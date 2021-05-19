@@ -18,6 +18,7 @@ global function GRX_HasInventoryEverBeenReady
 global function GRX_IsItemOwnedByPlayer
 global function GRX_IsItemOwnedByPlayer_AllowOutOfDateData
 global function GRX_GetPlayerEdition
+global function GRX_IsOfferRestricted
 #endif
 
 #if SERVER || UI
@@ -166,6 +167,9 @@ global struct ItemFlavorPurchasabilityInfo
 global ItemFlavor&[GRX_CURRENCY_COUNT] GRX_CURRENCIES = [{...}, {...}, {...}]
 global asset[GRX_CURRENCY_COUNT] GRX_CURRENCY_CONTAINERS = [$"", $"", $""]
 
+global ItemFlavor& GRX_BATTLEPASS_PURCHASE_PACK_BASIC
+global ItemFlavor& GRX_BATTLEPASS_PURCHASE_PACK_BUNDLE
+
 
 ///////////////////////
 ///////////////////////
@@ -212,6 +216,7 @@ struct PlayerGRXScriptState
 	#if SERVER || CLIENT || UI
 		bool isInventoryReady
 		bool hasInventoryEverBeenClean = false
+		bool isOfferRestricted = false
 	#endif
 
 	#if CLIENT
@@ -2287,6 +2292,32 @@ void function CodeCallback_GRXPackOpened( entity player, array<int> balanceDiffs
 		if ( player in DEV_GRX_BulkOpenPacksUsingBots_botPackIndexMap )
 			DEV_GRX_BulkOpenPacksUsingBots_OnPackOpened( player, balanceDiffs, newItems, packError )
 	#endif
+}
+#endif
+
+#if SERVER || CLIENT || UI 
+bool function GRX_IsOfferRestricted( entity player = null )
+{
+#if CLIENT
+	if ( player == null )
+		player = GetLocalClientPlayer()
+#elseif UI
+	if ( player == null )
+		player = GetUIPlayer()
+#endif
+
+	#if(false)
+
+
+#elseif SERVER || CLIENT
+		Assert( player == GetLocalClientPlayer() )
+		PlayerGRXScriptState grxState = GetPlayerGRXScriptState( player )
+	#else
+		Assert( player == GetUIPlayer() )
+		PlayerGRXScriptState grxState = GetPlayerGRXScriptState( player )
+	#endif
+
+	return grxState.isOfferRestricted
 }
 #endif
 

@@ -49,7 +49,6 @@ global function CloseAllMenus
 global function CloseAllDialogs
 global function CloseAllToTargetMenu
 global function PrintMenuStack
-global function CleanupInGameMenus
 global function GetActiveMenu
 global function IsMenuVisible
 global function IsPanelActive
@@ -81,6 +80,7 @@ global function IsMenuInMenuStack
 global function RemoveFromMenuStack
 global function GetTopNonDialogMenu
 global function SetDialog
+global function SetPopup
 global function SetClearBlur
 global function IsDialog
 global function IsDialogOnlyActiveMenu
@@ -124,6 +124,9 @@ global function RemoveCallback_UserInfoUpdated
 global function AddCallbackAndCallNow_RemoteMatchInfoUpdated
 global function RemoveCallback_RemoteMatchInfoUpdated
 
+global function _IsMenuThinkActive
+global function UpdateActiveMenuThink
+
 #if DURANGO_PROG
 global function OpenXboxPartyApp
 global function OpenXboxHelp
@@ -142,6 +145,8 @@ struct
 
 	array<void functionref( string, string )>   userInfoChangedCallbacks // TODO: move to shared file for client usage; sh_userinfo
 	array<void functionref()>                   remoteMatchInfoChangedCallbacks // TODO: move to shared file for client usage; sh_userinfo
+
+	bool menuThinkThreadActive = false
 } file
 
 
@@ -164,13 +169,13 @@ void function UICodeCallback_ActivateMenus()
 	if ( IsConnected() )
 		return
 
+	var mainMenu = GetMenu( "MainMenu" )
+
 	printt( "UICodeCallback_ActivateMenus:", GetActiveMenu() && Hud_GetHudName( GetActiveMenu() ) != "" )
 	if ( uiGlobal.menuStack.len() == 0 )
-	{
-		AdvanceMenu( GetMenu( "MainMenu" ) )
-	}
+		AdvanceMenu( mainMenu )
 
-	if ( GetActiveMenu() == GetMenu( "MainMenu" ) )
+	if ( GetActiveMenu() == mainMenu )
 		Signal( uiGlobal.signalDummy, "OpenErrorDialog" )
 
 	PlayContextualMenuMusic()
@@ -334,7 +339,7 @@ bool function UICodeCallback_LevelLoadingStarted( string levelname )
 {
 	printt( "UICodeCallback_LevelLoadingStarted: " + levelname )
 
-	CloseAllDialogs()
+	CloseAllMenus()
 	Signal( uiGlobal.signalDummy, "EndFooterUpdateFuncs" )
 	Signal( uiGlobal.signalDummy, "EndSearchForPartyServerTimeout" )
 
@@ -431,12 +436,14 @@ void function UICodeCallback_LevelInit( string levelname )
 	ShGRX_LevelInit()
 	CustomizeCommon_Init()
 	ShLoadouts_LevelInit_Begin()
+	ShCalEvent_LevelInit()
 	ShCharacters_LevelInit()
 	ShCharacterAbilities_LevelInit()
 	ShCharacterCosmetics_LevelInit()
 	ShWeapons_LevelInit()
 	ShWeaponCosmetics_LevelInit()
 	ShGladiatorCards_LevelInit()
+	ShBattlePass_LevelInit()
 	MeleeShared_Init()
 	MeleeSyncedShared_Init()
 	ShItems_LevelInit_Finish()
@@ -447,6 +454,7 @@ void function UICodeCallback_LevelInit( string levelname )
 	ShStatsInternals_LevelInit()
 	ShStats_LevelInit()
 	ShPersistentData_LevelInit_Finish()
+	ShPassPanel_LevelInit()
 	ShEHI_LevelInit_End()
 
 	//InitItems()
@@ -533,7 +541,7 @@ void function UICodeCallback_LevelShutdown()
 	StopVideos( eVideoPanelContext.ALL )
 
 	if ( uiGlobal.loadedLevel != "" )
-		CleanupInGameMenus()
+		Signal( uiGlobal.signalDummy, "CleanupInGameMenus" )
 
 	uiGlobal.loadedLevel = ""
 
@@ -576,6 +584,7 @@ void function UICodeCallback_NavigateBack()
 // Called when IsConnected() will start returning true.
 void function UICodeCallback_OnConnected()
 {
+	InitXPEvents() //
 }
 
 
@@ -632,8 +641,6 @@ void function UICodeCallback_ConsoleKeyboardClosed()
 
 void function UICodeCallback_OnDetenteDisplayed()
 {
-	//	thread PlayDetentSound()
-	//}
 	//
 	//void function PlayDetentSound()
 	//{
@@ -730,13 +737,16 @@ void function AdvanceMenu( var newMenu )
 
 		// Opening a normal menu while a dialog is open
 		// TODO: temporary exception until we get rid of all the old dialog menus
-		Assert( !IsDialog( currentMenu ), "Tried opening menu: " + Hud_GetHudName( newMenu ) + " when activeMenu was: " + Hud_GetHudName( currentMenu ) )
+		Assert( !IsDialog( currentMenu ) || IsPopup( newMenu ), "Tried opening menu: " + Hud_GetHudName( newMenu ) + " when activeMenu was: " + Hud_GetHudName( currentMenu ) )
 	}
 
 	if ( currentMenu && !IsDialog( newMenu ) ) // Dialogs show on top so don't close existing menu when opening them
 	{
 		CloseMenu( currentMenu )
 		ClearMenuBlur( currentMenu )
+
+		if ( uiGlobal.menuData[ currentMenu ].loseTopLevelFunc != null )
+			uiGlobal.menuData[ currentMenu ].loseTopLevelFunc()
 
 		if ( uiGlobal.menuData[ currentMenu ].hideFunc != null )
 			uiGlobal.menuData[ currentMenu ].hideFunc()
@@ -757,6 +767,9 @@ void function AdvanceMenu( var newMenu )
 		SetFooterPanelVisibility( currentMenu, false )
 		if ( ShouldClearBlur( newMenu ) )
 			ClearMenuBlur( currentMenu )
+
+		if ( uiGlobal.menuData[ currentMenu ].loseTopLevelFunc != null )
+			uiGlobal.menuData[ currentMenu ].loseTopLevelFunc()
 	}
 
 	uiGlobal.menuStack.push( GetMenuDef( newMenu ) )
@@ -895,6 +908,11 @@ void function CloseActiveMenu( bool cancelled = false, bool openStackMenu = true
 		{
 			OpenMenuWrapper( nextActiveMenu, false )
 		}
+		else
+		{
+			if ( uiGlobal.menuData[ nextActiveMenu ].getTopLevelFunc != null )
+				uiGlobal.menuData[ nextActiveMenu ].getTopLevelFunc()
+		}
 	}
 
 	Signal( uiGlobal.signalDummy, "ActiveMenuChanged" )
@@ -910,7 +928,7 @@ void function CloseAllMenus()
 
 void function CloseAllDialogs()
 {
-	while ( IsDialog( GetActiveMenu() ) )
+	while ( IsDialog( GetActiveMenu() ) || IsPopup( GetActiveMenu() ) )
 		CloseActiveMenu( true )
 }
 
@@ -943,15 +961,8 @@ void function UpdateMenusOnConnectThread( string levelname )
 {
 	EndSignal( uiGlobal.signalDummy, "LevelShutdown" ) // HACK fix because UICodeCallback_LevelInit() incorrectly runs when disconnected by client error. Test with "script_error_client" while a level is loaded.
 
-	CloseAllDialogs()
-
-	var mainMenu = GetMenu( "MainMenu" )
-	if ( IsMenuInMenuStack( mainMenu ) && !IsMenuInMenuStack( null ) )
-		CloseAllToTargetMenu( mainMenu )
-
+	CloseAllMenus()
 	Assert( GetActiveMenu() != null || uiGlobal.menuStack.len() == 0 )
-
-	AdvanceMenu( null )
 
 	bool isLobby = IsLobbyMapName( levelname )
 
@@ -999,7 +1010,7 @@ void function DialogFlow()
 		#endif
 	}
 	#if PS4_PROG
-	else if ( LocalPlayerHasEntitlement( PSPLUS_PACK ) && persistenceAvailable && GetPersistentVarAsInt( "plusAcknowledged" ) )
+	else if ( LocalPlayerHasEntitlement( PSPLUS_PACK ) && persistenceAvailable && !GetPersistentVarAsInt( "plusAcknowledged" ) )
 	{
 		ClientCommand( "plusAcknowledged" )
 		ClientCommand( "lastSeenPremiumCurrency" )
@@ -1099,22 +1110,6 @@ var function GetTopNonDialogMenu()
 	}
 
 	return null
-}
-
-
-void function CleanupInGameMenus()
-{
-	Signal( uiGlobal.signalDummy, "CleanupInGameMenus" )
-
-	CloseAllMenus()
-	Assert( GetActiveMenu() == null )
-	if ( uiGlobal.menuStack.len() )
-	{
-		if ( uiGlobal.loadingLevel == "" )
-			CloseActiveMenu() // Disconnected. Remove stack null and open main menu.
-		else
-			CloseActiveMenu( true, false ) // Level to level transition. Remove stack null and DON'T open main menu.
-	}
 }
 
 
@@ -1232,6 +1227,8 @@ void function InitMenus()
 	AddPanel( lobbyMenu, "PlayPanel", InitPlayPanel )
 	AddPanel( lobbyMenu, "CharactersPanel", InitCharactersPanel )
 	AddPanel( lobbyMenu, "ArmoryPanel", InitArmoryPanel )
+	//
+	AddPanel( lobbyMenu, "PassPanel", InitPassPanel )
 	var storePanel = AddPanel( lobbyMenu, "StorePanel", InitStorePanel )
 	AddPanel( storePanel, "LootPanel", InitLootPanel )
 	AddPanel( storePanel, "ECPanel", InitOffersPanel )
@@ -1287,11 +1284,19 @@ void function InitMenus()
 	AddMenu( "SurvivalGroundListMenu", $"resource/ui/menus/survival_ground_list.menu", InitGroundListMenu )
 	AddMenu( "SurvivalQuickSwapMenu", $"resource/ui/menus/survival_quick_swap.menu", InitQuickSwapMenu )
 
+	#if(false)
+
+
+#endif
+
 	AddMenu( "GammaMenu", $"resource/ui/menus/gamma.menu", InitGammaMenu, "#BRIGHTNESS" )
 
 	AddMenu( "Notifications", $"resource/ui/menus/notifications.menu", InitNotificationsMenu )
 
 	AddMenu( "InGameMPMenu", $"resource/ui/menus/ingame_mp.menu", InitInGameMPMenu )
+	#if(false)
+
+#endif
 
 	AddMenu( "PostGameMenu", $"resource/ui/menus/postgame.menu", InitPostGameMenu )
 
@@ -1311,9 +1316,24 @@ void function InitMenus()
 	AddMenu( "ModeSelectDialog", $"resource/ui/menus/dialog_mode_select.menu", InitModeSelectDialog )
 	AddMenu( "ErrorDialog", $"resource/ui/menus/dialogs/ok_dialog.menu", InitErrorDialog )
 	AddMenu( "AccessibilityDialog", $"resource/ui/menus/dialogs/accessibility_dialog.menu", InitAccessibilityDialog )
+	AddMenu( "ReportPlayerDialog", $"resource/ui/menus/dialog_report_player.menu", InitReportPlayerDialog )
+	AddMenu( "ReportPlayerReasonPopup", $"resource/ui/menus/dialog_report_player_reason.menu", InitReportReasonPopup )
 
-	AddMenu( "ControlsAdvancedLookMenu", $"resource/ui/menus/controls_advanced_look.menu", InitControlsAdvancedLookMenu, "#CONTROLS_ADVANCED_LOOK" )
+	AddMenu( "PassXPPurchaseDialog", $"resource/ui/menus/dialogs/pass_dialog.menu", InitPassXPPurchaseDialog )
+	AddMenu( "PassPurchaseMenu", $"resource/ui/menus/pass_purchase.menu", InitPassPurchaseMenu )
+	AddMenu( "PassAwardsMenu", $"resource/ui/menus/pass_awards.menu", InitPassAwardsMenu )
+	AddMenu( "PassLegendBonusMenu", $"resource/ui/menus/dialogs/pass_legend_bonus_dialog.menu", InitLegendBonusDialog )
+
+	AddMenu( "BattlePassAboutPage1", $"resource/ui/menus/dialogs/battle_pass_about_1.menu", InitAboutBattlePass1Dialog )
+
+	var controlsAdvancedLookMenu = AddMenu( "ControlsAdvancedLookMenu", $"resource/ui/menus/controls_advanced_look.menu", InitControlsAdvancedLookMenu, "#CONTROLS_ADVANCED_LOOK" )
+	AddPanel( controlsAdvancedLookMenu, "AdvancedLookControlsPanel", InitAdvancedLookControlsPanel )
 	AddMenu( "GamepadLayoutMenu", $"resource/ui/menus/gamepadlayout.menu", InitGamepadLayoutMenu )
+
+	#if(false)
+
+#endif
+	//
 
 	AddMenu( "LootBoxOpen", $"resource/ui/menus/loot_box.menu", InitLootBoxMenu )
 	AddMenu( "InviteFriendsMenu", $"resource/ui/menus/invite_friends.menu", InitInviteFriendsMenu )
@@ -1464,6 +1484,16 @@ void function AddMenuEventHandler( var menu, int event, void functionref() func 
 		Assert( uiGlobal.menuData[ menu ].hideFunc == null )
 		uiGlobal.menuData[ menu ].hideFunc = func
 	}
+	else if ( event == eUIEvent.MENU_GET_TOP_LEVEL )
+	{
+		Assert( uiGlobal.menuData[ menu ].getTopLevelFunc == null )
+		uiGlobal.menuData[ menu ].getTopLevelFunc = func
+	}
+	else if ( event == eUIEvent.MENU_LOSE_TOP_LEVEL )
+	{
+		Assert( uiGlobal.menuData[ menu ].loseTopLevelFunc == null )
+		uiGlobal.menuData[ menu ].loseTopLevelFunc = func
+	}
 	else if ( event == eUIEvent.MENU_NAVIGATE_BACK )
 	{
 		Assert( uiGlobal.menuData[ menu ].navBackFunc == null )
@@ -1529,10 +1559,11 @@ void function OpenMenuWrapper( var menu, bool isFirstOpen )
 	}
 
 	if ( uiGlobal.menuData[ menu ].showFunc != null )
-	{
 		uiGlobal.menuData[ menu ].showFunc()
-		//printt( "Called showFunc for:", menu.GetHudName() )
-	}
+
+	if ( uiGlobal.menuData[ menu ].getTopLevelFunc != null )
+		uiGlobal.menuData[ menu ].getTopLevelFunc()
+
 	uiGlobal.menuData[ menu ].enterTime = Time()
 
 	foreach ( var panel in GetAllMenuPanels( menu ) )
@@ -1853,15 +1884,23 @@ void function InitGlobalMenuVars()
 }
 
 
+bool function _IsMenuThinkActive()
+{
+	return file.menuThinkThreadActive
+}
+
+
 void function UpdateActiveMenuThink()
 {
 	OnThreadEnd(
 		function() : ()
 		{
 			Assert( false, "This thread should not have ended" )
+			file.menuThinkThreadActive = false
 		}
 	)
 
+	file.menuThinkThreadActive = true
 	while ( true )
 	{
 		var menu = GetActiveMenu()
@@ -2023,6 +2062,14 @@ void function SetDialog( var menu, bool val )
 }
 
 
+void function SetPopup( var menu, bool val )
+{
+	uiGlobal.menuData[ menu ].isDialog = val
+	uiGlobal.menuData[ menu ].isPopup = val
+	uiGlobal.menuData[ menu ].clearBlur = false
+}
+
+
 void function SetClearBlur( var menu, bool val )
 {
 	uiGlobal.menuData[ menu ].clearBlur = val
@@ -2037,6 +2084,13 @@ bool function IsDialog( var menu )
 	return uiGlobal.menuData[ menu ].isDialog
 }
 
+bool function IsPopup( var menu )
+{
+	if ( menu == null )
+		return false
+
+	return uiGlobal.menuData[ menu ].isPopup
+}
 
 bool function ShouldClearBlur( var menu )
 {
@@ -2354,8 +2408,8 @@ void function ButtonClass_AddMenu( var menu )
 
 void function InitButtonRCP( var button )
 {
-	int width  = int( Hud_GetWidth( button ) / GetContentScaleFactor( GetMenu( "MainMenu" ) ).x )//ContentScaledXAsInt( Hud_GetWidth( button ) )
-	int height = int( Hud_GetHeight( button ) / GetContentScaleFactor( GetMenu( "MainMenu" ) ).y )//ContentScaledYAsInt( Hud_GetHeight( button ) )
+	int width  = Hud_GetWidth( button )
+	int height = Hud_GetHeight( button )
 	RuiSetFloat2( Hud_GetRui( button ), "actualRes", <width, height, 0> )
 }
 

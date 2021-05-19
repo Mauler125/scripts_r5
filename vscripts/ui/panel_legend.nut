@@ -11,7 +11,7 @@ void function OnShowLegendPage( var panel )
 	SurvivalInventory_SetBGVisible( true )
 
 	var elem = Hud_GetChild( panel, "GCard" )
-	RunClientScript( "UICallback_PopulateClientGladCard", elem, null, null, null, 0, Time(), eGladCardPresentation.FRONT_CLEAN )
+	RunClientScript( "UICallback_PopulateClientGladCard", elem, null, null, null, null, null, 0, Time(), eGladCardPresentation.FRONT_CLEAN )
 
 	ItemFlavor ornull character = null
 

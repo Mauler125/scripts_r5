@@ -61,7 +61,8 @@ void function ArmoryPanel_OnFocusChanged( var panel, var oldFocus, var newFocus 
 {
 	if ( !IsValid( panel ) ) // uiscript_reset
 		return
-	if ( GetParentMenu( panel ) != GetActiveMenu() )
+
+	if ( !newFocus || GetParentMenu( panel ) != GetActiveMenu() )
 		return
 
 	UpdateFooterOptions()

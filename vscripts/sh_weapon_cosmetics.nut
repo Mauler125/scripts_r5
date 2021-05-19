@@ -7,6 +7,7 @@ global function WeaponSkin_GetSkinName
 global function WeaponSkin_GetCamoIndex
 global function WeaponSkin_GetSortOrdinal
 global function WeaponSkin_GetWeaponFlavor
+global function WeaponSkin_GetVideo
 #if SERVER
 global function AddCallback_UpdatePlayerWeaponCosmetics
 #endif
@@ -225,6 +226,12 @@ int function WeaponSkin_GetCamoIndex( ItemFlavor flavor )
 	return GetGlobalSettingsInt( ItemFlavor_GetAsset( flavor ), "camoIndex" )
 }
 
+asset function WeaponSkin_GetVideo( ItemFlavor flavor )
+{
+	Assert( ItemFlavor_GetType( flavor ) == eItemType.weapon_skin )
+
+	return GetGlobalSettingsStringAsAsset( ItemFlavor_GetAsset( flavor ), "video" )
+}
 
 #if SERVER || CLIENT
 void function WeaponSkin_Apply( entity ent, ItemFlavor skin )

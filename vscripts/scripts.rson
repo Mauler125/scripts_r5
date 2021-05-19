@@ -16,6 +16,12 @@ MAP_mp_box		True if the given map name is being loaded
 GAMEMODE_at		True of the given game mode is being loaded
 */
 
+When: " SERVER || CLIENT || UI "
+Scripts:
+[
+	root_asset_lists.gnut
+]
+
 When: "SP || MP_CAMPAIGNCOOP"
 Scripts:
 [
@@ -81,6 +87,8 @@ Scripts:
 	sh_consts_mp.gnut
 	sh_loadouts.gnut
 	sh_grx.gnut
+	sh_cal_events.gnut
+	sh_battlepass.gnut
 	sh_characters.gnut
 	sh_character_abilities.gnut
 	sh_character_cosmetics.nut
@@ -243,6 +251,7 @@ Scripts:
 	weapons/mp_weapon_thermite_grenade.nut
 	weapons/mp_weapon_zipline.nut
 	weapons/mp_weapon_alternator_smg.nut
+	weapons/mp_weapon_softball.nut
 
 	weapons/sh_deployable.gnut
 	weapons/sh_phase_shift.gnut
@@ -394,6 +403,7 @@ Scripts:
 	vehicle/_vehicle_behavior.gnut
 	vehicle/_vehicle_dropship_new.nut
 	weapons/_at_turrets.gnut
+	weapons/_ball_lightning.gnut
 	weapons/_cloaker.gnut
 	weapons/_particle_wall.gnut
 
@@ -576,6 +586,8 @@ When: "CLIENT || UI"
 Scripts:
 [
 	ui/sh_tooltips.nut
+	ui/clui_lobby_panel_pass.nut
+	client/cl_chroma.gnut
 ]
 
 When: "UI"
@@ -612,13 +624,13 @@ Scripts:
 	ui/dialogs/confirm_grx_error.nut
 	ui/dialogs/error.nut
 	ui/dialogs/mode_select.nut
+	ui/dialogs/report_player.nut
 	ui/menu_eula_dialog.nut
 	ui/menu_accessibility_dialog.nut
 	ui/menu_postgame.nut
 	ui/menu_knowledgebase.nut
 	ui/menu_knowledgebase_submenu.nut
 	ui/panel_scoreboard.nut
-	ui/menu_controls_advanced_look.nut
 	ui/menu_gamepad_layout.nut
 	ui/menu_generation_respawn.nut
 	ui/menu_ingame.nut
@@ -631,8 +643,10 @@ Scripts:
 	ui/lobby_panel_play.nut
 	ui/lobby_panel_characters.nut
 	ui/lobby_panel_armory.nut
+	
 	ui/lobby_panel_store.nut
 	ui/lobby_panel_settings.nut
+	ui/menu_controls_advanced_look.nut
 	ui/panel_controls_pc.nut
 	ui/panel_controls_gamepad.nut
 	ui/panel_video.nut
@@ -666,6 +680,8 @@ Scripts:
 	ui/panel_legend.nut
 	ui/menu_survival_ground_list.nut
 	ui/menu_survival_quick_swap.nut
+	
+	
 	lobby/sh_lobby.gnut
 ]
 

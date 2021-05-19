@@ -40,6 +40,8 @@ void function CardPosesPanel_OnHide( var panel )
 {
 	RemoveCallback_OnTopLevelCustomizeContextChanged( panel, CardPosesPanel_Update )
 	CardPosesPanel_Update( panel )
+	var scrollPanel = Hud_GetChild( file.listPanel, "ScrollPanel" )
+	Hud_SetSelected( Hud_GetChild( scrollPanel, "GridButton0" ), true )
 }
 
 

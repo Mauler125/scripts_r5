@@ -296,6 +296,8 @@ global struct GRXUserInfo
 	array< int > balances
 
 	int marketplaceEdition
+
+	bool isOfferRestricted
 }
 
 global struct VortexBulletHit

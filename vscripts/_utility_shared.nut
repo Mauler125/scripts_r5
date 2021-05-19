@@ -163,7 +163,7 @@ void function InitWeaponScripts()
 	MpWeaponBasicBolt_Init()
 
 	#if SERVER
-		//BallLightning_Init()
+		BallLightning_Init()
 	#endif
 }
 
@@ -4174,13 +4174,6 @@ void function DebugDrawLineFromEntToPos( entity ent, vector pos, int r, int g, i
 		DebugDrawLine( ent.GetOrigin(), pos, r, g, b, throughGeo, 0.1 )
 		wait 0.05
 	}
-}
-
-vector function VectorRotateAxis( vector vecToRotate, vector axisVec, float degrees )
-{
-	float vecLength = vecToRotate.Length()
-	vector newAngles = RotateAnglesAboutAxis( VectorToAngles( vecToRotate ), Normalize( axisVec ), degrees )
-	return Normalize( AnglesToForward( newAngles ) ) * vecLength
 }
 
 //bool function PlayerIsInMeleeBlockingADS( entity player )

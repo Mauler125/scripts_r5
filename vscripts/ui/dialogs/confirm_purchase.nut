@@ -1,6 +1,7 @@
 global function InitConfirmPurchaseDialog
 
 global function PurchaseDialog
+global function PurchaseDialog_SetPurchaseOverrideSound
 
 global enum ePurchaseDialogStatus
 {
@@ -34,6 +35,7 @@ struct
 	table<var, ItemFlavorBag>              purchaseButtonPriceMap
 	void functionref()                     onPurchaseStartCallback
 	void functionref( bool wasSuccessful ) onPurchaseResultCallback
+	string								   purchaseSoundOverride = ""
 } file
 
 void function InitConfirmPurchaseDialog()
@@ -82,6 +84,8 @@ void function PurchaseDialog( ItemFlavor flav, int quantity, bool markAsNew,
 		void functionref() onPurchaseStartCallback,
 		void functionref( bool wasSuccessful ) onPurchaseResultCallback )
 {
+	printt( "PurchaseDialog", ItemFlavor_GetAsset( flav ) )
+
 	Assert( GRX_IsInventoryReady() )
 	Assert( file.purchaseStatus == ePurchaseDialogStatus.INACTIVE )
 	Assert( ItemFlavor_GetGRXMode( flav ) != GRX_ITEMFLAVORMODE_NONE )
@@ -105,6 +109,7 @@ void function PurchaseDialog( ItemFlavor flav, int quantity, bool markAsNew,
 	file.purchaseMarkAsNew = markAsNew
 	file.onPurchaseStartCallback = onPurchaseStartCallback
 	file.onPurchaseResultCallback = onPurchaseResultCallback
+	file.purchaseSoundOverride = ""
 
 	ItemFlavorPurchasabilityInfo ifpi = GRX_GetItemPurchasabilityInfo( flav )
 	Assert( ifpi.isPurchasableAtAll )
@@ -120,6 +125,12 @@ void function PurchaseDialog( ItemFlavor flav, int quantity, bool markAsNew,
 
 	EmitUISound( "UI_Menu_Cosmetic_Unlock" )
 	AdvanceMenu( file.menu )
+}
+
+
+void function PurchaseDialog_SetPurchaseOverrideSound( string overrideSound )
+{
+	file.purchaseSoundOverride = overrideSound
 }
 
 
@@ -249,6 +260,8 @@ void function OnPurchaseOperationFinished( int status, ItemFlavorBag price )
 	}
 	if ( wasSuccessful )
 	{
+		if ( file.purchaseSoundOverride != "" )
+			EmitUISound( file.purchaseSoundOverride )
 		if ( wasPremium )
 			EmitUISound( "UI_Menu_Purchase_Coins" )
 		else if ( wasCredits )
@@ -306,7 +319,7 @@ void function UpdatePurchaseDialog()
 
 	ItemFlavor purchaseItem = expect ItemFlavor(file.purchaseItemFlavOrNull)
 	string purchaseItemName = Localize( ItemFlavor_GetLongName( purchaseItem ) )
-	int quality             = ItemFlavor_GetQuality( purchaseItem )
+	int quality             = ItemFlavor_HasQuality( purchaseItem ) ? ItemFlavor_GetQuality( purchaseItem ) : 0
 
 	string messageText
 	switch ( ItemFlavor_GetType( purchaseItem ) )
@@ -320,15 +333,18 @@ void function UpdatePurchaseDialog()
 			messageText = purchaseItemName
 			break
 
+		case eItemType.battlepass_purchased_xp:
+			if ( file.purchaseQuantity > 1 )
+				messageText = Localize( "#STORE_ITEM_X_N", purchaseItemName, file.purchaseQuantity )
+			else
+				messageText = purchaseItemName
+			break
+
 		default:
 			if ( file.purchaseQuantity > 1 )
-			{
 				messageText = Localize( "#STORE_ITEM_X_N", purchaseItemName, file.purchaseQuantity ) + "\n`1" + Localize( ItemFlavor_GetQualityName( purchaseItem ) )
-			}
 			else
-			{
 				messageText = purchaseItemName + "\n`1" + Localize( ItemFlavor_GetQualityName( purchaseItem ) )
-			}
 			break
 	}
 

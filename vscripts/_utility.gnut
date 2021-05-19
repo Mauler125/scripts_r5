@@ -330,7 +330,7 @@ entity function CreateScriptMover( vector origin = <0.0, 0.0, 0.0>, vector angle
 {
 	entity script_mover = CreateEntity( "script_mover_lightweight" )
 	script_mover.kv.solid = solidType
-	script_mover.SetValueForModelKey( $"mdl/dev/empty_model.rmdl" )
+	script_mover.SetValueForModelKey( $"models/dev/empty_model.mdl" )
 	script_mover.kv.SpawnAsPhysicsMover = 0
 	script_mover.SetOrigin( origin )
 	script_mover.SetAngles( angles )
@@ -1576,7 +1576,7 @@ entity function CreatePropScript_NoDispatchSpawn( asset model, vector ornull ori
 		if ( angles )
 			prop_script.SetAngles( expect vector( angles ) )
 	}
-	//DispatchSpawn( prop_script )
+	DispatchSpawn( prop_script )
 	if ( origin )
 	{
 		// hack: Setting origin twice. SetOrigin needs to happen after DispatchSpawn, otherwise origin is snapped to nearest whole unit
@@ -2893,6 +2893,25 @@ void function ForceTimeLimitDone()
 	svGlobal.levelEnt.Signal( "devForcedWin" )
 	ServerCommand( "mp_enabletimelimit 1" )
 	ServerCommand( "mp_enablematchending 1" )
+}
+
+
+void function UpdateBadRepPresent()
+{
+	array<entity> players = GetPlayerArray()
+	bool found = false
+/*	always set to false for now
+	foreach ( player in players )
+	{
+		if ( player.HasBadReputation() )
+		{
+			found = true
+			break
+		}
+	}
+*/
+	level.nv.badRepPresent = found
+	level.ui.badRepPresent = found
 }
 
 void function Dev_PrintMessage( entity player, string text, string subText = "", float duration = 7.0, string soundAlias = "" )
@@ -4570,5 +4589,5 @@ void function RunClientCommandOnPlayer( entity player, string command )
 
 entity function CreatePropDoor( asset model, vector pos, vector ang )
 {
-	return CreatePropDynamic_NoDispatchSpawn( model, pos, ang )
+	return CreatePropDynamic( model, pos, ang )
 }

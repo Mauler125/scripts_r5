@@ -83,30 +83,18 @@ global function AddCallback_OnThreatEventStateChange
 
 void function CodeCallback_OnClientConnectionCompleted( entity player )
 {
-	//SetGameState(eGameState.PickLoadout)
-
-	player.hasConnected = true
-
-	ZiplineInit( player )
-
-	NotifyClientsOfConnection( player, 1 )
-
-	SetGameState(eGameState.Playing)
-	
-	CodeCallback_OnClientReloadConnectionCompleted(player)
-
-	player.SetPlayerSettingsWithMods( $"settings/player/mp/pilot_survival_grapple.rpak", [ "enable_wallrun", "enable_doublejump" ] )
-
-    // Respawn to get out of spectator?
-    DoRespawnPlayer( player, null )
-
 	vector origin = GetEnt( "info_player_start" ).GetOrigin()
-    player.SetOrigin( origin )
-    //thread RespawnPlayersInDropshipAtPoint(GetPlayerArray(), origin, <0, 90, 0>)
+	vector angles = GetEnt( "info_player_start" ).GetAngles()
 
-    // Give weapons
-	player.GiveWeapon( "mp_weapon_alternator_smg", WEAPON_INVENTORY_SLOT_ANY )
-	player.GiveWeapon( "mp_weapon_sniper", WEAPON_INVENTORY_SLOT_ANY )
+	// player.SetPlayerSettings( $"settings/player/mp/pilot_survival_gunner.rpak" )
+	player.SetOrigin( origin )
+	player.SetAngles( angles )
+	// player.RespawnPlayer( null )
+
+	//CPlayer.SetPlayerSettingsWithMods( player, DEFAULT_PILOT_SETTINGS, [] )
+	player.SetPlayerSettingsWithMods( $"settings/player/mp/pilot_survival_grapple.rpak", [ "enable_wallrun", "enable_doublejump" ] )
+	DoRespawnPlayer( player, null )//player.RespawnPlayer( null )
+	player.GiveWeapon( "mp_weapon_softball", WEAPON_INVENTORY_SLOT_ANY )
 	player.GiveWeapon( "mp_weapon_wraith_kunai_primary", WEAPON_INVENTORY_SLOT_ANY )
 	player.GiveOffhandWeapon( "mp_ability_grapple", OFFHAND_SPECIAL )
 	EnableOffhandWeapons( player )
@@ -114,7 +102,7 @@ void function CodeCallback_OnClientConnectionCompleted( entity player )
 
 void function AddCallback_OnWeaponAttack( void functionref( entity, entity, string, int, vector, vector ) callback )
 {
-	printt("AddCallback_OnWeaponAttack")
+
 }
 
 void function AddClientCommandCallbackNew( string commandString, void functionref( entity player, array<string> args ) callbackFunc )
@@ -323,7 +311,7 @@ void function SendEntityKilledEvent( entity ent, var damageInfo )
 
 	foreach ( player in players )
 	{
-		Remote_CallFunction_NonReplay( player, "ServerCallback_OnEntityKilled", attacker, ent, scriptDamageType, damageSourceId )
+		Remote_CallFunction_NonReplay( player, "ServerCallback_OnEntityKilled", attackerEHandle, victimEHandle, scriptDamageType, damageSourceId )
 	}
 }
 

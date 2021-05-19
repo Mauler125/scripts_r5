@@ -16,11 +16,7 @@ global function UICodeCallback_OnCompletedUserSignIn
 global function UICodeCallback_OnUserSignOut
 #endif
 
-#if PC_PROG
-const bool SPINNER_DEBUG_INFO = true
-#else
-const bool SPINNER_DEBUG_INFO = false
-#endif
+const bool SPINNER_DEBUG_INFO = PC_PROG
 
 struct
 {
@@ -118,7 +114,7 @@ bool function IsAccessibilityFooterValid()
 
 bool function IsDataCenterFooterValid()
 {
-	bool hideDurationElapsed = Time() - file.startTime > 0.0
+	bool hideDurationElapsed = Time() - file.startTime > 60.0
 
 	#if DURANGO_PROG
 		return Console_IsSignedIn() && !IsWorking() && !IsSearchingForPartyServer() && hideDurationElapsed

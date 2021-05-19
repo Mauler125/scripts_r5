@@ -125,10 +125,10 @@ void function CodeCallback_OnPrecache()
  	Assert( IsSingleplayer() || GAMETYPE in GAMETYPE_TEXT )
 
 	// these should be level specific in SP
-	//PrecacheEntity( "npc_soldier" )
-	//PrecacheEntity( "turret" )
+	PrecacheEntity( "npc_soldier" )
+	PrecacheEntity( "turret" )
 
-	//PrecacheEntity( "npc_dropship", DROPSHIP_MODEL )
+	PrecacheEntity( "npc_dropship", DROPSHIP_MODEL )
 
 	//Scavenger ore models. Need to precache here instead of in gamemode scripts for vpk builds
     //Removing for build
@@ -289,14 +289,14 @@ bool function DamageIgnoresFriendlyFire( damageInfo )
 
 	int damageSourceID = DamageInfo_GetDamageSourceIdentifier( damageInfo )
 
-	// switch ( damageSourceID )
-	// {
-	// 	case eDamageSourceId.switchback_trap:
-	// 	case eDamageSourceId.suicideSpectreAoE:
-	// 	case eDamageSourceId.mp_titanweapon_stun_laser: // for energy transfer functionality. Preventing FF damage in the callback.
-	// 	case eDamageSourceId.mp_titanability_smoke: // For FD Vanguard Shield Upgrades. Preventing FF damage in the callback.
-	// 		return true
-	// }
+	switch ( damageSourceID )
+	{
+		case eDamageSourceId.switchback_trap:
+		case eDamageSourceId.suicideSpectreAoE:
+		case eDamageSourceId.mp_titanweapon_stun_laser: // for energy transfer functionality. Preventing FF damage in the callback.
+		case eDamageSourceId.mp_titanability_smoke: // For FD Vanguard Shield Upgrades. Preventing FF damage in the callback.
+			return true
+	}
 
 	return false
 }

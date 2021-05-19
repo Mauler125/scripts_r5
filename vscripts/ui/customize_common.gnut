@@ -509,19 +509,17 @@ void function UpdateCustomizeItemButton( CustomizeButtonContext cbc, bool justAd
 	var rui = Hud_GetRui( cbc.button )
 
 	// Name, icon and quality
-	string name       = Localize( "#EMPTY" )
-	asset buttonImage = $""
-	int quality       = -1
+	string name = Localize( "#EMPTY" )
 	if ( cbc.useShortName )
 		name = Localize( ItemFlavor_GetShortName( cbc.itemFlavor ) )
 	else
 		name = Localize( ItemFlavor_GetLongName( cbc.itemFlavor ) )
+	int quality = ItemFlavor_HasQuality( cbc.itemFlavor ) ? ItemFlavor_GetQuality( cbc.itemFlavor ) : 0
 
-	buttonImage = ItemFlavor_GetIcon( cbc.itemFlavor )
-	quality = ItemFlavor_HasQuality( cbc.itemFlavor ) ? ItemFlavor_GetQuality( cbc.itemFlavor ) : 0
 	RuiSetString( rui, "buttonText", name )
-	RuiSetImage( rui, "buttonImage", buttonImage )
+	RuiSetImage( rui, "buttonImage", ItemFlavor_GetIcon( cbc.itemFlavor ) )
 	RuiSetInt( rui, "quality", quality )
+	RuiSetImage( rui, "sourceIcon", ItemFlavor_HasSourceTag( cbc.itemFlavor ) ? ItemFlavor_GetSourceIcon( cbc.itemFlavor ) : $"" )
 
 	// Tooltip
 	//if ( cbc.showTooltip )
@@ -622,6 +620,7 @@ void function UpdateAllCurrentCustomizeItemButtons()
 	}
 
 	UpdateFooterOptions()
+	UpdateActionButton()
 }
 
 
@@ -700,7 +699,7 @@ void function UpdateActionButton()
 	ItemFlavor item = cbc.itemFlavor
 
 	bool isParentItemOwned = IsParentItemOwned( cbc )
-	bool isOwned = GRX_IsItemOwnedByPlayer( item )
+	bool isOwned = GRX_IsItemOwnedByPlayer_AllowOutOfDateData( item )
 	bool isEquipped = (LoadoutSlot_GetItemFlavor( LocalClientEHI(), cbc.loadoutEntry ) == item)
 	bool isVisible = !isParentItemOwned || !isOwned || (isOwned && !isEquipped)
 

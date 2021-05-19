@@ -33,32 +33,60 @@ void function InitSquadPanel( var panel )
 		var button
 		if ( i > 0 )
 		{
-			button = Hud_GetChild( panel, "TeammateMute"+i )
-			AddButtonEventHandler( button, UIE_CLICK, OnMuteButtonClick )
-			RuiSetImage( Hud_GetRui( button ), "unmuteIcon", $"rui/menu/lobby/icon_voicechat" )
-			RuiSetImage( Hud_GetRui( button ), "muteIcon", $"rui/menu/lobby/icon_voicechat_muted" )
-			ToolTipData d1
-			d1.tooltipFlags = d1.tooltipFlags | eToolTipFlag.CLIENT_UPDATE
-			d1.tooltipStyle = eTooltipStyle.DEFAULT
-			Hud_SetToolTipData( button, d1 )
+			{
+				button = Hud_GetChild( panel, "TeammateMute"+i )
+				AddButtonEventHandler( button, UIE_CLICK, OnMuteButtonClick )
+				RuiSetImage( Hud_GetRui( button ), "unmuteIcon", $"rui/menu/lobby/icon_voicechat" )
+				RuiSetImage( Hud_GetRui( button ), "muteIcon", $"rui/menu/lobby/icon_voicechat_muted" )
+				ToolTipData d1
+				d1.tooltipFlags = d1.tooltipFlags | eToolTipFlag.CLIENT_UPDATE
+				d1.tooltipStyle = eTooltipStyle.DEFAULT
+				Hud_SetToolTipData( button, d1 )
+			}
 
-			button = Hud_GetChild( panel, "TeammateMutePing"+i )
-			AddButtonEventHandler( button, UIE_CLICK, OnMutePingButtonClick )
-			RuiSetImage( Hud_GetRui( button ), "unmuteIcon", $"rui/menu/lobby/icon_ping" )
-			RuiSetImage( Hud_GetRui( button ), "muteIcon", $"rui/menu/lobby/icon_ping_muted" )
-			ToolTipData d2
-			d2.tooltipFlags = d2.tooltipFlags | eToolTipFlag.CLIENT_UPDATE
-			d2.tooltipStyle = eTooltipStyle.DEFAULT
-			Hud_SetToolTipData( button, d2 )
+			{
+				button = Hud_GetChild( panel, "TeammateMutePing"+i )
+				AddButtonEventHandler( button, UIE_CLICK, OnMutePingButtonClick )
+				RuiSetImage( Hud_GetRui( button ), "unmuteIcon", $"rui/menu/lobby/icon_ping" )
+				RuiSetImage( Hud_GetRui( button ), "muteIcon", $"rui/menu/lobby/icon_ping_muted" )
+				ToolTipData d2
+				d2.tooltipFlags = d2.tooltipFlags | eToolTipFlag.CLIENT_UPDATE
+				d2.tooltipStyle = eTooltipStyle.DEFAULT
+				Hud_SetToolTipData( button, d2 )
+			}
 
-			button = Hud_GetChild( panel, "TeammateMuteChat"+i )
-			AddButtonEventHandler( button, UIE_CLICK, OnMuteChatButtonClick )
-			RuiSetImage( Hud_GetRui( button ), "unmuteIcon", $"rui/menu/lobby/icon_textchat" )
-			RuiSetImage( Hud_GetRui( button ), "muteIcon", $"rui/menu/lobby/icon_textchat_muted" )
-			ToolTipData d3
-			d3.tooltipFlags = d3.tooltipFlags | eToolTipFlag.CLIENT_UPDATE
-			d3.tooltipStyle = eTooltipStyle.DEFAULT
-			Hud_SetToolTipData( button, d3 )
+			{
+				button = Hud_GetChild( panel, "TeammateMuteChat"+i )
+				AddButtonEventHandler( button, UIE_CLICK, OnMuteChatButtonClick )
+				RuiSetImage( Hud_GetRui( button ), "unmuteIcon", $"rui/menu/lobby/icon_textchat" )
+				RuiSetImage( Hud_GetRui( button ), "muteIcon", $"rui/menu/lobby/icon_textchat_muted" )
+				ToolTipData d3
+				d3.tooltipFlags = d3.tooltipFlags | eToolTipFlag.CLIENT_UPDATE
+				d3.tooltipStyle = eTooltipStyle.DEFAULT
+				Hud_SetToolTipData( button, d3 )
+			}
+
+			{
+				button = Hud_GetChild( panel, "TeammateInvite"+i )
+				AddButtonEventHandler( button, UIE_CLICK, OnInviteButtonClick )
+				RuiSetImage( Hud_GetRui( button ), "unmuteIcon", $"rui/menu/lobby/icon_textchat" )
+				RuiSetImage( Hud_GetRui( button ), "muteIcon", $"rui/menu/lobby/icon_textchat_muted" )
+				ToolTipData d4
+				d4.tooltipFlags = d4.tooltipFlags | eToolTipFlag.CLIENT_UPDATE
+				d4.tooltipStyle = eTooltipStyle.DEFAULT
+				Hud_SetToolTipData( button, d4 )
+			}
+
+			{
+				button = Hud_GetChild( panel, "TeammateReport"+i )
+				AddButtonEventHandler( button, UIE_CLICK, OnReportButtonClick )
+				RuiSetImage( Hud_GetRui( button ), "unmuteIcon", $"rui/menu/lobby/icon_report" )
+				RuiSetImage( Hud_GetRui( button ), "muteIcon", $"rui/menu/lobby/icon_report" )
+				ToolTipData d5
+				d5.tooltipFlags = d5.tooltipFlags | eToolTipFlag.CLIENT_UPDATE
+				d5.tooltipStyle = eTooltipStyle.DEFAULT
+				Hud_SetToolTipData( button, d5 )
+			}
 		}
 		i++
 	}
@@ -88,6 +116,16 @@ void function OnMuteChatButtonClick( var button )
 	RunClientScript( "UICallback_ToggleMuteChat", button )
 }
 
+void function OnInviteButtonClick( var button )
+{
+	RunClientScript( "UICallback_InviteSquadMate", button )
+}
+
+void function OnReportButtonClick( var button )
+{
+	RunClientScript( "UICallback_ReportSquadMate", button )
+}
+
 void function OnShowSquad( var panel )
 {
 	SurvivalInventory_SetBGVisible( true )
@@ -98,15 +136,19 @@ void function OnShowSquad( var panel )
 		var muteButton
 		var mutePingButton
 		var muteChatButton
+		var inviteButton
+		var reportButton
 
 		if ( i > 0 )
 		{
 			muteButton = Hud_GetChild( panel, "TeammateMute"+i )
 			mutePingButton = Hud_GetChild( panel, "TeammateMutePing"+i )
 			muteChatButton = Hud_GetChild( panel, "TeammateMuteChat"+i )
+			inviteButton = Hud_GetChild( panel, "TeammateInvite"+i )
+			reportButton = Hud_GetChild( panel, "TeammateReport"+i )
 		}
 
-		RunClientScript( "UICallback_PopulateClientGladCard", elem, muteButton, mutePingButton, muteChatButton, i, Time(), eGladCardPresentation.FULL_BOX )
+		RunClientScript( "UICallback_PopulateClientGladCard", elem, muteButton, mutePingButton, muteChatButton, reportButton, inviteButton, i, Time(), eGladCardPresentation.FULL_BOX )
 		file.squadPanels[panel].cardsInitialized[elem] = true
 
 		i++

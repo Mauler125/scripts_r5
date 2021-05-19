@@ -120,8 +120,9 @@ void function OnLobbyMenu_Show()
 {
 	thread LobbyMenuUpdate()
 	RegisterInputs()
-}
 
+	Chroma_Lobby()
+}
 
 
 void function OnLobbyMenu_Hide()
@@ -160,7 +161,10 @@ void function OnGRXStateChanged()
 	{
 		if ( !Hud_IsVisible( panel ) )
 		{
-			SetPanelTabEnabled( panel, ready )
+			if ( panel == GetPanel( "PassPanel" ) )
+				SetPanelTabEnabled( panel, ready && IsBattlePassEnabled() && (GetPlayerActiveBattlePass( ToEHI( GetUIPlayer() ) ) != null) )
+			else
+				SetPanelTabEnabled( panel, ready )
 		}
 	}
 

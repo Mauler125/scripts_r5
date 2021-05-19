@@ -1887,6 +1887,9 @@ int function GetCommsActionForPing( entity pingingPlayer, int pingType, entity p
 
 		case ePingType.ENEMY_LOOTSOURCE:
 			return eCommsAction.PING_NPC_LOOT_TICK
+			
+		case ePingType.ENEMY_SUSPECTED:
+			return eCommsAction.PING_ENEMY_SUSPECTED
 
 		case ePingType.LOOT:
 			return GetPingLootCommsAction( pingedEnt )

@@ -9,6 +9,7 @@ struct
 {
 	var menu
 	var titleArt
+	var subtitle
 	var versionDisplay
 	var signedInDisplay
 	#if PS4_PROG
@@ -25,24 +26,41 @@ void function InitMainMenu()
 	SetGamepadCursorEnabled( menu, false )
 
 	AddMenuEventHandler( menu, eUIEvent.MENU_SHOW, OnMainMenu_Show )
+	AddMenuEventHandler( menu, eUIEvent.MENU_CLOSE, OnMainMenu_Close )
 	AddMenuEventHandler( menu, eUIEvent.MENU_NAVIGATE_BACK, OnMainMenu_NavigateBack )
 
 	file.titleArt = Hud_GetChild( file.menu, "TitleArt" )
 	var titleArtRui = Hud_GetRui( file.titleArt )
 	RuiSetImage( titleArtRui, "basicImage", $"ui/menu/title_screen/title_art" )
 
-	file.versionDisplay = Hud_GetChild( menu, "versionDisplay" )
+	file.subtitle = Hud_GetChild( file.menu, "Subtitle" )
+	var subtitleRui = Hud_GetRui( file.subtitle )
+	RuiSetString( subtitleRui, "subtitleText", Localize( "#BATTLE_PASS_SEASON_NUMBER", 1 ).toupper() )
+
+	file.versionDisplay = Hud_GetChild( menu, "VersionDisplay" )
 	file.signedInDisplay = Hud_GetChild( menu, "SignInDisplay" )
 }
 
 
 void function OnMainMenu_Show()
 {
-	Hud_SetWidth( file.titleArt, int( Hud_GetHeight( file.titleArt ) * 1.77777778 ) ) // force aspect correct width
+	//
+	int width = int( Hud_GetHeight( file.titleArt ) * 1.77777778 )
+	Hud_SetWidth( file.titleArt, width )
+	Hud_SetWidth( file.subtitle, width )
+
 	Hud_SetText( file.versionDisplay, GetPublicGameVersion() )
 	Hud_Show( file.versionDisplay )
 
 	ActivatePanel( GetPanel( "MainMenuPanel" ) )
+
+	Chroma_MainMenu()
+}
+
+
+void function OnMainMenu_Close()
+{
+	HidePanel( GetPanel( "MainMenuPanel" ) )
 }
 
 

@@ -120,6 +120,13 @@ void function InitSocialMenu()
 	//GridPanel_SetButtonHandler( s_socialFile.friendGrid, UIE_CLICKRIGHT, FriendButton_OnInspect )
 	GridPanel_SetButtonHandler( s_socialFile.friendGrid, UIE_GET_FOCUS, FriendButton_OnGetFocus )
 
+	Hud_SetNavLeft( Hud_GetChild( s_socialFile.friendGrid, "GridButton0x0" ), s_socialFile.myGridButton )
+	Hud_SetNavLeft( Hud_GetChild( s_socialFile.friendGrid, "GridButton1x0" ), s_socialFile.partyPrivacyButton )
+	Hud_SetNavLeft( Hud_GetChild( s_socialFile.friendGrid, "GridButton2x0" ), s_socialFile.leavePartyButton )
+	#if(PC_PROG)
+		Hud_SetNavLeft( Hud_GetChild( s_socialFile.friendGrid, "GridButton5x0" ), s_socialFile.steamButton )
+	#endif
+
 	RuiSetString( s_socialFile.menuHeaderRui, "menuName", "#MENU_TITLE_FRIENDS" )
 
 	s_socialFile.pageButtons = GetPanelElementsByClassname( menu, "PaginationButton" )
@@ -207,6 +214,25 @@ void function UpdateMyFriendButton()
 	FriendButton_Init( s_socialFile.myGridButton, friend )
 }
 
+void function UpdateDpadNav()
+{
+	if( CurrentlyInParty() )
+	{
+		Hud_SetNavDown( s_socialFile.partyPrivacyButton, s_socialFile.leavePartyButton )
+		Hud_SetNavUp( s_socialFile.leavePartyButton, s_socialFile.partyPrivacyButton )
+		#if(PC_PROG)
+			Hud_SetNavUp( s_socialFile.steamButton, s_socialFile.leavePartyButton )
+			Hud_SetNavDown( s_socialFile.leavePartyButton, s_socialFile.steamButton )
+		#endif
+	}
+	else
+	{
+		#if(PC_PROG)
+			Hud_SetNavUp( s_socialFile.steamButton, s_socialFile.partyPrivacyButton )
+			Hud_SetNavDown( s_socialFile.partyPrivacyButton, s_socialFile.steamButton )
+		#endif
+	}
+}
 
 void function FriendButtonInit( var button )
 {
@@ -216,6 +242,14 @@ void function FriendButtonInit( var button )
 void function SocialMenu_OnOpen()
 {
 	RuiSetGameTime( s_socialFile.decorationRui, "initTime", Time() )
+	AddCallback_OnPartyUpdated( UpdateDpadNav )
+	UpdateDpadNav()
+
+	if ( !_IsMenuThinkActive() )
+	{
+		//
+		thread UpdateActiveMenuThink()
+	}
 }
 
 
@@ -394,6 +428,7 @@ void function BindPageButtons( int numItems, int currentPageIdx )
 void function SocialMenu_OnClose()
 {
 	RunMenuClientFunction( "ClearAllCharacterPreview" )
+	RemoveCallback_OnPartyUpdated( UpdateDpadNav )
 }
 
 
@@ -820,52 +855,36 @@ void function PreviewFriendCosmetics( bool isForLocalPlayer, CommunityUserInfo o
 
 		SendMenuGladCardPreviewString( eGladCardPreviewCommandType.NAME, 0, userInfo.name )
 
-		ItemFlavor ornull character = GetItemFlavorOrNullByGUID( userInfo.charData[ePlayerStryderCharDataArraySlots.CHARACTER], eItemType.character )
-		if ( character == null )
-			character = GetDefaultItemFlavorForLoadoutSlot( EHI_null, Loadout_CharacterClass() )
-		expect ItemFlavor( character )
+		ItemFlavor character = GetItemFlavorForCommunityUserInfo( userInfo, ePlayerStryderCharDataArraySlots.CHARACTER, eItemType.character  )
 		SendMenuGladCardPreviewCommand( eGladCardPreviewCommandType.CHARACTER, 0, character )
 
-		ItemFlavor ornull skin = GetItemFlavorOrNullByGUID( userInfo.charData[ePlayerStryderCharDataArraySlots.CHARACTER_SKIN], eItemType.character_skin )
-		if ( skin == null )
-			skin = GetDefaultItemFlavorForLoadoutSlot( EHI_null, Loadout_CharacterSkin( character ) )
-		expect ItemFlavor(skin)
+		ItemFlavor skin = GetItemFlavorForCommunityUserInfo( userInfo, ePlayerStryderCharDataArraySlots.CHARACTER_SKIN, eItemType.character_skin )
 		SendMenuGladCardPreviewCommand( eGladCardPreviewCommandType.SKIN, 0, skin )
 
 		RunClientScript( "UIToClient_PreviewCharacterSkin", ItemFlavor_GetNetworkIndex_DEPRECATED( skin ), ItemFlavor_GetNetworkIndex_DEPRECATED( character ) )
 
-		ItemFlavor ornull frame = GetItemFlavorOrNullByGUID( userInfo.charData[ePlayerStryderCharDataArraySlots.BANNER_FRAME], eItemType.gladiator_card_frame )
-		if ( frame == null )
-			frame = GetDefaultItemFlavorForLoadoutSlot( EHI_null, Loadout_GladiatorCardFrame( character ) )
-		SendMenuGladCardPreviewCommand( eGladCardPreviewCommandType.FRAME, 0, expect ItemFlavor(frame) )
+		ItemFlavor frame = GetItemFlavorForCommunityUserInfo( userInfo, ePlayerStryderCharDataArraySlots.BANNER_FRAME, eItemType.gladiator_card_frame )
+		SendMenuGladCardPreviewCommand( eGladCardPreviewCommandType.FRAME, 0, frame )
 
-		ItemFlavor ornull stance = GetItemFlavorOrNullByGUID( userInfo.charData[ePlayerStryderCharDataArraySlots.BANNER_STANCE], eItemType.gladiator_card_stance )
-		if ( stance == null )
-			stance = GetDefaultItemFlavorForLoadoutSlot( EHI_null, Loadout_GladiatorCardStance( character ) )
-		SendMenuGladCardPreviewCommand( eGladCardPreviewCommandType.STANCE, 0, expect ItemFlavor(stance) )
+		ItemFlavor stance = GetItemFlavorForCommunityUserInfo( userInfo, ePlayerStryderCharDataArraySlots.BANNER_STANCE, eItemType.gladiator_card_stance )
+		SendMenuGladCardPreviewCommand( eGladCardPreviewCommandType.STANCE, 0, stance )
 
 		for ( int badgeIndex = 0; badgeIndex < GLADIATOR_CARDS_NUM_BADGES; badgeIndex++ )
 		{
-			ItemFlavor ornull badge = GetItemFlavorOrNullByGUID( userInfo.charData[ePlayerStryderCharDataArraySlots.BANNER_BADGE1 + 2 * badgeIndex], eItemType.gladiator_card_badge )
-			if ( badge == null )
-				badge = GetDefaultItemFlavorForLoadoutSlot( EHI_null, Loadout_GladiatorCardBadge( character, badgeIndex ) )
-			int dataInteger = maxint( 0, userInfo.charData[ePlayerStryderCharDataArraySlots.BANNER_BADGE1_TIER + 2 * badgeIndex] - 2 ) // todo(dw): fix
-			SendMenuGladCardPreviewCommand( eGladCardPreviewCommandType.BADGE, badgeIndex, expect ItemFlavor( badge ), dataInteger )
+			ItemFlavor badge = GetBadgeItemFlavorForCommunityUserInfo( userInfo, character, badgeIndex )
+			int dataInteger = GetBadgeDataIntegerFromCommunityUserInfo( userInfo, badgeIndex )
+			SendMenuGladCardPreviewCommand( eGladCardPreviewCommandType.BADGE, badgeIndex, badge , dataInteger )
 		}
 
 		for ( int trackerIndex = 0; trackerIndex < GLADIATOR_CARDS_NUM_TRACKERS; trackerIndex++ )
 		{
-			ItemFlavor ornull tracker = GetItemFlavorOrNullByGUID( userInfo.charData[ePlayerStryderCharDataArraySlots.BANNER_TRACKER1 + 2 * trackerIndex], eItemType.gladiator_card_stat_tracker )
-			if ( tracker == null )
-				tracker = GetDefaultItemFlavorForLoadoutSlot( EHI_null, Loadout_GladiatorCardStatTracker( character, trackerIndex ) )
-			int dataInteger = maxint( 0, userInfo.charData[ePlayerStryderCharDataArraySlots.BANNER_TRACKER1_VALUE + 2 * trackerIndex] - 2 ) // todo(dw): fix
-			SendMenuGladCardPreviewCommand( eGladCardPreviewCommandType.TRACKER, trackerIndex, expect ItemFlavor( tracker ) )
+			ItemFlavor tracker = GetTrackerItemFlavorForCommunityUserInfo( userInfo, character, trackerIndex )
+			int dataInteger = GetTrackerDataIntegerFromCommunityUserInfo( userInfo, trackerIndex )
+			SendMenuGladCardPreviewCommand( eGladCardPreviewCommandType.TRACKER, trackerIndex, tracker )
 		}
 
-		ItemFlavor ornull introQuip = GetItemFlavorOrNullByGUID( userInfo.charData[ePlayerStryderCharDataArraySlots.CHARACTER_INTRO_QUIP], eItemType.gladiator_card_intro_quip )
-		if ( introQuip == null )
-			introQuip = GetDefaultItemFlavorForLoadoutSlot( EHI_null, Loadout_CharacterIntroQuip( character ) )
-		introQuipSoundEventName = CharacterIntroQuip_GetVoiceSoundEvent( expect ItemFlavor(introQuip) )
+		ItemFlavor introQuip = GetItemFlavorForCommunityUserInfo( userInfo, ePlayerStryderCharDataArraySlots.CHARACTER_INTRO_QUIP, eItemType.gladiator_card_intro_quip )
+		introQuipSoundEventName = CharacterIntroQuip_GetVoiceSoundEvent( introQuip )
 	}
 
 	OnThreadEnd( void function() : ( introQuipSoundEventName ) {

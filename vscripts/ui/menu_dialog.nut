@@ -500,29 +500,52 @@ void function LeaveDialog()
 	dialogData.image = $"ui/menu/common/dialog_error"
 	dialogData.darkenBackground = true
 
-	//int lobbyType = GetLobbyTypeScript()
-	if ( IsLobby() ) // && (lobbyType != eLobbyType.MATCH) ) // SOLO, PARTY_LEADER, PARTY_MEMBER, PRIVATE_MATCH
-	{
-		AddDialogButton( dialogData, "#CANCEL_NO" )
+#if(false)
 
-		if ( !PartyHasMembers() || AmIPartyLeader() )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#endif
+	{
+		//int lobbyType = GetLobbyTypeScript()
+		if ( IsLobby() ) // && (lobbyType != eLobbyType.MATCH) ) // SOLO, PARTY_LEADER, PARTY_MEMBER, PRIVATE_MATCH
 		{
-			if ( AmIPartyLeader() && PartyHasMembers() )
-				AddDialogButton( dialogData, "#YES_LEAVE_PARTY", LeaveParty )
+			AddDialogButton( dialogData, "#CANCEL_NO" )
+
+			if ( !PartyHasMembers() || AmIPartyLeader() )
+			{
+				if ( AmIPartyLeader() && PartyHasMembers() )
+					AddDialogButton( dialogData, "#YES_LEAVE_PARTY", LeaveParty )
+				else
+					AddDialogButton( dialogData, "#YES_RETURN_TO_TITLE_MENU", Disconnect )
+			}
 			else
-				AddDialogButton( dialogData, "#YES_RETURN_TO_TITLE_MENU", Disconnect )
+			{
+				Assert( PartyHasMembers() )
+				Assert( !AmIPartyLeader() )
+				AddDialogButton( dialogData, "#YES_LEAVE_PARTY", LeaveParty )
+			}
 		}
 		else
 		{
-			Assert( PartyHasMembers() )
-			Assert( !AmIPartyLeader() )
-			AddDialogButton( dialogData, "#YES_LEAVE_PARTY", LeaveParty )
+			ConfirmLeaveMatchDialog_Open()
+			return
 		}
-	}
-	else
-	{
-		ConfirmLeaveMatchDialog_Open()
-		return
 	}
 
 	OpenDialog( dialogData )

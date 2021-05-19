@@ -9,6 +9,7 @@ global function GetDevNameForZoneId
 #if CLIENT
 global function SCB_OnPlayerEntersMapZone
 global function MapZones_ZoneIntroText
+global function MapZones_GetChromaBackgroundForZoneId
 #endif
 
 #if SERVER
@@ -109,6 +110,16 @@ string function GetZoneNameForZoneId( int zoneId )
 	Assert( zoneId < GetDatatableRowCount( file.mapZonesDataTable ) )
 	string zoneName = GetDataTableString( file.mapZonesDataTable, zoneId, GetDataTableColumnByName( file.mapZonesDataTable, "zoneName" ) )
 	return zoneName
+}
+
+string function MapZones_GetChromaBackgroundForZoneId( int zoneId )
+{
+	int column = GetDataTableColumnByName( file.mapZonesDataTable, "chroma" )
+	if ( column < 0 )
+		return ""
+
+	string chroma = GetDataTableString( file.mapZonesDataTable, zoneId, column )
+	return chroma
 }
 
 int function MapZones_GetZoneIdForTriggerName( string triggerName )
@@ -397,8 +408,6 @@ void function AddToPopNotify( ZoneData zd )
 void function RemovePlayerFromCurrentZone( entity player )
 {
 	if ( player.p.currentZoneId == INVALID_ZONE_ID )
-		return
-	if ( player.p.currentZoneId == 0 )
 		return
 
 	ZoneData zd = s_zoneDatas[player.p.currentZoneId]

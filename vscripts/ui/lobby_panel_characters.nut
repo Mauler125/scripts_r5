@@ -122,6 +122,8 @@ void function JumpToStoreCharacterFromButton( var button )
 {
 	if ( button in file.buttonToCharacter )
 		JumpToStoreCharacter( file.buttonToCharacter[button] )
+
+	EmitUISound( "menu_accept" )
 }
 
 void function SetFeaturedCharacterFromButton( var button )
@@ -166,57 +168,15 @@ void function InitCharacterButtons()
 		allCharacters.append( itemFlav )
 	}
 
-	int count = allCharacters.len()
-	int rows = int( ceil( count / float( MAX_COLUMNS ) ) )
-
-	array<var> visibleButtons
-	for ( int i = 0; i < rows; i++ )
-	{
-		array<var> rowButtons = GetRowButtons( count, i )
-		visibleButtons.extend( rowButtons )
-
-		//SetNavLeftRight( rowButtons ) // TODO: dpad navigation no longer functions at all
-	}
-
-	foreach ( index, button in visibleButtons )
-		CharacterButton_Init( button, allCharacters[index] )
-
 	foreach ( button in file.buttons )
+		Hud_SetVisible( button, false )
+
+	table<int,ItemFlavor> mappingTable = GetCharacterButtonMapping( allCharacters, file.buttons.len() )
+	foreach( int buttonIndex, ItemFlavor itemFlav in mappingTable )
 	{
-		if ( !visibleButtons.contains( button ) )
-			Hud_SetVisible( button, false )
+		CharacterButton_Init( file.buttons[ buttonIndex ], itemFlav )
+		Hud_SetVisible( file.buttons[ buttonIndex ], true )
 	}
-}
-
-
-array<var> function GetRowButtons( int totalCount, int targetRow )
-{
-	array<var> rowButtons
-	if ( targetRow >= MAX_ROWS )
-		return rowButtons
-
-	int startIndex = MAX_COLUMNS * targetRow
-	int endIndex = startIndex + GetColumnCountForRow( totalCount, targetRow ) - 1
-
-	for ( int i = startIndex; i <= endIndex; i++ )
-		rowButtons.append( file.buttons[i] )
-
-	return rowButtons
-}
-
-
-int function GetColumnCountForRow( int totalCount, int targetRow )
-{
-	if ( targetRow >= MAX_ROWS )
-		return 0
-
-	int rows = int( ceil( totalCount / float( MAX_COLUMNS ) ) )
-	int cols = int( ceil( totalCount / float( rows ) ) )
-
-	if ( targetRow < rows - 1 )
-		return cols
-
-	return totalCount - (cols * targetRow)
 }
 
 
@@ -274,7 +234,8 @@ void function CharactersPanel_OnFocusChanged( var panel, var oldFocus, var newFo
 {
 	if ( !IsValid( panel ) ) // uiscript_reset
 		return
-	if ( GetParentMenu( panel ) != GetActiveMenu() )
+
+	if ( !newFocus || GetParentMenu( panel ) != GetActiveMenu() )
 		return
 
 	UpdateFooterOptions()

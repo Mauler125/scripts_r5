@@ -747,8 +747,8 @@ bool function IsWeaponKeyFieldDefined( string ref, string variable )
 
 string function GetWeaponInfoFileKeyField_GlobalString( string ref, string variable )
 {
-	// if(variable == "printName") 
-	// 	return "printName"
+	if(variable == "printName") 
+		return "printName"
 	var val = GetWeaponInfoFileKeyField_Global( ref, variable )
 	Assert( val != null, "Weapon key \"" + variable + "\" does not exist in weapon \"" + ref + "\" !" )
 	return expect string( val )
@@ -1917,23 +1917,7 @@ void function __ThrottleInternalThread( ThrottleData data, float interval )
 	data.latestFunc()
 }
 
-
-
-// Should probably expose the code function instead. But who has time to wait for that? I did make a bug: R5DEV-53700
 const float GAMMA = 2.4
-vector function SrgbToLinear( vector inputColor )
-{
-	if ( inputColor.Length() <= 0.04045 )
-		return inputColor * (1.0 / 12.92)
-
-	const float CVAL = (1.0 / (1 + 0.055))
-	inputColor.x = pow( (inputColor.x + 0.055) * CVAL, GAMMA )
-	inputColor.y = pow( (inputColor.y + 0.055) * CVAL, GAMMA )
-	inputColor.z = pow( (inputColor.z + 0.055) * CVAL, GAMMA )
-
-	return inputColor
-}
-
 
 vector function LinearToSrgb( vector inputColor )
 {

@@ -231,9 +231,18 @@ void function InitGamepadLayoutMenu()
 	AddMenuEventHandler( menu, eUIEvent.MENU_NAVIGATE_BACK, OnNavigateBackMenu )
 
 	AddMenuFooterOption( menu, LEFT, BUTTON_B, true, "#B_BUTTON_BACK", "#B_BUTTON_BACK", null, ShouldShowBackButton )
+	AddMenuFooterOption( menu, LEFT, BUTTON_X, true, "#X_BUTTON_SWAPTRIGGERS", "#SWAPTRIGGERS", SwapTriggersAndShoulders )
 	//AddMenuFooterOption( menu, LEFT, BUTTON_BACK, true, "#BACKBUTTON_RESTORE_DEFAULTS", "#RESTORE_DEFAULTS", RestoreDefaultsButton ) //ShouldShowRestoreDefaultsButton
 }
 
+void function SwapTriggersAndShoulders( var button )
+{
+	GamepadSwapShoulderAndTriggerBinds( "gamepad_custom_pilot" )
+
+	RefreshButtonBinds()
+	EmitUISound( "menu_email_sent" )
+	UpdatePresetButtons()
+}
 
 void function RegisterButtonData( int buttonEnum, string ruiArg, bool isLeft )
 {

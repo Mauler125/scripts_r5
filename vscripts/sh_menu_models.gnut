@@ -177,6 +177,8 @@ global function UIToClient_PartyMemberLoseFocus
 global function DisableModelTurn
 global function EnableModelTurn
 
+global function GetAttachmentOriginOffset
+
 #if DEV
 global function DEV_TweakPlayCamera
 global function DEV_TweakCharacterCamera

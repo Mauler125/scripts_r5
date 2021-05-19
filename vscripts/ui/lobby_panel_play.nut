@@ -94,7 +94,6 @@ void function InitPlayPanel( var panel )
 	SetPanelInputHandler( panel, BUTTON_Y, ReadyShortcut_OnActivate )
 
 	file.fillButton = Hud_GetChild( panel, "FillButton" )
-	Hud_SetVisible( file.fillButton, GetCurrentPlaylistVarBool( "enable_teamNoFill", false ) )
 	Hud_AddEventHandler( file.fillButton, UIE_CLICK, FillButton_OnActivate )
 
 	file.modeButton = Hud_GetChild( panel, "ModeButton" )
@@ -125,6 +124,8 @@ void function InitPlayPanel( var panel )
 	Hud_AddEventHandler( file.openLootBoxButton, UIE_CLICK, OpenLootBoxButton_OnActivate )
 
 	AddMenuVarChangeHandler( "isMatchmaking", UpdateLobbyButtons )
+
+	UpdateFillButtonVisibility();
 
 	file.chatBox = Hud_GetChild( panel, "ChatRoomTextChat" )
 	file.hdTextureProgress = Hud_GetChild( panel, "HDTextureProgress" )
@@ -210,6 +211,24 @@ void function UpdateHDTextureProgress()
 	}
 }
 
+void function UpdateFillButtonVisibility()
+{
+	if( GetCurrentPlaylistVarBool( "enable_teamNoFill", false ) )
+	{
+		Hud_SetVisible( file.fillButton, true )
+		Hud_SetNavUp( file.modeButton, file.fillButton )
+		Hud_SetNavDown( file.inviteFriendsButton0, file.fillButton )
+		Hud_SetNavLeft( file.inviteFriendsButton0, file.fillButton )
+	}
+	else
+	{
+		Hud_SetVisible( file.fillButton, false )
+		Hud_SetNavUp( file.modeButton, file.inviteFriendsButton0 )
+		Hud_SetNavDown( file.inviteFriendsButton0, file.modeButton )
+		Hud_SetNavLeft( file.inviteFriendsButton0, file.modeButton )
+	}
+}
+
 bool function ShowDownloadCompleteDialog()
 {
 	if ( GetGameFullyInstalledProgress() != 1 )
@@ -226,7 +245,7 @@ bool function ShowDownloadCompleteDialog()
 
 	if ( GetPersistentVar( "showGameSummary" ) && IsPostGameMenuValid( true ) )
 		return false
-
+		
 	return true
 }
 
@@ -388,6 +407,21 @@ void function UpdateFriendButtons()
 	ToolTipData toolTipData
 	toolTipData.titleText = "#INVITE"
 	toolTipData.descText = "#INVITE_HINT"
+
+	entity player = GetUIPlayer()
+	if ( IsLocalClientEHIValid() && IsValid( player ) )
+	{
+		bool hasPremiumPass = false
+		ItemFlavor ornull activeBattlePass = GetPlayerActiveBattlePass( ToEHI( player ) )
+		bool hasActiveBattlePass           = activeBattlePass != null
+		if ( hasActiveBattlePass )
+		{
+			expect ItemFlavor( activeBattlePass )
+			hasPremiumPass = DoesPlayerOwnBattlePass( player, activeBattlePass )
+			if ( hasPremiumPass )
+				toolTipData.descText = Localize( "#INVITE_HINT_BP", GetPlayerBattlePassXPBoostPercent( ToEHI( player ), activeBattlePass ) )
+		}
+	}
 
 	#if PC_PROG
 		if ( !Origin_IsOverlayAvailable() && !GetCurrentPlaylistVarBool( "social_menu_enabled", true ) )
@@ -811,18 +845,21 @@ void function UpdateLootBoxButton( var button )
 	string buttonText
 	string descText
 	int lootBoxCount
+	int nextRarity
 
 	if ( GRX_IsInventoryReady() )
 	{
 		lootBoxCount = GRX_GetTotalPackCount()
 		buttonText = lootBoxCount == 1 ? "#LOOT_BOX" : "#LOOT_BOXES"
 		descText = "#LOOT_REMAINING"
+		nextRarity = GetNextLootBoxRarity()
 	}
 	else
 	{
 		lootBoxCount = 0
 		buttonText = "#LOOT_BOXES"
 		descText = "#UNAVAILABLE"
+		nextRarity = -1
 	}
 
 	HudElem_SetRuiArg( button, "bigText", string( lootBoxCount ) )
@@ -830,6 +867,7 @@ void function UpdateLootBoxButton( var button )
 	HudElem_SetRuiArg( button, "descText", descText )
 	HudElem_SetRuiArg( button, "lootBoxCount", lootBoxCount )
 	HudElem_SetRuiArg( button, "badLuckProtectionActive", GRX_IsBadLuckProtectionActive() )
+	HudElem_SetRuiArg( button, "descTextRarity", nextRarity )
 
 	Hud_SetLocked( button, lootBoxCount == 0 )
 }

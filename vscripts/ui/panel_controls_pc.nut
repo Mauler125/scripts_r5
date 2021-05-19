@@ -87,6 +87,8 @@ void function OnControlsPCPanel_Hide( var panel )
 
 	SaveSettingsConVars( file.conVarDataList )
 	SavePlayerSettings()
+
+	RunClientScript( "UpdateWeaponStatusOnBindingChange" )
 }
 
 

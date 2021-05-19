@@ -122,7 +122,9 @@ void function UpdateSystemPanel( var panel )
 		SetCursorPosition( <1920.0 * 0.5, 1080.0 * 0.5, 0> )
 
 		SetButtonData( panel, buttonIndex++, file.settingsButtonData[ panel ] )
-		SetButtonData( panel, buttonIndex++, file.leaveMatchButtonData[ panel ] )
+		{
+			SetButtonData( panel, buttonIndex++, file.leaveMatchButtonData[ panel ] )
+		}
 	}
 	else
 	{
@@ -132,6 +134,20 @@ void function UpdateSystemPanel( var panel )
 		#if PC_PROG
 			SetButtonData( panel, buttonIndex++, file.exitButtonData[ panel ] )
 		#endif
+	}
+
+	const int maxNumButtons = 4;
+	for( int i = 0; i < maxNumButtons; i++ )
+	{
+		if( i > 0 && i < buttonIndex)
+			Hud_SetNavUp( file.buttons[ panel ][i], file.buttons[ panel ][i - 1] )
+		else
+			Hud_SetNavUp( file.buttons[ panel ][i], null )
+
+		if( i < (buttonIndex - 1) )
+			Hud_SetNavDown( file.buttons[ panel ][i], file.buttons[ panel ][i + 1] )
+		else
+			Hud_SetNavDown( file.buttons[ panel ][i], null )
 	}
 }
 

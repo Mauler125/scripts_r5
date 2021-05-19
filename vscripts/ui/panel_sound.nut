@@ -32,7 +32,6 @@ void function InitSoundPanel( var panel )
 	SetupSettingsButton( Hud_GetChild( Hud_GetChild( contentPanel, "SldSFXVolume" ), "BtnDropButton" ), "#MENU_SFX_VOLUME_CLASSIC", "#OPTIONS_MENU_SFX_VOLUME_DESC", $"rui/menu/settings/settings_audio" )
 	SetupSettingsButton( Hud_GetChild( Hud_GetChild( contentPanel, "SldMusicVolume" ), "BtnDropButton" ), "#MENU_MUSIC_VOLUME_CLASSIC", "#OPTIONS_MENU_MUSIC_VOLUME_DESC", $"rui/menu/settings/settings_audio" )
 	SetupSettingsButton( Hud_GetChild( Hud_GetChild( contentPanel, "SldLobbyMusicVolume" ), "BtnDropButton" ), "#MENU_LOBBY_MUSIC_VOLUME", "#OPTIONS_MENU_LOBBY_MUSIC_VOLUME_DESC", $"rui/menu/settings/settings_audio" )
-	SetupSettingsButton( Hud_GetChild( contentPanel, "SwchSubtitles" ), "#SUBTITLES", "#OPTIONS_MENU_SUBTITLES_DESC", $"rui/menu/settings/settings_audio" )
 	SetupSettingsButton( Hud_GetChild( contentPanel, "SwchChatSpeechToText" ), "#MENU_CHAT_SPEECH_TO_TEXT", "#OPTIONS_MENU_CHAT_SPEECH_TO_TEXT_DESC", $"rui/menu/settings/settings_audio" )
 	Hud_SetVisible( Hud_GetChild( contentPanel, "SwchChatSpeechToText" ), IsAccessibilityAvailable() )
 	#if PC_PROG

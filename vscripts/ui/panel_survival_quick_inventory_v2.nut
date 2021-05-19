@@ -6,6 +6,8 @@ global function InitSystemInventoryPanel
 global function InitLegendPanelInventory
 
 global function SurvivalGroundItem_SetGroundItemCount
+global function SurvivalGroundItem_SetGroundItemHeader
+global function SurvivalGroundItem_IsHeader
 
 global function SurvivalQuickInventory_OnUpdate
 
@@ -20,6 +22,7 @@ global function SurvivalQuickInventory_MarkInventoryButtonUsed
 global function SurvivalQuickInventory_MarkInventoryButtonPinged
 global function SurvivalQuickInventory_UpdateEquipmentForActiveWeapon
 
+global function GetGroundItemDef
 global function GetGroundItemCount
 global function Survival_CommonButtonInit
 global function GetInventoryItemCount
@@ -66,6 +69,8 @@ struct
 	bool compactModeEnabled = false
 
 	int 		groundItemCount = 0
+
+	array<bool>	groundItemHeaders = []
 
 	table< string, var > equipmentButtons = {}
 
@@ -195,7 +200,7 @@ void function InitInventoryFooter( var panel )
 
 	AddPanelFooterOption( panel, LEFT, BUTTON_B, true, "#B_BUTTON_BACK", "#B_BUTTON_BACK" )
 	AddPanelFooterOption( panel, RIGHT, BUTTON_START, true, "#HINT_SYSTEM_MENU_GAMEPAD", "#HINT_SYSTEM_MENU_KB", TryOpenSystemMenu )
-	AddPanelFooterOption( panel, RIGHT, BUTTON_DPAD_UP, false, "#UP_BUTTON_CHARACTER_CHANGE", "#UP_BUTTON_CHARACTER_CHANGE", TryChangeCharacters, ShowChangeCharactersOption )
+	AddPanelFooterOption( panel, RIGHT, BUTTON_DPAD_UP, true, "#UP_BUTTON_CHARACTER_CHANGE", "#UP_BUTTON_CHARACTER_CHANGE", TryChangeCharacters, ShowChangeCharactersOption )
 
 	#if DEV
 		AddPanelFooterOption( panel, LEFT, BUTTON_DPAD_DOWN, true, "#DOWN_BUTTON_DEV_MENU", "#DEV_MENU", OpenDevMenu )
@@ -508,6 +513,8 @@ void function ScaleButton( string equipmentSlot, float scale )
 void function SurvivalGroundItem_SetGroundItemCount( int count )
 {
 	file.groundItemCount = count
+	file.groundItemHeaders = []
+	file.groundItemHeaders.resize( count, false )
 }
 
 int function GetGroundItemCount( var panel )
@@ -515,6 +522,29 @@ int function GetGroundItemCount( var panel )
 	return file.groundItemCount
 }
 
+void function SurvivalGroundItem_SetGroundItemHeader( int index, bool isHeader )
+{
+	file.groundItemHeaders[index] = isHeader
+}
+
+ListPanelListDef function GetGroundItemDef( var panel )
+{
+	ListPanelListDef def
+	def.itemCount = file.groundItemCount
+	def.itemHeights.resize( def.itemCount, 1.0 )
+
+	for( int index = 0; index < def.itemCount; index++ )
+	{
+		def.itemHeights[index] = SurvivalGroundItem_IsHeader( index ) ? 0.5 : 1.0
+	}
+
+	return def
+}
+
+bool function SurvivalGroundItem_IsHeader( int index )
+{
+	return file.groundItemHeaders[index]
+}
 
 void function SurvivalQuickInventory_SetClientUpdateLootTooltipData( var button, bool isMainWeapon )
 {
@@ -568,6 +598,9 @@ void function OnBackpackItemClick( var panel, var button, int index )
 void function OnBackpackItemClickAction( var panel, var button, int index )
 {
 	EmitUISound( "UI_InGame_Inventory_Select" )
+
+	if ( !IsFullyConnected() )
+		return
 
 	RunClientScript( "UICallback_OnInventoryButtonAction", button, index )
 }

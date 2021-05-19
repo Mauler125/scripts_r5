@@ -235,8 +235,6 @@ global enum eDamageSourceId
 	//rocketstrike
 	//orbitallaser
 	//explosion
-
-	mp_weapon_arc_launcher
 }
 
 //When adding new mods, they need to be added below and to persistent_player_data_version_N.pdef in r1/cfg/server.

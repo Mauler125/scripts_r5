@@ -244,9 +244,12 @@ void function RegisterPageChangeInput()
 
 	RegisterButtonPressedCallback( BUTTON_SHOULDER_LEFT, Page_NavLeft )
 	RegisterButtonPressedCallback( BUTTON_DPAD_LEFT, Page_NavLeft )
+	RegisterButtonPressedCallback( KEY_LEFT, Page_NavLeft )
 
 	RegisterButtonPressedCallback( BUTTON_SHOULDER_RIGHT, Page_NavRight )
 	RegisterButtonPressedCallback( BUTTON_DPAD_RIGHT, Page_NavRight )
+	RegisterButtonPressedCallback( KEY_RIGHT, Page_NavRight )
+
 
 	file.pageChangeInputsRegistered = true
 
@@ -261,9 +264,11 @@ void function DeregisterPageChangeInput()
 
 	DeregisterButtonPressedCallback( BUTTON_SHOULDER_LEFT, Page_NavLeft )
 	DeregisterButtonPressedCallback( BUTTON_DPAD_LEFT, Page_NavLeft )
+	DeregisterButtonPressedCallback( KEY_LEFT, Page_NavLeft )
 
 	DeregisterButtonPressedCallback( BUTTON_SHOULDER_RIGHT, Page_NavRight )
 	DeregisterButtonPressedCallback( BUTTON_DPAD_RIGHT, Page_NavRight )
+	DeregisterButtonPressedCallback( KEY_RIGHT, Page_NavRight )
 
 	file.pageChangeInputsRegistered = false
 }

@@ -32,6 +32,7 @@ struct
 	table<var, string> buttonTitles
 	table<var, string> buttonDescriptions
 	table<var, asset>  buttonImages
+	table<var, bool>   additionalWidget
 	var                detailsPanel
 	var				   panel
 
@@ -165,12 +166,13 @@ void function SettingsPanel_NavigateToSavedSelection()
 }
 
 
-var function SetupSettingsButton( var button, string buttonText, string description, asset image )
+var function SetupSettingsButton( var button, string buttonText, string description, asset image, bool showAdditional = false )
 {
 	SetButtonRuiText( button, buttonText )
 	file.buttonTitles[ button ] <- buttonText
 	file.buttonDescriptions[ button ] <- description
 	file.buttonImages[ button ] <- image
+	file.additionalWidget[ button ] <- showAdditional
 
 	if ( Hud_HasChild( button, "RightButton" ) )
 	{
@@ -180,6 +182,7 @@ var function SetupSettingsButton( var button, string buttonText, string descript
 		file.buttonTitles[ childButton ] <- buttonText
 		file.buttonDescriptions[ childButton ] <- description
 		file.buttonImages[ childButton ] <- image
+		file.additionalWidget[ childButton ] <- showAdditional
 	}
 	if ( Hud_HasChild( button, "LeftButton" ) )
 	{
@@ -189,6 +192,7 @@ var function SetupSettingsButton( var button, string buttonText, string descript
 		file.buttonTitles[ childButton ] <- buttonText
 		file.buttonDescriptions[ childButton ] <- description
 		file.buttonImages[ childButton ] <- image
+		file.additionalWidget[ childButton ] <- showAdditional
 	}
 
 	AddButtonEventHandler( button, UIE_GET_FOCUS, SettingsButton_GetFocus )
@@ -209,6 +213,9 @@ void function SettingsButton_GetFocus( var button )
 	RuiSetArg( rui, "selectionText", file.buttonTitles[ button ] )
 	RuiSetArg( rui, "descText", file.buttonDescriptions[ button ] )
 	RuiSetAsset( rui, "detailImage", file.buttonImages[ button ] )
+	RuiSetBool( rui, "showCbInfo", file.additionalWidget[ button ] )
+
+	ScrollPanel_ScrollIntoView( file.panel )
 }
 
 
@@ -220,6 +227,7 @@ void function SettingsButton_LoseFocus( var button )
 	RuiSetArg( rui, "selectionText", "" )
 	RuiSetArg( rui, "descText", "" )
 	RuiSetAsset( rui, "detailImage", SettingsPanel_GetDefaultImageForIndex( tabData.tabIndex ) )
+	RuiSetBool( rui, "showCbInfo", false )
 }
 
 

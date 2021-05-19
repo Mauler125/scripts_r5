@@ -168,16 +168,13 @@ global SvGlobals svGlobal
 void function CodeCallback_MapSpawn() // original script entry point
 {
 	ShWeapons_LevelInit()
-	//seterrorhandler(void function() {})
+	seterrorhandler(void function() {})
 	ScriptCompilerTest()
 	LoadDiamond()
 
 	_cc = CreateEntity( "point_clientcommand" )
 	_sc = CreateEntity( "point_servercommand" )
 	PrecacheEntity( "env_entity_dissolver" )
-
-	FlagInit("EntitiesDidLoad")
-	svGlobal.levelEnt = GetEnt( "worldspawn" )
 
 	LevelVarInit()
 
@@ -189,20 +186,14 @@ void function CodeCallback_MapSpawn() // original script entry point
 	PrecacheModel( $"mdl/error.rmdl" ) // model used when no model is provided
 
 	PrecacheModel( $"mdl/weapons/arms/pov_pilot_heavy_pathfinder.rmdl" )
-    PrecacheModel( $"mdl/humans/class/heavy/pilot_heavy_pathfinder.rmdl" )
+	PrecacheModel( $"mdl/humans/class/heavy/pilot_heavy_pathfinder.rmdl" )
 
-    PrecacheWeapon( $"mp_weapon_sniper" )
     PrecacheWeapon( $"mp_weapon_alternator_smg" )
+	PrecacheWeapon( $"mp_weapon_softball" )
     PrecacheWeapon( $"mp_weapon_wraith_kunai_primary" )
     PrecacheWeapon( $"mp_ability_grapple" )
-	PrecacheWeapon( $"mp_weapon_deployable_medic" )
-	PrecacheWeapon( $"mp_ability_gibraltar_shield" )
-	PrecacheWeapon( $"mp_weapon_bubble_bunker" )
-	PrecacheWeapon( $"mp_ability_holopilot" )
-	PrecacheWeapon( $"mp_ability_phase_walk")
-	PrecacheWeapon( $"mp_ability_hunt_mode")
+	PrecacheWeapon( $"mp_ability_phase_walk" )
 
-	RegisterSignal("forever")
 	printl( "Code Script: _mapspawn" )
 
 	//SPMP_MapSpawn_Init() // naw actually dont lol

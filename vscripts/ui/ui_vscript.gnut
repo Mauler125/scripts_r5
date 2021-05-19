@@ -110,8 +110,10 @@ global struct MenuDef
 	void functionref()             closeFunc
 	void functionref()             showFunc
 	void functionref()             hideFunc
+	void functionref()             getTopLevelFunc
+	void functionref()             loseTopLevelFunc
 	void functionref()             navBackFunc
-	//void functionref()      tabChangedFunc
+	//void functionref()             tabChangedFunc
 	void functionref()             inputModeChangedFunc
 	array<void functionref( var )> thinkFuncs
 
@@ -124,6 +126,7 @@ global struct MenuDef
 	bool hasTabs = false
 
 	bool        isDialog = false
+	bool        isPopup = false
 	DialogData& dialogData
 	bool        isDynamicHeight = false
 	bool        gamepadCursorEnabled = true

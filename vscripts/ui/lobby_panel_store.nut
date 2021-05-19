@@ -283,6 +283,9 @@ void function UpdateLootTickTabNewness()
 	int packCount = GRX_GetTotalPackCount()
 }
 
+
+
+
 /*
 ██╗   ██╗██╗██████╗ ████████╗██╗   ██╗ █████╗ ██╗          ██████╗██╗   ██╗██████╗ ███████╗███╗   ██╗ ██████╗██╗   ██╗
 ██║   ██║██║██╔══██╗╚══██╔══╝██║   ██║██╔══██╗██║         ██╔════╝██║   ██║██╔══██╗██╔════╝████╗  ██║██╔════╝╚██╗ ██╔╝
@@ -519,6 +522,7 @@ asset function GetVCPackImage( int vcPackIndex )
 	return s_vc.vcPacks[vcPackIndex].image
 }
 
+
 /*
  ██████╗██╗  ██╗ █████╗ ██████╗  █████╗  ██████╗████████╗███████╗██████╗ 
 ██╔════╝██║  ██║██╔══██╗██╔══██╗██╔══██╗██╔════╝╚══██╔══╝██╔════╝██╔══██╗
@@ -527,6 +531,7 @@ asset function GetVCPackImage( int vcPackIndex )
 ╚██████╗██║  ██║██║  ██║██║  ██║██║  ██║╚██████╗   ██║   ███████╗██║  ██║
  ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝   ╚═╝   ╚══════╝╚═╝  ╚═╝
 */
+
 
 void function InitStoreCharactersPanel( var panel )
 {
@@ -765,6 +770,7 @@ void function CharacterButton_OnGetFocus( var button )
 	RunClientScript( "UIToClient_PreviewCharacterSkin", ItemFlavor_GetNetworkIndex_DEPRECATED( characterSkin ), ItemFlavor_GetNetworkIndex_DEPRECATED( character ) )
 }
 
+
 /*
 ██╗      ██████╗  ██████╗ ████████╗    ████████╗██╗ ██████╗██╗  ██╗
 ██║     ██╔═══██╗██╔═══██╗╚══██╔══╝    ╚══██╔══╝██║██╔════╝██║ ██╔╝
@@ -938,6 +944,8 @@ void function OnLootTickPurchaseResult( bool wasSuccessful )
 	}
 }
 
+
+
 /*
 ███████╗ ██████╗    ███████╗██╗  ██╗ ██████╗ ██████╗ 
 ██╔════╝██╔════╝    ██╔════╝██║  ██║██╔═══██╗██╔══██╗
@@ -1037,8 +1045,7 @@ void function InitOffers()
 	int featuredWidth = 0
 
 	int exclusiveWidth = 0
-	int exclusiveX
-
+	int exclusiveX	   = 0
 
 	var dataTable = GetDataTable( $"datatable/seasonal_store_data.rpak" )
 	for ( int i = 0; i < GetDatatableRowCount( dataTable ); i++ )
@@ -1061,6 +1068,9 @@ void function InitOffers()
 		s_offers.seasonalDataMap[seasonTag] <- seasonalStoreData
 	}
 	//array<int> fakeOfferCounts = [2, 1, 0, 2, 2]
+
+	int featuredColumns = 0
+	int exclusiveColumns = 0
 
 	for ( int col = 0; col < 5; col++ )
 	{
@@ -1097,6 +1107,11 @@ void function InitOffers()
 			if ( featuredWidth != 0 && exclusiveX == 0 )
 			{
 				exclusiveX = totalWidth + Hud_GetX( s_offers.fullOfferButtons[col] )
+				exclusiveColumns++
+			}
+			else
+			{
+				featuredColumns++
 			}
 
 			Hud_ReturnToBaseSize( s_offers.fullOfferButtons[col] )
@@ -1117,6 +1132,11 @@ void function InitOffers()
 			if ( featuredWidth != 0 && exclusiveX == 0 )
 			{
 				exclusiveX = totalWidth + Hud_GetX( s_offers.fullOfferButtons[col] )
+				exclusiveColumns++
+			}
+			else
+			{
+				featuredColumns++
 			}
 
 			Hud_ReturnToBaseSize( s_offers.fullOfferButtons[col] )
@@ -1144,6 +1164,7 @@ void function InitOffers()
 
 	Hud_SetX( s_offers.exclusiveHeader, exclusiveX )
 	Hud_SetWidth( s_offers.exclusiveHeader, exclusiveWidth > 0 ? exclusiveWidth : totalWidth - exclusiveX )
+	Hud_SetVisible( s_offers.exclusiveHeader, exclusiveColumns > 0 )
 }
 
 

@@ -79,6 +79,10 @@ global function GladiatorCardCharacterSkin_ShouldHideIfLocked
 global function GladiatorCardWeaponSkin_ShouldHideIfLocked
 #endif
 
+#if CLIENT || UI
+global function GladiatorCardStatTracker_GetColor0
+#endif
+
 #if CLIENT // todo(dw): temp
 global function GladiatorCardBadge_HasOwnRUI
 global function ShGladiatorCards_OnDevnetBugScreenshot
@@ -2979,6 +2983,24 @@ string function GladiatorCardStatTracker_GetValueSuffix( ItemFlavor flavor )
 }
 #endif
 
+#if SERVER || CLIENT || UI
+asset function GladiatorCardStatTracker_GetBackgroundImage( ItemFlavor flavor )
+{
+	Assert( ItemFlavor_GetType( flavor ) == eItemType.gladiator_card_stat_tracker )
+
+	return GetGlobalSettingsAsset( ItemFlavor_GetAsset( flavor ), "backgroundImage" )
+}
+#endif
+
+
+#if SERVER || CLIENT || UI
+vector function GladiatorCardStatTracker_GetColor0( ItemFlavor flavor )
+{
+	Assert( ItemFlavor_GetType( flavor ) == eItemType.gladiator_card_stat_tracker )
+
+	return GetGlobalSettingsVector( ItemFlavor_GetAsset( flavor ), "color0" )
+}
+#endif
 
 #if SERVER || CLIENT || UI
 string function GladiatorCardStatTracker_GetFormattedValueText( entity player, ItemFlavor character, ItemFlavor flavor )
