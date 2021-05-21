@@ -6,8 +6,8 @@ global function WeaponReactiveKillTracking_GetKillsForPlayerWithWeapon
 global function SCB_UpdatePlayerWeaponReactiveEffects
 global function WeaponReactiveKillEffects_ClearAllFX
 
-#if(false)
-
+#if SERVER
+// TODO: Recover server function
 #endif
 
 const bool WEAPON_REACTIVE_EFFECTS_PRINTS = true
@@ -30,7 +30,7 @@ struct WeaponReactiveKillActiveFXGroup
 }
 
 
-#if(false)
+#if SERVER
 
 
 
@@ -49,18 +49,18 @@ struct
 
 void function WeaponReactiveEffects_Init()
 {
-	#if(false)
+	#if SERVER
 
 
 
-#endif
+	#endif
 }
 
 void function OnWeaponActivate_ReactiveKillEffects( entity weapon )
 {
-	#if(false)
+	#if SERVER
 
-#endif
+	#endif
 }
 
 void function OnWeaponDeactivate_ReactiveKillEffects( entity weapon )
@@ -68,7 +68,7 @@ void function OnWeaponDeactivate_ReactiveKillEffects( entity weapon )
 	WeaponReactiveKillEffects_ClearAllFX( weapon )
 }
 
-#if(false)
+#if SERVER
 
 
 
@@ -86,13 +86,13 @@ void function WeaponReactiveKillTracking_InitForWeapon( entity weapon )
 
 	int numKills = WeaponReactiveKillTracking_GetKillsForPlayerWithWeapon( player, weapon )
 
-	#if(false)
+	#if SERVER
 
 
 
 
 
-#endif
+	#endif
 
 	UpdatePlayerWeaponReactiveEffects( weapon, eReactiveEffectUpdateType.INIT )
 }
@@ -130,117 +130,16 @@ int function WeaponReactiveKillTracking_GetKillsForPlayerWithWeapon( entity play
 
 	ItemFlavor weaponSkin = GetItemFlavorByNetworkIndex_DEPRECATED( weapon.GetGrade() )
 
-	#if(false)
+	#if SERVER
 
-#elseif(CLIENT)
+	#elseif CLIENT
 		return weapon.GetProScreenIntValForIndex( PRO_SCREEN_IDX_MATCH_KILLS )
 	#endif
 }
 
-#if(false)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//
-
-
-
-
-
-
-
-
-
-
-
-
-//
-
-
-
-
-
-
-
-
-
-
-
-
-
-//
-
-
-
-
-
-
-
-
-
-//
-
-
-
-//
-
-
-
-
-//
-
-
-
-
-
-
-
-
-
-
-
-#endif //
+#if SERVER
+// TODO: Recover server function
+#endif // SERVER
 
 void function SCB_UpdatePlayerWeaponReactiveEffects( entity weapon, int updateType )
 {
@@ -294,10 +193,10 @@ void function UpdatePlayerWeaponReactiveEffects( entity weapon, int updateType )
 		WeaponReactiveKillEffects_PlayOneShotSounds( weapon, weaponSkin, oneShotEffectsLevel )
 	}
 
-	#if(false)
-//
+	#if SERVER
+	//
 
-#endif
+	#endif
 }
 
 void function WeaponReactiveKillEffects_PlayOneShotSounds( entity weapon, ItemFlavor weaponSkin, int reactiveKillLevel )
@@ -312,7 +211,7 @@ void function WeaponReactiveKillEffects_PlayOneShotSounds( entity weapon, ItemFl
 
 	weapon.EmitWeaponSound_1p3p( sound1p, sound3p )
 
-	#if(true)
+	#if(true) // TODO: Figure out the real directive for this
 		printt( "playing one-shot sounds", sound1p, sound3p )
 	#endif
 }
@@ -329,7 +228,7 @@ void function WeaponReactiveKillEffects_PlayPersistentSounds( entity weapon, Ite
 
 	weapon.EmitWeaponSound_1p3p( sound1p, sound3p )
 
-	#if(true)
+	#if(true) // TODO: Figure out the real directive for this
 		printt( "playing persistent sounds", sound1p, sound3p )
 	#endif
 }
@@ -353,7 +252,7 @@ void function WeaponReactiveKillEffects_StopPersistentSounds( entity weapon, Ite
 		if ( sound3p != "" )
 			weapon.StopWeaponSound( sound3p )
 
-		#if(true)
+		#if(true) // TODO: Figure out the real directive for this
 			printt( "stopping persistent sound(s)", sound1p, sound3p )
 		#endif
 	}
@@ -370,7 +269,7 @@ void function WeaponReactiveKillEffects_PlayOneShotFx( entity weapon, ItemFlavor
 
 		weapon.PlayWeaponEffect( fx1p, fx3p, attachmentName )
 
-		#if(true)
+		#if(true) // TODO: Figure out the real directive for this
 			printt( "playing flash FX", fx1p, fx3p, attachmentName )
 		#endif
 
@@ -389,7 +288,7 @@ void function WeaponReactiveKillEffects_PlayPersistentFX( entity weapon, ItemFla
 
 		weapon.PlayWeaponEffect( fx1p, fx3p, attachmentName )
 
-		#if(true)
+		#if(true) // TODO: Figure out the real directive for this
 			printt( "playing persistent FX", fx1p, fx3p, attachmentName )
 		#endif
 
@@ -416,7 +315,7 @@ void function WeaponReactiveKillEffects_ClearPersistentFX( entity weapon )
 	{
 		if ( fxGroup.isPersistent )
 		{
-			#if(true)
+			#if(true) // TODO: Figure out the real directive for this
 				printt( "removing effect", fxGroup.fx1p, fxGroup.fx3p )
 			#endif
 
@@ -434,7 +333,7 @@ void function WeaponReactiveKillEffects_ClearAllFX( entity weapon )
 {
 	foreach ( int idx, fxGroup in file.activeReactiveKillFX )
 	{
-		#if(true)
+		#if(true) // TODO: Figure out the real directive for this
 			printt( "removing effect", fxGroup.fx1p, fxGroup.fx3p )
 		#endif
 
