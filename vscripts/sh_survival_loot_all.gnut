@@ -191,6 +191,7 @@ void function SURVIVAL_Loot_All_InitShared()
 		data.lootType = SURVIVAL_Loot_GetLootTypeFromString( lootType )
 		data.netInt = GetDataTableString( dataTable, i, GetDataTableColumnByName( dataTable, "netInt" ) )
 		data.inventorySlotCount = GetDataTableInt( dataTable, i, GetDataTableColumnByName( dataTable, "inventorySlotCount" ) )
+		printt("  ", data.ref, data.netInt, data.lootType, lootType)
 
 		#if (SERVER || CLIENT)
 			data.minInWorld = GetDataTableFloat( dataTable, i, GetDataTableColumnByName( dataTable, "minInWorld" ) )
@@ -219,11 +220,12 @@ void function SURVIVAL_Loot_All_InitShared()
 		{
 			case eLootType.MAINWEAPON:
 				RegisterWeaponForUse( data.baseWeapon )
-				data.model = $"mdl/weapons/vinson/w_vinson.rmdl" // GetWeaponInfoFileKeyFieldAsset_Global( data.baseWeapon, "playermodel" )
-				if ( false && GetWeaponInfoFileKeyField_Global( data.baseWeapon, "ammo_pool_type" ) != null )
-					data.ammoType = "highcal"//GetWeaponInfoFileKeyField_GlobalString( data.baseWeapon, "ammo_pool_type" )
+				//PrecacheWeapon( data.baseWeapon )
+				data.model = GetWeaponInfoFileKeyFieldAsset_Global( data.baseWeapon, "playermodel" )
+				if ( GetWeaponInfoFileKeyField_Global( data.baseWeapon, "ammo_pool_type" ) != null )
+					data.ammoType = GetWeaponInfoFileKeyField_GlobalString( data.baseWeapon, "ammo_pool_type" )
 				else
-					data.ammoType = "highcal"
+					data.ammoType = ""
 
 				if ( data.fakeAmmoIcon != "" )
 				{
@@ -252,9 +254,9 @@ void function SURVIVAL_Loot_All_InitShared()
 
 			case eLootType.ORDNANCE:
 				RegisterWeaponForUse( data.baseWeapon )
-				data.pickupString = "#WPN_VINSON"//GetWeaponInfoFileKeyField_GlobalString( data.baseWeapon, "printName" )
-				data.desc = "#WPN_VINSON"//GetWeaponInfoFileKeyField_GlobalString( data.baseWeapon, "description" )
-				data.hudIcon = $"rui/weapon_icons/r5/weapon_flatline"//GetWeaponInfoFileKeyFieldAsset_Global( data.baseWeapon, "hud_icon" )
+				data.pickupString = GetWeaponInfoFileKeyField_GlobalString( data.baseWeapon, "printName" )
+				data.desc = GetWeaponInfoFileKeyField_GlobalString( data.baseWeapon, "description" )
+				data.hudIcon = GetWeaponInfoFileKeyFieldAsset_Global( data.baseWeapon, "hud_icon" )
 				break
 
 			case eLootType.ATTACHMENT:

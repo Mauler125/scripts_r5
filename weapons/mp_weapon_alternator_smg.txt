@@ -32,6 +32,8 @@ WeaponData
 	"playermodel" 									"mdl/weapons/alternator_smg/w_alternator_smg.rmdl"
 	"holster_type"									"rifle"
 
+	"chroma_color"									".9 1 .2"
+
 	"alt_fire_anim_count"							"1"
 
 	"sound_dryfire"									"hemlok_dryfire"

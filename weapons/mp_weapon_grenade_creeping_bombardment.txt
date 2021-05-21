@@ -31,7 +31,7 @@ WeaponData
 
 	"OnWeaponTossReleaseAnimEvent"					"OnWeaponTossReleaseAnimEvent_WeaponCreepingBombardment"
 	"OnWeaponTossPrep"								"Grenade_OnWeaponTossPrep"
-	"OnWeaponDeactivate"							"Grenade_OnWeaponDeactivate"
+	"OnWeaponDeactivate"							"OnWeaponDeactivate_WeaponCreepingBombardment"
 	"OnProjectileCollision"							"OnProjectileCollision_WeaponCreepingBombardment"
 	"OnWeaponReadyToFire"                           "OnWeaponReadyToFire_WeaponCreepingBombardment"
 

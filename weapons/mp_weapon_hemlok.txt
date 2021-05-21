@@ -31,6 +31,8 @@ WeaponData
 	"viewmodel"   									"mdl/weapons/m1a1_hemlok/ptpov_hemlok.rmdl"
 	"playermodel" 									"mdl/weapons/m1a1_hemlok/w_hemlok.rmdl"
 
+	"chroma_color"									".8 1 .6"
+
 	"sound_dryfire"									"hemlok_dryfire"
 	"sound_pickup"									"wpn_pickup_Rifle_1P"
 	"sound_trigger_pull"							"Weapon_Hemlok_Trigger"

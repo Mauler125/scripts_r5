@@ -90,6 +90,8 @@ WeaponData
 	"fx_muzzle_flash_world"							"wpn_muzzleflash_lmg"
 	"fx_muzzle_flash_attach"						"muzzle_flash"
 
+	"chroma_color"									".6 1 .6"
+
 	//Sounds
 	"fire_sound_1_player_1p"						"LMG_shell"
 	"fire_sound_1_player_3p"						"LMG_shell"

@@ -543,8 +543,8 @@ void function Cl_Survival_AddClient( entity player )
 
 	if ( !GetCurrentPlaylistVarBool( "survival_staging_area_enabled", false ) && !IsTestMap() )
 	{
-		//file.waitingForPlayersBlackScreenRui = CreatePermanentCockpitRui( $"ui/waiting_for_players_blackscreen.rpak", -1 )
-		//RuiSetResolutionToScreenSize( file.waitingForPlayersBlackScreenRui )
+		file.waitingForPlayersBlackScreenRui = CreatePermanentCockpitRui( $"ui/waiting_for_players_blackscreen.rpak", -1 )
+		RuiSetResolutionToScreenSize( file.waitingForPlayersBlackScreenRui )
 	}
 }
 
@@ -2844,6 +2844,7 @@ void function PROTO_ContainersThink()
 
 void function TryCycleOrdnance( entity player )
 {
+	printt("TryCycleOrdnance")
 	if ( player == GetLocalClientPlayer() && player == GetLocalViewPlayer() )
 	{
 		entity weapon = player.GetActiveWeapon( eActiveInventorySlot.mainHand )

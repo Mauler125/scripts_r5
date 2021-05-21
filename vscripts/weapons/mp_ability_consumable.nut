@@ -166,6 +166,10 @@ const RESTORE_HEALTH_COCKPIT_FX	= $"P_heal_loop_screen"
 void function Consumable_Init()
 {
 	RegisterWeaponForUse( CONSUMABLE_WEAPON_NAME )
+	RegisterSignal( "ConsumableDestroyRui" ) // idk really, from S7 or so...
+
+	//Remote_RegisterUntypedFunction_deprecated( "ClientCallback_SetSelectedConsumableTypeNetInt") //, "int", INT_MIN, INT_MAX )
+	//Remote_RegisterUntypedFunction_deprecated( "ClientCallback_SetNextHealModType") //, "string" )
 
 	{ // Phoenix Kit - Full health and shields
 		ConsumableInfo phoenixKit
@@ -260,6 +264,8 @@ void function Consumable_Init()
 
 		AddClientCommandCallbackNew( "SetSelectedConsumableTypeNetInt", ClientCommand_SetSelectedConsumableTypeNetInt )
 		AddClientCommandCallbackNew( "SetNextHealModType", ClientCommand_SetNextHealModType  )
+
+		RegisterSignal( "StartHeal" )
 	#endif
 
 	#if CLIENT
@@ -270,6 +276,11 @@ void function Consumable_Init()
 void function OnClientConnected( entity player )
 {
 	file.playerHealResourceIds[player] <- []
+
+	#if SERVER
+	printt("OnClientConnected SERVER")
+	file.playerToNextMod[player] <- "phoenix_kit"
+	#endif
 }
 
 // =========================================================================================================================
@@ -285,6 +296,7 @@ void function OnClientConnected( entity player )
 
 void function OnWeaponOwnerChanged_Consumable( entity weapon, WeaponOwnerChangedParams changeParams )
 {
+	printt("OnWeaponOwnerChanged_Consumable")
 	#if SERVER
 		if ( !IsValid( changeParams.oldOwner ) )
 		{
@@ -319,20 +331,29 @@ void function OnWeaponOwnerChanged_Consumable( entity weapon, WeaponOwnerChanged
 	}
 
 	file.chargeTimesInitialized = true
-	weapon.SetMods( [] )
+	weapon.SetMods( ["phoenix_kit"] )
 }
 
 bool function OnWeaponAttemptOffhandSwitch_Consumable( entity weapon )
 {
+	printt("OnWeaponAttemptOffhandSwitch_Consumable", GetConsumableModOnWeapon( weapon ), weapon.GetWeaponPrimaryClipCount())
+	weapon.SetMods([ "phoenix_kit" ])
+
 	if ( GetConsumableModOnWeapon( weapon ) == "" && weapon.GetOwner().IsBot() )
 		return false
+
+	printt("OnWeaponAttemptOffhandSwitch_Consumable#337")
 
 #if SERVER
 	if ( ! ( weapon.GetOwner() in file.playerToNextMod ) )
 		return false
 
+	printt("OnWeaponAttemptOffhandSwitch_Consumable#343")
+
 	if ( !CanSwitchToWeapon( weapon, file.playerToNextMod[ weapon.GetOwner() ] ) )
 		return false
+
+	printt("OnWeaponAttemptOffhandSwitch_Consumable#348")
 #endif
 
 	#if CLIENT
@@ -594,6 +615,7 @@ void function OnWeaponChargeEnd_Consumable( entity weapon )
 
 var function OnWeaponPrimaryAttack_Consumable( entity weapon, WeaponPrimaryAttackParams attackParams )
 {
+	printt("OnWeaponPrimaryAttack_Consumable")
 	entity player = weapon.GetOwner()
 
 	if( weapon.GetWeaponChargeFraction() < 1.0 )
@@ -670,6 +692,7 @@ void function Consumable_SetClientTypeOnly()
 void function Consumable_UseCurrentSelectedItem( entity player )
 {
 	int selectedPickupType = file.clientSelectedConsumableType
+	//printt("Consumable_UseCurrentSelectedItem", selectedPickupType, Consumable_CanUseConsumable( player, selectedPickupType ))
 	if ( !Consumable_CanUseConsumable( player, selectedPickupType ) )
 	{
 		return
@@ -709,6 +732,9 @@ void function AddModAndFireWeapon_Thread( entity player, string modName )
 
 	file.clientPlayerNextMod = modName
 	player.ClientCommand( "SetNextHealModType " + modName )
+	//Remote_CallFunction_NonReplay( "ClientCallback_SetNextHealModType", modName )
+
+	printt("AddModAndFireWeapon_Thread", "SetNextHealModType " + modName )
 
 	ActivateOffhandWeaponByIndex( OFFHAND_SLOT_FOR_CONSUMABLES )
 }
@@ -1127,6 +1153,18 @@ void function UltimatePackUse( entity player, ConsumableInfo info )
 		ultimateAbility.SetWeaponPrimaryClipCount( ammo )
 	else
 		ultimateAbility.SetWeaponPrimaryClipCount( maxAmmo )
+}
+
+void function ClientCallback_SetNextHealModType(string nextModName)
+{
+	printt("ClientCallback_SetNextHealModType")
+	//file.playerToNextMod[ player ] <- nextModName
+}
+
+void function ClientCallback_SetSelectedConsumableTypeNetInt( int consumableType )
+{
+	printt("ClientCallback_SetSelectedConsumableTypeNetInt")
+	//SetSelectedConsumableTypeNetInt( player, consumableType )
 }
 
 void function ClientCommand_SetNextHealModType( entity player, array<string> args )

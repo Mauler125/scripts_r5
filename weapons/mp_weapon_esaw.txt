@@ -89,6 +89,8 @@ WeaponData
 	"fx_muzzle_flash_world"							"P_mflash_pulse_LMG"
 	"fx_muzzle_flash_attach"						"muzzle_flash"
 
+	"chroma_color"									".1 1 .1"
+
 	"burst_or_looping_fire_sound_start_1p"			"weapon_devotion_firstshot_1p"
 	"burst_or_looping_fire_sound_middle_1p"			"Weapon_Devotion_Loop_1P"
 	"burst_or_looping_fire_sound_end_1p"			"weapon_devotion_lastshot_1p"

@@ -24,6 +24,8 @@
 	"viewmodel"                                "mdl/weapons/at_rifle/ptpov_at_rifle.rmdl"
 	"playermodel"                              "mdl/weapons/at_rifle/w_at_rifle.rmdl"
 
+	"chroma_color"								"1 .6 .2"
+
 	// Script - Callbacks
 	"OnWeaponActivate"                         "OnWeaponActivate_weapon_basic_bolt"
 	"OnWeaponPrimaryAttack"                    "OnWeaponPrimaryAttack_weapon_basic_bolt"
@@ -103,7 +105,7 @@
 
 	"reload_time"                              "3.2"
 	"reload_time_late1"                        "1.95"
-	"reload_time_late2"                        "0.81"
+	"reload_time_late2"                        "1.95"
 	"reloadempty_time"                         "4.3"
 	"reloadempty_time_late1"                   "3.13"
 	"reloadempty_time_late2"                   "2.08"

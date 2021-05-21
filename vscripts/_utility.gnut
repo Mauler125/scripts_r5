@@ -317,7 +317,7 @@ entity function CreateExpensiveScriptMover( vector origin = <0.0, 0.0, 0.0>, vec
 {
 	entity script_mover = CreateEntity( "script_mover" )
 	script_mover.kv.solid = solidType
-	script_mover.SetValueForModelKey( $"models/dev/empty_model.mdl" )
+	script_mover.SetValueForModelKey( $"mdl/dev/empty_model.rmdl" )
 	script_mover.kv.SpawnAsPhysicsMover = 0
 	script_mover.SetOrigin( origin )
 	script_mover.SetAngles( angles )
@@ -330,7 +330,7 @@ entity function CreateScriptMover( vector origin = <0.0, 0.0, 0.0>, vector angle
 {
 	entity script_mover = CreateEntity( "script_mover_lightweight" )
 	script_mover.kv.solid = solidType
-	script_mover.SetValueForModelKey( $"models/dev/empty_model.mdl" )
+	script_mover.SetValueForModelKey( $"mdl/dev/empty_model.rmdl" )
 	script_mover.kv.SpawnAsPhysicsMover = 0
 	script_mover.SetOrigin( origin )
 	script_mover.SetAngles( angles )
@@ -368,7 +368,7 @@ entity function CreateOwnedScriptMover( entity owner )
 {
 	entity script_mover = CreateEntity( "script_mover" )
 	script_mover.kv.solid = 0
-	script_mover.SetValueForModelKey( $"models/dev/empty_model.mdl" )
+	script_mover.SetValueForModelKey( $"mdl/dev/empty_model.rmdl" )
 	script_mover.kv.SpawnAsPhysicsMover = 0
 	script_mover.SetOrigin( owner.GetOrigin() )
 	script_mover.SetAngles( owner.GetAngles() )
@@ -611,7 +611,7 @@ entity function SpawnRefEnt( entity ent )
 
 	entity ref = CreateEntity( "prop_dynamic" )
 	//ref.kv.SpawnAsPhysicsMover = 0
-	ref.SetValueForModelKey( $"models/dev/empty_model.mdl" )
+	ref.SetValueForModelKey( $"mdl/dev/empty_model.rmdl" )
 	DispatchSpawn( ref )
 
 	ref.SetOrigin( origin )
@@ -1576,7 +1576,7 @@ entity function CreatePropScript_NoDispatchSpawn( asset model, vector ornull ori
 		if ( angles )
 			prop_script.SetAngles( expect vector( angles ) )
 	}
-	DispatchSpawn( prop_script )
+	//DispatchSpawn( prop_script )
 	if ( origin )
 	{
 		// hack: Setting origin twice. SetOrigin needs to happen after DispatchSpawn, otherwise origin is snapped to nearest whole unit
@@ -4459,7 +4459,7 @@ void function CreateTraceBlockerVolume( vector fxOrigin, float something, bool b
 
 void function SetOutOfBoundsTimeLimit( float maxtime )
 {
-
+	//stub
 }
 
 array<entity> function GetEntityChainOfType( entity endNodes )
@@ -4589,5 +4589,5 @@ void function RunClientCommandOnPlayer( entity player, string command )
 
 entity function CreatePropDoor( asset model, vector pos, vector ang )
 {
-	return CreatePropDynamic( model, pos, ang )
+	return CreatePropDynamic_NoDispatchSpawn( model, pos, ang )
 }

@@ -652,6 +652,9 @@ void function __IncrementStat_Int( entity player, StatEntry entry, int increment
 	Assert( entry.type == eStatType.INT )
 	Assert( entry.behavior == eStatBehavior.ACCUMULATED )
 
+	if(player.p.statValues_Float.len() <= entry.indexWithinType)
+		return
+
 	//player.p.statValues_Int[entry.indexWithinType] += incrementAmount
 	int oldValue = player.p.statValues_Int[entry.indexWithinType]
 	int newValue = oldValue + incrementAmount
@@ -675,6 +678,9 @@ void function __IncrementStat_Float( entity player, StatEntry entry, float incre
 {
 	Assert( entry.type == eStatType.FLOAT )
 	Assert( entry.behavior == eStatBehavior.ACCUMULATED )
+
+	if(player.p.statValues_Float.len() <= entry.indexWithinType)
+		return
 
 	//player.p.statValues_Float[entry.indexWithinType] += incrementAmount
 	float oldValue = player.p.statValues_Float[entry.indexWithinType]
@@ -700,6 +706,9 @@ void function __SetStat_Bool( entity player, StatEntry entry, bool newValue, boo
 	Assert( entry.type == eStatType.BOOL )
 	Assert( entry.behavior == eStatBehavior.VARIABLE || (entry.type == eStatType.BOOL && entry.behavior == eStatBehavior.ACCUMULATED && newValue) || DEV_alwaysAllowSet, "Cannot set a bool to false unless its behavior is VARIABLE" )
 
+	if(player.p.statValues_Float.len() <= entry.indexWithinType)
+		return
+
 	//player.p.statValues_Bool[entry.indexWithinType] = newValue
 	bool oldValue = player.p.statValues_Bool[entry.indexWithinType]
 	player.p.statValues_Bool[entry.indexWithinType] = newValue
@@ -723,6 +732,9 @@ void function __SetStat_Int( entity player, StatEntry entry, int newValue, bool 
 	Assert( entry.type == eStatType.INT )
 	Assert( entry.behavior == eStatBehavior.VARIABLE || DEV_alwaysAllowSet )
 
+	if(player.p.statValues_Float.len() <= entry.indexWithinType)
+		return
+
 	//player.p.statValues_Int[entry.indexWithinType] = newValue
 	int oldValue = player.p.statValues_Int[entry.indexWithinType]
 	player.p.statValues_Int[entry.indexWithinType] = newValue
@@ -745,6 +757,9 @@ void function __SetStat_Float( entity player, StatEntry entry, float newValue, b
 {
 	Assert( entry.type == eStatType.FLOAT )
 	Assert( entry.behavior == eStatBehavior.VARIABLE || DEV_alwaysAllowSet )
+
+	if(player.p.statValues_Float.len() <= entry.indexWithinType)
+		return
 
 	//player.p.statValues_Float[entry.indexWithinType] = newValue
 	float oldValue = player.p.statValues_Float[entry.indexWithinType]

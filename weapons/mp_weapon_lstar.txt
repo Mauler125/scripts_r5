@@ -49,6 +49,8 @@ WeaponData
 	"stat_accuracy"   								"34"
 	"stat_rof"										"45"
 
+	"chroma_color"									"1 .5 .5"
+
 	// Models
 	"viewmodel"   									"mdl/weapons/lstar/ptpov_lstar.rmdl"
 	"playermodel" 									"mdl/weapons/lstar/w_lstar.rmdl"
@@ -481,81 +483,6 @@ WeaponData
 		survival_finite_ammo
         {
         }
-
-		npc_spectre
-		{
-			"projectile_launch_speed"						"1500"
-			"projectile_gravity_scale"						"0.05"
-
-			"ammo_no_remove_from_clip"						"1"
-			"ammo_no_remove_from_stockpile"					"1"
-
-			"bolt_hitsize"									"0.0"
-			"bolt_hitsize_grow1_time"						"0.0"
-			"bolt_hitsize_grow1_size"						"0.0"
-			"bolt_hitsize_grow2_time"						"0.0"
-			"bolt_hitsize_grow2_size"						"0.0"
-			"bolt_hitsize_growfinal_lerptime"				"0.0"
-			"bolt_hitsize_growfinal_size"					"0.0"
-
-			"npc_min_burst"   								"2"
-			"npc_max_burst"   								"3"
-			"npc_rest_time_between_bursts_min"				"0.5"
-			"npc_rest_time_between_bursts_max"				"1.5"
-
-			//Effects
-			"projectile_trail_effect_0" 					"P_projectile_lstar_burn"
-			"fx_muzzle_flash_view"							"P_muz_lstar_FP_burn"
-			"fx_muzzle_flash_world"							"P_muz_lstar_burn"
-		}
-
-		titan_test
-		{
-			"projectile_launch_speed"						"1000"
-			"projectile_gravity_scale"						"0.0"
-
-			"fire_rate"   									"15.0"
-			"ammo_no_remove_from_clip"						"1"
-			"ammo_no_remove_from_stockpile"					"1"
-
-			"bolt_hitsize"									"10.0"
-			"bolt_hitsize_grow1_time"						"0.0"
-			"bolt_hitsize_grow1_size"						"10.0"
-			"bolt_hitsize_grow2_time"						"0.0"
-			"bolt_hitsize_grow2_size"						"10.0"
-			"bolt_hitsize_growfinal_lerptime"				"0.0"
-			"bolt_hitsize_growfinal_size"					"10.0"
-
-			"npc_min_burst"   								"10"
-			"npc_max_burst"   								"25"
-			"npc_rest_time_between_bursts_min"				"1.5"
-			"npc_rest_time_between_bursts_max"				"3.5"
-
-			//Effects
-			"projectile_trail_effect_0" 					"P_projectile_lstar_burn"
-			"fx_muzzle_flash_view"							"P_muz_lstar_FP_burn"
-			"fx_muzzle_flash_world"							"P_muz_lstar_burn"
-
-			//
-			"npc_damage_near_value"   						"15"
-			"npc_damage_far_value"							"15"
-			"npc_damage_near_value_titanarmor"				"15"
-			"npc_damage_far_value_titanarmor" 				"15"
-
-			//
-			"npc_min_engage_range"							"200"
-			"npc_max_engage_range"							"5000"
-			"npc_min_engage_range_heavy_armor"				"500"
-			"npc_max_engage_range_heavy_armor"				"5000"
-			"npc_min_range"   								"0"
-			"npc_max_range"   								"10000"
-
-			//
-			"viewkick_pitch_softScale"						"*0.0"
-			"viewkick_pitch_hardScale"						"*0.0"
-			"viewkick_yaw_softScale"						"*0.0"
-			"viewkick_yaw_hardScale"						"*0.0"
-		}
 
 		// R2 easter egg, to keep
 		rcee

@@ -37,6 +37,8 @@ WeaponData
 
 	//"tracer_effect"   							"weapon_tracers_shotgun"
 
+	"chroma_color"									"1 .9 .5"
+
 	//Sounds
 	"fire_sound_1_player_1p"						"Weapon_bulletCasings.Bounce"
 	"fire_sound_1_player_3p"						"Weapon_bulletCasings.Bounce"

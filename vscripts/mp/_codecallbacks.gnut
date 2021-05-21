@@ -175,11 +175,11 @@ void function CodeCallback_DamagePlayerOrNPC( entity ent, var damageInfo )
 			}
 
 			// Don't take damage from projectiles created before you where spawned.
-			if ( inflictor.GetProjectileCreationTime() < ent.s.respawnTime && ( Time() - ent.s.respawnTime ) < 2.0 )
-			{
-				DamageInfo_SetDamage( damageInfo, 0 )
-				return
-			}
+			// if ( inflictor.GetProjectileCreationTime() < ent.s.respawnTime && ( Time() - ent.s.respawnTime ) < 2.0 )
+			// {
+			// 	DamageInfo_SetDamage( damageInfo, 0 )
+			// 	return
+			// }
 		}
 
 		if ( inflictor.e.onlyDamageEntitiesOnce == true || inflictor.e.onlyDamageEntitiesOncePerTick == true )
@@ -645,13 +645,7 @@ vector function GetDamageOrigin( damageInfo, entity victim = null )
 
 	switch ( damageSourceId )
 	{
-		case eDamageSourceId.mp_weapon_satchel:
-		case eDamageSourceId.mp_weapon_proximity_mine:
-		case eDamageSourceId.mp_titanweapon_arc_pylon:
-			break
-
 		case damagedef_nuclear_core:
-		case eDamageSourceId.mp_titanability_smoke:
 			//if ( IsValid( victim ) && victim.IsPlayer() && IsValid( victim.GetTitanSoulBeingRodeoed() ) )
 			{
 				damageOrigin += (RandomVecInDome( Vector( 0, 0, -1 ) ) * 300.0)

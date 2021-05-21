@@ -42,6 +42,8 @@ WeaponData
 	"fx_muzzle_flash_world"							"mflash_shotgun_FULL"
 	"fx_muzzle_flash_attach"						"muzzle_flash"
 
+	"chroma_color"									".5 .3 1"
+
 	"impact_effect_table" 							"inc_bullet"
 	"vortex_absorb_effect"							"wpn_vortex_projectile_shotgun_FP"
 	"vortex_absorb_effect_third_person"				"wpn_vortex_projectile_shotgun"

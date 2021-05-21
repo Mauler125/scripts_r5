@@ -122,7 +122,7 @@ const string SIGNAL_WAYPOINT_TIMEOUT_BEGIN = "WaypointTimeoutThreadBegin"
 void function PlayerWaypoints_Init()
 {
 	RegisterSignal( SIGNAL_WAYPOINT_TIMEOUT_BEGIN )
-
+	printt("PlayerWaypoints_Init")
 	#if CLIENT
 		AddCreateCallback( PLAYER_WAYPOINT_CLASSNAME, PlayerWaypoint_CreateCallback )
 		AddDestroyCallback( PLAYER_WAYPOINT_CLASSNAME, PlayerWaypoint_DestroyCallback )
@@ -1555,9 +1555,9 @@ entity function GetAnyValidLocPingForReuse( entity player, int pingType, entity 
 	// 	return null
 
 	entity wp           = null//player.p.pings.locations.top()
-	float timeSincePing = Waypoint_GetWaypointAge( wp )
-	if ( timeSincePing >= PING_REUSE_TIME )
-		return null
+	//float timeSincePing = Waypoint_GetWaypointAge( wp )
+	//if ( timeSincePing >= PING_REUSE_TIME )
+	return null
 
 	int topPingType = Waypoint_GetPingTypeForWaypoint( wp )
 	if ( topPingType != pingType )
@@ -1735,6 +1735,8 @@ entity function CreateWaypoint_Ping_Location( entity player, int pingType, entit
 {
 	if ( GetCurrentPlaylistVarBool( "use_new_ping", true ) )
 		position += <0, 0, 72>
+
+	forceNew = true
 
 	entity wp = forceNew ? null : GetAnyValidLocPingForReuse( player, pingType, pingEnt, position )
 	if ( wp == null )

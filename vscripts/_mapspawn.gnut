@@ -104,6 +104,7 @@ global struct SvGlobals
 	table<string, array<void functionref( entity ent )> >onEntityChangedTeamCallbacks
 
 	table<string, bool functionref( entity player, array<string>args )> clientCommandCallbacks
+	table<string, void functionref( entity player, array<string>args )> clientCommandCallbacksNew
 	array<void functionref()>[ eGameState._count_ ] gameStateEnterCallbacks
 
 	bool allowPointsOverLimit = false
@@ -113,9 +114,9 @@ global struct SvGlobals
 	entity levelEnt
 
 	//TODO: Get rid of these and use the new StartParticleEffectInWorld_ReturnEntity etc functions
-	entity fx_CP_color_enemy //Used for setting control points on FX
-	entity fx_CP_color_friendly //Used for setting control points on FX
-	entity fx_CP_color_neutral //Used for setting control points on FX
+	entity fx_CP_color_enemy 		//Used for setting control points on FX
+	entity fx_CP_color_friendly 	//Used for setting control points on FX
+	entity fx_CP_color_neutral 		//Used for setting control points on FX
 
 	array<entity>[ TEAM_COUNT ] classicMPDropships
 	bool evacEnabled = false
@@ -152,8 +153,8 @@ global struct SvGlobals
 
 	bool forceNoFinalRoundDraws 				= false //Setting this to true will force a round based mode to keep playing rounds until a winner is determined. Game will not end on draw.
 
-	bool roundBasedTeamScore_RoundReset 		= true //if true, reset team scores at the start of each round.
-	bool isInPilotGracePeriod 					= false // if true, all players will be allowed to switch loadouts
+	bool roundBasedTeamScore_RoundReset 		= true  // if true, reset team scores at the start of each round.
+	bool isInPilotGracePeriod 					= false // if true, all players will be allowed to switch loadouts.
 	
 	table<string, void functionref(entity,array<string>)> globalAnimEventTokenizeCallbacks
 	array<bool functionref( entity player, entity zipline, vector ziplineClosestPoint )> canUseZiplineCallbacks
@@ -168,13 +169,16 @@ global SvGlobals svGlobal
 void function CodeCallback_MapSpawn() // original script entry point
 {
 	ShWeapons_LevelInit()
-	seterrorhandler(void function() {})
+	//seterrorhandler(void function() {})
 	ScriptCompilerTest()
 	LoadDiamond()
 
 	_cc = CreateEntity( "point_clientcommand" )
 	_sc = CreateEntity( "point_servercommand" )
 	PrecacheEntity( "env_entity_dissolver" )
+
+	FlagInit("EntitiesDidLoad")
+	svGlobal.levelEnt = GetEnt( "worldspawn" )
 
 	LevelVarInit()
 
@@ -193,10 +197,10 @@ void function CodeCallback_MapSpawn() // original script entry point
     PrecacheWeapon( $"mp_weapon_wraith_kunai_primary" )
     PrecacheWeapon( $"mp_ability_grapple" )
 	PrecacheWeapon( $"mp_ability_phase_walk" )
+	PrecacheWeapon( $"mp_ability_mirage_ultimate" )
 
 	printl( "Code Script: _mapspawn" )
 
-	//SPMP_MapSpawn_Init() // naw actually dont lol
 	SV_CL_Shared_Init()
 }
 
@@ -216,6 +220,12 @@ var function CodeCallback_ClientCommand( entity player, array<string> args )
 	//TODO: Track down Why VModEnable is being called from code?
 
 	//Assert( commandString in svGlobal.clientCommandCallbacks )
+	if(commandString in svGlobal.clientCommandCallbacksNew)
+	{
+		printt("CodeCallback_ClientCommand", commandString)
+		svGlobal.clientCommandCallbacksNew[ commandString ]( player, args )
+		return true
+	}
 	if ( commandString in svGlobal.clientCommandCallbacks  )
 	{
 		return svGlobal.clientCommandCallbacks[ commandString ]( player, args )

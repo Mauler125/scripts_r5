@@ -948,6 +948,7 @@ string function GetWeaponAmmoType( string weaponName )
 
 int function SURVIVAL_GetInventoryLimit( entity player )
 {
+	//printt("SURVIVAL_GetInventoryLimit sh_surv_loot")
 	int bpTier = EquipmentSlot_GetEquipmentTier( player, "backpack" )
 	switch ( bpTier )
 	{
@@ -1106,7 +1107,7 @@ int function SURVIVAL_GetCountToFillStack( entity player, string ref )
 
 		return diff
 	}
-
+	printt("SURVIVAL_GetCountToFillStack", data.inventorySlotCount)
 	return data.inventorySlotCount
 }
 
@@ -1124,6 +1125,7 @@ int function SURVIVAL_AddToPlayerInventory( entity player, string ref, int count
 	int numAdded = 0
 	int inventoryLimit = SURVIVAL_GetInventoryLimit( player )
 
+	//printt("SURVIVAL_AddToPlayerInventory", numToAdd, inventoryLimit)
 	foreach ( invItem in playerInventory )
 	{
 		if ( invItem.type != type )
@@ -1293,6 +1295,7 @@ array<ConsumableInventoryItem> function SURVIVAL_ConsolidateInventoryItems( enti
 #if SERVER
 void function SetPlayerInventory( entity player, array<ConsumableInventoryItem> playerInventory )
 {
+	//printt("SetPlayerInventory")
 	//playerInventory.sort( SortByPriorityThenTier ) // SortByInventoryIndexAndCount )
 
 	foreach ( index, item in playerInventory )
@@ -1389,6 +1392,11 @@ bool function CanUseStackablePropSurvival( entity player, entity prop )
 void function OnPropSurvivalCreate( entity prop )
 {
 	int index = prop.GetSurvivalInt()
+
+	//printt("Surv idx ", index)
+	#if SERVER
+	printt("SERVER OnPropSurvivalCreate")
+	#endif
 
 	if ( index < 0 )
 		return
@@ -1992,8 +2000,10 @@ array<string> function SURVIVAL_GetAllPlayerOrdnance( entity player )
 bool function SURVIVAL_CanPlayerPickup( entity player, entity pickup )
 {
 	#if SERVER
-	if ( pickup.e.spawnTime + 0.5 > Time() )
-		return false
+	printt("??? SURVIVAL_CanPlayerPickup FIX pickup.e.spawnTime ???")
+	//printt("SURVIVAL_CanPlayerPickup", (pickup.e.spawnTime + 0.5 > Time()), SURVIVAL_PlayerAllowedToPickup( player ) )
+	//if ( pickup.e.spawnTime + 0.5 > Time() )
+	//	return false
 	#endif
 
 	return SURVIVAL_PlayerAllowedToPickup( player )
@@ -2031,6 +2041,9 @@ bool function SURVIVAL_PlayerCanSwitchOrdnance( entity player )
 
 bool function PlayerInValidState( entity player )
 {
+	#if SERVER
+	//printt("PlayerInValidState NOT - ", !IsAlive( player ), player.ContextAction_IsActive(), Bleedout_IsBleedingOut( player ), SURVIVAL_IsPlayerCarryingLoot( player ))
+	#endif
 	if ( !IsAlive( player ) )
 		return false
 
@@ -2049,7 +2062,8 @@ bool function PlayerInValidState( entity player )
 bool function SURVIVAL_IsPlayerCarryingLoot( entity player )
 {
 	#if SERVER
-	return IsValid( player.p.carriedLoot )
+	return false
+	//return IsValid( player.p.carriedLoot )
 	#else
 	return ( player.GetWeaponDisableFlags() == WEAPON_DISABLE_FLAGS_ALL )
 	#endif
@@ -2860,6 +2874,8 @@ bool function SurvivalLoot_CanUseFunction( entity player, entity ent )
 {
 	if( Bleedout_IsBleedingOut( player ) )
 		return false
+	//printt("SurvivalLoot_CanUseFunction")
+	return true
 
 	entity activeWeapon = player.GetActiveWeapon( eActiveInventorySlot.mainHand )
 	if ( IsValid( activeWeapon ) )
@@ -3434,11 +3450,20 @@ bool function DeathBox_CanUseFunction( entity player, entity ent )
 
 void function OnUseSurvivalPickup( entity pickup, entity player, int useInputFlags )
 {
+	#if SERVER
+		//printt("OnUseSurvivalPickup Server", SURVIVAL_CanPlayerPickup( player, pickup ))
+	#endif
 	if ( !SURVIVAL_CanPlayerPickup( player, pickup ) )
 		return
 
+	#if SERVER
+		//printt("OnUseSurvivalPickup Server can pickup")
+	#endif
+
 	if ( !SURVIVAL_Loot_IsLootIndexValid( pickup.GetSurvivalInt() ) )
 		return
+
+	//printt("OnUseSurvivalPickup#3453")
 
 	LootData data = SURVIVAL_Loot_GetLootDataByIndex( pickup.GetSurvivalInt() )
 	int lootType = data.lootType
@@ -3481,6 +3506,8 @@ bool function Survival_PickupItem( entity pickup, entity player, int pickupFlags
 	bool shouldDestroy = SURVIVAL_ApplyLootAction( as.action, pickup, player, pickupFlags, deathBox )
 
 	bool pickedup = pickup.GetClipCount() < oldAmmo
+
+	//printt("picked-up", as.action, pickedup, shouldDestroy, pickup.GetClipCount(), oldAmmo, as.action)
 
 	#if CLIENT
 	if ( Time() - pickup.e.lastUseTime > 0.5 )
@@ -3528,7 +3555,7 @@ bool function Survival_PickupItem( entity pickup, entity player, int pickupFlags
 
 		PIN_ItemPickup( player, pickup, lootRef.lootData.ref, unitsPickedUp )
 
-		//printt( "LOOTED:", lootRef.lootData.ref, "x" + unitsPickedUp )
+		printt( "LOOTED:", lootRef.lootData.ref, "x" + unitsPickedUp )
 
 		SURVIVAL_PlayerPickedupItem( pickup, player, as.action, pickupFlags, !shouldDestroy )
 	}

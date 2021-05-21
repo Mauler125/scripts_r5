@@ -91,8 +91,7 @@ void function RegisterWeaponForUse( string weaponClassname )
 {
 	//printt( VM_NAME(), FUNC_NAME(), FUNC_NAME( 1 ), weaponClassname )
 	#if SERVER || CLIENT
-		// commented for debugging
-		//PrecacheWeapon( weaponClassname )
+		PrecacheWeapon( weaponClassname )
 		RegisterWeaponDamageSource( weaponClassname )
 	#endif
 }

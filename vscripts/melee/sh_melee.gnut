@@ -107,8 +107,8 @@ void function OnItemFlavorRegistered_Character( ItemFlavor characterClass )
 			//PrecacheModel( MeleeSkin_GetViewModel( meleeSkin ) )
 			
 			// commented for debugging
-			//PrecacheWeapon( MeleeSkin_GetMainWeaponClassname( meleeSkin ) )
-			//PrecacheWeapon( MeleeSkin_GetOffhandWeaponClassname( meleeSkin ) )
+			PrecacheWeapon( MeleeSkin_GetMainWeaponClassname( meleeSkin ) )
+			PrecacheWeapon( MeleeSkin_GetOffhandWeaponClassname( meleeSkin ) )
 		#endif
 	}
 
@@ -241,6 +241,7 @@ bool function IsWeaponClassMelee( string weaponName )
 {
 	// (dw): meant to mimic weapon.IsWeaponMelee()
 	int fireMode = expect int(GetWeaponInfoFileKeyField_Global( weaponName, "fire_mode" ))
+	printt("IsWeaponClassMelee", weaponName, fireMode, eWeaponFireMode.offhandMelee, eWeaponFireMode.offhandMeleeHybrid)
 	return (fireMode == eWeaponFireMode.offhandMelee || fireMode == eWeaponFireMode.offhandMeleeHybrid)
 }
 #endif
@@ -467,6 +468,7 @@ void function CodeCallback_OnMeleeReleased( entity player, entity weapon )
 #if SERVER || CLIENT
 void function CodeCallback_OnMeleeAttackAnimEvent( entity attacker, entity meleeAttackWeapon )
 {
+	printt("CodeCallback_OnMeleeAttackAnimEvent")
 	Assert( IsValid( attacker ) )
 
 	if ( !attacker.PlayerMelee_IsAttackActive() )

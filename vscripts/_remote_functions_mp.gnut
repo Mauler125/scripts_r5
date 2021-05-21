@@ -14,6 +14,9 @@ void function RemoteFunctions_Init_Begin()
 			//Remote_RegisterClientFunction( "ServerCallback_GladiatorArtTestColorCorrect", "int", 1, 5 )
 			break
 	}
+	
+	RegisterSignal("OnChangedPlayerClass")
+	RegisterSignal("BleedOut_OnStartDying")
 
 	Remote_RegisterUntypedFunction_deprecated( "ServerCallback_FPS_Test" )// This is for local FPS tests using myscripts for standardized optimization
 	Remote_RegisterUntypedFunction_deprecated( "ServerCallback_FPS_Avg" )// general callback for more people to use - soupy

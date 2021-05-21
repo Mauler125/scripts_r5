@@ -59,6 +59,7 @@ global function OnWeaponReadyToFire_ability_tactical
 global function GetMeleeWeapon
 global function OnWeaponRegenEndGeneric
 global function Ultimate_OnWeaponRegenBegin
+global function OnWeaponActivate_RUIColorSchemeOverrides
 
 #if SERVER
 global function CreateDamageInflictorHelper
@@ -367,6 +368,12 @@ void function OnWeaponActivate_updateViewmodelAmmo( entity weapon )
 	#if CLIENT
 		UpdateViewmodelAmmo( false, weapon )
 	#endif // #if CLIENT
+}
+
+void function OnWeaponActivate_RUIColorSchemeOverrides( entity weapon )
+{
+	#if SERVER
+	#endif
 }
 
 int function Fire_EnergyChargeWeapon( entity weapon, WeaponPrimaryAttackParams attackParams, EnergyChargeWeaponData chargeWeaponData, bool playerFired = true, float patternScale = 1.0, bool ignoreSpread = true )
@@ -2851,6 +2858,7 @@ entity function GetMeleeWeapon( entity player )
 	array<entity> weapons = player.GetMainWeapons()
 	foreach ( weaponEnt in weapons )
 	{
+		printt("ismelee", weaponEnt.IsWeaponMelee())
 		if ( weaponEnt.IsWeaponMelee() )
 			return weaponEnt
 	}

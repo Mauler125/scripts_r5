@@ -83,31 +83,60 @@ global function AddCallback_OnThreatEventStateChange
 
 void function CodeCallback_OnClientConnectionCompleted( entity player )
 {
+
+	//onClientConnectedCallbacks
+	//SetGameState(eGameState.PickLoadout)
+
+	foreach( callbackFunc in svGlobal.onClientConnectedCallbacks ) {
+		callbackFunc(player)
+	}
+
+	player.hasConnected = true
+
+	ZiplineInit( player )
+
+	NotifyClientsOfConnection( player, 1 )
+
+	SetGameState(eGameState.Playing)
+	
+	CodeCallback_OnClientReloadConnectionCompleted(player)
+
 	vector origin = GetEnt( "info_player_start" ).GetOrigin()
 	vector angles = GetEnt( "info_player_start" ).GetAngles()
-
 	// player.SetPlayerSettings( $"settings/player/mp/pilot_survival_gunner.rpak" )
 	player.SetOrigin( origin )
-	player.SetAngles( angles )
+	player.SetOrigin( angles )
 	// player.RespawnPlayer( null )
 
 	//CPlayer.SetPlayerSettingsWithMods( player, DEFAULT_PILOT_SETTINGS, [] )
 	player.SetPlayerSettingsWithMods( $"settings/player/mp/pilot_survival_grapple.rpak", [ "enable_wallrun", "enable_doublejump" ] )
 	DoRespawnPlayer( player, null )//player.RespawnPlayer( null )
 	player.GiveWeapon( "mp_weapon_softball", WEAPON_INVENTORY_SLOT_ANY )
-	player.GiveWeapon( "mp_weapon_wraith_kunai_primary", WEAPON_INVENTORY_SLOT_ANY )
-	player.GiveOffhandWeapon( "mp_ability_grapple", OFFHAND_SPECIAL )
+	player.GiveWeapon( "mp_weapon_wraith_kunai_primary", WEAPON_INVENTORY_SLOT_PRIMARY_2 )
+	player.GiveWeapon( "mp_weapon_grenade_emp", WEAPON_INVENTORY_SLOT_ANY )
+	player.GiveOffhandWeapon( "melee_wraith_kunai", OFFHAND_MELEE )
+	player.GiveOffhandWeapon( "mp_ability_phase_walk", OFFHAND_SPECIAL )
+	player.GiveOffhandWeapon( "mp_ability_mirage_ultimate", OFFHAND_INVENTORY )
+	player.GiveOffhandWeapon( CONSUMABLE_WEAPON_NAME, OFFHAND_SLOT_FOR_CONSUMABLES )
 	EnableOffhandWeapons( player )
+
+	entity ultimateAbility = player.GetOffhandWeapon( OFFHAND_INVENTORY )
+	int ammoMax = ultimateAbility.GetWeaponPrimaryClipCountMax()
+	ultimateAbility.SetWeaponPrimaryClipCount( ammoMax )
+
+	player.SetHealth( 80 )
 }
 
 void function AddCallback_OnWeaponAttack( void functionref( entity, entity, string, int, vector, vector ) callback )
 {
-
+	printt("AddCallback_OnWeaponAttack")
 }
 
 void function AddClientCommandCallbackNew( string commandString, void functionref( entity player, array<string> args ) callbackFunc )
 {
-
+	//void function AddClientCommandCallback( string commandString, bool functionref( entity player, array<string> args ) callbackFunc )
+	Assert( !( commandString in svGlobal.clientCommandCallbacksNew ), "Already added " + commandString + " with AddClientCommandCallbackNew" )
+	svGlobal.clientCommandCallbacksNew[ commandString ] <- callbackFunc
 }
 
 void function AddCallback_OnPreClientDisconnected( void functionref( entity player) callbackFunc )
@@ -311,7 +340,7 @@ void function SendEntityKilledEvent( entity ent, var damageInfo )
 
 	foreach ( player in players )
 	{
-		Remote_CallFunction_NonReplay( player, "ServerCallback_OnEntityKilled", attackerEHandle, victimEHandle, scriptDamageType, damageSourceId )
+		Remote_CallFunction_NonReplay( player, "ServerCallback_OnEntityKilled", attacker, ent, scriptDamageType, damageSourceId )
 	}
 }
 

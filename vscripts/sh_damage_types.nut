@@ -217,6 +217,7 @@ global enum eDamageSourceId
 	mp_titancore_upgrade
 	mp_titanweapon_xo16_vanguard
 	mp_weapon_arc_trap
+	mp_weapon_arc_launcher
 	core_overload
 	mp_titanweapon_stasis
 	mp_titanweapon_stealth_titan
@@ -528,8 +529,8 @@ void function DamageTypes_Init()
 void function RegisterWeaponDamageSource( string weaponRef )
 {
 	int sourceID = eDamageSourceId[weaponRef]
-	file.damageSourceIDToName[ sourceID ] <- "e" //GetWeaponInfoFileKeyField_GlobalString( weaponRef, "shortprintname" )
-	file.damageSourceIDToImage[ sourceID ] <- $"rui/weapon_icons/r5/weapon_flatline"//GetWeaponInfoFileKeyFieldAsset_Global( weaponRef, "hud_icon" )
+	file.damageSourceIDToName[ sourceID ] <- GetWeaponInfoFileKeyField_GlobalString( weaponRef, "shortprintname" )
+	file.damageSourceIDToImage[ sourceID ] <- GetWeaponInfoFileKeyFieldAsset_Global( weaponRef, "hud_icon" )
 	file.damageSourceIDToString[ sourceID ] <- weaponRef
 }
 

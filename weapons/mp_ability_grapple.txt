@@ -143,16 +143,18 @@ WeaponData
 			}
 		}
 
-//		Crosshair_2
-//		{
-//			"ui"						"ui/crosshair_grapple"
-//			Args
-//			{
-//			    ammoFrac                "progress_weapon_clip_ammo_frac"
-//    			isGrappleInRange		"grapple_in_range"
-//    			weaponIsDisabled		"weapon_is_disabled"
-//			}
-//		}
+		//Crosshair_2
+		//{
+		//	"ui"						"ui/crosshair_grapple"
+		//	Args
+		//	{
+		//	    ammoFrac                "progress_weapon_clip_ammo_frac"
+    	//		isGrappleInRange		"grapple_in_range"
+		//		grappleInRangeTime		"grapple_in_range_time"
+		//		grappleOutOfRangeTime	"grapple_out_of_range_time"
+    	//		weaponIsDisabled		"weapon_is_disabled"
+		//	}
+		//}
 	}
 
 	Mods

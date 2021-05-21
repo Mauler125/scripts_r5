@@ -57,9 +57,14 @@ void function SURVIVAL_ThrowLootFromPoint( vector throwOrigin, vector forward, s
 
 }
 
-void function SURVIVAL_PlayerPickedupItem( entity pikcup, entity player, int action, int pickupFlags, bool shouldKeepAlive = false )
+void function SURVIVAL_PlayerPickedupItem( entity pickup, entity player, int action, int pickupFlags, bool shouldKeepAlive = false )
 {
-	
+	//SURVIVAL_PlayerPickedupItem( pickup, player, as.action, pickupFlags, !shouldDestroy )
+	printt("!!! SURVIVAL_PlayerPickedupItem SHITTY STUB IS IN USE !!!")
+	if(!shouldKeepAlive)
+	{
+		pickup.Destroy()
+	}
 }
 
 void function EquipAttachments_Internal( entity player, entity weapon, string item, string modToRemove, bool takeFromInventory, bool returnToInventory, bool forceActive, bool idk, entity deathBox )
@@ -89,7 +94,12 @@ void function TrackingVision_CreatePOIForPickedUpLoot( entity player, int lootTy
 
 void function SURVIVAL_GiveMainWeapon( entity player, entity pickup, entity activeWeapon, bool dropCurrentWeapon, entity deathBox, bool doPickupPrint )
 {
+	printt("!!! SURVIVAL_GiveMainWeapon SHITTY STUB IS IN USE !!!")
+	if(dropCurrentWeapon)
+		player.DropWeapon( activeWeapon ) // FIXXX??? DropWeapon looks retarded
 
+	LootData data = SURVIVAL_Loot_GetLootDataByIndex( pickup.GetSurvivalInt() )
+	player.GiveWeapon( data.baseWeapon, WEAPON_INVENTORY_SLOT_ANY )
 }
 
 vector function GetThrowOrigin( entity player )
@@ -97,9 +107,43 @@ vector function GetThrowOrigin( entity player )
 	return player.GetOrigin()
 }
 
-entity function SpawnGenericLoot( string ref, ... )
+entity function SpawnGenericLoot( string ref, vector origin, vector angles, int count )
 {
-	return null
+	LootData data = SURVIVAL_Loot_GetLootDataByRef( ref )
+
+	//printt("SpawnGenericLoot", ref)
+
+	entity loot = CreateEntity( "prop_survival" )
+	loot.SetOrigin( origin )
+	loot.SetAngles( angles )
+
+	loot.kv.solid = 0
+
+	loot.SetUsable()
+	loot.SetFadeDistance( 100000 )
+	loot.AddUsableValue( USABLE_CUSTOM_HINTS | USABLE_BY_OWNER | USABLE_BY_PILOTS | USABLE_BY_ENEMIES )
+	loot.SetUsablePriority( USABLE_PRIORITY_HIGH )
+	
+	//LootData data = SURVIVAL_Loot_GetLootDataByRef( ref )
+	
+	loot.SetSurvivalInt(data.index)
+	loot.SetClipCount( count )
+
+	if (data.lootType == eLootType.MAINWEAPON) {
+		loot.SetWeaponName(data.baseWeapon)
+	}
+
+	loot.e.spawnTime = Time()
+
+	loot.SetValueForModelKey( data.model )
+
+	loot.kv.fadedist = -1
+	loot.kv.renderamt = 255
+	loot.kv.rendercolor = "255 255 255"
+	
+	DispatchSpawn( loot )
+	
+	return loot
 }
 
 void function SetItemSpawnSource( entity drop, int spawnSource, entity player )
@@ -119,7 +163,39 @@ void function FakePhysicsThrow( entity player, entity drop, vector forward, bool
 
 void function SURVIVAL_GivePlayerEquipment( entity player, string newEquip, int value )
 {
+	// newEquip - ref
+	// Inventory_SetPlayerEquipment( entity player, string itemRef, string equipmentSlot, int propertyValue = 0 )
+	LootData data = SURVIVAL_Loot_GetLootDataByRef( newEquip )
+	string slot = ""
+	/*
+	ARMOR
+	INCAPSHIELD
+	JUMPKIT
+	ORDNANCE
+	ATTACHMENT
+	CUSTOMPICKUP
+	BACKPACK
+	HELMET
+	*/
 
+	printt("SURVIVAL_GivePlayerEquipment", player, newEquip, value)
+
+	// This is utterly retarded... (C) Valve
+	switch(data.lootType) {
+		case eLootType.BACKPACK:
+			slot = "backpack"
+			break
+		case eLootType.ARMOR:
+			slot = "armor"
+			break
+		case eLootType.HELMET:
+			slot = "helmet"
+			break
+		/*case eLootType.BACKPACK:
+			slot = "backpack"
+			break*/
+	}
+	Inventory_SetPlayerEquipment(player, newEquip, slot, value)
 }
 
 entity function SpawnWeaponAndAmmo( string ref, vector origin )
