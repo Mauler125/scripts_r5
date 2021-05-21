@@ -146,33 +146,36 @@ global function AddCallback_OnPlayerRemoveWeaponMod
 global function CodeCallback_OnPlayerAddedWeaponMod
 global function CodeCallback_OnPlayerRemovedWeaponMod
 
-global const PROJECTILE_PREDICTED = true
-global const PROJECTILE_NOT_PREDICTED = false
+global const PROJECTILE_PREDICTED 							= true
+global const PROJECTILE_NOT_PREDICTED 						= false
 
-global const PROJECTILE_LAG_COMPENSATED = true
-global const PROJECTILE_NOT_LAG_COMPENSATED = false
+global const PROJECTILE_LAG_COMPENSATED 					= true
+global const PROJECTILE_NOT_LAG_COMPENSATED 				= false
 
-const float DEFAULT_SHOTGUN_SPREAD_INNEREXCLUDE_FRAC = 0.4
+global const PRO_SCREEN_IDX_MATCH_KILLS 					= 1
+global const PRO_SCREEN_IDX_AMMO_COUNTER_OVERRIDE_HACK 		= 2
+
+const float DEFAULT_SHOTGUN_SPREAD_INNEREXCLUDE_FRAC 		= 0.4
 const bool DEBUG_PROJECTILE_BLAST = false
 
-const float EMP_SEVERITY_SLOWTURN = 0.35
-const float EMP_SEVERITY_SLOWMOVE = 0.50
-const float LASER_STUN_SEVERITY_SLOWTURN = 0.20
-const float LASER_STUN_SEVERITY_SLOWMOVE = 0.30
+const float EMP_SEVERITY_SLOWTURN 				= 0.35
+const float EMP_SEVERITY_SLOWMOVE 				= 0.50
+const float LASER_STUN_SEVERITY_SLOWTURN 		= 0.20
+const float LASER_STUN_SEVERITY_SLOWMOVE 		= 0.30
 
-const asset FX_EMP_BODY_HUMAN = $"P_emp_body_human"
-const asset FX_EMP_BODY_TITAN = $"P_emp_body_titan"
-const asset FX_VANGUARD_ENERGY_BODY_HUMAN = $"P_monarchBeam_body_human"
-const asset FX_VANGUARD_ENERGY_BODY_TITAN = $"P_monarchBeam_body_titan"
-const SOUND_EMP_REBOOT_SPARKS = "marvin_weld"
-const FX_EMP_REBOOT_SPARKS = $"weld_spark_01_sparksfly"
-const EMP_GRENADE_BEAM_EFFECT = $"wpn_arc_cannon_beam"
-const DRONE_REBOOT_TIME = 5.0
-const GUNSHIP_REBOOT_TIME = 5.0
+const asset FX_EMP_BODY_HUMAN 				= $"P_emp_body_human"
+const asset FX_EMP_BODY_TITAN 				= $"P_emp_body_titan"
+const asset FX_VANGUARD_ENERGY_BODY_HUMAN 	= $"P_monarchBeam_body_human"
+const asset FX_VANGUARD_ENERGY_BODY_TITAN 	= $"P_monarchBeam_body_titan"
+const SOUND_EMP_REBOOT_SPARKS 				= "marvin_weld"
+const FX_EMP_REBOOT_SPARKS 					= $"weld_spark_01_sparksfly"
+const EMP_GRENADE_BEAM_EFFECT 				= $"wpn_arc_cannon_beam"
+const DRONE_REBOOT_TIME 					= 5.0
+const GUNSHIP_REBOOT_TIME 					= 5.0
 
-const bool DEBUG_BURN_DAMAGE = false
+const bool DEBUG_BURN_DAMAGE 				= false
 
-const float BOUNCE_STUCK_DISTANCE = 5.0
+const float BOUNCE_STUCK_DISTANCE 			= 5.0
 
 global struct RadiusDamageData
 {

@@ -2,7 +2,6 @@ global function WeaponReactiveEffects_Init
 global function OnWeaponActivate_ReactiveKillEffects
 global function OnWeaponDeactivate_ReactiveKillEffects
 global function WeaponHasReactiveKillTrackingForCurrentSkin
-global function WeaponReactiveKillTracking_GetKillsForPlayerWithWeapon
 global function SCB_UpdatePlayerWeaponReactiveEffects
 global function WeaponReactiveKillEffects_ClearAllFX
 
@@ -135,6 +134,7 @@ int function WeaponReactiveKillTracking_GetKillsForPlayerWithWeapon( entity play
 	#elseif CLIENT
 		return weapon.GetProScreenIntValForIndex( PRO_SCREEN_IDX_MATCH_KILLS )
 	#endif
+	return 0
 }
 
 #if SERVER

@@ -2,6 +2,7 @@ global function MpWeaponGrenadeGas_Init
 global function OnProjectileCollision_weapon_grenade_gas
 global function OnWeaponReadyToFire_weapon_grenade_gas
 global function OnWeaponTossReleaseAnimEvent_weapon_greande_gas
+global function OnWeaponDeactivate_weapon_grenade_gas
 
 const float WEAPON_GAS_GRENADE_DELAY = 1.0
 const float WEAPON_GAS_GRENADE_DURATION = 20.0
@@ -26,6 +27,11 @@ void function OnWeaponReadyToFire_weapon_grenade_gas( entity weapon )
 
 }
 
+void function OnWeaponDeactivate_weapon_grenade_gas( entity weapon )
+{
+	weapon.StopWeaponEffect( GAS_GRENADE_FX_GLOW_FP, GAS_GRENADE_FX_GLOW_3P )
+	Grenade_OnWeaponDeactivate( weapon )
+}
 
 var function OnWeaponTossReleaseAnimEvent_weapon_greande_gas( entity weapon, WeaponPrimaryAttackParams attackParams )
 {
