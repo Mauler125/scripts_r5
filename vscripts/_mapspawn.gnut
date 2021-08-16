@@ -156,10 +156,10 @@ global struct SvGlobals
 
 	bool roundBasedTeamScore_RoundReset         = true  // if true, reset team scores at the start of each round.
 	bool isInPilotGracePeriod                   = false // if true, all players will be allowed to switch loadouts.
-	
+
 	table<string, void functionref(entity,array<string>)> globalAnimEventTokenizeCallbacks
 	array<bool functionref( entity player, entity zipline, vector ziplineClosestPoint )> canUseZiplineCallbacks
-	
+
 	// r5 stuff
 	array<void functionref(entity, entity)> onPilotEmbarkingTitanCallbacks
 	array<void functionref(entity, entity)> onPlayerUsedOffhandCallbacks
@@ -176,7 +176,7 @@ void function CodeCallback_MapSpawn() // original script entry point
 	//seterrorhandler(void function() {})
 	ScriptCompilerTest()
 	LoadDiamond()
-	
+
 	RegisterSignal( "CleanupFXAndSoundsForDecoy" )
 	RegisterSignal( "MirageSpotted" )
 	RegisterSignal( "forever" )
@@ -202,7 +202,7 @@ void function CodeCallback_MapSpawn() // original script entry point
 	PrecacheModel( $"mdl/dev/editor_ref.rmdl" )
 	PrecacheModel( $"mdl/dev/empty_model.rmdl" )
 	PrecacheModel( $"mdl/error.rmdl" ) // model used when no model is provided
-	
+
 	PrecacheParticleSystem( $"wpn_grenade_sonar_impact" )
 
 	PrecacheModel( $"mdl/weapons/arms/pov_pilot_heavy_pathfinder.rmdl" )
@@ -210,11 +210,11 @@ void function CodeCallback_MapSpawn() // original script entry point
 	PrecacheModel( $"mdl/weapons/arms/pov_pilot_medium_stim.rmdl" )
 	PrecacheModel( $"mdl/Humans/class/medium/pilot_medium_stim.rmdl" )
 
-	
+
 	PrecacheModel( $"mdl/Humans/class/medium/combat_dummie_medium.rmdl" )
-	
+
 	PrecacheModel( $"mdl/humans/class/medium/combat_dummie_medium.rmdl" )
-	
+
 	//Charms - todo: find a better way
 
 	PrecacheModel( $"mdl/props/charm/charm_fireball.rmdl" )
@@ -232,7 +232,7 @@ void function CodeCallback_MapSpawn() // original script entry point
 	PrecacheModel( $"mdl/props/charm/charm_nessy_ghost.rmdl" )
 	PrecacheModel( $"mdl/props/charm/charm_clown.rmdl" )
 	PrecacheModel( $"mdl/props/charm/charm_witch.rmdl" )
-	
+
 	// PrecacheModel( $"mdl/vehicle/hovership/hovership_platform_mp.rmdl" )
 	// PrecacheModel( $"mdl/fx/sonar_pulse_cone.rmdl" )
 	// PrecacheModel( $"mdl/weapons/titan_raptor_rocket_pod/atpov_titan_raptor_rocket_pod_right.rmdl" )
@@ -246,7 +246,6 @@ void function CodeCallback_MapSpawn() // original script entry point
 	// PrecacheWeapon( $"mp_weapon_data_knife" )
 	// PrecacheWeapon( $"mp_weapon_jack_dknife" )
 	PrecacheWeapon( $"mp_weapon_mdlspawner" )
-	PrecacheWeapon( $"mp_weapon_dummyspawner" )
 	PrecacheWeapon( $"mp_weapon_alternator_smg" )
 	PrecacheWeapon( $"mp_weapon_bubble_bunker" )
 	PrecacheWeapon( $"mp_weapon_dmr" )
@@ -268,6 +267,7 @@ void function CodeCallback_MapSpawn() // original script entry point
 	PrecacheWeapon( $"mp_weapon_deployable_medic" )
 	// PrecacheWeapon( $"mp_weapon_car" )
 	PrecacheWeapon( $"mp_ability_grapple" )
+	PrecacheWeapon( $"mp_ability_spiderman" )
 	PrecacheWeapon( $"mp_weapon_vinson" )
 	PrecacheWeapon( $"mp_weapon_pdw" )
 	PrecacheWeapon( $"mp_ability_phase_walk" )
