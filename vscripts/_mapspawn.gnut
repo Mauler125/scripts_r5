@@ -306,6 +306,7 @@ void function CodeCallback_MapSpawn() // original script entry point
 	// PrecacheWeapon( $"mp_ability_laser_trip" )
 	// PrecacheWeapon( $"mp_weapon_satchel" )
 	// PrecacheWeapon( $"mp_weapon_spectre_spawner" )
+	PrecacheWeapon( $"mp_weapon_dummyspawner" )
 
 	printl( "Code Script: _mapspawn" )
 
