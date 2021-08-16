@@ -245,6 +245,7 @@ Scripts:
 	weapons/mp_ability_holopilot.nut
 	weapons/mp_weapon_smart_pistol.nut
 	weapons/mp_weapon_mdlspawner.nut
+	weapons/mp_weapon_dummyspawner.nut
 	
 
 	weapons/mp_ability_heal.nut
