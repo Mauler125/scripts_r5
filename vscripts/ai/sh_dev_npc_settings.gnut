@@ -65,7 +65,6 @@ void function SetupWeapons()
 	SetupDevCommand( "L-Star", "give mp_weapon_lstar" )
 	SetupDevCommand( "Mastiff Shotgun", "give mp_weapon_mastiff" )
 	SetupDevCommand( "Dev Tool", "give mp_weapon_mdlspawner" )
-	SetupDevCommand( "Dummy Spawner", "give mp_weapon_dummyspawner" )
 	SetupDevCommand( "Prowler SMG", "give mp_weapon_pdw" )
 	SetupDevCommand( "R99", "give mp_weapon_r97" )
 	SetupDevCommand( "R301", "give mp_weapon_rspn101" )
@@ -80,6 +79,11 @@ void function SetupWeapons()
 	SetupDevCommand( "Thermite Grenade", "give mp_weapon_thermite_grenade" )
 	SetupDevCommand( "Frag Grenade", "give mp_weapon_frag_grenade" )
 	SetupDevCommand( "Arc Star", "give mp_weapon_grenade_emp" )
+
+	SetupDevCommand( "Dummy Spawner", "give mp_weapon_dummyspawner" )
+	SetupDevCommand( "Edo's rocket launcher", "give mp_weapon_edo_rocketlauncher" )
+
+	SetupDevCommand( "The Kwingman", "give mp_weapon_kwingman" )
 	#endif
 }
 

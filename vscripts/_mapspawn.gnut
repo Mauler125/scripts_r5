@@ -310,6 +310,7 @@ void function CodeCallback_MapSpawn() // original script entry point
 	//Custom
 	PrecacheWeapon( $"mp_weapon_dummyspawner" )
 	PrecacheWeapon( $"mp_weapon_edo_rocketlauncher" )
+	PrecacheWeapon( $"mp_weapon_kwingman" )
 
 	printl( "Code Script: _mapspawn" )
 

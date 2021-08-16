@@ -247,8 +247,7 @@ Scripts:
 	weapons/mp_ability_holopilot.nut
 	weapons/mp_weapon_smart_pistol.nut
 	weapons/mp_weapon_mdlspawner.nut
-	weapons/mp_weapon_dummyspawner.nut
-	
+
 
 	weapons/mp_ability_heal.nut
 	weapons/mp_ability_sonar.nut
@@ -260,8 +259,8 @@ Scripts:
 	weapons/mp_weapon_dmr.nut
 	weapons/mp_weapon_doubletake.nut
 	weapons/mp_weapon_shotgun_pistol.nut
-	
-	
+
+
 
 	weapons/mp_weapon_grenade_emp.nut
 	weapons/mp_weapon_lmg.nut
@@ -271,21 +270,21 @@ Scripts:
 	weapons/mp_weapon_vinson.nut
 	weapons/mp_weapon_mastiff.nut
 	weapons/mp_weapon_melee_primary.nut
-	
+
 	weapons/mp_weapon_wraith_kunai_primary.nut
 	weapons/melee_wraith_kunai.nut
-	
+
 	weapons/mp_weapon_bloodhound_axe_primary.nut
 	weapons/melee_bloodhound_axe.nut
-	
+
 	weapons/mp_weapon_lifeline_baton_primary.nut
 	weapons/melee_lifeline_baton.nut
-	
-	
+
+
 	weapons/mp_weapon_shadow_squad_hands_primary.nut
 	weapons/melee_shadowsquad_hands.nut
-	
-	
+
+
 	weapons/mp_weapon_shotgun.nut
 	weapons/mp_weapon_sniper.nut
 	weapons/mp_weapon_thermite_grenade.nut
@@ -300,6 +299,10 @@ Scripts:
 	weapons/sh_stim.gnut
 	weapons/mp_weapon_energy_shotgun.nut
 	weapons/mp_weapon_grenade_sonar.nut
+
+
+	//CUSTOM
+	weapons/mp_weapon_dummyspawner.nut
 ]
 
 When: "SERVER || CLIENT"
@@ -322,7 +325,7 @@ Scripts:
 
 	mp/sh_game_state_dialog.nut
 	mp/sh_comms_menu.nut
-	
+
 	mp/sh_warp_gates.gnut
 	sh_mp_utility.gnut
 	sh_score.gnut
@@ -336,7 +339,7 @@ When: "SERVER || CLIENT || UI"
 Scripts:
 [
 	mp/sh_quickchat.gnut
-	
+
 	melee/sh_melee.gnut
 	melee/sh_melee_synced.gnut
 	gamemodes/sh_gamemode_survival.nut
@@ -376,7 +379,7 @@ Scripts:
 	_ultimates.gnut
 	sh_survival_persistentdamagelayer.gnut
 	gamemodes/sh_gamemode_shadow_squad.nut
-	
+
 ]
 
 When: "SERVER"
@@ -702,7 +705,7 @@ Scripts:
 	ui/menu_eula_dialog.nut
 	ui/menu_accessibility_dialog.nut
 	ui/menu_postgame.nut
-	
+
 	ui/menu_knowledgebase.nut
 	ui/menu_knowledgebase_submenu.nut
 	ui/panel_scoreboard.nut
@@ -728,7 +731,7 @@ Scripts:
 	ui/lobby_panel_play.nut
 	ui/lobby_panel_characters.nut
 	ui/lobby_panel_armory.nut
-	
+
 	ui/lobby_panel_store.nut
 	ui/store_panel_collection_event.nut
 	ui/menu_collection_event_about.nut
@@ -780,8 +783,8 @@ Scripts:
 	ui/panel_legend.nut
 	ui/menu_survival_ground_list.nut
 	ui/menu_survival_quick_swap.nut
-	
-	
+
+
 	lobby/sh_lobby.gnut
 
 	ui/menu_post_game_ranked.nut
@@ -823,10 +826,10 @@ Scripts:
 	weapons/mp_weapon_phase_tunnel.nut
 	weapons/mp_weapon_incap_shield.nut
 	weapons/mp_ability_care_package.nut
-	
+
 	weapons/mp_ability_crypto_drone.nut
 	weapons/mp_ability_crypto_drone_emp.nut
-	
+
 
 	sh_clientmusic.gnut
 

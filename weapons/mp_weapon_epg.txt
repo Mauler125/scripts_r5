@@ -27,7 +27,7 @@ WeaponData
 	"projectile_gravity_scale"						"0.0001"
 
 	"damage_flags"									"DF_BULLET | DF_GIB"
-	
+
 	"OnClientAnimEvent"								"GlobalClientEventHandler"
 //	"OnWeaponPrimaryAttack"							"OnWeaponPrimaryAttack_GenericMissile_Player"
 //	"OnWeaponNpcPrimaryAttack"						"OnWeaponPrimaryAttack_GenericMissile_NPC"
@@ -47,7 +47,8 @@ WeaponData
 	"viewmodel"   									"mdl/weapons/epg/ptpov_epg.rmdl"
 	"playermodel" 									"mdl/weapons/epg/w_epg.rmdl"
 	"projectilemodel" 								"mdl/weapons/bullets/projectile_rocket_launcher_sram.rmdl"
-		// Effects
+
+	// Effects
 	"impact_effect_table" 							"exp_plasma_LG"
 	"projectile_trail_effect_0" 					"wpn_grenade_frag_blue"
 	"projectile_trail_effect_1" 					"P_plasma_proj_MD_DLight"
