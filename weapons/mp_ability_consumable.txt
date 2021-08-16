@@ -225,21 +225,6 @@ WeaponData
             "charge_effect_attachment"				"muzzle_flash"
         }
 
-        // This should really be in Bakery or something. It's orphaned here and hidden knowledge to change it to get it to work.
-        // No better way to do it for now.
-        quick_heal
-        {
-            "charge_time"                           "*0.75"
-            "raise_time"                            "*0.75"
-            "holster_time"                          "*0.75"
-        }
-        fast_heal
-        {
-            "charge_time"                           "*0.5"
-            "raise_time"                            "*0.5"
-            "holster_time"                          "*0.5"
-        }
-
         consumable_no_weapon_interrupt
         {
         	"offhand_interupts_weapon_anims"		"0"
