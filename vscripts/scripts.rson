@@ -300,6 +300,10 @@ Scripts:
 	weapons/sh_stim.gnut
 	weapons/mp_weapon_energy_shotgun.nut
 	weapons/mp_weapon_grenade_sonar.nut
+	
+
+	//CUSTOM
+	weapons/mp_weapon_dummyspawner.nut
 ]
 
 When: "SERVER || CLIENT"

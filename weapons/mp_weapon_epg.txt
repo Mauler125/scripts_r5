@@ -6,11 +6,11 @@ WeaponData
 	"description" 									"EPG"
 	"longdesc"										"EPG"
 
-	"menu_icon"										"r2_ui/menus/loadout_icons/primary_weapon/primary_epg1"
-	"hud_icon"										"r2_ui/menus/loadout_icons/primary_weapon/primary_epg1"
+	"menu_icon"										"rui/weapon_icons/r5/weapon_charge_rifle"
+	"hud_icon"										"rui/weapon_icons/r5/weapon_charge_rifle"
 
 	"weaponClass" 									"human"
-	"fire_mode"   									"semi_auto"
+	"fire_mode"   									"automatic"
 	"body_type"										"heavy"
 	"aimassist_adspull_weaponclass"					"none"
 	"leveled_pickup"								"1"
@@ -27,61 +27,56 @@ WeaponData
 	"projectile_gravity_scale"						"0.0001"
 
 	"damage_flags"									"DF_BULLET | DF_GIB"
-	
+
 	"OnClientAnimEvent"								"GlobalClientEventHandler"
-//	"OnWeaponPrimaryAttack"							"OnWeaponPrimaryAttack_GenericMissile_Player"
-//	"OnWeaponNpcPrimaryAttack"						"OnWeaponPrimaryAttack_GenericMissile_NPC"
-	"OnWeaponPrimaryAttack"							"OnWeaponPrimaryAttack_GenericBoltWithDrop_Player"
-	"OnWeaponNpcPrimaryAttack"						"OnWeaponPrimaryAttack_GenericBoltWithDrop_NPC"
-	"OnWeaponActivate"								"OnWeaponActivate_updateViewmodelAmmo"
+	"OnWeaponPrimaryAttack"							"OnWeaponPrimaryAttack_GenericMissile_Player"
+	"OnWeaponNpcPrimaryAttack"						"OnWeaponPrimaryAttack_GenericMissile_NPC"
 
 	// Menu
 	"menu_category"                                 "special"
 	"menu_anim_class"                               "medium"
-	"stat_damage" 									"48"
+	"stat_damage" 									"80"
 	"stat_range"  									"60"
 	"stat_accuracy"   								"60"
 	"stat_rof"										"17"
 
 	// Models
-	"viewmodel"   									"mdl/weapons/epg/ptpov_epg.rmdl"
-	"playermodel" 									"mdl/weapons/epg/w_epg.rmdl"
-	"projectilemodel" 								"mdl/weapons/bullets/projectile_rocket_launcher_sram.rmdl"
-		// Effects
-	"impact_effect_table" 							"exp_plasma_LG"
-	"projectile_trail_effect_0" 					"wpn_grenade_frag_blue"
-	"projectile_trail_effect_1" 					"P_plasma_proj_MD_DLight"
-	"projectile_trail_attachment" 					"exhaust"
-	"vortex_absorb_effect"							"wpn_vortex_projectile_SuperSpec_FP"
-	"vortex_absorb_effect_third_person"				"wpn_vortex_projectile_SuperSpec"
-	"vortex_absorb_sound"							"Vortex_Shield_AbsorbRocket"
-	"vortex_absorb_sound_1p_vs_3p"					"Vortex_Shield_AbsorbRocket_1P_VS_3P"
-	"vortex_drain"									"0.0"
-	"projectile_adjust_to_gun_barrel"				"1"
+	"viewmodel"   									"mdl/weapons/defender/ptpov_defender.rmdl"
+	"playermodel" 									"mdl/weapons/defender/w_defender.rmdl"
+	"holster_type"									"anti_titan"
+	"projectilemodel"								"mdl/weapons/grenades/m20_f_grenade_projectile.rmdl"
+
+	// Effects
+	"projectile_trail_effect_0"						"P_grenade_thermite_trail"
+	"projectile_trail_attachment" 					"FX_TRAIL"
+	"vortex_absorb_effect"							"wpn_vortex_projectile_frag_FP"
+	"vortex_absorb_effect_third_person"				"wpn_vortex_projectile_frag"
+	"vortex_absorb_sound"							"Vortex_Shield_AbsorbBulletLarge"
+	"vortex_absorb_sound_1p_vs_3p"					"Vortex_Shield_AbsorbBulletLarge_1P_VS_3P"
+	"projectile_adjust_to_gun_barrel"				"0"
+	"projectile_adjust_to_hand"						"1"
+	"impact_effect_table"							"exp_frag_grenade"
 
 	"explosion_shake_radius"						"300"
 	"explosion_shake_amplitude"						"10"
 	"explosion_shake_frequency"						"35"
 	"explosion_shake_duration"						"0.5"
 
-	"fx_muzzle_flash_view"							"P_wpn_muzzleflash_epg_FP"
-	"fx_muzzle_flash_world"							"P_wpn_muzzleflash_epg"
-	"fx_muzzle_flash_attach"						"muzzle_flash"
+	//"fx_muzzle_flash_view"						"P_wpn_muzzleflash_epg_FP"
+	//"fx_muzzle_flash_world"						"P_wpn_muzzleflash_epg"
+	//"fx_muzzle_flash_attach"						"muzzle_flash"
 
 	// Sound
 	"projectile_flight_sound"						"weapon_epg_projectile_loop"
-	"sound_dryfire"									"spring_dryfire"
-	"sound_zoom_in"									"Weapon_Sidewinder_ADS_In"
-	"sound_zoom_out"								"Weapon_Sidewinder_ADS_Out"
-	"fire_sound_1_player_1p"						"Weapon_epg_Fire_1P"
-	"fire_sound_1_player_3p"						"Weapon_epg_Fire_3P"
-	"fire_sound_1_npc"								"Weapon_epg_Fire_NPC"
+	"sound_dryfire"									"weapon_thermitegrenade_idleburn_1p"
+	"sound_zoom_in"									"Weapon_Rangemaster_Kraber_ADS_In"
+	"sound_zoom_out"								"Weapon_Rangemaster_Kraber_ADS_Out"
+	"fire_sound_1_player_1p"						"Weapon_ChargeRifle_Fire_1P"
+	"fire_sound_1_player_3p"						"Weapon_ChargeRifle_Fire_3P"
+	"fire_sound_1_npc"								"Weapon_ChargeRifle_Fire_NPC"
 	"looping_sounds"								"0"
 
-	"idle_sound_player_1p"							"weapon_epg_idle_gears_1p"
-
-	"low_ammo_sound_name_1"							"EPG_LowAmmo_Shot1"
-	"low_ammo_sound_name_2"							"EPG_LowAmmo_Shot2"
+	"idle_sound_player_1p"							"GasGrenade_IdleHiss"
 
 
 	// Ammo
@@ -105,7 +100,7 @@ WeaponData
 		"ammo_no_remove_from_clip"                      "0"
         "ammo_no_remove_from_stockpile"                 "1"
 
-		"damage_near_value"   							"60"
+		"damage_near_value"   							"200"
 		"damage_far_value"								"60"
 		"damage_near_value_titanarmor"					"700"
 		"damage_far_value_titanarmor" 					"700"
@@ -113,7 +108,7 @@ WeaponData
 		"damage_near_distance"							"60"
 		"damage_far_distance" 							"60"
 
-		"explosion_damage"								"40"
+		"explosion_damage"								"120"
 		"explosion_damage_heavy_armor"					"700"
 
 		"red_crosshair_range" 							"2000"
@@ -411,6 +406,7 @@ WeaponData
     "clip_bodygroup_show_for_milestone_1"	"0"
 
 	"bodygroup_ammo_index_count"			"7"
+	"ammo_pool_type"						"special"
 
 	Mods
 	{
@@ -425,6 +421,11 @@ WeaponData
         	"bodygroup1_set"	"0"
         	"bodygroup6_set"	"1"
         }
+		survival_finite_ammo
+		{
+			"uses_ammo_pool"						"1"
+			"ammo_no_remove_from_stockpile"			"0"
+		}
        	extended_ammo
 		{
 			"ammo_stockpile_max"				"120"

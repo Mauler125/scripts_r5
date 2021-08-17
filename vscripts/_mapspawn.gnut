@@ -270,7 +270,6 @@ void function CodeCallback_MapSpawn() // original script entry point
 	PrecacheWeapon( $"mp_weapon_vinson" )
 	PrecacheWeapon( $"mp_weapon_pdw" )
 	PrecacheWeapon( $"mp_ability_phase_walk" )
-	PrecacheWeapon( $"mp_ability_3dash" )
 	PrecacheWeapon( $"mp_weapon_phase_tunnel" )
 	PrecacheWeapon( $"mp_weapon_zipline" )
 	PrecacheWeapon( $"mp_ability_area_sonar_scan" )
@@ -298,13 +297,26 @@ void function CodeCallback_MapSpawn() // original script entry point
 	// PrecacheWeapon( $"mp_weapon_smart_pistol" )
 	PrecacheWeapon( $"mp_weapon_grenade_creeping_bombardment" )
 	PrecacheWeapon( $"mp_weapon_grenade_defensive_bombardment" )
-	PrecacheWeapon( $"mp_weapon_grenade_sonar" )
 	// PrecacheWeapon( $"mp_weapon_grenade_gravity" )
-	PrecacheWeapon( $"mp_weapon_grenade_electric_smoke" )
-	PrecacheWeapon( $"mp_weapon_deployable_cover" )
 	// PrecacheWeapon( $"mp_ability_laser_trip" )
 	// PrecacheWeapon( $"mp_weapon_satchel" )
 	// PrecacheWeapon( $"mp_weapon_spectre_spawner" )
+	
+	
+	//Custom
+	PrecacheWeapon( $"mp_ability_3dash" )
+	PrecacheWeapon( $"mp_ability_spider_grapple" )
+	PrecacheWeapon( $"mp_weapon_epg" )
+	PrecacheWeapon( $"mp_weapon_oneshot_wingman" )
+	PrecacheWeapon( $"mp_weapon_mastiff_extreme" )
+	PrecacheWeapon( $"mp_weapon_mozambique_extreme" )
+	PrecacheWeapon( $"mp_weapon_wingman_lmg" )
+	PrecacheWeapon( $"mp_weapon_r99_kraber" )
+	PrecacheWeapon( $"mp_weapon_dummyspawner" )
+	PrecacheWeapon( $"mp_weapon_grenade_sonar" )
+	PrecacheWeapon( $"mp_weapon_grenade_electric_smoke" )
+	PrecacheWeapon( $"mp_weapon_deployable_cover" )
+	
 
 	printl( "Code Script: _mapspawn" )
 
