@@ -1,6 +1,7 @@
 global function SURVIVAL_LootDistribution_InitShared
 global function SURVIVAL_GetWeightedItemFromGroup
 global function SURVIVAL_GetMultipleWeightedItemsFromGroup
+global function AddCustomItemToLootPool
 
 struct LootDistro
 {
@@ -31,7 +32,9 @@ void function SURVIVAL_LootDistribution_InitShared()
         }
         if(groupRef != "") //Found a group header, accumulate anything so far into the previous group 
         {
-            LootDistribution[ currentGroupRef ] <- clone distributions
+             if (currentGroupRef in LootDistribution)
+                LootDistribution[currentGroupRef].extend(clone distributions)
+            else LootDistribution[ currentGroupRef ] <- clone distributions
             distributions.clear()
             currentGroupRef = groupRef
         }
@@ -114,4 +117,11 @@ array<LootDistro> function UnpackGroup(string groupRef)
             unpackedDistro.append(distro)
     }   
     return unpackedDistro
+}
+
+void function AddCustomItemToLootPool(string itemRef, string groupRef, float chance)
+{
+    LootDistro ld = NewLootDistro(itemRef, chance)
+    if (groupRef in LootDistribution) LootDistribution[groupRef].append(ld)
+    else LootDistribution[groupRef] <- [ld]
 }
