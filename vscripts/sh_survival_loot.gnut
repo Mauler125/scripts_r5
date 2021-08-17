@@ -234,8 +234,6 @@ global enum eHealthPickupType
 
 	ULTIMATE
 
-	COMBO_FULL_SMALL
-
 	_count
 
 	INVALID = -1
@@ -513,18 +511,6 @@ void function SURVIVAL_Loot_InitShared()
 			healthPickup.animName1p = "ptpov_health_injector_short"
 		}
 		file.healthPickups[ eHealthPickupType.HEALTH_SMALL ] <- healthPickup
-	}
-
-	{
-		HealthPickup healthPickup
-		{
-			healthPickup.lootData = SURVIVAL_Loot_GetLootDataByRef( "health_pickup_combo_full" )
-			healthPickup.interactionTime = 3.0
-			healthPickup.healAmount = 50.0
-			healthPickup.shieldAmount = 50.0
-			healthPickup.healTime = 0.0
-		}
-		file.healthPickups[ eHealthPickupType.COMBO_FULL_SMALL ] <- healthPickup
 	}
 
 	healthKitUseOrder.append(eHealthPickupType.SHIELD_LARGE)
