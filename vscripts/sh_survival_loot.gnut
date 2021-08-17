@@ -234,6 +234,8 @@ global enum eHealthPickupType
 
 	ULTIMATE
 
+	COMBO_FULL_SMALL
+
 	_count
 
 	INVALID = -1
@@ -513,6 +515,18 @@ void function SURVIVAL_Loot_InitShared()
 		file.healthPickups[ eHealthPickupType.HEALTH_SMALL ] <- healthPickup
 	}
 
+	{
+		HealthPickup healthPickup
+		{
+			healthPickup.lootData = SURVIVAL_Loot_GetLootDataByRef( "health_pickup_combo_full" )
+			healthPickup.interactionTime = 3.0
+			healthPickup.healAmount = 50.0
+			healthPickup.shieldAmount = 50.0
+			healthPickup.healTime = 0.0
+		}
+		file.healthPickups[ eHealthPickupType.COMBO_FULL_SMALL ] <- healthPickup
+	}
+
 	healthKitUseOrder.append(eHealthPickupType.SHIELD_LARGE)
 	healthKitUseOrder.append(eHealthPickupType.SHIELD_SMALL)
 	healthKitUseOrder.append(eHealthPickupType.COMBO_FULL)
@@ -604,12 +618,12 @@ void function SURVIVAL_Loot_InitShared()
 
 			int col = GetDataTableColumnByName( attachmentMatrix, data.baseWeapon )
 
-			string colFeatureFlagRef = GetDataTableString( attachmentMatrix, featureFlagRowIdx, col )
+			/*string colFeatureFlagRef = GetDataTableString( attachmentMatrix, featureFlagRowIdx, col )
 			if ( colFeatureFlagRef != "" && !GetFeatureFlagByString( colFeatureFlagRef ) )
 			{
 				printf( "Skipping weapon attachment data for %s because feature flag %s is off.", data.baseWeapon, colFeatureFlagRef )
 				continue
-			}
+			}*/
 
 			if ( col != -1 )
 			{
@@ -620,9 +634,22 @@ void function SURVIVAL_Loot_InitShared()
 					aData.compatibleWeapons.append( data.baseWeapon )
 				}
 			}
+			else if (IsAttachmentCompatibleWithCustomWeapon(data, aData)) aData.compatibleWeapons.append( data.baseWeapon )
 		}
 
 		file.attachmentMatrix[ attachmentName ] <- aData
+	}
+
+	foreach(CustomHopupData a in GetCustomHopupArray()){
+		AttachmentData aData
+		aData.ref = a.className
+		aData.attachPoint = a.attachmentSlot
+
+		foreach ( data in allWeapons )
+		{
+			if (IsAttachmentCompatibleWithCustomWeapon(data, aData)) aData.compatibleWeapons.append( data.baseWeapon )
+		}
+		file.attachmentMatrix[aData.ref] <- aData
 	}
 
 	foreach ( aData in file.attachmentMatrix )
@@ -680,6 +707,16 @@ void function SURVIVAL_Loot_InitShared()
 			aData.tagData.weaponRefs = attachmentUniques
 		}
 	}
+}
+
+bool function IsAttachmentCompatibleWithCustomWeapon(LootData weapon, AttachmentData att)
+{
+	if (!weapon.supportedAttachments.contains( att.attachPoint )) return false
+
+	array<string> mods = GetWeaponMods_Global( weapon.baseWeapon )
+	if (mods.contains(att.ref)) printt("Attachment", att.ref, "has been found to be compatible with", weapon.ref)
+	else return false
+	return true
 }
 
 #if SERVER
@@ -969,12 +1006,8 @@ bool function SURVIVAL_Loot_RunConditionalCheck( string ref, entity player )
 
 string function GetAttachPointForAttachment( string attachmentName )
 {
-	var attachmentMatrix = GetDataTable( $"datatable/weapon_attachment_matrix.rpak" )
-	int attachmentRow = GetDataTableRowMatchingStringValue( attachmentMatrix, GetDataTableColumnByName( attachmentMatrix, "attachmentName" ), attachmentName )
-	Assert( attachmentRow >= 0, "Attachment not defined in datatable/weapon_attachment_matrix.rpak" )
-	int attachmentPointColumn = GetDataTableColumnByName( attachmentMatrix, "attachmentPoint" )
 
-	return GetDataTableString( attachmentMatrix, attachmentRow, attachmentPointColumn )
+	return file.attachmentMatrix[attachmentName].attachPoint
 }
 
 #if CLIENT || SERVER
@@ -2829,7 +2862,7 @@ void function Inventory_RegisterNetworking()
 {
 	Remote_RegisterClientFunction( "ServerCallback_PickedupItem", "entity", "int", 0, 256, "int", 0, 256 )
 	Remote_RegisterClientFunction( "ServerCallback_DroppedItem", "entity", "int", 0, 256 )
-	Remote_RegisterClientFunction( "ServerCallback_AttachedMod", "int", 0, 100, "int", 0, 256 )
+	Remote_RegisterClientFunction( "ServerCallback_AttachedMod", "int", 0, 256, "int", 0, 256 )
 }
 #endif // CLIENT || SERVER
 
