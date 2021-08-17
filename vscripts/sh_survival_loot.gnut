@@ -2848,7 +2848,7 @@ void function Inventory_RegisterNetworking()
 {
 	Remote_RegisterClientFunction( "ServerCallback_PickedupItem", "entity", "int", 0, 256, "int", 0, 256 )
 	Remote_RegisterClientFunction( "ServerCallback_DroppedItem", "entity", "int", 0, 256 )
-	Remote_RegisterClientFunction( "ServerCallback_AttachedMod", "int", 0, 256, "int", 0, 256 )
+	Remote_RegisterClientFunction( "ServerCallback_AttachedMod", "int", 0, 100, "int", 0, 256 )
 }
 #endif // CLIENT || SERVER
 
