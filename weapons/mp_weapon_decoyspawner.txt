@@ -5,10 +5,10 @@
 WeaponData
 {
 	// General
-	"printname"                                "Dummy Spawner"
-	"shortprintname"                           "Dummy Spawner"
-	"description"                              "Allows you to spawn dummy..."
-	"longdesc"                                 "Allows you to spawn dummy..."
+	"printname"                                "Decoy Spawner"
+	"shortprintname"                           "Decoy Spawner"
+	"description"                              "Allows you to spawn a decoy"
+	"longdesc"                                 "Allows you to spawn a decoy"
 	"ammo_pool_type"								"highcal"
 
 	"menu_icon"										"rui/weapon_icons/r5/weapon_wingman"
@@ -231,11 +231,12 @@ WeaponData
     "clip_bodygroup_show_for_milestone_3"	"1"
 
 	//
-	//SPAWN DUMMIES
+	//SPAWN DECOYS
 	//
 
-	"OnWeaponPrimaryAttack"							"OnWeaponPrimaryAttack_weapon_dummyspawner"
-	"OnWeaponNpcPrimaryAttack"						"OnWeaponNpcPrimaryAttack_weapon_dummyspawner"
+	"OnWeaponPrimaryAttack"							"OnWeaponPrimaryAttack_weapon_decoyspawner"
+	"OnWeaponNpcPrimaryAttack"						"OnWeaponNpcPrimaryAttack_weapon_decoyspawner"
+	"OnProjectileCollision"                         "OnProjectileCollision_weapon_decoyspawner"
 
 	Mods
 	{

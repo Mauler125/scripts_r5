@@ -108,7 +108,7 @@ void function Bleedout_StartPlayerBleedout( entity player, entity attacker )
 	if ( IsValid( file.Callback_OnPlayerStartBleedout ) && !file.isBleeding[ player ] )
 		file.Callback_OnPlayerStartBleedout( player, attacker, null )
 
-	thread BloodTrail( player )
+	// thread BloodTrail( player )
 	thread PlayerDying( player )
 	thread EnablePlayerRes( player )
 
@@ -385,15 +385,19 @@ void function PlayerAttemptRes( entity playerHealer, entity playerToRes )
 				playerToRes.SnapEyesToFeet()
 				ClearPlayerAnimViewEntity( playerToRes )
 				playerToRes.MovementEnable()
-				playerToRes.ForceStand()
 				Remote_CallFunction_NonReplay( playerToRes, "ServerCallback_BLEEDOUT_StopFirstAidProgressBar", attemptID )
 
-				// hack
-				thread function() : ( playerToRes )
+				if ( !file.isBleeding[ playerToRes ] )
 				{
-					wait 0.1
-					playerToRes.UnforceStand()
-				}()
+					playerToRes.ForceStand()
+
+					// hack
+					thread function() : ( playerToRes )
+					{
+						wait 0.1
+						playerToRes.UnforceStand()
+					}()
+				}
 			}
 		}
 	)
@@ -448,6 +452,11 @@ void function PlayerAttemptRes( entity playerHealer, entity playerToRes )
 		playerToRes.SetPlayerNetBool( "usedSelfRevive", true )
         Inventory_SetPlayerEquipment(playerToRes, "incapshield_pickup_lv3", "incapshield")
     }
+	else
+	{
+		if ( GetCurrentPlaylistVarBool( "thank_for_revive_enabled", true ) )
+			Remote_CallFunction_NonReplay( playerToRes, "ServerCallback_PromptSayThanks", playerHealer )
+	}
 
 	playerToRes.Signal( "BleedOut_OnRevive" )
 	playerHealer.p.revivesGiven++

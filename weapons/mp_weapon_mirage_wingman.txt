@@ -1,15 +1,14 @@
 #base "_base_handgun.txt"
 #base "_base_handgun_optics.txt"
-#base "_base_mags_heavy.txt"
+#base "_base_mags_energy.txt"
 
 WeaponData
 {
 	// General
-	"printname"                                "Dummy Spawner"
-	"shortprintname"                           "Dummy Spawner"
-	"description"                              "Allows you to spawn dummy..."
-	"longdesc"                                 "Allows you to spawn dummy..."
-	"ammo_pool_type"								"highcal"
+	"printname"   									"Mirage's wingman"
+	"shortprintname"								"Mirage's WM"
+	"description" 									"Mirage's very own wingman. Might act weird, idk."
+	"longdesc" 										"Mirage's very own wingman. Might act weird, idk."
 
 	"menu_icon"										"rui/weapon_icons/r5/weapon_wingman"
 	"hud_icon"										"rui/weapon_icons/r5/weapon_wingman"
@@ -62,22 +61,23 @@ WeaponData
 
 	"damage_type" 									"bullet"
 
-	"ammo_clip_size"                                "160"
 
 	"dof_zoom_focusArea_horizontal"					"0.06"
 	"dof_zoom_focusArea_top"						"0.070"
 	"dof_zoom_focusArea_bottom"						"-0.011"
 
-    "ammo_default_total"                            "160"
-	"ammo_stockpile_max"                            "160"
-	"ammo_default_total"                            "160"
-	"ammo_per_shot"                                 "1"
-	"ammo_min_to_fire"                              "1"
-	"ammo_clip_random_loss_on_npc_drop_chunksize"   "1"
-	"ammo_no_remove_from_stockpile"                 "1"
-	"reload_enabled"                                "1"
-	"allow_empty_click"                             "1"
-	"empty_reload_only"                             "0"
+
+	"ammo_pool_type"                               "special"
+	"ammo_clip_size"                               "3"
+	"ammo_stockpile_max"                           "120"
+	"ammo_default_total"                           "120"
+	"ammo_per_shot"                                "1"
+	"ammo_min_to_fire"                             "1"
+	"ammo_clip_random_loss_on_npc_drop_chunksize"  "1"
+	"ammo_no_remove_from_stockpile"                "1"
+	"reload_enabled"                               "1"
+	"allow_empty_click"                            "1"
+	"empty_reload_only"                            "0"
 
     // Damage - When Used by Players
     "damage_near_value"   							"45"
@@ -89,7 +89,14 @@ WeaponData
     "damage_rodeo" 									"350"
 
     // this sucks. it should be an %else but I haven't had time to do it yet
+
+
+
+
+
     "damage_headshot_scale"                         "2"   //"2.15"
+
+
     "damage_near_distance"							"800"
     "damage_far_distance" 							"1300"
     "damage_very_far_distance"						"1800"
@@ -125,13 +132,13 @@ WeaponData
 	"dof_nearDepthEnd"								"0.0"
 
 	// Behavior
-	"fire_rate"   									"100"
-	"reload_time" 									"0.05"
-	"reload_time_late1" 							"0.05"
-	"reload_time_late2" 							"0.05"
-	"reloadempty_time"								"0.05"
-	"reloadempty_time_late1"						"0.05"
-	"reloadempty_time_late2"						"0.05"
+	"fire_rate"   									"2.9"
+	"reload_time" 									"1.7"
+	"reload_time_late1" 							"1.75"
+	"reload_time_late2" 							"0.60"
+	"reloadempty_time"								"2.1"
+	"reloadempty_time_late1"						"1.75"
+	"reloadempty_time_late2"						"0.65"
 	"deploy_time" 									"0.45"
 	"holster_time"									"0.4"
 	"raise_time"  									"0.35"
@@ -230,12 +237,37 @@ WeaponData
     "clip_bodygroup_show_for_milestone_2"	"1"
     "clip_bodygroup_show_for_milestone_3"	"1"
 
+
 	//
-	//SPAWN DUMMIES
+	// CUSTOM
 	//
 
-	"OnWeaponPrimaryAttack"							"OnWeaponPrimaryAttack_weapon_dummyspawner"
-	"OnWeaponNpcPrimaryAttack"						"OnWeaponNpcPrimaryAttack_weapon_dummyspawner"
+	"OnWeaponPrimaryAttack"							"OnWeaponPrimaryAttack_weapon_mirage_wingman"
+	"OnWeaponNpcPrimaryAttack"						"OnWeaponNpcPrimaryAttack_weapon_mirage_wingman"
+	"OnProjectileCollision"                         "OnProjectileCollision_weapon_mirage_wingman"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	Mods
 	{
@@ -245,35 +277,25 @@ WeaponData
 
 		survival_finite_ammo
         {
-            "ammo_default_total"			"0"
-	   		"ammo_stockpile_max"			"20"
-	   		"ammo_no_remove_from_stockpile"	"0"
-	   		"low_ammo_fraction" 			"0.3"
-	   		"uses_ammo_pool"				"1"
+			"ammo_stockpile_max"             "24"
+			"ammo_default_total"             "0"
+			"ammo_no_remove_from_stockpile"  "0"
+			"uses_ammo_pool"                 "1"
+			"low_ammo_fraction"              "0.3"
         }
-
-        hopup_headshot_dmg
-        {
-        	"damage_headshot_scale"			"2.25"
-        	"projectile_trail_effect_0"     "P_tracer_proj_sniper_piercer"
-        	"fire_sound_1_player_1p"		"weapon_wingman_fire_skull_1p"
-			"fire_sound_1_player_3p"		"weapon_wingman_fire_skull_3p"
-			"fire_sound_1_npc"				"weapon_wingman_fire_skull_3p"
-        }
-
-		highcal_mag_l1
+		energy_mag_l1
 		{
-			"ammo_clip_size"   					"500"
+			"ammo_clip_size"   					"4"
 		}
 
-		highcal_mag_l2
+		energy_mag_l2
 		{
-			"ammo_clip_size"   					"500"
+			"ammo_clip_size"   					"5"
 		}
 
-		highcal_mag_l3
+		energy_mag_l3
 		{
-			"ammo_clip_size"   					"500"
+			"ammo_clip_size"   					"6"
 		}
 
 		legendary1
