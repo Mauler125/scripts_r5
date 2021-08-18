@@ -553,7 +553,6 @@ void function RegisterWeapon( CustomWeaponData weaponData )
 
 	// loot tags is just weapon type in disguise.
 	data.lootTags = [ weaponData.weaponType ]
-	// can be hardcoded since only weapons are registered through here.
 	data.lootType = eLootType.MAINWEAPON
 	
 	// sort the attachments so it appears like vanilla and not messed up
@@ -602,27 +601,23 @@ void function CreateCustomHopup(CustomHopupData hopupData)
 {
 	LootData data
 
-	// same as the mod added to the weapon when equipped.
 	data.ref = hopupData.className
-	// basic stuff
 	data.pickupString = hopupData.displayName
 	data.desc = hopupData.desc
 	data.hudIcon = hopupData.icon
 	data.model = hopupData.model
+	data.tier = hopupData.tier
+
 	// can be hardcoded since this is an attachment, no need for custom pickup sounds.
 	data.pickupSound_1p = "survival_loot_pickup_attachments"
 	data.pickupSound_3p = "survival_loot_pickup_3p_attachments"
-	// rarity
-	data.tier = hopupData.tier
+
 	// needs to be setup, otherwise you won't be able to pick up the attachment
 	data.countPerDrop = 1
 	data.inventorySlotCount = 1
 	data.attachmentStyle = "hopup"
 
-
-	// loot tags not needed, because this is not a weapon.
 	data.lootTags = []
-	// can be hardcoded since only attachments are registered through here.
 	data.lootType = eLootType.ATTACHMENT
 
 
