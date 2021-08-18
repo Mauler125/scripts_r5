@@ -149,6 +149,7 @@ void function InitWeaponScripts()
 		MeleeShadowsquadHands_Init()
 		MpWeaponShadowsquadHandsPrimary_Init()
 		MDLSpawner_Init()
+		DummySpawner_Init()
 	#endif
 
 	MpAbilityGibraltarShield_Init()
