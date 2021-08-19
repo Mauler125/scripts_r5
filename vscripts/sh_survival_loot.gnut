@@ -1598,7 +1598,7 @@ void function SURVIVAL_Loot_SetHighlightForLoot( entity prop, bool isSelected )
 	switch( lootType )
 	{
 		case eLootType.MAINWEAPON:
-			if ( lootTier != 4 )
+			if (lootTier == 1) 
 				highlight = "survival_item_weapon"
 			break
 
