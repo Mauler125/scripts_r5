@@ -27,7 +27,7 @@ global function CodeCallback_PlayerLeaveUpdraftTrigger
 	//const asset HOVERTANK_PATH_FX = $"P_wpn_arcball_beam"
 	//const asset HOVERTANK_END_FX = $"P_ar_call_beacon_ring_hovertank"
 
-	const float SKYBOX_Z_OFFSET_STAGING_AREA = 32.0
+	const float SKYBOX_Z_OFFSET_STAGING_AREA = 30.0
 	const vector SKYBOX_ANGLES_STAGING_AREA = <0, 60, 0>
 
 	const int HOVER_TANKS_DEFAULT_CIRCLE_INDEX = 1
@@ -110,6 +110,7 @@ void function Canyonlands_MapInit_Common()
 	SupplyShip_Init()
 
 	#if SERVER
+        InitWaterLeviathans()
 		LootTicks_Init()
 
 		FlagSet( "DisableDropships" )
@@ -134,9 +135,8 @@ void function Canyonlands_MapInit_Common()
 		SURVIVAL_SetAirburstHeight( 8000 )
 		SURVIVAL_SetMapCenter( <0, 0, 0> )
 
-		AddSpawnCallback_ScriptName( "leviathan", LeviathanThink )
-		AddSpawnCallback_ScriptName( "leviathan_staging", LeviathanThink )
-
+        AddSpawnCallbackEditorClass( "prop_dynamic", "script_survival_pvpcurrency_container", OnPvpCurrencyContainerSpawned )    
+        AddSpawnCallbackEditorClass( "prop_dynamic", "script_survival_upgrade_station", OnSurvivalUpgradeStationSpawned )  
 		if ( GetMapName() == "mp_rr_canyonlands_staging" )
 		{
 			// adjust skybox for staging area
@@ -180,7 +180,23 @@ void function Canyonlands_MapInit_Common()
 }
 
 #if SERVER
+void function OnPvpCurrencyContainerSpawned(entity ent)
+{	
+    if( GameRules_GetGameMode() != FREELANCE )
+	{
+        if(IsValid(ent))
+            ent.Destroy()
+    }
+}
 
+void function OnSurvivalUpgradeStationSpawned(entity ent)
+{
+    if( GameRules_GetGameMode() != FREELANCE )
+	{
+        if(IsValid(ent))
+            ent.Destroy()
+    }
+}
 void function InitWaterLeviathans()
 {
 	AddSpawnCallback_ScriptName( CANYONLANDS_LEVIATHAN1_NAME, CreateClientSideLeviathanMarkers )
@@ -957,20 +973,6 @@ void function TestCreateTooManyLinks()
 			wait 0
 		}
 	}
-}
-
-void function LeviathanThink( entity leviathan )
-{
-	leviathan.EndSignal( "OnDestroy" )
-
-	string targetName = "LeviathanMarker"
-	if ( leviathan.GetScriptName() == "leviathan_staging" )
-		targetName = "LeviathanStagingMarker"
-
-	entity ent = CreatePropDynamic_NoDispatchSpawn( $"mdl/dev/empty_model.rmdl", leviathan.GetOrigin(), leviathan.GetAngles() )
-	SetTargetName( ent, targetName )
-	DispatchSpawn( ent )
-	leviathan.Destroy()
 }
 
 void function StagingArea_MoveSkybox()

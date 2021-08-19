@@ -105,6 +105,13 @@ void function CodeCallback_DamagePlayerOrNPC( entity ent, var damageInfo )
 		}
 	}
 
+	// if inflictor is trigger_hurt, set the identifier according to ent keyvalue
+	if ( DamageInfo_GetDamageSourceIdentifier( damageInfo ) == eDamageSourceId.invalid 
+			&& inflictor != null 
+			&& inflictor.GetClassName() == "trigger_hurt" 
+			&& inflictor.HasKey( "damageSourceName" ) )
+		DamageInfo_SetDamageSourceIdentifier( damageInfo, eDamageSourceId[expect string( inflictor.kv.damageSourceName )] )
+
 	#if VERBOSE_DAMAGE_PRINTOUTS
 		printt( "CodeCallback_DamagePlayerOrNPC ent:", ent )
 		printt( "    Attacker:", DamageInfo_GetAttacker( damageInfo ) )
@@ -582,27 +589,7 @@ void function SetGameModeRulesEarnMeterOnDamage( void functionref( entity, entit
 
 bool function ShouldGiveTimerCredit_Default( entity player, entity victim, var damageInfo )
 {
-	if ( player == victim )
-		return false
-
-	if ( player.IsTitan() && !IsCoreAvailable( player ) )
-		return false
-
-	// if ( GAMETYPE == FREE_AGENCY && !player.IsTitan() )
-	// 	return false
-
-	int damageSourceID = DamageInfo_GetDamageSourceIdentifier( damageInfo )
-	switch ( damageSourceID )
-	{
-		case eDamageSourceId.mp_titancore_flame_wave:
-		case eDamageSourceId.mp_titancore_flame_wave_secondary:
-		case eDamageSourceId.mp_titancore_salvo_core:
-		case damagedef_titan_fall:
-		case damagedef_nuclear_core:
-			return false
-	}
-
-	return true
+	return false
 }
 
 bool function GameModeRulesShouldGiveTimerCredit( entity player, entity victim, var damageInfo )

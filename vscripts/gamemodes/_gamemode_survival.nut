@@ -19,9 +19,13 @@ global function SURVIVAL_AddLootGroupRemapping
 global function SURVIVAL_DebugLoot
 global function Survival_AddCallback_OnAirdropLaunched
 global function Survival_CleanupPlayerPermanents
+global function Survival_SetCallback_Leviathan_ConsiderLookAtEnt
+global function Survival_Leviathan_ConsiderLookAtEnt
+global function CreateSurvivalDeathBoxForPlayer
 
 struct
 {
+    void functionref( entity, float, float ) leviathanConsiderLookAtEntCallback = null
 } file
 
 void function GamemodeSurvival_Init()
@@ -45,6 +49,18 @@ void function GamemodeSurvival_Init()
 	)
 
 	thread SURVIVAL_RunArenaDeathField()
+}
+
+void function Survival_SetCallback_Leviathan_ConsiderLookAtEnt( void functionref( entity, float, float ) callback )
+{
+	file.leviathanConsiderLookAtEntCallback = callback
+}
+
+void function Survival_Leviathan_ConsiderLookAtEnt(entity ent)
+{
+    wait 1 //Wait until the ent has decided their direction
+    if(file.leviathanConsiderLookAtEntCallback != null)
+        file.leviathanConsiderLookAtEntCallback( ent, 10, 0.3 )
 }
 
 void function RespawnPlayerInDropship( entity player )
@@ -85,9 +101,21 @@ void function RespawnPlayerInDropship( entity player )
 
 void function Sequence_Playing()
 {
-	SetServerVar( "minimapState", true )
+	SetServerVar( "minimapState", IsFiringRangeGameMode() ? eMinimapState.Hidden : eMinimapState.Default )
 
-	
+	if ( IsFiringRangeGameMode() )
+	{
+		SetGameState( eGameState.WaitingForPlayers )
+
+		foreach ( player in GetPlayerArray() )
+		{
+			SetRandomStagingPositionForPlayer( player )
+			DecideRespawnPlayer( player )
+		}
+
+		return
+	}
+
 	if ( !GetCurrentPlaylistVarBool( "jump_from_plane_enabled", true ) )
 	{
 		vector pos = GetEnt( "info_player_start" ).GetOrigin()
@@ -340,12 +368,6 @@ void function OnPlayerDamaged( entity victim, var damageInfo )
 		return
 
 	int sourceId = DamageInfo_GetDamageSourceIdentifier( damageInfo )
-	
-	// Trigger_Hurt fix
-	entity inflictor = DamageInfo_GetInflictor(damageInfo);
-	if(sourceId == eDamageSourceId.invalid && inflictor != null && inflictor.GetClassName() == "trigger_hurt" && inflictor.HasKey("damageSourceName"))
-		DamageInfo_SetDamageSourceIdentifier(damageInfo, eDamageSourceId[expect string(inflictor.kv.damageSourceName)])
-	
 	if ( sourceId == eDamageSourceId.bleedout || sourceId == eDamageSourceId.human_execution )
 		return
 
@@ -359,35 +381,138 @@ void function OnPlayerDamaged( entity victim, var damageInfo )
 		&& PlayerRevivingEnabled() )
 	{
 		// Supposed to be bleeding
-		//Bleedout_StartPlayerBleedout( victim, DamageInfo_GetAttacker( damageInfo ) )
+		Bleedout_StartPlayerBleedout( victim, DamageInfo_GetAttacker( damageInfo ) )
 
 		// Cancel the damage
-		//DamageInfo_SetDamage( damageInfo, 0 )
+		DamageInfo_SetDamage( damageInfo, 0 )
+
+		// Run client callback
+		int scriptDamageType = DamageInfo_GetCustomDamageType( damageInfo )
+		entity attacker = DamageInfo_GetAttacker( damageInfo )
+
+		foreach ( cbPlayer in GetPlayerArray() )
+			Remote_CallFunction_Replay( cbPlayer, "ServerCallback_OnEnemyDowned", attacker, victim, scriptDamageType, sourceId )
 	}
+}
+
+array<ConsumableInventoryItem> function GetAllDroppableItems( entity player )
+{
+	array<ConsumableInventoryItem> final = []
+
+	// Consumable inventory
+	final.extend( SURVIVAL_GetPlayerInventory( player ) )
+
+	// Weapon related items
+	foreach ( weapon in SURVIVAL_GetPrimaryWeapons( player ) )
+	{
+		LootData data = SURVIVAL_GetLootDataFromWeapon( weapon )
+		if ( data.ref == "" )
+			continue
+
+		// Add the weapon
+		ConsumableInventoryItem item
+		
+		item.type = data.index
+		item.count = weapon.GetWeaponPrimaryClipCount()
+
+		final.append( item )
+
+		foreach ( esRef, mod in GetAllWeaponAttachments( weapon ) )
+		{
+			if ( !SURVIVAL_Loot_IsRefValid( mod ) )
+				continue
+			
+			if ( data.baseMods.contains( mod ) )
+				continue
+
+			LootData attachmentData = SURVIVAL_Loot_GetLootDataByRef( mod )
+
+			// Add the attachment
+			ConsumableInventoryItem attachmentItem
+			
+			attachmentItem.type = attachmentData.index
+			attachmentItem.count = 1
+
+			final.append( attachmentItem )
+		}
+	}
+
+	// Non-weapon equipment slots
+	foreach ( string ref, EquipmentSlot es in EquipmentSlot_GetAllEquipmentSlots() )
+	{
+		if ( EquipmentSlot_IsMainWeaponSlot( ref ) || EquipmentSlot_IsAttachmentSlot( ref ) )
+			continue
+
+		LootData data = EquipmentSlot_GetEquippedLootDataForSlot( player, ref )
+		if ( data.ref == "" )
+			continue
+
+		// Add the equipped loot
+		ConsumableInventoryItem equippedItem
+
+		equippedItem.type = data.index
+		equippedItem.count = 1
+
+		final.append( equippedItem )
+	}
+
+	return final
+}
+
+void function CreateSurvivalDeathBoxForPlayer( entity victim, entity attacker, var damageInfo )
+{
+	entity deathBox = SURVIVAL_CreateDeathBox( victim, true )
+
+	foreach ( invItem in GetAllDroppableItems( victim ) )
+	{
+		LootData data = SURVIVAL_Loot_GetLootDataByIndex( invItem.type )
+
+		entity loot = SpawnGenericLoot( data.ref, deathBox.GetOrigin(), deathBox.GetAngles(), invItem.count )
+		AddToDeathBox( loot, deathBox )
+	}
+
+	UpdateDeathBoxHighlight( deathBox )
+
+	foreach ( func in svGlobal.onDeathBoxSpawnedCallbacks )
+		func( deathBox, attacker, damageInfo != null ? DamageInfo_GetDamageSourceIdentifier( damageInfo ) : 0 )
 }
 
 void function OnPlayerKilled( entity victim, entity attacker, var damageInfo )
 {
-	if ( !IsValid( victim ) || !IsValid( attacker ) )
+	if ( !IsValid( victim ) || !IsValid( attacker ) || !victim.IsPlayer() )
 		return
 
-	if ( victim.IsPlayer() )
+	if ( IsFiringRangeGameMode() )
 	{
-		SetPlayerEliminated( victim )
-		PlayerStartSpectating( victim, attacker )
+		thread function() : ( victim )
+		{
+			wait 5.0
 
-		int victimTeamNumber = victim.GetTeam()
-		array<entity> victimTeam = GetPlayerArrayOfTeam_Alive( victimTeamNumber )
-		bool teamEliminated = victimTeam.len() == 0
+			SetRandomStagingPositionForPlayer( victim )
+			DecideRespawnPlayer( victim )
+		}()
 
-		if ( teamEliminated )
-			HandleSquadElimination( victim.GetTeam() )
-
-		if ( !PlayerRespawnEnabled() )
-			PlayerFullyDoomed( victim )
-		else
-			printt( "!!! Respawns are enabled! This is TODO" )
+		return
 	}
+
+	SetPlayerEliminated( victim )
+	PlayerStartSpectating( victim, attacker )
+
+	int victimTeamNumber = victim.GetTeam()
+	array<entity> victimTeam = GetPlayerArrayOfTeam_Alive( victimTeamNumber )
+	bool teamEliminated = victimTeam.len() == 0
+
+	if ( teamEliminated )
+		HandleSquadElimination( victim.GetTeam() )
+
+	bool canPlayerBeRespawned = PlayerRespawnEnabled() && !teamEliminated
+	int droppableItems = GetAllDroppableItems( victim ).len()
+
+	if ( canPlayerBeRespawned || droppableItems > 0 )
+		CreateSurvivalDeathBoxForPlayer( victim, attacker, damageInfo )
+	
+	if ( !canPlayerBeRespawned )
+		PlayerFullyDoomed( victim )
 }
 
 void function OnClientConnected( entity player )
@@ -413,7 +538,14 @@ void function OnClientConnected( entity player )
 				// Joined too late, assign a random legend so everything runs fine
 				CharacterSelect_TryAssignCharacterCandidatesToPlayer( player, [] )
 
-			if ( Flag( "SpawnInDropship" ) )
+			if ( IsFiringRangeGameMode() )
+			{
+				PlayerMatchState_Set( player, ePlayerMatchState.STAGING_AREA )
+
+				SetRandomStagingPositionForPlayer( player )
+				DecideRespawnPlayer( player )
+			}
+			else if ( Flag( "SpawnInDropship" ) )
 				RespawnPlayerInDropship( player )
 			else
 			{
@@ -488,7 +620,23 @@ void function Survival_PlayerRespawnedTeammate( entity playerWhoRespawned, entit
 
 void function UpdateDeathBoxHighlight( entity box )
 {
+	int highestTier = 0
 
+	foreach ( item in box.GetLinkEntArray() )
+	{
+		LootData data = SURVIVAL_Loot_GetLootDataByIndex( item.GetSurvivalInt() )
+		if ( data.ref == "" )
+			continue
+
+		if ( data.tier > highestTier )
+			highestTier = data.tier
+	}
+
+	box.SetNetInt( "lootRarity", highestTier )
+	Highlight_SetNeutralHighlight( box, SURVIVAL_GetHighlightForTier( highestTier ) )
+
+	foreach ( player in GetPlayerArray() )
+		Remote_CallFunction_Replay( player, "ServerCallback_RefreshDeathBoxHighlight" )
 }
 
 float function Survival_GetMapFloorZ( vector field )
