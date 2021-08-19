@@ -173,6 +173,16 @@ struct
 } file
 
 
+struct CustomGrenadeData
+{
+	string className,
+	int countPerDrop,
+	int stackSize,
+	int tier,
+	float chance,
+	float carePackageChance
+}
+
 array<string> attachmentSortOrder = ["barrel", "mag", "sight", "grip", "hopup"]
 
 array<CustomHopupData> function GetCustomHopupArray()
@@ -286,7 +296,7 @@ void function SURVIVAL_Loot_All_InitShared()
 		array<string> supportedAttachments = split( supportedAttachmentsString, " " )
 		// This version is supposed to have energy mags on these weapons.
 		// They were only removed on January 14, 2020, and this build is from October 30, 2019.
-		if (data.ref == "mp_weapon_esaw" || data.ref == "mp_weapon_energy_ar" || data.ref == "mp_weapon_doubletake") supportedAttachments.append("mag")
+		//if (data.ref == "mp_weapon_energy_ar" || data.ref == "mp_weapon_doubletake") supportedAttachments.append("mag")
 		supportedAttachments.sort(
 			int function( string attachmentA, string attachmentB ) : ()
 			{
@@ -508,7 +518,46 @@ void function RegisterCustomWeapons()
 		// create the hopup...
 		CreateCustomHopup(data)
 	}
+	array<string> customGrenadeClassNames = split(GetCurrentPlaylistVarString("custom_grenade_list", ""), " ")
+	foreach(string className in customGrenadeClassNames)
+	{
+		CustomGrenadeData data
+		data.className = className
+		data.countPerDrop = GetCurrentPlaylistVarInt(className + "_count_per_drop", 1)
+		data.stackSize = GetCurrentPlaylistVarInt(className + "_stack_size", 2)
+		data.tier = GetCurrentPlaylistVarInt(className + "_tier", 1)
+		RegisterCustomGrenade(data)
+	}
 }
+
+void function RegisterCustomGrenade(CustomGrenadeData grenadeData) {
+	LootData data
+	data.ref = grenadeData.className
+	data.baseWeapon = grenadeData.className
+	#if !UI
+	PrecacheWeapon( data.baseWeapon )
+	#endif
+	data.pickupString = GetWeaponInfoFileKeyField_GlobalString( data.baseWeapon, "printName" )
+	data.desc = GetWeaponInfoFileKeyField_GlobalString( data.baseWeapon, "description" )
+	data.hudIcon = GetWeaponInfoFileKeyFieldAsset_Global( data.baseWeapon, "hud_icon" )
+	data.model = GetWeaponInfoFileKeyFieldAsset_Global( data.baseWeapon, "playermodel" )
+	data.tier = grenadeData.tier
+	data.countPerDrop = grenadeData.countPerDrop
+	data.inventorySlotCount = grenadeData.stackSize
+	data.lootType = eLootType.ORDNANCE
+	data.pickupSound_1p = "survival_loot_pickup_ordanance"
+	data.pickupSound_3p = "survival_loot_pickup_3p_ordanance"
+
+	data.index = file.lootIndexToString.len()
+	file.lootIndexToString.append( data.ref )
+	file.lootData[ data.ref ] <- data
+
+	#if !UI
+	AddCustomItemToLootPool( data.ref, "ordnance", 30)
+	AddCustomItemToLootPool( data.ref, "ordnance_drops", 50)
+	#endif
+}
+
 #if !UI
 // used for conversion shit
 asset function CastStringToAsset( string val )
@@ -543,6 +592,7 @@ void function RegisterWeapon( CustomWeaponData weaponData )
 	data.desc = GetWeaponInfoFileKeyField_GlobalString( data.baseWeapon, "description" )
 	data.hudIcon = GetWeaponInfoFileKeyFieldAsset_Global( data.baseWeapon, "hud_icon" )
 	data.model = GetWeaponInfoFileKeyFieldAsset_Global( data.baseWeapon, "playermodel" )
+	data.countPerDrop = GetWeaponInfoFileKeyField_GlobalInt( data.baseWeapon, "ammo_clip_size" )
 
 	// Pickup sounds. 
 	data.pickupSound_3p = weaponData.pickupSound3p
@@ -816,7 +866,7 @@ const vector LOOT_COLOR_HEIRLOOM = <255, 0, 0>
 vector function GetFXRarityColorForTier( int tier )
 {
 #if SERVER
-    //Warning( "Server is attempting to get a loot rarity color. This does not support accessibility features such as color blind mode." )
+    Warning( "Server is attempting to get a loot rarity color. This does not support accessibility features such as color blind mode." )
 	switch ( tier )
 	{
 		case eLootTier.NONE:
