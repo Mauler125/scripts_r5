@@ -123,6 +123,7 @@ global function RemoveThreatScopeColorStatusEffect
 global function LimitVelocityHorizontal
 global function GiveMatchingAkimboWeapon
 global function TakeMatchingAkimboWeapon
+global function GetDualPrimarySlotForWeapon
 global function AddWeaponModChangedCallback
 global function TryApplyingBurnDamage
 global function AddEntityBurnDamageStack

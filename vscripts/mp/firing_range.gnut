@@ -47,7 +47,8 @@ struct {
 
 	array<RackGroup> rackSpawns
 
-	vector flickTraining_pos = <32000,-6686,-29033>
+	vector trackingTraining_pos = <32000,-7853,-29000>
+	vector flickTraining_pos = <32000,-6720,-29033>
 	vector flickTraining_ang = <0,-180,0>
 	float flickTraining_dist = 320
 } file
@@ -65,7 +66,8 @@ void function FiringRangeGameMode_Init()
 	PrecacheParticleSystem( FIRINGRANGE_ITEM_RESPAWN_PARTICLE )
 	
 	#if SERVER
-		AddCallback_EntitiesDidLoad( EntitiesDidLoad )
+		AddCallback_EntitiesDidLoad( OnEntitiesDidLoad )
+		AddCallback_OnPlayerRespawned( OnPlayerRespawned )
 		AddSpawnCallback( "prop_survival", OnPropSurvivalSpawned )
 	#endif
 
@@ -102,9 +104,11 @@ void function SCB_BroadcastFriendlyFireChange( entity playerThatChanged )
 }
 #endif //
 
-void function EntitiesDidLoad()
+void function OnEntitiesDidLoad()
 {
 	#if SERVER
+
+	// Init
 	array<entity> lootbins = GetEntArrayByScriptName("staging_loot_bin")
 	array<entity> movers = GetEntArrayByScriptName("script_mover_lightweight")
 	
@@ -117,6 +121,7 @@ void function EntitiesDidLoad()
 		file.rackSpawns.append(r)
 	}
 
+	// Items
 	FillWeaponTable() // load first to know where the rest goes
 	FillAttachmentTable() // requires weapons to be loaded
 	FillEquipmentTable() // armor + helmet + bp + shield
@@ -130,57 +135,48 @@ void function EntitiesDidLoad()
 	SpawnItems()
 	SpawnAmmo()
 
-	SpawnFlickTraining()
+	// Targets
+	SpawnTrainingTarget(file.flickTraining_pos, file.flickTraining_ang, OnTrainingTargetDamagedReposition)
+	thread MoveTrainingTargetAround(
+		SpawnTrainingTarget(file.trackingTraining_pos, file.flickTraining_ang, OnTrainingTargetDamagedNothing))
+	// - - - -
+
+	thread WaitForPlayerSpawn()
+
 	#endif
 }
 
-void function OnFlickTargetDamaged(entity ent, var damageInfo)
-{	
-	EmitSoundOnEntity(ent, FIRINGRANGE_FLICK_TARGET_SOUND)
-	StartParticleEffectInWorld( GetParticleSystemIndex( FIRINGRANGE_FLICK_TARGET_PARTICLE_HIT ), ent.GetOrigin(), ent.GetAngles() )
 
-	entity root = ent.GetParent()
-	vector newPos = file.flickTraining_pos + 
-					RandomFloatRange(-file.flickTraining_dist,file.flickTraining_dist)*root.GetUpVector()*0.5 + 
-					RandomFloatRange(-file.flickTraining_dist,file.flickTraining_dist)*root.GetRightVector();
 
-	ent.SetOrigin(newPos)
-
-	#if SERVER
-	/*
-	DamageInfo_GetAttacker(damageInfo).NotifyDidDamage
-	(
-		ent,
-		DamageInfo_GetHitBox( damageInfo ),
-		DamageInfo_GetDamagePosition( damageInfo ), 
-		DamageInfo_GetCustomDamageType( damageInfo ),
-		DamageInfo_GetDamage( damageInfo ),
-		DamageInfo_GetDamageFlags( damageInfo ), 
-		DamageInfo_GetHitGroup( damageInfo ),
-		DamageInfo_GetWeapon( damageInfo ), 
-		DamageInfo_GetDistFromAttackOrigin( damageInfo )
-	)
-	*/
-	#endif
-}
 
 #if SERVER
 
-void function SpawnFlickTraining()
+// ==================================================
+//					PLAYER EQUIP
+// ==================================================
+
+void function WaitForPlayerSpawn()
 {
-	entity root = CreateScriptMover( file.flickTraining_pos, file.flickTraining_ang)
-	entity collision = CreatePropDynamic(FIRINGRANGE_FLICK_TARGET_ASSET, root.GetOrigin(), root.GetAngles(), 6, -1)
-	entity target2 = CreatePropDynamic(FIRINGRANGE_BLUE_TARGET_ASSET, root.GetOrigin(), root.GetAngles(), 6, -1)
-	collision.SetParent(root)
-    collision.SetDamageNotifications( true )
-	collision.Hide()
-	target2.SetParent(collision)
-	target2.SetModelScale(0.45)
-	target2.NotSolid()
+	while(gp().len() < 1)
+		wait 0.5
 
+	while(!IsAlive(gp()[0]))
+		wait 0.5
 
-    AddEntityCallback_OnDamaged(collision, OnFlickTargetDamaged)
+	OnPlayerRespawned(gp()[0])
 }
+void function OnPlayerRespawned(entity player)
+{
+	player.GiveWeapon("mp_weapon_semipistol", WEAPON_INVENTORY_SLOT_PRIMARY_0)
+	player.SetActiveWeaponByName( eActiveInventorySlot.mainHand, "mp_weapon_semipistol" )
+	Survival_PickupItem(SpawnGenericLoot( "bullet", player.GetOrigin(), player.GetAngles(), 40 ), player)
+}
+
+
+// ==================================================
+//					ITEM SPAWNING
+// ==================================================
+
 
 // Get All weapons, arange them in a table per ammo type
 void function FillWeaponTable()
@@ -347,7 +343,7 @@ void function SpawnAmmo()
 				vector pos = firstPos + rght*itemOffsetX*i + fwd*itemOffsetY*j
 
 				entity loot = SpawnGenericLoot(rackGroup.ammoType, pos, <0,0,0>, ammoStack)
-				thread OnPickupGenericThread(loot, rackGroup.ammoType)
+				thread OnPickupGenericThread(loot, rackGroup.ammoType, ammoStack)
 			}
 		}
 	}
@@ -492,14 +488,14 @@ void function OnPickupFromRackThread(entity item, string ref)
 	item.WaitSignal("OnItemPickup")
 
 	wait FIRINGRANGE_RACK_RESPAWN_TIME
-	
+
 	entity newWeapon = SpawnWeaponOnRack(rack, ref)
 	StartParticleEffectInWorld( GetParticleSystemIndex( FIRINGRANGE_ITEM_RESPAWN_PARTICLE ), newWeapon.GetOrigin(), newWeapon.GetAngles() )
 	thread OnPickupFromRackThread(newWeapon, ref)
 }
 
 // When the item is grabbed -> respawn it
-void function OnPickupGenericThread(entity item, string ref)
+void function OnPickupGenericThread(entity item, string ref, int amount = 1)
 {
 	vector pos = item.GetOrigin()
 	vector angles = item.GetAngles()
@@ -508,7 +504,7 @@ void function OnPickupGenericThread(entity item, string ref)
 	wait FIRINGRANGE_RACK_RESPAWN_TIME
 
 	StartParticleEffectInWorld( GetParticleSystemIndex( FIRINGRANGE_ITEM_RESPAWN_PARTICLE ), pos, angles )
-	thread OnPickupGenericThread(SpawnGenericLoot(ref, pos, angles, 1), ref)
+	thread OnPickupGenericThread(SpawnGenericLoot(ref, pos, angles, amount), ref, amount)
 }
 
 // On item dropped
@@ -527,7 +523,102 @@ void function OnPropSurvivalSpawned_Thread(entity prop)
 		prop.Dissolve(ENTITY_DISSOLVE_CORE, <0,0,0>, 200)
 }
 
+
+
+// ==================================================
+//					TARGET PRACTICE
+// ==================================================
+
+void function PlayTrainingTargetReaction(entity ent, var damageInfo)
+{
+	EmitSoundOnEntity(ent, FIRINGRANGE_FLICK_TARGET_SOUND)
+
+	DamageInfo_GetAttacker(damageInfo).NotifyDidDamage
+	(
+		ent,
+		DamageInfo_GetHitBox( damageInfo ),
+		DamageInfo_GetDamagePosition( damageInfo ), 
+		DamageInfo_GetCustomDamageType( damageInfo ),
+		DamageInfo_GetDamage( damageInfo ),
+		DamageInfo_GetDamageFlags( damageInfo ), 
+		DamageInfo_GetHitGroup( damageInfo ),
+		DamageInfo_GetWeapon( damageInfo ), 
+		DamageInfo_GetDistFromAttackOrigin( damageInfo )
+	)
+}
+
+void function MoveTrainingTargetAround(entity ent)
+{
+	entity o = ent.GetParent()
+	float dist = file.flickTraining_dist * 0.75
+	while(IsValid(ent))
+	{
+		vector next = o.GetOrigin() + RandomFloatRange(-dist,dist)*o.GetUpVector()*0.75 + 
+						RandomFloatRange(-dist,dist)*o.GetRightVector();
+		
+		float t = 0.8;
+		ent.NonPhysicsMoveTo(next, t, 0.1, 0.1 )
+		wait t
+	}
+}
+
+void function OnTrainingTargetDamagedNothing(entity ent, var damageInfo)
+{	
+	PlayTrainingTargetReaction(ent, damageInfo)
+}
+
+void function OnTrainingTargetDamagedReposition(entity ent, var damageInfo)
+{	
+	StartParticleEffectInWorld( GetParticleSystemIndex( FIRINGRANGE_FLICK_TARGET_PARTICLE_HIT ), ent.GetOrigin(), ent.GetAngles() )
+	PlayTrainingTargetReaction(ent, damageInfo)
+
+	entity root = ent.GetParent()
+	vector newPos = root.GetOrigin() + 
+					RandomFloatRange(-file.flickTraining_dist,file.flickTraining_dist)*root.GetUpVector()*0.5 + 
+					RandomFloatRange(-file.flickTraining_dist,file.flickTraining_dist)*root.GetRightVector();
+
+	ent.SetOrigin(newPos)
+
+	ent.Signal( "OnActivate" )
+	thread ResetTrainingTarget(ent)
+}
+
+void function ResetTrainingTarget(entity ent)
+{
+	EndSignal( ent, "OnActivate" )
+	wait 4
+	ent.SetOrigin(ent.GetParent().GetOrigin())
+	StartParticleEffectInWorld( GetParticleSystemIndex( FIRINGRANGE_ITEM_RESPAWN_PARTICLE ), ent.GetOrigin(), <0,0,0> )
+}
+
+entity function SpawnTrainingTarget(vector pos, vector ang, void functionref( entity, var ) onDamaged )
+{
+	entity root = CreateScriptMover( pos, ang)
+
+	entity target = CreateEntity( "script_mover_lightweight" )
+	target.kv.solid = 6
+	target.SetValueForModelKey( FIRINGRANGE_FLICK_TARGET_ASSET )
+	target.kv.SpawnAsPhysicsMover = 0
+	target.SetOrigin( root.GetOrigin() )
+	target.SetAngles( root.GetAngles() )
+	DispatchSpawn( target )
+	target.Hide()
+	target.SetDamageNotifications( true )
+	target.SetParent(root)
+
+	entity visual = CreatePropDynamic(FIRINGRANGE_BLUE_TARGET_ASSET, root.GetOrigin(), root.GetAngles(), 6, -1)
+	visual.SetParent(target)
+	visual.SetModelScale(0.45)
+	visual.NotSolid()
+
+    AddEntityCallback_OnDamaged(target, onDamaged)
+	return target
+}
 #endif
+
+
+
+
 
 #if(false)
 
