@@ -80,7 +80,6 @@ void function InitTrainClientEnts()
 	if ( !Desertlands_IsTrainEnabled() )
 		return
 
-
 	//
 	entity trainMover = GetEntByScriptName( format( "%s_%i", TRAIN_MOVER_NAME, 0 ) )
 	foreach ( entity ambientGeneric in GetEntArrayByScriptName( "Vehicles_Train_SpeedController" ) )
@@ -272,17 +271,29 @@ void function DesertlandsTrain_Init()
 	array<entity> lootBins = GetEntArrayByClass_Expensive( "prop_dynamic" )
 	array<entity> survivalItems = GetEntArrayByClass_Expensive( "prop_survival" )
 	
+    int j = 0
 	foreach(entity car in cars)
 	{
 		printl(">>>> " + car)
 		foreach(entity bin in lootBins)
 		{
-			if(bin.GetModelName().find("loot_bin") == 0)
+			if(bin.GetModelName().find("loot_bin_0") <= 0)
 				continue
 			
 			float distance = Distance(car.GetOrigin(),bin.GetOrigin())
 			if(distance > 300)
 				continue
+			
+            j++ //Spawn really good loot in the last car
+            
+            if( GetCurrentPlaylistVarBool("lootbin_loot_enable", true) == true)
+            {   
+                ClearLootBinContents( bin )
+                if(j != 2)
+                    AddMultipleLootItemsToLootBin( bin, SURVIVAL_GetMultipleWeightedItemsFromGroup( "Desertlands_Train", 4 ) )
+                else
+                    AddMultipleLootItemsToLootBin( bin, SURVIVAL_GetMultipleWeightedItemsFromGroup( "POI_Ultra", 4 ) )
+            }
 			
 			entity parentPoint = CreateEntity( "script_mover_lightweight" )
 			parentPoint.kv.solid = 0

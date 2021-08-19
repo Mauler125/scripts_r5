@@ -2,8 +2,19 @@ global function FiringRangeGameMode_Init
 
 global const float FIRINGRANGE_DISSOLVE_TIME = 5.0
 global const float FIRINGRANGE_RACK_RESPAWN_TIME = 0.5
-global const float FIRINGRANGE_ATTACHMENTS_POS_OFFSET = 128.0
-global const int FIRINGRANGE_ATTACHMENTS_MAX_COLUMN = 6
+global const float FIRINGRANGE_RACK_OFFSET = 32
+
+global const int FIRINGRANGE_ATTACHMENTS_MAX_COLUMNS = 6
+global const int FIRINGRANGE_ITEMS_MAX_COLUMNS = 2
+global const int FIRINGRANGE_ORDNANCE_MAX_COLUMNS = 2
+global const int FIRINGRANGE_AMMO_ROWS = 2
+
+global const asset FIRINGRANGE_FLICK_TARGET_ASSET = $"mdl/fx/plasma_sphere_01.rmdl"
+global const asset FIRINGRANGE_FLICK_TARGET_PARTICLE_HIT = $"P_crypto_drone_explosion"
+global const string FIRINGRANGE_FLICK_TARGET_SOUND = "Player.Hitbeep_headshot.Human_3P_vs_1P"
+global const asset FIRINGRANGE_BLUE_TARGET_ASSET = $"mdl/barriers/shooting_range_target_02.rmdl"
+
+global const asset FIRINGRANGE_ITEM_RESPAWN_PARTICLE = $"P_impact_shieldbreaker_sparks"
 
 #if(false)
 
@@ -20,9 +31,25 @@ global const int FIRINGRANGE_ATTACHMENTS_MAX_COLUMN = 6
 global function SCB_BroadcastFriendlyFireChange
 #endif //
 
+struct RackGroup
+{
+	entity point = null
+	string ammoType = ""
+	array<entity> racks = []
+} 
+
 struct {
-	table<string, array<LootData> > weaponsPerAmmoType,
+	table<string, array<LootData> > weaponsPerAmmoType
 	table<string, array<string> > attachmentsPerAmmoType
+	array< array<LootData> > equipmentsPerIndex
+	array<LootData> items
+	array<LootData> ordnance
+
+	array<RackGroup> rackSpawns
+
+	vector flickTraining_pos = <32000,-6720,-29033>
+	vector flickTraining_ang = <0,-180,0>
+	float flickTraining_dist = 320
 } file
 
 void function FiringRangeGameMode_Init()
@@ -32,9 +59,14 @@ void function FiringRangeGameMode_Init()
 
 	Remote_RegisterClientFunction( "SCB_BroadcastFriendlyFireChange", "entity" )
 
+	PrecacheModel( FIRINGRANGE_FLICK_TARGET_ASSET )
+	PrecacheModel( FIRINGRANGE_BLUE_TARGET_ASSET )
+	PrecacheParticleSystem( FIRINGRANGE_FLICK_TARGET_PARTICLE_HIT )
+	PrecacheParticleSystem( FIRINGRANGE_ITEM_RESPAWN_PARTICLE )
 	
 	#if SERVER
-		AddCallback_EntitiesDidLoad( EntitiesDidLoad )
+		AddCallback_EntitiesDidLoad( OnEntitiesDidLoad )
+		AddCallback_OnPlayerRespawned( OnPlayerRespawned )
 		AddSpawnCallback( "prop_survival", OnPropSurvivalSpawned )
 	#endif
 
@@ -71,7 +103,7 @@ void function SCB_BroadcastFriendlyFireChange( entity playerThatChanged )
 }
 #endif //
 
-void function EntitiesDidLoad()
+void function OnEntitiesDidLoad()
 {
 	#if SERVER
 	array<entity> lootbins = GetEntArrayByScriptName("staging_loot_bin")
@@ -80,24 +112,106 @@ void function EntitiesDidLoad()
 	foreach(entity lootbin in lootbins)
 		lootbin.Destroy()
 
-	FillWeaponTable()
-	FillAttachmentTable()
-	CreateRacks()
-	SpawnAttachments()
-
-	foreach(string ammoType, array<string> attachments in file.attachmentsPerAmmoType)
+	foreach(entity e in GetEntArrayByScriptName("weapon_racks"))
 	{
-		printl(">> " + ammoType)
-		print("\t- ")
-		foreach(string attachment in attachments)
-		{
-			print(" " + attachment)
-		}
+		RackGroup r;	r.point = e
+		file.rackSpawns.append(r)
 	}
+
+	FillWeaponTable() // load first to know where the rest goes
+	FillAttachmentTable() // requires weapons to be loaded
+	FillEquipmentTable() // armor + helmet + bp + shield
+	FillOrdnanceTable() // nades
+	FillItemTable() // health + batts + the rest
+
+	CreateRackGroups()
+	SpawnAttachments()
+	SpawnEquipments()
+	SpawnOrdnance()
+	SpawnItems()
+	SpawnAmmo()
+
+	SpawnFlickTraining()
+	
+	thread WaitForPlayerSpawn()
 	#endif
 }
 
+
+
+
 #if SERVER
+
+void function WaitForPlayerSpawn()
+{
+	while(gp().len() < 1)
+		wait 0.5
+
+	while(!IsAlive(gp()[0]))
+		wait 0.5
+
+	OnPlayerRespawned(gp()[0])
+}
+void function OnPlayerRespawned(entity player)
+{
+	player.GiveWeapon("mp_weapon_semipistol", WEAPON_INVENTORY_SLOT_PRIMARY_0)
+	player.SetActiveWeaponByName( eActiveInventorySlot.mainHand, "mp_weapon_semipistol" )
+	Survival_PickupItem(SpawnGenericLoot( "bullet", player.GetOrigin(), player.GetAngles(), 40 ), player)
+}
+
+void function OnFlickTargetDamaged(entity ent, var damageInfo)
+{	
+	EmitSoundOnEntity(ent, FIRINGRANGE_FLICK_TARGET_SOUND)
+	StartParticleEffectInWorld( GetParticleSystemIndex( FIRINGRANGE_FLICK_TARGET_PARTICLE_HIT ), ent.GetOrigin(), ent.GetAngles() )
+
+	entity root = ent.GetParent()
+	vector newPos = file.flickTraining_pos + 
+					RandomFloatRange(-file.flickTraining_dist,file.flickTraining_dist)*root.GetUpVector()*0.5 + 
+					RandomFloatRange(-file.flickTraining_dist,file.flickTraining_dist)*root.GetRightVector();
+
+	ent.SetOrigin(newPos)
+
+	#if SERVER
+	DamageInfo_GetAttacker(damageInfo).NotifyDidDamage
+	(
+		ent,
+		DamageInfo_GetHitBox( damageInfo ),
+		DamageInfo_GetDamagePosition( damageInfo ), 
+		DamageInfo_GetCustomDamageType( damageInfo ),
+		DamageInfo_GetDamage( damageInfo ),
+		DamageInfo_GetDamageFlags( damageInfo ), 
+		DamageInfo_GetHitGroup( damageInfo ),
+		DamageInfo_GetWeapon( damageInfo ), 
+		DamageInfo_GetDistFromAttackOrigin( damageInfo )
+	)
+	#endif
+
+	ent.Signal( "OnActivate" )
+	thread ResetFlickTarget(ent)
+}
+
+void function ResetFlickTarget(entity ent)
+{
+	EndSignal( ent, "OnActivate" )
+	wait 4
+	ent.SetOrigin(file.flickTraining_pos)
+	StartParticleEffectInWorld( GetParticleSystemIndex( FIRINGRANGE_ITEM_RESPAWN_PARTICLE ), file.flickTraining_pos, <0,0,0> )
+}
+
+void function SpawnFlickTraining()
+{
+	entity root = CreateScriptMover( file.flickTraining_pos, file.flickTraining_ang)
+	entity collision = CreatePropDynamic(FIRINGRANGE_FLICK_TARGET_ASSET, root.GetOrigin(), root.GetAngles(), 6, -1)
+	entity target2 = CreatePropDynamic(FIRINGRANGE_BLUE_TARGET_ASSET, root.GetOrigin(), root.GetAngles(), 6, -1)
+	collision.SetParent(root)
+    collision.SetDamageNotifications( true )
+	collision.Hide()
+	target2.SetParent(collision)
+	target2.SetModelScale(0.45)
+	target2.NotSolid()
+
+    AddEntityCallback_OnDamaged(collision, OnFlickTargetDamaged)
+}
 
 // Get All weapons, arange them in a table per ammo type
 void function FillWeaponTable()
@@ -158,6 +272,31 @@ void function FillAttachmentTable()
 	}
 }
 
+// Append all equipments
+void function FillEquipmentTable()
+{
+	file.equipmentsPerIndex.append(SURVIVAL_Loot_GetByType( eLootType.ARMOR ))
+	file.equipmentsPerIndex.append(SURVIVAL_Loot_GetByType( eLootType.HELMET ))
+	file.equipmentsPerIndex.append(SURVIVAL_Loot_GetByType( eLootType.INCAPSHIELD ))
+	file.equipmentsPerIndex.append(SURVIVAL_Loot_GetByType( eLootType.BACKPACK ))		
+}
+
+// Append all items
+void function FillItemTable()
+{
+	file.items.extend(SURVIVAL_Loot_GetByType( eLootType.HEALTH ))
+	file.items.extend(SURVIVAL_Loot_GetByType( eLootType.RESOURCE ))
+	file.items.extend(SURVIVAL_Loot_GetByType( eLootType.DATAKNIFE ))
+	file.items.extend(SURVIVAL_Loot_GetByType( eLootType.CUSTOMPICKUP ))
+	file.items.extend(SURVIVAL_Loot_GetByType( eLootType.JUMPKIT ))
+}
+
+// Append all ordnances
+void function FillOrdnanceTable()
+{
+	file.ordnance.extend(SURVIVAL_Loot_GetByType( eLootType.ORDNANCE ))
+}
+
 // Add string only if missing
 void function ExtendLootDataArrayIfMissing(array<LootData> from, array<LootData> to)
 {
@@ -170,10 +309,152 @@ void function ExtendLootDataArrayIfMissing(array<LootData> from, array<LootData>
 	}
 }
 
+// Spawn nades at the left of the racks
+void function SpawnOrdnance()
+{
+	const float cornerOffset = 32.0
+	const float itemOffsetX = 16.0
+	const float itemOffsetY = 16.0
+	const float itemOffsetZ = 4.0
+	foreach(RackGroup rackGroup in file.rackSpawns)
+	{
+		entity rack = rackGroup.point
+		vector rght = rack.GetRightVector()
+		vector fwd = rack.GetForwardVector()
+		vector up = rack.GetUpVector()
+
+		vector firstPos = rack.GetOrigin() + (rght*rackGroup.racks.len()*FIRINGRANGE_RACK_OFFSET)/2 + rack.GetRightVector()*cornerOffset
+		
+		int col = 0 
+		int row = 0 
+		for(int i = 0; i<file.ordnance.len(); i++)
+		{
+			// Double it
+			for(int j = 0; j<2; j++)
+			{
+				if(col >= FIRINGRANGE_ORDNANCE_MAX_COLUMNS)
+				{
+					row++
+					col = 0
+				}
+
+				LootData item = file.ordnance[i]
+				vector pos = firstPos + rght*itemOffsetX*col + fwd*itemOffsetY*row + up*itemOffsetZ
+
+				entity loot = SpawnGenericLoot(item.ref, pos, <0,90,0>, 1)
+				thread OnPickupGenericThread(loot, item.ref)
+				
+				col++
+			}
+		}
+	}
+}
+
+// Spawn ammo at the left of the racks
+void function SpawnAmmo()
+{
+	const float cornerOffset = -4
+	const float itemOffsetX = 12.0
+	const float itemOffsetY = 20.0
+
+	foreach(RackGroup rackGroup in file.rackSpawns)
+	{
+		if(rackGroup.ammoType == "")
+			continue
+
+		entity rack = rackGroup.point
+		vector rght = rack.GetRightVector()
+		vector fwd = rack.GetForwardVector()
+		vector up = rack.GetUpVector()
+
+		vector firstPos = rack.GetOrigin() + (rght*rackGroup.racks.len()*FIRINGRANGE_RACK_OFFSET)/2 + rack.GetRightVector()*cornerOffset
+
+		int ammoStack = SURVIVAL_Loot_GetLootDataByRef( rackGroup.ammoType ).countPerDrop * 2
+
+		for(int i = 0; i<2; i++)
+		{
+			for(int j = 0; j<FIRINGRANGE_AMMO_ROWS; j++)
+			{
+				vector pos = firstPos + rght*itemOffsetX*i + fwd*itemOffsetY*j
+
+				entity loot = SpawnGenericLoot(rackGroup.ammoType, pos, <0,0,0>, ammoStack)
+				thread OnPickupGenericThread(loot, rackGroup.ammoType, ammoStack)
+			}
+		}
+	}
+}
+
+// Spawn all items at the opposite right of the racks
+void function SpawnItems()
+{
+	const float otherSideOffset = 512.0
+	const float cornerOffset = 128.0 - 16.0
+	const float itemOffsetX = 32.0
+	const float itemOffsetY = 24.0
+	foreach(RackGroup rackGroup in file.rackSpawns)
+	{
+		entity rack = rackGroup.point
+		vector rght = rack.GetRightVector()
+		vector fwd = rack.GetForwardVector()
+
+		vector firstPos = rack.GetOrigin() + fwd*otherSideOffset + rght*cornerOffset
+		
+		int col = 0 
+		int row = 0 
+		for(int i = 0; i<file.items.len(); i++)
+		{
+			if(col >= FIRINGRANGE_ITEMS_MAX_COLUMNS)
+			{
+				row++
+				col = 0
+			}
+
+			LootData item = file.items[i]
+			vector pos = firstPos + rght*itemOffsetX*col - fwd*itemOffsetY*row
+
+			entity loot = SpawnGenericLoot(item.ref, pos, <0,90,0>, 1)
+			thread OnPickupGenericThread(loot, item.ref)
+			
+			col++
+		}
+	}
+}
+
+// Spawn all equipments at the opposite left of the racks
+void function SpawnEquipments()
+{
+	const float otherSideOffset = 512.0
+	const float cornerOffset = 256.0
+	const float itemOffsetX = 32.0
+	const float itemOffsetY = 24.0
+	foreach(RackGroup rackGroup in file.rackSpawns)
+	{
+		entity rack = rackGroup.point
+		vector rght = rack.GetRightVector()
+		vector fwd = rack.GetForwardVector()
+
+		vector firstPos = rack.GetOrigin() + fwd*otherSideOffset - rght*cornerOffset
+		
+		for(int i = 0; i<file.equipmentsPerIndex.len(); i++)
+		{
+			array<LootData> group = file.equipmentsPerIndex[i]
+
+			for(int j = 0; j<group.len(); j++)
+			{
+				LootData item = group[j]
+				vector pos = firstPos + rght*itemOffsetX*j - fwd*itemOffsetY*i
+
+				entity loot = SpawnGenericLoot(item.ref, pos, <0,90,0>, 1)
+				thread OnPickupGenericThread(loot, item.ref)
+			}
+		}
+	}
+}
+
+// Spawn attachments at the right of the racks
 void function SpawnAttachments()
 {
-	array<entity> rackSpawns = GetEntArrayByScriptName("weapon_racks")
-
+	const float cornerOffset = 128.0
 	const float placementOffset = 24.0
 	int ammoIndex = 0
 	foreach ( string ammoType, array<LootData> arr in file.weaponsPerAmmoType) // Correspond to each rack
@@ -183,16 +464,14 @@ void function SpawnAttachments()
 			if(ammoType != ammoType2)
 				continue
 
-			entity r = rackSpawns[ammoIndex]
-			vector firstPos = r.GetOrigin() - r.GetRightVector()*FIRINGRANGE_ATTACHMENTS_POS_OFFSET
-
-			printl("AMMO: " + ammoIndex + ammoType)
+			entity r = file.rackSpawns[ammoIndex].point
+			vector firstPos = r.GetOrigin() - r.GetRightVector()*cornerOffset
 
 			int row = 0
 			int col = 0
 			foreach(string ref in refs)
 			{
-				if(col >= FIRINGRANGE_ATTACHMENTS_MAX_COLUMN)
+				if(col >= FIRINGRANGE_ATTACHMENTS_MAX_COLUMNS)
 				{
 					row++
 					col = 0
@@ -210,29 +489,27 @@ void function SpawnAttachments()
 }
 
 // Create weapon racks per ammo type
-void function CreateRacks()
+void function CreateRackGroups()
 {
-	array<entity> rackSpawns = GetEntArrayByScriptName("weapon_racks")
-
-	const float rackOffset = 32.0
-
 	int ammoIndex = 0
 	foreach ( string ammoType, array<LootData> arr in file.weaponsPerAmmoType)
 	{ 
-		if(ammoIndex >= rackSpawns.len() )
+		if(ammoIndex >= file.rackSpawns.len() )
 			break
 
-		printl(">> Spawning weapons from ammo type: " + ammoType)
-
-		float rOffset = (arr.len()*rackOffset)/2
+		float rOffset = (arr.len()*FIRINGRANGE_RACK_OFFSET)/2
 
 		for(int i = 0; i<arr.len(); i++)
 		{
-			entity r = rackSpawns[ammoIndex]
-			vector pos = r.GetOrigin() + r.GetRightVector()*i*rackOffset - r.GetRightVector()*rOffset
+			entity r = file.rackSpawns[ammoIndex].point
+			vector pos = r.GetOrigin() + r.GetRightVector()*i*FIRINGRANGE_RACK_OFFSET - r.GetRightVector()*rOffset
 			vector ang = r.GetAngles()
 
 			entity rack = CreateWeaponRack(pos, ang, arr[i].ref)
+
+			file.rackSpawns[ammoIndex].racks.append(rack)
+			file.rackSpawns[ammoIndex].ammoType = ammoType
+
 			thread OnPickupFromRackThread(GetWeaponFromRack(rack), arr[i].ref)
 		}
 		ammoIndex++
@@ -246,18 +523,23 @@ void function OnPickupFromRackThread(entity item, string ref)
 	item.WaitSignal("OnItemPickup")
 
 	wait FIRINGRANGE_RACK_RESPAWN_TIME
-	thread OnPickupFromRackThread(SpawnWeaponOnRack(rack, ref), ref)
+
+	entity newWeapon = SpawnWeaponOnRack(rack, ref)
+	StartParticleEffectInWorld( GetParticleSystemIndex( FIRINGRANGE_ITEM_RESPAWN_PARTICLE ), newWeapon.GetOrigin(), newWeapon.GetAngles() )
+	thread OnPickupFromRackThread(newWeapon, ref)
 }
 
 // When the item is grabbed -> respawn it
-void function OnPickupGenericThread(entity item, string ref)
+void function OnPickupGenericThread(entity item, string ref, int amount = 1)
 {
 	vector pos = item.GetOrigin()
 	vector angles = item.GetAngles()
 	item.WaitSignal("OnItemPickup")
 
 	wait FIRINGRANGE_RACK_RESPAWN_TIME
-	thread OnPickupGenericThread(SpawnGenericLoot(ref, pos, angles, 1), ref)
+
+	StartParticleEffectInWorld( GetParticleSystemIndex( FIRINGRANGE_ITEM_RESPAWN_PARTICLE ), pos, angles )
+	thread OnPickupGenericThread(SpawnGenericLoot(ref, pos, angles, amount), ref, amount)
 }
 
 // On item dropped

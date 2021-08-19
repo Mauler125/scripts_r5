@@ -33,12 +33,12 @@ WeaponData
 
 	// Ammo
 	//"ammo_display"									"bar"
-	//"ammo_stockpile_max"							"200"
-	//"ammo_clip_size"   								"200"
-	//"ammo_default_total"							"200"
-	//"ammo_per_shot"									"200"
-	//"ammo_min_to_fire"								"200"
-	//"ammo_no_remove_from_clip"						"1"
+	//"ammo_stockpile_max"							"150"
+	//"ammo_clip_size"   								"150"
+	//"ammo_default_total"							"150"
+	//"ammo_per_shot"									"1"
+	//"ammo_min_to_fire"								"150"
+	//"ammo_no_remove_from_clip"						"0"
 
 	"sound_weapon_ready"							"survival_ui_tactical_ready"
 
@@ -105,16 +105,16 @@ WeaponData
 		"grapple_maxLength"								"5000"
 	    "grapple_maxLengthVert"							"5000"
 
-	    "ammo_clip_size"								"<KEEP_DEFAULT>"
-        "ammo_default_total"							"<KEEP_DEFAULT>"
-        "ammo_display"									"<KEEP_DEFAULT>"
-        "ammo_min_to_fire"								"<KEEP_DEFAULT>"
-        "ammo_per_shot"									"<KEEP_DEFAULT>"
-        "ammo_stockpile_max"							"<KEEP_DEFAULT>"
-        "regen_ammo_refill_rate"						"<KEEP_DEFAULT>"
-        "regen_ammo_refill_start_delay"					"<KEEP_DEFAULT>"
-        "ammo_no_remove_from_stockpile"					"<KEEP_DEFAULT>"
-        "ammo_no_remove_from_clip"						"<KEEP_DEFAULT>"
+        "ammo_clip_size"								"150"
+        "ammo_default_total"							"150"
+        "ammo_display"									"count"
+        "ammo_min_to_fire"								"150"
+        "ammo_per_shot"									"1"
+        "ammo_stockpile_max"							"150"
+        "regen_ammo_refill_rate"						"150"
+        "regen_ammo_refill_start_delay"					"0.0"
+        "ammo_no_remove_from_stockpile"					"0"
+        "ammo_no_remove_from_clip"						"0"
 	}
 
 	active_crosshair_count				"2"

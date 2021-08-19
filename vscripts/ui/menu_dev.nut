@@ -270,9 +270,9 @@ void function SetupDefaultDevCommandsMP()
 {
 	SetupDevMenu( "Abilities", SetDevMenu_Abilities )
 	SetupDevMenu( "Equip Weapon", SetDevMenu_Weapons )
-	SetupDevMenu( "MDLSpawner", SetDevMenu_ModelSpawner )
 	SetupDevMenu( "Custom Community Things", SetDevMenu_CustomThings )
 	SetupDevMenu( "Gun Spwaners", SetDevMenu_GunSpwaners )
+	SetupDevMenu( "MDLSpawner", SetDevMenu_ModelSpawner )
 
 	if ( IsSurvivalMenuEnabled() )
 	{
@@ -390,11 +390,6 @@ void function SetupLevelDevCommands()
 	}
 }
 
-void function SetDevMenu_ModelSpawner( var _ )
-{
-	thread ChangeToThisMenu( SetupModelSpawner )
-}
-
 void function SetDevMenu_Abilities( var _ )
 {
 	thread ChangeToThisMenu( SetupAbilities )
@@ -418,6 +413,11 @@ void function SetDevMenu_CustomThings( var _ )
 void function SetDevMenu_GunSpwaners( var _ )
 {
 	thread ChangeToThisMenu( SetupGunSpwaners )
+}
+
+void function SetDevMenu_ModelSpawner( var _ )
+{
+	thread ChangeToThisMenu( SetupModelSpawner )
 }
 
 

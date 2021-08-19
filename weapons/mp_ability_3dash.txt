@@ -67,7 +67,7 @@ WeaponData
 	"ammo_stockpile_max"							"100"
 	"ammo_drains_to_empty_on_fire"					"0"
 	"ammo_no_remove_from_clip"						"0"
-
+	
     "charge_time"									"0.1"
     "charge_cooldown_time"							"0.2"
     "charge_cooldown_delay"   						"0.2"
@@ -79,7 +79,7 @@ WeaponData
     "charge_effect_show_during_drain"				"0"
 
 	//Regen Ammo
-	"regen_ammo_refill_rate"						"2.5"
+	"regen_ammo_refill_rate"						"1000"
 	"regen_ammo_refill_start_delay"					"0.0"
 
 	MP_BASE

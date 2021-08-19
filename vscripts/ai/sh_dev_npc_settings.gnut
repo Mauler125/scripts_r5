@@ -142,17 +142,17 @@ void function SetupAbilities()
 void function SetupModelSpawner()
 {
 	#if UI
-	SetupDevCommand( "marvin", "SetMDLSpawnerModel mdl/robots/marvin/marvin.rmdl" )
-	SetupDevCommand( "atpov_titan_raptor_rocket_pod_right", "SetMDLSpawnerModel mdl/weapons/titan_raptor_rocket_pod/atpov_titan_raptor_rocket_pod_right.rmdl" )
-	SetupDevCommand( "currency_crafting_common", "SetMDLSpawnerModel mdl/currency/crafting/currency_crafting_common.rmdl" )
-	SetupDevCommand( "currency_crafting_epic", "SetMDLSpawnerModel mdl/currency/crafting/currency_crafting_epic.rmdl" )
-	SetupDevCommand( "currency_crafting_legendary", "SetMDLSpawnerModel mdl/currency/crafting/currency_crafting_legendary.rmdl" )
-	SetupDevCommand( "currency_crafting_rare", "SetMDLSpawnerModel mdl/currency/crafting/currency_crafting_rare.rmdl" )
+	SetupDevCommand( "Dev Tool", "give mp_weapon_mdlspawner" )
+	SetupDevCommand( "marvin", "SetMDLSpawnerModel mdl/robots/marvin/marvin_gladcard.rmdl" )
 	SetupDevCommand( "droppod_loot_LL_holo", "SetMDLSpawnerModel mdl/vehicle/droppod_loot/droppod_loot_LL_holo.rmdl" )
 	SetupDevCommand( "death_box_01", "SetMDLSpawnerModel mdl/props/death_box/death_box_01.rmdl" )
 	SetupDevCommand( "drone_frag", "mdl/robots/drone_frag/drone_frag.rmdl" )
 	SetupDevCommand( "droppod_fireteam", "SetMDLSpawnerModel mdl/vehicle/droppod_fireteam/droppod_fireteam.rmdl" )
 	SetupDevCommand( "droppod_loot_LL_holo", "mdl/vehicle/droppod_loot/droppod_loot_LL_holo.rmdl" )
+	SetupDevCommand( "currency_crafting_common", "SetMDLSpawnerModel mdl/currency/crafting/currency_crafting_common.rmdl" )
+	SetupDevCommand( "currency_crafting_rare", "SetMDLSpawnerModel mdl/currency/crafting/currency_crafting_rare.rmdl" )
+	SetupDevCommand( "currency_crafting_epic", "SetMDLSpawnerModel mdl/currency/crafting/currency_crafting_epic.rmdl" )
+	SetupDevCommand( "currency_crafting_legendary", "SetMDLSpawnerModel mdl/currency/crafting/currency_crafting_legendary.rmdl" )
 	#endif
 }
 
@@ -180,7 +180,10 @@ void function SetupCustomThings()
 	SetupDevCommand( "Wingman LMG", "give mp_weapon_wingman_lmg" )
 	SetupDevCommand( "Smart Pistol LMG", "give mp_weapon_smart_lmg" )
 	SetupDevCommand( "R99 As Kraber", "give mp_weapon_r99_kraber" )
+	SetupDevCommand( "Burst Pistol", "give mp_weapon_bpistol" )
 	SetupDevCommand( "Infinity R301", "give mp_weapon_infinity_rifle" )
+	SetupDevCommand( "Full Infinity R301", "give mp_weapon_infinity_rifle hopup_barrel hopup_stock hopup_mag hopup_sight hopup_infinity" )
+	SetupDevCommand( "Akimbo Weapon", "script GiveMatchingAkimboWeapon(gp()[0].GetActiveWeapon( eActiveInventorySlot.mainHand ), [])" )
 	SetupDevCommand( "Pulse Blade", "give mp_weapon_grenade_sonar" )
 	SetupDevCommand( "Amped Wall", "give mp_weapon_deployable_cover" )
 	SetupDevCommand( "Electric Smoke", "give mp_weapon_grenade_electric_smoke" )
@@ -191,7 +194,6 @@ void function SetupGunSpwaners()
 {
 	#if UI
 	//Gun Spwaners
-	SetupDevCommand( "Dev Tool", "give mp_weapon_mdlspawner" )
 	SetupDevCommand( "Dummy Spawner", "give mp_weapon_dummyspawner" )
 	SetupDevCommand( "Decoy Spawner", "give mp_weapon_decoyspawner" )
 	#endif

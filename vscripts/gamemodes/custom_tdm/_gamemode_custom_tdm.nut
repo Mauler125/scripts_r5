@@ -45,10 +45,13 @@ LocPair function SV_GetVotingLocation()
 {
     switch(GetMapName())
     {
+        case "mp_rr_canyonlands_staging":
+            return NewLocPair(<26794, -6241, -27479>, <0, 0, 0>)
         case "mp_rr_canyonlands_64k_x_64k":
+        case "mp_rr_canyonlands_mu1":
+        case "mp_rr_canyonlands_mu1_night":
             return NewLocPair(<-6252, -16500, 3296>, <0, 0, 0>)
         case "mp_rr_desertlands_64k_x_64k":
-            return NewLocPair(<1763, 5463, -3145>, <5, -95, 0>)
         case "mp_rr_desertlands_64k_x_64k_nx":
                 return NewLocPair(<1763, 5463, -3145>, <5, -95, 0>)
         default:
@@ -84,15 +87,6 @@ void function DestroyPlayerProps()
     file.playerSpawnedProps.clear()
 }
 
-void function WaitPrematch() 
-{
-    array<entity> players = GetPlayerArray()
-    while(players.len() < MIN_NUMBER_OF_PLAYERS)
-    {
-        players = GetPlayerArray()
-        wait 0.5
-    }
-}
 
 
 void function VotingPhase()
@@ -115,7 +109,7 @@ void function VotingPhase()
         TpPlayerToSpawnPoint(player)
         player.UnfreezeControlsOnServer();      
     }
-    wait VOTING_TIME
+    wait GetCurrentPlaylistVarInt("voting_time", 5)
 
     int choice = RandomIntRangeInclusive(0, file.locationSettings.len() - 1)
 
@@ -171,7 +165,7 @@ void function StartRound()
         }
         
     }
-    float endTime = Time() + ROUND_TIME
+    float endTime = Time() + GetCurrentPlaylistVarInt("round_time", 480)
     while( Time() <= endTime )
 	{
         if(file.tdmState == eTDMState.WINNER_DECIDED)
@@ -184,9 +178,11 @@ void function StartRound()
 
 void function ScreenFadeToFromBlack(entity player, float fadeTime = 1, float holdTime = 1)
 {
-    ScreenFadeToBlack(player, fadeTime / 2, holdTime / 2)
+    if( IsValid( player ) )
+        ScreenFadeToBlack(player, fadeTime / 2, holdTime / 2)
     wait fadeTime
-    ScreenFadeFromBlack(player, fadeTime / 2, holdTime / 2)
+    if( IsValid( player ) )
+        ScreenFadeFromBlack(player, fadeTime / 2, holdTime / 2)
 }
 
 bool function ClientCommand_NextRound(entity player, array<string> args)
@@ -227,28 +223,7 @@ bool function ClientCommand_GiveWeapon(entity player, array<string> args)
     
 }
 
-void function FillPlayerToNeedyTeam(entity player)
-{
-    Assert(teams.len() > 0, "You need to define at least one team!")
-    int minTeam = teams[0]
-    int minPlayersOfTeam = GetPlayerArrayOfTeam(minTeam).len()
-    
-    foreach(team in teams)
-    {
-        printt("TEAM ", team, ": ")
-        foreach(pl in GetPlayerArrayOfTeam(team))
-            printt(pl, ", ")
 
-        print("\n")
-        int playersOfTeam = GetPlayerArrayOfTeam(team).len()
-        if(playersOfTeam < minPlayersOfTeam)
-        {
-            minPlayersOfTeam = playersOfTeam
-            minTeam = team
-        }
-    }
-    SetTeam(player, minTeam)
-}
 
 void function SV_OnPlayerConnected(entity player)
 {
@@ -385,10 +360,10 @@ LocPair function SV_GetAppropriateSpawnLocation(entity player)
         break
     case eGameState.Playing:
         float maxDistToEnemy = 0
-        foreach(spawn in file.selectedLocation.spawns[ourTeam])
+        foreach(spawn in file.selectedLocation.spawns)
         {
             vector enemyOrigin = GetClosestEnemyToOrigin(spawn.origin, ourTeam)
-            float distToEnemy = Length2D(spawn.origin - enemyOrigin)
+            float distToEnemy = Distance(spawn.origin, enemyOrigin)
 
             if(distToEnemy > maxDistToEnemy)
             {
@@ -407,18 +382,15 @@ vector function GetClosestEnemyToOrigin(vector origin, int ourTeam)
     float minDist = -1
     vector enemyOrigin = <0, 0, 0>
 
-    foreach(team in teams)
+    foreach(player in GetPlayerArray_Alive())
     {
-        if(ourTeam == team) continue;
+        if(player.GetTeam() == ourTeam) continue
 
-        foreach(player in GetPlayerArrayOfTeam(team))
+        float dist = Distance(player.GetOrigin(), origin)
+        if(dist < minDist || minDist < 0)
         {
-            float dist = Length2D(player.GetOrigin() - origin)
-            if(dist < minDist || minDist < 0)
-            {
-                minDist = dist
-                enemyOrigin = player.GetOrigin()
-            }
+            minDist = dist
+            enemyOrigin = player.GetOrigin()
         }
     }
 

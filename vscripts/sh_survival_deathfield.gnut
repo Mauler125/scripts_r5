@@ -306,6 +306,8 @@ bool function PlayerShouldSeeSurveyBeaconMarkers( entity player )
 #if SERVER
 void function EntitiesDidLoad_DeathField()
 {
+    if(file.deathFieldStartStage > 0)
+        SetCurrentDeathFieldStage( file.deathFieldStartStage )
 	DeathFieldCreatePositions()
 }
 
@@ -1649,7 +1651,7 @@ var function SurveyBeacon_CreateHUDMarker( asset beaconImage, entity minimapObj 
 
 int function SURVIVAL_GetCurrentDeathFieldStage()
 {
-    if(GetServerVar( "minimapState" ))
+    if(GamePlaying())
         return GetGlobalNetInt( "currentDeathFieldStage" )
     
 	return -1
