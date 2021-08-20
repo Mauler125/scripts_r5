@@ -526,6 +526,8 @@ void function RegisterCustomWeapons()
 		data.countPerDrop = GetCurrentPlaylistVarInt(className + "_count_per_drop", 1)
 		data.stackSize = GetCurrentPlaylistVarInt(className + "_stack_size", 2)
 		data.tier = GetCurrentPlaylistVarInt(className + "_tier", 1)
+		data.chance = GetCurrentPlaylistVarFloat(className + "_chance", 0)
+		data.carePackageChance = GetCurrentPlaylistVarFloat(className + "_cp_chance", 0)
 		RegisterCustomGrenade(data)
 	}
 }
@@ -553,8 +555,8 @@ void function RegisterCustomGrenade(CustomGrenadeData grenadeData) {
 	file.lootData[ data.ref ] <- data
 
 	#if !UI
-	AddCustomItemToLootPool( data.ref, "ordnance", 30)
-	AddCustomItemToLootPool( data.ref, "ordnance_drops", 50)
+	AddCustomItemToLootPool( data.ref, "ordnance", grenadeData.chance)
+	AddCustomItemToLootPool( data.ref, "ordnance_drops", grenadeData.carePackageChance)
 	#endif
 }
 
