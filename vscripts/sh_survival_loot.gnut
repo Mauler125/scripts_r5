@@ -3885,11 +3885,8 @@ AttachmentData function GetAttachmentData( string attachment )
 int function SURVIVAL_GetInventorySlotCountForPlayer( entity player, LootData data )
 {
 	int result = data.inventorySlotCount
-    // pretty terrible hardcode for Wattson to carry 2 Ultimate Accelerants
-    if( PlayerHasPassive( player, ePassives.PAS_BATTERY_POWERED )
-    && data == SURVIVAL_Loot_GetLootDataByRef( "health_pickup_ultimate" )) {
-        result = 2
-    }
+
+
 	return result
 }
 
