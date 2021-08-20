@@ -82,7 +82,7 @@ global enum ePassives
 	PAS_SYRINGE_BONUS,
 	PAS_FORTIFIED,
 	PAS_LOWPROFILE,
-	PAS_PILOT_BLOOD
+	PAS_PILOT_BLOOD,
 
 	_count,
 }
