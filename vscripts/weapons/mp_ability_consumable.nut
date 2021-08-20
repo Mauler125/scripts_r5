@@ -1355,23 +1355,19 @@ int function EntityHealResource_GetRemainingTotal( entity player )
 
 void function UltimatePackUse( entity player, ConsumableInfo info )
 {
-	print("using ult accel");
 	entity ultimateAbility = player.GetOffhandWeapon( OFFHAND_INVENTORY )
 	int ammo = ultimateAbility.GetWeaponPrimaryClipCount()
 	int maxAmmo = ultimateAbility.GetWeaponPrimaryClipCountMax()
 	ammo += int( maxAmmo * (info.ultimateAmount/100) )
 
 	if( ammo < maxAmmo ) {
-		printt("regular ult accel")
 		ultimateAbility.SetWeaponPrimaryClipCount( ammo )
 	}
 	else {
-		printt("full")
 		ultimateAbility.SetWeaponPrimaryClipCount( maxAmmo )
 	}
 	// Gives Wattson full ult on ult accel
 	if( PlayerHasPassive( player, ePassives.PAS_BATTERY_POWERED )) {
-		printt("fully charged!")
 		ultimateAbility.SetWeaponPrimaryClipCount( maxAmmo )
 	}
 }
