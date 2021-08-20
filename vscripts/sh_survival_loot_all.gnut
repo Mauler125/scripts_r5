@@ -463,7 +463,7 @@ struct CustomWeaponData
 
 void function RegisterCustomWeapons()
 {
-	array<string> customWeaponClassNames = split(GetCurrentPlaylistVarString("custom_weapon_list", "default"), " ")
+	array<string> customWeaponClassNames = split(GetCurrentPlaylistVarString("custom_weapon_list", ""), " ")
 	foreach (string className in customWeaponClassNames)
 	{
 		CustomWeaponData data
