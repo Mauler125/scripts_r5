@@ -294,9 +294,6 @@ void function SURVIVAL_Loot_All_InitShared()
 
 		string supportedAttachmentsString  = GetLootTableString( data.ref, dt, i, "supportedAttachments" )
 		array<string> supportedAttachments = split( supportedAttachmentsString, " " )
-		// This version is supposed to have energy mags on these weapons.
-		// They were only removed on January 14, 2020, and this build is from October 30, 2019.
-		//if (data.ref == "mp_weapon_energy_ar" || data.ref == "mp_weapon_doubletake") supportedAttachments.append("mag")
 		supportedAttachments.sort(
 			int function( string attachmentA, string attachmentB ) : ()
 			{
