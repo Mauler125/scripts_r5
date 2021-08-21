@@ -7,7 +7,7 @@ global function SetupSurvivalIncapShieldBot
 global function SetupAbilities
 global function SetupWeapons
 global function SetupCustomThings
-global function SetupGunSpwaners
+global function SetupGunSpawners
 
 void function SetupChangeSurvivalCharacterClass()
 {
@@ -171,29 +171,31 @@ void function SetupCustomThings()
 {
 	#if UI
 	//Custom
-	SetupDevCommand( "3Dash Tactical", "give mp_ability_3dash" )
-	SetupDevCommand( "Spider Grapple", "give mp_ability_spider_grapple" )
+	SetupDevCommand( "Akimbo Weapon", "script GiveMatchingAkimboWeapon(gp()[0].GetActiveWeapon( eActiveInventorySlot.mainHand ), [])" )
 	SetupDevCommand( "EPG", "give mp_weapon_epg" )
+	SetupDevCommand( "Hailstorm LMG", "give mp_weapon_hailstorm_lmg" )
 	SetupDevCommand( "Oneshot Wingman", "give mp_weapon_oneshot_wingman" )
+	SetupDevCommand( "Burst Pistol", "give mp_weapon_bpistol" )
 	SetupDevCommand( "Mastiff Extreme", "give mp_weapon_mastiff_extreme" )
 	SetupDevCommand( "Mozambique Extreme", "give mp_weapon_mozambique_extreme" )
 	SetupDevCommand( "Wingman LMG", "give mp_weapon_wingman_lmg" )
-	SetupDevCommand( "Smart Pistol LMG", "give mp_weapon_smart_lmg" )
+	SetupDevCommand( "Smart Pistol LMG", "give mp_weapon_smart_lmg optic_cq_threat" )
 	SetupDevCommand( "R99 As Kraber", "give mp_weapon_r99_kraber" )
-	SetupDevCommand( "Burst Pistol", "give mp_weapon_bpistol" )
+	SetupDevCommand( "Laser G8", "give mp_weapon_laser_g8 optic_cq_hcog_bruiser" )
 	SetupDevCommand( "Infinity R301", "give mp_weapon_infinity_rifle" )
-	SetupDevCommand( "Full Infinity R301", "give mp_weapon_infinity_rifle hopup_barrel hopup_stock hopup_mag hopup_sight hopup_infinity" )
-	SetupDevCommand( "Akimbo Weapon", "script GiveMatchingAkimboWeapon(gp()[0].GetActiveWeapon( eActiveInventorySlot.mainHand ), [])" )
+	SetupDevCommand( "Full Infinity R301", "give mp_weapon_infinity_rifle hopup_barrel hopup_stock hopup_mag optic_cq_hcog_bruiser hopup_infinity" )
+	SetupDevCommand( "3Dash Tactical", "give mp_ability_3dash" )
+	SetupDevCommand( "Spider Grapple", "give mp_ability_spider_grapple" )
 	SetupDevCommand( "Pulse Blade", "give mp_weapon_grenade_sonar" )
 	SetupDevCommand( "Amped Wall", "give mp_weapon_deployable_cover" )
 	SetupDevCommand( "Electric Smoke", "give mp_weapon_grenade_electric_smoke" )
 	#endif
 }
 
-void function SetupGunSpwaners()
+void function SetupGunSpawners()
 {
 	#if UI
-	//Gun Spwaners
+	//Gun Spawners
 	SetupDevCommand( "Dummy Spawner", "give mp_weapon_dummyspawner" )
 	SetupDevCommand( "Decoy Spawner", "give mp_weapon_decoyspawner" )
 	#endif

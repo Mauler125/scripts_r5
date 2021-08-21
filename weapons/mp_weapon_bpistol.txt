@@ -95,9 +95,9 @@ WeaponData
 	"damage_type" 									"bullet"
 
     // Damage - When Used by Players
-    "damage_near_value"   							"12"
-    "damage_far_value"								"12"
-    "damage_very_far_value"							"12"
+    "damage_near_value"   							"22"
+    "damage_far_value"								"20"
+    "damage_very_far_value"							"17"
     "damage_near_value_titanarmor"					"11"
     "damage_far_value_titanarmor" 					"11"
     "damage_very_far_value_titanarmor" 				"11"

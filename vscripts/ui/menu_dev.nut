@@ -271,7 +271,7 @@ void function SetupDefaultDevCommandsMP()
 	SetupDevMenu( "Abilities", SetDevMenu_Abilities )
 	SetupDevMenu( "Equip Weapon", SetDevMenu_Weapons )
 	SetupDevMenu( "Custom Community Things", SetDevMenu_CustomThings )
-	SetupDevMenu( "Gun Spwaners", SetDevMenu_GunSpwaners )
+	SetupDevMenu( "Gun Spawners", SetDevMenu_GunSpawners )
 	SetupDevMenu( "MDLSpawner", SetDevMenu_ModelSpawner )
 
 	if ( IsSurvivalMenuEnabled() )
@@ -410,16 +410,15 @@ void function SetDevMenu_CustomThings( var _ )
 	thread ChangeToThisMenu( SetupCustomThings )
 }
 
-void function SetDevMenu_GunSpwaners( var _ )
+void function SetDevMenu_GunSpawners( var _ )
 {
-	thread ChangeToThisMenu( SetupGunSpwaners )
+	thread ChangeToThisMenu( SetupGunSpawners )
 }
 
 void function SetDevMenu_ModelSpawner( var _ )
 {
 	thread ChangeToThisMenu( SetupModelSpawner )
 }
-
 
 void function DEV_InitLoadoutDevSubMenu()
 {
@@ -761,6 +760,8 @@ void function SetDevMenu_Prototypes( var _ )
 
 void function SetupPrototypesDevMenu()
 {
+	SetupDevCommand( "Toggle Akimbo With Current Weapon", "script DEV_ToggleAkimboWeapon(gp()[0])" )
+	SetupDevCommand( "Toggle Akimbo With Holstered Weapon", "script DEV_ToggleAkimboWeaponAlt(gp()[0])" )
 	// SetupDevCommand( "Change to Shadow Squad", "script Dev_ShadowFormEnable( GP() )" )
 }
 
