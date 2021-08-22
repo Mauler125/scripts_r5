@@ -67,10 +67,6 @@ void function InitSoundPanel( var panel )
 		AddButtonEventHandler( slider, UIE_CHANGE, OnVoiceChatVolumeSettingChanged )
 		SetupSettingsButton( Hud_GetChild( contentPanel, "SwchSoundWithoutFocus" ), "#SOUND_WITHOUT_FOCUS", "#OPTIONS_MENU_SOUND_WITHOUT_FOCUS", $"rui/menu/settings/settings_audio" )
 		SetupSettingsButton( Hud_GetChild( contentPanel, "SwchSpeakerConfig" ), "#WINDOWS_AUDIO_CONFIGURATION", "", $"rui/menu/settings/settings_audio" )
-	#elseif(CONSOLE_PROG)
-		var button = Hud_GetChild( contentPanel, "SwchMuteVoiceChat" )
-		SetupSettingsButton( button, "#OPTIONS_MENU_VOICE_CHAT_DISABLE", "#OPTIONS_MENU_VOICE_CHAT_DISABLE_DESC", $"rui/menu/settings/settings_audio" )
-		AddButtonEventHandler( button, UIE_CHANGE, OnDisableVoiceChatSettingChanged )
 	#endif
 
 	//AddEventHandlerToButtonClass( menu, "LeftRuiFooterButtonClass", UIE_GET_FOCUS, FooterButton_Focused )
@@ -81,9 +77,7 @@ void function InitSoundPanel( var panel )
 	AddPanelFooterOption( panel, LEFT, BUTTON_B, true, "#B_BUTTON_BACK", "#B_BUTTON_BACK" )
 	AddPanelFooterOption( panel, LEFT, BUTTON_BACK, true, "#BACKBUTTON_RESTORE_DEFAULTS", "#RESTORE_DEFAULTS", OpenConfirmRestoreSoundDefaultsDialog )
 	AddPanelFooterOption( panel, LEFT, -1, false, "#FOOTER_CHOICE_HINT", "" )
-	//#if DURANGO_PROG
-	//AddPanelFooterOption( panel, LEFT, BUTTON_Y, false, "#Y_BUTTON_XBOX_HELP", "", OpenXboxHelp )
-	//#endif // DURANGO_PROG
+
 
 	file.conVarDataList.append( CreateSettingsConVarData( "TalkIsStream", eConVarType.INT ) )
 	file.conVarDataList.append( CreateSettingsConVarData( "miles_occlusion", eConVarType.INT ) )
@@ -216,15 +210,6 @@ void function OnVoiceChatVolumeSettingChanged( var slider )
 {
 	bool isVoiceVolumeZero = GetConVarFloat( "sound_volume_voice" ) == 0.0
 	LockSpeechToText( isVoiceVolumeZero )
-}
-#endif
-
-#if CONSOLE_PROG
-void function OnDisableVoiceChatSettingChanged( var button )
-{
-	bool isVoiceChatDisabled = !GetConVarBool( "voice_enabled" )
-	var speechToTextButton = Hud_GetChild( file.contentPanel, "SwchChatSpeechToText" )
-	LockSpeechToText( isVoiceChatDisabled )
 }
 #endif
 
