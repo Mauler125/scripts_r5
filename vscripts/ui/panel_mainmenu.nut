@@ -9,6 +9,13 @@ global function PrelaunchValidateAndLaunch
 
 global function UICodeCallback_GetOnPartyServer
 
+#if DURANGO_PROG
+global function UICodeCallback_OnStartedUserSignIn
+global function UICodeCallback_OnFailedUserSignIn
+global function UICodeCallback_OnCompletedUserSignIn
+global function UICodeCallback_OnUserSignOut
+#endif
+
 const bool SPINNER_DEBUG_INFO = PC_PROG
 
 struct
@@ -27,6 +34,9 @@ struct
 	var				   serverSearchMessage
 	var				   serverSearchError
 
+	#if DURANGO_PROG
+		bool forceProfileSelect = false
+	#endif // DURANGO_PROG
 
 	float startTime = 0
 } file
@@ -72,7 +82,14 @@ void function InitMainMenuPanel( var panel )
 	AddPanelFooterOption( panel, LEFT, BUTTON_STICK_RIGHT, false, "#DATACENTER_DOWNLOADING", "", OpenDataCenterDialog, IsDataCenterFooterVisible, UpdateDataCenterFooter )
 	AddPanelFooterOption( panel, LEFT, BUTTON_START, true, "#START_BUTTON_ACCESSIBLITY", "#BUTTON_ACCESSIBLITY", Accessibility_OnActivate, IsAccessibilityFooterValid )
 
+	#if DURANGO_PROG
+		AddPanelFooterOption( panel, LEFT, BUTTON_Y, true, "#Y_BUTTON_SWITCH_PROFILE", "", SwitchProfile_OnActivate, IsSwitchProfileFooterValid )
+	#endif
 
+	#if CONSOLE_PROG
+		AddMenuVarChangeHandler( "CONSOLE_isSignedIn", UpdateFooterOptions )
+		AddMenuVarChangeHandler( "CONSOLE_isSignedIn", UpdateSignedInState )
+	#endif // CONSOLE_PROG
 }
 
 
@@ -86,7 +103,14 @@ bool function IsExitToDesktopFooterValid()
 
 bool function IsAccessibilityFooterValid()
 {
-	return !IsWorking() && !IsSearchingForPartyServer()
+	if ( !IsAccessibilityAvailable() )
+		return false
+
+	#if DURANGO_PROG
+		return Console_IsSignedIn() && !IsWorking() && !IsSearchingForPartyServer()
+	#else
+		return !IsWorking() && !IsSearchingForPartyServer()
+	#endif
 }
 
 bool function IsDataCenterFooterVisible()
@@ -102,7 +126,12 @@ bool function IsDataCenterFooterClickable()
 #else //
 	bool hideDurationElapsed = Time() - file.startTime > 10.0
 #endif //
+
+	#if DURANGO_PROG
+		return Console_IsSignedIn() && !IsWorking() && !IsSearchingForPartyServer() && hideDurationElapsed
+	#else
 		return !IsWorking() && !IsSearchingForPartyServer() && hideDurationElapsed
+	#endif
 }
 
 void function UpdateDataCenterFooter( InputDef footerData )
@@ -206,6 +235,16 @@ void function PrelaunchValidation( bool autoContinue = false )
 		}
 	#endif // PC_PROG
 
+	#if CONSOLE_PROG
+		bool isOnline = Console_IsOnline()
+		PrintLaunchDebugVal( "isOnline", isOnline )
+		if ( !isOnline )
+		{
+			SetLaunchState( eLaunchState.WAIT_TO_CONTINUE, Localize( "#INTERNET_NOT_FOUND" ), Localize( "#MAINMENU_RETRY" ) )
+			return
+		}
+	#endif // CONSOLE_PROG
+
 	bool hasLatestPatch = HasLatestPatch()
 	PrintLaunchDebugVal( "hasLatestPatch", hasLatestPatch )
 	if ( !hasLatestPatch )
@@ -252,13 +291,164 @@ void function PrelaunchValidation( bool autoContinue = false )
 		}
 	#endif // PC_PROG
 
+	#if PS4_PROG
+		WaitFrame() // ???: doesn't work without a wait
+
+		if ( PS4_isNetworkingDown() )
+		{
+			printt( "PS4 - networking is down" )
+			SetLaunchState( eLaunchState.WAIT_TO_CONTINUE, Localize( "#PSN_CANNOT_CONNECT" ), Localize( "#MAINMENU_RETRY" ) )
+			return
+		}
+
+		if ( !PS4_isUserNetworkingEnabled() )
+		{
+			PS4_ScheduleUserNetworkingEnabledTest()
+#if SPINNER_DEBUG_INFO
+			SetSpinnerDebugInfo( "PS4_isUserNetworkingResolved" )
+#endif
+			WaitFrame()
+			if ( !PS4_isUserNetworkingResolved() )
+			{
+				printt( "PS4 - networking isn't resolved yet" )
+				while ( !PS4_isUserNetworkingResolved() )
+					WaitFrame()
+			}
+		}
+
+		int netStatus = PS4_getUserNetworkingResolution()
+
+		bool isPSNConnected
+		if ( netStatus == PS4_NETWORK_STATUS_NOT_LOGGED_IN )
+			isPSNConnected = false
+		else
+			isPSNConnected = Ps4_PSN_Is_Loggedin()
+		PrintLaunchDebugVal( "isPSNConnected", isPSNConnected )
+		if ( !isPSNConnected )
+		{
+			if ( autoContinue )
+				thread PS4_PSNSignIn()
+			else
+				SetLaunchState( eLaunchState.WAIT_TO_CONTINUE, "", Localize( "#MAINMENU_CONTINUE" ) )
+			return
+		}
+
+		bool isAgeApproved
+		if ( netStatus == PS4_NETWORK_STATUS_AGE_RESTRICTION )
+			isAgeApproved = false
+		else
+			isAgeApproved = !PS4_is_NetworkStatusAgeRestriction()
+		PrintLaunchDebugVal( "isAgeApproved", isAgeApproved )
+		if ( !isAgeApproved )
+		{
+			SetLaunchState( eLaunchState.CANT_CONTINUE, Localize( "#MULTIPLAYER_AGE_RESTRICTED" ) )
+			return
+		}
+
+		bool isPSNError = netStatus == PS4_NETWORK_STATUS_IN_ERROR
+		PrintLaunchDebugVal( "isPSNError", isPSNError )
+		if ( isPSNError )
+		{
+			SetLaunchState( eLaunchState.WAIT_TO_CONTINUE, Localize( "#PSN_HAD_ERROR" ), Localize( "#MAINMENU_RETRY" ) )
+			return
+		}
+
+		// Moved till later because some of the above PS4 checks cause PS4_isUserNetworkingEnabled() to return false so anything past checking PS4_isUserNetworkingEnabled() couldn't be reached
+		if ( !PS4_isUserNetworkingEnabled() )
+		{
+			SetLaunchState( eLaunchState.CANT_CONTINUE, Localize( "#PSN_NOT_ALLOWED" ) )
+			return
+		}
+	#endif // PS4_PROG
+
+	#if DURANGO_PROG
+		bool isSignedIn = Console_IsSignedIn() // This call is weird. Seems like this is our game's concept of signed in, instead of xbox's. Also not used on PS4 because code always returns true
+		bool isProfileSelectRequired = file.forceProfileSelect
+		PrintLaunchDebugVal( "isSignedIn", isSignedIn )
+		PrintLaunchDebugVal( "isProfileSelectRequired", isProfileSelectRequired )
+		PrintLaunchDebugVal( "autoContinue", autoContinue )
+		if ( !isSignedIn || isProfileSelectRequired )
+		{
+			file.forceProfileSelect = false
+
+			if ( autoContinue )
+			{
+				Durango_ShowAccountPicker()
+			}
+			else
+			{
+				SetLaunchState( eLaunchState.WAIT_TO_CONTINUE, "", Localize( "#MAINMENU_SIGN_IN" ) )
+			}
+			return
+		}
+
+		bool isGuest = Durango_IsGuest()
+		PrintLaunchDebugVal( "isGuest", isGuest )
+		if ( isGuest )
+		{
+			if ( autoContinue )
+			{
+				Durango_ShowAccountPicker()
+			}
+			else
+			{
+				SetLaunchState( eLaunchState.WAIT_TO_CONTINUE, Localize( "#GUESTS_NOT_SUPPORTED" ), Localize( "#MAINMENU_SIGN_IN" ) )
+			}
+			return
+		}
+	#endif // DURANGO_PROG
+
 	bool hasPermission = HasPermission()
 	PrintLaunchDebugVal( "hasPermission", hasPermission )
 	if ( !hasPermission )
 	{
+		#if DURANGO_PROG
+			if ( autoContinue )
+			{
+				thread XB1_PermissionsDialog()
+				SetLaunchState( eLaunchState.WAIT_TO_CONTINUE, Localize( "#MULTIPLAYER_NOT_AVAILABLE" ), Localize( "#MAINMENU_CONTINUE" ) ) // TEMP
+			}
+			else
+			{
+				SetLaunchState( eLaunchState.WAIT_TO_CONTINUE, "", Localize( "#MAINMENU_SIGN_IN" ) )
+			}
+		#else
 			SetLaunchState( eLaunchState.CANT_CONTINUE, Localize( "#MULTIPLAYER_NOT_AVAILABLE" ) )
+		#endif
 		return
 	}
+
+	//#if PS4_PROG
+	//	bool hasPlus = Ps4_CheckPlus_Allowed()
+	//	PrintLaunchDebugVal( "hasPlus", hasPlus )
+	//
+	//	if ( !hasPlus )
+	//	{
+	//		Ps4_CheckPlus_Schedule()
+	//	#if SPINNER_DEBUG_INFO
+	//		SetSpinnerDebugInfo( "Ps4_CheckPlus_Running" )
+	//	#endif
+	//		while ( Ps4_CheckPlus_Running() )
+	//			WaitFrame()
+	//		hasPlus = Ps4_CheckPlus_Allowed()
+	//		PrintLaunchDebugVal( "hasPlus", hasPlus )
+	//
+	//		if ( !hasPlus )
+	//		{
+	//			if ( Ps4_CheckPlus_GetLastRequestResults() != 0 )
+	//			{
+	//				SetLaunchState( eLaunchState.WAIT_TO_CONTINUE, Localize( "#PSN_HAD_ERROR" ), Localize( "#MAINMENU_RETRY" ) )
+	//				return
+	//			}
+	//
+	//			if ( autoContinue )
+	//				thread PS4_PlusSignUp()
+	//			else
+	//				SetLaunchState( eLaunchState.WAIT_TO_CONTINUE, "", Localize( "#MAINMENU_CONTINUE" ) )
+	//			return
+	//		}
+	//	}
+	//#endif // PS4_PROG
 
 #if SPINNER_DEBUG_INFO
 	SetSpinnerDebugInfo( "isAuthenticatedByStryder" )
@@ -288,6 +478,21 @@ void function PrelaunchValidation( bool autoContinue = false )
 		return
 	}
 
+	#if CONSOLE_PROG
+		bool isNucleusRequired = Nucleussdk_is_required()
+		bool isNucleusLoggedIn = Nucleussdk_is_loggedin()
+		PrintLaunchDebugVal( "isNucleusRequired", isNucleusRequired )
+		PrintLaunchDebugVal( "isNucleusLoggedIn", isNucleusLoggedIn )
+		if ( isNucleusRequired && !isNucleusLoggedIn )
+		{
+			if ( autoContinue )
+				thread NucleusLogin()
+			else
+				SetLaunchState( eLaunchState.WAIT_TO_CONTINUE, "", Localize( "#MAINMENU_CONTINUE" ) )
+			return
+		}
+	#endif // CONSOLE_PROG
+
 	if ( autoContinue )
 		LaunchMP()
 	else
@@ -301,6 +506,9 @@ void function OnMainMenuPanel_Hide( var panel )
 	Signal( uiGlobal.signalDummy, "EndPrelaunchValidation" )
 	file.working = false
 	file.searching = false
+	#if DURANGO_PROG
+		file.forceProfileSelect = false
+	#endif // DURANGO_PROG
 }
 
 
@@ -384,6 +592,13 @@ bool function IsWorking()
 
 void function StartSearchForPartyServer()
 {
+	#if DURANGO_PROG
+		// IMPORTANT: As a safety measure leave any party view we are in at this point.
+		// Otherwise, if you are unlucky enough to get stuck in a party view, you will
+		// trash its state by pointing it to your private lobby.
+		Durango_LeaveParty()
+	#endif // DURANGO_PROG
+
 	SearchForPartyServer()
 	SetLaunchState( eLaunchState.WORKING )
 	file.searching = true
@@ -459,6 +674,138 @@ bool function IsSearchingForPartyServer()
 }
 
 
+#if DURANGO_PROG
+void function UICodeCallback_OnStartedUserSignIn()
+{
+	printt( "UICodeCallback_OnStartedUserSignIn" )
+	SetLaunchState( eLaunchState.WORKING )
+
+#if SPINNER_DEBUG_INFO
+	SetSpinnerDebugInfo( "OnStartedUserSignIn" )
+#endif
+}
+
+void function UICodeCallback_OnFailedUserSignIn()
+{
+	printt( "UICodeCallback_OnFailedUserSignIn" )
+	SetLaunchState( eLaunchState.WAIT_TO_CONTINUE, "", Localize( "#MAINMENU_SIGN_IN" ) )
+}
+
+void function UICodeCallback_OnCompletedUserSignIn()
+{
+	printt( "UICodeCallback_OnCompletedUserSignIn" )
+	SetLaunchState( eLaunchState.WAIT_TO_CONTINUE, "", Localize( "#MAINMENU_CONTINUE" ) )
+}
+
+void function UICodeCallback_OnUserSignOut()
+{
+	printt( "UICodeCallback_OnUserSignOut" )
+	SetLaunchState( eLaunchState.WAIT_TO_CONTINUE, "", Localize( "#MAINMENU_SIGN_IN" ) )
+}
+
+void function XB1_PermissionsDialog()
+{
+	Durango_VerifyMultiplayerPermissions()
+
+	if ( !Console_HasPermissionToPlayMultiplayer() )
+		file.forceProfileSelect = true
+
+	// TODO: Need code to know when this ends
+	//PrelaunchValidateAndLaunch()
+}
+#endif // DURANGO_PROG
+
+
+#if PS4_PROG
+// TODO: All of this needs improving. Need simpler interface to script.
+void function PS4_PSNSignIn()
+{
+	if ( Ps4_LoginDialog_Schedule() )
+	{
+#if SPINNER_DEBUG_INFO
+		SetSpinnerDebugInfo( "Ps4_LoginDialog_Running" )
+#endif
+		while ( Ps4_LoginDialog_Running() )
+			WaitFrame()
+
+		//printt( "!!!!!!!!!!!!!!!!!!!!!!!!! starting PS4_ScheduleUserNetworkingEnabledTest" )
+
+		PS4_ScheduleUserNetworkingEnabledTest()
+		WaitFrame()
+		if ( !PS4_isUserNetworkingResolved() )
+		{
+			//printt( "PS4 - networking isn't resolved yet" )
+#if SPINNER_DEBUG_INFO
+			SetSpinnerDebugInfo( "PS4_isUserNetworkingResolved" )
+#endif
+			while ( !PS4_isUserNetworkingResolved() )
+				WaitFrame()
+		}
+
+		//printt( "!!!!!!!!!!!!!!!!!!!!!!!!! PS4_isUserNetworkingEnabled", PS4_isUserNetworkingEnabled() )
+		//printt( "!!!!!!!!!!!!!!!!!!!!!!!!! resolved and not enabled means you failed with dialog or net is down or something else?" )
+
+		// Had to add PS4_NETWORK_STATUS_AGE_RESTRICTION check because PS4_isUserNetworkingEnabled() will be false when that is the resolution and underage users that just signed in were being asked to sign in again
+		if ( !PS4_isUserNetworkingEnabled() && PS4_getUserNetworkingResolution() != PS4_NETWORK_STATUS_AGE_RESTRICTION )
+		{
+			// user backed out of login or forgot password or ...
+			SetLaunchState( eLaunchState.WAIT_TO_CONTINUE, Localize( "#PS4_DISCONNECT_NOT_SIGNED_IN_TO_PSN" ), Localize( "#MAINMENU_SIGN_IN" ) )
+		}
+		else
+		{		
+			//printt( "!!!!!!!!!!!!!!!!!!!!!!!!! PS4_getUserNetworkingResolution", PS4_getUserNetworkingResolution() )
+			//printt( "!!!!!!!!!!!!!!!!!!!!!!!!! Ps4_PSN_Is_Loggedin", Ps4_PSN_Is_Loggedin() )
+
+			bool isPSNConnected
+			if ( PS4_getUserNetworkingResolution() == PS4_NETWORK_STATUS_NOT_LOGGED_IN )
+			{
+				isPSNConnected = false
+			}
+			else
+			{
+				float endTime = Time() + 10
+				while ( !Ps4_PSN_Is_Loggedin() && Time() < endTime )
+					WaitFrame()
+
+				isPSNConnected = Ps4_PSN_Is_Loggedin()
+			}
+
+			PrintLaunchDebugVal( "isPSNConnected", isPSNConnected )
+			if ( !isPSNConnected )
+				SetLaunchState( eLaunchState.WAIT_TO_CONTINUE, Localize( "#PS4_DISCONNECT_NOT_SIGNED_IN_TO_PSN" ), Localize( "#MAINMENU_SIGN_IN" ) )
+			else
+				PrelaunchValidateAndLaunch()
+		}
+	}
+}
+
+
+void function PS4_PlusSignUp()
+{
+	if ( Ps4_ScreenPlusDialog_Schedule() )
+	{
+#if SPINNER_DEBUG_INFO
+		SetSpinnerDebugInfo( "Ps4_ScreenPlusDialog_Running" )
+#endif
+		while ( Ps4_ScreenPlusDialog_Running() )
+			WaitFrame()
+
+		Ps4_CheckPlus_Schedule()
+#if SPINNER_DEBUG_INFO
+		SetSpinnerDebugInfo( "Ps4_CheckPlus_Running" )
+#endif
+		while ( Ps4_CheckPlus_Running() )
+			WaitFrame()
+		bool hasPlus = Ps4_CheckPlus_Allowed()
+		PrintLaunchDebugVal( "hasPlus", hasPlus )
+
+		if ( !hasPlus )
+			SetLaunchState( eLaunchState.WAIT_TO_CONTINUE, Localize( "#PSN_MUST_BE_PLUS_USER" ), Localize( "#MAINMENU_CONTINUE" ) )
+		else
+			PrelaunchValidateAndLaunch()
+	}
+}
+#endif // PS4_PROG
 
 void function LaunchButton_OnActivate( var button )
 {
@@ -489,20 +836,34 @@ bool function IsStryderAllowingMP()
 }
 
 
+// TODO: Non-PS4 platforms need to actually check instead of blindly returning true
 bool function HasLatestPatch()
 {
+	#if PS4_PROG
+		if ( PS4_getUserNetworkingErrorStatus() == -2141913073 ) // SCE_NP_ERROR_LATEST_PATCH_PKG_EXIST
+			return false
+	#endif // PS4_PROG
+
 	return true
 }
 
 
 bool function HasPermission()
 {
+	#if CONSOLE_PROG
+		return Console_HasPermissionToPlayMultiplayer() // A more general permission check. Can fail if not patched, underage profile logged in to another controller, network issue, etc.
+	#endif
+
 	return true
 }
 
 
 void function Accessibility_OnActivate( var button )
 {
+	#if DURANGO_PROG
+		if ( !Console_IsSignedIn() )
+			return
+	#endif
 
 	if ( IsDialog( GetActiveMenu() ) )
 		return
@@ -525,4 +886,81 @@ void function PrintLaunchDebugVal( string name, bool val )
 	#if R5DEV
 		printt( "*** PrelaunchValidation *** " + name + ": " + val )
 	#endif // DEV
+}
+
+
+#if CONSOLE_PROG
+void function NucleusLogin()
+{
+	if ( file.isNucleusProcessActive )
+		return
+
+	file.isNucleusProcessActive = true
+	OnThreadEnd( void function() {
+		file.isNucleusProcessActive = false
+	} )
+
+	if ( !Nucleussdk_is_loggedin() )
+	{
+		printt( "Nucleussdk_is_loggedin is false 1." )
+		WaitFrame();
+		Nucleussdk_login()
+#if SPINNER_DEBUG_INFO
+		SetSpinnerDebugInfo( "Nucleussdk_is_loging_in" )
+#endif
+		while ( Nucleussdk_is_loging_in() )
+			WaitFrame()
+	}
+
+	if ( !Nucleussdk_is_loggedin() )
+	{
+		string errorDetails
+		switch ( Nucleussdk_last_error() )
+		{
+			case EA_Nucleus_kNcsErrorLoginCancelled:
+				errorDetails = Localize( "#ORIGINSDK_NO_ACCOUNT" )
+				break
+			case EA_Nucleus_kNcsErrorServerError:
+				errorDetails = Localize( "#ORIGINSDK_EA_NETWORK" )
+				break
+			case EA_Nucleus_kNcsErrorDeviceTokenError:
+				#if DURANGO_PROG
+					errorDetails = Localize( "#ORIGINSDK_XBOX1_NETWORK" )
+				#elseif PS4_PROG
+					errorDetails = Localize( "#ORIGINSDK_PS4_NETWORK" )
+				#endif
+				break
+			default:
+				errorDetails = Localize( "#ORIGINSDK_UNKNOWN_ERROR", string( Nucleussdk_last_error() ) )
+				break
+		}
+
+		SetLaunchState( eLaunchState.WAIT_TO_CONTINUE, errorDetails, Localize( "#MAINMENU_RETRY" ) )
+		return
+	}
+	else
+	{
+		PrelaunchValidateAndLaunch()
+	}
+}
+#endif // CONSOLE_PROG
+
+void function SwitchProfile_OnActivate( var button )
+{
+	#if DURANGO_PROG
+		// this combo seems to put us in the right state for the account picker to properly show when we press "A"
+		Durango_ShowAccountPicker()
+		Durango_GoToSplashScreen()
+		SetLaunchState( eLaunchState.WAIT_TO_CONTINUE, "", Localize( "#MAINMENU_SIGN_IN" ) )
+	#endif
+}
+
+
+bool function IsSwitchProfileFooterValid()
+{
+	#if DURANGO_PROG
+		return Console_IsSignedIn() && !IsWorking() && !IsSearchingForPartyServer()
+	#else
+		return false
+	#endif
 }

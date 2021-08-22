@@ -190,6 +190,10 @@ void function RestoreGamepadDefaults()
 	ExecConfig( "gamepad_stick_layout_default.cfg" )
 	ExecConfig( "gamepad_button_layout_custom.cfg" )
 
+#if CONSOLE_PROG
+	ExecConfig( "config_default_console.cfg" )
+#endif
+
 	SaveSettingsConVars( file.conVarDataList )
 
 	EmitUISound( "menu_advocategift_open" )

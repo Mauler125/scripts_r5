@@ -61,6 +61,9 @@ void function ClientToUI_ShowReportPlayerDialog( string playerName, string playe
 	file.reportPlayerUID = playerUID
 
 	int ver = GetReportStyle()
+	#if(CONSOLE_PROG)
+		ver = minint( ver, 1 )
+	#endif
 
 	if ( ver == 1 )
 		ShowPlayerProfileCardForUID( file.reportPlayerUID )

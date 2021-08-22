@@ -45,7 +45,12 @@ void function InitAccessibilityDialog( var newMenuArg )
 
 void function OnOpenMenu()
 {
-	HudElem_SetRuiArg( file.contentRui, "messageText", "#MENU_ACCESSIBILITY_DESC" )
+	#if DURANGO_PROG
+		HudElem_SetRuiArg( file.contentRui, "messageText", Localize( "#SIGNED_IN_AS_N", Durango_GetGameDisplayName() ) )
+	#else
+		HudElem_SetRuiArg( file.contentRui, "messageText", "#MENU_ACCESSIBILITY_DESC" )
+	#endif
+
 	file.wasNarrationEnabled = IsAccessibilityNarrationEnabled()
 	SetCursorPosition( <1920.0 * 0.5, 1080.0 * 0.5, 0> )
 }

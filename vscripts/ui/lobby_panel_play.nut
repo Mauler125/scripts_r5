@@ -1749,7 +1749,11 @@ bool function CanInvite()
 	if ( GetParty().numFreeSlots == 0 )
 		return false
 
-	#if PC_PROG
+	#if DURANGO_PROG
+		return (GetMenuVarBool( "isFullyConnected" ) && GetMenuVarBool( "DURANGO_canInviteFriends" ) && GetMenuVarBool( "DURANGO_isJoinable" ))
+	#elseif PS4_PROG
+		return GetMenuVarBool( "PS4_canInviteFriends" )
+	#elseif PC_PROG
 		return (GetMenuVarBool( "isFullyConnected" ) && GetMenuVarBool( "ORIGIN_isEnabled" ) && GetMenuVarBool( "ORIGIN_isJoinable" ))
 	#endif
 }
