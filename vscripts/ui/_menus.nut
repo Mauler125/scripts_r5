@@ -204,9 +204,6 @@ void function UICodeCallback_ActivateMenus()
 
 	UIMusicUpdate()
 
-	#if DURANGO_PROG
-		Durango_LeaveParty()
-	#endif // DURANGO_PROG
 }
 
 
@@ -423,11 +420,6 @@ bool function UICodeCallback_LevelLoadingStarted( string levelname )
 	// kill lingering postgame summary since persistent data may not be available at this point
 	Signal( uiGlobal.signalDummy, "PGDisplay" )
 
-	#if CONSOLE_PROG
-		if ( !Console_IsSignedIn() )
-			return false
-	#endif
-
 	return true
 }
 
@@ -435,12 +427,6 @@ bool function UICodeCallback_LevelLoadingStarted( string levelname )
 bool function UICodeCallback_UpdateLoadingLevelName( string levelname )
 {
 	printt( "UICodeCallback_UpdateLoadingLevelName: " + levelname )
-
-	#if CONSOLE_PROG
-		if ( !Console_IsSignedIn() )
-			return false
-	#endif
-
 	return true
 }
 
@@ -756,48 +742,6 @@ void function UICodeCallback_ErrorDialog( string errorDetails )
 void function UICodeCallback_AcceptInviteThread( string accesstoken, string from )
 {
 	printt( "UICodeCallback_AcceptInviteThread '" + accesstoken + "' from '" + from + "'" )
-
-	#if PS4_PROG
-		if ( !Ps4_PSN_Is_Loggedin() )
-		{
-			Ps4_LoginDialog_Schedule()
-			while ( Ps4_LoginDialog_Running() )
-				WaitFrame()
-
-			if ( !Ps4_PSN_Is_Loggedin() )
-				return
-		}
-
-/*
-		if ( Ps4_CheckPlus_Schedule() )
-		{
-			while ( Ps4_CheckPlus_Running() )
-				WaitFrame()
-
-			if ( !Ps4_CheckPlus_Allowed() )
-			{
-				if ( Ps4_CheckPlus_GetLastRequestResults() != 0 )
-				{
-					return
-				}
-
-				if ( Ps4_ScreenPlusDialog_Schedule() )
-				{
-					while ( Ps4_ScreenPlusDialog_Running() )
-						WaitFrame()
-
-					if ( !Ps4_ScreenPlusDialog_Allowed() )
-						return
-				}
-				else
-				{
-					return
-				}
-			}
-		}
-*/
-
-	#endif // #if PS4_PROG
 
 	SubscribeToChatroomPartyChannel( accesstoken, from )
 }
@@ -1239,29 +1183,6 @@ void function DialogFlow()
 		PromoDialog_OpenHijacked( "<p|" + promotCategory + "|" + Localize( "#ORIGIN_ACCESS_TWITCH" ) + "|" + Localize( "#TWITCH_CAUSTIC1_ENTITLEMENT_OWNED" ) + ">" )
 		file.numDialogFlowDialogsDisplayed++
 	}
-#if PS4_PROG
-	else if ( LocalPlayerHasEntitlement( PSPLUS_PACK_02 ) && persistenceAvailable && !TryDialogFlowPersistenceQuery( "plus02Acknowledged" ) )
-	{
-		ClientCommand( "plus02Acknowledged" )
-		ClientCommand( "lastSeenPremiumCurrency" )
-		PromoDialog_OpenHijacked( "<p|apex_title_blue|" + Localize( "#PROMO_REWARDS_UNLOCKED" ) + "|" + Localize( "#PROMO_PS4_PLUS02_OWNED" ) + ">" )
-		file.numDialogFlowDialogsDisplayed++
-	}
-	else if ( LocalPlayerHasEntitlement( PSPLUS_PACK_03 ) && persistenceAvailable && !TryDialogFlowPersistenceQuery( "plus03Acknowledged" ) )
-	{
-		ClientCommand( "plus03Acknowledged" )
-		ClientCommand( "lastSeenPremiumCurrency" )
-		PromoDialog_OpenHijacked( "<p|playstation_plus_pack3|" + Localize( "#PROMO_REWARDS_UNLOCKED" ) + "|" + Localize( "#PROMO_PS4_PLUS03_OWNED" ) + ">" )
-		file.numDialogFlowDialogsDisplayed++
-	}
-	else if ( LocalPlayerHasEntitlement( PSPLUS_PACK_04 ) && persistenceAvailable && !TryDialogFlowPersistenceQuery( "plus04Acknowledged" ) )
-	{
-		ClientCommand( "plus04Acknowledged" )
-		ClientCommand( "lastSeenPremiumCurrency" )
-		PromoDialog_OpenHijacked( "<p|playstation_plus_pack4|" + Localize( "#PROMO_REWARDS_UNLOCKED" ) + "|" + Localize( "#PROMO_PS4_PLUS04_OWNED" ) + ">" )
-		file.numDialogFlowDialogsDisplayed++
-	}
-#endif
 	else if ( earliestRankedPeriod != "" )
 	{
 		ClientCommand( "rankedPeriodRewardAcknowledged " + earliestRankedPeriod )
@@ -2272,40 +2193,18 @@ void function InitGlobalMenuVars()
 	RegisterMenuVarBool( "isPartyLeader", false )
 	RegisterMenuVarBool( "isGamepadActive", IsControllerModeActive() )
 	RegisterMenuVarBool( "isMatchmaking", false )
+	RegisterMenuVarBool( "ORIGIN_isEnabled", false )
+	RegisterMenuVarBool( "ORIGIN_isJoinable", false )
 
-	#if CONSOLE_PROG
-		RegisterMenuVarBool( "CONSOLE_isSignedIn", false )
-	#endif // CONSOLE_PROG
-
-	#if DURANGO_PROG
-		RegisterMenuVarBool( "DURANGO_canInviteFriends", false )
-		RegisterMenuVarBool( "DURANGO_isJoinable", false )
-	#elseif PS4_PROG
-		RegisterMenuVarBool( "PS4_canInviteFriends", false )
-	#elseif PC_PROG
-		RegisterMenuVarBool( "ORIGIN_isEnabled", false )
-		RegisterMenuVarBool( "ORIGIN_isJoinable", false )
-	#endif
 
 	thread UpdateIsFullyConnected()
 	thread UpdateAmIPartyLeader()
 	thread UpdateActiveMenuThink()
 	thread UpdateIsMatchmaking()
 
-	#if CONSOLE_PROG
-		thread UpdateConsole_IsSignedIn()
-	#endif // CONSOLE_PROG
-
-	#if DURANGO_PROG
-		thread UpdateDurango_CanInviteFriends()
-		thread UpdateDurango_IsJoinable()
-	#elseif PS4_PROG
-		thread UpdatePS4_CanInviteFriends()
-	#elseif PC_PROG
-		thread UpdateOrigin_IsEnabled()
-		thread UpdateOrigin_IsJoinable()
-		thread UpdateIsGamepadActive()
-	#endif
+	thread UpdateOrigin_IsEnabled()
+	thread UpdateOrigin_IsJoinable()
+	thread UpdateIsGamepadActive()
 }
 
 
@@ -2370,51 +2269,6 @@ void function UpdateIsMatchmaking()
 	}
 }
 
-#if CONSOLE_PROG
-void function UpdateConsole_IsSignedIn()
-{
-	while ( true )
-	{
-		SetMenuVarBool( "CONSOLE_isSignedIn", Console_IsSignedIn() )
-		WaitFrame()
-	}
-}
-#endif // CONSOLE_PROG
-
-
-#if PS4_PROG
-void function UpdatePS4_CanInviteFriends()
-{
-	while ( true )
-	{
-		SetMenuVarBool( "PS4_canInviteFriends", PS4_canInviteFriends() )
-		WaitFrame()
-	}
-}
-#endif // PS4_PROG
-
-
-
-#if DURANGO_PROG
-void function UpdateDurango_CanInviteFriends()
-{
-	while ( true )
-	{
-		SetMenuVarBool( "DURANGO_canInviteFriends", Durango_CanInviteFriends() )
-		WaitFrame()
-	}
-}
-
-void function UpdateDurango_IsJoinable()
-{
-	while ( true )
-	{
-		SetMenuVarBool( "DURANGO_isJoinable", Durango_IsJoinable() )
-		WaitFrame()
-	}
-}
-#endif // DURANGO_PROG
-
 #if PC_PROG
 void function UpdateOrigin_IsEnabled()
 {
@@ -2461,18 +2315,6 @@ void function InviteFriends()
 
 	AdvanceMenu( GetMenu( "SocialMenu" ) )
 }
-
-#if DURANGO_PROG
-void function OpenXboxPartyApp( var button )
-{
-	Durango_OpenPartyApp()
-}
-
-void function OpenXboxHelp( var button )
-{
-	Durango_ShowHelpWindow()
-}
-#endif // DURANGO_PROG
 
 #if R5DEV
 void function OpenDevMenu( var button )

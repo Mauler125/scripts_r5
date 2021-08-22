@@ -98,15 +98,10 @@ void function InitInGameMPMenu( var newMenuArg )
 
 	//var controlsButton = AddComboButton( comboStruct, headerIndex, buttonIndex++, "#CONTROLS" )
 	//Hud_AddEventHandler( controlsButton, UIE_CLICK, AdvanceMenuEventHandler( GetMenu( "ControlsMenu" ) ) )
-	#if CONSOLE_PROG
-		//var avButton = AddComboButton( comboStruct, headerIndex, buttonIndex++, "#AUDIO_VIDEO" )
-		//Hud_AddEventHandler( avButton, UIE_CLICK, AdvanceMenuEventHandler( GetMenu( "AudioVideoMenu" ) ) )
-	#elseif PC_PROG
-		//var videoButton = AddComboButton( comboStruct, headerIndex, buttonIndex++, "#AUDIO" )
-		//Hud_AddEventHandler( videoButton, UIE_CLICK, AdvanceMenuEventHandler( GetMenu( "AudioMenu" ) ) )
-		//var soundButton = AddComboButton( comboStruct, headerIndex, buttonIndex++, "#VIDEO" )
-		//Hud_AddEventHandler( soundButton, UIE_CLICK, AdvanceMenuEventHandler( GetMenu( "VideoMenu" ) ) )
-	#endif
+	//var videoButton = AddComboButton( comboStruct, headerIndex, buttonIndex++, "#AUDIO" )
+	//Hud_AddEventHandler( videoButton, UIE_CLICK, AdvanceMenuEventHandler( GetMenu( "AudioMenu" ) ) )
+	//var soundButton = AddComboButton( comboStruct, headerIndex, buttonIndex++, "#VIDEO" )
+	//Hud_AddEventHandler( soundButton, UIE_CLICK, AdvanceMenuEventHandler( GetMenu( "VideoMenu" ) ) )
 
 	file.faqButton = AddComboButton( comboStruct, headerIndex, buttonIndex++, "#KNB_MENU_HEADER" )
 	//Hud_AddEventHandler( file.faqButton, UIE_CLICK, AdvanceMenuEventHandler( GetMenu( "KnowledgeBaseMenu" ) ) )
