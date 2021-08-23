@@ -325,15 +325,181 @@ void function PlayerRestoreHP(entity player, float health, float shields)
     player.SetShieldHealth( shields )
 
 }
+
+array<string> function GetAllHopups(string weapon)
+{
+    array<string> hopups
+    // HAVOC Rifle
+    if(IsValid(weapon) && weapon == "mp_weapon_energy_ar") {
+        hopups.append( "gold" )
+        hopups.append( "optic_cq_hcog_bruiser" )
+        hopups.append( "energy_mag_l3" )
+        hopups.append( "stock_tactical_l3" )
+        hopups.append( "hopup_turbocharger" )
+    }
+    // Devotion LMG
+    else if(IsValid(weapon) && weapon == "mp_weapon_esaw") {
+        hopups.append( "gold" )
+        hopups.append( "barrel_stabilizer_l4_flash_hider" )
+        hopups.append( "optic_cq_hcog_bruiser" )
+        hopups.append( "energy_mag_l3" )
+        hopups.append( "stock_tactical_l3" )
+        hopups.append( "hopup_turbocharger" )
+    }
+    // Triple Take
+    else if(IsValid(weapon) && weapon == "mp_weapon_doubletake") {
+        hopups.append( "gold" )
+        hopups.append( "optic_sniper_threat" )
+        hopups.append( "energy_mag_l3" )
+        hopups.append( "stock_sniper_l3" )
+        hopups.append( "hopup_energy_choke" )
+    }
+    // VK47 Flatline
+    else if(IsValid(weapon) && weapon == "mp_weapon_vinson") {
+        hopups.append( "gold" )
+        hopups.append( "highcal_mag_l3" )
+        hopups.append( "optic_cq_holosight_variable" )
+        hopups.append( "stock_tactical_l3" )
+        hopups.append( "hopup_highcal_rounds" )
+    }
+    // Hemlok Burst AR
+    else if(IsValid(weapon) && weapon == "mp_weapon_hemlok") {
+        // hopups.append( "gold" )
+        hopups.append( "barrel_stabilizer_l4_flash_hider" )
+        hopups.append( "optic_cq_hcog_bruiser" )
+        hopups.append( "highcal_mag_l3" )
+        hopups.append( "stock_tactical_l3" )
+    }
+    // G7 Scout
+    else if(IsValid(weapon) && weapon == "mp_weapon_g2") {
+        hopups.append( "gold" )
+        hopups.append( "barrel_stabilizer_l4_flash_hider" )
+        hopups.append( "optic_ranged_aog_variable" )
+        hopups.append( "bullets_mag_l3" )
+        hopups.append( "stock_sniper_l3" )
+        hopups.append( "hopup_double_tap" )
+    }
+    // Alternator SMG
+    else if(IsValid(weapon) && weapon == "mp_weapon_alternator_smg") {
+        hopups.append( "gold" )
+        hopups.append( "barrel_stabilizer_l4_flash_hider" )
+        hopups.append( "optic_cq_threat" )
+        hopups.append( "bullets_mag_l3" )
+        hopups.append( "stock_tactical_l3" )
+    }
+    // R99 SMG
+    else if(IsValid(weapon) && weapon == "mp_weapon_r97") {
+        hopups.append( "barrel_stabilizer_l4_flash_hider" )
+        hopups.append( "optic_cq_threat" )
+        hopups.append( "bullets_mag_l3" )
+        hopups.append( "stock_tactical_l3" )
+    }
+    // Prowler SMG
+    else if(IsValid(weapon) && weapon == "mp_weapon_pdw") {
+        hopups.append( "gold" )
+        hopups.append( "highcal_mag_l3" )
+        hopups.append( "optic_cq_threat" )
+        hopups.append( "stock_tactical_l3" )
+        hopups.append( "hopup_selectfire" )
+    }
+    // Longbow DMR
+    else if(IsValid(weapon) && weapon == "mp_weapon_dmr") {
+        hopups.append( "gold" )
+        hopups.append( "barrel_stabilizer_l4_flash_hider" )
+        hopups.append( "highcal_mag_l3" )
+        hopups.append( "optic_sniper_threat" )
+        hopups.append( "stock_sniper_l3" )
+    }
+    // Charge Rifle
+    else if(IsValid(weapon) && weapon == "mp_weapon_defender") {
+        hopups.append( "gold" )
+        hopups.append( "optic_sniper_threat" )
+        hopups.append( "stock_sniper_l3" )
+    }
+    // M600 Spitfire
+    else if(IsValid(weapon) && weapon == "mp_weapon_lmg") {
+        hopups.append( "barrel_stabilizer_l4_flash_hider" )
+        hopups.append( "optic_cq_hcog_bruiser" )
+        hopups.append( "highcal_mag_l3" )
+        hopups.append( "stock_tactical_l3" )
+    }
+    // R301 Carbine
+    else if(IsValid(weapon) && weapon == "mp_weapon_rspn101") {
+        hopups.append( "gold" )
+        hopups.append( "barrel_stabilizer_l4_flash_hider" )
+        hopups.append( "optic_cq_hcog_bruiser" )
+        hopups.append( "bullets_mag_l3" )
+        hopups.append( "stock_tactical_l3" )
+        hopups.append( "hopup_highcal_rounds" )
+    }
+    // EVA8 Auto
+    else if(IsValid(weapon) && weapon == "mp_weapon_shotgun") {
+        hopups.append( "gold" )
+        hopups.append( "shotgun_bolt_l3" )
+        hopups.append( "optic_cq_threat" )
+        hopups.append( "hopup_double_tap" )
+    }
+    // Peacekeeper
+    else if(IsValid(weapon) && weapon == "mp_weapon_energy_shotgun") {
+        hopups.append( "gold" )
+        hopups.append( "shotgun_bolt_l3" )
+        hopups.append( "optic_cq_threat" )
+        hopups.append( "hopup_energy_choke" )
+    }
+    // Mozambique
+    else if(IsValid(weapon) && weapon == "mp_weapon_shotgun_pistol") {
+        hopups.append( "gold" )
+        hopups.append( "shotgun_bolt_l3" )
+        hopups.append( "optic_cq_threat" )
+        hopups.append( "hopup_unshielded_dmg" )
+    }
+    // Wingman
+    else if(IsValid(weapon) && weapon == "mp_weapon_wingman") {
+        hopups.append( "gold" )
+        hopups.append( "highcal_mag_l3" )
+        hopups.append( "optic_cq_threat" )
+    }
+    // P2020
+    else if(IsValid(weapon) && weapon == "mp_weapon_semipistol") {
+        hopups.append( "gold" )
+        hopups.append( "bullets_mag_l3" )
+        hopups.append( "optic_cq_threat" )
+        hopups.append( "hopup_unshielded_dmg" )
+    }
+    // RE-45
+    else if(IsValid(weapon) && weapon == "mp_weapon_autopistol") {
+        hopups.append( "gold" )
+        hopups.append( "barrel_stabilizer_l4_flash_hider" )
+        hopups.append( "bullets_mag_l3" )
+        hopups.append( "optic_cq_threat" )
+    }
+    // LStar
+    else if(IsValid(weapon) && weapon == "mp_weapon_lstar") {
+        hopups.append( "crate" )
+        hopups.append( "optic_cq_threat" )
+    }
+
+    return hopups
+}
+
 void function PlayerRestoreWeapons(entity player, string weapon0, string weapon1)
 {
     if(IsValid(weapon0) && weapon0 != "")
     {
-        player.GiveWeapon(weapon0, WEAPON_INVENTORY_SLOT_PRIMARY_0);
+        if(GetAllHopups(weapon0).len() != 0){
+            player.GiveWeapon(weapon0, WEAPON_INVENTORY_SLOT_PRIMARY_0, GetAllHopups(weapon0))
+        } else {
+            player.GiveWeapon(weapon0, WEAPON_INVENTORY_SLOT_PRIMARY_0);
+        }
+        
     }
     if(IsValid(weapon1) && weapon1 != "")
     {
-        player.GiveWeapon_NoDeploy(weapon1, WEAPON_INVENTORY_SLOT_PRIMARY_1);
+        if(GetAllHopups(weapon1).len() != 0){
+            player.GiveWeapon_NoDeploy(weapon1, WEAPON_INVENTORY_SLOT_PRIMARY_1, GetAllHopups(weapon1))
+        } else {
+            player.GiveWeapon_NoDeploy(weapon1, WEAPON_INVENTORY_SLOT_PRIMARY_1);
+        }
     }
 }
 
