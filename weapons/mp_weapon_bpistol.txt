@@ -72,7 +72,6 @@ WeaponData
 	"burst_or_looping_fire_sound_middle_npc"		"Weapon_LSTAR_Loop_3P_npc_a"
 	"burst_or_looping_fire_sound_end_npc"			"Weapon_LSTAR_LoopEnd_3P_npc_a"
 
-
 	"ammo_clip_size"   								"18"
     "ammo_default_total"							"200"
     "ammo_stockpile_max"							"200"
@@ -89,8 +88,6 @@ WeaponData
 	"projectile_trail_effect_0" 					"P_tracer_projectile_smg_blue"
 	"tracer_effect"   								"P_tracer_proj_sniper_energy"
 	"impact_effect_table" 							"pulse_bullet"
-                
-
 
 	"damage_type" 									"bullet"
 

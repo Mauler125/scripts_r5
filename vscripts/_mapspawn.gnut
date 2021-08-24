@@ -156,10 +156,10 @@ global struct SvGlobals
 
 	bool roundBasedTeamScore_RoundReset         = true  // if true, reset team scores at the start of each round.
 	bool isInPilotGracePeriod                   = false // if true, all players will be allowed to switch loadouts.
-	
+
 	table<string, void functionref(entity,array<string>)> globalAnimEventTokenizeCallbacks
 	array<bool functionref( entity player, entity zipline, vector ziplineClosestPoint )> canUseZiplineCallbacks
-	
+
 	// r5 stuff
 	array<void functionref(entity, entity)> onPilotEmbarkingTitanCallbacks
 	array<void functionref(entity, entity)> onPlayerUsedOffhandCallbacks
@@ -176,7 +176,7 @@ void function CodeCallback_MapSpawn() // original script entry point
 	//seterrorhandler(void function() {})
 	ScriptCompilerTest()
 	LoadDiamond()
-	
+
 	RegisterSignal( "CleanupFXAndSoundsForDecoy" )
 	RegisterSignal( "MirageSpotted" )
 	RegisterSignal( "forever" )
@@ -248,6 +248,8 @@ void function CodeCallback_MapSpawn() // original script entry point
 	PrecacheModel( $"mdl/currency/crafting/currency_crafting_rare.rmdl" )
 
 	PrecacheWeapon( $"mp_weapon_melee_survival" )
+	// PrecacheWeapon( $"mp_weapon_data_knife" )
+	// PrecacheWeapon( $"mp_weapon_jack_dknife" )
 	PrecacheWeapon( $"mp_weapon_alternator_smg" )
 	PrecacheWeapon( $"mp_weapon_bubble_bunker" )
 	PrecacheWeapon( $"mp_weapon_dmr" )
@@ -265,6 +267,9 @@ void function CodeCallback_MapSpawn() // original script entry point
 	PrecacheWeapon( $"mp_weapon_autopistol" )
 	PrecacheWeapon( $"mp_weapon_wingman" )
 	PrecacheWeapon( $"mp_weapon_thermite_grenade" )
+	PrecacheWeapon( $"mp_weapon_wraith_kunai_primary" )
+	PrecacheWeapon( $"mp_weapon_deployable_medic" )
+	// PrecacheWeapon( $"mp_weapon_car" )
 	PrecacheWeapon( $"mp_ability_grapple" )
 	PrecacheWeapon( $"mp_weapon_vinson" )
 	PrecacheWeapon( $"mp_weapon_pdw" )
@@ -274,11 +279,15 @@ void function CodeCallback_MapSpawn() // original script entry point
 	PrecacheWeapon( $"mp_ability_area_sonar_scan" )
 	PrecacheWeapon( $"mp_ability_consumable" )
 	PrecacheWeapon( $"mp_weapon_g2" )
+	// PrecacheWeapon( $"mp_weapon_rocket_launcher" )
+	// PrecacheWeapon( $"mp_weapon_grenade_emp" )
+	// PrecacheWeapon( $"mp_weapon_dirty_bomb" )
 	PrecacheWeapon( $"mp_weapon_grenade_bangalore" )
 	PrecacheWeapon( $"mp_weapon_incap_shield" )
 	PrecacheWeapon( $"mp_ability_care_package" )
 	PrecacheWeapon( $"mp_ability_hunt_mode" )
 	PrecacheWeapon( $"mp_weapon_dirty_bomb" )
+	// PrecacheWeapon( $"mp_weapon_softball" )
 	PrecacheWeapon( $"mp_weapon_energy_ar" )
 	PrecacheWeapon( $"mp_weapon_esaw" )
 	PrecacheWeapon( $"mp_weapon_semipistol" )
@@ -306,10 +315,16 @@ void function CodeCallback_MapSpawn() // original script entry point
 	PrecacheWeapon( $"mp_weapon_mastiff_extreme" )
 	PrecacheWeapon( $"mp_weapon_mozambique_extreme" )
 	PrecacheWeapon( $"mp_weapon_wingman_lmg" )
-	PrecacheWeapon( $"mp_weapon_smart_lmg" )
 	PrecacheWeapon( $"mp_weapon_r99_kraber" )
 	PrecacheWeapon( $"mp_weapon_laser_g8" )
+	PrecacheWeapon( $"mp_weapon_lstargrenade" )
+	PrecacheWeapon( $"mp_weapon_ionizer" )
 	PrecacheWeapon( $"mp_weapon_infinity_rifle" )
+	PrecacheWeapon( $"mp_weapon_smart_melee" )
+	PrecacheWeapon( $"mp_weapon_smart_lmg" )
+	PrecacheWeapon( $"mp_weapon_smart_r301" )
+	PrecacheWeapon( $"mp_weapon_smart_kraber" )
+	PrecacheWeapon( $"mp_weapon_shadow_squad_hands_primary" )
 	PrecacheWeapon( $"mp_ability_3dash" )
 	PrecacheWeapon( $"mp_ability_spider_grapple" )
 	PrecacheWeapon( $"mp_weapon_grenade_sonar" )
