@@ -15,7 +15,10 @@ struct {
 
     array<LocationSettings> locationSettings
 
+    
     array<string> whitelistedWeapons
+
+    entity bubbleBoundary
 } file;
 
 
@@ -26,7 +29,7 @@ void function _CustomTDM_Init()
     AddCallback_OnClientConnected( void function(entity player) { thread SV_OnPlayerConnected(player) } )
 
     AddClientCommandCallback("next_round", ClientCommand_NextRound)
-    AddClientCommandCallback("give_weapon", ClientCommand_GiveWeapon)
+    AddClientCommandCallback("tgive", ClientCommand_GiveWeapon)
         
     thread RunTDM()
 
@@ -69,6 +72,7 @@ void function RunTDM()
 {
     WaitForGameState(eGameState.Playing)
     AddSpawnCallback("prop_dynamic", SV_OnPropDynamicSpawned)
+
     for(; ; )
     {
         VotingPhase();
@@ -141,6 +145,9 @@ void function StartRound()
         TpPlayerToSpawnPoint(player)
         
     }
+    
+    file.bubbleBoundary = CreateBubbleBoundary(file.selectedLocation)
+
     foreach(player in GetPlayerArray())
     {
         Remote_CallFunction_NonReplay(player, "ServerCallback_TDM_DoAnnouncement", 4, eTDMAnnounce.MAP_FLYOVER)
@@ -161,11 +168,15 @@ void function StartRound()
             {
                 DecideRespawnPlayer(player)
             }
-            PlayerRestoreHP(player, 100, GetCurrentPlaylistVarFloat("default_shield_hp", 100))
+            if(IsAlive(player)) 
+            {
+                PlayerRestoreHP(player, 100, GetCurrentPlaylistVarFloat("default_shield_hp", 100))
+            }
+            
         }
         
     }
-    float endTime = Time() + GetCurrentPlaylistVarInt("round_time", 480)
+    float endTime = Time() + GetCurrentPlaylistVarFloat("round_time", 480)
     while( Time() <= endTime )
 	{
         if(file.tdmState == eTDMState.WINNER_DECIDED)
@@ -173,6 +184,9 @@ void function StartRound()
 		WaitFrame()
 	}
     file.tdmState = eTDMState.IN_PROGRESS
+
+    file.bubbleBoundary.Destroy()
+    
 }
 
 
@@ -194,13 +208,14 @@ bool function ClientCommand_NextRound(entity player, array<string> args)
 
 bool function ClientCommand_GiveWeapon(entity player, array<string> args)
 {
+    if(args.len() < 2) return false;
+
     bool foundMatch = false
 
 
     foreach(weaponName in file.whitelistedWeapons)
     {
-        print(args[0] + " vs " + weaponName)
-        if(args[0] == weaponName)
+        if(args[1] == weaponName)
         {
             foundMatch = true
             break
@@ -212,13 +227,47 @@ bool function ClientCommand_GiveWeapon(entity player, array<string> args)
     entity weapon
 
     try {
-        print(args[0])
-        weapon = player.GiveWeapon(args[0], WEAPON_INVENTORY_SLOT_ANY)
-        weapon = player.GiveOffhandWeapon(args[0], WEAPON_INVENTORY_SLOT_ANY)
-    } catch( error ) {
-        player.SetActiveWeaponBySlot(eActiveInventorySlot.mainHand, GetSlotForWeapon(player, weapon))
-        return true
+        entity primary = player.GetNormalWeapon( WEAPON_INVENTORY_SLOT_PRIMARY_0 )
+        entity secondary = player.GetNormalWeapon( WEAPON_INVENTORY_SLOT_PRIMARY_1 )
+        entity tactical = player.GetOffhandWeapon( OFFHAND_TACTICAL )
+        entity ultimate = player.GetOffhandWeapon( OFFHAND_ULTIMATE )
+        switch(args[0]) 
+        {
+            case "p":
+            case "primary":
+                if( IsValid( primary ) ) player.TakeWeaponByEntNow( primary )
+                weapon = player.GiveWeapon(args[1], WEAPON_INVENTORY_SLOT_PRIMARY_0)
+                break
+            case "s":
+            case "secondary":
+                if( IsValid( secondary ) ) player.TakeWeaponByEntNow( secondary )
+                weapon = player.GiveWeapon(args[1], WEAPON_INVENTORY_SLOT_PRIMARY_1)
+                break
+            case "t":
+            case "tactical":
+                if( IsValid( tactical ) ) player.TakeOffhandWeapon( OFFHAND_TACTICAL )
+                weapon = player.GiveOffhandWeapon(args[1], OFFHAND_TACTICAL)
+                break
+            case "u":
+            case "ultimate":
+                if( IsValid( ultimate ) ) player.TakeOffhandWeapon( OFFHAND_ULTIMATE )
+                weapon = player.GiveOffhandWeapon(args[1], OFFHAND_ULTIMATE)
+                break
+        }
     }
+    catch( e1 ) { }
+
+    if( args.len() > 2 )
+    {
+        try {
+            weapon.SetMods(args.slice(2, args.len()))
+        }
+        catch( e2 ) {
+            print(e2)
+        }
+    }
+    
+    if( IsValid( weapon) && !weapon.IsWeaponOffhand() ) player.SetActiveWeaponBySlot(eActiveInventorySlot.mainHand, GetSlotForWeapon(player, weapon))
     return true
     
 }
@@ -232,7 +281,8 @@ void function SV_OnPlayerConnected(entity player)
     GivePassive(player, ePassives.PAS_PILOT_BLOOD)
 
     DecideRespawnPlayer(player)
-    PlayerRestoreHP(player, 100, GetCurrentPlaylistVarFloat("default_shield_hp", 100))
+    if( IsAlive( player ) )
+        PlayerRestoreHP(player, 100, GetCurrentPlaylistVarFloat("default_shield_hp", 100))
     TpPlayerToSpawnPoint(player)
     //SetPlayerSettings(player, TDM_PLAYER_SETTINGS)
 
@@ -265,9 +315,13 @@ void function SV_OnPlayerDied(entity victim, entity attacker, var damageInfo)
     case eGameState.Playing:
 
         
-        string weapon0 = SURVIVAL_GetWeaponBySlot(victim, 0)
-        string weapon1 = SURVIVAL_GetWeaponBySlot(victim, 1)
+        entity weapon1 = victim.GetNormalWeapon( WEAPON_INVENTORY_SLOT_PRIMARY_0 )
+        entity weapon2 = victim.GetNormalWeapon( WEAPON_INVENTORY_SLOT_PRIMARY_1 )
 
+        array<WeaponKit> mainWeaponsKit
+
+        if(IsValid(weapon1)) mainWeaponsKit.append(NewWeaponKit(weapon1.GetWeaponClassName(), weapon1.GetMods()))
+        if(IsValid(weapon2)) mainWeaponsKit.append(NewWeaponKit(weapon2.GetWeaponClassName(), weapon2.GetMods()))
 
         wait GetCurrentPlaylistVarFloat("respawn_delay", 8)
 
@@ -275,7 +329,8 @@ void function SV_OnPlayerDied(entity victim, entity attacker, var damageInfo)
         {
 
             DecideRespawnPlayer( victim )
-            PlayerRestoreWeapons(victim, weapon0, weapon1)
+            
+            PlayerRestoreWeapons(victim, mainWeaponsKit)
             SetPlayerSettings(victim, TDM_PLAYER_SETTINGS)
             PlayerRestoreHP(victim, 100, GetCurrentPlaylistVarFloat("default_shield_hp", 100))
             
@@ -310,6 +365,66 @@ void function SV_OnPlayerDied(entity victim, entity attacker, var damageInfo)
     }
 }
 
+entity function CreateBubbleBoundary(LocationSettings location)
+{
+    array<LocPair> spawns = location.spawns
+    
+    vector bubbleCenter
+    foreach(spawn in spawns)
+    {
+        bubbleCenter += spawn.origin
+    }
+    
+    bubbleCenter /= spawns.len()
+
+    float bubbleRadius = 0
+
+    foreach(LocPair spawn in spawns)
+    {
+        if(Distance(spawn.origin, bubbleCenter) > bubbleRadius)
+        bubbleRadius = Distance(spawn.origin, bubbleCenter)
+    }
+    
+    bubbleRadius += GetCurrentPlaylistVarFloat("bubble_radius_padding", 600)
+
+    entity bubbleShield = CreateEntity( "prop_dynamic" )
+	bubbleShield.SetValueForModelKey( BUBBLE_BUNKER_SHIELD_COLLISION_MODEL )
+    bubbleShield.SetOrigin(bubbleCenter)
+    bubbleShield.SetModelScale(bubbleRadius / 235)
+    bubbleShield.kv.CollisionGroup = 0
+    bubbleShield.kv.rendercolor = "127 73 37"
+    DispatchSpawn( bubbleShield )
+
+
+
+    thread MonitorBubbleBoundary(bubbleShield, bubbleCenter, bubbleRadius)
+
+
+    return bubbleShield
+
+}
+
+
+void function MonitorBubbleBoundary(entity bubbleShield, vector bubbleCenter, float bubbleRadius)
+{
+    while(IsValid(bubbleShield))
+    {
+
+        foreach(player in GetPlayerArray_Alive())
+        {
+            if(!IsValid(player)) continue
+            if(Distance(player.GetOrigin(), bubbleCenter) > bubbleRadius)
+            {
+				Remote_CallFunction_Replay( player, "ServerCallback_PlayerTookDamage", 0, 0, 0, 0, DF_BYPASS_SHIELD | DF_DOOMED_HEALTH_LOSS, eDamageSourceId.deathField, null )
+                player.TakeDamage( int( GetCurrentPlaylistVarFloat("oob_damage_percent", 25) / 100 * float( player.GetMaxHealth() ) ), null, null, { scriptType = DF_BYPASS_SHIELD | DF_DOOMED_HEALTH_LOSS, damageSourceId = eDamageSourceId.deathField } )
+            }
+        }
+        wait 1
+    }
+    
+}
+
+
 void function PlayerRestoreHP(entity player, float health, float shields)
 {
     player.SetHealth( health )
@@ -325,181 +440,10 @@ void function PlayerRestoreHP(entity player, float health, float shields)
     player.SetShieldHealth( shields )
 
 }
-
-array<string> function GetAllHopups(string weapon)
+void function PlayerRestoreWeapons(entity player, array<WeaponKit> weapons)
 {
-    array<string> hopups
-    // HAVOC Rifle
-    if(IsValid(weapon) && weapon == "mp_weapon_energy_ar") {
-        hopups.append( "gold" )
-        hopups.append( "optic_cq_hcog_bruiser" )
-        hopups.append( "energy_mag_l3" )
-        hopups.append( "stock_tactical_l3" )
-        hopups.append( "hopup_turbocharger" )
-    }
-    // Devotion LMG
-    else if(IsValid(weapon) && weapon == "mp_weapon_esaw") {
-        hopups.append( "gold" )
-        hopups.append( "barrel_stabilizer_l4_flash_hider" )
-        hopups.append( "optic_cq_hcog_bruiser" )
-        hopups.append( "energy_mag_l3" )
-        hopups.append( "stock_tactical_l3" )
-        hopups.append( "hopup_turbocharger" )
-    }
-    // Triple Take
-    else if(IsValid(weapon) && weapon == "mp_weapon_doubletake") {
-        hopups.append( "gold" )
-        hopups.append( "optic_sniper_threat" )
-        hopups.append( "energy_mag_l3" )
-        hopups.append( "stock_sniper_l3" )
-        hopups.append( "hopup_energy_choke" )
-    }
-    // VK47 Flatline
-    else if(IsValid(weapon) && weapon == "mp_weapon_vinson") {
-        hopups.append( "gold" )
-        hopups.append( "highcal_mag_l3" )
-        hopups.append( "optic_cq_holosight_variable" )
-        hopups.append( "stock_tactical_l3" )
-        hopups.append( "hopup_highcal_rounds" )
-    }
-    // Hemlok Burst AR
-    else if(IsValid(weapon) && weapon == "mp_weapon_hemlok") {
-        // hopups.append( "gold" )
-        hopups.append( "barrel_stabilizer_l4_flash_hider" )
-        hopups.append( "optic_cq_hcog_bruiser" )
-        hopups.append( "highcal_mag_l3" )
-        hopups.append( "stock_tactical_l3" )
-    }
-    // G7 Scout
-    else if(IsValid(weapon) && weapon == "mp_weapon_g2") {
-        hopups.append( "gold" )
-        hopups.append( "barrel_stabilizer_l4_flash_hider" )
-        hopups.append( "optic_ranged_aog_variable" )
-        hopups.append( "bullets_mag_l3" )
-        hopups.append( "stock_sniper_l3" )
-        hopups.append( "hopup_double_tap" )
-    }
-    // Alternator SMG
-    else if(IsValid(weapon) && weapon == "mp_weapon_alternator_smg") {
-        hopups.append( "gold" )
-        hopups.append( "barrel_stabilizer_l4_flash_hider" )
-        hopups.append( "optic_cq_threat" )
-        hopups.append( "bullets_mag_l3" )
-        hopups.append( "stock_tactical_l3" )
-    }
-    // R99 SMG
-    else if(IsValid(weapon) && weapon == "mp_weapon_r97") {
-        hopups.append( "barrel_stabilizer_l4_flash_hider" )
-        hopups.append( "optic_cq_threat" )
-        hopups.append( "bullets_mag_l3" )
-        hopups.append( "stock_tactical_l3" )
-    }
-    // Prowler SMG
-    else if(IsValid(weapon) && weapon == "mp_weapon_pdw") {
-        hopups.append( "gold" )
-        hopups.append( "highcal_mag_l3" )
-        hopups.append( "optic_cq_threat" )
-        hopups.append( "stock_tactical_l3" )
-        hopups.append( "hopup_selectfire" )
-    }
-    // Longbow DMR
-    else if(IsValid(weapon) && weapon == "mp_weapon_dmr") {
-        hopups.append( "gold" )
-        hopups.append( "barrel_stabilizer_l4_flash_hider" )
-        hopups.append( "highcal_mag_l3" )
-        hopups.append( "optic_sniper_threat" )
-        hopups.append( "stock_sniper_l3" )
-    }
-    // Charge Rifle
-    else if(IsValid(weapon) && weapon == "mp_weapon_defender") {
-        hopups.append( "gold" )
-        hopups.append( "optic_sniper_threat" )
-        hopups.append( "stock_sniper_l3" )
-    }
-    // M600 Spitfire
-    else if(IsValid(weapon) && weapon == "mp_weapon_lmg") {
-        hopups.append( "barrel_stabilizer_l4_flash_hider" )
-        hopups.append( "optic_cq_hcog_bruiser" )
-        hopups.append( "highcal_mag_l3" )
-        hopups.append( "stock_tactical_l3" )
-    }
-    // R301 Carbine
-    else if(IsValid(weapon) && weapon == "mp_weapon_rspn101") {
-        hopups.append( "gold" )
-        hopups.append( "barrel_stabilizer_l4_flash_hider" )
-        hopups.append( "optic_cq_hcog_bruiser" )
-        hopups.append( "bullets_mag_l3" )
-        hopups.append( "stock_tactical_l3" )
-        hopups.append( "hopup_highcal_rounds" )
-    }
-    // EVA8 Auto
-    else if(IsValid(weapon) && weapon == "mp_weapon_shotgun") {
-        hopups.append( "gold" )
-        hopups.append( "shotgun_bolt_l3" )
-        hopups.append( "optic_cq_threat" )
-        hopups.append( "hopup_double_tap" )
-    }
-    // Peacekeeper
-    else if(IsValid(weapon) && weapon == "mp_weapon_energy_shotgun") {
-        hopups.append( "gold" )
-        hopups.append( "shotgun_bolt_l3" )
-        hopups.append( "optic_cq_threat" )
-        hopups.append( "hopup_energy_choke" )
-    }
-    // Mozambique
-    else if(IsValid(weapon) && weapon == "mp_weapon_shotgun_pistol") {
-        hopups.append( "gold" )
-        hopups.append( "shotgun_bolt_l3" )
-        hopups.append( "optic_cq_threat" )
-        hopups.append( "hopup_unshielded_dmg" )
-    }
-    // Wingman
-    else if(IsValid(weapon) && weapon == "mp_weapon_wingman") {
-        hopups.append( "gold" )
-        hopups.append( "highcal_mag_l3" )
-        hopups.append( "optic_cq_threat" )
-    }
-    // P2020
-    else if(IsValid(weapon) && weapon == "mp_weapon_semipistol") {
-        hopups.append( "gold" )
-        hopups.append( "bullets_mag_l3" )
-        hopups.append( "optic_cq_threat" )
-        hopups.append( "hopup_unshielded_dmg" )
-    }
-    // RE-45
-    else if(IsValid(weapon) && weapon == "mp_weapon_autopistol") {
-        hopups.append( "gold" )
-        hopups.append( "barrel_stabilizer_l4_flash_hider" )
-        hopups.append( "bullets_mag_l3" )
-        hopups.append( "optic_cq_threat" )
-    }
-    // LStar
-    else if(IsValid(weapon) && weapon == "mp_weapon_lstar") {
-        hopups.append( "crate" )
-        hopups.append( "optic_cq_threat" )
-    }
-
-    return hopups
-}
-
-void function PlayerRestoreWeapons(entity player, string weapon0, string weapon1)
-{
-    if(IsValid(weapon0) && weapon0 != "")
-    {
-        if(GetAllHopups(weapon0).len() != 0){
-            player.GiveWeapon(weapon0, WEAPON_INVENTORY_SLOT_PRIMARY_0, GetAllHopups(weapon0))
-        } else {
-            player.GiveWeapon(weapon0, WEAPON_INVENTORY_SLOT_PRIMARY_0);
-        }
-        
-    }
-    if(IsValid(weapon1) && weapon1 != "")
-    {
-        if(GetAllHopups(weapon1).len() != 0){
-            player.GiveWeapon_NoDeploy(weapon1, WEAPON_INVENTORY_SLOT_PRIMARY_1, GetAllHopups(weapon1))
-        } else {
-            player.GiveWeapon_NoDeploy(weapon1, WEAPON_INVENTORY_SLOT_PRIMARY_1);
-        }
+    foreach(weapon in weapons) {
+        player.GiveWeapon(weapon.weapon, WEAPON_INVENTORY_SLOT_ANY, weapon.mods);
     }
 }
 
