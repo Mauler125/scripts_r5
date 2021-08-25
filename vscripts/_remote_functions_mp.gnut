@@ -30,6 +30,18 @@ void function RemoteFunctions_Init_Begin()
 	Remote_RegisterClientFunction("ServerCallback_TDM_DoLocationIntroCutscene")
     Remote_RegisterClientFunction("ServerCallback_TDM_PlayerKilled")
 
+	// Custom GUN GAME
+	Remote_RegisterClientFunction("ServerCallback_Gun_Game_DoAnnouncement", "float", 0.0, 256.0, 32, "int", 0, 255)
+    Remote_RegisterClientFunction("ServerCallback_Gun_Game_DoCountDown", "int", INT_MIN, INT_MAX)
+	Remote_RegisterClientFunction("ServerCallback_Gun_Game_SetSelectedLocation","int", 0, 255)
+	Remote_RegisterClientFunction("ServerCallback_Gun_Game_DoLocationIntroCutscene")
+    Remote_RegisterClientFunction("ServerCallback_Gun_Game_PlayerKilled", "entity", "int", INT_MIN, INT_MAX)
+	//Victory screen related
+	Remote_RegisterClientFunction("ServerCallback_Gun_Game_DoVictory")
+  	Remote_RegisterClientFunction("ServerCallback_Gun_Game_AddWinningSquadData", "int", -1, 254, "int", INT_MIN, INT_MAX)
+    Remote_RegisterClientFunction("ServerCallback_Gun_Game_MatchEndAnnouncement", "bool", "int", INT_MIN, INT_MAX )
+
+
 
 	RegisterSignal("OnChangedPlayerClass")
 	RegisterSignal("BleedOut_OnStartDying")
@@ -172,6 +184,7 @@ void function RemoteFunctions_Init_Begin()
 //
 #endif //
 		case CUSTOM_TDM:
+		case GUN_GAME:
 		case SURVIVAL:
 			RegisterNetworkedVariable( "isPlayerShadowForm", SNDC_PLAYER_GLOBAL, SNVT_BOOL, false )
 			RegisterNetworkedVariable( "hasDeathFieldImmunity", SNDC_PLAYER_EXCLUSIVE, SNVT_BOOL, false )

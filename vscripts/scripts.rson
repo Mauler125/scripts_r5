@@ -886,6 +886,26 @@ Scripts:
 	gamemodes/custom_tdm/cl_gamemode_custom_tdm.nut
 ]
 
+// Gun game
+When: "SERVER || CLIENT"
+Scripts:
+[
+	gamemodes/gun_game/sh_gamemode_gun_game.nut
+	gamemodes/gun_game/gun_game_settings.nut
+]
+
+When: "SERVER"
+Scripts:
+[
+	gamemodes/gun_game/_gamemode_gun_game.nut
+]
+
+When: "CLIENT"
+Scripts:
+[
+	gamemodes/gun_game/cl_gamemode_gun_game.nut
+]
+
 
 // Freelance
 When: "SERVER"
