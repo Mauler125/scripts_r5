@@ -311,6 +311,7 @@ void function SetupDefaultDevCommandsMP()
 
 
 	SetupDevCommand( "Toggle NoClip", "noclip" )
+	SetupDevCommand( "Toggle Thirdperson", "ToggleThirdPerson" )
 	SetupDevCommand( "Toggle Model Viewer", "script thread ToggleModelViewer()" )
 	SetupDevCommand( "Start Skydive", "script thread SkydiveTest()" )
 	SetupDevCommand( "Spawn Deathbox", "script thread SURVIVAL_CreateDeathBox(gp()[0], false)" )
