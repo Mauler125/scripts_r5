@@ -141,6 +141,8 @@ struct {
 //
 void function _Gun_Game_Init()
 {
+    //In lava fissure you can freefall, so we have to initialize particles to avoid crashes
+	SurvivalFreefall_Init()
 
     AddCallback_OnPlayerKilled(void function(entity victim, entity attacker, var damageInfo) {thread SV_OnPlayerDied(victim, attacker, damageInfo)})
     AddCallback_OnClientConnected( void function(entity player) { thread SV_OnPlayerConnected(player) } )
