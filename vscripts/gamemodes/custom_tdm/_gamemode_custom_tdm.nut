@@ -247,6 +247,8 @@ bool function ClientCommand_GiveWeapon(entity player, array<string> args)
             case "tactical":
                 if( IsValid( tactical ) ) player.TakeOffhandWeapon( OFFHAND_TACTICAL )
                 weapon = player.GiveOffhandWeapon(args[1], OFFHAND_TACTICAL)
+                entity newTactical = player.GetOffhandWeapon( OFFHAND_TACTICAL )
+                newTactical.SetWeaponPrimaryClipCount( 0 )
                 break
             case "u":
             case "ultimate":
