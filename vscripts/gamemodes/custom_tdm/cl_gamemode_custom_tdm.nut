@@ -4,6 +4,7 @@ global function ServerCallback_TDM_DoAnnouncement
 global function ServerCallback_TDM_SetSelectedLocation
 global function ServerCallback_TDM_DoLocationIntroCutscene
 global function ServerCallback_TDM_PlayerKilled
+global function ServerCallback_TDM_DoVictoryAnnounce
 
 global function Cl_RegisterLocation
 
@@ -13,6 +14,7 @@ struct {
     array choices
     array<LocationSettings> locationSettings
     var scoreRui
+    var victoryRui
 } file;
 
 
@@ -61,6 +63,7 @@ void function MakeScoreRUI()
 
 void function ServerCallback_TDM_DoAnnouncement(float duration, int type)
 {
+    
     string message = ""
     string subtext = ""
     switch(type)
@@ -86,15 +89,51 @@ void function ServerCallback_TDM_DoAnnouncement(float duration, int type)
                 message = file.selectedLocation.name
             break
         }
+
     }
 	AnnouncementData announcement = Announcement_Create( message )
     Announcement_SetSubText(announcement, subtext)
+    //Announcement_SetStyle( announcement, ANNOUNCEMENT_STYLE_RESULTS )
 	Announcement_SetStyle( announcement, ANNOUNCEMENT_STYLE_CIRCLE_WARNING )
 	Announcement_SetPurge( announcement, true )
 	Announcement_SetOptionalTextArgsArray( announcement, [ "true" ] )
 	Announcement_SetPriority( announcement, 200 ) //Be higher priority than Titanfall ready indicator etc
 	announcement.duration = duration
 	AnnouncementFromClass( GetLocalViewPlayer(), announcement )
+}
+
+
+void function ServerCallback_TDM_DoVictoryAnnounce( int winnerTeam )
+{
+	if ( file.victoryRui != null )
+		return
+
+    string message = ""
+
+	asset ruiAsset = GetChampionScreenRuiAsset()
+	file.victoryRui = CreateFullscreenRui( ruiAsset )
+	RuiSetBool( file.victoryRui, "onWinningTeam",  GetLocalClientPlayer().GetTeam() == winnerTeam)
+    //RuiSetString(file.victoryRui, "messageText", message);
+    //RuiSetFloat( file.victoryRui, "duration", duration )
+    //RuiSetFloat3( file.victoryRui, "eventColor", SrgbToLinear( <128, 188, 255> ) )
+
+
+	EmitSoundOnEntity( GetLocalClientPlayer(), "UI_InGame_ChampionVictory" )
+
+    thread DestroyVictoryRui()
+
+}
+
+void function DestroyVictoryRui()
+{
+    wait 5
+    RuiDestroy( file.victoryRui )
+    file.victoryRui = null
+}
+
+asset function GetChampionScreenRuiAsset()
+{
+	return $"ui/champion_screen.rpak"
 }
 
 void function ServerCallback_TDM_DoLocationIntroCutscene()
