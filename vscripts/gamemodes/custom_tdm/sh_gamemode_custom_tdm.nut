@@ -56,7 +56,7 @@ struct {
 void function Sh_CustomTDM_Init() 
 {
 
-
+Remote_RegisterClientFunction("ServerCallback_TDM_DoVictoryAnnounce", "int", 0, 255)
     // Map locations
 
     switch(GetMapName())

@@ -141,6 +141,7 @@ void function StartRound()
     wait 1
     foreach(player in GetPlayerArray())
     {
+        if(!IsValid(player)) continue;
         DecideRespawnPlayer(player)
         TpPlayerToSpawnPoint(player)
         
@@ -170,7 +171,7 @@ void function StartRound()
             }
             if(IsAlive(player)) 
             {
-                PlayerRestoreHP(player, 100, GetCurrentPlaylistVarFloat("default_shield_hp", 100))
+                PlayerRestoreHP(player, 100, GetCurrentPlaylistVarFloat("default_shield_hp", 75))
             }
             
         }
@@ -183,6 +184,47 @@ void function StartRound()
             break
 		WaitFrame()
 	}
+
+    int teamIMCScore = GameRules_GetTeamScore(TEAM_IMC);
+    int teamMILITIAScore = GameRules_GetTeamScore(TEAM_MILITIA);
+    int winnerTeam = -1;
+
+    if(teamIMCScore > teamMILITIAScore)
+    {
+        winnerTeam = TEAM_IMC
+    }
+    else if(teamIMCScore == teamMILITIAScore)
+    {
+        winnerTeam = 97
+    }
+    else
+    {
+        winnerTeam = TEAM_MILITIA
+    }
+
+    printt("winner team : " + winnerTeam);
+
+    foreach(player in GetPlayerArray())
+    {
+        if(!IsValid(player)) continue;
+        DecideRespawnPlayer(player)
+        MakeInvincible(player)
+		HolsterAndDisableWeapons( player )
+        player.ForceStand()
+        Remote_CallFunction_NonReplay(player, "ServerCallback_TDM_DoVictoryAnnounce", winnerTeam)
+        
+    }
+    
+    wait 5
+     foreach(player in GetPlayerArray())
+    {
+        if(!IsValid(player)) continue;
+        ClearInvincible(player)
+        DeployAndEnableWeapons(player)
+        player.UnforceStand()
+        player.UnfreezeControlsOnServer();
+    }
+
     file.tdmState = eTDMState.IN_PROGRESS
 
     file.bubbleBoundary.Destroy()
@@ -247,6 +289,8 @@ bool function ClientCommand_GiveWeapon(entity player, array<string> args)
             case "tactical":
                 if( IsValid( tactical ) ) player.TakeOffhandWeapon( OFFHAND_TACTICAL )
                 weapon = player.GiveOffhandWeapon(args[1], OFFHAND_TACTICAL)
+                entity newTactical = player.GetOffhandWeapon( OFFHAND_TACTICAL )
+                newTactical.SetWeaponPrimaryClipCount( 0 )
                 break
             case "u":
             case "ultimate":
@@ -333,7 +377,9 @@ void function SV_OnPlayerDied(entity victim, entity attacker, var damageInfo)
             PlayerRestoreWeapons(victim, mainWeaponsKit)
             SetPlayerSettings(victim, TDM_PLAYER_SETTINGS)
             PlayerRestoreHP(victim, 100, GetCurrentPlaylistVarFloat("default_shield_hp", 100))
-            
+            //ClientCommand_GiveWeapon(victim, ["t", "mp_ability_3dash"])
+            //entity defaulttactical = victim.GetOffhandWeapon( OFFHAND_TACTICAL )
+            //defaulttactical.SetWeaponPrimaryClipCount( defaulttactical.GetWeaponPrimaryClipCountMax() )
             TpPlayerToSpawnPoint(victim)
             thread GrantSpawnImmunity(victim, 3)
         }
