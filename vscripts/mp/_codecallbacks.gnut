@@ -256,6 +256,8 @@ void function CodeCallback_DamagePlayerOrNPC( entity ent, var damageInfo )
 		}
 	}
 
+	float damageMultiplier = 1.0 + StatusEffect_GetSeverity( ent, eStatusEffect.damage_received_multiplier )
+
 	if (DamageInfo_GetWeapon(damageInfo) != null) {
 		if (ent.GetShieldHealth() == 0) {
 			float unshielded = DamageInfo_GetWeapon(damageInfo).GetWeaponSettingFloat(eWeaponVar.damage_unshielded_scale)
@@ -266,10 +268,8 @@ void function CodeCallback_DamagePlayerOrNPC( entity ent, var damageInfo )
 
 			damageMultiplier = shielded
 		}
-  }
+ 	}
 
-
-	float damageMultiplier = 1.0 + StatusEffect_GetSeverity( ent, eStatusEffect.damage_received_multiplier )
 	if ( damageMultiplier != 1.0 )
 		DamageInfo_ScaleDamage( damageInfo, damageMultiplier )
 
