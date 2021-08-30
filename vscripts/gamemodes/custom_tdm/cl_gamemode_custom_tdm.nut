@@ -76,6 +76,7 @@ void function ServerCallback_TDM_DoAnnouncement(float duration, int type)
         {
             clGlobal.levelEnt.Signal( "CloseScoreRUI" )
             message = "Welcome To Team Deathmatch"
+            subtext = "Made by sal (score UI by shrugtal)"
             break
         }
         case eTDMAnnounce.MAP_FLYOVER:
@@ -130,13 +131,13 @@ void function ServerCallback_TDM_DoLocationIntroCutscene_Body()
     {
 
         float duration = LOCATION_CUTSCENE_DURATION / max(1, file.selectedLocation.spawns.len() - 1)
-        cutsceneMover.NonPhysicsMoveTo(file.selectedLocation.spawns[i].origin + file.selectedLocation.cinematicCameraOffset, duration, 1, 1)
+        cutsceneMover.NonPhysicsMoveTo(file.selectedLocation.spawns[i].origin + file.selectedLocation.cinematicCameraOffset, duration, 0, 0)
         wait duration
     }
 
     wait 1
-    cutsceneMover.NonPhysicsMoveTo(GetLocalClientPlayer().GetOrigin() + <0, 0, 100>, 2, 1, 1)
-    cutsceneMover.NonPhysicsRotateTo(GetLocalClientPlayer().GetAngles(), 2, 1, 1)
+    cutsceneMover.NonPhysicsMoveTo(GetLocalClientPlayer().GetOrigin() + <0, 0, 100>, 2, 0, 0)
+    cutsceneMover.NonPhysicsRotateTo(GetLocalClientPlayer().GetAngles(), 2, 0, 0)
 	camera.SetTargetFOV(playerFOV, true, EASING_CUBIC_INOUT, 2 )
 
     wait 2
