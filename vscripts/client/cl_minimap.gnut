@@ -345,7 +345,8 @@ void function OnSpectateTargetChanged( entity spectatingPlayer, entity oldSpecta
 
 var function CreateMinimapRui( asset ruiAsset, int sortKey = 0 )
 {
-	var rui = RuiCreate( ruiAsset, clGlobal.topoFullscreenHudPermanent, RUI_DRAW_HUD, sortKey )
+	// var rui = RuiCreate( ruiAsset, clGlobal.topoFullscreenHudPermanent, RUI_DRAW_HUD, sortKey )
+	var rui = RuiCreate( ruiAsset, clGlobal.topoFullscreenHudPermanent, RUI_DRAW_COCKPIT, sortKey )
 	InitHUDRui( rui, true )
 	return rui
 }

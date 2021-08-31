@@ -485,6 +485,20 @@ void function MainHud_TurnOn( entity vgui, float duration, float xWarp, float xS
 	vgui.s.enabledState = VGUI_OPEN
 }
 
+void function MainHud_UpdateCockpitRui()
+{
+	UISize screenSize = GetScreenSize()
+	if ( screenSize.width / screenSize.height <= 1.6 )
+	{
+		RuiTopology_UpdateSphereArcs( clGlobal.topoFullscreenHud, COCKPIT_RUI_WIDTH, COCKPIT_RUI_HEIGHT, COCKPIT_RUI_SUBDIV )
+		RuiTopology_UpdatePos( clGlobal.topoFullscreenHud, COCKPIT_RUI_OFFSET_1610_TEMP, <0, -1, 0>, <0, 0, -1> )
+	}
+	else
+	{
+		RuiTopology_UpdateSphereArcs( clGlobal.topoFullscreenHud, COCKPIT_RUI_WIDTH, COCKPIT_RUI_HEIGHT, COCKPIT_RUI_SUBDIV )
+		RuiTopology_UpdatePos( clGlobal.topoFullscreenHud, COCKPIT_RUI_OFFSET, <0, -1, 0>, <0, 0, -1> )
+	}
+}
 
 void function MainHud_TurnOn_RUI( bool instant = false )
 {
@@ -492,7 +506,9 @@ void function MainHud_TurnOn_RUI( bool instant = false )
 	clGlobal.levelEnt.EndSignal( "MainHud_TurnOn" )
 	clGlobal.levelEnt.EndSignal( "MainHud_TurnOff" )
 
-	UpdateFullscreenTopology( clGlobal.topoFullscreenHud, true )
+	// UpdateFullscreenTopology( clGlobal.topoFullscreenHud, true )
+
+	MainHud_UpdateCockpitRui()
 }
 
 
@@ -586,7 +602,19 @@ void function HidePermanentHudTopo()
 
 void function ShowPermanentHudTopo()
 {
-	UpdateFullscreenTopology( clGlobal.topoFullscreenHudPermanent, true )
+	// UpdateFullscreenTopology( clGlobal.topoFullscreenHudPermanent, true )
+	UISize screenSize = GetScreenSize()
+
+	if ( screenSize.width / screenSize.height <= 1.6 )
+	{
+		RuiTopology_UpdateSphereArcs( clGlobal.topoFullscreenHudPermanent, COCKPIT_RUI_WIDTH, COCKPIT_RUI_HEIGHT, COCKPIT_RUI_SUBDIV )
+		RuiTopology_UpdatePos( clGlobal.topoFullscreenHudPermanent, COCKPIT_RUI_OFFSET_1610_TEMP, <0, -1, 0>, <0, 0, -1> )
+	}
+	else
+	{
+		RuiTopology_UpdateSphereArcs( clGlobal.topoFullscreenHudPermanent, COCKPIT_RUI_WIDTH, COCKPIT_RUI_HEIGHT, COCKPIT_RUI_SUBDIV )
+		RuiTopology_UpdatePos( clGlobal.topoFullscreenHudPermanent, COCKPIT_RUI_OFFSET, <0, -1, 0>, <0, 0, -1> )
+	}
 }
 
 void function HideTargetInfoHudTopo()
