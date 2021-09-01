@@ -174,7 +174,7 @@ void function ClientCodeCallback_OnDetenteEnded()
 
 bool function CircularHudEnabled()
 {
-	return true /*GetCurrentPlaylistVarBool( "circular_hud", false )*/
+	return GetCurrentPlaylistVarBool( "circular_hud", false )
 }
 
 int function GetHudDrawGroup( int ifNotCircular = RUI_DRAW_HUD )
