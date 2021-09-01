@@ -19,8 +19,12 @@ WeaponData
 	"never_drop"									"1"
 
 	// Models
-	"viewmodel"   									"mdl/weapons/empty_handed/ptpov_emptyhand.rmdl"
-	"playermodel" 									"mdl/weapons/empty_handed/w_empty_handed_human.rmdl"
+	// "viewmodel"   									"mdl/weapons/empty_handed/ptpov_emptyhand.rmdl"
+	// "playermodel" 									"mdl/weapons/empty_handed/w_empty_handed_human.rmdl"
+
+	"viewmodel"   									"mdl/weapons/kunai/ptpov_kunai_wraith.rmdl"
+	"playermodel" 									"mdl/weapons/kunai/w_kunai_wraith.rmdl"
+
 
 	// Melee
 	"melee_can_hit_humansized"						"1"

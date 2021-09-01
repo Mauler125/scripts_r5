@@ -43,8 +43,12 @@ WeaponData
     "menu_anim_class"                               "medium"
 
 	// Models
-	"viewmodel"   									"mdl/weapons/empty_handed/ptpov_emptyhand.rmdl"
-	"playermodel" 									"mdl/weapons/empty_handed/w_empty_handed_human.rmdl"
+	// "viewmodel"   									"mdl/weapons/empty_handed/ptpov_emptyhand.rmdl"
+	// "playermodel" 									"mdl/weapons/empty_handed/w_empty_handed_human.rmdl"
+
+	"viewmodel"   									"mdl/weapons/kunai/ptpov_kunai_wraith.rmdl"
+	"playermodel" 									"mdl/weapons/kunai/w_kunai_wraith.rmdl"
+
 
 
 	"reload_enabled"								"0"
