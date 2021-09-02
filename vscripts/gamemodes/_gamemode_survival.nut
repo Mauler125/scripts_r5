@@ -118,18 +118,40 @@ void function Sequence_Playing()
 
 	if ( !GetCurrentPlaylistVarBool( "jump_from_plane_enabled", true ) )
 	{
+		// default position
 		vector pos = GetEnt( "info_player_start" ).GetOrigin()
 		pos.z += 5
-	
+
+		// default angles
+		vector ang = < 0.0, 0.0, 0.0 > 
+
+		// override default position
+        if (GetCurrentPlaylistVarBool("enable_custom_spawn", false))
+        {
+
+        	pos.x =  GetCurrentPlaylistVarFloat( "spawn_pos_x", 0.0 )
+        	pos.y =  GetCurrentPlaylistVarFloat( "spawn_pos_y", 0.0 )
+        	pos.z =  GetCurrentPlaylistVarFloat( "spawn_pos_z", 0.0 )
+
+        	ang.x =  GetCurrentPlaylistVarFloat( "spawn_ang_x", 0.0 )
+        	ang.y =  GetCurrentPlaylistVarFloat( "spawn_ang_y", 0.0 )
+        	ang.z =  GetCurrentPlaylistVarFloat( "spawn_ang_z", 0.0 ) 
+        }
+
 		int i = 0
 		foreach ( player in GetPlayerArray() )
 		{
-			// circle
-			float r = float(i) / float(GetPlayerArray().len()) * 2 * PI
-			player.SetOrigin( pos + 500.0 * <sin( r ), cos( r ), 0.0> )
-	
+			// circle formation mostly for multiplayer 
+			if (GetCurrentPlaylistVarBool("spawn_circle_formation", false))
+			{
+				float r = float(i) / float(GetPlayerArray().len()) * 2 * PI
+				player.SetOrigin( pos + 500.0 * <sin( r ), cos( r ), 0.0> )
+			} else {
+				player.SetOrigin( pos )
+				player.SetAngles( ang )
+			}
+
 			DecideRespawnPlayer( player )
-	
 			i++
 		}
 
