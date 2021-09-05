@@ -267,6 +267,45 @@ void function Sh_CustomTDM_Init()
             )
         )
 
+        Shared_RegisterLocation(
+            NewLocationSettings(
+                "Swamps",
+                [
+
+                      NewLocPair(<35757, 3256, 3290>, <0, -90, 0>),
+                      NewLocPair(<36422, 3109, 3294>, <0, -165, 0>),
+                      NewLocPair(<34965, 1718, 3529>, <0, 45, 0>),
+                      NewLocPair(<32654, -1552, 3228>, <0, -90, 0>),
+                      NewLocPair(<32370, -2340, 3096>, <0, -90, 0>),
+                      NewLocPair(<34958, 4355, 3068>, <0, -90, 0>),
+                      NewLocPair(<36966, 4771, 3037>, <0, -180, 0>),
+                      NewLocPair(<37065, 3392, 2875>, <0, -45, 0>),
+                ], 
+                <0, 0, 3000>
+            )
+        )
+
+        Shared_RegisterLocation(
+            NewLocationSettings(
+                "Repulsor",
+                [
+                      NewLocPair(<26036, -17590, 5694>, <0, 90, 0>),
+                      NewLocPair(<26670, -16729, 4926>, <0, -180, 0>),
+                      NewLocPair(<27784, -16166, 5046>, <0, -180, 0>),
+                      NewLocPair(<27133, -16074, 5414>, <0, -90, 0>),
+                      NewLocPair(<27051, -14200, 5582>, <0, -90, 0>),
+                      NewLocPair(<28510, -12445, 4799>, <0, 0, 0>),
+                      NewLocPair(<25210, -12763, 4799>, <0, -180, 0>),
+                      NewLocPair(<23851, -12977, 5319>, <0, 0, 0>),
+                      NewLocPair(<22379, -14284, 4506>, <0, 0, 0>),
+                      NewLocPair(<22674, -16299, 5002>, <0, 0, 0>),
+                      NewLocPair(<23969, -17113, 4862>, <0, 0, 0>),
+                      NewLocPair(<24903, -15239, 4957>, <0, -90, 0>),
+                ], 
+                <0, 0, 3000>
+            )
+        )
+
         break
 
         case "mp_rr_desertlands_64k_x_64k":
