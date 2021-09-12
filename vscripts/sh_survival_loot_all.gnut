@@ -24,6 +24,8 @@ global function DiffKeyColors
 
 global function GetFXRarityColorForTier // use this for in game loot
 global function GetFXRarityColorForUnlockable
+global function IsCustomAttachment
+global function IsCustomWeapon
 
 global enum eLootTier
 {
@@ -230,7 +232,6 @@ void function SURVIVAL_Loot_All_InitShared()
 	#if(!UI)
 		//
 	#endif
-
 	var dt = GetDataTable( $"datatable/survival_loot.rpak" )
 	file.lootIndexToString.clear()
 	file.lootData.clear()
@@ -271,6 +272,7 @@ void function SURVIVAL_Loot_All_InitShared()
 		}
 
 		data.fakeAmmoIcon = GetLootTableAsset( data.ref, dt, i, "fakeAmmoIcon" )
+		if (data.fakeAmmoIcon != "") printt("Fake ammo icon for", data.ref, "-", data.fakeAmmoIcon)
 
 		data.baseMods = split( GetLootTableString( data.ref, dt, i, "baseMods" ), " " )
 
@@ -345,6 +347,7 @@ void function SURVIVAL_Loot_All_InitShared()
 		{
 			case eLootType.MAINWEAPON:
 				RegisterWeaponForUse( data.baseWeapon )
+				RegisterCustomAttachments(GetCustomHopupsForWeapon(data.baseWeapon))
 				data.pickupString = GetWeaponInfoFileKeyField_GlobalString( data.baseWeapon, "printName" )
 				data.desc = GetWeaponInfoFileKeyField_GlobalString( data.baseWeapon, "description" )
 				data.hudIcon = GetWeaponInfoFileKeyFieldAsset_Global( data.baseWeapon, "hud_icon" )
@@ -455,7 +458,8 @@ struct CustomWeaponData
 	string weaponType,
 	float lowWeaponChance,
 	float medWeaponChance,
-	float highWeaponChance
+	float highWeaponChance,
+	bool isCP
 }
 
 void function RegisterCustomWeapons()
@@ -479,16 +483,71 @@ void function RegisterCustomWeapons()
 		// weaponTypes: assault, smg, lmg, sniper, shotgun, pistol
 		data.weaponType = GetCurrentPlaylistVarString(className + "_class", "assault")
 		// weights for weapon to appear on ground.
-		// the game sets the chances to a sum of 100.
-		// the actual chance is dependent on all other custom weapons.
+		// the game sets the chances to a sum of 100 normally.
+		// the actual chance is dependent on all other weapons.
 		data.lowWeaponChance = GetCurrentPlaylistVarFloat(className + "_low_chance", 5.0)
 		data.medWeaponChance = GetCurrentPlaylistVarFloat(className + "_med_chance", 10.0)
 		data.highWeaponChance = GetCurrentPlaylistVarFloat(className + "_high_chance", 25.0)
+
+		data.isCP = GetCurrentPlaylistVarBool(className + "_cp_weapon", false)
 		RegisterWeapon(data)
+		RegisterCustomAttachments(GetCustomHopupsForWeapon(className))
+	}
+	
+	array<string> customGrenadeClassNames = split(GetCurrentPlaylistVarString("custom_grenade_list", ""), " ")
+	foreach(string className in customGrenadeClassNames)
+	{
+		CustomGrenadeData data
+		data.className = className
+		data.countPerDrop = GetCurrentPlaylistVarInt(className + "_count_per_drop", 1)
+		data.stackSize = GetCurrentPlaylistVarInt(className + "_stack_size", 2)
+		data.tier = GetCurrentPlaylistVarInt(className + "_tier", 1)
+		data.chance = GetCurrentPlaylistVarFloat(className + "_chance", 0)
+		data.carePackageChance = GetCurrentPlaylistVarFloat(className + "_cp_chance", 0)
+		RegisterCustomGrenade(data)
 	}
 
-	array<string> customHopupClassNames = split(GetCurrentPlaylistVarString("custom_hopup_list", ""), " ")
-	foreach(string className in customHopupClassNames){
+	array<string> customConsumableClassNames = split(GetCurrentPlaylistVarString("custom_consumable_list", ""), " ")
+	foreach(string className in customConsumableClassNames)
+	{
+		printt("CLASS NAME:", className)
+		CustomGrenadeData data
+		data.className = className
+		data.countPerDrop = GetCurrentPlaylistVarInt(className + "_count_per_drop", 1)
+		data.stackSize = GetCurrentPlaylistVarInt(className + "_stack_size", 2)
+		data.tier = GetCurrentPlaylistVarInt(className + "_tier", 1)
+		data.chance = GetCurrentPlaylistVarFloat(className + "_chance", 0)
+		data.carePackageChance = GetCurrentPlaylistVarFloat(className + "_cp_chance", 0)
+		RegisterCustomConsumable(data)
+	}
+	
+	#if SERVER
+		AddClientCommandCallback( "SetNextCustomConsumable", ClientCallback_SetNextCustomConsumable )
+	#endif
+}
+
+bool function IsCustomAttachment(LootData data)
+{
+	printt(data.ref)
+	foreach (CustomHopupData d in file.customHopups)
+	{
+		if (d.className == data.ref) return true
+	}
+	return false
+}
+
+bool function IsCustomWeapon(LootData data)
+{
+	var weaponMatrix = GetDataTable( $"datatable/weapon_attachment_matrix.rpak" )
+
+	int col = GetDataTableColumnByName( weaponMatrix, data.baseWeapon )
+
+	return col == -1
+}
+
+void function RegisterCustomAttachments(array<string> refs)
+{
+	foreach(string className in refs){
 		CustomHopupData data
 		// class name - the name of the mod to be added to a weapon once this hopup is equipped.
 		data.className = className
@@ -515,18 +574,19 @@ void function RegisterCustomWeapons()
 		// create the hopup...
 		CreateCustomHopup(data)
 	}
-	array<string> customGrenadeClassNames = split(GetCurrentPlaylistVarString("custom_grenade_list", ""), " ")
-	foreach(string className in customGrenadeClassNames)
+}
+
+array<string> function GetCustomHopupsForWeapon(string className)
+{
+	array<string> result = []
+	foreach(string mod in GetWeaponMods_Global(className))
 	{
-		CustomGrenadeData data
-		data.className = className
-		data.countPerDrop = GetCurrentPlaylistVarInt(className + "_count_per_drop", 1)
-		data.stackSize = GetCurrentPlaylistVarInt(className + "_stack_size", 2)
-		data.tier = GetCurrentPlaylistVarInt(className + "_tier", 1)
-		data.chance = GetCurrentPlaylistVarFloat(className + "_chance", 0)
-		data.carePackageChance = GetCurrentPlaylistVarFloat(className + "_cp_chance", 0)
-		RegisterCustomGrenade(data)
+		if (SURVIVAL_Loot_IsRefValid(mod)) continue;
+
+		if (GetCurrentPlaylistVarString(mod + "_slot", "") == "") continue;
+		result.append(mod)
 	}
+	return result
 }
 
 void function RegisterCustomGrenade(CustomGrenadeData grenadeData) {
@@ -557,6 +617,68 @@ void function RegisterCustomGrenade(CustomGrenadeData grenadeData) {
 	#endif
 }
 
+void function RegisterCustomConsumable(CustomGrenadeData grenadeData)
+{
+	LootData data
+	data.ref = grenadeData.className
+	data.baseWeapon = grenadeData.className
+	#if !UI
+		PrecacheWeapon( data.baseWeapon )
+	#endif
+	data.pickupString = GetWeaponInfoFileKeyField_GlobalString( data.baseWeapon, "printName" )
+	data.desc = GetWeaponInfoFileKeyField_GlobalString( data.baseWeapon, "description" )
+	data.hudIcon = GetWeaponInfoFileKeyFieldAsset_Global( data.baseWeapon, "hud_icon" )
+	// this is so playermodel can still be empty handed if we choose so.
+	data.model = GetWeaponInfoFileKeyFieldAsset_Global( data.baseWeapon, "pickupmodel" )
+	data.tier = grenadeData.tier
+	data.countPerDrop = grenadeData.countPerDrop
+	data.inventorySlotCount = grenadeData.stackSize
+	data.lootType = eLootType.CUSTOMPICKUP
+	data.pickupSound_1p = "survival_loot_pickup_ordanance"
+	data.pickupSound_3p = "survival_loot_pickup_3p_ordanance"
+
+	data.index = file.lootIndexToString.len()
+	file.lootIndexToString.append( data.ref )
+	file.lootData[ data.ref ] <- data
+	#if CLIENT
+		RegisterUseFunctionForItem( data.ref, FireCustomConsumable )
+	#endif
+
+	#if !UI
+	AddCustomItemToLootPool( data.ref, "ordnance", grenadeData.chance)
+	AddCustomItemToLootPool( data.ref, "ordnance_drops", grenadeData.carePackageChance)
+	#endif
+}
+
+#if CLIENT
+void function FireCustomConsumable(entity player, string ref)
+{
+	player.ClientCommand( "SetNextCustomConsumable " + ref )
+	ActivateOffhandWeaponByIndex(OFFHAND_EQUIPMENT)
+}
+#endif
+
+#if SERVER
+bool function ClientCallback_SetNextCustomConsumable( entity player, array<string> args )
+{
+	if (!SURVIVAL_Loot_IsRefValid(args[0])) return true
+	if (SURVIVAL_CountItemsInInventory(player, args[0]) <= 0) return true
+
+	printt("setting next consumable: ", args[0])
+	
+	if (IsValid(player.GetOffhandWeapon(OFFHAND_EQUIPMENT)) && player.GetOffhandWeapon(OFFHAND_EQUIPMENT).GetWeaponClassName() != args[0])
+	{
+		player.TakeOffhandWeapon( OFFHAND_EQUIPMENT )
+		player.GiveOffhandWeapon( args[0], OFFHAND_EQUIPMENT )
+	}
+	else if (!IsValid(player.GetOffhandWeapon(OFFHAND_EQUIPMENT))) 
+	{
+		player.GiveOffhandWeapon( args[0], OFFHAND_EQUIPMENT )
+	}
+	return true
+}
+#endif
+
 #if !UI
 // used for conversion shit
 asset function CastStringToAsset( string val )
@@ -582,7 +704,8 @@ void function RegisterWeapon( CustomWeaponData weaponData )
 
 	// precache the weapon, obviously.
 	#if !UI
-	PrecacheWeapon(weaponData.className)
+		PrecacheWeapon(weaponData.className)
+		//RegisterCustomWeaponDamageSource(weaponData.className)
 	#endif
 	// rarity
 	data.tier = weaponData.tier
@@ -591,7 +714,7 @@ void function RegisterWeapon( CustomWeaponData weaponData )
 	data.desc = GetWeaponInfoFileKeyField_GlobalString( data.baseWeapon, "description" )
 	data.hudIcon = GetWeaponInfoFileKeyFieldAsset_Global( data.baseWeapon, "hud_icon" )
 	data.model = GetWeaponInfoFileKeyFieldAsset_Global( data.baseWeapon, "playermodel" )
-	data.countPerDrop = GetWeaponInfoFileKeyField_GlobalInt( data.baseWeapon, "ammo_clip_size" )
+	data.countPerDrop = 1
 
 	// Pickup sounds. 
 	data.pickupSound_3p = weaponData.pickupSound3p
@@ -619,6 +742,8 @@ void function RegisterWeapon( CustomWeaponData weaponData )
 		}
 	)
 	
+
+
 	data.supportedAttachments = weaponData.supportedAttachments
 	// base mods, come with the weapon.
 	data.baseMods = weaponData.baseMods
@@ -633,12 +758,21 @@ void function RegisterWeapon( CustomWeaponData weaponData )
 	#endif
 	
 	#if !UI
-	if ( data.model != $"" )
-		PrecacheModel( data.model )
+		if ( data.model != $"" )
+			PrecacheModel( data.model )
 		// Add the item to the loot pool
-		AddCustomItemToLootPool(data.ref, "weapon_low", weaponData.lowWeaponChance)
-		AddCustomItemToLootPool(data.ref, "weapon_medium", weaponData.medWeaponChance)
-		AddCustomItemToLootPool(data.ref, "weapon_high", weaponData.highWeaponChance)
+		if (!weaponData.isCP)
+		{
+			AddCustomItemToLootPool(data.ref, "weapon_low", weaponData.lowWeaponChance)
+			AddCustomItemToLootPool(data.ref, "weapon_medium", weaponData.medWeaponChance)
+			AddCustomItemToLootPool(data.ref, "weapon_high", weaponData.highWeaponChance)
+		}
+		else 
+		{
+			AddCustomItemToLootPool(data.ref, "crate_weapons_earlygame", weaponData.lowWeaponChance)
+			AddCustomItemToLootPool(data.ref, "crate_weapons_midgame", weaponData.medWeaponChance)
+			AddCustomItemToLootPool(data.ref, "crate_weapons_lategame", weaponData.highWeaponChance)
+		}
 	#endif
 	// Not needed to appear in the dev menu.
 	//#if CLIENT
@@ -808,7 +942,23 @@ int function SURVIVAL_Loot_GetLootTypeFromString( string lootTypeString )
 
 LootData function SURVIVAL_Loot_GetLootDataByIndex( int index )
 {
+	#if CLIENT
+	try
+	{
+		return file.lootData[ file.lootIndexToString[ index ] ]
+	}
+	catch (error)
+	{
+		RunUIScript("OpenErrorDialog", "Client loot table out of sync (code:items)\n\nMake sure you have the custom weapon framework installed and your weapon files match.")
+		GetLocalClientPlayer().ClientCommand("disconnect")
+		printt(error)
+		return file.lootData[ file.lootIndexToString[0] ]
+	}
+	unreachable
+	#else
+	// Server is always right, therefore this must exist.
 	return file.lootData[ file.lootIndexToString[ index ] ]
+	#endif
 }
 bool function SURVIVAL_Loot_IsLootIndexValid( int index )
 {

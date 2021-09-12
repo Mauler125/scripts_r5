@@ -2526,27 +2526,6 @@ LootActionStruct function SURVIVAL_BuildStringForAction( entity player, int cont
 				as.displayString = Localize( "#LOOT_ACTION", buttonString, actionString )
 			}
 
-#if(false)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#endif
 			{
 				if ( actionLoot.lootType == eLootType.CUSTOMPICKUP )
 				{
@@ -2883,7 +2862,7 @@ void function Inventory_RegisterNetworking()
 	// It's because if we don't, the game will flop itself when you pick certain items up.
 	// If there's a better solution, you're welcome to suggest it.
 	// They shouldn't have added ranges into this.
-	Remote_RegisterClientFunction( "ServerCallback_AttachedMod", "int", 0, 256, "int", 0, 256 )
+	Remote_RegisterClientFunction( "ServerCallback_AttachedMod", "int", 0, 100, "int", 0, 256 )
 }
 #endif // CLIENT || SERVER
 

@@ -3,6 +3,7 @@ global function SetupOverrideSpawnSurvivalCharacter
 global function SetupSurvival
 global function SetupModelSpawner
 global function SetupSurvivalLoot
+global function SetupCustomLoot
 global function SetupSurvivalIncapShieldBot
 global function SetupAbilities
 global function SetupWeapons
@@ -106,6 +107,13 @@ void function SetupSurvivalLoot( var categories )
 {
 	#if UI
 		RunClientScript( "SetupSurvivalLoot", categories )
+	#endif
+}
+
+void function SetupCustomLoot( var categories )
+{
+	#if UI
+		RunClientScript( "SetupCustomLoot", categories )
 	#endif
 }
 
