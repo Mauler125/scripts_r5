@@ -55,7 +55,7 @@ const table<string, asset> GAMEMODE_BINK_MAP = {
 
 bool function GamemodeSelectV2_IsEnabled()
 {
-	return GetCurrentPlaylistVarBool( "gamemode_select_v2_enable", true )
+	return true
 }
 
 
@@ -68,22 +68,21 @@ void function GamemodeSelectV2_UpdateSelectButton( var button, string playlistNa
 {
 	var rui = Hud_GetRui( button )
 
-	string nameText = GetPlaylistVarString( playlistName, "name", "#PLAYLIST_UNAVAILABLE" )
-	RuiSetString( rui, "modeNameText", nameText )
+	//string nameText = GetPlaylistVarString( playlistName, "name", "#PLAYLIST_UNAVAILABLE" )
+	RuiSetString( rui, "modeNameText", playlistName )
 
-	string descText = GetPlaylistVarString( playlistName, "description", "#HUD_UNKNOWN" )
-	RuiSetString( rui, "modeDescText", descText )
+	RuiSetString( rui, "modeDescText", "Quickly goto firing range, find a server, or create a server" )
 
 	RuiSetString( rui, "modeLockedReason", "" )
 
 	RuiSetBool( rui, "alwaysShowDesc", false )
 
 	RuiSetBool( rui, "isPartyLeader", false )
-	RuiSetBool( rui, "showLockedIcon", true )
+	RuiSetBool( rui, "showLockedIcon", false )
 
-	RuiSetBool( rui, "isLimitedTime", GetPlaylistVarBool( playlistName, "is_limited_time", false ) )
+	RuiSetBool( rui, "isLimitedTime", false )
 
-	string imageKey  = GetPlaylistVarString( playlistName, "image", "" )
+	string imageKey  = "duos"
 	asset imageAsset = $"white"
 	if ( imageKey != "" )
 	{
@@ -93,89 +92,71 @@ void function GamemodeSelectV2_UpdateSelectButton( var button, string playlistNa
 			Warning( "Playlist '%s' has invalid value for 'image': %s", playlistName, imageKey )
 	}
 	RuiSetImage( Hud_GetRui( button ), "modeImage", imageAsset )
+}
 
+void function GamemodeSelectV2_UpdateSelectButton2( var button, string playlistName, string imagekey, string desc, string lockreason, bool locked )
+{
+	var rui = Hud_GetRui( button )
 
-	bool isPlaylistAvailable = Lobby_IsPlaylistAvailable( playlistName )
-	Hud_SetLocked( button, !isPlaylistAvailable )
-	RuiSetString( rui, "modeLockedReason", Lobby_GetPlaylistStateString( Lobby_GetPlaylistState( playlistName ) ) )
+	//string nameText = GetPlaylistVarString( playlistName, "name", "#PLAYLIST_UNAVAILABLE" )
+	RuiSetString( rui, "modeNameText", playlistName )
 
-	int emblemMode = DRAW_NONE
-	if ( IsRankedPlaylist( playlistName ) )
+	RuiSetString( rui, "modeDescText", desc )
+
+	RuiSetString( rui, "modeLockedReason", lockreason )
+
+	RuiSetBool( rui, "alwaysShowDesc", false )
+
+	RuiSetBool( rui, "isPartyLeader", false )
+	RuiSetBool( rui, "showLockedIcon", locked )
+
+	if (locked)
 	{
-		emblemMode = DRAW_RANK
-		int rankScore = GetPlayerRankScore( GetUIPlayer() )
-		PopulateRuiWithRankedBadgeDetails( rui, rankScore, Ranked_GetDisplayNumberForRuiBadge( GetUIPlayer() ) )
+		Hud_SetLocked( button, true )
 	}
 	else
 	{
-		asset emblemImage = GetModeEmblemImage( playlistName )
-		if ( emblemImage != $"" )
-		{
-			emblemMode = DRAW_IMAGE
-			RuiSetImage( rui, "emblemImage", emblemImage )
-		}
+		Hud_SetLocked( button, false )
 	}
-	RuiSetInt( rui, "emblemMode", emblemMode )
 
-	file.selectButtonPlaylistNameMap[button] <- playlistName
+	RuiSetBool( rui, "isLimitedTime", false )
+
+	string imageKey  = imagekey
+	asset imageAsset = $"white"
+	if ( imageKey != "" )
+	{
+		if ( imageKey in GAMEMODE_IMAGE_MAP )
+			imageAsset = GAMEMODE_IMAGE_MAP[imageKey]
+		else
+			Warning( "Playlist '%s' has invalid value for 'image': %s", playlistName, imageKey )
+	}
+	RuiSetImage( Hud_GetRui( button ), "modeImage", imageAsset )
 }
-
 
 void function GamemodeSelectV2_PlayVideo( var button, string playlistName )
 {
-	string videoKey         = GetPlaylistVarString( playlistName, "video", "" )
+	string videoKey         = playlistName
 	asset desiredVideoAsset = $""
-	if ( videoKey != "" )
-	{
-		if ( videoKey in GAMEMODE_BINK_MAP )
-			desiredVideoAsset = GAMEMODE_BINK_MAP[videoKey]
-		else
-			Warning( "Playlist '%s' has invalid value for 'video': %s", playlistName, videoKey )
-	}
 
-	if ( desiredVideoAsset != $"" )
-		file.currentVideoAsset = $"" //
-	Signal( uiGlobal.signalDummy, "GamemodeSelectV2_EndVideoStopThread" )
-	Assert( file.currentVideoAsset == $"" )
+	desiredVideoAsset = GAMEMODE_BINK_MAP[videoKey]
 
-	if ( desiredVideoAsset != $"" )
-	{
-		if ( file.videoChannel == -1 )
-			file.videoChannel = ReserveVideoChannel()
+	Assert( file.currentVideoAsset == GAMEMODE_BINK_MAP[videoKey] )
 
-		StartVideoOnChannel( file.videoChannel, desiredVideoAsset, true, 0.0 )
-		file.currentVideoAsset = desiredVideoAsset
-	}
+	if ( file.videoChannel == -1 )
+		file.videoChannel = ReserveVideoChannel()
+
+	StartVideoOnChannel( file.videoChannel, GAMEMODE_BINK_MAP[videoKey], true, 0.0 )
+	file.currentVideoAsset = desiredVideoAsset
 
 	var rui = Hud_GetRui( button )
-	RuiSetBool( rui, "hasVideo", videoKey != "" )
-	RuiSetInt( rui, "channel", file.videoChannel )
-	if ( file.currentVideoAsset != $"" )
-		thread VideoStopThread( button )
+	RuiSetBool( rui, "hasVideo", false )
+	RuiSetInt( rui, "channel", -1 )
 }
 
 
 void function VideoStopThread( var button )
 {
-	EndSignal( uiGlobal.signalDummy, "GamemodeSelectV2_EndVideoStopThread" )
 
-	OnThreadEnd( function() : ( button ) {
-		if ( IsValid( button ) )
-		{
-			var rui = Hud_GetRui( button )
-			RuiSetInt( rui, "channel", -1 )
-		}
-		if ( file.currentVideoAsset != $"" )
-		{
-			StopVideoOnChannel( file.videoChannel )
-			file.currentVideoAsset = $""
-		}
-	} )
-
-	while ( GetFocus() == button )
-		WaitFrame()
-
-	wait 0.3
 }
 
 
@@ -185,6 +166,7 @@ void function InitGamemodeSelectV2Dialog( var newMenuArg ) //
 	file.menu = menu
 
 	file.selectionPanel = Hud_GetChild( menu, "GamemodeSelectPanel" )
+
 
 	SetDialog( menu, true )
 	SetClearBlur( menu, false )
@@ -198,13 +180,13 @@ void function InitGamemodeSelectV2Dialog( var newMenuArg ) //
 	for ( int buttonIdx = 0; buttonIdx < MAX_DISPLAYED_MODES; buttonIdx++ )
 	{
 		var button = Hud_GetChild( file.menu, format( "GamemodeButton%d", buttonIdx ) )
-		Hud_AddEventHandler( button, UIE_CLICK, GamemodeButton_Activate )
+
 		Hud_AddEventHandler( button, UIE_GET_FOCUS, GamemodeButton_OnGetFocus )
 		Hud_AddEventHandler( button, UIE_LOSE_FOCUS, GamemodeButton_OnLoseFocus )
 		file.modeSelectButtonList.append( button )
 	}
 
-	RegisterSignal( "GamemodeSelectV2_EndVideoStopThread" )
+	//RegisterSignal( "GamemodeSelectV2_EndVideoStopThread" )
 
 	AddMenuFooterOption( menu, LEFT, BUTTON_B, true, "#B_BUTTON_CLOSE", "#CLOSE" )
 	AddMenuFooterOption( menu, LEFT, BUTTON_A, true, "#A_BUTTON_SELECT" )
@@ -224,28 +206,11 @@ void function OnOpenModeSelectDialog()
 	file.selectButtonPlaylistNameMap.clear()
 
 	table<string, string> slotToPlaylistNameMap = {
-		training = "",
-		firing_range = "",
-		regular_1 = "",
-		regular_2 = "",
-		ltm = "",
-	}
-
-	foreach ( string candidatePlaylistName in GetVisiblePlaylistNames() )
-	{
-		string uiSlot = GetPlaylistVarString( candidatePlaylistName, "ui_slot", "" )
-		if ( uiSlot != "" )
-		{
-			if ( uiSlot in slotToPlaylistNameMap )
-			{
-				if ( slotToPlaylistNameMap[uiSlot] == "" )
-					slotToPlaylistNameMap[uiSlot] = candidatePlaylistName
-				else
-					Warning( "Playlist '%s' and '%s' specify the same 'ui_slot': %s", candidatePlaylistName, slotToPlaylistNameMap[uiSlot], uiSlot )
-			}
-			else
-				Warning( "Playlist '%s' has invalid value for 'ui_slot': %s", candidatePlaylistName, uiSlot )
-		}
+		training = "Enabled",
+		firing_range = "Enabled",
+		regular_1 = "Enabled",
+		regular_2 = "Enabled",
+		ltm = "Enabled",
 	}
 
 	table<string, var > slotToButtonMap = {
@@ -267,14 +232,59 @@ void function OnOpenModeSelectDialog()
 			Hud_SetX( button, 0 )
 			continue
 		}
-
-		Hud_SetX( button, REPLACEHud_GetBasePos( button ).x )
-		Hud_SetWidth( button, Hud_GetBaseWidth( button ) )
-		Hud_Show( button )
-		drawWidth += (REPLACEHud_GetPos( button ).x + Hud_GetWidth( button ))
-
-		GamemodeSelectV2_UpdateSelectButton( button, playlistName )
 	}
+
+
+
+	var button6 = Hud_GetChild( file.menu, "GamemodeButton0" )
+
+	Hud_SetX( button6, REPLACEHud_GetBasePos( button6 ).x )
+	Hud_SetWidth( button6, 300 )
+	Hud_Show( button6 )
+	drawWidth += (REPLACEHud_GetPos( button6 ).x + Hud_GetWidth( button6 ))
+	Hud_AddEventHandler( button6, UIE_CLICK, GamemodeButton0_Activate )
+	GamemodeSelectV2_UpdateSelectButton2( button6, "Firing Range", "training", "Mess around in the firing range", "", false )
+	GamemodeSelectV2_PlayVideo( button6, "training" )
+
+	var button7 = Hud_GetChild( file.menu, "GamemodeButton1" )
+
+	Hud_SetX( button7, REPLACEHud_GetBasePos( button7 ).x )
+	Hud_SetWidth( button7, 300 )
+	Hud_Show( button7 )
+	drawWidth += (REPLACEHud_GetPos( button7 ).x + Hud_GetWidth( button7 ))
+	Hud_AddEventHandler( button7, UIE_CLICK, GamemodeButton1_Activate )
+	GamemodeSelectV2_UpdateSelectButton2( button7, "Quick Join", "generic_02", "Joins a random server", "Not Finished", true )
+	GamemodeSelectV2_PlayVideo( button7, "generic_02" )
+
+	var button8 = Hud_GetChild( file.menu, "GamemodeButton2" )
+
+	Hud_SetX( button8, REPLACEHud_GetBasePos( button8 ).x )
+	Hud_SetWidth( button8, 300 )
+	Hud_Show( button8 )
+	drawWidth += (REPLACEHud_GetPos( button8 ).x + Hud_GetWidth( button8 ))
+	Hud_AddEventHandler( button8, UIE_CLICK, GamemodeButton2_Activate )
+	GamemodeSelectV2_UpdateSelectButton2( button8, "Create Server", "generic_01", "Quickly create a server", "Not Finished", true )
+	GamemodeSelectV2_PlayVideo( button8, "generic_01" )
+
+	var button9 = Hud_GetChild( file.menu, "GamemodeButton3" )
+
+	Hud_SetX( button9, REPLACEHud_GetBasePos( button9 ).x )
+	Hud_SetWidth( button9, 300 )
+	Hud_Show( button9 )
+	drawWidth += (REPLACEHud_GetPos( button9 ).x + Hud_GetWidth( button9 ))
+	Hud_AddEventHandler( button9, UIE_CLICK, GamemodeButton3_Activate )
+	GamemodeSelectV2_UpdateSelectButton2( button9, "Worlds Edge", "worlds_edge", "Run around on Worlds Edge", "", false )
+	GamemodeSelectV2_PlayVideo( button9, "worlds_edge" )
+
+	var button10 = Hud_GetChild( file.menu, "GamemodeButton4" )
+
+	Hud_SetX( button10, REPLACEHud_GetBasePos( button10 ).x )
+	Hud_SetWidth( button10, 300 )
+	Hud_Show( button10 )
+	drawWidth += (REPLACEHud_GetPos( button10 ).x + Hud_GetWidth( button10 ))
+	Hud_AddEventHandler( button10, UIE_CLICK, GamemodeButton4_Activate )
+	GamemodeSelectV2_UpdateSelectButton2( button10, "Kings Canyon", "ranked_1", "Run around on Kings Kanyon", "", false )
+	GamemodeSelectV2_PlayVideo( button10, "ranked_1" )
 
 	//
 	float scale = float( GetScreenSize().width ) / 1920.0
@@ -285,7 +295,6 @@ void function OnOpenModeSelectDialog()
 	RuiSetFloat( Hud_GetRui( file.selectionPanel ), "drawWidth", (drawWidth / scale) )
 	Hud_SetWidth( file.selectionPanel, drawWidth )
 }
-
 
 void function OnCloseModeSelectDialog()
 {
@@ -299,7 +308,7 @@ void function OnCloseModeSelectDialog()
 }
 
 
-void function GamemodeButton_Activate( var button )
+void function GamemodeButton0_Activate( var button )
 {
 	if ( Hud_IsLocked( button ) )
 	{
@@ -307,19 +316,56 @@ void function GamemodeButton_Activate( var button )
 		return
 	}
 
-	string playlistName = file.selectButtonPlaylistNameMap[button]
-	Lobby_SetSelectedPlaylist( playlistName )
-
-	CloseAllDialogs()
+	ClientCommand( "mmlaunchsolo mp_rr_canyonlands_staging survival_firingrange" )
 }
 
+void function GamemodeButton1_Activate( var button )
+{
+	if ( Hud_IsLocked( button ) )
+	{
+		EmitUISound( "menu_deny" )
+		return
+	}
+
+	print("buttons!!!")
+}
+
+void function GamemodeButton2_Activate( var button )
+{
+	if ( Hud_IsLocked( button ) )
+	{
+		EmitUISound( "menu_deny" )
+		return
+	}
+
+	print("buttons!!!")
+}
+
+void function GamemodeButton3_Activate( var button )
+{
+	if ( Hud_IsLocked( button ) )
+	{
+		EmitUISound( "menu_deny" )
+		return
+	}
+
+	ClientCommand( "mmlaunchsolo mp_rr_desertlands_64k_x_64k survival_dev" )
+}
+
+void function GamemodeButton4_Activate( var button )
+{
+	if ( Hud_IsLocked( button ) )
+	{
+		EmitUISound( "menu_deny" )
+		return
+	}
+
+	ClientCommand( "mmlaunchsolo mp_rr_canyonlands_64k_x_64k survival_dev" )
+}
 
 void function GamemodeButton_OnGetFocus( var button )
 {
-	//
-
-	string playlistName = file.selectButtonPlaylistNameMap[button]
-	GamemodeSelectV2_PlayVideo( button, playlistName )
+	GamemodeSelectV2_PlayVideo( button, "play_apex" )
 }
 
 

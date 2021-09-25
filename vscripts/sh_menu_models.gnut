@@ -2483,12 +2483,12 @@ void function UI_SetPresentationType( int newPresentationType )
 		file.interpolateCameraMoves = true
 	}*/
 
-	RunClientScript( "SetPresentationType", GetLocalClientPlayer(), newPresentationType, file.interpolateCameraMoves )
+	//RunClientScript( "SetPresentationType", GetLocalClientPlayer(), newPresentationType, file.interpolateCameraMoves )
 
-	file.activePresentationType = newPresentationType
+	//file.activePresentationType = newPresentationType
 
-	if ( newPresentationType == ePresentationType.PLAY )
-		RunClientScript( "UpdateMenuWithPartyMembers" )
+	//if ( newPresentationType == ePresentationType.PLAY )
+		//RunClientScript( "UpdateMenuWithPartyMembers" )
 }
 
 void function UICodeCallback_MouseMovementCapture( var capturePanel, int deltaX, int deltaY )

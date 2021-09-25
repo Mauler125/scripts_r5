@@ -165,10 +165,10 @@ void function GotoPremiumStoreTab()
 		AdvanceMenu( GetMenu( "LobbyMenu" ) )
 
 	TabData tabData = GetTabDataForPanel( GetMenu( "LobbyMenu" ) )
-	ActivateTab( tabData, Tab_GetTabIndexByBodyName( tabData, "StorePanel" ) )
-	TabDef tabDef        = Tab_GetTabDefByBodyName( tabData, "StorePanel" )
-	TabData storeTabData = GetTabDataForPanel( tabDef.panel )
-	ActivateTab( storeTabData, Tab_GetTabIndexByBodyName( storeTabData, "VCPanel" ) )
+	//ActivateTab( tabData, Tab_GetTabIndexByBodyName( tabData, "StorePanel" ) )
+	//TabDef tabDef        = Tab_GetTabDefByBodyName( tabData, "StorePanel" )
+	//TabData storeTabData = GetTabDataForPanel( tabDef.panel )
+	//ActivateTab( storeTabData, Tab_GetTabIndexByBodyName( storeTabData, "VCPanel" ) )
 }
 
 

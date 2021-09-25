@@ -529,7 +529,7 @@ void function UICodeCallback_FullyConnected( string levelname )
 	ShChallenges_LevelInit_PreStats()
 	ShItems_LevelInit_Finish()
 	ShItemPerPlayerState_LevelInit()
-	UserInfoPanels_LevelInit()
+	//UserInfoPanels_LevelInit()
 	ShLoadouts_LevelInit_Finish()
 	UiNewnessQueries_LevelInit()
 	ShStatsInternals_LevelInit()
@@ -1513,17 +1513,18 @@ void function InitMenus()
 
 	var lobbyMenu = AddMenu( "LobbyMenu", $"resource/ui/menus/lobby.menu", InitLobbyMenu )
 	AddPanel( lobbyMenu, "PlayPanel", InitPlayPanel )
-	AddPanel( lobbyMenu, "CharactersPanel", InitCharactersPanel )
-	AddPanel( lobbyMenu, "ArmoryPanel", InitArmoryPanel )
-	AddPanel( lobbyMenu, "PassPanelV2", InitPassPanel )
+	//AddPanel( lobbyMenu, "CharactersPanel", InitCharactersPanel )
+	//AddPanel( lobbyMenu, "ArmoryPanel", InitArmoryPanel )
+	//AddPanel( lobbyMenu, "PassPanelV2", InitPassPanel )
 
-	var storePanel = AddPanel( lobbyMenu, "StorePanel", InitStorePanel )
+	/*var storePanel = AddPanel( lobbyMenu, "StorePanel", InitStorePanel )
 	AddPanel( storePanel, "LootPanel", InitLootPanel )
 	AddPanel( storePanel, "CollectionEventPanel", CollectionEventPanel_Init )
 	AddPanel( storePanel, "ThemedShopPanel", ThemedShopPanel_Init )
 	AddPanel( storePanel, "ECPanel", InitOffersPanel )
 	AddPanel( storePanel, "CharacterPanel", InitStoreCharactersPanel )
 	AddPanel( storePanel, "VCPanel", InitStoreVCPanel )
+	Hud_SetVisible( storePanel, false )*/
 
 	var systemMenu = AddMenu( "SystemMenu", $"resource/ui/menus/system.menu", InitSystemMenu )
 	AddPanel( systemMenu, "SystemPanel", InitSystemPanelMain )
@@ -1684,6 +1685,7 @@ void function InitMenus()
 		array<var> elems = GetPanelElementsByClassname( panel, "TabsPanelClass" )
 		if ( elems.len() )
 			uiGlobal.panelData[ panel ].hasTabs = true
+			uiGlobal.panelData[ panel ].isActive = true
 	}
 
 	// A little weird, but GetElementsByClassname() uses menu scope rather than parent scope.

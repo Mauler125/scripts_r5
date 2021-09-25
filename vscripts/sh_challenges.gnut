@@ -419,9 +419,9 @@ void function UpdateLobbyChallengeMenu()
 	}
 	else
 	{
-		Hud_Hide( challengesBoxHeader )
+		Hud_Show( challengesBoxHeader )
 		Hud_Show( challengesBoxBG )
-		Hud_Hide( allChallengesButton )
+		Hud_Show( allChallengesButton )
 	}
 
 	bool isAnyChallengeNew = false

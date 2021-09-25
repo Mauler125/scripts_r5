@@ -4879,7 +4879,7 @@ void function OnClickStoreButton( var button )
 	CloseActiveMenu()
 	AdvanceMenu( lobbyMenu )
 	TabData tabData = GetTabDataForPanel( lobbyMenu )
-	ActivateTab( tabData, Tab_GetTabIndexByBodyName( tabData, "StorePanel" ) )
+	//ActivateTab( tabData, Tab_GetTabIndexByBodyName( tabData, "StorePanel" ) )
 }
 #endif
 

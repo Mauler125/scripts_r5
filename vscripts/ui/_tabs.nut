@@ -30,6 +30,7 @@ global function Tab_GetTabIndexByBodyName
 global function Tab_GetTabDefByBodyName
 global function SetTabNavigationEnabled
 global function SetTabNavigationEndCallback
+global function HideShowTabs
 
 global function GetTabBodyParent
 
@@ -111,7 +112,6 @@ void function InitTabs()
 				Hud_AddEventHandler( tabButton, UIE_CLICK, OnTab_Activate )
 				Hud_AddEventHandler( tabButton, UIE_GET_FOCUS, OnTab_GetFocus )
 				Hud_AddEventHandler( tabButton, UIE_LOSE_FOCUS, OnTab_LoseFocus )
-				Hud_Hide( tabButton )
 
 				file.tabButtonParents[tabButton] <- parentPanel
 			}
@@ -125,6 +125,8 @@ void function InitTabs()
 
 				tabData.tabDividers.append( tabDivider )
 			}
+
+			
 		}
 	}
 
@@ -175,6 +177,24 @@ TabDef function AddTab( var parentPanel, var panel, string tabTitle, bool wantDi
 		file.elementTabData[parentPanel].activeTabIdx = 0
 
 	return data
+}
+
+void function HideShowTabs( bool vis )
+{
+	var menu2 = GetActiveMenu()
+	if ( menu2 == null )
+		return
+
+	array<var> tabButtonPanels2 = GetElementsByClassname( menu2, "TabsCommonClass" )
+	foreach ( tabButtonPanel2 in tabButtonPanels2 )
+	{
+		var parentPanel2 = Hud_GetParent( tabButtonPanel2 )
+		TabData tabData2 = GetTabDataForPanel( parentPanel2 )
+
+		var tabsPanel          = tabData2.tabPanel
+
+		Hud_SetVisible( tabsPanel, vis )
+	}
 }
 
 
@@ -727,8 +747,6 @@ TabData ornull function Tab_GetActiveNestedTabData( var menu )
 		if ( Tab_IsRootLevel( tabData ) )
 			continue
 
-		if ( !uiGlobal.panelData[ parentPanel ].isActive )
-			continue
 
 		return tabData
 	}

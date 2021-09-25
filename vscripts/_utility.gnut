@@ -382,9 +382,9 @@ void function SpawnDummy(vector origin, vector angles)
     dummy.SetAngles( angles )
     SetTeam(dummy, 99)
     DispatchSpawn( dummy )
-    
+
     dummy.SetSkin(RandomInt(6))
-    
+
     array<string> weapons = ["mp_weapon_vinson", "mp_weapon_mastiff", "mp_weapon_energy_shotgun", "mp_weapon_lstar"]
     string randomWeapon = weapons[RandomInt(weapons.len())]
     dummy.GiveWeapon(randomWeapon, WEAPON_INVENTORY_SLOT_ANY)
@@ -1526,7 +1526,7 @@ entity function CreatePropDynamic( asset model, vector ornull origin = null, vec
 	prop_dynamic.SetValueForModelKey( model )
 	prop_dynamic.kv.fadedist = fadeDist
 	prop_dynamic.kv.renderamt = 255
-	prop_dynamic.kv.rendercolor = "255 255 255"
+	prop_dynamic.kv.rendercolor = "0 0 0"
 	prop_dynamic.kv.solid = solidType // 0 = no collision, 2 = bounding box, 6 = use vPhysics, 8 = hitboxes only
 	if ( origin )
 	{
@@ -4591,12 +4591,12 @@ array<entity> function GetAllPlayersOfLockstepIndex( int index )
 table< int, array<entity> > function GetAllPlayersSortedByTeam()
 {
 	table< int, array<entity> > groupedPlayers
-	
+
 	foreach ( player in GetPlayerArray() )
 	{
 		if ( !( player.GetTeam() in groupedPlayers ) )
 			groupedPlayers[player.GetTeam()] <- []
-		
+
 		groupedPlayers[player.GetTeam()].append( player )
 	}
 
@@ -4695,7 +4695,7 @@ entity function CreatePropDynamic_NoDispatchSpawn( asset model, vector ornull or
 		if ( angles )
 			prop_dynamic.SetAngles( expect vector( angles ) )
 	}
-	
+
 	return prop_dynamic
 }
 
@@ -4747,7 +4747,7 @@ entity function CreatePropDeathBox_NoDispatchSpawn( asset model, vector ornull o
 		if ( angles )
 			prop_death_box.SetAngles( expect vector( angles ) )
 	}
-	
+
 	return prop_death_box
 }
 

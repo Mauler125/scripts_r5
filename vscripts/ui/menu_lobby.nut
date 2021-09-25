@@ -53,6 +53,7 @@ void function InitLobbyMenu( var newMenuArg )
 	HudElem_SetRuiArg( postGameButton, "icon", $"rui/menu/lobby/postgame_icon" )
 	HudElem_SetRuiArg( postGameButton, "shortcutText", "%[BACK|TAB]%" )
 	Hud_AddEventHandler( postGameButton, UIE_CLICK, PostGameButton_OnActivate )
+	Hud_SetVisible( file.postGameButton, false )
 
 	var newsButton = Hud_GetChild( menu, "NewsButton" )
 	file.newsButton = newsButton
@@ -62,6 +63,7 @@ void function InitLobbyMenu( var newMenuArg )
 	HudElem_SetRuiArg( newsButton, "icon", $"rui/menu/lobby/news_icon" )
 	HudElem_SetRuiArg( newsButton, "shortcutText", "%[R_TRIGGER|ESCAPE]%" )
 	Hud_AddEventHandler( newsButton, UIE_CLICK, NewsButton_OnActivate )
+	Hud_SetVisible( file.newsButton, true )
 
 	var socialButton = Hud_GetChild( menu, "SocialButton" )
 	file.socialButton = socialButton
@@ -71,6 +73,7 @@ void function InitLobbyMenu( var newMenuArg )
 	HudElem_SetRuiArg( socialButton, "icon", $"rui/menu/lobby/friends_icon" )
 	HudElem_SetRuiArg( socialButton, "shortcutText", "%[STICK2|]%" )
 	Hud_AddEventHandler( socialButton, UIE_CLICK, SocialButton_OnActivate )
+	Hud_SetVisible( file.socialButton, false )
 
 	var gameMenuButton = Hud_GetChild( menu, "GameMenuButton" )
 	file.gameMenuButton = gameMenuButton
@@ -88,6 +91,7 @@ void function InitLobbyMenu( var newMenuArg )
 	Hud_SetToolTipData( datacenterButton, datacenterTooltip )
 	HudElem_SetRuiArg( datacenterButton, "icon", $"rui/hud/gamestate/net_latency" )
 	Hud_AddEventHandler( datacenterButton, UIE_CLICK, OpenLowPopDialogFromButton )
+	Hud_SetVisible( datacenterButton, false )
 }
 
 
@@ -121,8 +125,8 @@ void function OnLobbyMenu_Open()
 
 	Lobby_UpdatePlayPanelPlaylists()
 
-	AddCallbackAndCallNow_OnGRXOffersRefreshed( OnGRXStateChanged )
-	AddCallbackAndCallNow_OnGRXInventoryStateChanged( OnGRXStateChanged )
+	//AddCallbackAndCallNow_OnGRXOffersRefreshed( OnGRXStateChanged )
+	//AddCallbackAndCallNow_OnGRXInventoryStateChanged( OnGRXStateChanged )
 }
 
 
@@ -165,10 +169,10 @@ void function OnGRXStateChanged()
 	string bpPanel = "PassPanelV2"
 
 	array<var> panels = [
-		GetPanel( "CharactersPanel" ),
-		GetPanel( "ArmoryPanel" ),
-		GetPanel( bpPanel ),
-		GetPanel( "StorePanel" ),
+		//GetPanel( "CharactersPanel" ),
+		//GetPanel( "ArmoryPanel" ),
+		//GetPanel( bpPanel ),
+		//GetPanel( "StorePanel" ),
 	]
 
 	foreach ( var panel in panels )
@@ -191,9 +195,9 @@ void function UpdateNewnessCallbacks()
 {
 	ClearNewnessCallbacks()
 
-	Newness_AddCallbackAndCallNow_OnRerverseQueryUpdated( NEWNESS_QUERIES.GladiatorTab, OnNewnessQueryChangedUpdatePanelTab, GetPanel( "CharactersPanel" ) )
-	Newness_AddCallbackAndCallNow_OnRerverseQueryUpdated( NEWNESS_QUERIES.ArmoryTab, OnNewnessQueryChangedUpdatePanelTab, GetPanel( "ArmoryPanel" ) )
-	Newness_AddCallbackAndCallNow_OnRerverseQueryUpdated( NEWNESS_QUERIES.StoreTab, OnNewnessQueryChangedUpdatePanelTab, GetPanel( "StorePanel" ) )
+	//Newness_AddCallbackAndCallNow_OnRerverseQueryUpdated( NEWNESS_QUERIES.GladiatorTab, OnNewnessQueryChangedUpdatePanelTab, GetPanel( "CharactersPanel" ) )
+	//Newness_AddCallbackAndCallNow_OnRerverseQueryUpdated( NEWNESS_QUERIES.ArmoryTab, OnNewnessQueryChangedUpdatePanelTab, GetPanel( "ArmoryPanel" ) )
+	//Newness_AddCallbackAndCallNow_OnRerverseQueryUpdated( NEWNESS_QUERIES.StoreTab, OnNewnessQueryChangedUpdatePanelTab, GetPanel( "StorePanel" ) )
 	file.newnessInitialized = true
 }
 
@@ -203,9 +207,9 @@ void function ClearNewnessCallbacks()
 	if ( !file.newnessInitialized )
 		return
 
-	Newness_RemoveCallback_OnRerverseQueryUpdated( NEWNESS_QUERIES.GladiatorTab, OnNewnessQueryChangedUpdatePanelTab, GetPanel( "CharactersPanel" ) )
-	Newness_RemoveCallback_OnRerverseQueryUpdated( NEWNESS_QUERIES.ArmoryTab, OnNewnessQueryChangedUpdatePanelTab, GetPanel( "ArmoryPanel" ) )
-	Newness_RemoveCallback_OnRerverseQueryUpdated( NEWNESS_QUERIES.StoreTab, OnNewnessQueryChangedUpdatePanelTab, GetPanel( "StorePanel" ) )
+	//Newness_RemoveCallback_OnRerverseQueryUpdated( NEWNESS_QUERIES.GladiatorTab, OnNewnessQueryChangedUpdatePanelTab, GetPanel( "CharactersPanel" ) )
+	//Newness_RemoveCallback_OnRerverseQueryUpdated( NEWNESS_QUERIES.ArmoryTab, OnNewnessQueryChangedUpdatePanelTab, GetPanel( "ArmoryPanel" ) )
+	//Newness_RemoveCallback_OnRerverseQueryUpdated( NEWNESS_QUERIES.StoreTab, OnNewnessQueryChangedUpdatePanelTab, GetPanel( "StorePanel" ) )
 	file.newnessInitialized = false
 }
 
@@ -245,10 +249,10 @@ void function UpdateCornerButtons()
 	var playPanel = GetPanel( "PlayPanel" )
 	bool isPlayPanelActive  = IsTabPanelActive( playPanel )
 	var postGameButton      = Hud_GetChild( file.menu, "PostGameButton" )
-	bool showPostGameButton = isPlayPanelActive && IsPostGameMenuValid()
-	Hud_SetVisible( postGameButton, showPostGameButton )
+	bool showPostGameButton = false
+	Hud_SetVisible( postGameButton, false )
 	if ( showPostGameButton )
-		Hud_SetX( postGameButton, Hud_GetBaseX( postGameButton ) )
+		Hud_SetX( postGameButton, Hud_GetBaseX( postGameButton ) + Hud_GetBaseX( postGameButton ))
 	else
 		Hud_SetX( postGameButton, Hud_GetBaseX( postGameButton ) - Hud_GetWidth( postGameButton ) - Hud_GetBaseX( postGameButton ) )
 
@@ -286,6 +290,10 @@ void function UpdateCornerButtons()
 
 		Hud_SetVisible( file.datacenterButton, datacenterButtonVisible )
 	}
+
+	Hud_SetVisible( file.datacenterButton, false )
+	Hud_SetVisible( file.socialButton, false )
+	Hud_SetVisible( file.newsButton, false )
 }
 
 
@@ -372,6 +380,8 @@ void function GameMenuButton_OnActivate( var button )
 
 	if ( IsDialog( GetActiveMenu() ) )
 		return
+
+	HideShowTabs( true )
 
 	AdvanceMenu( GetMenu( "SystemMenu" ) )
 }

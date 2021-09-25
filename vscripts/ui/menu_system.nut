@@ -50,6 +50,7 @@ void function InitSystemPanelMain( var panel )
 	InitSystemPanel( panel )
 
 	AddPanelFooterOption( panel, LEFT, BUTTON_B, true, "#B_BUTTON_BACK", "#B_BUTTON_BACK" )
+	AddPanelFooterOption( panel, LEFT, KEY_TAB, true, "Console", "Console", OpenConsoleMenu )
 	#if R5DEV
 		if ( Dev_CommandLineHasParm( "-showdevmenu" ) )
 			AddPanelFooterOption( panel, LEFT, BUTTON_Y, true, "#Y_BUTTON_DEV_MENU", "#DEV_MENU", OpenDevMenu )
@@ -60,6 +61,11 @@ void function InitSystemPanelMain( var panel )
 		AddPanelFooterOption( panel, RIGHT, BUTTON_BACK, false, "#BUTTON_RETURN_TO_MAIN", "", ReturnToMain_OnActivate )
 	#endif
 	AddPanelFooterOption( panel, RIGHT, BUTTON_STICK_RIGHT, true, "#BUTTON_VIEW_CINEMATIC", "#VIEW_CINEMATIC", ViewCinematic, IsLobby )
+}
+
+void function OpenConsoleMenu( var button )
+{
+	ClientCommand("cgameconsole")
 }
 
 void function ViewCinematic( var button )
@@ -133,7 +139,7 @@ void function InitSystemPanel( var panel )
 
 	file.friendlyFireButtonData[ panel ].label = "#BUTTON_FRIENDLY_FIRE_TOGGLE"
 	file.friendlyFireButtonData[ panel ].activateFunc = ToggleFriendlyFire
-	
+
 	file.thirdPersonButtonData[ panel ].label = "TOGGLE THIRD PERSON"
 	file.thirdPersonButtonData[ panel ].activateFunc = ToggleThirdPerson
 
@@ -207,7 +213,7 @@ void function UpdateSystemPanel( var panel )
 	}
 
 	var dataCenterElem = Hud_GetChild( panel, "DataCenter" )
-	Hud_SetText( dataCenterElem, Localize( "#SYSTEM_DATACENTER", GetDatacenterName(), GetDatacenterPing() ) )
+	Hud_SetText( dataCenterElem, Localize( "R5Reloaded") )
 }
 
 void function SetButtonData( var panel, int buttonIndex, ButtonData buttonData )

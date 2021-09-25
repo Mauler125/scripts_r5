@@ -82,7 +82,7 @@ void function ShPlaylists_LevelInit()
 }
 #endif
 
-#if CLIENT || UI 
+#if CLIENT || UI
 int ornull function GetCurrentPlaylistVarTimestamp( string varName, int defaultVal )
 {
 	return DateTimeStringToUnixTimestamp( GetCurrentPlaylistVarString( varName, string(defaultVal) ) )
@@ -232,69 +232,30 @@ array<int> function GetEmblemColor( string playlistName )
 
 array<string> function GetVisiblePlaylistNames()
 {
-	int numPlaylists          = GetPlaylistCount()
-	//bool pveLoadingIsForcedOn = IsPvELoadingForcedOn()
-
-	string forcedVisiblePlaylistsString  = GetConVarString( "match_visiblePlaylists" )
-	array<string> forcedVisiblePlaylists = split( forcedVisiblePlaylistsString, " " )
-
 	array<string> list      = []
-	array<string> optInList = []
-	for ( int i = 0; i < numPlaylists; i++ )
-	{
-		string name    = string( GetPlaylistName( i ) )
-		bool visible   = GetPlaylistVarBool( name, "visible", false )
-		bool hubOnly   = GetPlaylistVarBool( name, "hub_only", false )
-		bool optInOnly = GetPlaylistVarBool( name, "opt_in_only", false )
-		//bool isPvEOnly = GetPlaylistVarBool( name, "pve_only", false )
 
-		//if ( pveLoadingIsForcedOn != isPvEOnly )
-		//	continue
+		string playlist1name    = "Test 1"
+		bool playlist1visible   = true
+		bool playlist1hubOnly   = true
+		bool playlist1optInOnly = false
 
-		if ( forcedVisiblePlaylists.contains( name ) )
-		{
-			list.append( name )
-			continue
-		}
+		list.append( playlist1name )
 
-		if ( !visible )
-			continue
+		string playlist2name    = "Test 2"
+		bool playlist2visible   = true
+		bool playlist2hubOnly   = true
+		bool playlist2optInOnly = false
 
-		if ( hubOnly )
-			continue
+		list.append( playlist2name )
 
-		if ( optInOnly )
-		{
-			/*if ( ShouldDisplayOptInOptions() )
-			{
-				if ( uiGlobal.isOptInEnabled )
-					optInList.append( name )
-			}*/
-			continue
-		}
+		string playlist3name    = "Test 3"
+		bool playlist3visible   = true
+		bool playlist3hubOnly   = true
+		bool playlist3optInOnly = false
 
-		list.append( name )
-	}
+		list.append( playlist3name )
 
-	array<string> finalList = []
-
-	if ( forcedVisiblePlaylists.len() > 0 )
-	{
-		foreach ( string name in list )
-		{
-			if ( !forcedVisiblePlaylists.contains( name ) )
-				continue
-
-			finalList.append( name )
-		}
-	}
-
-	if ( finalList.len() == 0 )
-		finalList = list
-
-	finalList.extend( optInList )
-
-	return finalList
+	return list
 }
 
 string function Playlist_GetLTMSlotPlaylist()

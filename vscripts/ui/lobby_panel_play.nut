@@ -153,37 +153,48 @@ void function InitPlayPanel( var panel )
 
 	file.fillButton = Hud_GetChild( panel, "FillButton" )
 	Hud_AddEventHandler( file.fillButton, UIE_CLICK, FillButton_OnActivate )
+	Hud_SetVisible( file.fillButton, false )
 
 	file.modeButton = Hud_GetChild( panel, "ModeButton" )
+	HudElem_SetRuiArg( file.modeButton, "buttonText", Localize( "Server Browser" ) )
 	Hud_AddEventHandler( file.modeButton, UIE_CLICK, ModeButton_OnActivate )
+	Hud_SetVisible( file.modeButton, false )
 
 	file.gamemodeSelectV2Button = Hud_GetChild( panel, "GamemodeSelectV2Button" )
 	Hud_AddEventHandler( file.gamemodeSelectV2Button, UIE_CLICK, GameModeSelectV2Button_OnActivate )
 	Hud_AddEventHandler( file.gamemodeSelectV2Button, UIE_GET_FOCUS, GameModeSelectV2Button_OnGetFocus )
 	Hud_AddEventHandler( file.gamemodeSelectV2Button, UIE_LOSE_FOCUS, GameModeSelectV2Button_OnLoseFocus )
-	Hud_SetVisible( file.gamemodeSelectV2Button, false )
 
 	file.readyButton = Hud_GetChild( panel, "ReadyButton" )
+	HudElem_SetRuiArg( file.readyButton, "isLeader", true ) // TEMP
+	HudElem_SetRuiArg( file.readyButton, "isReady", false )
+	HudElem_SetRuiArg( file.readyButton, "buttonText", Localize( "Server Browser" ) )
+	HudElem_SetRuiArg( file.readyButton, "buttonDescText", "Server Browser" )
 	Hud_AddEventHandler( file.readyButton, UIE_CLICK, ReadyButton_OnActivate )
 
 	file.inviteFriendsButton0 = Hud_GetChild( panel, "InviteFriendsButton0" )
 	Hud_AddEventHandler( file.inviteFriendsButton0, UIE_CLICK, InviteFriendsButton_OnActivate )
+	Hud_SetVisible( file.inviteFriendsButton0, false )
 
 	file.inviteFriendsButton1 = Hud_GetChild( panel, "InviteFriendsButton1" )
 	Hud_AddEventHandler( file.inviteFriendsButton1, UIE_CLICK, InviteFriendsButton_OnActivate )
+	Hud_SetVisible( file.inviteFriendsButton1, false )
 
 	file.inviteLastPlayedHeader = Hud_GetChild( panel, "InviteLastSquadHeader" )
 	Hud_Hide( file.inviteLastPlayedHeader )
+	Hud_SetVisible( file.inviteLastPlayedHeader, false )
 
 	file.inviteLastPlayedUnitFrame0 = Hud_GetChild( panel, "InviteLastPlayedUnitframe0" )
 	Hud_AddEventHandler( file.inviteLastPlayedUnitFrame0, UIE_CLICK, InviteLastPlayedButton_OnActivate )
 	Hud_AddEventHandler( file.inviteLastPlayedUnitFrame0, UIE_CLICKRIGHT, InviteLastPlayedButton_OnRightClick )
 	Hud_Hide( file.inviteLastPlayedUnitFrame0 )
+	Hud_SetVisible( file.inviteLastPlayedUnitFrame0, false )
 
 	file.inviteLastPlayedUnitFrame1 = Hud_GetChild( panel, "InviteLastPlayedUnitframe1" )
 	Hud_AddEventHandler( file.inviteLastPlayedUnitFrame1, UIE_CLICK, InviteLastPlayedButton_OnActivate )
 	Hud_AddEventHandler( file.inviteLastPlayedUnitFrame1, UIE_CLICKRIGHT, InviteLastPlayedButton_OnRightClick )
 	Hud_Hide( file.inviteLastPlayedUnitFrame1 )
+	Hud_SetVisible( file.inviteLastPlayedUnitFrame1, false )
 
 	file.selfButton = Hud_GetChild( panel, "SelfButton" )
 	Hud_AddEventHandler( file.selfButton, UIE_CLICK, FriendButton_OnActivate )
@@ -191,16 +202,19 @@ void function InitPlayPanel( var panel )
 	file.friendButton0 = Hud_GetChild( panel, "FriendButton0" )
 	Hud_AddEventHandler( file.friendButton0, UIE_CLICK, FriendButton_OnActivate )
 	Hud_AddEventHandler( file.friendButton0, UIE_CLICKRIGHT, FriendButton_OnRightClick )
+	Hud_SetVisible( file.friendButton0, false )
 
 	file.friendButton1 = Hud_GetChild( panel, "FriendButton1" )
 	Hud_AddEventHandler( file.friendButton1, UIE_CLICK, FriendButton_OnActivate )
 	Hud_AddEventHandler( file.friendButton1, UIE_CLICKRIGHT, FriendButton_OnRightClick )
+	Hud_SetVisible( file.friendButton1, false )
 
 	file.allChallengesButton = Hud_GetChild( panel, "AllChallengesButton" )
 	//Hud_SetVisible( file.allChallengesButton, true )
 	//Hud_SetEnabled( file.allChallengesButton, true )
 	HudElem_SetRuiArg( file.allChallengesButton, "buttonText", Localize( "#CHALLENGES_LOBBY_BUTTON" ) )
 	Hud_AddEventHandler( file.allChallengesButton, UIE_CLICK, AllChallengesButton_OnActivate )
+	Hud_SetVisible( file.allChallengesButton, false )
 
 	Hud_AddEventHandler( Hud_GetChild( file.panel, "PopupMessage" ), UIE_CLICK, OnClickBPPopup )
 
@@ -220,15 +234,31 @@ void function InitPlayPanel( var panel )
 
 	var eliteBadge = Hud_GetChild( file.panel, "EliteBadge" )
 	Hud_AddEventHandler( eliteBadge, UIE_CLICK, OpenEliteIntroMenuNonAnimated )
+	Hud_SetVisible( eliteBadge, false )
 
 	var aboutButton = Hud_GetChild( file.panel, "AboutButton" )
 	Hud_AddEventHandler( aboutButton, UIE_CLICK, OpenAboutGameModePage )
+	Hud_SetVisible( aboutButton, false )
 
 	var rankedBadge = Hud_GetChild( file.panel, "RankedBadge" )
 	Hud_AddEventHandler( rankedBadge, UIE_CLICK, OpenRankedInfoPage )
 	AddUICallback_OnLevelInit( Ranked_OnLevelInit )
 	AddCallback_OnPartyMemberAdded( TryShowMatchmakingDelayDialog )
 	AddCallback_OnPartyMemberRemoved( UpdateCurrentMaxMatchmakingDelayEndTime )
+	Hud_SetVisible( rankedBadge, false )
+
+	foreach ( var hideuserinfo in uiGlobal.allMenus )
+	{
+		array<var> userInfoElemListhide = GetElementsByClassname( hideuserinfo, "UserInfo" )
+
+		if ( userInfoElemListhide.len() > 0 )
+		{
+			foreach ( var userInfoelem in userInfoElemListhide  )
+			{
+				Hud_SetVisible( userInfoelem, false )
+			}
+		}
+	}
 }
 
 
@@ -336,7 +366,7 @@ void function PlayPanel_OnShow( var panel )
 		Lobby_UpdatePlayPanelPlaylists()
 	}
 
-	UpdateFillButtonVisibility()
+	//UpdateFillButtonVisibility()
 	UpdateLobbyButtons()
 
 	if ( file.chatroomMenu )
@@ -356,7 +386,7 @@ void function PlayPanel_OnShow( var panel )
 
 	thread TryPopupEliteMessage()
 
-	bool newPlaylistSelect = GamemodeSelectV2_IsEnabled()
+	bool newPlaylistSelect = true
 	if ( newPlaylistSelect )
 	{
 		Hud_SetNavUp( file.readyButton, file.gamemodeSelectV2Button )
@@ -368,6 +398,8 @@ void function PlayPanel_OnShow( var panel )
 
 	thread TryRunDialogFlowThread()
 	thread Lobby_ShowBattlePassPopup()
+
+	HideShowTabs( false )
 }
 
 
@@ -379,15 +411,16 @@ void function TryPopupEliteMessage()
 
 void function UpdateLobbyButtons()
 {
-	if ( !IsConnected() )
-		return
+	//if ( !IsConnected() )
+		//return
 
-	UpdateFillButton()
-	UpdateReadyButton()
-	UpdateModeButton()
-	UpdateFriendButtons()
-	UpdateLastPlayedButtons()
-	UpdatePlaylistBadges()
+	//UpdateFillButton()
+	//UpdateReadyButton()
+	//UpdateModeButton()
+	//UpdateFriendButtons()
+	//UpdateLastPlayedButtons()
+	//UpdatePlaylistBadges()
+	GamemodeSelectV2_UpdateSelectButton( file.gamemodeSelectV2Button, "Quick Access" )
 }
 
 
@@ -424,25 +457,7 @@ void function UpdateHDTextureProgress()
 
 void function UpdateFillButtonVisibility()
 {
-	if ( GetCurrentPlaylistVarBool( "enable_teamNoFill", false ) )
-	{
-		Hud_SetVisible( file.fillButton, true )
-		Hud_SetNavUp( file.modeButton, file.fillButton )
-		Hud_SetNavDown( file.inviteFriendsButton0, file.fillButton )
-		Hud_SetNavLeft( file.inviteFriendsButton0, file.fillButton )
-	}
-	else
-	{
-		Hud_SetVisible( file.fillButton, false )
-		Hud_SetNavUp( file.modeButton, file.inviteFriendsButton0 )
 
-		var buttonToLink = file.modeButton
-		if ( GamemodeSelectV2_IsEnabled() )
-			buttonToLink = file.gamemodeSelectV2Button
-
-		Hud_SetNavDown( file.inviteFriendsButton0, buttonToLink )
-		Hud_SetNavLeft( file.inviteFriendsButton0, buttonToLink )
-	}
 }
 
 
@@ -746,6 +761,13 @@ void function UpdateFriendButtons()
 
 	Hud_SetToolTipData( file.inviteFriendsButton0, toolTipData )
 	Hud_SetToolTipData( file.inviteFriendsButton1, toolTipData )
+
+	Hud_SetVisible( file.inviteFriendsButton0, false )
+	Hud_SetVisible( file.inviteFriendsButton1, false )
+
+	Hud_SetVisible( file.friendButton0, false )
+	Hud_SetVisible( file.friendButton1, false )
+	Hud_SetVisible( file.selfButton, false )
 }
 
 
@@ -1175,12 +1197,12 @@ void function UpdateModeButton()
 		file.lastVisiblePlaylistValue = visiblePlaylistValue
 	}
 
-	Hud_SetLocked( file.modeButton, !CanActivateModeButton() )
+	Hud_SetLocked( file.modeButton, false )
 
 	bool isReady = GetConVarBool( "party_readyToSearch" )
-	Hud_SetEnabled( file.modeButton, !isReady && CanActivateModeButton() )
-	HudElem_SetRuiArg( file.modeButton, "isReady", isReady )
-	HudElem_SetRuiArg( file.gamemodeSelectV2Button, "isReady", isReady )
+	Hud_SetEnabled( file.modeButton, true )
+	HudElem_SetRuiArg( file.modeButton, "isReady", false )
+	HudElem_SetRuiArg( file.gamemodeSelectV2Button, "isReady", false )
 
 	bool hasNewModes = false
 
@@ -1214,10 +1236,10 @@ void function UpdateModeButton()
 	string invalidPlaylistText = isLeader ? "#SELECT_PLAYLIST" : "#PARTY_LEADER_CHOICE"
 
 	string name = GetPlaylistVarString( playlistName, "name", invalidPlaylistText )
-	HudElem_SetRuiArg( file.modeButton, "buttonText", Localize( name ) )
+	HudElem_SetRuiArg( file.modeButton, "buttonText", "Console" )
 
 	bool useGamemodeSelectV2 = GamemodeSelectV2_IsEnabled() && !(ShouldDisplayOptInOptions() && uiGlobal.isOptInEnabled)
-	Hud_SetVisible( file.modeButton, !useGamemodeSelectV2 )
+	Hud_SetVisible( file.modeButton, true )
 	Hud_SetVisible( file.gamemodeSelectV2Button, useGamemodeSelectV2 )
 	RuiSetBool( Hud_GetRui( file.readyButton ), "showReadyFrame", !useGamemodeSelectV2 )
 	if ( useGamemodeSelectV2 )
@@ -1227,7 +1249,7 @@ void function UpdateModeButton()
 		HudElem_SetRuiArg( file.gamemodeSelectV2Button, "isPartyLeader", isLeader )
 
 		HudElem_SetRuiArg( file.gamemodeSelectV2Button, "modeLockedReason", "" )
-		Hud_SetLocked( file.gamemodeSelectV2Button, !CanActivateModeButton() )
+		Hud_SetLocked( file.gamemodeSelectV2Button, false )
 	}
 
 	if ( file.lastPlaylistDisplayed != playlistName )
@@ -1276,9 +1298,9 @@ void function ModeButton_OnActivate( var button )
 	if ( Hud_IsLocked( button ) || !CanActivateModeButton() )
 		return
 
-	ClientCommand( "ViewedModes" )
+	//ClientCommand( "ViewedModes" )
 
-	AdvanceMenu( GetMenu( "ModeSelectDialog" ) )
+	//AdvanceMenu( GetMenu( "ModeSelectDialog" ) )
 }
 
 
@@ -1298,7 +1320,7 @@ void function GameModeSelectV2Button_OnActivate( var button )
 
 void function GameModeSelectV2Button_OnGetFocus( var button )
 {
-	GamemodeSelectV2_PlayVideo( button, file.selectedPlaylist )
+	GamemodeSelectV2_PlayVideo( button, "play_apex" )
 }
 
 
@@ -1331,84 +1353,18 @@ void function PlayPanel_OnNavBack( var panel )
 
 void function ReadyShortcut_OnActivate( var panel )
 {
-	if ( AreWeMatchmaking() )
+	/*if ( AreWeMatchmaking() )
 		return
 
-	ReadyButton_OnActivate( file.readyButton )
+	ReadyButton_OnActivate( file.readyButton )*/
+
+	//ClientCommand( "exec menustuff" )
 }
 
 
 void function ReadyButton_OnActivate( var button )
 {
-	if ( Hud_IsLocked( file.readyButton ) || !CanActivateReadyButton() )
-		return
-
-	bool isReady                   = GetConVarBool( "party_readyToSearch" )
-	bool requireConsensusForSearch = GetConVarBool( "party_requireConsensusForSearch" )
-
-	if ( AreWeMatchmaking() || isReady )
-	{
-		CancelMatchmaking()
-		ClientCommand( "CancelMatchSearch" )
-		EmitUISound( SOUND_STOP_MATCHMAKING_1P )
-	}
-	else
-	{
-		if ( !IsGameFullyInstalled() || HasNonFullyInstalledAssetsLoaded() )
-		{
-			ConfirmDialogData data
-			data.headerText = "#TEXTURE_STREAM_HEADER"
-			data.messageText = Localize( "#TEXTURE_STREAM_MESSAGE", floor( GetGameFullyInstalledProgress() * 100 ) )
-			data.yesText = ["#TEXTURE_STREAM_PLAY", "#TEXTURE_STREAM_PLAY_PC"]
-			data.noText = ["#TEXTURE_STREAM_WAIT", "#TEXTURE_STREAM_WAIT_PC"]
-			if ( GetGameFullyInstalledProgress() >= 1 && HasNonFullyInstalledAssetsLoaded() )
-			{
-				// hd textured fully loaded, requires disconnect to use
-				data.headerText = "#TEXTURE_STREAM_REBOOT_HEADER"
-				data.messageText = "#TEXTURE_STREAM_REBOOT_MESSAGE"
-				data.yesText = ["#TEXTURE_STREAM_REBOOT", "#TEXTURE_STREAM_REBOOT_PC"]
-				data.noText = ["#TEXTURE_STREAM_PLAY_ON_NO", "#TEXTURE_STREAM_PLAY_PC"]
-			}
-
-			data.resultCallback = void function ( int result ) : ()
-			{
-				if ( GetGameFullyInstalledProgress() >= 1 && HasNonFullyInstalledAssetsLoaded() )
-				{
-					// hd textured fully loaded, should we return to the main menu?
-					if ( result == eDialogResult.YES )
-					{
-						// hd textured fully loaded, return to the main menu
-						ClientCommand( "disconnect" )
-						return
-					}
-				}
-				else if ( result != eDialogResult.YES )
-				{
-					// still downloading HD textures, elected to wait.
-					return
-
-				}
-
-				// play without HD textures
-				ReadyButtonActivate()
-			}
-
-			if ( !IsDialog( GetActiveMenu() ) )
-				OpenConfirmDialogFromData( data )
-			return
-		}
-
-		bool isLeader = IsPartyLeader()
-
-		if ( isLeader && ShouldShowLowPopDialog( file.selectedPlaylist ) )
-		{
-			OpenLowPopDialog( ReadyButtonActivateForDataCenter )
-		}
-		else
-		{
-			ReadyButtonActivate()
-		}
-	}
+	ClientCommand( "ccompanion" )
 }
 
 
@@ -1617,8 +1573,7 @@ void function OpenLootBoxButton_OnActivate( var button )
 
 void function UpdatePlayPanelGRXDependantElements()
 {
-	if ( GRX_IsInventoryReady() )
-		UpdateLobbyChallengeMenu()
+	UpdateLobbyChallengeMenu()
 
 	UpdateMiniPromoPinning()
 }
