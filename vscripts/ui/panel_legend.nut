@@ -119,3 +119,5 @@ void function PopulateSkillElem( var elem, ItemFlavor character )
 	RuiSetBool( rui, "isUltimate", skillType == "ultimate" )
 	RuiSetGameTime( rui, "initTime", Time() )
 }
+
+

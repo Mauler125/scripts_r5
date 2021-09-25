@@ -186,6 +186,21 @@ void function InitGamemodeSelectV2Dialog( var newMenuArg ) //
 		file.modeSelectButtonList.append( button )
 	}
 
+	var gandlergmbutton1 = Hud_GetChild( file.menu, "GamemodeButton0" )
+	Hud_AddEventHandler( gandlergmbutton1, UIE_CLICK, GamemodeButton0_Activate )
+
+	var gandlergmbutton2 = Hud_GetChild( file.menu, "GamemodeButton1" )
+	Hud_AddEventHandler( gandlergmbutton2, UIE_CLICK, GamemodeButton1_Activate )
+
+	var gandlergmbutton3 = Hud_GetChild( file.menu, "GamemodeButton2" )
+	Hud_AddEventHandler( gandlergmbutton3, UIE_CLICK, GamemodeButton2_Activate )
+
+	var gandlergmbutton4 = Hud_GetChild( file.menu, "GamemodeButton3" )
+	Hud_AddEventHandler( gandlergmbutton4, UIE_CLICK, GamemodeButton3_Activate )
+
+	var gandlergmbutton5 = Hud_GetChild( file.menu, "GamemodeButton4" )
+	Hud_AddEventHandler( gandlergmbutton5, UIE_CLICK, GamemodeButton4_Activate )
+
 	//RegisterSignal( "GamemodeSelectV2_EndVideoStopThread" )
 
 	AddMenuFooterOption( menu, LEFT, BUTTON_B, true, "#B_BUTTON_CLOSE", "#CLOSE" )
@@ -236,62 +251,57 @@ void function OnOpenModeSelectDialog()
 
 
 
-	var button6 = Hud_GetChild( file.menu, "GamemodeButton0" )
+	var gamemodebutton0 = Hud_GetChild( file.menu, "GamemodeButton0" )
 
-	Hud_SetX( button6, REPLACEHud_GetBasePos( button6 ).x )
-	Hud_SetWidth( button6, 300 )
-	Hud_Show( button6 )
-	drawWidth += (REPLACEHud_GetPos( button6 ).x + Hud_GetWidth( button6 ))
-	Hud_AddEventHandler( button6, UIE_CLICK, GamemodeButton0_Activate )
-	GamemodeSelectV2_UpdateSelectButton2( button6, "Firing Range", "training", "Mess around in the firing range", "", false )
-	GamemodeSelectV2_PlayVideo( button6, "training" )
+	Hud_SetX( gamemodebutton0, REPLACEHud_GetBasePos( gamemodebutton0 ).x )
+	Hud_SetWidth( gamemodebutton0, 250 )
+	Hud_Show( gamemodebutton0 )
+	drawWidth += (REPLACEHud_GetPos( gamemodebutton0 ).x + Hud_GetWidth( gamemodebutton0 ))
+	GamemodeSelectV2_UpdateSelectButton2( gamemodebutton0, "Firing Range", "training", "Mess around in the firing range", "", false )
+	GamemodeSelectV2_PlayVideo( gamemodebutton0, "training" )
 
-	var button7 = Hud_GetChild( file.menu, "GamemodeButton1" )
+	var gamemodebutton1 = Hud_GetChild( file.menu, "GamemodeButton1" )
 
-	Hud_SetX( button7, REPLACEHud_GetBasePos( button7 ).x )
-	Hud_SetWidth( button7, 300 )
-	Hud_Show( button7 )
-	drawWidth += (REPLACEHud_GetPos( button7 ).x + Hud_GetWidth( button7 ))
-	Hud_AddEventHandler( button7, UIE_CLICK, GamemodeButton1_Activate )
-	GamemodeSelectV2_UpdateSelectButton2( button7, "Quick Join", "generic_02", "Joins a random server", "Not Finished", true )
-	GamemodeSelectV2_PlayVideo( button7, "generic_02" )
+	Hud_SetX( gamemodebutton1, REPLACEHud_GetBasePos( gamemodebutton1 ).x )
+	Hud_SetWidth( gamemodebutton1, 250 )
+	Hud_Show( gamemodebutton1 )
+	drawWidth += (REPLACEHud_GetPos( gamemodebutton1 ).x + Hud_GetWidth( gamemodebutton1 ))
+	GamemodeSelectV2_UpdateSelectButton2( gamemodebutton1, "Quick Join", "generic_02", "Joins a random server", "Not Finished", true )
+	GamemodeSelectV2_PlayVideo( gamemodebutton1, "generic_02" )
 
-	var button8 = Hud_GetChild( file.menu, "GamemodeButton2" )
+	var gamemodebutton2 = Hud_GetChild( file.menu, "GamemodeButton2" )
 
-	Hud_SetX( button8, REPLACEHud_GetBasePos( button8 ).x )
-	Hud_SetWidth( button8, 300 )
-	Hud_Show( button8 )
-	drawWidth += (REPLACEHud_GetPos( button8 ).x + Hud_GetWidth( button8 ))
-	Hud_AddEventHandler( button8, UIE_CLICK, GamemodeButton2_Activate )
-	GamemodeSelectV2_UpdateSelectButton2( button8, "Create Server", "generic_01", "Quickly create a server", "Not Finished", true )
-	GamemodeSelectV2_PlayVideo( button8, "generic_01" )
+	Hud_SetX( gamemodebutton2, REPLACEHud_GetBasePos( gamemodebutton2 ).x )
+	Hud_SetWidth( gamemodebutton2, 250 )
+	Hud_Show( gamemodebutton2 )
+	drawWidth += (REPLACEHud_GetPos( gamemodebutton2 ).x + Hud_GetWidth( gamemodebutton2 ))
+	GamemodeSelectV2_UpdateSelectButton2( gamemodebutton2, "Create Server", "generic_01", "Quickly create a server", "Not Finished", true )
+	GamemodeSelectV2_PlayVideo( gamemodebutton2, "generic_01" )
 
-	var button9 = Hud_GetChild( file.menu, "GamemodeButton3" )
+	var gamemodebutton3 = Hud_GetChild( file.menu, "GamemodeButton3" )
 
-	Hud_SetX( button9, REPLACEHud_GetBasePos( button9 ).x )
-	Hud_SetWidth( button9, 300 )
-	Hud_Show( button9 )
-	drawWidth += (REPLACEHud_GetPos( button9 ).x + Hud_GetWidth( button9 ))
-	Hud_AddEventHandler( button9, UIE_CLICK, GamemodeButton3_Activate )
-	GamemodeSelectV2_UpdateSelectButton2( button9, "Worlds Edge", "worlds_edge", "Run around on Worlds Edge", "", false )
-	GamemodeSelectV2_PlayVideo( button9, "worlds_edge" )
+	Hud_SetX( gamemodebutton3, REPLACEHud_GetBasePos( gamemodebutton3 ).x )
+	Hud_SetWidth( gamemodebutton3, 250 )
+	Hud_Show( gamemodebutton3 )
+	drawWidth += (REPLACEHud_GetPos( gamemodebutton3 ).x + Hud_GetWidth( gamemodebutton3 ))
+	GamemodeSelectV2_UpdateSelectButton2( gamemodebutton3, "Worlds Edge", "worlds_edge", "Run around on Worlds Edge", "", false )
+	GamemodeSelectV2_PlayVideo( gamemodebutton3, "worlds_edge" )
 
-	var button10 = Hud_GetChild( file.menu, "GamemodeButton4" )
+	var gamemodebutton4 = Hud_GetChild( file.menu, "GamemodeButton4" )
 
-	Hud_SetX( button10, REPLACEHud_GetBasePos( button10 ).x )
-	Hud_SetWidth( button10, 300 )
-	Hud_Show( button10 )
-	drawWidth += (REPLACEHud_GetPos( button10 ).x + Hud_GetWidth( button10 ))
-	Hud_AddEventHandler( button10, UIE_CLICK, GamemodeButton4_Activate )
-	GamemodeSelectV2_UpdateSelectButton2( button10, "Kings Canyon", "ranked_1", "Run around on Kings Kanyon", "", false )
-	GamemodeSelectV2_PlayVideo( button10, "ranked_1" )
+	Hud_SetX( gamemodebutton4, REPLACEHud_GetBasePos( gamemodebutton4 ).x )
+	Hud_SetWidth( gamemodebutton4, 250 )
+	Hud_Show( gamemodebutton4 )
+	drawWidth += (REPLACEHud_GetPos( gamemodebutton4 ).x + Hud_GetWidth( gamemodebutton4 ))
+	GamemodeSelectV2_UpdateSelectButton2( gamemodebutton4, "Kings Canyon", "ranked_1", "Run around on Kings Kanyon", "", false )
+	GamemodeSelectV2_PlayVideo( gamemodebutton4, "ranked_1" )
 
 	//
 	float scale = float( GetScreenSize().width ) / 1920.0
 	drawWidth += int( 48 * scale )
 
 	bool hasLimitedMode = (slotToPlaylistNameMap["ltm"] != "")
-	RuiSetBool( Hud_GetRui( file.selectionPanel ), "hasLimitedMode", hasLimitedMode )
+	RuiSetBool( Hud_GetRui( file.selectionPanel ), "hasLimitedMode", false )
 	RuiSetFloat( Hud_GetRui( file.selectionPanel ), "drawWidth", (drawWidth / scale) )
 	Hud_SetWidth( file.selectionPanel, drawWidth )
 }

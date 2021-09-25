@@ -196,12 +196,12 @@ void function OnMainMenuPanel_Show( var panel )
 {
 	file.startTime = Time()
 
-	AccessibilityHintReset()
-	EnterLobbySurveyReset()
+	//AccessibilityHintReset()
+	//EnterLobbySurveyReset()
 
-	thread MainMenu_Think()
+	//thread MainMenu_Think()
 
-	thread PrelaunchValidation()
+	//thread PrelaunchValidation()
 
 	ExecCurrentGamepadButtonConfig()
 	ExecCurrentGamepadStickConfig()

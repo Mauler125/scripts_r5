@@ -238,7 +238,13 @@ void function InitPlayPanel( var panel )
 
 	var aboutButton = Hud_GetChild( file.panel, "AboutButton" )
 	Hud_AddEventHandler( aboutButton, UIE_CLICK, OpenAboutGameModePage )
-	Hud_SetVisible( aboutButton, false )
+	Hud_SetY (aboutButton, 100)
+	Hud_SetVisible( aboutButton, true )
+
+	var aboutrui = Hud_GetRui( aboutButton )
+	RuiSetString( aboutrui, "buttonText", "About R5Reloaded" )
+	asset aboutruiemblemImage = $"rui/menu/gamemode_emblem/shadowfall"
+	RuiSetImage( aboutrui, "emblemImage", aboutruiemblemImage )
 
 	var rankedBadge = Hud_GetChild( file.panel, "RankedBadge" )
 	Hud_AddEventHandler( rankedBadge, UIE_CLICK, OpenRankedInfoPage )
@@ -1674,9 +1680,9 @@ void function UpdateLootBoxButton( var button, array<ItemFlavor> specificPackFla
 	RuiSetColorAlpha( Hud_GetRui( button ), "themeCol", themeCol, 1.0 )
 	RuiSetColorAlpha( Hud_GetRui( button ), "countTextCol", countTextCol, 1.0 )
 
-	Hud_SetLocked( button, lootBoxCount == 0 )
+	Hud_SetLocked( button, false )
 
-	Hud_SetEnabled( button, lootBoxCount > 0 )
+	Hud_SetEnabled( button, true )
 }
 
 

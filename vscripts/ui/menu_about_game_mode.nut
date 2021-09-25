@@ -32,13 +32,8 @@ void function OnAboutGameModeMenu_Open()
 //
 	RuiSetFloat2( rui, "actualRes", < screenSize.width, screenSize.height, 0 > )
 
-	/*array<int> emblemColor = GetEmblemColor( Lobby_GetSelectedPlaylist() )
-	RuiSetColorAlpha( rui, "emblemColor", SrgbToLinear( <emblemColor[0],emblemColor[1],emblemColor[2]> / 255.0 ), emblemColor[3] / 255.0 )*/
-
-	string aboutTitle = GetPlaylistVarString( Lobby_GetSelectedPlaylist(), "name", "" )
-	string aboutText = GetPlaylistVarString( Lobby_GetSelectedPlaylist(), "about_text", "" )
-	RuiSetString( rui, "aboutTitle", aboutTitle )
-	RuiSetString( rui, "aboutText", aboutText )
+	RuiSetString( rui, "aboutTitle", "About R5 Reloaded" )
+	RuiSetString( rui, "aboutText", "Temp Text, Temp Text, Temp Text, Temp Text, Temp Text, Temp Text, Temp Text, Temp Text, Temp Text, Temp Text, Temp Text" )
 }
 
 void function OnAboutGameModeMenu_Close()

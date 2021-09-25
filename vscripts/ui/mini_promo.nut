@@ -52,6 +52,16 @@ void function InitMiniPromo( var button )
 	Hud_AddEventHandler( button, UIE_CLICK, MiniPromoButton_OnActivate )
 	Hud_AddEventHandler( button, UIE_GET_FOCUS, MiniPromoButton_OnGetFocus )
 	Hud_AddEventHandler( button, UIE_LOSE_FOCUS, MiniPromoButton_OnLoseFocus )
+
+	MiniPromoPageData newPage
+	newPage.imageName = "shadow_squad"
+	newPage.image = $"rui/menu/gamemode/shadow_squad"
+	newPage.text1 = "Testing"
+	newPage.text2 = "12345"
+	newPage.format = MINIPROMO_PAGE_FORMAT_DEFAULT
+	infopages.append( newPage )
+
+	file.allPages = infopages
 }
 
 
@@ -63,11 +73,6 @@ void function MiniPromo_Start()
 	//
 
 	UpdatePromoData()
-
-	if ( !IsPromoDataProtocolValid() )
-		return
-
-	file.allPages = InitPages()
 
 	if ( !file.grxCallbacksRegistered )
 	{
@@ -110,7 +115,7 @@ void function OnGRXStateChanged()
 
 	UpdateValidityOfPages( file.allPages )
 
-	int validPageCount = GetValidPageCount()
+	int validPageCount = 6
 
 	if ( validPageCount > 0 )
 	{
@@ -239,76 +244,22 @@ int function GetActivePageIndexForRui()
 }
 
 
+
 array<MiniPromoPageData> function InitPages()
 {
-	string content = "<m|m_openpack|OPEN PACK||openpack>"
-	content += GetPromoDataLayout()
-	//
-	//
-	//
-	//
-	//
-	//
-	//
-
-	//
-	array< array<string> > matches = RegexpFindAll( content, "<m\\|([^>\\|]*)\\|([^>\\|]*)\\|([^>\\|]*)\\|([^>\\|]+)>" )
-	if ( matches.len() > MINIPROMO_MAX_PAGES )
-	{
-		Warning( "Ignoring extra mini promo pages! Found " + matches.len() + " pages and only " + MINIPROMO_MAX_PAGES + " are supported." )
-		matches.resize( MINIPROMO_MAX_PAGES )
-	}
-
 	array<MiniPromoPageData> pages
 
-	foreach ( idx, vals in matches )
-	{
-		//
-		//
-		//
-
-		//
-		//
-		MiniPromoPageData newPage
-		newPage.imageName = vals[1]
-		if( !GetConVarBool( "assetdownloads_enabled" ) || idx == 0 )
-			newPage.image = GetPromoImage( newPage.imageName )
-		newPage.text1 = vals[2]
-		newPage.text2 = vals[3]
-
-		if ( vals[4].slice( 0, 4 ).tolower() == "url:" ) //
-		{
-			newPage.linkType = "url"
-			newPage.linkData.append( vals[4].slice( 4, vals[4].len() ) )
-		}
-		else
-		{
-			array<string> linkVals = split( vals[4], ":" )
-			if ( linkVals.len() > 0 )
-			{
-				newPage.linkType = linkVals[0]
-				linkVals.remove( 0 )
-				newPage.linkData = linkVals
-			}
-		}
-
-		//
-		//
-		//
-
-		if ( IsLinkFormatValid( newPage.linkType, newPage.linkData ) )
-		{
-			newPage.format = newPage.linkType == "openpack" ? MINIPROMO_PAGE_FORMAT_OPENPACK : MINIPROMO_PAGE_FORMAT_DEFAULT
-			pages.append( newPage )
-		}
-		else
-		{
-			Warning( "Ignoring invalid mini promo link format (" + vals[4] + ")!" )
-		}
-	}
+	MiniPromoPageData newPage
+	newPage.imageName = "shadow_squad"
+	newPage.image = $"rui/menu/gamemode/shadow_squad"
+	newPage.text1 = "Testing"
+	newPage.text2 = "12345"
+	newPage.format = MINIPROMO_PAGE_FORMAT_DEFAULT
+	pages.append( newPage )
 
 	return pages
 }
+
 
 
 bool function IsLinkFormatValid( string linkType, array<string> linkData )
@@ -396,13 +347,10 @@ void function SetPage( int pageIndex, bool instant = false )
 	RuiSetString( rui, "lastText2", lastPage.text2 )
 
 	MiniPromoPageData page = file.allPages[file.activePageIndex]
-	if( GetConVarBool( "assetdownloads_enabled" ) && file.activePageIndex > 0 )
-		RuiSetImage( rui, "imageAsset", GetDownloadedImageAsset( GetMiniPromoRpakName(), page.imageName, ePakType.DL_MINI_PROMO, file.button ) )
-	else
-		RuiSetImage( rui, "imageAsset", page.image )
-	RuiSetBool( rui, "format", page.format )
-	RuiSetString( rui, "text1", page.text1 )
-	RuiSetString( rui, "text2", page.text2 )
+	RuiSetImage( rui, "imageAsset", $"rui/menu/gamemode/shadow_squad" )
+	RuiSetBool( rui, "format", MINIPROMO_PAGE_FORMAT_DEFAULT )
+	RuiSetString( rui, "text1", "Testing" )
+	RuiSetString( rui, "text2", "Testings" )
 
 	RuiSetInt( rui, "activePageIndex", GetActivePageIndexForRui() )
 
