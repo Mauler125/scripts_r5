@@ -122,10 +122,10 @@ float function GetSurveySampleRateByType( int surveyType )
 	if ( surveyType < 0 || surveyType >= eSurveyType._COUNT )
 		return 0.0
 
-	float sampleRate = GetCurrentPlaylistVarFloat( "survey_sample_rate", 0.0 )
+	float sampleRate = 0.0
 
 	string typeString = surveyTypeToNameMap[surveyType]
-	sampleRate = GetCurrentPlaylistVarFloat( "survey_sample_rate_" + typeString, sampleRate )
+	sampleRate = 0.0
 
 	return sampleRate
 }
