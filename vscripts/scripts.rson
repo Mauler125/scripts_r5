@@ -300,6 +300,7 @@ Scripts:
 	weapons/sh_stim.gnut
 	weapons/mp_weapon_energy_shotgun.nut
 	weapons/mp_weapon_grenade_sonar.nut
+	weapons/mp_weapon_editor.nut
 ]
 
 When: "SERVER || CLIENT"
@@ -472,6 +473,8 @@ Scripts:
 
 	mp/_mobility_experiments.gnut
 	mp/_model_viewer.nut
+
+	mp/_base_cmds.gnut
 ]
 
 When: "SERVER"
