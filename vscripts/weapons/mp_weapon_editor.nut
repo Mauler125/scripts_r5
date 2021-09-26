@@ -7,6 +7,8 @@ global function OnWeaponPrimaryAttack_weapon_editor
 global function ServerCallback_SwitchProp
 
 #if SERVER
+global function ClientCommand_Compile
+
 global function ClientCommand_UP_Server
 global function ClientCommand_DOWN_Server
 #elseif CLIENT
@@ -35,16 +37,21 @@ struct
     array<PropInfo> propInfoList
     float offsetZ = 0
 
+    // store the props here for saving and loading
+    array<entity> allProps
+
 } file
 
 
 void function MpWeaponEditor_Init()
 {
     // save and load functions
+    #if SERVER
     // AddClientCommandCallback("model", ClientCommand_Model)
-    // AddClientCommandCallback("compile", ClientCommand_Compile)
+    AddClientCommandCallback("compile", ClientCommand_Compile)
     // AddClientCommandCallback("load", ClientCommand_Load)
     // AddClientCommandCallback("spawnpoint", ClientCommand_Spawnpoint)
+    #endif
 
     // in-editor functions
     #if CLIENT
@@ -158,6 +165,7 @@ void function StartNewPropPlacement(entity player)
 
 void function PlaceProp(entity player)
 {
+    file.allProps.append(GetProp(player))
     #if SERVER
     GetProp(player).Show()
     GetProp(player).Solid()
@@ -317,11 +325,12 @@ bool function ClientCommand_Model(entity player, array<string> args) {
 	return true
 }
 
-
+#if SERVER
 bool function ClientCommand_Compile(entity player, array<string> args) {
-    //printl("SERIALIZED: " + serialize())
+    printl("SERIALIZED: " + serialize())
     return true
 }
+#endif
 
 bool function ClientCommand_Load(entity player, array<string> args) {
     // if (args.len() == 0) {
@@ -381,41 +390,42 @@ vector function snapVec( vector vec, int size  ) {
     return <x,y,z>
 }
 
-/*
+
 string function serialize() {
     // Model Serializer
     
     string serialized = ""
     
     int index = 0
-    bool isNext = file.spawnPoints.len() != 0
-    foreach (modelSerialized in file.modifications) {
+    bool isNext = false // file.spawnPoints.len() != 0
+    foreach (modelSerialized in file.allProps) {
         serialized += "m:" + modelSerialized
-        if (isNext || index != (file.modifications.len() - 1)) {
+        if (isNext || index != (file.allProps.len() - 1)) {
             serialized += "|"
         }
         index++
     }
     index = 0
-    foreach(position in file.spawnPoints) {
-        vector origin = position.origin 
-        vector angles = position.angles
+    // foreach(position in file.spawnPoints) {
+    //     vector origin = position.origin 
+    //     vector angles = position.angles
 
-        string oSer = origin.x + "," + origin.y + "," + origin.z
-        string aSer = angles.x + "," + angles.y + "," + angles.z
-        serialized += "s:" + oSer + ";" + aSer
+    //     string oSer = origin.x + "," + origin.y + "," + origin.z
+    //     string aSer = angles.x + "," + angles.y + "," + angles.z
+    //     serialized += "s:" + oSer + ";" + aSer
 
-        if (index != (file.spawnPoints.len() - 1)) {
-            serialized += "|"
-        }
-        index++
-    }
+    //     if (index != (file.spawnPoints.len() - 1)) {
+    //         serialized += "|"
+    //     }
+    //     index++
+    // }
 
     printl("Serialization: " + serialized)
     
     return serialized
 }
 
+/*
 array<entity> function deserialize(string serialized, bool dummies) {
     array<string> sections = split(serialized, "|")
     array<entity> entities = []
