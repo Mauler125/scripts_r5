@@ -15,11 +15,29 @@ struct
     entity buildProp
     #endif
     table<entity, asset> playerPreferedBuilds
+    
+    // no promises this will work well on MP
+    array<string> modifications = []
+    array<entity> entityModifications = []
+    // array<LocPair> spawnPoints = []
+
+    float offsetZ = 0
 } file
 
 
 void function MpWeaponEditor_Init()
 {
+    // save and load functions
+    // AddClientCommandCallback("model", ClientCommand_Model)
+    // AddClientCommandCallback("compile", ClientCommand_Compile)
+    // AddClientCommandCallback("load", ClientCommand_Load)
+    // AddClientCommandCallback("spawnpoint", ClientCommand_Spawnpoint)
+
+    // in-editor functions
+    // AddClientCommandCallback("moveUp", ClientCommand_UP)
+    // AddClientCommandCallback("moveDown", ClientCommand_DOWN)
+    // AddClientCommandCallback("rotate", ClientCommand_Rotate)
+    // AddClientCommandCallback("undo", ClientCommand_Undo)
 
 }
 
@@ -52,7 +70,7 @@ void function OnWeaponActivate_weapon_editor( entity weapon )
     #endif
 
     AddInputHint( "%attack%", "Place Prop" )
-    AddInputHint( "%zoom%", "Switch Prop")
+    AddInputHint( "%duck%", "Switch Prop")
 
     #if SERVER
     AddButtonPressedPlayerInputCallback( owner, IN_DUCK, ServerCallback_SwitchProp )
@@ -156,7 +174,7 @@ void function PlaceProxyThink(entity player)
         vector origin = result.endPos
         origin.x = floor(origin.x / gridSize) * gridSize
         origin.y = floor(origin.y / gridSize) * gridSize
-        origin.z = floor(origin.z / gridSize) * gridSize
+        origin.z = (floor(origin.z / gridSize) * gridSize) + file.offsetZ
 
         vector angles = VectorToAngles( -1 * player.GetViewVector() )
         angles.x = GetProp(player).GetAngles().x
@@ -217,4 +235,259 @@ void function AddInputHint( string buttonText, string hintText)
     file.inputHintRuis.append( hintRui )
 
     #endif
+}
+
+
+
+// CODE FROM THE OTHER VERSION OF THE MODEL TOOL
+// Most of this was written by Pebbers (@Vysteria on Github)
+
+bool function ClientCommand_UP(entity player, array<string> args)
+{
+    file.offsetZ += 2
+    return true
+}
+
+bool function ClientCommand_DOWN(entity player, array<string> args)
+{
+    file.offsetZ -= 2
+    return true
+}
+
+
+bool function ClientCommand_Model(entity player, array<string> args) {
+// 	if (args.len() < 1) {
+// 		return false
+// 	}
+
+// 	try {
+// 		string modelName = args[0]
+// 	    file.buildProp = CastStringToAsset(modelName)
+// 		file.currentModelName = modelName
+//   } catch (error) {
+// 		printl(error)
+// 	}
+	return true
+}
+
+
+bool function ClientCommand_Compile(entity player, array<string> args) {
+    //printl("SERIALIZED: " + serialize())
+    return true
+}
+
+bool function ClientCommand_Load(entity player, array<string> args) {
+    // if (args.len() == 0) {
+    //     printl("USAGE: load \"<serialized code>\"")
+    //     return false
+    // }
+
+    // string serializedCode = args[0]
+    // file.entityModifications = deserialize(serializedCode, true)
+    return true
+}
+
+bool function ClientCommand_Spawnpoint(entity player, array<string> args) {
+    // if (file.currentEditor != null) {
+    //     vector origin = player.GetOrigin()
+    //     vector angles = player.GetAngles()
+
+    //     LocPair pair = NewLocPair(origin, angles)
+    //     file.spawnPoints.append(pair)
+    //     printl("Successfully added position " + origin + " " + angles)
+    //     SpawnDummyAtPlayer(player)
+    // } else {
+    //     printl("You must be in editor mode")
+    //     return false
+    // }
+    return true
+}
+
+
+
+
+bool function ClientCommand_Rotate(entity player, array<string> args) {
+    return true
+}
+
+bool function ClientCommand_Undo(entity player, array<string> args) {
+    return true
+}
+
+// deleted createFRProp
+
+asset function CastStringToAsset( string val ) {
+	return GetKeyValueAsAsset( {kn = val}, "kn")
+}
+
+// Snaps a number to the nearest size
+int function snapTo( float f, int size ) {
+    return ((f / size).tointeger()) * size
+}
+
+// Snaps a vector to the grid of size
+vector function snapVec( vector vec, int size  ) {
+    int x = snapTo(vec.x, size)
+    int y = snapTo(vec.y, size)
+    int z = snapTo(vec.z, size)
+
+    return <x,y,z>
+}
+
+/*
+string function serialize() {
+    // Model Serializer
+    
+    string serialized = ""
+    
+    int index = 0
+    bool isNext = file.spawnPoints.len() != 0
+    foreach (modelSerialized in file.modifications) {
+        serialized += "m:" + modelSerialized
+        if (isNext || index != (file.modifications.len() - 1)) {
+            serialized += "|"
+        }
+        index++
+    }
+    index = 0
+    foreach(position in file.spawnPoints) {
+        vector origin = position.origin 
+        vector angles = position.angles
+
+        string oSer = origin.x + "," + origin.y + "," + origin.z
+        string aSer = angles.x + "," + angles.y + "," + angles.z
+        serialized += "s:" + oSer + ";" + aSer
+
+        if (index != (file.spawnPoints.len() - 1)) {
+            serialized += "|"
+        }
+        index++
+    }
+
+    printl("Serialization: " + serialized)
+    
+    return serialized
+}
+
+array<entity> function deserialize(string serialized, bool dummies) {
+    array<string> sections = split(serialized, "|")
+    array<entity> entities = []
+
+    int index = 0
+    foreach(section in sections) {
+        index++
+
+        bool isModelSection = section.find("m:") != -1
+        bool isPositionSection = section.find("s:") != -1
+        
+        if (isModelSection) {
+            string payload = StringReplace(section, "m:", "")
+
+            array<string> payloadSections = split(payload, ";")
+
+            if (payloadSections.len() < 3) {
+                printl("Problem with loading model: Less than 3 payloadSections ")
+                foreach(psec in payloadSections) {
+                    printl(psec)
+                }
+                continue
+            }
+
+            string modelName = payloadSections[0]
+            vector origin = deserializeVector(payloadSections[1], "origin")
+            vector angles = deserializeVector(payloadSections[2], "angles")
+            
+            entities.append(CreateFRProp(CastStringToAsset(modelName), origin, angles))
+            printl("Loading model: " + modelName + " at " + origin + " with angle " + angles)
+        } else if (isPositionSection) { 
+            string payload = StringReplace(section, "s:", "")
+
+            array<string> payloadSections = split(payload, ";")
+
+            if (payloadSections.len() < 2) {
+                printl("Problem with loading model: Less than 2 payloadSections ")
+                foreach(psec in payloadSections) {
+                    printl(psec)
+                }
+                continue
+            }
+
+            vector origin = deserializeVector(payloadSections[0], "origin")
+            vector angles = deserializeVector(payloadSections[1], "angles")
+            
+            if (dummies) {
+                entities.append(SpawnDummyAtPosition(origin, angles))
+            }
+            printl("Loading player position at " + origin + " with angle " + angles)
+        } else {
+            printl("Problem with section number " + index.tostring())
+        }
+    } 
+    return entities
+}
+*/
+
+
+vector function deserializeVector(string serialized, string type) {
+    array<string> axis = split(serialized, ",")
+
+    try {
+        float x = axis[0].tofloat()
+        float y = axis[1].tofloat()
+        float z = axis[2].tofloat()
+        return <x, y, z>
+    } catch(error) {
+        printl("Failed to serialize vector " + type + " " + serialized)
+        printl(error)
+        return <0, 0, 0>
+    }
+}
+
+/*
+void function SpawnDummyAtPlayer(entity player) {
+    entity dummy = CreateDummy(99, player.GetOrigin(), player.GetAngles())
+    DispatchSpawn( dummy )
+	
+    dummy.SetSkin(RandomInt(6))
+    
+    array<string> weapons = ["mp_weapon_vinson", "mp_weapon_mastiff", "mp_weapon_energy_shotgun", "mp_weapon_lstar"]
+    string randomWeapon = weapons[RandomInt(weapons.len())]
+    dummy.GiveWeapon(randomWeapon, WEAPON_INVENTORY_SLOT_ANY)
+    file.entityModifications.append(dummy)
+}
+
+void function SpawnDummyAtPosition(vector origin, vector angles) {
+    entity dummy = CreateDummy(99, origin, angles)
+    DispatchSpawn( dummy )
+	
+    dummy.SetSkin(RandomInt(6))
+    
+    array<string> weapons = ["mp_weapon_vinson", "mp_weapon_mastiff", "mp_weapon_energy_shotgun", "mp_weapon_lstar"]
+    string randomWeapon = weapons[RandomInt(weapons.len())]
+    dummy.GiveWeapon(randomWeapon, WEAPON_INVENTORY_SLOT_ANY)
+}
+*/
+
+TraceResults function PlayerLookingAtRes(entity player) {
+    vector angles = player.EyeAngles()
+	vector forward = AnglesToForward( angles )
+	vector origin = player.EyePosition()
+
+	vector start = origin
+	vector end = origin + forward * 50000
+	TraceResults result = TraceLine( start, end )
+
+	return result
+}
+
+vector function PlayerLookingAtVec(entity player) {
+    vector angles = player.EyeAngles()
+	vector forward = AnglesToForward( angles )
+	vector origin = player.EyePosition()
+
+	vector start = origin
+	vector end = origin + forward * 50000
+	TraceResults result = TraceLine( start, end )
+
+	return result.endPos
 }
