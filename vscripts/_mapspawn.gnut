@@ -205,6 +205,8 @@ void function CodeCallback_MapSpawn() // original script entry point
 
 	PrecacheModel( $"mdl/Humans/class/medium/combat_dummie_medium.rmdl" )
 	
+	PrecacheModel( $"mdl/thunderdome/thunderdome_cage_wall_256x256_01.rmdl" )
+	PrecacheModel( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl" )
 	//Charms - todo: find a better way
 
 	PrecacheModel( $"mdl/props/charm/charm_fireball.rmdl" )
@@ -280,7 +282,7 @@ void function CodeCallback_MapSpawn() // original script entry point
 	PrecacheWeapon( $"mp_weapon_grenade_electric_smoke" )
 	PrecacheWeapon( $"mp_weapon_deployable_cover" )
 	PrecacheWeapon( $"melee_data_knife" )
-
+	PrecacheWeapon( $"mp_weapon_editor" )
 	printl( "Code Script: _mapspawn" )
 
 	SV_CL_Shared_Init()

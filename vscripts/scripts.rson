@@ -300,6 +300,7 @@ Scripts:
 	weapons/sh_stim.gnut
 	weapons/mp_weapon_energy_shotgun.nut
 	weapons/mp_weapon_grenade_sonar.nut
+	weapons/mp_weapon_editor.nut
 ]
 
 When: "SERVER || CLIENT"
