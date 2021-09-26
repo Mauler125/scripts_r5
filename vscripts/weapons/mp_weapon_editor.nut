@@ -7,13 +7,16 @@ global function OnWeaponPrimaryAttack_weapon_editor
 global function ServerCallback_SwitchProp
 
 #if SERVER
-global function ClientCommand_Compile
+global function ClientCommand_Model
+global function ClientCommand_Compile 
+global function ClientCommand_Load
+global function ClientCommand_Spawnpoint
 
-global function ClientCommand_UP_Server
-global function ClientCommand_DOWN_Server
+global function ServerCommand_UP
+global function ServerCommand_DOWN
 #elseif CLIENT
-global function ClientCommand_UP_Client
-global function ClientCommand_DOWN_Client
+global function ClientCommand_UP
+global function ClientCommand_DOWN
 #endif
 
 struct PropSaveInfo
@@ -47,19 +50,19 @@ void function MpWeaponEditor_Init()
 {
     // save and load functions
     #if SERVER
-    // AddClientCommandCallback("model", ClientCommand_Model)
+    AddClientCommandCallback("model", ClientCommand_Model)
     AddClientCommandCallback("compile", ClientCommand_Compile)
-    // AddClientCommandCallback("load", ClientCommand_Load)
-    // AddClientCommandCallback("spawnpoint", ClientCommand_Spawnpoint)
+    AddClientCommandCallback("load", ClientCommand_Load)
+    AddClientCommandCallback("spawnpoint", ClientCommand_Spawnpoint)
     #endif
 
     // in-editor functions
     #if CLIENT
-    RegisterConCommandTriggeredCallback( "weaponSelectPrimary0", ClientCommand_UP_Client )
-    RegisterConCommandTriggeredCallback( "weaponSelectPrimary1", ClientCommand_DOWN_Client )
+    RegisterConCommandTriggeredCallback( "weaponSelectPrimary0", ClientCommand_UP )
+    RegisterConCommandTriggeredCallback( "weaponSelectPrimary1", ClientCommand_DOWN )
     #elseif SERVER
-    AddClientCommandCallback("moveUp", ClientCommand_UP_Server )
-    AddClientCommandCallback("moveDown", ClientCommand_DOWN_Server )
+    AddClientCommandCallback("moveUp", ServerCommand_UP )
+    AddClientCommandCallback("moveDown", ServerCommand_DOWN )
     #endif
 
 
@@ -280,14 +283,14 @@ void function AddInputHint( string buttonText, string hintText)
 // Most of this was written by Pebbers (@Vysteria on Github)
 
 #if SERVER
-bool function ClientCommand_UP_Server(entity player, array<string> args)
+bool function ServerCommand_UP(entity player, array<string> args)
 {
     file.offsetZ += 64
     printl("moving up " + file.offsetZ)
     return true
 }
 
-bool function ClientCommand_DOWN_Server(entity player, array<string> args)
+bool function ServerCommand_DOWN(entity player, array<string> args)
 {
     file.offsetZ -= 64
     printl("moving down " + file.offsetZ)
@@ -295,14 +298,14 @@ bool function ClientCommand_DOWN_Server(entity player, array<string> args)
 }
 
 #elseif CLIENT
-bool function ClientCommand_UP_Client(entity player)
+bool function ClientCommand_UP(entity player)
 {
     GetLocalClientPlayer().ClientCommand("moveUp")
     file.offsetZ += 64
     return true
 }
 
-bool function ClientCommand_DOWN_Client(entity player)
+bool function ClientCommand_DOWN(entity player)
 {
     GetLocalClientPlayer().ClientCommand("moveDown")
     file.offsetZ -= 64
