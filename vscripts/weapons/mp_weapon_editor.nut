@@ -398,8 +398,12 @@ string function serialize() {
     
     int index = 0
     bool isNext = false // file.spawnPoints.len() != 0
-    foreach (modelSerialized in file.allProps) {
-        serialized += "m:" + modelSerialized
+    foreach (model in file.allProps) {
+        string origin = serializeVector(model.GetOrigin())
+        string angles = serializeVector(model.GetAngles())
+        string name = model.GetModelName()
+
+        serialized += "m:" + name + ";" + origin + ";" + angles
         if (isNext || index != (file.allProps.len() - 1)) {
             serialized += "|"
         }
@@ -500,17 +504,13 @@ vector function deserializeVector(string serialized, string type) {
     }
 }
 
+string function serializeVector(vector vec) {
+    return vec.x + "," + vec.y + "," + vec.z
+}
+
 /*
 void function SpawnDummyAtPlayer(entity player) {
-    entity dummy = CreateDummy(99, player.GetOrigin(), player.GetAngles())
-    DispatchSpawn( dummy )
-	
-    dummy.SetSkin(RandomInt(6))
-    
-    array<string> weapons = ["mp_weapon_vinson", "mp_weapon_mastiff", "mp_weapon_energy_shotgun", "mp_weapon_lstar"]
-    string randomWeapon = weapons[RandomInt(weapons.len())]
-    dummy.GiveWeapon(randomWeapon, WEAPON_INVENTORY_SLOT_ANY)
-    file.entityModifications.append(dummy)
+    SpawnDummyAtPosition(player.GetOrigin(), player.GetAngles())
 }
 
 void function SpawnDummyAtPosition(vector origin, vector angles) {
