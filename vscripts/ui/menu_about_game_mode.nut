@@ -33,7 +33,7 @@ void function OnAboutGameModeMenu_Open()
 	RuiSetFloat2( rui, "actualRes", < screenSize.width, screenSize.height, 0 > )
 
 	RuiSetString( rui, "aboutTitle", "About R5 Reloaded" )
-	RuiSetString( rui, "aboutText", "Temp Text, Temp Text, Temp Text, Temp Text, Temp Text, Temp Text, Temp Text, Temp Text, Temp Text, Temp Text, Temp Text" )
+	RuiSetString( rui, "aboutText", "Welcome to R5Reloaded! You can use F10 to open/close the server browser and ~ to open/close the console (Still need to add more here)" )
 }
 
 void function OnAboutGameModeMenu_Close()

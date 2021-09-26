@@ -1371,6 +1371,7 @@ void function ReadyShortcut_OnActivate( var panel )
 void function ReadyButton_OnActivate( var button )
 {
 	ClientCommand( "ccompanion" )
+	//AdvanceMenu( GetMenu( "SocialMenu" ) )
 }
 
 
