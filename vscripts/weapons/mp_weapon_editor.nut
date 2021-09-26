@@ -6,6 +6,11 @@ global function OnWeaponOwnerChanged_weapon_editor
 global function OnWeaponPrimaryAttack_weapon_editor
 global function ServerCallback_SwitchProp
 
+#if SERVER
+global function ClientCommand_UP
+global function ClientCommand_DOWN
+#endif
+
 struct
 {
 	array<var> inputHintRuis
@@ -34,8 +39,10 @@ void function MpWeaponEditor_Init()
     // AddClientCommandCallback("spawnpoint", ClientCommand_Spawnpoint)
 
     // in-editor functions
-    // AddClientCommandCallback("moveUp", ClientCommand_UP)
-    // AddClientCommandCallback("moveDown", ClientCommand_DOWN)
+    #if SERVER
+    AddClientCommandCallback("moveUp", ClientCommand_UP)
+    AddClientCommandCallback("moveDown", ClientCommand_DOWN)
+    #endif
     // AddClientCommandCallback("rotate", ClientCommand_Rotate)
     // AddClientCommandCallback("undo", ClientCommand_Undo)
 
@@ -131,13 +138,13 @@ void function ServerCallback_SwitchProp( entity player )
 void function StartNewPropPlacement(entity player)
 {
     #if SERVER
-    SetProp(player, CreatePropDynamic(file.playerPreferedBuilds[player], <0, 0, 0>, <0, 0, 0>, SOLID_VPHYSICS ))
+    SetProp(player, CreatePropDynamic(file.playerPreferedBuilds[player], <0, 0, file.offsetZ>, <0, 0, 0>, SOLID_VPHYSICS ))
     GetProp(player).NotSolid()
     GetProp(player).Hide()
     
     #elseif CLIENT
     if(player != GetLocalClientPlayer()) return;
-	SetProp(player, CreateClientSidePropDynamic( <0, 0, 0>, <0, 0, 0>, file.playerPreferedBuilds[player] ))
+	SetProp(player, CreateClientSidePropDynamic( <0, 0, file.offsetZ>, <0, 0, 0>, file.playerPreferedBuilds[player] ))
     DeployableModelHighlight( GetProp(player) )
     #endif
 
@@ -242,17 +249,21 @@ void function AddInputHint( string buttonText, string hintText)
 // CODE FROM THE OTHER VERSION OF THE MODEL TOOL
 // Most of this was written by Pebbers (@Vysteria on Github)
 
+#if SERVER
 bool function ClientCommand_UP(entity player, array<string> args)
 {
-    file.offsetZ += 2
+    file.offsetZ += 64
+    printl("moving up " + file.offsetZ)
     return true
 }
 
 bool function ClientCommand_DOWN(entity player, array<string> args)
 {
-    file.offsetZ -= 2
+    file.offsetZ -= 64
+    printl("moving down " + file.offsetZ)
     return true
 }
+#endif
 
 
 bool function ClientCommand_Model(entity player, array<string> args) {

@@ -176,6 +176,8 @@ void function InitWeaponScripts()
 	#if SERVER
 		//BallLightning_Init()
 	#endif
+
+	MpWeaponEditor_Init()
 }
 
 
