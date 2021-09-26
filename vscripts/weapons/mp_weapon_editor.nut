@@ -6,7 +6,7 @@ global function OnWeaponOwnerChanged_weapon_editor
 global function OnWeaponPrimaryAttack_weapon_editor
 global function ServerCallback_SwitchProp
 
-#if SERVER
+#if CLIENT
 global function ClientCommand_UP
 global function ClientCommand_DOWN
 #endif
@@ -39,9 +39,9 @@ void function MpWeaponEditor_Init()
     // AddClientCommandCallback("spawnpoint", ClientCommand_Spawnpoint)
 
     // in-editor functions
-    #if SERVER
-    AddClientCommandCallback("moveUp", ClientCommand_UP)
-    AddClientCommandCallback("moveDown", ClientCommand_DOWN)
+    #if CLIENT
+    RegisterConCommandTriggeredCallback( "weaponSelectPrimary0", ClientCommand_UP )
+    RegisterConCommandTriggeredCallback( "weaponSelectPrimary1", ClientCommand_DOWN )
     #endif
     // AddClientCommandCallback("rotate", ClientCommand_Rotate)
     // AddClientCommandCallback("undo", ClientCommand_Undo)
@@ -160,10 +160,12 @@ void function PlaceProp(entity player)
     #if SERVER
     GetProp(player).Show()
     GetProp(player).Solid()
+    printl("------------------------ Server offset: " + file.offsetZ)
     #elseif CLIENT
     if(player != GetLocalClientPlayer()) return;
     GetProp(player).Destroy()
     SetProp(player, null)
+    printl("------------------------ Client offset: " + file.offsetZ)
     #endif
 }
 
@@ -249,15 +251,15 @@ void function AddInputHint( string buttonText, string hintText)
 // CODE FROM THE OTHER VERSION OF THE MODEL TOOL
 // Most of this was written by Pebbers (@Vysteria on Github)
 
-#if SERVER
-bool function ClientCommand_UP(entity player, array<string> args)
+#if CLIENT
+bool function ClientCommand_UP(entity player)
 {
     file.offsetZ += 64
     printl("moving up " + file.offsetZ)
     return true
 }
 
-bool function ClientCommand_DOWN(entity player, array<string> args)
+bool function ClientCommand_DOWN(entity player)
 {
     file.offsetZ -= 64
     printl("moving down " + file.offsetZ)
