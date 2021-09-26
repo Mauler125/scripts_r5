@@ -172,6 +172,7 @@ void function InitWeaponScripts()
 	MpWeaponTrophy_Init()
 
 	MpWeaponBasicBolt_Init()
+	MpWeaponEditor_Init()
 
 	#if SERVER
 		//BallLightning_Init()

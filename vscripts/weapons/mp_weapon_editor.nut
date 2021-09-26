@@ -6,40 +6,49 @@ global function OnWeaponOwnerChanged_weapon_editor
 global function OnWeaponPrimaryAttack_weapon_editor
 global function ServerCallback_SwitchProp
 
+
+struct PropSaveInfo
+{
+    PropInfo& prop
+    vector origin
+    vector angles
+}
+
+PropInfo function NewPropInfo(asset model, vector originDisplacement)
+{
+    PropInfo prop
+    prop.model = model
+    prop.originDisplacement = originDisplacement
+    return prop
+}
+
 struct
 {
 	array<var> inputHintRuis
-    #if SERVER
-    table<entity, entity> playerProps
-    #elseif CLIENT
-    entity buildProp
-    #endif
-    table<entity, asset> playerPreferedBuilds
+    array<PropInfo> propInfoList
 } file
 
 
 void function MpWeaponEditor_Init()
 {
-
+    file.propInfoList.append(NewPropInfo($"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl", <0, 0, 0>))
+    file.propInfoList.append(NewPropInfo($"mdl/thunderdome/thunderdome_cage_wall_256x256_01.rmdl", <128, 0, 0>))
 }
 
 entity function GetProp(entity player)
 {
-    #if SERVER
-    return file.playerProps[player]
-    #elseif CLIENT
-    return file.buildProp
+    #if SERVER || CLIENT
+    return player.p.currentPropEntity
     #endif
     return null
 }
 
 void function SetProp(entity player, entity prop)
 {
-    #if SERVER
-    file.playerProps[player] = prop
-    #elseif CLIENT
-    file.buildProp = prop
+    #if SERVER || CLIENT
+    player.p.currentPropEntity = prop
     #endif
+    return null
 }
 
 
@@ -55,13 +64,13 @@ void function OnWeaponActivate_weapon_editor( entity weapon )
     AddInputHint( "%zoom%", "Switch Prop")
 
     #if SERVER
-    AddButtonPressedPlayerInputCallback( owner, IN_DUCK, ServerCallback_SwitchProp )
-    if( !(owner in file.playerProps) )
-    {
-        file.playerProps[owner] <- null
-    }
+    AddButtonPressedPlayerInputCallback( owner, IN_ZOOM, ServerCallback_SwitchProp )
     #endif
-    file.playerPreferedBuilds[owner] <- $"mdl/thunderdome/thunderdome_cage_wall_256x256_01.rmdl"
+    if(owner.p.selectedProp.model == $"")
+    {
+        owner.p.selectedProp = file.propInfoList[0]
+    }
+        
     
     StartNewPropPlacement(owner)
 }
@@ -73,7 +82,7 @@ void function OnWeaponDeactivate_weapon_editor( entity weapon )
     if(weapon.GetOwner() != GetLocalClientPlayer()) return;
     #endif
     #if SERVER
-    RemoveButtonPressedPlayerInputCallback( weapon.GetOwner(), IN_DUCK, ServerCallback_SwitchProp )
+    RemoveButtonPressedPlayerInputCallback( weapon.GetOwner(), IN_ZOOM, ServerCallback_SwitchProp )
     #endif
     if(IsValid(GetProp(weapon.GetOwner())))
     {
@@ -92,19 +101,8 @@ void function ServerCallback_SwitchProp( entity player )
     if(!IsValid( player )) return
     if(!IsAlive( player )) return
 
-    if(file.playerPreferedBuilds[player] == $"mdl/thunderdome/thunderdome_cage_wall_256x256_01.rmdl")
-    {
-        file.playerPreferedBuilds[player] = $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl"
-    }
-    else
-    {
-        file.playerPreferedBuilds[player] = $"mdl/thunderdome/thunderdome_cage_wall_256x256_01.rmdl"
-    }
-    if(IsValid(GetProp(player)))
-    {
-        GetProp(player).SetModel(file.playerPreferedBuilds[player])
-    }
-    
+    player.p.selectedProp = file.propInfoList[(file.propInfoList.find(player.p.selectedProp) + 1) % file.propInfoList.len()] // increment to next prop info in list
+    printl(player.p.selectedProp.model)
     #if SERVER
     Remote_CallFunction_Replay( player, "ServerCallback_SwitchProp", player )
     #endif
@@ -113,14 +111,14 @@ void function ServerCallback_SwitchProp( entity player )
 void function StartNewPropPlacement(entity player)
 {
     #if SERVER
-    SetProp(player, CreatePropDynamic(file.playerPreferedBuilds[player], <0, 0, 0>, <0, 0, 0>, SOLID_VPHYSICS ))
+    SetProp(player, CreatePropDynamic(player.p.selectedProp.model, <0, 0, 0>, <0, 0, 0>, SOLID_VPHYSICS ))
     GetProp(player).NotSolid()
     GetProp(player).Hide()
     
     #elseif CLIENT
     if(player != GetLocalClientPlayer()) return;
-	SetProp(player, CreateClientSidePropDynamic( <0, 0, 0>, <0, 0, 0>, file.playerPreferedBuilds[player] ))
-    DeployableModelHighlight( GetProp(player) )
+	SetProp(player, CreateClientSidePropDynamic( <0, 0, 0>, <0, 0, 0>, player.p.selectedProp.model ))
+    DeployableModelWarningHighlight( GetProp(player) )
     #endif
 
     #if SERVER
@@ -144,12 +142,14 @@ void function PlaceProp(entity player)
 
 void function PlaceProxyThink(entity player)
 {
-    float gridSize = 64
+    float gridSize = 256
 
     while( IsValid( GetProp(player) ) )
     {
         if(!IsValid( player )) return
         if(!IsAlive( player )) return
+
+        GetProp(player).SetModel( player.p.selectedProp.model )
 
 	    TraceResults result = TraceLine(player.EyePosition() + 5 * player.GetViewForward(), player.GetOrigin() + 200 * player.GetViewForward(), [player], TRACE_MASK_SHOT, TRACE_COLLISION_GROUP_PLAYER)
 
@@ -157,15 +157,32 @@ void function PlaceProxyThink(entity player)
         origin.x = floor(origin.x / gridSize) * gridSize
         origin.y = floor(origin.y / gridSize) * gridSize
         origin.z = floor(origin.z / gridSize) * gridSize
+        
+        vector offset = player.GetViewForward()
+        
+        // convert offset to -1 if value it's less than -0.5, 0 if it's between -0.5 and 0.5, and 1 if it's greater than 0.5
+
+        vector ang = VectorToAngles(player.GetViewForward())
+        ang.x = 0
+        ang.y = floor(clamp(ang.y + 45, -360, 360) / 90) * 90
+        ang.z = floor(clamp(ang.z + 45, -360, 360) / 90) * 90
+
+        offset = RotateVector(player.p.selectedProp.originDisplacement, ang)
+        // offset.x = offset.x * player.p.selectedProp.originDisplacement.x
+        // offset.y = offset.y * player.p.selectedProp.originDisplacement.y
+        // offset.z = offset.z * player.p.selectedProp.originDisplacement.z
+
+        origin = origin + offset
+        
 
         vector angles = VectorToAngles( -1 * player.GetViewVector() )
         angles.x = GetProp(player).GetAngles().x
-        angles.y = floor(angles.y / 90) * 90
+        angles.y = floor(clamp(angles.y - 45, -360, 360) / 90) * 90
 
         GetProp(player).SetOrigin( origin )
         GetProp(player).SetAngles( angles )
 
-        WaitFrame()
+        wait 0.1
     }
 }
 

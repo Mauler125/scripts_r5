@@ -152,6 +152,9 @@ global struct ClientPlayerStruct
 
 	array<int> freefallContrailFXHandles
 	int freefallWindEffectHandle = -1
+
+	PropInfo& selectedProp
+	entity currentPropEntity
 }
 
 

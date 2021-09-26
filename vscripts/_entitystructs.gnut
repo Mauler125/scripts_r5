@@ -659,6 +659,9 @@ global struct ServerPlayerStruct
 	float playerDamageDealt
 	int respawnsGiven
 	int revivesGiven
+
+	PropInfo& selectedProp
+	entity currentPropEntity
 }
 
 global struct ServerPlayerWaypoint
