@@ -6,14 +6,33 @@ global function OnWeaponOwnerChanged_weapon_editor
 global function OnWeaponPrimaryAttack_weapon_editor
 global function ServerCallback_SwitchProp
 
+<<<<<<< HEAD
 #if CLIENT
 global function ClientCommand_UP
 global function ClientCommand_DOWN
 #endif
+=======
+
+struct PropSaveInfo
+{
+    PropInfo& prop
+    vector origin
+    vector angles
+}
+
+PropInfo function NewPropInfo(asset model, vector originDisplacement)
+{
+    PropInfo prop
+    prop.model = model
+    prop.originDisplacement = originDisplacement
+    return prop
+}
+>>>>>>> b4cfca31f28a4ac8504af8b326f30d32c45ecf1f
 
 struct
 {
 	array<var> inputHintRuis
+<<<<<<< HEAD
     #if SERVER
     table<entity, entity> playerProps
     #elseif CLIENT
@@ -27,11 +46,15 @@ struct
     // array<LocPair> spawnPoints = []
 
     float offsetZ = 0
+=======
+    array<PropInfo> propInfoList
+>>>>>>> b4cfca31f28a4ac8504af8b326f30d32c45ecf1f
 } file
 
 
 void function MpWeaponEditor_Init()
 {
+<<<<<<< HEAD
     // save and load functions
     // AddClientCommandCallback("model", ClientCommand_Model)
     // AddClientCommandCallback("compile", ClientCommand_Compile)
@@ -46,25 +69,41 @@ void function MpWeaponEditor_Init()
     // AddClientCommandCallback("rotate", ClientCommand_Rotate)
     // AddClientCommandCallback("undo", ClientCommand_Undo)
 
+=======
+    file.propInfoList.append(NewPropInfo($"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl", <0, 0, 0>))
+    file.propInfoList.append(NewPropInfo($"mdl/thunderdome/thunderdome_cage_wall_256x256_01.rmdl", <128, 0, 0>))
+>>>>>>> b4cfca31f28a4ac8504af8b326f30d32c45ecf1f
 }
 
 entity function GetProp(entity player)
 {
+<<<<<<< HEAD
     #if SERVER
     return file.playerProps[player]
     #elseif CLIENT
     return file.buildProp
+=======
+    #if SERVER || CLIENT
+    return player.p.currentPropEntity
+>>>>>>> b4cfca31f28a4ac8504af8b326f30d32c45ecf1f
     #endif
     return null
 }
 
 void function SetProp(entity player, entity prop)
 {
+<<<<<<< HEAD
     #if SERVER
     file.playerProps[player] = prop
     #elseif CLIENT
     file.buildProp = prop
     #endif
+=======
+    #if SERVER || CLIENT
+    player.p.currentPropEntity = prop
+    #endif
+    return null
+>>>>>>> b4cfca31f28a4ac8504af8b326f30d32c45ecf1f
 }
 
 
@@ -77,6 +116,7 @@ void function OnWeaponActivate_weapon_editor( entity weapon )
     #endif
 
     AddInputHint( "%attack%", "Place Prop" )
+<<<<<<< HEAD
     AddInputHint( "%duck%", "Switch Prop")
 
     #if SERVER
@@ -87,6 +127,18 @@ void function OnWeaponActivate_weapon_editor( entity weapon )
     }
     #endif
     file.playerPreferedBuilds[owner] <- $"mdl/thunderdome/thunderdome_cage_wall_256x256_01.rmdl"
+=======
+    AddInputHint( "%zoom%", "Switch Prop")
+
+    #if SERVER
+    AddButtonPressedPlayerInputCallback( owner, IN_ZOOM, ServerCallback_SwitchProp )
+    #endif
+    if(owner.p.selectedProp.model == $"")
+    {
+        owner.p.selectedProp = file.propInfoList[0]
+    }
+        
+>>>>>>> b4cfca31f28a4ac8504af8b326f30d32c45ecf1f
     
     StartNewPropPlacement(owner)
 }
@@ -98,7 +150,11 @@ void function OnWeaponDeactivate_weapon_editor( entity weapon )
     if(weapon.GetOwner() != GetLocalClientPlayer()) return;
     #endif
     #if SERVER
+<<<<<<< HEAD
     RemoveButtonPressedPlayerInputCallback( weapon.GetOwner(), IN_DUCK, ServerCallback_SwitchProp )
+=======
+    RemoveButtonPressedPlayerInputCallback( weapon.GetOwner(), IN_ZOOM, ServerCallback_SwitchProp )
+>>>>>>> b4cfca31f28a4ac8504af8b326f30d32c45ecf1f
     #endif
     if(IsValid(GetProp(weapon.GetOwner())))
     {
@@ -117,6 +173,7 @@ void function ServerCallback_SwitchProp( entity player )
     if(!IsValid( player )) return
     if(!IsAlive( player )) return
 
+<<<<<<< HEAD
     if(file.playerPreferedBuilds[player] == $"mdl/thunderdome/thunderdome_cage_wall_256x256_01.rmdl")
     {
         file.playerPreferedBuilds[player] = $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl"
@@ -130,6 +187,10 @@ void function ServerCallback_SwitchProp( entity player )
         GetProp(player).SetModel(file.playerPreferedBuilds[player])
     }
     
+=======
+    player.p.selectedProp = file.propInfoList[(file.propInfoList.find(player.p.selectedProp) + 1) % file.propInfoList.len()] // increment to next prop info in list
+    printl(player.p.selectedProp.model)
+>>>>>>> b4cfca31f28a4ac8504af8b326f30d32c45ecf1f
     #if SERVER
     Remote_CallFunction_Replay( player, "ServerCallback_SwitchProp", player )
     #endif
@@ -138,14 +199,23 @@ void function ServerCallback_SwitchProp( entity player )
 void function StartNewPropPlacement(entity player)
 {
     #if SERVER
+<<<<<<< HEAD
     SetProp(player, CreatePropDynamic(file.playerPreferedBuilds[player], <0, 0, file.offsetZ>, <0, 0, 0>, SOLID_VPHYSICS ))
+=======
+    SetProp(player, CreatePropDynamic(player.p.selectedProp.model, <0, 0, 0>, <0, 0, 0>, SOLID_VPHYSICS ))
+>>>>>>> b4cfca31f28a4ac8504af8b326f30d32c45ecf1f
     GetProp(player).NotSolid()
     GetProp(player).Hide()
     
     #elseif CLIENT
     if(player != GetLocalClientPlayer()) return;
+<<<<<<< HEAD
 	SetProp(player, CreateClientSidePropDynamic( <0, 0, file.offsetZ>, <0, 0, 0>, file.playerPreferedBuilds[player] ))
     DeployableModelHighlight( GetProp(player) )
+=======
+	SetProp(player, CreateClientSidePropDynamic( <0, 0, 0>, <0, 0, 0>, player.p.selectedProp.model ))
+    DeployableModelWarningHighlight( GetProp(player) )
+>>>>>>> b4cfca31f28a4ac8504af8b326f30d32c45ecf1f
     #endif
 
     #if SERVER
@@ -160,39 +230,83 @@ void function PlaceProp(entity player)
     #if SERVER
     GetProp(player).Show()
     GetProp(player).Solid()
+<<<<<<< HEAD
     printl("------------------------ Server offset: " + file.offsetZ)
+=======
+>>>>>>> b4cfca31f28a4ac8504af8b326f30d32c45ecf1f
     #elseif CLIENT
     if(player != GetLocalClientPlayer()) return;
     GetProp(player).Destroy()
     SetProp(player, null)
+<<<<<<< HEAD
     printl("------------------------ Client offset: " + file.offsetZ)
+=======
+>>>>>>> b4cfca31f28a4ac8504af8b326f30d32c45ecf1f
     #endif
 }
 
 void function PlaceProxyThink(entity player)
 {
+<<<<<<< HEAD
     float gridSize = 64
+=======
+    float gridSize = 256
+>>>>>>> b4cfca31f28a4ac8504af8b326f30d32c45ecf1f
 
     while( IsValid( GetProp(player) ) )
     {
         if(!IsValid( player )) return
         if(!IsAlive( player )) return
 
+<<<<<<< HEAD
+=======
+        GetProp(player).SetModel( player.p.selectedProp.model )
+
+>>>>>>> b4cfca31f28a4ac8504af8b326f30d32c45ecf1f
 	    TraceResults result = TraceLine(player.EyePosition() + 5 * player.GetViewForward(), player.GetOrigin() + 200 * player.GetViewForward(), [player], TRACE_MASK_SHOT, TRACE_COLLISION_GROUP_PLAYER)
 
         vector origin = result.endPos
         origin.x = floor(origin.x / gridSize) * gridSize
         origin.y = floor(origin.y / gridSize) * gridSize
+<<<<<<< HEAD
         origin.z = (floor(origin.z / gridSize) * gridSize) + file.offsetZ
 
         vector angles = VectorToAngles( -1 * player.GetViewVector() )
         angles.x = GetProp(player).GetAngles().x
         angles.y = floor(angles.y / 90) * 90
+=======
+        origin.z = floor(origin.z / gridSize) * gridSize
+        
+        vector offset = player.GetViewForward()
+        
+        // convert offset to -1 if value it's less than -0.5, 0 if it's between -0.5 and 0.5, and 1 if it's greater than 0.5
+
+        vector ang = VectorToAngles(player.GetViewForward())
+        ang.x = 0
+        ang.y = floor(clamp(ang.y + 45, -360, 360) / 90) * 90
+        ang.z = floor(clamp(ang.z + 45, -360, 360) / 90) * 90
+
+        offset = RotateVector(player.p.selectedProp.originDisplacement, ang)
+        // offset.x = offset.x * player.p.selectedProp.originDisplacement.x
+        // offset.y = offset.y * player.p.selectedProp.originDisplacement.y
+        // offset.z = offset.z * player.p.selectedProp.originDisplacement.z
+
+        origin = origin + offset
+        
+
+        vector angles = VectorToAngles( -1 * player.GetViewVector() )
+        angles.x = GetProp(player).GetAngles().x
+        angles.y = floor(clamp(angles.y - 45, -360, 360) / 90) * 90
+>>>>>>> b4cfca31f28a4ac8504af8b326f30d32c45ecf1f
 
         GetProp(player).SetOrigin( origin )
         GetProp(player).SetAngles( angles )
 
+<<<<<<< HEAD
         WaitFrame()
+=======
+        wait 0.1
+>>>>>>> b4cfca31f28a4ac8504af8b326f30d32c45ecf1f
     }
 }
 
@@ -244,6 +358,7 @@ void function AddInputHint( string buttonText, string hintText)
     file.inputHintRuis.append( hintRui )
 
     #endif
+<<<<<<< HEAD
 }
 
 
@@ -503,4 +618,6 @@ vector function PlayerLookingAtVec(entity player) {
 	TraceResults result = TraceLine( start, end )
 
 	return result.endPos
+=======
+>>>>>>> b4cfca31f28a4ac8504af8b326f30d32c45ecf1f
 }

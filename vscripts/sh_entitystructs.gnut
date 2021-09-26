@@ -69,3 +69,11 @@ global typedef EHISignalDummy entity
 #elseif CLIENT || UI
 global typedef EHISignalDummy EHIScriptStruct
 #endif
+
+#if SERVER || CLIENT
+global struct PropInfo
+{
+    asset model
+    vector originDisplacement
+}
+#endif

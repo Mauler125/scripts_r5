@@ -50,6 +50,7 @@ global function SonarViewModelHighlight
 global function SonarViewModelClearHighlight
 global function SonarPlayerCloneHighlight
 global function DeployableModelHighlight
+global function DeployableModelWarningHighlight
 global function DeployableModelInvalidHighlight
 global function PingViewModelHighlight
 global function PingViewModelClearHighlight
@@ -1603,6 +1604,18 @@ void function DeployableModelHighlight( entity viewModelEntity )
 	int highlightId = viewModelEntity.Highlight_GetState( HIGHLIGHT_CONTEXT_NEUTRAL )
 	viewModelEntity.Highlight_SetFunctions( HIGHLIGHT_CONTEXT_NEUTRAL, HIGHLIGHT_FILL_VM_CUSTOM_COLOR, true, HIGHLIGHT_OUTLINE_VM_CUSTOM_COLOR, 8.0, highlightId, false )
 	viewModelEntity.Highlight_SetParam( HIGHLIGHT_CONTEXT_NEUTRAL, 0, HIGHLIGHT_COLOR_INTERACT )
+	//viewModelEntity.Highlight_SetFadeInTime( 0.25 )
+	//viewModelEntity.Highlight_SetFadeOutTime( 0.25 )
+	viewModelEntity.Highlight_StartOn()
+}
+
+void function DeployableModelWarningHighlight( entity viewModelEntity )
+{
+	viewModelEntity.Highlight_SetVisibilityType( HIGHLIGHT_VIS_ALWAYS )
+	viewModelEntity.Highlight_SetCurrentContext( HIGHLIGHT_CONTEXT_NEUTRAL )
+	int highlightId = viewModelEntity.Highlight_GetState( HIGHLIGHT_CONTEXT_NEUTRAL )
+	viewModelEntity.Highlight_SetFunctions( HIGHLIGHT_CONTEXT_NEUTRAL, HIGHLIGHT_FILL_VM_CUSTOM_COLOR, true, HIGHLIGHT_OUTLINE_VM_CUSTOM_COLOR, 8.0, highlightId, false )
+	viewModelEntity.Highlight_SetParam( HIGHLIGHT_CONTEXT_NEUTRAL, 0, <0.2, 0.8, 1> )
 	//viewModelEntity.Highlight_SetFadeInTime( 0.25 )
 	//viewModelEntity.Highlight_SetFadeOutTime( 0.25 )
 	viewModelEntity.Highlight_StartOn()
