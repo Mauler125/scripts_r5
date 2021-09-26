@@ -47,6 +47,10 @@ void function OnWeaponActivate_weapon_editor( entity weapon )
 {
     entity owner = weapon.GetOwner()
 
+    #if CLIENT
+    if(owner != GetLocalClientPlayer()) return;
+    #endif
+
     AddInputHint( "%attack%", "Place Prop" )
     AddInputHint( "%zoom%", "Switch Prop")
 
@@ -65,15 +69,23 @@ void function OnWeaponActivate_weapon_editor( entity weapon )
 void function OnWeaponDeactivate_weapon_editor( entity weapon )
 {
     RemoveAllHints()
+    #if CLIENT
+    if(weapon.GetOwner() != GetLocalClientPlayer()) return;
+    #endif
     #if SERVER
     RemoveButtonPressedPlayerInputCallback( weapon.GetOwner(), IN_DUCK, ServerCallback_SwitchProp )
     #endif
-    GetProp(weapon.GetOwner()).Destroy()
+    if(IsValid(GetProp(weapon.GetOwner())))
+    {
+        GetProp(weapon.GetOwner()).Destroy()
+    }
+    
 }
 
 void function ServerCallback_SwitchProp( entity player )
 {
     #if CLIENT
+    if(player != GetLocalClientPlayer()) return;
     player = GetLocalClientPlayer()
     #endif
 
@@ -88,8 +100,11 @@ void function ServerCallback_SwitchProp( entity player )
     {
         file.playerPreferedBuilds[player] = $"mdl/thunderdome/thunderdome_cage_wall_256x256_01.rmdl"
     }
-
-    GetProp(player).SetModel(file.playerPreferedBuilds[player])
+    if(IsValid(GetProp(player)))
+    {
+        GetProp(player).SetModel(file.playerPreferedBuilds[player])
+    }
+    
     #if SERVER
     Remote_CallFunction_Replay( player, "ServerCallback_SwitchProp", player )
     #endif
@@ -103,6 +118,7 @@ void function StartNewPropPlacement(entity player)
     GetProp(player).Hide()
     
     #elseif CLIENT
+    if(player != GetLocalClientPlayer()) return;
 	SetProp(player, CreateClientSidePropDynamic( <0, 0, 0>, <0, 0, 0>, file.playerPreferedBuilds[player] ))
     DeployableModelHighlight( GetProp(player) )
     #endif
@@ -120,6 +136,7 @@ void function PlaceProp(entity player)
     GetProp(player).Show()
     GetProp(player).Solid()
     #elseif CLIENT
+    if(player != GetLocalClientPlayer()) return;
     GetProp(player).Destroy()
     SetProp(player, null)
     #endif
