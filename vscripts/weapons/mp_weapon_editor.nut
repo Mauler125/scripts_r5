@@ -12,11 +12,11 @@ global function ClientCommand_Compile
 global function ClientCommand_Load
 global function ClientCommand_Spawnpoint
 
-global function ServerCommand_UP
-global function ServerCommand_DOWN
+global function ClientCommand_UP_Server
+global function ClientCommand_DOWN_Server
 #elseif CLIENT
-global function ClientCommand_UP
-global function ClientCommand_DOWN
+global function ClientCommand_UP_Client
+global function ClientCommand_DOWN_Client
 #endif
 
 struct PropSaveInfo
@@ -337,14 +337,14 @@ void function AddInputHint( string buttonText, string hintText)
 // Most of this was written by Pebbers (@Vysteria on Github)
 
 #if SERVER
-bool function ServerCommand_UP(entity player, array<string> args)
+bool function ClientCommand_UP_Server(entity player, array<string> args)
 {
     file.offsets[player] += 64
     printl("moving up " + file.offsets[player])
     return true
 }
 
-bool function ServerCommand_DOWN(entity player, array<string> args)
+bool function ClientCommand_DOWN_Server(entity player, array<string> args)
 {
     file.offsets[player] -= 64
     printl("moving down " + file.offsets[player])
@@ -431,7 +431,7 @@ bool function ClientCommand_UP_Client(entity player)
     return true
 }
 
-bool function ClientCommand_DOWN(entity player)
+bool function ClientCommand_DOWN_Client(entity player)
 {
     GetLocalClientPlayer().ClientCommand("moveDown")
     file.offsetZ -= 64
