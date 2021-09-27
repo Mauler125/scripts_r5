@@ -6,13 +6,8 @@ global function OnWeaponOwnerChanged_weapon_editor
 global function OnWeaponPrimaryAttack_weapon_editor
 
 #if SERVER
-global function ClientCommand_Compile
-
-global function ClientCommand_UP_Server
-global function ClientCommand_DOWN_Server
-#elseif CLIENT
-global function ClientCommand_UP_Client
-global function ClientCommand_DOWN_Client
+global function ClientCommand_Compile 
+global function ClientCommand_Load
 #endif
 
 struct PropSaveInfo
@@ -25,7 +20,6 @@ struct PropSaveInfo
 
 struct
 {
-
     // store the props here for saving and loading
     array<entity> allProps
     array<EditorMode> editorModes
@@ -35,28 +29,6 @@ struct
 
 void function MpWeaponEditor_Init()
 {
-    // save and load functions
-    #if SERVER
-    // AddClientCommandCallback("model", ClientCommand_Model)
-    AddClientCommandCallback("compile", ClientCommand_Compile)
-    // AddClientCommandCallback("load", ClientCommand_Load)
-    // AddClientCommandCallback("spawnpoint", ClientCommand_Spawnpoint)
-    #endif
-
-    // in-editor functions
-    #if CLIENT
-    RegisterConCommandTriggeredCallback( "weaponSelectPrimary0", ClientCommand_UP_Client )
-    RegisterConCommandTriggeredCallback( "weaponSelectPrimary1", ClientCommand_DOWN_Client )
-    #elseif SERVER
-    AddClientCommandCallback("moveUp", ClientCommand_UP_Server )
-    AddClientCommandCallback("moveDown", ClientCommand_DOWN_Server )
-    #endif
-
-
-    // AddClientCommandCallback("rotate", ClientCommand_Rotate)
-    // AddClientCommandCallback("undo", ClientCommand_Undo)
-
-
     file.editorModes.append(EditorModePlace_Init())
 }
 
@@ -72,6 +44,7 @@ void function OnWeaponActivate_weapon_editor( entity weapon )
 
     player.p.selectedEditorMode = file.editorModes[0]
     player.p.selectedEditorMode.onActivationCallback(player)
+
 }
 
 void function OnWeaponDeactivate_weapon_editor( entity weapon )
@@ -95,7 +68,7 @@ var function OnWeaponPrimaryAttack_weapon_editor( entity weapon, WeaponPrimaryAt
     #elseif SERVER
     entity player = weapon.GetOwner()
     #endif
-
+    
     player.p.selectedEditorMode = file.editorModes[0]
     player.p.selectedEditorMode.onAttackCallback(player)
 }
@@ -120,116 +93,6 @@ bool function OnWeaponAttemptOffhandSwitch_weapon_editor( entity weapon )
 // CODE FROM THE OTHER VERSION OF THE MODEL TOOL
 // Most of this was written by Pebbers (@Vysteria on Github)
 
-#if SERVER
-bool function ClientCommand_UP_Server(entity player, array<string> args)
-{
-    file.offsetZ += 64
-    printl("moving up " + file.offsetZ)
-    return true
-}
-
-bool function ClientCommand_DOWN_Server(entity player, array<string> args)
-{
-    file.offsetZ -= 64
-    printl("moving down " + file.offsetZ)
-    return true
-}
-
-#elseif CLIENT
-bool function ClientCommand_UP_Client(entity player)
-{
-    GetLocalClientPlayer().ClientCommand("moveUp")
-    file.offsetZ += 64
-    return true
-}
-
-bool function ClientCommand_DOWN_Client(entity player)
-{
-    GetLocalClientPlayer().ClientCommand("moveDown")
-    file.offsetZ -= 64
-    return true
-}
-#endif
-
-bool function ClientCommand_Model(entity player, array<string> args) {
-// 	if (args.len() < 1) {
-// 		return false
-// 	}
-
-// 	try {
-// 		string modelName = args[0]
-// 	    file.buildProp = CastStringToAsset(modelName)
-// 		file.currentModelName = modelName
-//   } catch (error) {
-// 		printl(error)
-// 	}
-	return true
-}
-
-#if SERVER
-bool function ClientCommand_Compile(entity player, array<string> args) {
-    printl("SERIALIZED: " + serialize())
-    return true
-}
-#endif
-
-bool function ClientCommand_Load(entity player, array<string> args) {
-    // if (args.len() == 0) {
-    //     printl("USAGE: load \"<serialized code>\"")
-    //     return false
-    // }
-
-    // string serializedCode = args[0]
-    // file.entityModifications = deserialize(serializedCode, true)
-    return true
-}
-
-bool function ClientCommand_Spawnpoint(entity player, array<string> args) {
-    // if (file.currentEditor != null) {
-    //     vector origin = player.GetOrigin()
-    //     vector angles = player.GetAngles()
-
-    //     LocPair pair = NewLocPair(origin, angles)
-    //     file.spawnPoints.append(pair)
-    //     printl("Successfully added position " + origin + " " + angles)
-    //     SpawnDummyAtPlayer(player)
-    // } else {
-    //     printl("You must be in editor mode")
-    //     return false
-    // }
-    return true
-}
-
-
-
-
-bool function ClientCommand_Rotate(entity player, array<string> args) {
-    return true
-}
-
-bool function ClientCommand_Undo(entity player, array<string> args) {
-    return true
-}
-
-// deleted createFRProp
-
-asset function CastStringToAsset( string val ) {
-	return GetKeyValueAsAsset( {kn = val}, "kn")
-}
-
-// Snaps a number to the nearest size
-int function snapTo( float f, int size ) {
-    return ((f / size).tointeger()) * size
-}
-
-// Snaps a vector to the grid of size
-vector function snapVec( vector vec, int size  ) {
-    int x = snapTo(vec.x, size)
-    int y = snapTo(vec.y, size)
-    int z = snapTo(vec.z, size)
-
-    return <x,y,z>
-}
 
 
 string function serialize() {
@@ -274,19 +137,15 @@ string function serialize() {
 array<entity> function deserialize(string serialized, bool dummies) {
     array<string> sections = split(serialized, "|")
     array<entity> entities = []
-
     int index = 0
     foreach(section in sections) {
         index++
-
         bool isModelSection = section.find("m:") != -1
         bool isPositionSection = section.find("s:") != -1
         
         if (isModelSection) {
             string payload = StringReplace(section, "m:", "")
-
             array<string> payloadSections = split(payload, ";")
-
             if (payloadSections.len() < 3) {
                 printl("Problem with loading model: Less than 3 payloadSections ")
                 foreach(psec in payloadSections) {
@@ -294,7 +153,6 @@ array<entity> function deserialize(string serialized, bool dummies) {
                 }
                 continue
             }
-
             string modelName = payloadSections[0]
             vector origin = deserializeVector(payloadSections[1], "origin")
             vector angles = deserializeVector(payloadSections[2], "angles")
@@ -303,9 +161,7 @@ array<entity> function deserialize(string serialized, bool dummies) {
             printl("Loading model: " + modelName + " at " + origin + " with angle " + angles)
         } else if (isPositionSection) { 
             string payload = StringReplace(section, "s:", "")
-
             array<string> payloadSections = split(payload, ";")
-
             if (payloadSections.len() < 2) {
                 printl("Problem with loading model: Less than 2 payloadSections ")
                 foreach(psec in payloadSections) {
@@ -313,7 +169,6 @@ array<entity> function deserialize(string serialized, bool dummies) {
                 }
                 continue
             }
-
             vector origin = deserializeVector(payloadSections[0], "origin")
             vector angles = deserializeVector(payloadSections[1], "angles")
             
@@ -349,43 +204,20 @@ string function serializeVector(vector vec) {
     return vec.x + "," + vec.y + "," + vec.z
 }
 
-/*
-void function SpawnDummyAtPlayer(entity player) {
-    SpawnDummyAtPosition(player.GetOrigin(), player.GetAngles())
+#if SERVER
+bool function ClientCommand_Compile(entity player, array<string> args) {
+    printl("SERIALIZED: " + serialize())
+    return true
 }
+#endif
 
-void function SpawnDummyAtPosition(vector origin, vector angles) {
-    entity dummy = CreateDummy(99, origin, angles)
-    DispatchSpawn( dummy )
-	
-    dummy.SetSkin(RandomInt(6))
-    
-    array<string> weapons = ["mp_weapon_vinson", "mp_weapon_mastiff", "mp_weapon_energy_shotgun", "mp_weapon_lstar"]
-    string randomWeapon = weapons[RandomInt(weapons.len())]
-    dummy.GiveWeapon(randomWeapon, WEAPON_INVENTORY_SLOT_ANY)
-}
-*/
+bool function ClientCommand_Load(entity player, array<string> args) {
+    // if (args.len() == 0) {
+    //     printl("USAGE: load \"<serialized code>\"")
+    //     return false
+    // }
 
-TraceResults function PlayerLookingAtRes(entity player) {
-    vector angles = player.EyeAngles()
-	vector forward = AnglesToForward( angles )
-	vector origin = player.EyePosition()
-
-	vector start = origin
-	vector end = origin + forward * 50000
-	TraceResults result = TraceLine( start, end )
-
-	return result
-}
-
-vector function PlayerLookingAtVec(entity player) {
-    vector angles = player.EyeAngles()
-	vector forward = AnglesToForward( angles )
-	vector origin = player.EyePosition()
-
-	vector start = origin
-	vector end = origin + forward * 50000
-	TraceResults result = TraceLine( start, end )
-
-	return result.endPos
+    // string serializedCode = args[0]
+    // file.entityModifications = deserialize(serializedCode, true)
+    return true
 }
