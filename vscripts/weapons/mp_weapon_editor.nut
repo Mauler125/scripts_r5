@@ -38,10 +38,19 @@ struct
 {
 	array<var> inputHintRuis
     array<PropInfo> propInfoList
-    float offsetZ = 0
 
     // store the props here for saving and loading
     array<entity> allProps
+    // not using player.p.xxx because I already did this using these variables and I am not rewriting everything.
+    #if SERVER
+    table<entity, float> snapSizes
+    table<entity, float> pitches
+    table<entity, float> offsets
+    #elseif CLIENT
+    float snapSize = 64
+    float pitch = 0
+    float offsetZ = 0
+    #endif
 
 } file
 
@@ -58,11 +67,14 @@ void function MpWeaponEditor_Init()
 
     // in-editor functions
     #if CLIENT
-    RegisterConCommandTriggeredCallback( "weaponSelectPrimary0", ClientCommand_UP )
-    RegisterConCommandTriggeredCallback( "weaponSelectPrimary1", ClientCommand_DOWN )
+    // should not be here. wait until weapon is equipped.
+    //RegisterConCommandTriggeredCallback( "weaponSelectPrimary0", ClientCommand_UP_Client )
+    //RegisterConCommandTriggeredCallback( "weaponSelectPrimary1", ClientCommand_DOWN_Client )
     #elseif SERVER
-    AddClientCommandCallback("moveUp", ServerCommand_UP )
-    AddClientCommandCallback("moveDown", ServerCommand_DOWN )
+    AddClientCommandCallback("moveUp", ClientCommand_UP_Server )
+    AddClientCommandCallback("moveDown", ClientCommand_DOWN_Server )
+    AddClientCommandCallback( "ChangeSnapSize", ChangeSnapSize)
+    AddClientCommandCallback( "ChangeRotation", ChangeRotation)
     #endif
 
 
@@ -96,13 +108,33 @@ void function OnWeaponActivate_weapon_editor( entity weapon )
 
     #if CLIENT
     if(owner != GetLocalClientPlayer()) return;
+    RegisterConCommandTriggeredCallback( "+scriptCommand1", SwapToNextSnapSize )
+    RegisterConCommandTriggeredCallback( "+scriptCommand6", SwapToNextPitch )
+    RegisterConCommandTriggeredCallback( "weaponSelectPrimary0", ClientCommand_UP_Client )
+    RegisterConCommandTriggeredCallback( "weaponSelectPrimary1", ClientCommand_DOWN_Client )
     #endif
 
     AddInputHint( "%attack%", "Place Prop" )
     AddInputHint( "%zoom%", "Switch Prop")
+    AddInputHint( "%scriptCommand1%", "Change Snap Size" )
+    AddInputHint( "%scriptCommand6%", "Change Rotation" )
+    AddInputHint( "%weaponSelectPrimary0%", "Raise" )
+    AddInputHint( "%weaponSelectPrimary1%", "Lower" )
 
     #if SERVER
     AddButtonPressedPlayerInputCallback( owner, IN_ZOOM, ServerCallback_SwitchProp )
+    if( !(owner in file.snapSizes) )
+    {
+        file.snapSizes[owner] <- 64
+    }
+    if( !(owner in file.pitches) )
+    {
+        file.pitches[owner] <- 0
+    }
+    if( !(owner in file.offsets) )
+    {
+        file.offsets[owner] <- 0
+    }
     #endif
     if(owner.p.selectedProp.model == $"")
     {
@@ -118,6 +150,13 @@ void function OnWeaponDeactivate_weapon_editor( entity weapon )
     RemoveAllHints()
     #if CLIENT
     if(weapon.GetOwner() != GetLocalClientPlayer()) return;
+    // deregister here so no errors. 
+    // we're also deregistering so we don't change the z offset while we are doing something else e.g. playtesting.
+    // should also use +scriptCommands. Seriously.
+    DeregisterConCommandTriggeredCallback( "weaponSelectPrimary0", ClientCommand_UP_Client )
+    DeregisterConCommandTriggeredCallback( "weaponSelectPrimary1", ClientCommand_DOWN_Client )
+    DeregisterConCommandTriggeredCallback( "+scriptCommand1", SwapToNextSnapSize )
+    DeregisterConCommandTriggeredCallback( "+scriptCommand6", SwapToNextPitch )
     #endif
     #if SERVER
     RemoveButtonPressedPlayerInputCallback( weapon.GetOwner(), IN_ZOOM, ServerCallback_SwitchProp )
@@ -149,7 +188,7 @@ void function ServerCallback_SwitchProp( entity player )
 void function StartNewPropPlacement(entity player)
 {
     #if SERVER
-    SetProp(player, CreatePropDynamic( player.p.selectedProp.model, <0, 0, file.offsetZ>, <0, 0, 0>, SOLID_VPHYSICS ))
+    SetProp(player, CreatePropDynamic( player.p.selectedProp.model, <0, 0, file.offsets[player]>, <0, 0, 0>, SOLID_VPHYSICS ))
     GetProp(player).NotSolid()
     GetProp(player).Hide()
     
@@ -172,7 +211,7 @@ void function PlaceProp(entity player)
     #if SERVER
     GetProp(player).Show()
     GetProp(player).Solid()
-    printl("------------------------ Server offset: " + file.offsetZ)
+    printl("------------------------ Server offset: " + file.offsets[player])
     #elseif CLIENT
     if(player != GetLocalClientPlayer()) return;
     GetProp(player).Destroy()
@@ -187,6 +226,11 @@ void function PlaceProxyThink(entity player)
 
     while( IsValid( GetProp(player) ) )
     {
+        #if CLIENT
+        gridSize = file.snapSize
+        #elseif SERVER
+        gridSize = file.snapSizes[player]
+        #endif
         if(!IsValid( player )) return
         if(!IsAlive( player )) return
 
@@ -197,7 +241,12 @@ void function PlaceProxyThink(entity player)
         vector origin = result.endPos
         origin.x = floor(origin.x / gridSize) * gridSize
         origin.y = floor(origin.y / gridSize) * gridSize
-        origin.z = floor((origin.z / gridSize) * gridSize) + file.offsetZ
+        origin.z = (floor(origin.z / gridSize) * gridSize)
+        #if CLIENT
+        origin.z += file.offsetZ
+        #elseif SERVER
+        origin.z += file.offsets[player]
+        #endif
         
         vector offset = player.GetViewForward()
         
@@ -219,6 +268,11 @@ void function PlaceProxyThink(entity player)
         vector angles = VectorToAngles( -1 * player.GetViewVector() )
         angles.x = GetProp(player).GetAngles().x
         angles.y = floor(clamp(angles.y - 45, -360, 360) / 90) * 90
+        #if CLIENT
+        angles.z += file.pitch
+        #elseif SERVER
+        angles.z += file.pitches[player]
+        #endif
 
         GetProp(player).SetOrigin( origin )
         GetProp(player).SetAngles( angles )
@@ -285,20 +339,92 @@ void function AddInputHint( string buttonText, string hintText)
 #if SERVER
 bool function ServerCommand_UP(entity player, array<string> args)
 {
-    file.offsetZ += 64
-    printl("moving up " + file.offsetZ)
+    file.offsets[player] += 64
+    printl("moving up " + file.offsets[player])
     return true
 }
 
 bool function ServerCommand_DOWN(entity player, array<string> args)
 {
-    file.offsetZ -= 64
-    printl("moving down " + file.offsetZ)
+    file.offsets[player] -= 64
+    printl("moving down " + file.offsets[player])
+    return true
+}
+bool function ChangeSnapSize( entity player, array<string> args )
+{
+    if (args[0] == "") return true
+    
+    if( !(player in file.snapSizes) )
+    {
+        file.snapSizes[player] <- args[0].tofloat()
+    }
+    file.snapSizes[player] = args[0].tofloat()
+
     return true
 }
 
+bool function ChangeRotation( entity player, array<string> args )
+{
+    if (args[0] == "") return true
+    
+    printl(args[0].tofloat())
+    if( !(player in file.pitches) )
+    {
+        file.pitches[player] <- args[0].tofloat()
+    }
+    file.pitches[player] = args[0].tofloat()
+
+    return true
+}
 #elseif CLIENT
-bool function ClientCommand_UP(entity player)
+void function SwapToNextSnapSize(entity player)
+{
+    if (player != GetLocalClientPlayer()) return;
+    switch (file.snapSize)
+    {
+        case 64:
+            file.snapSize = 128
+            player.ClientCommand( "ChangeSnapSize 128" )
+            break;
+        case 128:
+            file.snapSize = 256
+            player.ClientCommand( "ChangeSnapSize 256" )
+            break;
+        case 256:
+            file.snapSize = 4
+            player.ClientCommand( "ChangeSnapSize 4" )
+            break;
+        default:
+            file.snapSize = 64
+            player.ClientCommand( "ChangeSnapSize 64" )
+            break;
+    }
+}
+void function SwapToNextPitch(entity player)
+{
+    if (player != GetLocalClientPlayer()) return;
+    switch (file.pitch)
+    {
+        case 0:
+            file.pitch = 30
+            player.ClientCommand( "ChangeRotation 30" )
+            break;
+        case 30:
+            file.pitch = 35
+            player.ClientCommand( "ChangeRotation 35" )
+            break;
+        case 35:
+            file.pitch = 45
+            player.ClientCommand( "ChangeRotation 45" )
+            break;
+        case 45:
+        default:
+            file.pitch = 0
+            player.ClientCommand( "ChangeRotation 0" )
+            break;
+    }
+}
+bool function ClientCommand_UP_Client(entity player)
 {
     GetLocalClientPlayer().ClientCommand("moveUp")
     file.offsetZ += 64
@@ -314,17 +440,19 @@ bool function ClientCommand_DOWN(entity player)
 #endif
 
 bool function ClientCommand_Model(entity player, array<string> args) {
-// 	if (args.len() < 1) {
-// 		return false
-// 	}
+    /* 	
+    if (args.len() < 1) {
+		return false
+ 	}
 
-// 	try {
-// 		string modelName = args[0]
-// 	    file.buildProp = CastStringToAsset(modelName)
-// 		file.currentModelName = modelName
-//   } catch (error) {
-// 		printl(error)
-// 	}
+ 	try {
+ 		string modelName = args[0]
+ 	    file.buildProp = CastStringToAsset(modelName)
+ 		file.currentModelName = modelName
+    } catch (error) {
+ 		printl(error)
+ 	}
+    */
 	return true
 }
 
@@ -436,19 +564,15 @@ string function serialize() {
 array<entity> function deserialize(string serialized, bool dummies) {
     array<string> sections = split(serialized, "|")
     array<entity> entities = []
-
     int index = 0
     foreach(section in sections) {
         index++
-
         bool isModelSection = section.find("m:") != -1
         bool isPositionSection = section.find("s:") != -1
         
         if (isModelSection) {
             string payload = StringReplace(section, "m:", "")
-
             array<string> payloadSections = split(payload, ";")
-
             if (payloadSections.len() < 3) {
                 printl("Problem with loading model: Less than 3 payloadSections ")
                 foreach(psec in payloadSections) {
@@ -456,7 +580,6 @@ array<entity> function deserialize(string serialized, bool dummies) {
                 }
                 continue
             }
-
             string modelName = payloadSections[0]
             vector origin = deserializeVector(payloadSections[1], "origin")
             vector angles = deserializeVector(payloadSections[2], "angles")
@@ -465,9 +588,7 @@ array<entity> function deserialize(string serialized, bool dummies) {
             printl("Loading model: " + modelName + " at " + origin + " with angle " + angles)
         } else if (isPositionSection) { 
             string payload = StringReplace(section, "s:", "")
-
             array<string> payloadSections = split(payload, ";")
-
             if (payloadSections.len() < 2) {
                 printl("Problem with loading model: Less than 2 payloadSections ")
                 foreach(psec in payloadSections) {
@@ -475,7 +596,6 @@ array<entity> function deserialize(string serialized, bool dummies) {
                 }
                 continue
             }
-
             vector origin = deserializeVector(payloadSections[0], "origin")
             vector angles = deserializeVector(payloadSections[1], "angles")
             
@@ -515,7 +635,6 @@ string function serializeVector(vector vec) {
 void function SpawnDummyAtPlayer(entity player) {
     SpawnDummyAtPosition(player.GetOrigin(), player.GetAngles())
 }
-
 void function SpawnDummyAtPosition(vector origin, vector angles) {
     entity dummy = CreateDummy(99, origin, angles)
     DispatchSpawn( dummy )
