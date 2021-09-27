@@ -898,3 +898,11 @@ Scripts:
 [
 	freelance/_freelance.gnut
 ]
+
+
+// SalEditor
+When: "SERVER || CLIENT"
+Scripts:
+[
+	weapons/editor_modes/editor_mode_place.nut
+] 

@@ -155,6 +155,8 @@ global struct ClientPlayerStruct
 
 	PropInfo& selectedProp
 	entity currentPropEntity
+	
+	EditorMode& selectedEditorMode
 }
 
 

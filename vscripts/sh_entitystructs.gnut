@@ -76,4 +76,14 @@ global struct PropInfo
     asset model
     vector originDisplacement
 }
+
+global struct EditorMode
+{
+    string displayName
+    
+    void functionref(entity player) onActivationCallback
+    void functionref(entity player) onDeactivationCallback
+    void functionref(entity player) onAttackCallback
+
+}
 #endif
