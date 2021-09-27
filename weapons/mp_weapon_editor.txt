@@ -287,14 +287,38 @@ WeaponData
         {
             "regen_ammo_refill_rate"    "*10.00"
         }
+
+		crosshair_active
+		{
+			active_crosshair_count		"1"
+		}
 	}
+
+	active_crosshair_count				"0"
+	rui_crosshair_index					"0"
 
 	RUI_CrosshairData
 	{
 		DefaultArgs
-        {
-        	crosshairMovementX          crosshair_movement_x
-            crosshairMovementY          crosshair_movement_y
-        }
+		{
+			adjustedSpread				weapon_spread
+			adsFrac 					player_zoomFrac
+			isSprinting					player_is_sprinting
+			isReloading					weapon_is_reloading
+			teamColor					crosshair_team_color
+			isAmped						weapon_is_amped
+			crosshairMovementX          crosshair_movement_x
+			crosshairMovementY          crosshair_movement_y
+		}
+
+		Crosshair_1
+		{
+			"ui"						"ui/crosshair_dot"
+			"base_spread"				"0.0"
+			Args
+			{
+				isFiring				weapon_is_firing
+			}
+		}
 	}
 }

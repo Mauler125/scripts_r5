@@ -23,13 +23,15 @@ struct
     // store the props here for saving and loading
     array<entity> allProps
     array<EditorMode> editorModes
-
 } file
 
 
 void function MpWeaponEditor_Init()
 {
     file.editorModes.append(EditorModePlace_Init())
+    file.editorModes.append(EditorModeDelete_Init())
+    AddCallback_OnPlayerAddWeaponMod(CycleWeaponMode)
+    AddCallback_OnPlayerRemoveWeaponMod(CycleWeaponMode)
 }
 
 
@@ -56,7 +58,7 @@ void function OnWeaponDeactivate_weapon_editor( entity weapon )
     entity player = weapon.GetOwner()
     #endif
 
-    player.p.selectedEditorMode = file.editorModes[0]
+    //player.p.selectedEditorMode = file.editorModes[0]
     player.p.selectedEditorMode.onDeactivationCallback(player)
 }
 
@@ -69,13 +71,38 @@ var function OnWeaponPrimaryAttack_weapon_editor( entity weapon, WeaponPrimaryAt
     entity player = weapon.GetOwner()
     #endif
     
-    player.p.selectedEditorMode = file.editorModes[0]
+    //player.p.selectedEditorMode = file.editorModes[0]
     player.p.selectedEditorMode.onAttackCallback(player)
 }
 
 void function OnWeaponOwnerChanged_weapon_editor( entity weapon, WeaponOwnerChangedParams changeParams )
 {
 	
+}
+
+void function CycleWeaponMode( entity player, entity weapon, string mod )
+{
+    if (weapon.GetWeaponClassName() != "mp_weapon_editor") return; 
+    EditorMode curMode = player.p.selectedEditorMode
+    int modeIndex = file.editorModes.find(curMode)
+    if (modeIndex == -1) return
+    int nextIndex = modeIndex + 1
+    if (nextIndex >= file.editorModes.len()) nextIndex = 0
+    player.p.selectedEditorMode = file.editorModes[nextIndex]
+    #if CLIENT
+        AnnouncementMessageRight( player, "Editor Mode: " + file.editorModes[nextIndex].displayName, "", <1, 1, 1>, $"", 3.0 )
+    #elseif SERVER
+        if (player.p.selectedEditorMode.crosshairActive)
+        {
+            if (!weapon.HasMod("crosshair_active")) weapon.AddMod("crosshair_active")
+        }
+        else 
+        {
+            if (weapon.HasMod("crosshair_active")) weapon.RemoveMod("crosshair_active")
+        }
+    #endif
+    curMode.onDeactivationCallback(player)
+    player.p.selectedEditorMode.onActivationCallback(player)
 }
 
 bool function OnWeaponAttemptOffhandSwitch_weapon_editor( entity weapon )

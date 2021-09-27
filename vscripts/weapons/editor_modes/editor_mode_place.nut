@@ -1,7 +1,9 @@
 global function EditorModePlace_Init
 
 global function ServerCallback_SwitchProp
-
+#if SERVER
+global function GetPlacedProps
+#endif
 #if SERVER
 global function ClientCommand_Model
 global function ClientCommand_Spawnpoint
@@ -18,21 +20,22 @@ struct {
     float offsetZ = 0
 	array<var> inputHintRuis	
 
-    // store the props here for saving and loading
-    array<entity> allProps
-    // not using player.p.xxx because I already did this using these variables and I am not rewriting everything.
     #if SERVER
     table<entity, float> snapSizes
     table<entity, float> pitches
     table<entity, float> offsets
+    array<entity> allProps
     #elseif CLIENT
     float snapSize = 64
     float pitch = 0
     #endif
 } file
-
-
-
+#if SERVER
+array<entity> function GetPlacedProps()
+{
+    return file.allProps
+}
+#endif
 EditorMode function EditorModePlace_Init() 
 {
     // INIT FOR WEAPON
@@ -225,8 +228,8 @@ void function StartNewPropPlacement(entity player)
 
 void function PlaceProp(entity player)
 {
-    //file.allProps.append(GetProp(player))
     #if SERVER
+    file.allProps.append(GetProp(player))
     GetProp(player).Show()
     GetProp(player).Solid()
     printl("------------------------ Server offset: " + file.offsetZ)
