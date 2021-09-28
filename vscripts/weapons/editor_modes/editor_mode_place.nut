@@ -243,12 +243,19 @@ void function PlaceProp(entity player)
     GetProp(player).SetScriptName("editor_placed_prop")
     GetProp(player).Show()
     GetProp(player).Solid()
-    printl("------------------------ Server offset: " + file.offsetZ)
+
+    // prints prop info to the console to save it
+    vector myOrigin = GetProp(player).GetOrigin()
+    vector myAngles = GetProp(player).GetAngles()
+
+    string positionSerialized = myOrigin.x.tostring() + "," + myOrigin.y.tostring() + "," + myOrigin.z.tostring()
+	string anglesSerialized = myAngles.x.tostring() + "," + myAngles.y.tostring() + "," + myAngles.z.tostring()
+    printl("[editor]" + player.p.selectedProp.model + ";" + positionSerialized + ";" + anglesSerialized)
+
     #elseif CLIENT
     if(player != GetLocalClientPlayer()) return;
     GetProp(player).Destroy()
     SetProp(player, null)
-    printl("------------------------ Client offset: " + file.offsetZ)
     #endif
 }
 
