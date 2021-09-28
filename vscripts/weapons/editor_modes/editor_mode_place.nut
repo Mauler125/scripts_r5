@@ -272,9 +272,9 @@ void function PlaceProxyThink(entity player)
 
         vector origin = result.endPos
 
-        origin.x = floor(origin.x / gridSize) * gridSize
-        origin.y = floor(origin.y / gridSize) * gridSize
-        origin.z = (floor(origin.z / gridSize) * gridSize)
+        origin.x = RoundToNearestInt(origin.x / gridSize) * gridSize
+        origin.y = RoundToNearestInt(origin.y / gridSize) * gridSize
+        origin.z = (RoundToNearestInt(origin.z / gridSize) * gridSize)
         #if CLIENT
         origin.z += file.offsetZ
         #elseif SERVER
