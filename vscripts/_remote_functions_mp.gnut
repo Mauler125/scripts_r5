@@ -34,6 +34,7 @@ void function RemoteFunctions_Init_Begin()
 
 	Remote_RegisterClientFunction("ServerCallback_SwitchProp", "entity")
 
+
 	RegisterSignal("OnChangedPlayerClass")
 	RegisterSignal("BleedOut_OnStartDying")
 

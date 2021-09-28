@@ -2,9 +2,6 @@ global function EditorModePlace_Init
 
 global function ServerCallback_SwitchProp
 #if SERVER
-global function GetPlacedProps
-#endif
-#if SERVER
 global function ClientCommand_Model
 global function ClientCommand_Spawnpoint
 
@@ -48,18 +45,11 @@ struct {
     table<entity, float> snapSizes
     table<entity, float> pitches
     table<entity, float> offsets
-    array<entity> allProps
     #elseif CLIENT
     float snapSize = 64
     float pitch = 0
     #endif
 } file
-#if SERVER
-array<entity> function GetPlacedProps()
-{
-    return file.allProps
-}
-#endif
 EditorMode function EditorModePlace_Init() 
 {
     // INIT FOR WEAPON
@@ -253,7 +243,7 @@ void function StartNewPropPlacement(entity player)
 void function PlaceProp(entity player)
 {
     #if SERVER
-    file.allProps.append(GetProp(player))
+    GetProp(player).SetScriptName("editor_placed_prop")
     GetProp(player).Show()
     GetProp(player).Solid()
     printl("------------------------ Server offset: " + file.offsetZ)
@@ -284,6 +274,7 @@ void function PlaceProxyThink(entity player)
 	    TraceResults result = TraceLine(player.EyePosition() + 5 * player.GetViewForward(), player.GetOrigin() + 200 * player.GetViewForward(), [player], TRACE_MASK_SHOT, TRACE_COLLISION_GROUP_PLAYER)
 
         vector origin = result.endPos
+
         origin.x = floor(origin.x / gridSize) * gridSize
         origin.y = floor(origin.y / gridSize) * gridSize
         origin.z = (floor(origin.z / gridSize) * gridSize)
@@ -318,9 +309,6 @@ void function PlaceProxyThink(entity player)
         ang.z = floor(smartClamp(ang.z + 45, -360, 360) / 90) * 90
 
         offset = RotateVector(player.p.selectedProp.originDisplacement, ang)
-        // offset.x = offset.x * player.p.selectedProp.originDisplacement.x
-        // offset.y = offset.y * player.p.selectedProp.originDisplacement.y
-        // offset.z = offset.z * player.p.selectedProp.originDisplacement.z
 
         origin = origin + offset
         
