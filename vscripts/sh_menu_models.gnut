@@ -1164,7 +1164,9 @@ void function InitMenuEntities()
 	    }
     }
 
-	clGlobal.menuCamera = CreateClientSidePointCamera( <0, 0, 0>, <0, 0, 0>, DEFAULT_FOV )
+	if (IsLobby()) {
+		clGlobal.menuCamera = CreateClientSidePointCamera( <0, 0, 0>, <0, 0, 0>, DEFAULT_FOV )
+	}
 
 	// Wait for character class to be known
 	EHI localPlayerEHI = WaitForLocalClientEHI()
@@ -1172,8 +1174,10 @@ void function InitMenuEntities()
 		return //
 
 	
-    entity localPlayer = GetLocalClientPlayer()
-    localPlayer.SetMenuCameraEntityWithAudio( clGlobal.menuCamera ) //
+	if (IsLobby()) {
+    	entity localPlayer = GetLocalClientPlayer()
+    	localPlayer.SetMenuCameraEntityWithAudio( clGlobal.menuCamera ) //
+	}
 
 
 	entity model
@@ -2294,6 +2298,10 @@ void function SetMenuCamera( entity player, int presentationType, bool interpola
 		return
 	}
 
+	if (!IsValid(clGlobal.menuCamera)) {
+		clGlobal.menuCamera = CreateClientSidePointCamera( <0, 0, 0>, <0, 0, 0>, DEFAULT_FOV )
+	}
+
 	player.SetScriptMenuOn()
 
 	float fov = file.presentationData[ presentationType ].fov
@@ -3063,13 +3071,8 @@ void function UIToClient_PreviewModel( string root, bool isLoop ) {
 	RunUIScript("CustomizeModelMenu_UpdateTitleRUI", string(modelAsset))
 
 	CreateMenuModel(file.customizeModel, modelAsset)
-
-	vector origin = clGlobal.menuCamera.GetOrigin()
-	vector modelOrigin = ModelData_GetModel(file.customizeModel).GetOrigin()
-
 	entity model = ModelData_GetModel(file.customizeModel)
 	vector color = MENU_MODELS_DEFAULT_HIGHLIGHT_COLOR
-	printl("ORIGIN: " + modelOrigin)
 
 	//file.cameraZoomModelInitialized = true
 
