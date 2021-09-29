@@ -1,6 +1,10 @@
 global function EditorModePlace_Init
 
-global function ServerCallback_SwitchProp
+global function ServerCallback_NextProp
+global function ServerCallback_OpenModelMenu
+#if SERVER
+global function GetPlacedProps
+#endif
 #if SERVER
 global function ClientCommand_Model
 global function ClientCommand_Spawnpoint
@@ -10,20 +14,19 @@ global function ClientCommand_DOWN_Server
 #elseif CLIENT
 global function ClientCommand_UP_Client
 global function ClientCommand_DOWN_Client
+global function SetEquippedSection
 #endif
 
 // Copied from _jump_pads. This is being hacked for the gravity lifts.
 #if SERVER
 // init functions:
 global function GravityLift_Init
-global function GravityLift_Trigger
+global function GravityLift_CreatedCallback
 
 // set constants:
-const asset GRAVITY_LIFT_FX = $"P_ar_loot_drop_point"
-
-const float JUMP_PAD_PUSH_RADIUS = 64
+const float JUMP_PAD_PUSH_RADIUS = 45.0
 const float JUMP_PAD_PUSH_PROJECTILE_RADIUS = 32.0//98.0
-const float JUMP_PAD_PUSH_VELOCITY = 950.0      // maybe can change this in-editor?
+const float JUMP_PAD_PUSH_VELOCITY = 950.0
 const float JUMP_PAD_VIEW_PUNCH_SOFT = 25.0
 const float JUMP_PAD_VIEW_PUNCH_HARD = 4.0
 const float JUMP_PAD_VIEW_PUNCH_RAND = 4.0
@@ -35,22 +38,32 @@ const float JUMP_PAD_ANGLE_LIMIT = 0.70
 const float JUMP_PAD_ICON_HEIGHT_OFFSET = 48.0
 const float JUMP_PAD_ACTIVATION_TIME = 0.5
 const asset JUMP_PAD_LAUNCH_FX = $"P_grndpnd_launch"
+const JUMP_PAD_DESTRUCTION = "jump_pad_destruction"
 #endif
 
 struct {
-    array<PropInfo> propInfoList
     float offsetZ = 0
 	array<var> inputHintRuis	
+
+    table< string, vector > displacements = {} 
+    array< string >         displacementKeys = []
 
     #if SERVER
     table<entity, float> snapSizes
     table<entity, float> pitches
     table<entity, float> offsets
+    array<entity> allProps
     #elseif CLIENT
     float snapSize = 64
     float pitch = 0
     #endif
 } file
+#if SERVER
+array<entity> function GetPlacedProps()
+{
+    return file.allProps
+}
+#endif
 EditorMode function EditorModePlace_Init() 
 {
     // INIT FOR WEAPON
@@ -66,23 +79,30 @@ EditorMode function EditorModePlace_Init()
     // END INIT FOR WEAPON
 
     // FILE LEVEL INIT
-
-    file.propInfoList.append(NewPropInfo($"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl", <0, 0, 0>))
-    file.propInfoList.append(NewPropInfo($"mdl/thunderdome/thunderdome_cage_wall_256x256_01.rmdl", <128, 0, 0>))
-    file.propInfoList.append(NewPropInfo($"mdl/Humans/class/medium/combat_dummie_medium.rmdl", <0, 0, 0>))
-
-
+    file.displacements["mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl"] <- <0, 0, 0>
+    file.displacements["mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl"] <- <128, 0, 0>
+    file.displacements["mdl/Humans/class/medium/combat_dummie_medium.rmdl"] <- <0, 0, 0>
     
+    foreach(disp, ign in file.displacements) {
+        file.displacementKeys.append(disp)
+    }
+
     // save and load functions
     #if SERVER
     AddClientCommandCallback("model", ClientCommand_Model)
     AddClientCommandCallback("compile", ClientCommand_Compile)
     AddClientCommandCallback("load", ClientCommand_Load)
     AddClientCommandCallback("spawnpoint", ClientCommand_Spawnpoint)
+    AddClientCommandCallback("nextprop", ClientCommand_Next)
+    AddClientCommandCallback("section", ClientCommand_Section)
     #endif
 
     // in-editor functions
-    #if SERVER
+    #if CLIENT
+    // should not be here. wait until weapon is equipped.
+    //RegisterConCommandTriggeredCallback( "weaponSelectPrimary0", ClientCommand_UP_Client )
+    //RegisterConCommandTriggeredCallback( "weaponSelectPrimary1", ClientCommand_DOWN_Client )
+    #elseif SERVER
     AddClientCommandCallback("moveUp", ClientCommand_UP_Server )
     AddClientCommandCallback("moveDown", ClientCommand_DOWN_Server )
     AddClientCommandCallback( "ChangeSnapSize", ChangeSnapSize)
@@ -106,6 +126,7 @@ void function EditorModePlace_Activation(entity player)
     AddInputHint( "%scriptCommand6%", "Change Rotation" )
     AddInputHint( "%weaponSelectPrimary0%", "Raise" )
     AddInputHint( "%weaponSelectPrimary1%", "Lower" )
+    AddInputHint( "%offhand4%", "Open Model Menu" )
 
     #if CLIENT
     
@@ -113,9 +134,10 @@ void function EditorModePlace_Activation(entity player)
     RegisterConCommandTriggeredCallback( "+scriptCommand6", SwapToNextPitch )
     RegisterConCommandTriggeredCallback( "weaponSelectPrimary0", ClientCommand_UP_Client )
     RegisterConCommandTriggeredCallback( "weaponSelectPrimary1", ClientCommand_DOWN_Client )
+    RegisterConCommandTriggeredCallback( "+offhand4", ServerCallback_OpenModelMenu )
 
     #elseif SERVER
-    AddButtonPressedPlayerInputCallback( player, IN_ZOOM, ServerCallback_SwitchProp )
+    AddButtonPressedPlayerInputCallback( player, IN_ZOOM, ServerCallback_NextProp )
     if( !(player in file.snapSizes) )
     {
         file.snapSizes[player] <- 64
@@ -130,9 +152,9 @@ void function EditorModePlace_Activation(entity player)
     }
     #endif
 
-    if(player.p.selectedProp.model == $"")
+    if(player.p.selectedProp.section == "")
     {
-        player.p.selectedProp = file.propInfoList[0]
+        player.p.selectedProp = NewPropInfo("mdl/base_models", 0)
     }
     
     StartNewPropPlacement(player)
@@ -149,8 +171,9 @@ void function EditorModePlace_Deactivation(entity player)
     DeregisterConCommandTriggeredCallback( "weaponSelectPrimary1", ClientCommand_DOWN_Client )
     DeregisterConCommandTriggeredCallback( "+scriptCommand1", SwapToNextSnapSize )
     DeregisterConCommandTriggeredCallback( "+scriptCommand6", SwapToNextPitch )
+    DeregisterConCommandTriggeredCallback( "+offhand4",  ServerCallback_OpenModelMenu )
     #elseif SERVER
-    RemoveButtonPressedPlayerInputCallback( player, IN_ZOOM, ServerCallback_SwitchProp )
+    RemoveButtonPressedPlayerInputCallback( player, IN_ZOOM, ServerCallback_NextProp )
     #endif
     if(IsValid(GetProp(player)))
     {
@@ -195,7 +218,21 @@ void function AddInputHint( string buttonText, string hintText)
     #endif
 }
 
-void function ServerCallback_SwitchProp( entity player )
+void function ServerCallback_OpenModelMenu( entity player ) {
+    #if SERVER
+        Remote_CallFunction_Replay( player, "ServerCallback_OpenModelMenu", player )
+    #elseif CLIENT
+    if(player != GetLocalClientPlayer()) return;
+    player = GetLocalClientPlayer()
+    
+    if (!IsValid(player)) return
+    if (!IsAlive(player)) return
+    
+    RunUIScript("OpenModelMenu", player.p.selectedProp.section)
+    #endif
+}
+
+void function ServerCallback_NextProp( entity player )
 {
     #if CLIENT
     if(player != GetLocalClientPlayer()) return;
@@ -205,10 +242,16 @@ void function ServerCallback_SwitchProp( entity player )
     if(!IsValid( player )) return
     if(!IsAlive( player )) return
 
-    player.p.selectedProp = file.propInfoList[(file.propInfoList.find(player.p.selectedProp) + 1) % file.propInfoList.len()] // increment to next prop info in list
-    printl(player.p.selectedProp.model)
+    printl("SERVER+CLIENT NEXT PROP")
+    int max = GetAssets()[getbyvalue(GetSections(), player.p.selectedProp.section)].len()
+    if (player.p.selectedProp.index + 1 > max - 1) {
+        player.p.selectedProp.index = 0
+    } else {
+        player.p.selectedProp.index++
+    }
+
     #if SERVER
-    Remote_CallFunction_Replay( player, "ServerCallback_SwitchProp", player )
+        Remote_CallFunction_Replay( player, "ServerCallback_NextProp", player )
     #endif
 }
 
@@ -217,12 +260,12 @@ void function StartNewPropPlacement(entity player)
 {
     // incoming
     #if SERVER
-    SetProp(player, CreatePropDynamic( player.p.selectedProp.model, <0, 0, file.offsets[player]>, <0, 0, 0>, SOLID_VPHYSICS ))
+    SetProp(player, CreatePropDynamic( GetAssetFromPlayer(player), <0, 0, file.offsets[player]>, <0, 0, 0>, SOLID_VPHYSICS ))
     GetProp(player).NotSolid()
     GetProp(player).Hide()
     
     #elseif CLIENT
-	SetProp(player, CreateClientSidePropDynamic( <0, 0, file.offsetZ>, <0, 0, 0>, player.p.selectedProp.model ))
+	SetProp(player, CreateClientSidePropDynamic( <0, 0, file.offsetZ>, <0, 0, 0>, GetAssetFromPlayer(player) ))
     DeployableModelWarningHighlight( GetProp(player) )
     
 	GetProp(player).kv.renderamt = 255
@@ -240,22 +283,15 @@ void function StartNewPropPlacement(entity player)
 void function PlaceProp(entity player)
 {
     #if SERVER
-    GetProp(player).SetScriptName("editor_placed_prop")
+    file.allProps.append(GetProp(player))
     GetProp(player).Show()
     GetProp(player).Solid()
-
-    // prints prop info to the console to save it
-    vector myOrigin = GetProp(player).GetOrigin()
-    vector myAngles = GetProp(player).GetAngles()
-
-    string positionSerialized = myOrigin.x.tostring() + "," + myOrigin.y.tostring() + "," + myOrigin.z.tostring()
-	string anglesSerialized = myAngles.x.tostring() + "," + myAngles.y.tostring() + "," + myAngles.z.tostring()
-    printl("[editor]" + player.p.selectedProp.model + ";" + positionSerialized + ";" + anglesSerialized)
-
+    printl("------------------------ Server offset: " + file.offsetZ)
     #elseif CLIENT
     if(player != GetLocalClientPlayer()) return;
     GetProp(player).Destroy()
     SetProp(player, null)
+    printl("------------------------ Client offset: " + file.offsetZ)
     #endif
 }
 
@@ -273,15 +309,14 @@ void function PlaceProxyThink(entity player)
         if(!IsValid( player )) return
         if(!IsAlive( player )) return
 
-        GetProp(player).SetModel( player.p.selectedProp.model )
+        GetProp(player).SetModel( GetAssetFromPlayer(player) )
 
 	    TraceResults result = TraceLine(player.EyePosition() + 5 * player.GetViewForward(), player.GetOrigin() + 200 * player.GetViewForward(), [player], TRACE_MASK_SHOT, TRACE_COLLISION_GROUP_PLAYER)
 
         vector origin = result.endPos
-
-        origin.x = RoundToNearestInt(origin.x / gridSize) * gridSize
-        origin.y = RoundToNearestInt(origin.y / gridSize) * gridSize
-        origin.z = (RoundToNearestInt(origin.z / gridSize) * gridSize)
+        origin.x = floor(origin.x / gridSize) * gridSize
+        origin.y = floor(origin.y / gridSize) * gridSize
+        origin.z = (floor(origin.z / gridSize) * gridSize)
         #if CLIENT
         origin.z += file.offsetZ
         #elseif SERVER
@@ -312,7 +347,13 @@ void function PlaceProxyThink(entity player)
         ang.y = floor(smartClamp(ang.y + 45, -360, 360) / 90) * 90
         ang.z = floor(smartClamp(ang.z + 45, -360, 360) / 90) * 90
 
-        offset = RotateVector(player.p.selectedProp.originDisplacement, ang)
+        string assetName = string(GetAssetFromPlayer(player))
+        if (contains(file.displacementKeys, assetName)) {
+            offset = RotateVector(file.displacements[assetName], ang)
+        }
+        // offset.x = offset.x * player.p.selectedProp.originDisplacement.x
+        // offset.y = offset.y * player.p.selectedProp.originDisplacement.y
+        // offset.z = offset.z * player.p.selectedProp.originDisplacement.z
 
         origin = origin + offset
         
@@ -349,11 +390,11 @@ void function SetProp(entity player, entity prop)
     return null
 }
 
-PropInfo function NewPropInfo(asset model, vector originDisplacement)
+PropInfo function NewPropInfo(string section, int index)
 {
     PropInfo prop
-    prop.model = model
-    prop.originDisplacement = originDisplacement
+    prop.section = section
+    prop.index = index
     return prop
 }
 
@@ -382,6 +423,17 @@ bool function ChangeSnapSize( entity player, array<string> args )
     file.snapSizes[player] = args[0].tofloat()
 
     return true
+}
+
+bool function ClientCommand_Section(entity player, array<string> args) {
+    if (args.len() > 0) {
+        if (contains(GetSections(), args[0])) {
+            player.p.selectedProp.section = args[0]
+            player.p.selectedProp.index = 0
+        }
+        return false
+    }
+    return false
 }
 
 bool function ChangeRotation( entity player, array<string> args )
@@ -547,6 +599,12 @@ bool function ClientCommand_Spawnpoint(entity player, array<string> args) {
     // }
     return true
 }
+
+bool function ClientCommand_Next(entity player, array<string> args) {
+    ServerCallback_NextProp(player)
+    //Remote_CallFunction_Replay( player, "ServerCallback_NextProp", player )
+    return true
+}
 #endif
 
 
@@ -556,24 +614,20 @@ bool function ClientCommand_Spawnpoint(entity player, array<string> args) {
 #if SERVER
 void function GravityLift_Init()
 {
-    // need lift particles here
-    PrecacheParticleSystem( GRAVITY_LIFT_FX )
-    
     array<entity> gravLiftTargets = GetEntArrayByScriptName( "geyser_jump" ) // ???
 	foreach ( target in gravLiftTargets )
 	{
-		thread GravityLift_Trigger( target )
+		thread GravityLift_CreatedCallback( target )
 		//target.Destroy()
 	}
 }
 
-void function GravityLift_Trigger( entity jumpPad )
+void function GravityLift_CreatedCallback( entity jumpPad )
 {
-    // Todo: give the player more control in the air
+
     vector origin = OriginToGround( jumpPad.GetOrigin() )
 	vector angles = jumpPad.GetAngles()
 
-    entity gravLiftBeam = StartParticleEffectInWorld_ReturnEntity(GetParticleSystemIndex( GRAVITY_LIFT_FX ), origin, angles )
 
 	entity trigger = CreateEntity( "trigger_cylinder_heavy" )
 	SetTargetName( trigger, "gravlift_trigger" )
@@ -593,7 +647,13 @@ void function GravityLift_Trigger( entity jumpPad )
 	DispatchSpawn( trigger )
 	trigger.SetEnterCallback( GravityLift_OnJumpPadAreaEnter )
     
-    trigger.SetParent( jumpPad )
+  //Need to set parent so the jump trigger is destroyed with the pad entity
+  trigger.SetParent( jumpPad )
+
+	// entity traceBlocker = CreateTraceBlockerVolume( trigger.GetOrigin(), 24.0, true, CONTENTS_BLOCK_PING | CONTENTS_NOGRAPPLE, TEAM_MILITIA, "GEYSER_PING_SCRIPT_NAME" ) // todo: replace geyser_ping_script_name --
+	// traceBlocker.SetBox( <-192, -192, -16>, <192, 192, 3000> )
+
+	
 }
 
 
@@ -605,22 +665,75 @@ void function GravityLift_OnJumpPadAreaEnter( entity trigger, entity ent )
 
 void function GravityLift_JumpPadPushEnt( entity trigger, entity ent, vector origin, vector angles )
 {
+	if ( GravityLift_JumpPad_ShouldPushPlayerOrNPC( ent ) )
+	{
+		if ( ent.IsPlayer() )
+		{
+			entity jumpPad = trigger.GetOwner()
+			if ( IsValid( jumpPad ) )
+			{
+				int fxId = GetParticleSystemIndex( JUMP_PAD_LAUNCH_FX )
+				StartParticleEffectOnEntity( jumpPad, fxId, FX_PATTACH_ABSORIGIN_FOLLOW, 0 )
+			}
+		}
+		else
+		{
+			EmitSoundOnEntity( ent, "JumpPad_LaunchPlayer_3p" )
+			EmitSoundOnEntity( ent, "JumpPad_AirborneMvmt_3p" )
+		}
+	}
+}
 
-    if ( ent.IsPlayer() )
-    {
-        entity jumpPad = trigger.GetOwner()
-        if ( IsValid( jumpPad ) )
-        {
-            int fxId = GetParticleSystemIndex( JUMP_PAD_LAUNCH_FX )
-            StartParticleEffectOnEntity( jumpPad, fxId, FX_PATTACH_ABSORIGIN_FOLLOW, 0 )
+bool function GravityLift_JumpPad_ShouldPushPlayerOrNPC( entity target )
+{
+	if ( target.IsTitan() )
+		return false
+
+	if ( IsSuperSpectre( target ) )
+		return false
+
+	if ( IsTurret( target ) )
+		return false
+
+	if ( IsDropship( target ) )
+		return false
+
+	return true
+}
+#endif
+
+// util funcs
+// O(n) might need to be improved
+string function getbyvalue(array<string> sec, string val) {
+    foreach(p in sec) {
+        if (val == p) {
+            return val
         }
     }
-    else
-    {
-        EmitSoundOnEntity( ent, "JumpPad_LaunchPlayer_3p" )
-        EmitSoundOnEntity( ent, "JumpPad_AirborneMvmt_3p" )
+    return ""
+}
+bool function contains(array<string> sec, string val) {
+    foreach(p in sec) {
+        if (val == p) {
+            return true
+        }
     }
-	
+    return false
+}
+
+asset function GetAssetFromPlayer(entity player) {
+    string sec = player.p.selectedProp.section
+    int index = player.p.selectedProp.index
+    return GetAssets()[sec][index]
+}
+
+#if CLIENT
+void function SetEquippedSection(string sec) {
+    entity player = GetLocalClientPlayer()
+    player.p.selectedProp.section = sec
+    player.p.selectedProp.index = 0
+
+    player.ClientCommand("section " + sec)
 }
 #endif
 // maybe also Geyser_JumpJetsWhileAirborne

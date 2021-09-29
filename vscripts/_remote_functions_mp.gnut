@@ -32,8 +32,8 @@ void function RemoteFunctions_Init_Begin()
 	Remote_RegisterClientFunction("ServerCallback_KillReplayHud_Activate")
 	Remote_RegisterClientFunction("ServerCallback_KillReplayHud_Deactivate")
 
-	Remote_RegisterClientFunction("ServerCallback_SwitchProp", "entity")
-
+	Remote_RegisterClientFunction("ServerCallback_NextProp", "entity")
+	Remote_RegisterClientFunction("ServerCallback_OpenModelMenu", "entity")
 
 	RegisterSignal("OnChangedPlayerClass")
 	RegisterSignal("BleedOut_OnStartDying")

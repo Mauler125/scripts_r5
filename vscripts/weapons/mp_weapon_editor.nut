@@ -25,13 +25,17 @@ struct
     array<EditorMode> editorModes
 } file
 
-
 void function MpWeaponEditor_Init()
 {
     file.editorModes.append(EditorModePlace_Init())
     file.editorModes.append(EditorModeDelete_Init())
     AddCallback_OnPlayerAddWeaponMod(CycleWeaponMode)
     AddCallback_OnPlayerRemoveWeaponMod(CycleWeaponMode)
+
+    #if CLIENT
+    RegisterSignal("EndSetPresentationType")
+    ClMenuModels_Init()
+    #endif
 }
 
 
@@ -248,3 +252,43 @@ bool function ClientCommand_Load(entity player, array<string> args) {
     // file.entityModifications = deserialize(serializedCode, true)
     return true
 }
+
+#if CLIENT
+/*
+void function MakeScoreRUI()
+{
+    if ( file.scoreRui != null)
+    {
+        RuiSetString( file.scoreRui, "messageText", "0/0 | none" )
+        return
+    }
+    clGlobal.levelEnt.EndSignal( "CloseScoreRUI" )
+
+    UISize screenSize = GetScreenSize()
+    var screenAlignmentTopo = RuiTopology_CreatePlane( <(screenSize.width * -0.11),( screenSize.height * -0.5 ), 0>, <float( screenSize.width ), 0, 0>, <0, float( screenSize.height ), 0>, false )
+    var rui = RuiCreate( $"ui/announcement_quick_right.rpak", screenAlignmentTopo, RUI_DRAW_HUD, RUI_SORT_SCREENFADE + 1 )
+    
+    RuiSetGameTime( rui, "startTime", Time() )
+    RuiSetString( rui, "messageText", "0/0 | none" )
+    RuiSetString( rui, "messageSubText", "Text 2")
+    RuiSetFloat( rui, "duration", 9999999 )
+    RuiSetFloat3( rui, "eventColor", SrgbToLinear( <128, 188, 255> ) )
+	
+    file.scoreRui = rui
+    
+    OnThreadEnd(
+		function() : ( rui )
+		{
+			RuiDestroy( rui )
+			file.scoreRui = null
+		}
+	)
+    
+    WaitForever()
+}
+
+void function UpdateRUI(string sec, int partIndex, int max) {
+    string currentAsset = GetAssets()[sec][partIndex]
+    RuiSetString( file.scoreRui,"messageText", "");
+}*/
+#endif

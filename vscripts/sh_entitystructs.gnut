@@ -73,8 +73,9 @@ global typedef EHISignalDummy EHIScriptStruct
 #if SERVER || CLIENT
 global struct PropInfo
 {
-    asset model
-    vector originDisplacement
+	// advanced models
+	string section
+	int index
 }
 
 global struct EditorMode

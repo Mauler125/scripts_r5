@@ -49,6 +49,7 @@ Scripts:
 	_threads.nut
 	_settings.nut
 	sh_utility_all.gnut
+	sh_assets.nut
 	sh_playlists.gnut
 	sh_networkvars.gnut
 	sh_items.gnut
@@ -685,6 +686,7 @@ Scripts:
 	ui/userinfo.nut
 	ui/newness.gnut
 	ui/customize_common.gnut
+	ui/customize_model.nut
 	ui/mini_promo.nut
 	ui/menu_action_blocks.nut
 	ui/menu_dev.nut
@@ -770,8 +772,10 @@ Scripts:
 	ui/panel_quip_kill.nut
 
 	ui/menu_customize_weapon.nut
+	ui/menu_customize_model.nut
 	ui/menu_misc_customize.nut
 	ui/panel_weapon_skins.nut
+	ui/panel_models.nut
 
 	ui/menu_main.nut
 	ui/panel_mainmenu.nut
