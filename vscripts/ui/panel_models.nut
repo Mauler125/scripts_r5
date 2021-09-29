@@ -18,7 +18,9 @@ struct
 	table<var, PanelData> panelDataMap
 
 	var         currentPanel = null
-	string       currentModel
+	string      currentMap
+	string      currentModel
+
 	bool charmsMenuActive = false
 	table<int, array<string> > indexedPanelAssets
 } file
@@ -29,9 +31,9 @@ void function InitModelsPanel( var panel )
 	Assert( !(panel in file.panelDataMap) )
 
 	if (file.panelDataMap.len() == 0) {
-		InitPanelAssets()
+		// ADD mdl/base_models as a default
+		InitPanelAssets("")
 	}
-
 
 	PanelData pd
 	file.panelDataMap[ panel ] <- pd
@@ -76,11 +78,14 @@ bool function CharmsFooter_IsVisible()
 	return !result
 }
 
-void function InitPanelAssets() {
-	file.indexedPanelAssets [0] <- ["mdl/base_models", "mdl/foliage_1","mdl/foliage_2","mdl/foliage_3","mdl/desertlands_1","mdl/desertlands_2","mdl/desertlands_3","mdl/desertlands_4","mdl/desertlands_5","mdl/desertlands_6","mdl/desertlands_7","mdl/desertlands_8","mdl/desertlands_9","mdl/desertlands_10","mdl/desertlands_11","mdl/desertlands_12","mdl/desertlands_13","mdl/desertlands_14","mdl/desertlands_15","mdl/desertlands_16","mdl/desertlands_17"]
-	file.indexedPanelAssets [1] <- ["mdl/colony_1","mdl/colony_2","mdl/thunderdome_1","mdl/thunderdome_2","mdl/containers_1","mdl/containers_2","mdl/sewers_1","mdl/ola_1","mdl/ola_2","mdl/furniture_1","mdl/relic_1","mdl/playback_1","mdl/IMC_base_1","mdl/IMC_base_2","mdl/industrial_1","mdl/industrial_2","mdl/industrial_3","mdl/levels_terrain_1","mdl/levels_terrain_2","mdl/levels_terrain_3"] 
-	file.indexedPanelAssets [2] <- ["mdl/electricalboxes_1","mdl/firstgen_1","mdl/barriers_1","mdl/props_1","mdl/props_2","mdl/angel_city_1","mdl/lamps_1","mdl/signs_1","mdl/signs_2","mdl/utilities_1","mdl/imc_interior_1","mdl/slum_city_1","mdl/slum_city_2","mdl/rocks_1","mdl/rocks_2","mdl/pipes_1","mdl/pipes_2","mdl/pipes_3","mdl/pipes_4","mdl/beacon_1","mdl/beacon_2"] 
-    file.indexedPanelAssets [3] <- ["mdl/mendoko_1","mdl/door_1","mdl/lava_land_1","mdl/vehicles_r5_1","mdl/canyonlands_1","mdl/decals_1","mdl/Gibs_1","mdl/props_debris_1","mdl/vehicle_1","mdl/gibs_1","mdl/extras_1","mdl/extras_2","mdl/extras_3"] 
+void function InitPanelAssets(string map) {
+	file.indexedPanelAssets [0] <- ["mdl/base_models"]
+	if (map == "mp_rr_desertlands_64k_x_64k" || map == "mp_rr_desertlands_64k_x_64k_nx") {
+		file.indexedPanelAssets [0] <- ["mdl/base_models", "mdl/foliage_1","mdl/foliage_2","mdl/foliage_3","mdl/desertlands_1","mdl/desertlands_2","mdl/desertlands_3","mdl/desertlands_4","mdl/desertlands_5","mdl/desertlands_6","mdl/desertlands_7","mdl/desertlands_8","mdl/desertlands_9","mdl/desertlands_10","mdl/desertlands_11","mdl/desertlands_12","mdl/desertlands_13","mdl/desertlands_14","mdl/desertlands_15","mdl/desertlands_16","mdl/desertlands_17"]
+		file.indexedPanelAssets [1] <- ["mdl/colony_1","mdl/colony_2","mdl/thunderdome_1","mdl/thunderdome_2","mdl/containers_1","mdl/containers_2","mdl/sewers_1","mdl/ola_1","mdl/ola_2","mdl/furniture_1","mdl/relic_1","mdl/playback_1","mdl/IMC_base_1","mdl/IMC_base_2","mdl/industrial_1","mdl/industrial_2","mdl/industrial_3","mdl/levels_terrain_1","mdl/levels_terrain_2","mdl/levels_terrain_3"] 
+		file.indexedPanelAssets [2] <- ["mdl/electricalboxes_1","mdl/firstgen_1","mdl/barriers_1","mdl/props_1","mdl/props_2","mdl/angel_city_1","mdl/lamps_1","mdl/signs_1","mdl/signs_2","mdl/utilities_1","mdl/imc_interior_1","mdl/slum_city_1","mdl/slum_city_2","mdl/rocks_1","mdl/rocks_2","mdl/pipes_1","mdl/pipes_2","mdl/pipes_3","mdl/pipes_4","mdl/beacon_1","mdl/beacon_2"] 
+		file.indexedPanelAssets [3] <- ["mdl/mendoko_1","mdl/door_1","mdl/lava_land_1","mdl/vehicles_r5_1","mdl/canyonlands_1","mdl/decals_1","mdl/Gibs_1","mdl/props_debris_1","mdl/vehicle_1","mdl/gibs_1","mdl/extras_1","mdl/extras_2","mdl/extras_3"] 
+	}
 }
 
 void function CharmsButton_Update( var button )
@@ -185,6 +190,9 @@ void function ModelsPanel_Update( var panel, bool first)// TODO: IMPLEMENT
 }
 
 array<string> function GetPanelAssets(PanelData data) {
+	if (file.indexedPanelAssets.len() - 1 < data.index) {
+		return file.indexedPanelAssets[file.indexedPanelAssets.len() - 1]
+	}
 	return file.indexedPanelAssets[data.index]
 }
 
@@ -206,6 +214,8 @@ void function PreviewModel( string model ) {
 }
 
 void function ModelsPanel_SetMap( string map ) {
+	file.currentMap = map
+	InitPanelAssets(map)
 	foreach(key, value in file.panelDataMap) {
 		ModelsPanel_Update(key, true)
 	}

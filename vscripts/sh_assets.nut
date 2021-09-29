@@ -1,7 +1,11 @@
 struct {
   table<string, array<asset> > we_assets = {}
+  table<string, array<asset> > kc_assets = {}
+  table<string, array<asset> > range_assets = {}
   // manually written, might not work lmao
   array<string> we_sections = []
+  array<string> kc_sections = []
+  array<string> range_sections = []
 } file;
 
 global function GetMapAssets
@@ -16,7 +20,11 @@ global function UpdateUIMap
 #endif
 
 void function ShAssets_Init() {
-file.we_assets ["mdl/base_models"] <- [$"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl", $"mdl/thunderdome/thunderdome_cage_wall_256x256_01.rmdl", $"mdl/Humans/class/medium/combat_dummie_medium.rmdl"]
+array<asset> base_models = [$"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl", $"mdl/thunderdome/thunderdome_cage_wall_256x256_01.rmdl", $"mdl/Humans/class/medium/combat_dummie_medium.rmdl"]
+file.we_assets ["mdl/base_models"] <- base_models
+file.kc_assets ["mdl/base_models"] <- base_models
+file.range_assets ["mdl/base_models"] <- base_models
+
 file.we_assets ["mdl/foliage_1"] <- [$"mdl/foliage/desertlands_alien_tree_leaf_large_01.rmdl",$"mdl/foliage/desertlands_alien_tree_large_root_02.rmdl",$"mdl/foliage/desertlands_alien_tree_large_root_01.rmdl",$"mdl/foliage/roots_ground_desertlands_01.rmdl",$"mdl/foliage/plant_desert_yucca_01.rmdl",$"mdl/foliage/brute_ivy_01.rmdl",$"mdl/foliage/brute_ivy_02.rmdl",$"mdl/foliage/plant_tobacco_large_03.rmdl",$"mdl/foliage/plant_tobacco_large_01.rmdl",$"mdl/foliage/plant_tobacco_large_02.rmdl",$"mdl/foliage/plant_agave_01.rmdl",$"mdl/foliage/fern_ground_dark_03.rmdl",$"mdl/foliage/fern_ground_dark_01.rmdl",$"mdl/foliage/fern_ground_dark_02.rmdl",$"mdl/foliage/desertlands_alien_tree_large_root_tendrils.rmdl",$"mdl/foliage/desertlands_alien_tree_02.rmdl",$"mdl/foliage/desertlands_alien_tree_large_01.rmdl",$"mdl/foliage/plant_fern_small_02.rmdl",$"mdl/foliage/tree_acacia_small_02.rmdl",$"mdl/foliage/ivy_green_large_hanging_02.rmdl",$"mdl/foliage/icelandic_ground_plant_01.rmdl",$"mdl/foliage/ground_plant_desertlands_01_group_01.rmdl",$"mdl/foliage/ground_plant_desertlands_01.rmdl",$"mdl/foliage/ground_plant_large.rmdl",$"mdl/foliage/plant_tropical_ground_leafy_01.rmdl"]
 file.we_assets ["mdl/foliage_2"] <- [$"mdl/foliage/brute_small_tiger_plant.rmdl",$"mdl/foliage/brute_small_tiger_plant_02.rmdl",$"mdl/foliage/grass_luscious_clump_02_flower.rmdl",$"mdl/foliage/icelandic_ground_plant_02.rmdl",$"mdl/foliage/holy_e_ear_plant.rmdl",$"mdl/foliage/foliage_ground_plants.rmdl",$"mdl/foliage/foliage_ground_plants_desertlands.rmdl",$"mdl/foliage/tree_brush_yellow_large_03.rmdl",$"mdl/foliage/tree_acacia_small_03.rmdl",$"mdl/foliage/tree_acacia_small_01.rmdl",$"mdl/foliage/plant_chinese_evergreen_small_nexus_02.rmdl",$"mdl/foliage/tree_brush_yellow_large_01.rmdl",$"mdl/foliage/moss_green_hanging_large_01_dark.rmdl",$"mdl/foliage/moss_green_hanging_large_02_dark.rmdl",$"mdl/foliage/moss_green_hanging_large_04_dark.rmdl",$"mdl/foliage/leaves_ground_spread_01.rmdl",$"mdl/foliage/plant_bush_thorny_leaf_small.rmdl",$"mdl/foliage/lilypad_clusters_05_flowing.rmdl",$"mdl/foliage/plant_grass_dead_tall_01.rmdl",$"mdl/foliage/tree_brush_yellow_large_02.rmdl",$"mdl/foliage/mendoko_bulb_plant_low.rmdl",$"mdl/foliage/desertlands_alien_tree_leaf_small_01.rmdl",$"mdl/foliage/icelandic_ground_plant_03.rmdl",$"mdl/foliage/desertlands_alien_tree_leaf_small_02.rmdl",$"mdl/foliage/icelandic_moss_grass_02.rmdl"]
 file.we_assets ["mdl/foliage_3"] <- [$"mdl/foliage/icelandic_moss_grass_01.rmdl",$"mdl/foliage/grass_burnt_yellow_03.rmdl",$"mdl/foliage/grass_burnt_long_02.rmdl",$"mdl/foliage/grass_icelandic_02.rmdl",$"mdl/foliage/grass_icelandic_03.rmdl",$"mdl/foliage/grass_icelandic_04.rmdl",$"mdl/foliage/grass_icelandic_01.rmdl",$"mdl/foliage/ground_plant_beacon_01.rmdl",$"mdl/foliage/ground_plant_beacon_03.rmdl"]
@@ -97,7 +105,22 @@ UpdateUIMap(GetMapName())
 #endif
 
 foreach(string key, array<asset> assets in GetAssets()) {
-  file.we_sections.append(key)
+  
+  switch(GetMapName())
+  {
+  case "mp_rr_canyonlands_staging":
+    file.range_sections.append(key)
+    break
+  case "mp_rr_canyonlands_mu1":
+  case "mp_rr_canyonlands_mu1_night":
+  case "mp_rr_canyonlands_64k_x_64k":
+    file.kc_sections.append(key)
+    break
+  case "mp_rr_desertlands_64k_x_64k":
+  case "mp_rr_desertlands_64k_x_64k_nx":
+    file.we_sections.append(key)
+    break
+  }
   #if SERVER
   foreach(ass in assets) {
     printl("Asset " + string(ass))
@@ -112,29 +135,18 @@ table<string, array<asset> > function GetAssets() {
   #if !UI
   switch(GetMapName())
   {
-  /*case "mp_rr_canyonlands_staging":
-      return []
-      break
-
+  case "mp_rr_canyonlands_staging":
+    return file.range_assets
   case "mp_rr_canyonlands_mu1":
   case "mp_rr_canyonlands_mu1_night":
   case "mp_rr_canyonlands_64k_x_64k":
-    file.current_assets = file.kc_mu1_assets
-    #if CLIENT
-      UpdateUI()
-    #endif
-    return file.kc_mu1_assets
+    return file.kc_assets
   case "mp_lobby":
-    file.current_assets = file.lobby_assets
-    #if CLIENT
-      UpdateUI()
-    #endif
-    return file.lobby_assets*/
+    return {}
   case "mp_rr_desertlands_64k_x_64k":
   case "mp_rr_desertlands_64k_x_64k_nx":
     return file.we_assets
   default:
-    Assert(false, "No TDM locations found for map!")
     return {}
   }
 
@@ -148,29 +160,18 @@ table<string, array<asset> > function GetAssets() {
 array<string> function GetSections() {
   switch(GetMapName())
   {
-  /*case "mp_rr_canyonlands_staging":
-      return []
-      break
-
+  case "mp_rr_canyonlands_staging":
+      return file.range_sections
   case "mp_rr_canyonlands_mu1":
   case "mp_rr_canyonlands_mu1_night":
   case "mp_rr_canyonlands_64k_x_64k":
-    file.current_assets = file.kc_mu1_assets
-    #if CLIENT
-      UpdateUI()
-    #endif
-    return file.kc_mu1_assets
+    return file.kc_sections
   case "mp_lobby":
-    file.current_assets = file.lobby_assets
-    #if CLIENT
-      UpdateUI()
-    #endif
-    return file.lobby_assets*/
+    return []
   case "mp_rr_desertlands_64k_x_64k":
   case "mp_rr_desertlands_64k_x_64k_nx":
     return file.we_sections
   default:
-    Assert(false, "No TDM locations found for map!")
     return []
   }
 
