@@ -9,6 +9,9 @@ global function OnWeaponPrimaryAttack_weapon_editor
 global function ClientCommand_Compile 
 global function ClientCommand_Load
 #endif
+#if CLIENT
+global function UpdateRUI
+#endif
 
 struct PropSaveInfo
 {
@@ -23,6 +26,10 @@ struct
     // store the props here for saving and loading
     array<entity> allProps
     array<EditorMode> editorModes
+
+    #if CLIENT
+    var rui
+    #endif
 } file
 
 void function MpWeaponEditor_Init()
@@ -34,6 +41,7 @@ void function MpWeaponEditor_Init()
 
     #if CLIENT
     RegisterSignal("EndSetPresentationType")
+    RegisterSignal("CloseModelRUI")
     ClMenuModels_Init()
     #endif
 }
@@ -44,6 +52,9 @@ void function OnWeaponActivate_weapon_editor( entity weapon )
     #if CLIENT
     if (weapon.GetOwner() != GetLocalClientPlayer()) return
     entity player = GetLocalClientPlayer()
+
+    thread MakeRUI()
+    UpdateRUI(player)
     #elseif SERVER
     entity player = weapon.GetOwner()
     #endif
@@ -58,6 +69,7 @@ void function OnWeaponDeactivate_weapon_editor( entity weapon )
     #if CLIENT
     if (weapon.GetOwner() != GetLocalClientPlayer()) return
     entity player = GetLocalClientPlayer()
+    clGlobal.levelEnt.Signal("CloseModelRUI")
     #elseif SERVER
     entity player = weapon.GetOwner()
     #endif
@@ -254,41 +266,52 @@ bool function ClientCommand_Load(entity player, array<string> args) {
 }
 
 #if CLIENT
-/*
-void function MakeScoreRUI()
+void function MakeRUI()
 {
-    if ( file.scoreRui != null)
+    if ( file.rui != null)
     {
-        RuiSetString( file.scoreRui, "messageText", "0/0 | none" )
+        RuiSetString( file.rui, "messageText", "0/0 | None" )
         return
     }
-    clGlobal.levelEnt.EndSignal( "CloseScoreRUI" )
+
+    clGlobal.levelEnt.EndSignal( "CloseModelRUI" )
 
     UISize screenSize = GetScreenSize()
-    var screenAlignmentTopo = RuiTopology_CreatePlane( <(screenSize.width * -0.11),( screenSize.height * -0.5 ), 0>, <float( screenSize.width ), 0, 0>, <0, float( screenSize.height ), 0>, false )
+    var screenAlignmentTopo = RuiTopology_CreatePlane( <(screenSize.width * -0.3),( screenSize.height * -0.52 ), 0>, <float( screenSize.width ), 0, 0>, <0, float( screenSize.height ), 0>, false )
     var rui = RuiCreate( $"ui/announcement_quick_right.rpak", screenAlignmentTopo, RUI_DRAW_HUD, RUI_SORT_SCREENFADE + 1 )
     
     RuiSetGameTime( rui, "startTime", Time() )
-    RuiSetString( rui, "messageText", "0/0 | none" )
+    RuiSetString( rui, "messageText", "0/0 | None" )
     RuiSetString( rui, "messageSubText", "Text 2")
     RuiSetFloat( rui, "duration", 9999999 )
     RuiSetFloat3( rui, "eventColor", SrgbToLinear( <128, 188, 255> ) )
 	
-    file.scoreRui = rui
+    file.rui = rui
     
     OnThreadEnd(
 		function() : ( rui )
 		{
 			RuiDestroy( rui )
-			file.scoreRui = null
+			file.rui = null
 		}
 	)
     
     WaitForever()
 }
 
-void function UpdateRUI(string sec, int partIndex, int max) {
-    string currentAsset = GetAssets()[sec][partIndex]
-    RuiSetString( file.scoreRui,"messageText", "");
-}*/
+void function UpdateRUI(entity player) {
+    string section = "mdl/base_models"
+    int index = 0
+
+    if (player.p.selectedProp.section != "") {
+        section = player.p.selectedProp.section
+        index = player.p.selectedProp.index
+    }
+
+    string currentAsset = GetAssets()[section][index]
+    int max = GetAssets()[section].len()
+    int currIndex = index + 1
+
+    RuiSetString( file.rui,"messageText", currIndex + "/" + max + " | " + currentAsset);
+}
 #endif

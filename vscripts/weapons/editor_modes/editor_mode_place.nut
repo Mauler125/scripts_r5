@@ -243,13 +243,16 @@ void function ServerCallback_NextProp( entity player )
     if(!IsValid( player )) return
     if(!IsAlive( player )) return
 
-    printl("SERVER+CLIENT NEXT PROP")
-    int max = GetAssets()[getbyvalue(GetSections(), player.p.selectedProp.section)].len()
+    int max = GetAssets()[player.p.selectedProp.section].len()
     if (player.p.selectedProp.index + 1 > max - 1) {
         player.p.selectedProp.index = 0
     } else {
         player.p.selectedProp.index++
     }
+
+    #if CLIENT
+    UpdateRUI(player)
+    #endif
 
     #if SERVER
         Remote_CallFunction_Replay( player, "ServerCallback_NextProp", player )
@@ -721,6 +724,7 @@ void function SetEquippedSection(string sec) {
     entity player = GetLocalClientPlayer()
     player.p.selectedProp.section = sec
     player.p.selectedProp.index = 0
+    UpdateRUI(player)
 
     player.ClientCommand("section " + sec)
 }
