@@ -340,6 +340,9 @@ void function ClMenuModels_Init()
 	AddCallback_OnClientScriptInit( OnClientScriptInit )
 	AddCallback_FullUpdate( OnFullUpdate )
 
+	file.scriptEntitiesOrigins["customize_weapon_camera_target"] = GetMapPosition()
+	file.scriptEntitiesAngles["customize_weapon_camera_target"] = GetMapAngles()
+
     GetAssets()
 }
 
@@ -1165,7 +1168,7 @@ void function InitMenuEntities()
     }
 
 	if (IsLobby()) {
-		clGlobal.menuCamera = CreateClientSidePointCamera( <0, 0, 0>, <0, 0, 0>, DEFAULT_FOV )
+		clGlobal.menuCamera = CreateClientSidePointCamera( GetMapPosition(), GetMapAngles(), DEFAULT_FOV )
 	}
 
 	// Wait for character class to be known
@@ -1210,7 +1213,15 @@ void function InitMenuEntities()
 	ItemFlavor weaponSkin = LoadoutSlot_GetItemFlavor( localPlayerEHI, Loadout_WeaponSkin( weapon ) )
 	WeaponCosmetics_Apply( model, weaponSkin, null )
 
-    ModelData_SetBaseOrigin( file.customizeModel, <7176, 345, 53> )
+	vector x = <7176, 345, 53>
+	switch(GetMapName()) {
+		case "mp_rr_canyonlands_mu1":
+		case "mp_rr_canyonlands_mu1_night":
+		case "mp_rr_canyonlands_64k_x_64k":
+			x = <18169, -22000, 7844>
+			break
+  	}
+    ModelData_SetBaseOrigin( file.customizeModel, x )
 	ModelData_SetBaseAngles( file.customizeModel, WEAPON_BASE_ANGLES )
 	ModelData_SetBaseRotationDelta( file.customizeModel, WEAPON_BASE_ROTATION_DELTA )
 	model = CreateMenuModel( file.customizeModel, $"mdl/dev/empty_model.rmdl" )
@@ -2299,7 +2310,7 @@ void function SetMenuCamera( entity player, int presentationType, bool interpola
 	}
 
 	if (!IsValid(clGlobal.menuCamera)) {
-		clGlobal.menuCamera = CreateClientSidePointCamera( <0, 0, 0>, <0, 0, 0>, DEFAULT_FOV )
+		clGlobal.menuCamera = CreateClientSidePointCamera( GetMapPosition(), GetMapAngles(), DEFAULT_FOV )
 	}
 
 	player.SetScriptMenuOn()
@@ -2309,6 +2320,8 @@ void function SetMenuCamera( entity player, int presentationType, bool interpola
 
 	int cameraTargetName = file.presentationData[ presentationType ].cameraTargetName
 	entity cameraTarget  = file.cameraTargets[ cameraTargetName ]
+	cameraTarget.SetOrigin(GetMapPosition())
+	cameraTarget.SetAngles(GetMapAngles())
 	clGlobal.menuCamera.SetTarget( cameraTarget, fov, interpolate, EASING_CUBIC_INOUT, TRANSITION_DURATION )
 
 	//EASING_LINEAR
@@ -3077,6 +3090,37 @@ void function UIToClient_PreviewModel( string root, bool isLoop ) {
 	//file.cameraZoomModelInitialized = true
 
 	thread TransitionTest( model, color / 255.0, true, true )
+}
+#endif
+
+#if CLIENT
+vector function GetMapPosition() {
+	switch(GetMapName()) {
+		case "mp_rr_canyonlands_mu1":
+		case "mp_rr_canyonlands_mu1_night":
+		case "mp_rr_canyonlands_64k_x_64k":
+			return <18169, -21781, 7844>
+		case "mp_rr_desertlands_64k_x_64k":
+		case "mp_rr_desertlands_64k_x_64k_nx":
+			return <7168,0,56>
+		default:
+			return <7168,0,56>
+  	}
+  unreachable
+}
+vector function GetMapAngles() {
+	switch(GetMapName()) {
+		case "mp_rr_canyonlands_mu1":
+		case "mp_rr_canyonlands_mu1_night":
+		case "mp_rr_canyonlands_64k_x_64k":
+			return <0, -90, 0>
+		case "mp_rr_desertlands_64k_x_64k":
+		case "mp_rr_desertlands_64k_x_64k_nx":
+			return <0,90,0>
+		default:
+			return <0,90,0>
+  }
+  unreachable
 }
 #endif
 
