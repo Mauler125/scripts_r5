@@ -21,11 +21,13 @@ global function SetEquippedSection
 #if SERVER
 // init functions:
 global function GravityLift_Init
-global function GravityLift_CreatedCallback
+global function GravityLift_Trigger
 
 // set constants:
+const asset GRAVITY_LIFT_FX = $"P_ar_loot_drop_point"
+
 const float JUMP_PAD_PUSH_RADIUS = 45.0
-const float JUMP_PAD_PUSH_PROJECTILE_RADIUS = 32.0//98.0
+const float JUMP_PAD_PUSH_PROJECTILE_RADIUS = 64
 const float JUMP_PAD_PUSH_VELOCITY = 950.0
 const float JUMP_PAD_VIEW_PUNCH_SOFT = 25.0
 const float JUMP_PAD_VIEW_PUNCH_HARD = 4.0
@@ -38,7 +40,6 @@ const float JUMP_PAD_ANGLE_LIMIT = 0.70
 const float JUMP_PAD_ICON_HEIGHT_OFFSET = 48.0
 const float JUMP_PAD_ACTIVATION_TIME = 0.5
 const asset JUMP_PAD_LAUNCH_FX = $"P_grndpnd_launch"
-const JUMP_PAD_DESTRUCTION = "jump_pad_destruction"
 #endif
 
 struct {
@@ -286,12 +287,19 @@ void function PlaceProp(entity player)
     file.allProps.append(GetProp(player))
     GetProp(player).Show()
     GetProp(player).Solid()
-    printl("------------------------ Server offset: " + file.offsetZ)
+    
+    // prints prop info to the console to save it
+    vector myOrigin = GetProp(player).GetOrigin()
+    vector myAngles = GetProp(player).GetAngles()
+
+    string positionSerialized = myOrigin.x.tostring() + "," + myOrigin.y.tostring() + "," + myOrigin.z.tostring()
+	string anglesSerialized = myAngles.x.tostring() + "," + myAngles.y.tostring() + "," + myAngles.z.tostring()
+    printl("[editor]" + string(GetAssetFromPlayer(player)) + ";" + positionSerialized + ";" + anglesSerialized)
+
     #elseif CLIENT
     if(player != GetLocalClientPlayer()) return;
     GetProp(player).Destroy()
     SetProp(player, null)
-    printl("------------------------ Client offset: " + file.offsetZ)
     #endif
 }
 
@@ -614,20 +622,24 @@ bool function ClientCommand_Next(entity player, array<string> args) {
 #if SERVER
 void function GravityLift_Init()
 {
+    // need lift particles here
+    PrecacheParticleSystem( GRAVITY_LIFT_FX )
+    
     array<entity> gravLiftTargets = GetEntArrayByScriptName( "geyser_jump" ) // ???
 	foreach ( target in gravLiftTargets )
 	{
-		thread GravityLift_CreatedCallback( target )
+		thread GravityLift_Trigger( target )
 		//target.Destroy()
 	}
 }
 
-void function GravityLift_CreatedCallback( entity jumpPad )
+void function GravityLift_Trigger( entity jumpPad )
 {
-
+    // Todo: give the player more control in the air
     vector origin = OriginToGround( jumpPad.GetOrigin() )
 	vector angles = jumpPad.GetAngles()
 
+    entity gravLiftBeam = StartParticleEffectInWorld_ReturnEntity(GetParticleSystemIndex( GRAVITY_LIFT_FX ), origin, angles )
 
 	entity trigger = CreateEntity( "trigger_cylinder_heavy" )
 	SetTargetName( trigger, "gravlift_trigger" )
@@ -647,13 +659,7 @@ void function GravityLift_CreatedCallback( entity jumpPad )
 	DispatchSpawn( trigger )
 	trigger.SetEnterCallback( GravityLift_OnJumpPadAreaEnter )
     
-  //Need to set parent so the jump trigger is destroyed with the pad entity
-  trigger.SetParent( jumpPad )
-
-	// entity traceBlocker = CreateTraceBlockerVolume( trigger.GetOrigin(), 24.0, true, CONTENTS_BLOCK_PING | CONTENTS_NOGRAPPLE, TEAM_MILITIA, "GEYSER_PING_SCRIPT_NAME" ) // todo: replace geyser_ping_script_name --
-	// traceBlocker.SetBox( <-192, -192, -16>, <192, 192, 3000> )
-
-	
+    trigger.SetParent( jumpPad )
 }
 
 
@@ -665,40 +671,22 @@ void function GravityLift_OnJumpPadAreaEnter( entity trigger, entity ent )
 
 void function GravityLift_JumpPadPushEnt( entity trigger, entity ent, vector origin, vector angles )
 {
-	if ( GravityLift_JumpPad_ShouldPushPlayerOrNPC( ent ) )
-	{
-		if ( ent.IsPlayer() )
-		{
-			entity jumpPad = trigger.GetOwner()
-			if ( IsValid( jumpPad ) )
-			{
-				int fxId = GetParticleSystemIndex( JUMP_PAD_LAUNCH_FX )
-				StartParticleEffectOnEntity( jumpPad, fxId, FX_PATTACH_ABSORIGIN_FOLLOW, 0 )
-			}
-		}
-		else
-		{
-			EmitSoundOnEntity( ent, "JumpPad_LaunchPlayer_3p" )
-			EmitSoundOnEntity( ent, "JumpPad_AirborneMvmt_3p" )
-		}
-	}
-}
 
-bool function GravityLift_JumpPad_ShouldPushPlayerOrNPC( entity target )
-{
-	if ( target.IsTitan() )
-		return false
-
-	if ( IsSuperSpectre( target ) )
-		return false
-
-	if ( IsTurret( target ) )
-		return false
-
-	if ( IsDropship( target ) )
-		return false
-
-	return true
+    if ( ent.IsPlayer() )
+    {
+        entity jumpPad = trigger.GetOwner()
+        if ( IsValid( jumpPad ) )
+        {
+            int fxId = GetParticleSystemIndex( JUMP_PAD_LAUNCH_FX )
+            StartParticleEffectOnEntity( jumpPad, fxId, FX_PATTACH_ABSORIGIN_FOLLOW, 0 )
+        }
+    }
+    else
+    {
+        EmitSoundOnEntity( ent, "JumpPad_LaunchPlayer_3p" )
+        EmitSoundOnEntity( ent, "JumpPad_AirborneMvmt_3p" )
+    }
+	
 }
 #endif
 
@@ -736,4 +724,3 @@ void function SetEquippedSection(string sec) {
     player.ClientCommand("section " + sec)
 }
 #endif
-// maybe also Geyser_JumpJetsWhileAirborne
