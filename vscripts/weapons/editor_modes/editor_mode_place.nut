@@ -290,6 +290,7 @@ void function PlaceProp(entity player)
     file.allProps.append(GetProp(player))
     GetProp(player).Show()
     GetProp(player).Solid()
+    GetProp(player).AllowMantle()
     GetProp(player).SetScriptName("editor_placed_prop")
     
     // prints prop info to the console to save it
