@@ -5,21 +5,20 @@
 
 
 
-Getting started:
-
+### Getting started:
 1. Download this repo and replace your current scripts
     1. back them up first if you have changed anything you want to keep
 2. Load in to a game in debug mode
 3. Press esc or tab, go to the dev menu, select Editor then Start Editing
 4. Press q (your tactical button) to equip the tool
 
-Using the tool:
+### Using the tool:
 * Set the rotate and snap binds by running `bind "3" "+scriptCommand6"; bind "4" "+scriptCommand1"` in the console
     * Change 3 and 4 to your key of choice
 * If you use toggle zoom, you need to bind something to hold aim to change props
 * Press b (change fire mode) to enter delete mode
 
-Saving and loading:
+### Saving and loading:
 * Before you start editing, open the console
 * [To save and load, use the tool and follow the instructions here](https://github.com/mostlyfireproof/R5RMapEditor)
 * __PLEASE SAVE FREQUENTLY__, as the game can and will crash at the worst possible time
