@@ -81,6 +81,8 @@ global struct PropInfo
 global struct EditorMode
 {
     string displayName
+	string description
+	
 	bool crosshairActive = false
     
     void functionref(entity player) onActivationCallback

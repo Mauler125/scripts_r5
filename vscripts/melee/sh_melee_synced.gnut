@@ -82,6 +82,7 @@ void function MeleeSyncedShared_Init()
 #if SERVER || CLIENT
 bool function AttackerCanStartSyncedMelee( entity attacker, entity meleeInputWeapon, entity meleeAttackWeapon )
 {
+	return true
 	if ( !AttackerCanStartMelee( attacker, meleeInputWeapon, meleeAttackWeapon ) )
 		return false
 

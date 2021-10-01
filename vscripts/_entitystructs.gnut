@@ -664,6 +664,7 @@ global struct ServerPlayerStruct
 	entity currentPropEntity
 
 	EditorMode& selectedEditorMode
+	EditorMode ornull lastEditorMode
 }
 
 global struct ServerPlayerWaypoint

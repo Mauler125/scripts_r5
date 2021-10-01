@@ -4,6 +4,7 @@ global function OnWeaponActivate_weapon_editor
 global function OnWeaponDeactivate_weapon_editor
 global function OnWeaponOwnerChanged_weapon_editor
 global function OnWeaponPrimaryAttack_weapon_editor
+global function GetEditorModes
 
 #if SERVER
 global function ClientCommand_Compile 
@@ -11,6 +12,7 @@ global function ClientCommand_Load
 #endif
 #if CLIENT
 global function UpdateRUI
+global function ServerCallback_SetCurrentEditorMode
 #endif
 
 struct PropSaveInfo
@@ -20,7 +22,6 @@ struct PropSaveInfo
     vector angles
 }
 
-
 struct
 {
     // store the props here for saving and loading
@@ -29,13 +30,22 @@ struct
 
     #if CLIENT
     var rui
+
+    bool attemptSwitchToLastEditorMode = false
+    float lastTimeOpenedEditorWheel
     #endif
+
+
 } file
 
 void function MpWeaponEditor_Init()
 {
-    file.editorModes.append(EditorModePlace_Init())
-    file.editorModes.append(EditorModeDelete_Init())
+    RegisterEditorMode(EditorModePlace_Init())
+    RegisterEditorMode(EditorModeDelete_Init())
+    RegisterEditorMode(EditorModeToys_Init())
+
+
+
     AddCallback_OnPlayerAddWeaponMod(CycleWeaponMode)
     AddCallback_OnPlayerRemoveWeaponMod(CycleWeaponMode)
 
@@ -43,15 +53,73 @@ void function MpWeaponEditor_Init()
     RegisterSignal("EndSetPresentationType")
     RegisterSignal("CloseModelRUI")
     ClMenuModels_Init()
+    #elseif SERVER
+    AddClientCommandCallback("SetEditorMode", ClientCommand_SetCurrentEditorMode)
     #endif
 }
 
+void function RegisterEditorMode(EditorMode mode)
+{
+    file.editorModes.append(mode)
+
+}
+
+array<EditorMode> function GetEditorModes()
+{
+    return file.editorModes
+}
+
+#if SERVER
+bool function ClientCommand_SetCurrentEditorMode(entity player, array<string> args)
+{
+    if(!IsValid( player )) return false
+
+    int idx = int( args[0] )
+    if(idx >= GetEditorModes().len() || idx < 0) return false
+
+    SetCurrentEditorMode(player, GetEditorModes()[idx])
+
+    Remote_CallFunction_Replay(player, "ServerCallback_SetCurrentEditorMode", idx)
+    return true
+}
+#endif
+
+#if CLIENT
+void function ServerCallback_SetCurrentEditorMode(int idx)
+{
+    SetCurrentEditorMode(GetLocalClientPlayer(), GetEditorModes()[idx])
+    file.attemptSwitchToLastEditorMode = false
+}
+#endif
+
+void function SetCurrentEditorMode(entity player, EditorMode mode)
+{
+    if(!IsValid( player )) return
+    if(player.GetActiveWeapon( eActiveInventorySlot.mainHand ).GetWeaponClassName() != "mp_weapon_editor") 
+        return   
+    if( GetEditorModes().find(mode) == GetEditorModes().find(player.p.selectedEditorMode) )
+        return
+
+    if(player.p.selectedEditorMode.onDeactivationCallback != null)
+    {
+        player.p.lastEditorMode = player.p.selectedEditorMode
+        player.p.selectedEditorMode.onDeactivationCallback(player)
+    }
+    player.p.selectedEditorMode = mode
+    player.p.selectedEditorMode.onActivationCallback(player)
+
+}
 
 void function OnWeaponActivate_weapon_editor( entity weapon )
 {
     #if CLIENT
     if (weapon.GetOwner() != GetLocalClientPlayer()) return
     entity player = GetLocalClientPlayer()
+
+    
+    RegisterConCommandTriggeredCallback("+use_alt", OpenEditorModeSelector)
+    RegisterConCommandTriggeredCallback("-use_alt", CloseEditorModeSelector)
+
 
     thread MakeRUI()
     UpdateRUI(player)
@@ -64,12 +132,40 @@ void function OnWeaponActivate_weapon_editor( entity weapon )
 
 }
 
+
+
+#if CLIENT
+void function OpenEditorModeSelector(entity player)
+{
+    CommsMenu_OpenMenuTo( player, eChatPage.EDITOR_MODES, eCommsMenuStyle.EDITOR_MODES_MENU )
+    file.attemptSwitchToLastEditorMode = true
+}
+
+void function CloseEditorModeSelector(entity player)
+{
+    if(file.attemptSwitchToLastEditorMode)
+    {
+        file.attemptSwitchToLastEditorMode = false
+        if(player.p.lastEditorMode != null)
+        {
+            player.ClientCommand(
+                "SetEditorMode " + GetEditorModes().find( expect EditorMode(player.p.lastEditorMode) )
+            )
+        }
+    }
+    CommsMenu_Shutdown( true )
+}
+
+#endif
+
 void function OnWeaponDeactivate_weapon_editor( entity weapon )
 {
     #if CLIENT
     if (weapon.GetOwner() != GetLocalClientPlayer()) return
     entity player = GetLocalClientPlayer()
     clGlobal.levelEnt.Signal("CloseModelRUI")
+    DeregisterConCommandTriggeredCallback("+use_alt", OpenEditorModeSelector)
+    DeregisterConCommandTriggeredCallback("-use_alt", CloseEditorModeSelector)
     #elseif SERVER
     entity player = weapon.GetOwner()
     #endif

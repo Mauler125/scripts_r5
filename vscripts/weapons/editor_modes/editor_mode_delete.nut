@@ -28,6 +28,7 @@ EditorMode function EditorModeDelete_Init()
     EditorMode mode
 
     mode.displayName = "Delete"
+    mode.description = "Delete props already placed"
     mode.crosshairActive = true
     
     mode.onActivationCallback = EditorModeDelete_Activation
@@ -176,6 +177,6 @@ void function DeleteProp(entity player)
 
 TraceResults function GetDeleteLineTrace(entity player)
 {
-    TraceResults result = TraceLine(player.EyePosition() + 5 * player.GetViewForward(), player.GetOrigin() + 1500 * player.GetViewForward(), [player], TRACE_MASK_SHOT, TRACE_COLLISION_GROUP_PLAYER)
+    TraceResults result = TraceLineHighDetail(player.EyePosition() + 5 * player.GetViewForward(), player.GetOrigin() + 1500 * player.GetViewForward(), [player], TRACE_MASK_SHOT, TRACE_COLLISION_GROUP_PLAYER)
     return result
 }

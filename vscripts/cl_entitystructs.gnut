@@ -159,6 +159,7 @@ global struct ClientPlayerStruct
 	entity currentPropEntity
 	
 	EditorMode& selectedEditorMode
+	EditorMode ornull lastEditorMode
 }
 
 

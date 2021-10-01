@@ -47,7 +47,8 @@ EditorMode function EditorModePlace_Init()
 
     EditorMode mode
 
-    mode.displayName = "Place"
+    mode.displayName = "Individual Place"
+    mode.description = "Place props one by one"
     
     mode.onActivationCallback = EditorModePlace_Activation
     mode.onDeactivationCallback = EditorModePlace_Deactivation
