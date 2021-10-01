@@ -910,4 +910,5 @@ Scripts:
 [
 	weapons/editor_modes/editor_mode_place.nut
 	weapons/editor_modes/editor_mode_delete.nut
+	weapons/editor_modes/editor_extras.nut
 ] 
