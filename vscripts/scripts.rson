@@ -876,18 +876,22 @@ Scripts:
 [
 	gamemodes/custom_tdm/sh_gamemode_custom_tdm.nut
 	gamemodes/custom_tdm/custom_tdm_settings.nut
+	gamemodes/surf/sh_gamemode_surf.nut
+	gamemodes/surf/surf_settings.nut
 ]
 
 When: "SERVER"
 Scripts:
 [
 	gamemodes/custom_tdm/_gamemode_custom_tdm.nut
+	gamemodes/surf/_gamemode_surf.nut
 ]
 
 When: "CLIENT"
 Scripts:
 [
 	gamemodes/custom_tdm/cl_gamemode_custom_tdm.nut
+	gamemodes/surf/cl_gamemode_surf.nut
 ]
 
 

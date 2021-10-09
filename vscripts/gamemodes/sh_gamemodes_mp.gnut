@@ -89,6 +89,24 @@ void function GameModes_Init_SV_CL()
 	GameMode_AddClientInit(gameMode, Cl_CustomTDM_Init)
 	//GameMode_AddClientInit( gameMode, ClGamemodeSurvival_Init )
 	#endif
+	
+	////////////////////////////
+	//                        //
+	//          SURF          //
+	//                        //
+	////////////////////////////
+
+	gameMode = SURF
+	#if SERVER || CLIENT
+		GameMode_AddSharedInit(gameMode, Sh_Surf_Init)
+		GameMode_AddSharedInit( gameMode, GamemodeSurvivalShared_Init )
+	#endif
+	#if SERVER
+	GameMode_AddServerInit(gameMode, _Surf_Init)
+	GameMode_SetEvacEnabled( gameMode, false )
+	#elseif CLIENT
+	GameMode_AddClientInit(gameMode, Cl_Surf_Init)
+	#endif
 
 	#if DEVSCRIPTS
 		Dev_GameModes_Init_SV_CL()
