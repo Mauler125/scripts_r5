@@ -56,7 +56,7 @@ WeaponData
     "zipline_grenade_snap_distance"					"250"
     "zipline_grenade_snap_angle"					"10"
 
-	"projectile_launch_speed"						"2600"
+	"projectile_launch_speed"						"10000"
 	"projectile_first_person_offset_fraction"		"2"
 	"projectile_launch_pitch_offset"				"6"
 
@@ -136,14 +136,14 @@ WeaponData
 
 	// Ammo
 	"ammo_clip_size"								"120"
-    "ammo_default_total"							"0"
+    "ammo_default_total"							"120"
     "ammo_display"									"count"
-    "ammo_min_to_fire"								"120"
-    "ammo_per_shot"									"120"
+    "ammo_min_to_fire"								"1"
+    "ammo_per_shot"									"0"
     "ammo_stockpile_max"							"0"
     "regen_ammo_refill_rate"						"1"
     "regen_ammo_refill_start_delay"					"0.1"
-    "ammo_no_remove_from_stockpile"					"0"
+    "ammo_no_remove_from_stockpile"					"1"
     "fire_duration"									"0.5"
 
 	// Behavior

@@ -170,5 +170,6 @@ void function SetupEditor()
 {
 	#if UI
 	SetupDevCommand( "Start Editing", "give mp_weapon_editor" )
+	SetupDevCommand( "Zipline", "give mp_weapon_zipline" )
 	#endif
 }
