@@ -304,9 +304,9 @@ void function PlaceProxyThink(entity player)
 	    TraceResults result = TraceLine(player.EyePosition() + 5 * player.GetViewForward(), player.GetOrigin() + 200 * player.GetViewForward(), [player], TRACE_MASK_SHOT, TRACE_COLLISION_GROUP_PLAYER)
 
         vector origin = result.endPos
-        origin.x = floor(origin.x / gridSize) * gridSize
-        origin.y = floor(origin.y / gridSize) * gridSize
-        origin.z = (floor(origin.z / gridSize) * gridSize)
+        origin.x = RoundToNearestInt(origin.x / gridSize) * gridSize
+        origin.y = RoundToNearestInt(origin.y / gridSize) * gridSize
+        origin.z = (RoundToNearestInt(origin.z / gridSize) * gridSize)
         #if CLIENT
         origin.z += file.offsetZ
         #elseif SERVER
