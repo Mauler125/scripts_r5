@@ -260,7 +260,7 @@ Scripts:
 	weapons/mp_weapon_dmr.nut
 	weapons/mp_weapon_doubletake.nut
 	weapons/mp_weapon_shotgun_pistol.nut
-	
+	weapons/mp_weapon_devmodel_finder.nut
 	
 
 	weapons/mp_weapon_grenade_emp.nut
