@@ -3,7 +3,7 @@
 ## This tool is in beta. It is not complete. 
 ## We do not take responsibility for any mental or physical harm caused by downloading, using, or modifying the level editor.
 
-
+If you have any bugs, suggestions, or questions, create an issue at the [R5Edit repo](https://github.com/mostlyfireproof/R5Edit) 
 
 ### Getting started:
 1. Download this repo and replace your current scripts
