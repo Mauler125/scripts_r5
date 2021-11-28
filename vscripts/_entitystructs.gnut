@@ -665,6 +665,12 @@ global struct ServerPlayerStruct
 	float playerDamageDealt
 	int respawnsGiven
 	int revivesGiven
+
+	PropInfo& selectedProp
+	entity currentPropEntity
+
+	EditorMode& selectedEditorMode
+	EditorMode ornull lastEditorMode
 }
 
 global struct ServerPlayerWaypoint
