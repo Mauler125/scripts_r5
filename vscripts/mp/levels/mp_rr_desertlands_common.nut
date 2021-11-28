@@ -561,6 +561,9 @@ void function CreateEditorZipline( vector startPos, vector endPos )
 
 	DispatchSpawn( rope_start )
 	DispatchSpawn( rope_end )
+
+	printl("[zipline][1]" + startPos)
+	printl("[zipline][2]" + endPos)
 }
 
 void function SetEditorTargetName( entity ent, string name )
