@@ -282,7 +282,10 @@ void function CodeCallback_MapSpawn() // original script entry point
 	PrecacheWeapon( $"mp_weapon_grenade_electric_smoke" )
 	PrecacheWeapon( $"mp_weapon_deployable_cover" )
 	PrecacheWeapon( $"melee_data_knife" )
+	PrecacheWeapon( $"mp_weapon_volt_smg" )
+
 	PrecacheWeapon( $"mp_weapon_editor" )
+
 	printl( "Code Script: _mapspawn" )
 
 	SV_CL_Shared_Init()
