@@ -268,7 +268,6 @@ void function ChangeToThisMenu_WithOpParm( void functionref( var ) menuFuncWithO
 
 void function SetupDefaultDevCommandsMP()
 {
-	SetupDevMenu( "Editor", SetDevMenu_Editor )
 	SetupDevMenu( "Abilities", SetDevMenu_Abilities )
 	SetupDevMenu( "Equip Weapon", SetDevMenu_Weapons )
     SetupDevMenu( "TDM Weapon", SetDevMenu_TDMWeapons )
@@ -416,10 +415,6 @@ void function SetDevMenu_SurvivalCharacter( var _ )
 	thread ChangeToThisMenu( SetupChangeSurvivalCharacterClass )
 }
 
-void function SetDevMenu_Editor( var _ ) 
-{
-	thread ChangeToThisMenu( SetupEditor ) 
-}
 
 void function DEV_InitLoadoutDevSubMenu()
 {

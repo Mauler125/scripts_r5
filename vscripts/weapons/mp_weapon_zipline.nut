@@ -313,8 +313,6 @@ void function OnProjectileCollision_weapon_zipline( entity projectile, vector po
 									}
 									weapon.w.ziplineStartPos = null
 
-									printl("[zipline][2]" + spots.endZiplineOrigin)
-
 									ziplineStationSuccessfullyDeployed = true
 								}
 							}
@@ -420,14 +418,12 @@ entity function CreateZipLineStation( entity weapon, entity player, vector origi
 		// If we are on a wall we make an anchor on the wall
 		entity model = CreatePropDynamic( ZIPLINE_TEMP_ZIPLINE_GUN_STATION_WALL_MODEL, origin, angles, 0 )
 		projectile.proj.projectileGroup.append( model )
-		printl("[zipline][1]" + origin)
 		return model
 	}
 
 	// If we are on the ground we make a pole station
 	entity model = CreatePropDynamic( ZIPLINE_TEMP_ZIPLINE_GUN_STATION_MODEL, origin, angles, 0 )
 	projectile.proj.projectileGroup.append( model )
-	printl("[zipline][1]" + origin)
 	return model
 }
 #endif
