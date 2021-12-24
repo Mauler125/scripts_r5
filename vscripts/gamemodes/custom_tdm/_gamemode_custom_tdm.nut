@@ -56,6 +56,8 @@ LocPair function _GetVotingLocation()
     {
         case "mp_rr_canyonlands_staging":
             return NewLocPair(<26794, -6241, -27479>, <0, 0, 0>)
+        case "mp_r5r_ashs_redemption"://our first custom tdm map
+            return NewLocPair(<-20917, 5852, -26741>, <0, -90, 0>)
         case "mp_rr_canyonlands_64k_x_64k":
         case "mp_rr_canyonlands_mu1":
         case "mp_rr_canyonlands_mu1_night":
