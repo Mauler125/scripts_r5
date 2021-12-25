@@ -33,6 +33,12 @@ void function GamemodeSurvival_Init()
 	SurvivalFreefall_Init()
 	Sh_ArenaDeathField_Init()
 	SurvivalShip_Init()
+	
+	if ( GetMapName() == "mp_r5r_ashs_redemption" )
+	{
+		//tdm map death wall
+		CreateWallTrigger( <-20857, 5702, -25746> )
+	}
 
 	FlagInit( "SpawnInDropship", false )
 	FlagInit( "PlaneDrop_Respawn_SetUseCallback", false )
@@ -266,6 +272,49 @@ void function Sequence_Playing()
 	thread Sequence_WinnerDetermined()
 }
 
+entity function CreateWallTrigger(vector pos, float box_radius = 30000 )
+{
+    entity map_trigger = CreateEntity( "trigger_cylinder" )
+    map_trigger.SetRadius( box_radius );map_trigger.SetAboveHeight( 350 );map_trigger.SetBelowHeight( 10 );
+    map_trigger.SetOrigin( pos )
+    DispatchSpawn( map_trigger )
+    thread FRThrowPlayerBack( map_trigger )
+    return map_trigger
+}
+
+void function FRThrowPlayerBack(entity proxy, float speed = 1)
+{ bool active = true
+    while (active)
+    {
+        if(IsValid(proxy))
+        {
+            foreach(player in GetPlayerArray())
+            {
+                if (player.GetPhysics() != MOVETYPE_NOCLIP)//won't affect noclip player
+                {
+                    if(proxy.IsTouching(player))
+						{
+							player.Zipline_Stop()
+							vector target_origin = player.GetOrigin()
+							vector proxy_origin = proxy.GetOrigin()
+							vector target_angles = player.GetAngles()
+							vector proxy_angles = proxy.GetAngles()
+                    
+							vector velocity = target_origin - proxy_origin
+							velocity = velocity * speed
+                    
+							vector angles = target_angles - proxy_angles
+                    
+							velocity = velocity + angles
+							player.SetVelocity(velocity)
+						}
+                }
+            }
+        } else {active = false ; break}
+        wait 0.01
+    } 
+}
+
 void function Sequence_WinnerDetermined()
 {
 	FlagSet( "DeathFieldPaused" )
@@ -375,7 +424,6 @@ void function OnPlayerDamaged( entity victim, var damageInfo )
 
 	float damage = DamageInfo_GetDamage( damageInfo )
 
-	
 	int currentHealth = victim.GetHealth()
 	if ( !( DamageInfo_GetCustomDamageType( damageInfo ) & DF_BYPASS_SHIELD ) )
 		currentHealth += victim.GetShieldHealth()
