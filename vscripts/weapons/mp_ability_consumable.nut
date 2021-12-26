@@ -317,7 +317,7 @@ void function OnClientConnected( entity player )
 
 void function OnWeaponOwnerChanged_Consumable( entity weapon, WeaponOwnerChangedParams changeParams )
 {
-	printt("OnWeaponOwnerChanged_Consumable")
+	// printt("OnWeaponOwnerChanged_Consumable")
 	#if SERVER
 		if ( !IsValid( changeParams.oldOwner ) )
 		{
