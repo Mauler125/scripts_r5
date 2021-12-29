@@ -90,7 +90,7 @@ void function Sh_CustomTDM_Init()
         )
         break
 		
-    case "mp_r5r_ashs_redemption":
+    case "mp_rr_ashs_redemption":
         Shared_RegisterLocation(
             NewLocationSettings(
                 "Ash's Redemption",

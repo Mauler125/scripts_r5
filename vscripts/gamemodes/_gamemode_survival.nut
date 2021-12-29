@@ -34,7 +34,7 @@ void function GamemodeSurvival_Init()
 	Sh_ArenaDeathField_Init()
 	SurvivalShip_Init()
 	
-	if ( GetMapName() == "mp_r5r_ashs_redemption" )
+	if ( GetMapName() == "mp_rr_ashs_redemption" )
 	{
 		//tdm map death wall
 		CreateWallTrigger( <-20857, 5702, -25746> )
