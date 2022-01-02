@@ -119,7 +119,9 @@ void function VotingPhase()
         player.ForceStand()
         Remote_CallFunction_NonReplay(player, "ServerCallback_TDM_DoAnnouncement", 2, eTDMAnnounce.VOTING_PHASE)
         TpPlayerToSpawnPoint(player)
-        player.UnfreezeControlsOnServer();      
+        player.UnfreezeControlsOnServer();
+        player.SetPlayerNetInt("kills", 0) //Reset for kills
+	    player.SetPlayerNetInt("assists", 0) //Reset for deaths
     }
     wait Deathmatch_GetVotingTime()
     int choice = RandomIntRangeInclusive(0, file.locationSettings.len() - 1)
@@ -283,6 +285,11 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
             wait reservedTime
             if(Spectator_GetReplayIsEnabled() && IsValid(victim) && ShouldSetObserverTarget( attacker ))
             {
+                //Add a death to the victim
+                int invscore = victim.GetPlayerNetInt( "assists" )
+				invscore++;
+				victim.SetPlayerNetInt( "assists", invscore )
+
                 victim.SetObserverTarget( attacker )
                 victim.SetSpecReplayDelay( Spectator_GetReplayDelay() )
                 victim.StartObserverMode( OBS_MODE_IN_EYE )
@@ -308,6 +315,12 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
                 int score = GameRules_GetTeamScore(attacker.GetTeam());
                 score++;
                 GameRules_SetTeamScore(attacker.GetTeam(), score);
+
+                int invscore = victim.GetPlayerNetInt( "kills" )
+			    invscore++;
+			    attacker.SetPlayerNetInt( "kills", invscore )
+
+
                 if(score >= SCORE_GOAL_TO_WIN)
                 {
                     foreach( entity player in GetPlayerArray() )
