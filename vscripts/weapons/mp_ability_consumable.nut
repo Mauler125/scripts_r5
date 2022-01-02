@@ -1360,10 +1360,16 @@ void function UltimatePackUse( entity player, ConsumableInfo info )
 	int maxAmmo = ultimateAbility.GetWeaponPrimaryClipCountMax()
 	ammo += int( maxAmmo * (info.ultimateAmount/100) )
 
-	if( ammo < maxAmmo )
+	if( ammo < maxAmmo ) {
 		ultimateAbility.SetWeaponPrimaryClipCount( ammo )
-	else
+	}
+	else {
 		ultimateAbility.SetWeaponPrimaryClipCount( maxAmmo )
+	}
+	// Gives Wattson full ult on ult accel
+	if( PlayerHasPassive( player, ePassives.PAS_BATTERY_POWERED )) {
+		ultimateAbility.SetWeaponPrimaryClipCount( maxAmmo )
+	}
 }
 
 void function ClientCallback_SetNextHealModType(string nextModName)
