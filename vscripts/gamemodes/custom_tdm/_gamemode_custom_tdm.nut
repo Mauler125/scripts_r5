@@ -316,9 +316,9 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
                 score++;
                 GameRules_SetTeamScore(attacker.GetTeam(), score);
 
-                int invscore = victim.GetPlayerNetInt( "kills" )
+                int invscore = attacker.GetPlayerNetInt( "kills" )
 			    invscore++;
-			    attacker.SetPlayerNetInt( "kills", invscore )
+			    victim.SetPlayerNetInt( "kills", invscore )
 
 
                 if(score >= SCORE_GOAL_TO_WIN)
