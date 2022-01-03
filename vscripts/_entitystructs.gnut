@@ -400,6 +400,8 @@ global struct ServerEntityStruct
 
 	float lastGrappleTime
 
+	//Trophy Structs
+	float pylonhealth
 }
 
 global struct MeritData
