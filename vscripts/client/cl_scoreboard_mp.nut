@@ -282,8 +282,8 @@ void function ScoreboardFadeIn()
 {
 	foreach ( elem in file.scoreboardElems )
 	{
-		RuiSetGameTime( Hud_GetRui( elem ), "fadeOutStartTime", RUI_BADGAMETIME )
-		RuiSetGameTime( Hud_GetRui( elem ), "fadeInStartTime", Time() )
+		RuiSetGameTime( Hud_GetRui( elem ), "fadeInStartTime", RUI_BADGAMETIME )
+		RuiSetGameTime( Hud_GetRui( elem ), "fadeOutStartTime", Time() )
 	}
 
 	if ( file.scoreboardBg != null )
@@ -319,10 +319,6 @@ void function ShowScoreboardMP()
 	file.scoreboardOverlays = CreateScoreboardOverlays()
 
 	int myTeam = localPlayer.GetTeam()
-	if ( myTeam == TEAM_SPECTATOR ) //To handle demos
-	{
-		myTeam = GetDefaultNonSpectatorTeam()
-	}
 
 	array<int> enemyTeams = GetAllEnemyTeams( myTeam )
 
@@ -341,15 +337,8 @@ void function ShowScoreboardMP()
 	int numPlayersOnATeam = GetNumPlayersToDisplayAsATeam()
 	int totalTeamLogoOffset
 
-	if ( UseOnlyMyTeamScoreboard() || UseSingleTeamScoreboard() )
-	{
-		totalTeamLogoOffset = SCOREBOARD_TEAM_LOGO_OFFSET
-		numTeams = 1
-	}
-	else
-	{
-		totalTeamLogoOffset = SCOREBOARD_TEAM_LOGO_OFFSET * numTeams
-	}
+	totalTeamLogoOffset = SCOREBOARD_TEAM_LOGO_OFFSET
+	numTeams = 1
 
 	int teamHeight = SCOREBOARD_TEAM_LOGO_HEIGHT + SCOREBOARD_PLAYER_ROW_OFFSET + ( SCOREBOARD_PLAYER_ROW_HEIGHT + SCOREBOARD_PLAYER_ROW_SPACING ) * numPlayersOnATeam - SCOREBOARD_PLAYER_ROW_SPACING
 	int scoreboardHeight = SCOREBOARD_TITLE_HEIGHT + SCOREBOARD_SUBTITLE_HEIGHT + ( teamHeight * numTeams ) + totalTeamLogoOffset  + SCOREBOARD_FOOTER_HEIGHT
@@ -385,6 +374,8 @@ void function ShowScoreboardMP()
 	IntFromEntityCompare compareFunc = GetScoreboardCompareFunc()
 
 	file.scoreboard.Show()
+
+	//WHY THE FUCK DID THIS BREAK THE SCOREBOARD - AyeZeeBB
 	ScoreboardFadeIn()
 
 	int maxPlayerDisplaySlots = GetNumPlayersToDisplayAsATeam()
@@ -711,8 +702,6 @@ void function HideScoreboardMP()
 	entity localPlayer = GetLocalClientPlayer()
 	int myTeam = localPlayer.GetTeam()
 	int enemyTeam = GetEnemyScoreboardTeam()
-
-	Signal( clGlobal.signalDummy, "OnHideScoreboard" )
 }
 
 bool function ScoreboardInputMP( int key )
