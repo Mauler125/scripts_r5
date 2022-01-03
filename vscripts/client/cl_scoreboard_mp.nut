@@ -639,22 +639,34 @@ void function UpdateScoreboardForGamemode( entity player, var rowRui, var scoreH
 	{
 		case 4:
 			playerScore4Header = headers[ 3 ]
-			playerScore4 = player.GetPlayerGameStat( playerGameStats[ 3 ] )
+			if (IsValid( player ))
+			{
+				playerScore4 = player.GetPlayerGameStat( playerGameStats[ 3 ] )
+			}
 			playerScore4NumDigits = numDigits[ 3 ]
 
 		case 3:
 			playerScore3Header = headers[ 2 ]
-			playerScore3 = player.GetPlayerGameStat( playerGameStats[ 2 ] )
+			if (IsValid( player ))
+			{
+				playerScore3 = player.GetPlayerGameStat( playerGameStats[ 2 ] )
+			}
 			playerScore3NumDigits = numDigits[ 2 ]
 
 		case 2:
 			playerScore2Header = headers[ 1 ]
-			playerScore2 = player.GetPlayerNetInt( "assists" )
+			if (IsValid( player ))
+			{
+				playerScore2 = player.GetPlayerNetInt( "assists" )
+			}
 			playerScore2NumDigits = numDigits[ 1 ]
 
 		case 1:
 			playerScore1Header = headers[ 0 ]
-			playerScore1 = player.GetPlayerNetInt( "kills" )
+			if (IsValid( player ))
+			{
+				playerScore1 = player.GetPlayerNetInt( "kills" )
+			}
 			playerScore1NumDigits = numDigits[ 0 ]
 	}
 
