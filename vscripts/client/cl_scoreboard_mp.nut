@@ -92,6 +92,10 @@ void function ClScoreboardMp_Init()
 
 void function ScoreboardFocus( entity player )
 { 
+	if (GAMETYPE_TEXT[ GAMETYPE ] != "custom_tdm")
+	{
+		return
+	}
 	thread ShowScoreboardMP()
 	file.hasFocus = true
 }
