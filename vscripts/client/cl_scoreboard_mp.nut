@@ -282,8 +282,8 @@ void function ScoreboardFadeIn()
 {
 	foreach ( elem in file.scoreboardElems )
 	{
+		RuiSetGameTime( Hud_GetRui( elem ), "fadeOutStartTime", RUI_BADGAMETIME )
 		RuiSetGameTime( Hud_GetRui( elem ), "fadeInStartTime", RUI_BADGAMETIME )
-		RuiSetGameTime( Hud_GetRui( elem ), "fadeOutStartTime", Time() )
 	}
 
 	if ( file.scoreboardBg != null )
