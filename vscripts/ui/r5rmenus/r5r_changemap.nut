@@ -49,7 +49,7 @@ void function InitR5RMapMenu( var newMenuArg )
     file.map5 = Hud_GetChild(menu, "Mapbtn5")
     Hud_AddEventHandler( file.map5, UIE_CLICK, SetMap5 )
     var map5rui = Hud_GetRui( file.map5 )
-    RuiSetString( map5rui, "buttonText", "Wordgs Edge After Dark" )
+    RuiSetString( map5rui, "buttonText", "Worlds Edge After Dark" )
 
     file.map6 = Hud_GetChild(menu, "Mapbtn6")
     Hud_AddEventHandler( file.map6, UIE_CLICK, SetMap6 )

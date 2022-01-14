@@ -15,7 +15,6 @@ void function InitR5RPrivateServerConnectMenu( var newMenuArg )
 	file.menu = menu
 
     AddMenuEventHandler( menu, eUIEvent.MENU_SHOW, OnR5RCS_Show )
-	AddMenuEventHandler( menu, eUIEvent.MENU_CLOSE, OnR5RCS_Close )
 	AddMenuEventHandler( menu, eUIEvent.MENU_NAVIGATE_BACK, OnR5RCS_NavigateBack )
 
 	SetGamepadCursorEnabled( menu, false )
@@ -40,12 +39,6 @@ void function OnR5RCS_Show()
     file.serverexists = false
 }
 
-
-void function OnR5RCS_Close()
-{
-	// nothing
-}
-
 void function OnR5RCS_NavigateBack()
 {
 	CloseActiveMenu()
@@ -56,7 +49,7 @@ void function ConnectToPrivateServer(var button)
     if (file.serverexists)
     {
         string enckey = Hud_GetUTF8Text( Hud_GetChild( file.menu, "BtnEncKey" ) )
-    JoinPrivateServerFromMenu(enckey);
+        JoinPrivateServerFromMenu(enckey);
     }
 }
 
