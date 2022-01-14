@@ -86,19 +86,7 @@ void function OnR5RCS_NavigateBack()
 
 void function StartServer( var button )
 {
-    thread SuperDumbFix()
-    //Servername, Mapname, playlist, vis
-}
-
-void function SuperDumbFix()
-{
-    //This is really shit and i dont like it.
-    //But i cant set servername or visibility without it being opened at least once
-    ClientCommand("cl_showbrowser")
-    wait 0.05
-    ClientCommand("cl_showbrowser")
-
-    CreateServer(file.name, file.map, file.gamemode, file.visibility)
+    thread CreateServer(file.name, file.map, file.gamemode, file.visibility)
 }
 
 void function ChangeMap( var button )
