@@ -1,15 +1,15 @@
 global function InitR5RMenu
 
-struct
+// do not change this enum without modifying it in code at gameui/IBrowser.h
+global enum eServerVisibility
 {
-	var menu
-    var serverbrowser
-    var createserver
-    var settings
-    var exit
-} file
+    OFFLINE,
+    HIDDEN,
+    PUBLIC
+}
 
-enum eR5RPromoData
+// make sure this enum is the same as in code!
+global enum eR5RPromoData
 {
     PromoLargeTitle,
     PromoLargeDesc,
@@ -18,6 +18,15 @@ enum eR5RPromoData
     PromoRightTitle,
     PromoRightDesc
 }
+
+struct
+{
+	var menu
+    var serverbrowser
+    var createserver
+    var settings
+    var exit
+} file
 
 void function InitR5RMenu( var newMenuArg )
 {

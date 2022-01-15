@@ -30,7 +30,7 @@ void function InitR5RVisibilityMenu( var newMenuArg )
 	file.vis2 = Hud_GetChild(menu, "Visbtn2")
 	Hud_AddEventHandler( file.vis2, UIE_CLICK, SetVis2 )
 	var vis2rui = Hud_GetRui( file.vis2 )
-	RuiSetString( vis2rui, "buttonText", "Private" )
+	RuiSetString( vis2rui, "buttonText", "Private/Hidden" )
 
 	file.vis3 = Hud_GetChild(menu, "Visbtn3")
 	Hud_AddEventHandler( file.vis3, UIE_CLICK, SetVis3 )
@@ -56,18 +56,18 @@ void function OnR5RSB_NavigateBack()
 
 void function SetVis1(var button)
 {
-	SetVisibility( "Offline" )
+	SetVisibility( eServerVisibility.OFFLINE )
 	CloseActiveMenu()
 }
 
 void function SetVis2(var button)
 {
-	SetVisibility( "Private" )
+	SetVisibility( eServerVisibility.HIDDEN )
 	CloseActiveMenu()
 }
 
 void function SetVis3(var button)
 {
-	SetVisibility( "Public" )
+	SetVisibility( eServerVisibility.PUBLIC )
 	CloseActiveMenu()
 }

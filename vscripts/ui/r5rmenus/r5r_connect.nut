@@ -18,7 +18,6 @@ void function InitR5RConnectMenu( var newMenuArg )
 	file.menu = menu
 
 	AddMenuEventHandler( menu, eUIEvent.MENU_SHOW, OnR5RSB_Show )
-	AddMenuEventHandler( menu, eUIEvent.MENU_CLOSE, OnR5RSB_Close )
 	AddMenuEventHandler( menu, eUIEvent.MENU_NAVIGATE_BACK, OnR5RSB_NavigateBack )
 
 	//Setup RUI/VGUI
@@ -37,11 +36,6 @@ void function OnR5RSB_Show()
 
 	Hud_SetText(file.header, "Connecting To Server")
 	Hud_SetText(file.text, file.servername)
-}
-
-void function OnR5RSB_Close()
-{
-	//
 }
 
 void function OnR5RSB_NavigateBack()

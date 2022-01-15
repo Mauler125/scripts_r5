@@ -3,7 +3,6 @@ global function SetMap
 global function SetGamemode
 global function SetVisibility
 
-
 struct
 {
 	var menu
@@ -19,7 +18,7 @@ struct
     string name
     string gamemode
     string map
-    string visibility
+    int visibility // eServerVisibility
 } file
 
 void function InitR5RCreateServer( var newMenuArg )
@@ -60,11 +59,11 @@ void function InitR5RCreateServer( var newMenuArg )
     file.name = Hud_GetUTF8Text( Hud_GetChild( file.menu, "BtnServerName" ) )
     file.map = "mp_rr_desertlands_64k_x_64k"
     file.gamemode = "survival_dev"
-    file.visibility = "Offline"
+    file.visibility = eServerVisibility.OFFLINE
 
     Hud_SetText(file.maplbl, "Current Map: " + file.map)
     Hud_SetText(file.gamemodelbl, "Current Playlist: " + file.gamemode)
-    Hud_SetText(file.vislbl, "Current Visibility: " + file.visibility)
+    Hud_SetText(file.vislbl, "Current Visibility: " + GetEnumString( "eServerVisibility", file.visibility ) )
 }
 
 void function OnR5RCS_Show()
@@ -111,11 +110,11 @@ void function SetGamemode( string gamemode )
     Hud_SetText(file.gamemodelbl, "Current Playlist: " + gamemode)
 }
 
-void function SetVisibility( string vis )
+void function SetVisibility( int vis )
 {
     //set selected visibility
     file.visibility = vis
-    Hud_SetText(file.vislbl, "Current Visibility: " + vis)
+    Hud_SetText( file.vislbl, "Current Visibility: " + GetEnumString( "eServerVisibility", file.visibility ) )
 }
 
 void function UpdateServerName( var button )

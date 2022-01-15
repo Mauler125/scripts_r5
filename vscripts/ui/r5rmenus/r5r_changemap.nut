@@ -4,14 +4,27 @@ struct
 {
 	var menu
 
-	var map1
-	var map2
-	var map3
-	var map4
-	var map5
-	var map6
-	var map7
+	array<string> maps
 } file
+
+const string MAP_BUTTON_CLASSNAME = "MapButton"
+
+string function TEMP_GetMapNameSuffix(string mapname)
+{
+	switch(mapname)
+	{
+		case "mp_rr_canyonlands_64k_x_64k":
+			return " (Season 0)"
+		case "mp_rr_canyonlands_mu1":
+			return " (Season 2)"
+		case "mp_rr_desertlands_64k_x_64k":
+		case "mp_rr_desertlands_64k_x_64k_nx":
+			return " (Season 3)"
+		default:
+			return ""
+	}
+	unreachable
+}
 
 void function InitR5RMapMenu( var newMenuArg )
 {
@@ -19,46 +32,32 @@ void function InitR5RMapMenu( var newMenuArg )
 	file.menu = menu
 
 	AddMenuEventHandler( menu, eUIEvent.MENU_SHOW, OnR5RSB_Show )
-	AddMenuEventHandler( menu, eUIEvent.MENU_CLOSE, OnR5RSB_Close )
 	AddMenuEventHandler( menu, eUIEvent.MENU_NAVIGATE_BACK, OnR5RSB_NavigateBack )
 
 	SetGamepadCursorEnabled( menu, false )
 
-	//Set VGUI/RUI
-	file.map1 = Hud_GetChild(menu, "Mapbtn1")
-	Hud_AddEventHandler( file.map1, UIE_CLICK, SetMap1 )
-	var map1rui = Hud_GetRui( file.map1 )
-	RuiSetString( map1rui, "buttonText", "Kings Canyon Season 0" )
+	file.maps = GetAvailableMaps()
 
-	file.map2 = Hud_GetChild(menu, "Mapbtn2")
-	Hud_AddEventHandler( file.map2, UIE_CLICK, SetMap2 )
-	var map2rui = Hud_GetRui( file.map2 )
-	RuiSetString( map2rui, "buttonText", "Kings Canyon Season 2" )
+	foreach( button in GetElementsByClassname( menu, MAP_BUTTON_CLASSNAME ) )
+	{
+		int buttonID = int( Hud_GetScriptID( button ) )
 
-	file.map3 = Hud_GetChild(menu, "Mapbtn3")
-	Hud_AddEventHandler( file.map3, UIE_CLICK, SetMap3 )
-	var map3rui = Hud_GetRui( file.map3 )
-	RuiSetString( map3rui, "buttonText", "Kings Canyon Season 2 After Dark" )
+		// if this button's script id is above the maximum index of maps, break from the loop
+		if(buttonID > file.maps.len()-1)
+		{
+			Hud_SetEnabled( button, false )
+			Hud_SetVisible( button, true )
+			continue;
+		}
 
-	file.map4 = Hud_GetChild(menu, "Mapbtn4")
-	Hud_AddEventHandler( file.map4, UIE_CLICK, SetMap4 )
-	var map4rui = Hud_GetRui( file.map4 )
-	RuiSetString( map4rui, "buttonText", "Worlds Edge" )
+		Hud_SetEnabled( button, true )
+		Hud_SetVisible( button, true )
 
-	file.map5 = Hud_GetChild(menu, "Mapbtn5")
-	Hud_AddEventHandler( file.map5, UIE_CLICK, SetMap5 )
-	var map5rui = Hud_GetRui( file.map5 )
-	RuiSetString( map5rui, "buttonText", "Worlds Edge After Dark" )
+		Hud_AddEventHandler( button, UIE_CLICK, MapButton_SetMap )
 
-	file.map6 = Hud_GetChild(menu, "Mapbtn6")
-	Hud_AddEventHandler( file.map6, UIE_CLICK, SetMap6 )
-	var map6rui = Hud_GetRui( file.map6 )
-	RuiSetString( map6rui, "buttonText", "Ash's Redemption" )
-
-	file.map7 = Hud_GetChild(menu, "Mapbtn7")
-	Hud_AddEventHandler( file.map7, UIE_CLICK, SetMap7 )
-	var map7rui = Hud_GetRui( file.map7 )
-	RuiSetString( map7rui, "buttonText", "Firing Range" )
+		var rui = Hud_GetRui( button )
+		RuiSetString( rui, "buttonText", Localize( "#" + file.maps[ buttonID ]) + TEMP_GetMapNameSuffix( file.maps[ buttonID ] ) )
+	}
 }
 
 void function OnR5RSB_Show()
@@ -66,55 +65,27 @@ void function OnR5RSB_Show()
 	Chroma_MainMenu()
 }
 
-
-void function OnR5RSB_Close()
-{
-	//
-}
-
 void function OnR5RSB_NavigateBack()
 {
 	CloseActiveMenu()
 }
 
-void function SetMap1(var button)
+void function MapButton_SetMap( var button )
 {
-	SetMap( "mp_rr_canyonlands_64k_x_64k" )
-	CloseActiveMenu()
-}
+	int buttonID = int( Hud_GetScriptID( button ) )
 
-void function SetMap2(var button)
-{
-	SetMap( "mp_rr_canyonlands_mu1" )
-	CloseActiveMenu()
-}
+	// check that button id is still within the range of gamemodes
+	// i don't think this can actually be an issue that occurs but may as well check it
+	if( buttonID > file.maps.len()-1 )
+	{
+		Warning("Attempted to use a map button with script id %i, but the maximum index is %i!", buttonID, file.maps.len()-1)
+		return
+	}
 
-void function SetMap3(var button)
-{
-	SetMap( "mp_rr_canyonlands_mu1_night" )
-	CloseActiveMenu()
-}
+	string mapname = file.maps[ buttonID ]
 
-void function SetMap4(var button)
-{
-	SetMap( "mp_rr_desertlands_64k_x_64k" )
-	CloseActiveMenu()
-}
+	printf( "%s() - Setting server map to %s\n", FUNC_NAME(), mapname )
 
-void function SetMap5(var button)
-{
-	SetMap( "mp_rr_desertlands_64k_x_64k_nx" )
-	CloseActiveMenu()
-}
-
-void function SetMap6(var button)
-{
-	SetMap( "mp_r5r_ashs_redemption" )
-	CloseActiveMenu()
-}
-
-void function SetMap7(var button)
-{
-	SetMap( "mp_rr_canyonlands_staging" )
+	SetMap( mapname )
 	CloseActiveMenu()
 }
