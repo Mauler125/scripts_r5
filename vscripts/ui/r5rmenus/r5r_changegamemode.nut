@@ -46,7 +46,6 @@ void function InitR5RGamemodeMenu( var newMenuArg )
 		Hud_AddEventHandler( button, UIE_CLICK, GamemodeButton_SetMode )
 
 		var rui = Hud_GetRui( button )
-		printf("Yes\n")
 		RuiSetString( rui, "buttonText", availablePlaylistsArray[ buttonID ] )
 	}
 }
