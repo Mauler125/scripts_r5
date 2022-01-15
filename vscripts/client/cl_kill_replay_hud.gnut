@@ -76,7 +76,7 @@ void function KillReplayHud_Activate()
 	//var rui = CreateCockpitRui( $"ui/kill_replay_overlay.rpak", 0 )
 	file.killReplayOverlayRui = rui
 
-	RuiSetString( rui, "killReplayTitleText", "#KILL_REPLAY" )
+	RuiSetString( rui, "killReplayTitleText", "Kill Replay" )
 
 	AttackerDisplayNameStruct nameOfLastKiller = clGlobal.nameOfLastKiller
 
