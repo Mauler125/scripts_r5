@@ -9,6 +9,16 @@ struct
     var exit
 } file
 
+enum eR5RPromoData
+{
+    PromoLargeTitle,
+    PromoLargeDesc,
+    PromoLeftTitle,
+    PromoLeftDesc,
+    PromoRightTitle,
+    PromoRightDesc
+}
+
 void function InitR5RMenu( var newMenuArg )
 {
 	var menu = GetMenu( "R5RMenu" )
@@ -47,21 +57,17 @@ void function InitR5RMenu( var newMenuArg )
     var rui2 = Hud_GetRui( button2 )
     var rui3 = Hud_GetRui( button3 )
 
-    //PromoLargeTitle, PromoLargeDesc
     RuiSetImage( rui1, "modeImage", $"rui/menu/gamemode/shotguns_and_snipers" )
-    RuiSetString( rui1, "modeNameText", GetPromoData("PromoLargeTitle"))
-    RuiSetString( rui1, "modeDescText", GetPromoData("PromoLargeDesc"))
+    RuiSetString( rui1, "modeNameText", GetPromoData(eR5RPromoData.PromoLargeTitle))
+    RuiSetString( rui1, "modeDescText", GetPromoData(eR5RPromoData.PromoLargeDesc))
 
-    //PromoLeftTitle, PromoLeftDesc
     RuiSetImage( rui2, "modeImage", $"rui/menu/gamemode/shadow_squad" )
-    RuiSetString( rui2, "modeNameText", GetPromoData("PromoLeftTitle"))
-    RuiSetString( rui2, "modeDescText", GetPromoData("PromoLeftDesc"))
+    RuiSetString( rui2, "modeNameText", GetPromoData(eR5RPromoData.PromoLeftTitle))
+    RuiSetString( rui2, "modeDescText", GetPromoData(eR5RPromoData.PromoLeftDesc))
 
-
-    //PromoRightTitle, PromoRightDesc
     RuiSetImage( rui3, "modeImage", $"rui/menu/gamemode/ranked_2" )
-    RuiSetString( rui3, "modeNameText", GetPromoData("PromoRightTitle"))
-    RuiSetString( rui3, "modeDescText", GetPromoData("PromoRightDesc"))
+    RuiSetString( rui3, "modeNameText", GetPromoData(eR5RPromoData.PromoRightTitle))
+    RuiSetString( rui3, "modeDescText", GetPromoData(eR5RPromoData.PromoRightDesc))
 
     Hud_SetText( Hud_GetChild( file.menu, "VersionNumber" ), GetSDKVersion() )
 }
