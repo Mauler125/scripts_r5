@@ -1,5 +1,5 @@
 //#base "combo_buttons2.res"
-resource/ui/menus/r5rmenu.menu
+scripts/resource/ui/menus/r5rmenu.menu
 {
 
 	menu

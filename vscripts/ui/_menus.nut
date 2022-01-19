@@ -1509,18 +1509,18 @@ void function InitMenus()
 	AddPanel( mainMenu, "MainMenuPanel", InitMainMenuPanel )
 
 
-	//R5Reloaed Custom Menus
-	var r5rMenu = AddMenu( "R5RMenu", $"resource/ui/menus/r5rmenu.menu", InitR5RMenu, "Main Menu" )
-	var r5rServerBrowser = AddMenu( "R5RServerBrowser", $"resource/ui/menus/r5rserverbrowser.menu", InitR5RServerBrowser, "Server Browser" )
-	var r5rCreateServer = AddMenu( "R5RCreateServer", $"resource/ui/menus/r5rcreateserver.menu", InitR5RCreateServer, "Create Server" )
+	//R5Reloaded Custom Menus
+	var r5rMenu = AddMenu( "R5RMenu", $"scripts/resource/ui/menus/r5rmenu.menu", InitR5RMenu, "Main Menu" )
+	var r5rServerBrowser = AddMenu( "R5RServerBrowser", $"scripts/resource/ui/menus/r5rserverbrowser.menu", InitR5RServerBrowser, "Server Browser" )
+	var r5rCreateServer = AddMenu( "R5RCreateServer", $"scripts/resource/ui/menus/r5rcreateserver.menu", InitR5RCreateServer, "Create Server" )
 
-	var r5rMap = AddMenu( "R5RChangeMap", $"resource/ui/menus/r5rmap.menu", InitR5RMapMenu, "Change Map" )
-	var r5rGamemode = AddMenu( "R5RChangeGamemode", $"resource/ui/menus/r5rgamemode.menu", InitR5RGamemodeMenu, "Change Playlist" )
-	var r5rVisibility = AddMenu( "R5RChangeVisibility", $"resource/ui/menus/r5rvisibility.menu", InitR5RVisibilityMenu, "Change Visibility" )
+	var r5rMap = AddMenu( "R5RChangeMap", $"scripts/resource/ui/menus/r5rmap.menu", InitR5RMapMenu, "Change Map" )
+	var r5rGamemode = AddMenu( "R5RChangeGamemode", $"scripts/resource/ui/menus/r5rgamemode.menu", InitR5RGamemodeMenu, "Change Playlist" )
+	var r5rVisibility = AddMenu( "R5RChangeVisibility", $"scripts/resource/ui/menus/r5rvisibility.menu", InitR5RVisibilityMenu, "Change Visibility" )
 
-	var r5rconnecting = AddMenu( "ConnectingToServer", $"resource/ui/menus/r5rconnecting.menu", InitR5RConnectMenu )
-	var r5rprivateserver = AddMenu( "PrivateServerConnect", $"resource/ui/menus/r5rprivateserver.menu", InitR5RPrivateServerConnectMenu )
-	var r5ripconnect = AddMenu( "IPServerConnect", $"resource/ui/menus/r5ripconnect.menu", InitR5RIPServerConnectMenu )
+	var r5rconnecting = AddMenu( "ConnectingToServer", $"scripts/resource/ui/menus/r5rconnecting.menu", InitR5RConnectMenu )
+	var r5rprivateserver = AddMenu( "PrivateServerConnect", $"scripts/resource/ui/menus/r5rprivateserver.menu", InitR5RPrivateServerConnectMenu )
+	var r5ripconnect = AddMenu( "IPServerConnect", $"scripts/resource/ui/menus/r5ripconnect.menu", InitR5RIPServerConnectMenu )
 	///////////////////////////////////
 
 	AddMenu( "PlayVideoMenu", $"resource/ui/menus/play_video.menu", InitPlayVideoMenu )
@@ -1546,7 +1546,7 @@ void function InitMenus()
 	//var miscMenu      = AddMenu( "MiscMenu", $"resource/ui/menus/misc.menu", InitMiscMenu )
 	//var settingsPanel = AddPanel( miscMenu, "SettingsPanel", InitSettingsPanel )
 
-	var miscMenu      = AddMenu( "MiscMenu", $"resource/ui/menus/r5rmisc.menu", InitMiscMenu )
+	var miscMenu      = AddMenu( "MiscMenu", $"scripts/resource/ui/menus/r5rmisc.menu", InitMiscMenu )
 	var settingsPanel = AddPanel( miscMenu, "SettingsPanel", InitSettingsPanel )
 
 	#if PC_PROG
@@ -1624,14 +1624,14 @@ void function InitMenus()
 	AddMenu( "LowPopDialog", $"resource/ui/menus/dialogs/low_pop.menu", InitLowPopDialog )
 	AddMenu( "SlotSelectDialog", $"resource/ui/menus/dialogs/select_slot.menu", InitSelectSlotDialog )
 	AddMenu( "CharacterSkillsDialog", $"resource/ui/menus/dialogs/character_skills.menu", InitCharacterSkillsDialog )
-	AddMenu( "ConfirmDialog", $"resource/ui/menus/dialogs/r5rconfirm_dialog.menu", InitConfirmDialog )
+	AddMenu( "ConfirmDialog", $"scripts/resource/ui/menus/dialogs/r5rconfirm_dialog.menu", InitConfirmDialog )
 	AddMenu( "OKDialog", $"resource/ui/menus/dialogs/ok_dialog.menu", InitOKDialog )
-	AddMenu( "ConfirmExitToDesktopDialog", $"resource/ui/menus/dialogs/r5rconfirm_dialog.menu", InitConfirmExitToDesktopDialog )
-	AddMenu( "ConfirmLeaveMatchDialog", $"resource/ui/menus/dialogs/r5rconfirm_dialog.menu", InitConfirmLeaveMatchDialog )
-	AddMenu( "ConfirmKeepVideoChangesDialog", $"resource/ui/menus/dialogs/r5rconfirm_dialog.menu", InitConfirmKeepVideoChangesDialog )
+	AddMenu( "ConfirmExitToDesktopDialog", $"scripts/resource/ui/menus/dialogs/r5rconfirm_dialog.menu", InitConfirmExitToDesktopDialog )
+	AddMenu( "ConfirmLeaveMatchDialog", $"scripts/resource/ui/menus/dialogs/r5rconfirm_dialog.menu", InitConfirmLeaveMatchDialog )
+	AddMenu( "ConfirmKeepVideoChangesDialog", $"scripts/resource/ui/menus/dialogs/r5rconfirm_dialog.menu", InitConfirmKeepVideoChangesDialog )
 	AddMenu( "ConfirmPurchaseDialog", $"resource/ui/menus/dialogs/confirm_purchase.menu", InitConfirmPurchaseDialog )
 	AddMenu( "ConfirmGrxErrorDialog", $"resource/ui/menus/dialogs/confirm_dialog.menu", InitConfirmGrxErrorDialog )
-	AddMenu( "ConnectingDialog", $"resource/ui/menus/r5rdialog_connecting.menu", InitConnectingDialog )
+	AddMenu( "ConnectingDialog", $"scripts/resource/ui/menus/r5rdialog_connecting.menu", InitConnectingDialog )
 	AddMenu( "DataCenterDialog", $"resource/ui/menus/dialog_datacenter.menu", InitDataCenterDialogMenu )
 	AddMenu( "EULADialog", $"resource/ui/menus/dialog_eula.menu", InitEULADialog )
 	AddMenu( "ModeSelectDialog", $"resource/ui/menus/dialog_mode_select.menu", InitModeSelectDialog )

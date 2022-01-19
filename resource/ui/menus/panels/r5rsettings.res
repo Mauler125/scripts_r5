@@ -1,4 +1,4 @@
-"resource/ui/menus/panels/r5rsettings.res"
+"scripts/resource/ui/menus/panels/r5rsettings.res"
 {
 	PanelFrame
 	{
@@ -29,7 +29,7 @@
         wide					f0
         tall					84
         visible					1
-        controlSettingsFile		"resource/ui/menus/panels/r5rtabs_settings.res"
+        controlSettingsFile		"scripts/resource/ui/menus/panels/r5rtabs_settings.res"
 
         pin_to_sibling			PanelFrame
         pin_corner_to_sibling	TOP
