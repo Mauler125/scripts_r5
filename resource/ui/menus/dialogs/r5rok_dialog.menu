@@ -105,7 +105,7 @@ resource/ui/menus/confirm_dialog.menu
 		ErrorImage
 		{
 			ControlName				RuiPanel
-			ypos 			-140
+			ypos 			-180
 			xpos			0
 			zpos 			4
 			wide			75
@@ -122,14 +122,14 @@ resource/ui/menus/confirm_dialog.menu
 		{
 			ControlName				Label
 			labelText				"#CONTINUE"
-			textAlignment	west
 			auto_wide_tocontents 1
 			tall 30
-			ypos -35
+			ypos -115
 			xpos 0
 			fontHeight 40
 			zpos 3
 			interactive 		false
+			textAlignment		center
 
 
 			pin_to_sibling			DialogFrame
@@ -140,15 +140,15 @@ resource/ui/menus/confirm_dialog.menu
 		ErrorMessage
 		{
 			ControlName				Label
-			labelText				"#CONTINUE"
-			textAlignment	west
-			auto_wide_tocontents 1
-			tall 30
+			textAlignment			center
+			labelText				""
+			wide 1000
+			tall 200
 			ypos 15
+			wrap 1
 			xpos 0
-			fontHeight 40
+			fontHeight 30
 			zpos 3
-			interactive 		false
 
 
 			pin_to_sibling			DialogFrame
