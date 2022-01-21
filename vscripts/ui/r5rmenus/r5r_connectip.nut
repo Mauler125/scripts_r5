@@ -36,5 +36,18 @@ void function ConnectToIP(var button)
 	string ip = Hud_GetUTF8Text( Hud_GetChild( file.menu, "BtnServerIP" ) )
 	string enckey = Hud_GetUTF8Text( Hud_GetChild( file.menu, "BtnEncKey" ) )
 	
+	if ( ip == "" || enckey == "")
+		return
+		
+	thread StartServerConnection(ip, enckey)
+}
+
+void function StartServerConnection(string ip, string enckey)
+{
+	SendConnectMenuData(ip, enckey)
+	AdvanceMenu( GetMenu( "ConnectingToServer" ) )
+	
+	wait 2
+	
 	ConnectToIPFromMenu(ip, enckey)
 }

@@ -48,8 +48,19 @@ void function ConnectToPrivateServer(var button)
 	if (file.serverexists)
 	{
 		string enckey = Hud_GetUTF8Text( Hud_GetChild( file.menu, "BtnEncKey" ) )
-		JoinPrivateServerFromMenu(enckey);
+		thread StartServerConnection(enckey)
 	}
+}
+
+void function StartServerConnection(string enckey)
+{
+	string message = GetPrivateServerMessage(enckey);
+	SendConnectMenuData(message, "")
+	AdvanceMenu( GetMenu( "ConnectingToServer" ) )
+	
+	wait 2
+	
+	JoinPrivateServerFromMenu(enckey)
 }
 
 void function CheckEncKey(var button)

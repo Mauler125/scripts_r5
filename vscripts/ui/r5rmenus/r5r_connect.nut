@@ -7,6 +7,7 @@ struct
 
 	var header
 	var text
+	var text2
 
 	string servername = "Super Cool Temp Server Name"
 	string gamemode
@@ -24,6 +25,7 @@ void function InitR5RConnectMenu( var newMenuArg )
 	file.header = Hud_GetChild( menu, "DialogHeader" )
 
 	file.text = Hud_GetChild( menu, "DialogMessage" )
+	file.text2 = Hud_GetChild( menu, "DialogMessage2" )
 
 	var cancel = Hud_GetChild( menu, "Button0" )
 	SetButtonRuiText( cancel, "Cancel" )
@@ -36,6 +38,7 @@ void function OnR5RSB_Show()
 
 	Hud_SetText(file.header, "Connecting To Server")
 	Hud_SetText(file.text, file.servername)
+	Hud_SetText(file.text2, file.gamemode)
 }
 
 void function OnR5RSB_NavigateBack()
