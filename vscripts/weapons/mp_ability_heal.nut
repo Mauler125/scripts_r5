@@ -17,6 +17,7 @@ bool function OnWeaponChargeBegin_ability_heal( entity weapon )
 	#if SERVER
 	int stimDamage = int(weapon.GetWeaponSettingFloat( eWeaponVar.damage_near_distance ))
 	player.SetHealth( player.GetHealth() - stimDamage < 1 ? 1 : player.GetHealth() - stimDamage )
+	PlayBattleChatterLineToSpeakerAndTeam( player, "bc_tactical" )
 	#endif
 	
 	return true

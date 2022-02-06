@@ -371,6 +371,9 @@ void function PlayerAttemptRes( entity playerHealer, entity playerToRes )
 
 	float endTime = Time() + firstAidTime
 
+	if( selfRes )
+		firstAidTime += 5.8
+
 	int playerEHandle = playerToRes.GetEncodedEHandle()
 	int healerEHandle = playerHealer.GetEncodedEHandle()
 	int attemptID = GetNewFirstAidAttemptID()
