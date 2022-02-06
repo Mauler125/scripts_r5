@@ -368,13 +368,18 @@ void function PlayerAttemptRes( entity playerHealer, entity playerToRes )
 	if ( selfRes )
 		healerAnimation = "mp_pt_" + toResRigWeight + "_self_revive_crouch"
 
-	float firstAidTime = playerToRes.GetSequenceDuration( toResAnimation ) // playerHealer == playerToRes ? Bleedout_GetFirstAidTimeSelf( playerHealer ) : Bleedout_GetFirstAidTime( playerHealer )
+	float firstAidTime
+
+	if( selfRes )
+	{
+		firstAidTime = 11.8
+	} else {
+		firstAidTime = playerToRes.GetSequenceDuration( toResAnimation ) // playerHealer == playerToRes ? Bleedout_GetFirstAidTimeSelf( playerHealer ) : Bleedout_GetFirstAidTime( playerHealer )
+	}
+
 	float firstAidHealPercent = Bleedout_GetFirstAidHealPercent( playerHealer )
 
 	float endTime = Time() + firstAidTime
-
-	if( selfRes )
-		firstAidTime += 5.8
 
 	int playerEHandle = playerToRes.GetEncodedEHandle()
 	int healerEHandle = playerHealer.GetEncodedEHandle()
