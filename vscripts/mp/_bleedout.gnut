@@ -107,7 +107,7 @@ void function Bleedout_StartPlayerBleedout( entity player, entity attacker )
 
 	PlayBattleChatterLineToSpeakerAndTeam( player, "bc_imDown" )
 	if( player != attacker )
-		thread PlayBattleChatterLineToSpeakerAndTeamAfterDelay( attacker, "bc_iDownedAnEnemy", 1.5 )
+		thread PlayBattleChatterLineDelayedToSpeakerAndTeam( attacker, "bc_iDownedAnEnemy", 1.5 )
 
 	if ( IsValid( file.Callback_OnPlayerStartBleedout ) && !file.isBleeding[ player ] )
 		file.Callback_OnPlayerStartBleedout( player, attacker, null )

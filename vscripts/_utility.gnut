@@ -4489,13 +4489,6 @@ void function PlayBattleChatterLineToSpeakerAndTeam( entity player, string sound
 		thread PlayDialogueForPlayer( sound, teamMember, player )
 }
 
-void function PlayBattleChatterLineToSpeakerAndTeamAfterDelay( entity player, string sound, float delay )
-{
-	wait delay
-	foreach ( teamMember in GetPlayerArrayOfTeam( player.GetTeam() ) )
-		thread PlayDialogueForPlayer( sound, teamMember, player )
-}
-
 void function PlayBattleChatterLineDelayedToSpeakerAndTeam( entity player, string sound, float delay )
 {
 	foreach ( teamMember in GetPlayerArrayOfTeam( player.GetTeam() ) )
