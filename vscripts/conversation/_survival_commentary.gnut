@@ -63,7 +63,7 @@ void function SetKillLeader( entity killLeader, int numKills )
 			PlayBattleChatterLineToSpeakerAndTeam( speakingPlayer, "bc_killLeaderNew" )
 	}
 
-	thread PlayDialogueForPlayer( "bc_iBecomeKillLeader", killLeader, killLeader )
+	thread PlayBattleChatterLineToSpeakerAndTeamAfterAnnouncement( killLeader, "diag_ap_aiNotify_killLeaderNew", 2, "bc_iBecomeKillLeader", 4.6 )
 
 	array<entity> teamMembers = GetPlayerArrayOfTeam( killLeaderTeam )
 	teamMembers.fastremovebyvalue( killLeader )
@@ -86,8 +86,7 @@ void function OnPlayerKilled( entity victim, entity attacker, var damageInfo )
 	{
 		if ( victim == file.currentKillLeader )
 		{
-			PlayBattleChatterLineToSpeakerAndTeam( attacker, "bc_weKilledKillLeader" )
-
+			thread PlayBattleChatterLineToSpeakerAndTeamAfterAnnouncement( attacker, "diag_ap_aiNotify_killLeaderEliminated", 2, "bc_weKilledKillLeader", 4.3 )
 			foreach ( player in GetPlayerArray() )
 				Remote_CallFunction_NonReplay( player, "ServerCallback_Survival_HighlightedPlayerKilled", victim, attacker, eSurvivalCommentaryPlayerType.KILLLEADER )
 		}
@@ -105,9 +104,18 @@ void function OnPlayerKilled( entity victim, entity attacker, var damageInfo )
 		if ( !Flag( "SurvivalCommentary_FirstBloodReached" ) )
 		{
 			FlagSet( "SurvivalCommentary_FirstBloodReached" )
-			PlayBattleChatterLineToSpeakerAndTeam( attacker, "bc_weTookFirstBlood" )
+			thread PlayBattleChatterLineToSpeakerAndTeamAfterAnnouncement( attacker, "diag_ap_aiNotify_diedFirst", 1, "bc_weTookFirstBlood", 3.8 )
 		}
 	}
+}
+
+void function PlayBattleChatterLineToSpeakerAndTeamAfterAnnouncement( entity attacker, string announcement, int amountofAnnouncement, string chatter, float announcementTime )
+{
+	//"amountofAnnouncement" is the number of voice types in the announcement.
+	wait 1.5
+	SurvivalCommentary_PlaySoundForAllPlayers( SurvivalCommentary_GetAlternativeSound( announcement, amountofAnnouncement ) )
+	wait announcementTime
+	PlayBattleChatterLineToSpeakerAndTeam( attacker, chatter )
 }
 
 //  eSurvivalEventType
