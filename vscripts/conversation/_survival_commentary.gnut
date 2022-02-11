@@ -173,9 +173,9 @@ void function AddSurvivalCommentaryEvent ( int event, entity player = null )
 				thread SurvivalCommentary_PlaySoundForAllPlayersAfterDelay( "diag_ap_nocNotify_diedFirst_01_01_3p", 1.5 )
 				thread PlayBattleChatterLineDelayedToSpeakerAndTeam( player, "bc_weTookFirstBlood", 6.7 )
 				break
-            case eSurvivalEventType.CARE_PACKAGE_DROPPING:
-                thread SurvivalCommentary_PlaySoundForAllPlayers( "diag_ap_nocNotify_droppingCarePack_01_01_3p")
-                break;
+			case eSurvivalEventType.CARE_PACKAGE_DROPPING:
+				thread SurvivalCommentary_PlaySoundForAllPlayers( "diag_ap_nocNotify_droppingCarePack_01_01_3p")
+				break;
 			case eSurvivalEventType.CHAMPION_ELIMINATED:
 				thread SurvivalCommentary_PlaySoundForAllPlayersAfterDelay( "diag_ap_nocNotify_championEliminated_01_01_3p", 1.5 )
 				break;
@@ -203,9 +203,9 @@ void function AddSurvivalCommentaryEvent ( int event, entity player = null )
 			case eSurvivalEventType.CIRCLE_MOVES_10SEC:
 				thread SurvivalCommentary_PlaySoundForAllPlayers( SurvivalCommentary_GetAlternativeSound( "diag_ap_aiNotify_circleMoves10sec", 2))
 				break
-            case eSurvivalEventType.CARE_PACKAGE_DROPPING:
-                thread SurvivalCommentary_PlaySoundForAllPlayers( "diag_ap_aiNotify_droppingCarePack_01" )
-                break;
+			case eSurvivalEventType.CARE_PACKAGE_DROPPING:
+				thread SurvivalCommentary_PlaySoundForAllPlayers( "diag_ap_aiNotify_droppingCarePack_01" )
+				break;
 			case eSurvivalEventType.FIRST_BLOOD:
 				thread SurvivalCommentary_PlaySoundForAllPlayersAfterDelay( "diag_ap_aiNotify_diedFirst", 1.5 )
 				thread PlayBattleChatterLineDelayedToSpeakerAndTeam( player, "bc_weTookFirstBlood", 5.0 )
