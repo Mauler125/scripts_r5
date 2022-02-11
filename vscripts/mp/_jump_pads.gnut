@@ -111,6 +111,11 @@ void function JumpPad_PlayLaunchAnim( entity trigger )
 void function OnJumpPadAreaEnter( entity trigger, entity ent )
 {
 	thread JumpPad_PlayLaunchAnim( trigger )
+	ItemFlavor character = LoadoutSlot_GetItemFlavor( ToEHI( ent ), Loadout_CharacterClass() )
+	string charRef = ItemFlavor_GetHumanReadableRef( character )
+	if( charRef == "character_octane" )
+		EmitSoundOnEntityOnlyToPlayer( ent, ent, "diag_mp_octane_bc_jumpPadLaunch_1p" )
+	
 	JumpPadPushEnt( trigger, ent, trigger.GetOrigin(), trigger.GetAngles() )
 }
 
