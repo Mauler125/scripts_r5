@@ -668,7 +668,7 @@ global struct ServerPlayerStruct
 	int respawnsGiven
 	int revivesGiven
 
-	// Abilities chatter of Octane stuff
+	// This is for Octane's ability chatter
 	bool isSaidChatterOnStim = false
 	bool isSaidChatterOnJumpPad = false
 
