@@ -106,10 +106,13 @@ void function Bleedout_StartPlayerBleedout( entity player, entity attacker )
 	player.SetHealth( 100 )
 
 	PlayBattleChatterLineToSpeakerAndTeam( player, "bc_imDown" )
-	if( player != attacker && attacker.p.downedEnemyAtOneTime <= 0 )
-		thread DownedEnemy( attacker, 1.5 )
+	if( attacker.IsPlayer() && IsValid( attacker ) )
+	{
+		if( player != attacker && attacker.p.downedEnemyAtOneTime <= 0 )
+			thread DownedEnemy( attacker, 1.5 )
 
-	attacker.p.downedEnemyAtOneTime += 1
+		attacker.p.downedEnemyAtOneTime += 1
+	}
 
 	if ( IsValid( file.Callback_OnPlayerStartBleedout ) && !file.isBleeding[ player ] )
 		file.Callback_OnPlayerStartBleedout( player, attacker, null )
