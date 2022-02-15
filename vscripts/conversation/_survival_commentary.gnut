@@ -219,7 +219,7 @@ void function AddSurvivalCommentaryEvent ( int event, entity player = null )
 				break;
 			case eSurvivalEventType.YOU_ARE_NEW_KILL_LEADER:
 				thread SurvivalCommentary_PlaySoundForAllPlayersAfterDelay( "diag_ap_aiNotify_killLeaderNew", 1.5 )
-				thread PlayBattleChatterLineDelayedToSpeakerAndTeam( player, "bc_iBecomeKillLeader", 4.6 )
+				thread PlayBattleChatterLineDelayedToSpeakerAndTeam( player, "bc_iBecomeKillLeader", 6.0 )
 				break;
 		}
 	}
