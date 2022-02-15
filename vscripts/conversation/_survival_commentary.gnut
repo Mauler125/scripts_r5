@@ -52,24 +52,7 @@ void function SetKillLeader( entity killLeader, int numKills )
 	foreach ( player in GetPlayerArray() )
 		Remote_CallFunction_NonReplay( player, "ServerCallback_Survival_NewKillLeader", killLeader, numKills )
 
-	int maxTeams = GetCurrentPlaylistVarInt( "max_teams", MAX_TEAMS )
-	for ( int i = TEAM_MULTITEAM_FIRST; i < TEAM_MULTITEAM_FIRST + maxTeams; ++i )
-	{
-		if ( i == killLeaderTeam )
-			continue
-
-		entity speakingPlayer = TryFindSpeakingPlayerOnTeam( i )
-		if ( speakingPlayer != null )
-			PlayBattleChatterLineToSpeakerAndTeam( speakingPlayer, "bc_killLeaderNew" )
-	}
-
-	AddSurvivalCommentaryEvent( eSurvivalEventType.YOU_ARE_NEW_KILL_LEADER, killLeader )
-
-	array<entity> teamMembers = GetPlayerArrayOfTeam( killLeaderTeam )
-	teamMembers.fastremovebyvalue( killLeader )
-
-	foreach ( teamMember in teamMembers )
-		thread PlayDialogueForPlayer( "bc_squadmateBecomesKillLeader", teamMember, teamMember )
+	thread AddSurvivalCommentaryEvent( eSurvivalEventType.YOU_ARE_NEW_KILL_LEADER, killLeader )
 }
 
 int function GetMinKillsForKillLeader()
@@ -144,9 +127,9 @@ void function OnPlayerKilled( entity victim, entity attacker, var damageInfo )
 // 	29  PILOT_REVIVED,
 // 	30  SQUAD_ELIMINATED,
 // 	31  NO_KILLS_FOR_TIME,
-//  	32  CHAMPION_ELIMINATED,
-//  	33  KILL_LEADER_ELIMINATED,
-//  	34  YOU_ARE_NEW_KILL_LEADER,
+//  32  CHAMPION_ELIMINATED,
+//  33  KILL_LEADER_ELIMINATED,
+//  34  YOU_ARE_NEW_KILL_LEADER,
 // 	35  _count
 
 void function AddSurvivalCommentaryEvent ( int event, entity player = null )
@@ -173,9 +156,9 @@ void function AddSurvivalCommentaryEvent ( int event, entity player = null )
 				thread SurvivalCommentary_PlaySoundForAllPlayersAfterDelay( "diag_ap_nocNotify_diedFirst_01_01_3p", 1.5 )
 				thread PlayBattleChatterLineDelayedToSpeakerAndTeam( player, "bc_weTookFirstBlood", 6.7 )
 				break
-			case eSurvivalEventType.CARE_PACKAGE_DROPPING:
-				thread SurvivalCommentary_PlaySoundForAllPlayers( "diag_ap_nocNotify_droppingCarePack_01_01_3p")
-				break;
+            case eSurvivalEventType.CARE_PACKAGE_DROPPING:
+                thread SurvivalCommentary_PlaySoundForAllPlayers( "diag_ap_nocNotify_droppingCarePack_01_01_3p")
+                break;
 			case eSurvivalEventType.CHAMPION_ELIMINATED:
 				thread SurvivalCommentary_PlaySoundForAllPlayersAfterDelay( "diag_ap_nocNotify_championEliminated_01_01_3p", 1.5 )
 				break;
@@ -186,6 +169,24 @@ void function AddSurvivalCommentaryEvent ( int event, entity player = null )
 			case eSurvivalEventType.YOU_ARE_NEW_KILL_LEADER:
 				thread SurvivalCommentary_PlaySoundForAllPlayersAfterDelay( "diag_ap_nocNotify_killLeaderNew_01_01_3p", 1.5 )
 				thread PlayBattleChatterLineDelayedToSpeakerAndTeam( player, "bc_iBecomeKillLeader", 6.5 )
+				wait 6.0
+				int killLeaderTeam = player.GetTeam()
+				array<entity> teamMembers = GetPlayerArrayOfTeam( killLeaderTeam )
+				teamMembers.fastremovebyvalue( player )
+
+				foreach ( teamMember in teamMembers )
+					thread PlayDialogueForPlayer( "bc_squadmateBecomesKillLeader", teamMember, teamMember )
+
+				int maxTeams = GetCurrentPlaylistVarInt( "max_teams", MAX_TEAMS )
+				for ( int i = TEAM_MULTITEAM_FIRST; i < TEAM_MULTITEAM_FIRST + maxTeams; ++i )
+				{
+					if ( i == killLeaderTeam )
+						continue
+
+					entity speakingPlayer = TryFindSpeakingPlayerOnTeam( i )
+					if ( speakingPlayer != null )
+						PlayBattleChatterLineToSpeakerAndTeam( speakingPlayer, "bc_killLeaderNew" )
+				}
 				break;
 		}
 	}
@@ -203,9 +204,9 @@ void function AddSurvivalCommentaryEvent ( int event, entity player = null )
 			case eSurvivalEventType.CIRCLE_MOVES_10SEC:
 				thread SurvivalCommentary_PlaySoundForAllPlayers( SurvivalCommentary_GetAlternativeSound( "diag_ap_aiNotify_circleMoves10sec", 2))
 				break
-			case eSurvivalEventType.CARE_PACKAGE_DROPPING:
-				thread SurvivalCommentary_PlaySoundForAllPlayers( "diag_ap_aiNotify_droppingCarePack_01" )
-				break;
+            case eSurvivalEventType.CARE_PACKAGE_DROPPING:
+                thread SurvivalCommentary_PlaySoundForAllPlayers( "diag_ap_aiNotify_droppingCarePack_01" )
+                break;
 			case eSurvivalEventType.FIRST_BLOOD:
 				thread SurvivalCommentary_PlaySoundForAllPlayersAfterDelay( "diag_ap_aiNotify_diedFirst", 1.5 )
 				thread PlayBattleChatterLineDelayedToSpeakerAndTeam( player, "bc_weTookFirstBlood", 5.0 )
@@ -220,6 +221,25 @@ void function AddSurvivalCommentaryEvent ( int event, entity player = null )
 			case eSurvivalEventType.YOU_ARE_NEW_KILL_LEADER:
 				thread SurvivalCommentary_PlaySoundForAllPlayersAfterDelay( "diag_ap_aiNotify_killLeaderNew", 1.5 )
 				thread PlayBattleChatterLineDelayedToSpeakerAndTeam( player, "bc_iBecomeKillLeader", 6.0 )
+				wait 6.0
+				int killLeaderTeam = player.GetTeam()
+				array<entity> teamMembers = GetPlayerArrayOfTeam( killLeaderTeam )
+				teamMembers.fastremovebyvalue( player )
+
+				foreach ( teamMember in teamMembers )
+					thread PlayDialogueForPlayer( "bc_squadmateBecomesKillLeader", teamMember, teamMember )
+
+				int maxTeams = GetCurrentPlaylistVarInt( "max_teams", MAX_TEAMS )
+				for ( int i = TEAM_MULTITEAM_FIRST; i < TEAM_MULTITEAM_FIRST + maxTeams; ++i )
+				{
+					if ( i == killLeaderTeam )
+						continue
+
+					entity speakingPlayer = TryFindSpeakingPlayerOnTeam( i )
+					if ( speakingPlayer != null )
+						PlayBattleChatterLineToSpeakerAndTeam( speakingPlayer, "bc_killLeaderNew" )
+				}
+
 				break;
 		}
 	}

@@ -106,8 +106,10 @@ void function Bleedout_StartPlayerBleedout( entity player, entity attacker )
 	player.SetHealth( 100 )
 
 	PlayBattleChatterLineToSpeakerAndTeam( player, "bc_imDown" )
-	if( player != attacker )
-		thread PlayBattleChatterLineDelayedToSpeakerAndTeam( attacker, "bc_iDownedAnEnemy", 1.5 )
+	if( player != attacker && attacker.p.downedEnemyAtOneTime <= 0 )
+		thread DownedEnemy( attacker, 1.5 )
+
+	attacker.p.downedEnemyAtOneTime += 1
 
 	if ( IsValid( file.Callback_OnPlayerStartBleedout ) && !file.isBleeding[ player ] )
 		file.Callback_OnPlayerStartBleedout( player, attacker, null )
@@ -606,6 +608,29 @@ int function GetNewFirstAidAttemptID()
 {
 	file.firstAidAttemptID += 1
 	return file.firstAidAttemptID
+}
+
+void function DownedEnemy( entity player, float time )
+{
+	wait time
+	if( player.p.downedEnemyAtOneTime > 1 && !player.p.isDownedEnemyRecently )
+		PlayBattleChatterLineToSpeakerAndTeam( player, "bc_iDownedMultiple" )
+	else if( player.p.downedEnemyAtOneTime == 1 && !player.p.isDownedEnemyRecently )
+		PlayBattleChatterLineToSpeakerAndTeam( player, "bc_iDownedAnEnemy" )
+	else if( player.p.isDownedEnemyRecently )
+		PlayBattleChatterLineToSpeakerAndTeam( player, "bc_iDownedAnotherEnemy" )
+
+	player.p.downedEnemyAtOneTime = 0
+	if( !player.p.isDownedEnemyRecently )
+		thread RecentlyDownedEnemy( player, 15.0 )
+	
+}
+
+void function RecentlyDownedEnemy( entity player, float time )
+{
+	player.p.isDownedEnemyRecently = true
+	wait time
+	player.p.isDownedEnemyRecently = false
 }
 
 // dump functions

@@ -671,6 +671,10 @@ global struct ServerPlayerStruct
 	// Abilities chatter of Octane stuff
 	bool isSaidChatterOnStim = false
 	bool isSaidChatterOnJumpPad = false
+
+	// Amount of player downed enemy at one time
+	int downedEnemyAtOneTime = 0
+	bool isDownedEnemyRecently = false
 }
 
 global struct ServerPlayerWaypoint

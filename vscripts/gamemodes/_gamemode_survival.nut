@@ -575,6 +575,9 @@ void function OnPlayerKilled( entity victim, entity attacker, var damageInfo )
 	
 	if ( !canPlayerBeRespawned )
 		PlayerFullyDoomed( victim )
+
+	if( RandomInt( 100 ) >= 30 )
+		thread PlayBattleChatterLineDelayedToSpeakerAndTeam( attacker, "bc_iKilledAnEnemy", 2.0 )
 }
 
 void function OnClientConnected( entity player )
