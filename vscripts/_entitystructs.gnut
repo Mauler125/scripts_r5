@@ -667,6 +667,10 @@ global struct ServerPlayerStruct
 	float playerDamageDealt
 	int respawnsGiven
 	int revivesGiven
+
+	// Abilities chatter of Octane stuff
+	bool isSaidChatterOnStim = false
+	bool isSaidChatterOnJumpPad = false
 }
 
 global struct ServerPlayerWaypoint

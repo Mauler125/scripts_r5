@@ -113,8 +113,8 @@ void function OnJumpPadAreaEnter( entity trigger, entity ent )
 	thread JumpPad_PlayLaunchAnim( trigger )
 	ItemFlavor character = LoadoutSlot_GetItemFlavor( ToEHI( ent ), Loadout_CharacterClass() )
 	string charRef = ItemFlavor_GetHumanReadableRef( character )
-	if( charRef == "character_octane" )
-		EmitSoundOnEntityOnlyToPlayer( ent, ent, "diag_mp_octane_bc_jumpPadLaunch_1p" )
+	if( charRef == "character_octane" && !ent.p.isSaidChatterOnJumpPad )
+		thread SayBattleChatter( ent, "diag_mp_octane_bc_jumpPadLaunch_1p", 20.0 )
 	
 	JumpPadPushEnt( trigger, ent, trigger.GetOrigin(), trigger.GetAngles() )
 }
@@ -185,4 +185,14 @@ bool function JumpPad_ShouldPushPlayerOrNPC( entity target )
 		return false
 
 	return true
+}
+
+var function SayBattleChatter( entity player, string chatter, float time )
+{
+	#if SERVER
+	player.p.isSaidChatterOnJumpPad = true
+	EmitSoundOnEntityOnlyToPlayer( player, player, chatter )
+	wait time
+	player.p.isSaidChatterOnJumpPad = false
+	#endif
 }
