@@ -564,17 +564,21 @@ void function OnPlayerKilled( entity victim, entity attacker, var damageInfo )
 	array<entity> victimTeam = GetPlayerArrayOfTeam_Alive( victimTeamNumber )
 	bool teamEliminated = victimTeam.len() == 0
 
+	bool canPlayerBeRespawned = PlayerRespawnEnabled() && !teamEliminated
+
+	// PlayerFullyDoomed MUST be called before HandleSquadElimination
+	// HandleSquadElimination accesses player.p.respawnChanceExpiryTime which is set by PlayerFullyDoomed
+	// if it isn't called in this order, the survivalTime will be 0
+	if ( !canPlayerBeRespawned )
+		PlayerFullyDoomed( victim )
+
 	if ( teamEliminated )
 		HandleSquadElimination( victim.GetTeam() )
 
-	bool canPlayerBeRespawned = PlayerRespawnEnabled() && !teamEliminated
 	int droppableItems = GetAllDroppableItems( victim ).len()
 
 	if ( canPlayerBeRespawned || droppableItems > 0 )
 		CreateSurvivalDeathBoxForPlayer( victim, attacker, damageInfo )
-	
-	if ( !canPlayerBeRespawned )
-		PlayerFullyDoomed( victim )
 }
 
 void function OnClientConnected( entity player )
