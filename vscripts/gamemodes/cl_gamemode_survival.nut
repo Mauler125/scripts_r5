@@ -4633,6 +4633,9 @@ void function OnPlayerKilled( entity player )
 	{
 		EmitSoundOnEntity( viewPlayer, SOUND_UI_TEAMMATE_KILLED )
 	}
+	if( player == viewPlayer )
+		PlayLocal1PDeathSound()
+	
 }
 
 

@@ -69,7 +69,7 @@ void function OnPlayerKilled( entity victim, entity attacker, var damageInfo )
 	{
 		if ( victim == file.currentKillLeader )
 		{
-			AddSurvivalCommentaryEvent( eSurvivalEventType.KILL_LEADER_ELIMINATED, attacker )
+			AddSurvivalCommentaryEvent( eSurvivalEventType.KILL_LEADER_ELIMINATED, attacker, victim )
 
 			foreach ( player in GetPlayerArray() )
 				Remote_CallFunction_NonReplay( player, "ServerCallback_Survival_HighlightedPlayerKilled", victim, attacker, eSurvivalCommentaryPlayerType.KILLLEADER )
@@ -88,7 +88,7 @@ void function OnPlayerKilled( entity victim, entity attacker, var damageInfo )
 		if ( !Flag( "SurvivalCommentary_FirstBloodReached" ) )
 		{
 			FlagSet( "SurvivalCommentary_FirstBloodReached" )
-			AddSurvivalCommentaryEvent( eSurvivalEventType.FIRST_BLOOD, attacker )
+			AddSurvivalCommentaryEvent( eSurvivalEventType.FIRST_BLOOD, attacker, victim )
 		}
 	}
 }
@@ -132,7 +132,7 @@ void function OnPlayerKilled( entity victim, entity attacker, var damageInfo )
 //  34  YOU_ARE_NEW_KILL_LEADER,
 // 	35  _count
 
-void function AddSurvivalCommentaryEvent ( int event, entity player = null )
+void function AddSurvivalCommentaryEvent ( int event, entity player = null, entity victim = null )
 {
 	#if R5DEV
 	string enumString = GetEnumString( "eSurvivalEventType", event )
@@ -154,6 +154,9 @@ void function AddSurvivalCommentaryEvent ( int event, entity player = null )
 				break
 			case eSurvivalEventType.FIRST_BLOOD:
 				thread SurvivalCommentary_PlaySoundForAllPlayersAfterDelay( "diag_ap_nocNotify_diedFirst_01_01_3p", 1.5 )
+				if( player == victim )
+					return
+				
 				thread PlayBattleChatterLineDelayedToSpeakerAndTeam( player, "bc_weTookFirstBlood", 6.7 )
 				break
             case eSurvivalEventType.CARE_PACKAGE_DROPPING:
@@ -164,11 +167,16 @@ void function AddSurvivalCommentaryEvent ( int event, entity player = null )
 				break;
 			case eSurvivalEventType.KILL_LEADER_ELIMINATED:
 				thread SurvivalCommentary_PlaySoundForAllPlayersAfterDelay( "diag_ap_nocNotify_killLeaderEliminated_01_01_3p", 1.5 )
+				if( player == victim )
+					return
+				
 				thread PlayBattleChatterLineDelayedToSpeakerAndTeam( player, "bc_weKilledKillLeader", 6.2 )
 				break;
 			case eSurvivalEventType.YOU_ARE_NEW_KILL_LEADER:
 				thread SurvivalCommentary_PlaySoundForAllPlayersAfterDelay( "diag_ap_nocNotify_killLeaderNew_01_01_3p", 1.5 )
-				thread PlayBattleChatterLineDelayedToSpeakerAndTeam( player, "bc_iBecomeKillLeader", 6.5 )
+				if( player != victim )
+					thread PlayBattleChatterLineDelayedToSpeakerAndTeam( player, "bc_iBecomeKillLeader", 6.5 )
+
 				wait 6.0
 				int killLeaderTeam = player.GetTeam()
 				array<entity> teamMembers = GetPlayerArrayOfTeam( killLeaderTeam )
@@ -209,6 +217,9 @@ void function AddSurvivalCommentaryEvent ( int event, entity player = null )
                 break;
 			case eSurvivalEventType.FIRST_BLOOD:
 				thread SurvivalCommentary_PlaySoundForAllPlayersAfterDelay( "diag_ap_aiNotify_diedFirst", 1.5 )
+				if( player == victim )
+					return
+				
 				thread PlayBattleChatterLineDelayedToSpeakerAndTeam( player, "bc_weTookFirstBlood", 5.0 )
 				break;
 			case eSurvivalEventType.CHAMPION_ELIMINATED:
@@ -216,11 +227,16 @@ void function AddSurvivalCommentaryEvent ( int event, entity player = null )
 				break;
 			case eSurvivalEventType.KILL_LEADER_ELIMINATED:
 				thread SurvivalCommentary_PlaySoundForAllPlayersAfterDelay( "diag_ap_aiNotify_killLeaderEliminated", 1.5 )
+				if( player == victim )
+					return
+				
 				thread PlayBattleChatterLineDelayedToSpeakerAndTeam( player, "bc_weKilledKillLeader", 5.3 )
 				break;
 			case eSurvivalEventType.YOU_ARE_NEW_KILL_LEADER:
 				thread SurvivalCommentary_PlaySoundForAllPlayersAfterDelay( "diag_ap_aiNotify_killLeaderNew", 1.5 )
-				thread PlayBattleChatterLineDelayedToSpeakerAndTeam( player, "bc_iBecomeKillLeader", 6.0 )
+				if( player != victim )
+					thread PlayBattleChatterLineDelayedToSpeakerAndTeam( player, "bc_iBecomeKillLeader", 6.0 )
+
 				wait 6.0
 				int killLeaderTeam = player.GetTeam()
 				array<entity> teamMembers = GetPlayerArrayOfTeam( killLeaderTeam )

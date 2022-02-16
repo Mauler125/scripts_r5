@@ -289,6 +289,9 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
                 int invscore = victim.GetPlayerNetInt( "assists" )
 				invscore++;
 				victim.SetPlayerNetInt( "assists", invscore )
+                #if CLIENT
+                PlayLocal1PDeathSound()
+                #endif
 
                 victim.SetObserverTarget( attacker )
                 victim.SetSpecReplayDelay( Spectator_GetReplayDelay() )
