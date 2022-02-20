@@ -342,10 +342,10 @@ void function OnRankedPeriodRegistered( ItemFlavor rp )
 
 void function Ranked_AllItemFlavorsRegistered()
 {
-	string latestRankedPeriodGUID = ItemFlavor_GetGUIDString ( GetLatestRankedPeriod( GetUnixTimestamp() ) )
-	file.rankedTiers = 	file.historicalRankedTiers[ latestRankedPeriodGUID ]
-	file.rankedDivisions = file.historicalRankedDivisions[ latestRankedPeriodGUID ]
-	file.topRankedDivisionData = file.rankedDivisions.top()
+	//string latestRankedPeriodGUID = ItemFlavor_GetGUIDString ( GetLatestRankedPeriod( GetUnixTimestamp() ) )
+	//file.rankedTiers = 	file.historicalRankedTiers[ latestRankedPeriodGUID ]
+	//file.rankedDivisions = file.historicalRankedDivisions[ latestRankedPeriodGUID ]
+	//file.topRankedDivisionData = file.rankedDivisions.top()
 
 	//
 }
@@ -376,9 +376,9 @@ RankedDivisionData function GetCurrentRankedDivisionFromScore( int score )
 {
 	if ( score == 0  )
 	{
-		Assert( file.rankedDivisions.len() > 0 )
-		Assert( file.rankedDivisions[ 0 ].scoreMin == 0 )
-		return file.rankedDivisions[ 0 ]
+		//Assert( file.rankedDivisions.len() > 0 )
+		//Assert( file.rankedDivisions[ 0 ].scoreMin == 0 )
+		//return file.rankedDivisions[ 0 ]
 	}
 
 	bool foundRank = false
@@ -535,27 +535,27 @@ RankedDivisionData function Ranked_GetHistoricalRankedDivisionFromScore( int ran
 {
 	Assert( rankedSeriesGUID in file.historicalRankedDivisions )
 
-	array< RankedDivisionData > historicalRankedDivisionData = file.historicalRankedDivisions[ rankedSeriesGUID  ]
+	//array< RankedDivisionData > historicalRankedDivisionData = file.historicalRankedDivisions[ rankedSeriesGUID  ]
 
 	if ( rankScore == 0  )
 	{
-		Assert( historicalRankedDivisionData.len() > 0 )
-		Assert( historicalRankedDivisionData[ 0 ].scoreMin == 0 )
-		return historicalRankedDivisionData[ 0 ]
+		//Assert( historicalRankedDivisionData.len() > 0 )
+		//Assert( historicalRankedDivisionData[ 0 ].scoreMin == 0 )
+		//return historicalRankedDivisionData[ 0 ]
 	}
 
 	bool foundRank = false
 	RankedDivisionData data
 
-	for ( int i = 0; i < historicalRankedDivisionData.len(); i++ )
-	{
-		if ( historicalRankedDivisionData[i].scoreMin > rankScore )
-			break
+	//for ( int i = 0; i < historicalRankedDivisionData.len(); i++ )
+	//{
+	//	if ( historicalRankedDivisionData[i].scoreMin > rankScore )
+		//	break
 
-		foundRank = true
+		//foundRank = true
 
-		data = historicalRankedDivisionData[ i ]
-	}
+	//	data = historicalRankedDivisionData[ i ]
+//	}
 
 	Assert( foundRank )
 	return data
@@ -1100,20 +1100,20 @@ void function PopulateRuiWithHistoricalRankedBadgeDetails( var rui, int rankScor
 
 var function CreateNestedRankedRui( var pRui, RankedTierData tier, string varName = "rankedBadgeHandle" )
 {
-	var rui = RuiCreateNested( pRui, varName, tier.iconRuiAsset )
+	//var rui = RuiCreateNested( pRui, varName, tier.iconRuiAsset )
 
-	PopulateRuiWithRankedBadgeDetails( rui, tier.scoreMin, 0, true )
+	//PopulateRuiWithRankedBadgeDetails( rui, tier.scoreMin, 0, true )
 
-	return rui
+	//return rui
 }
 
 var function CreateNestedHistoricalRankedRui( var pRui, RankedTierData tier, string rankedSeriesGUID, string varName = "rankedBadgeHandle" )
 {
-	var rui = RuiCreateNested( pRui, varName, tier.iconRuiAsset )
+	//var rui = RuiCreateNested( pRui, varName, tier.iconRuiAsset )
 
-	PopulateRuiWithHistoricalRankedBadgeDetails( rui, tier.scoreMin, 0, rankedSeriesGUID,  true )
+	//PopulateRuiWithHistoricalRankedBadgeDetails( rui, tier.scoreMin, 0, rankedSeriesGUID,  true )
 
-	return rui
+	//return rui
 }
 
 void function RuiFillInRankedLadderPos( var rui, int ladderPosition )
