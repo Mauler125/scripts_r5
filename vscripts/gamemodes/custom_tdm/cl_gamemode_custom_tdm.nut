@@ -5,6 +5,8 @@ global function ServerCallback_TDM_SetSelectedLocation
 global function ServerCallback_TDM_DoLocationIntroCutscene
 global function ServerCallback_TDM_PlayerKilled
 
+global function TDM_OnPlayerKilled
+
 global function Cl_RegisterLocation
 
 struct {
@@ -19,6 +21,7 @@ struct {
 
 void function Cl_CustomTDM_Init()
 {
+    AddOnDeathCallback( "player", TDM_OnPlayerKilled )
 }
 
 void function Cl_RegisterLocation(LocationSettings locationSettings)
@@ -174,6 +177,14 @@ void function ServerCallback_TDM_PlayerKilled()
 {
     if(file.scoreRui)
         RuiSetString( file.scoreRui, "messageText", "Team IMC: " + GameRules_GetTeamScore(TEAM_IMC) + "  ||  Team MIL: " + GameRules_GetTeamScore(TEAM_MILITIA) );
+}
+
+void function TDM_OnPlayerKilled( entity player )
+{
+	entity viewPlayer = GetLocalViewPlayer()
+
+    if( player == viewPlayer )
+		thread PlayLocal1PDeathSoundALittle()
 }
 
 var function CreateTemporarySpawnRUI(entity parentEnt, float duration)

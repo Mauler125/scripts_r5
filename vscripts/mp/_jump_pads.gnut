@@ -2,6 +2,7 @@
 
 global function JumpPad_Init
 global function JumpPad_CreatedCallback
+global function JumpPad_OnPlayerConnected
 
 // copied from r5-90 mp_rr_desertlands_common
 const float JUMP_PAD_PUSH_RADIUS = 45.0
@@ -20,14 +21,22 @@ const asset JUMP_PAD_MODEL = $"mdl/props/octane_jump_pad/octane_jump_pad.rmdl"
 const float JUMP_PAD_ANGLE_LIMIT = 0.70
 const float JUMP_PAD_ICON_HEIGHT_OFFSET = 48.0
 const float JUMP_PAD_ACTIVATION_TIME = 0.5
+const float JUMP_PAD_CHATTER_DEBOUNCE = 40.0
 const asset JUMP_PAD_LAUNCH_FX = $"P_grndpnd_launch"
 const JUMP_PAD_DESTRUCTION = "jump_pad_destruction"
+
+struct
+{
+	table< entity, float > playerToLastJumpPadChatterTime
+} file
 
 void function JumpPad_Init()
 {
 	RegisterSignal("JumpPadStart")
 
-  AddSpawnCallbackEditorClass( "prop_dynamic", "script_survival_jumppad", JumpPad_CreatedCallback )
+	AddSpawnCallbackEditorClass( "prop_dynamic", "script_survival_jumppad", JumpPad_CreatedCallback )
+
+	AddCallback_OnClientConnected( JumpPad_OnPlayerConnected )
 }
 
 void function JumpPad_CreatedCallback( entity jumpPad )
@@ -75,6 +84,11 @@ void function JumpPad_CreatedCallback( entity jumpPad )
   AddEntityCallback_OnKilled( jumpPad, JumpPad_OnDeath )
 }
 
+void function JumpPad_OnPlayerConnected( entity player )
+{
+	file.playerToLastJumpPadChatterTime[ player ] <- -40.0
+}
+
 void function JumpPad_OnDeath( entity ent, var damageInfo )
 {
   //todo: Explosion and sound 
@@ -113,9 +127,13 @@ void function OnJumpPadAreaEnter( entity trigger, entity ent )
 	thread JumpPad_PlayLaunchAnim( trigger )
 	ItemFlavor character = LoadoutSlot_GetItemFlavor( ToEHI( ent ), Loadout_CharacterClass() )
 	string charRef = ItemFlavor_GetHumanReadableRef( character )
-	if( charRef == "character_octane" && !ent.p.isSaidChatterOnJumpPad )
-		thread SayBattleChatter( ent, "diag_mp_octane_bc_jumpPadLaunch_1p", 20.0 )
-	
+	if( ent.IsPlayer() && IsValid( ent ) && charRef == "character_octane" )
+		if ( Time() - file.playerToLastJumpPadChatterTime[ ent ] > JUMP_PAD_CHATTER_DEBOUNCE )
+		{
+			file.playerToLastJumpPadChatterTime[ ent ] <- Time()
+			EmitSoundOnEntityOnlyToPlayer( ent, ent, "diag_mp_octane_bc_jumpPadLaunch_1p" )
+		}
+
 	JumpPadPushEnt( trigger, ent, trigger.GetOrigin(), trigger.GetAngles() )
 }
 
@@ -185,14 +203,4 @@ bool function JumpPad_ShouldPushPlayerOrNPC( entity target )
 		return false
 
 	return true
-}
-
-var function SayBattleChatter( entity player, string chatter, float time )
-{
-	#if SERVER
-	player.p.isSaidChatterOnJumpPad = true
-	EmitSoundOnEntityOnlyToPlayer( player, player, chatter )
-	wait time
-	player.p.isSaidChatterOnJumpPad = false
-	#endif
 }

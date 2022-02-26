@@ -2,6 +2,19 @@ global function OnWeaponChargeBegin_ability_heal
 global function OnWeaponPrimaryAttack_ability_heal
 global function OnWeaponChargeEnd_ability_heal
 global function OnWeaponAttemptOffhandSwitch_ability_heal
+global function OnWeaponOwnerChanged_Heal
+
+const float STIM_CHATTER_DEBOUNCE = 30.0
+
+struct
+{
+	table< entity, float > playerToLastStimChatterTime
+} file
+
+void function OnWeaponOwnerChanged_Heal( entity weapon, WeaponOwnerChangedParams changeParams )
+{
+	file.playerToLastStimChatterTime[ weapon.GetOwner() ] <- -30.0
+}
 
 bool function OnWeaponChargeBegin_ability_heal( entity weapon )
 {
@@ -17,9 +30,11 @@ bool function OnWeaponChargeBegin_ability_heal( entity weapon )
 	#if SERVER
 	int stimDamage = int(weapon.GetWeaponSettingFloat( eWeaponVar.damage_near_distance ))
 	player.SetHealth( player.GetHealth() - stimDamage < 1 ? 1 : player.GetHealth() - stimDamage )
-	if( !player.p.isSaidChatterOnStim )
-		thread SayBattleChatter( player, "bc_tactical", 30.0 )
-
+	if ( Time() - file.playerToLastStimChatterTime[ player ] > STIM_CHATTER_DEBOUNCE )
+	{
+		file.playerToLastStimChatterTime[ player ] <- Time()
+		PlayBattleChatterLineToSpeakerAndTeam( player, "bc_tactical" )
+	}
 	#endif
 	
 	return true
@@ -64,14 +79,4 @@ bool function OnWeaponAttemptOffhandSwitch_ability_heal( entity weapon )
 		return false
 
 	return true
-}
-
-var function SayBattleChatter( entity player, string chatter, float time )
-{
-	#if SERVER
-	player.p.isSaidChatterOnStim = true
-	PlayBattleChatterLineToSpeakerAndTeam( player, chatter )
-	wait time
-	player.p.isSaidChatterOnStim = false
-	#endif
 }

@@ -314,7 +314,7 @@ void function ScoreboardFadeOut()
 
 void function ShowScoreboardMP()
 {
-	foreach( void functionref() callbackFunc in file.scoreboardCallbacks_OnShowing)
+	/* foreach( void functionref() callbackFunc in file.scoreboardCallbacks_OnShowing)
 		callbackFunc()
 
 	entity localPlayer = GetLocalClientPlayer()
@@ -608,7 +608,7 @@ void function ShowScoreboardMP()
 
 		firstUpdate = false
 		WaitFrame()
-	}
+	} */
 }
 
 void function UpdateScoreboardForGamemode( entity player, var rowRui, var scoreHeaderRui )
