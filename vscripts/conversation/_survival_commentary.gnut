@@ -7,9 +7,12 @@ global function SurvivalCommentary_InitThreatChatterForPlayer
 global function SurvivalCommentary_OnThreatActivationBombardment
 global function SurvivalCommentary_OnThreatActivationGrenade
 
+global function SetChampion
+
 struct {
 	int currentKillLeaderKillAmount = 0
 	entity currentKillLeader = null
+	entity champion = null
 } file
 
 void function SurvivalCommentary_Init()
@@ -32,12 +35,15 @@ int function SurvivalCommentary_GetKillLeaderEEH()
 
 int function SurvivalCommentary_GetChampionTeam()
 {
-	return 0
+	return file.champion.GetTeam()
 }
 
 int function SurvivalCommentary_GetChampionEEH()
 {
-	return 0
+	if ( file.champion == null || !IsValid( file.champion ) )
+		return EncodedEHandle_null
+
+	return file.champion.GetEncodedEHandle()
 }
 
 void function SetKillLeader( entity killLeader, int numKills )
@@ -53,6 +59,22 @@ void function SetKillLeader( entity killLeader, int numKills )
 		Remote_CallFunction_NonReplay( player, "ServerCallback_Survival_NewKillLeader", killLeader, numKills )
 
 	thread AddSurvivalCommentaryEvent( eSurvivalEventType.YOU_ARE_NEW_KILL_LEADER, killLeader )
+}
+
+void function SetChampion( entity champion )
+{
+	printt( "Setting champion to " + champion )
+	file.champion = champion
+	array<entity> championteammates = GetPlayerArrayOfTeam( champion.GetTeam() )
+	championteammates.fastremovebyvalue( champion )
+	
+	SetGlobalNetInt( "championEEH", SurvivalCommentary_GetChampionEEH() )
+
+	if( championteammates.len() == 1 )
+		SetGlobalNetInt( "championSquad1EEH", championteammates[0].GetEncodedEHandle() )
+
+	if( championteammates.len() == 2 )
+		SetGlobalNetInt( "championSquad2EEH", championteammates[1].GetEncodedEHandle() )
 }
 
 int function GetMinKillsForKillLeader()
@@ -81,6 +103,17 @@ void function OnPlayerKilled( entity victim, entity attacker, var damageInfo )
 				&& attackerKills >= GetMinKillsForKillLeader()
 			)
 			thread SetKillLeader( attacker, attackerKills )
+	}
+
+	if ( GetCurrentPlaylistVarBool( "survival_commentary_champion_enabled", true ) )
+	{
+		if( victim == file.champion )
+		{
+		thread AddSurvivalCommentaryEvent( eSurvivalEventType.CHAMPION_ELIMINATED, attacker, victim )
+
+		foreach ( player in GetPlayerArray() )
+			Remote_CallFunction_NonReplay( player, "ServerCallback_Survival_HighlightedPlayerKilled", victim, attacker, eSurvivalCommentaryPlayerType.CHAMPION )
+		}
 	}
 
 	if ( GetCurrentPlaylistVarBool( "survival_commentary_first_blood_enabled", true ) )
