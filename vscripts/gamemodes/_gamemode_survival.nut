@@ -117,6 +117,17 @@ void function Sequence_Playing()
 
 		foreach ( player in GetPlayerArray() )
 		{
+			string desiredMusicTrack = "MUSIC_Lobby"
+			#if UI
+			if ( IsLocalClientEHIValid() && LoadoutSlot_IsReady( LocalClientEHI(), Loadout_MusicPack() ) )
+			{
+				ItemFlavor musicPack = GetMusicPackForPlayer( GetUIPlayer() )
+
+				desiredMusicTrack = MusicPack_GetLobbyMusic( musicPack )
+			}
+			#endif
+			EmitSoundOnEntityOnlyToPlayer( player, player, desiredMusicTrack )
+			
 			SetRandomStagingPositionForPlayer( player )
 			DecideRespawnPlayer( player )
 		}
@@ -457,6 +468,8 @@ void function OnPlayerDamaged( entity victim, var damageInfo )
 		// Run client callback
 		int scriptDamageType = DamageInfo_GetCustomDamageType( damageInfo )
 
+		EmitSoundOnEntity( victim, "flesh_bulletimpact_downedshot_3p_vs_3p" )
+
 		foreach ( cbPlayer in GetPlayerArray() )
 			Remote_CallFunction_Replay( cbPlayer, "ServerCallback_OnEnemyDowned", attacker, victim, scriptDamageType, sourceId )
 	}
@@ -544,20 +557,13 @@ void function CreateSurvivalDeathBoxForPlayer( entity victim, entity attacker, v
 		func( deathBox, attacker, damageInfo != null ? DamageInfo_GetDamageSourceIdentifier( damageInfo ) : 0 )
 }
 
-void function Ascention( entity victim )
-{
-	victim.SetThirdPersonShoulderModeOn()
-	victim.FreezeControlsOnServer()
-	victim.SetAngles( < 50, 0, 0 > )
-}
-
 void function OnPlayerKilled( entity victim, entity attacker, var damageInfo )
 {
 	if ( !IsValid( victim ) || !IsValid( attacker ) || !victim.IsPlayer() )
 		return
 
-	thread Ascention( victim )
-	
+	victim.FreezeControlsOnServer()
+
 	if ( IsFiringRangeGameMode() )
 	{
 		thread function() : ( victim )

@@ -262,12 +262,7 @@ void function _OnPlayerConnected(entity player)
     }
 }
 
-void function Ascention( entity victim )
-{
-	victim.SetThirdPersonShoulderModeOn()
-	victim.FreezeControlsOnServer()
-	victim.SetAngles( < 50, 0, 0 > )
-}
+
 
 
 void function _OnPlayerDied(entity victim, entity attacker, var damageInfo) 
@@ -282,10 +277,11 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
         void functionref() victimHandleFunc = void function() : (victim, attacker, damageInfo) {
 
             if(!IsValid(victim)) return
+
+            victim.FreezeControlsOnServer()
             
 
             victim.p.storedWeapons = StoreWeapons(victim)
-            thread Ascention( victim )
             
             float reservedTime = max(1, Deathmatch_GetRespawnDelay() - 1)// so we dont immediately go to killcam
             wait reservedTime

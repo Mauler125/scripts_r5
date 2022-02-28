@@ -32,6 +32,7 @@ void function InitR5RGamemodeMenu( var newMenuArg )
 		"custom_tdm",
 		"custom_tdm_tps",
 		"survival_dev",
+		"survival_custom",
 		"dev_default",
 		"menufall"
 	]
