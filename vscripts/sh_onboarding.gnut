@@ -498,6 +498,10 @@ void function OnPlayerKilled( entity victim, entity attacker, var damageInfo )
 
 	UpdatePlayerCounts()
 
+	if( victim == attacker )
+		return
+
+
 	if ( attacker.IsPlayer() && victim.IsPlayer() )
 		attacker.SetPlayerNetInt( "kills", attacker.GetPlayerNetInt( "kills" ) + 1 )
 }
