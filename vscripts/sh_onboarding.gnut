@@ -145,23 +145,12 @@ void function Sequence_WaitingForPlayers()
 	wait PreGame_GetWaitingForPlayersCountdown() + (introCountdownEnabled ? 0.0 : CharSelect_GetIntroMusicStartTime())
 
 	if ( GetCurrentPlaylistVarBool( "survival_commentary_champion_enabled", true ) )
-	{
-	int choosenPlayer = ChooseChampionPlayerRandomly()
-	SetChampion( GetPlayerArray()[ choosenPlayer ] )
-	}
+		SetChampion( GetPlayerArray().getrandom() )
 
 	if ( !introCountdownEnabled )
 		PlayPickLoadoutMusic( false )
 
 	thread Sequence_PickLoadout()
-}
-
-int function ChooseChampionPlayerRandomly()
-{
-	if( GetPlayerArray().len() <= 0 )
-		return 0
-
-	return RandomIntRange( 0, GetPlayerArray().len() )
 }
 
 void function Sequence_PickLoadout()
@@ -500,7 +489,6 @@ void function OnPlayerKilled( entity victim, entity attacker, var damageInfo )
 
 	if( victim == attacker )
 		return
-
 
 	if ( attacker.IsPlayer() && victim.IsPlayer() )
 		attacker.SetPlayerNetInt( "kills", attacker.GetPlayerNetInt( "kills" ) + 1 )
