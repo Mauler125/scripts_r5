@@ -117,16 +117,7 @@ void function Sequence_Playing()
 
 		foreach ( player in GetPlayerArray() )
 		{
-			string desiredMusicTrack = "MUSIC_Lobby"
-			#if UI
-			if ( IsLocalClientEHIValid() && LoadoutSlot_IsReady( LocalClientEHI(), Loadout_MusicPack() ) )
-			{
-				ItemFlavor musicPack = GetMusicPackForPlayer( GetUIPlayer() )
-
-				desiredMusicTrack = MusicPack_GetLobbyMusic( musicPack )
-			}
-			#endif
-			EmitSoundOnEntityOnlyToPlayer( player, player, desiredMusicTrack )
+			EmitSoundOnEntityOnlyToPlayer( player, player, "Music_Lobby" ) // Hard coded because idk why but can't use MusicPack_GetLobbyMusic
 			
 			SetRandomStagingPositionForPlayer( player )
 			DecideRespawnPlayer( player )
