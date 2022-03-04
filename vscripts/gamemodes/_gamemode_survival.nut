@@ -459,7 +459,7 @@ void function OnPlayerDamaged( entity victim, var damageInfo )
 		// Run client callback
 		int scriptDamageType = DamageInfo_GetCustomDamageType( damageInfo )
 
-		EmitSoundOnEntity( victim, "flesh_bulletimpact_downedshot_3p_vs_3p" )
+		EmitSoundOnEntityExceptToPlayer( victim, victim, "flesh_bulletimpact_downedshot_3p_vs_3p" )
 
 		foreach ( cbPlayer in GetPlayerArray() )
 			Remote_CallFunction_Replay( cbPlayer, "ServerCallback_OnEnemyDowned", attacker, victim, scriptDamageType, sourceId )
