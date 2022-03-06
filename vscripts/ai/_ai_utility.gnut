@@ -312,7 +312,7 @@ void function DEV_SpawnExplosiveTickAtCrosshair()
 	entity tick = CreateFragDrone( 99, origin, angles )
 
 	DispatchSpawn( tick )
-	tick.SetSkin(RandomInt(3))
+	tick.SetSkin(RandomInt(2))
 }
 
 void function DEV_SpawnAllNPCsWithTeam( int team )
