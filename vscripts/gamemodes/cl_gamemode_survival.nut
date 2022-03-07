@@ -507,6 +507,14 @@ void function OnPlayerCreated( entity player )
 		if ( IsSquadMuted() )
 			SetSquadMuteState( IsSquadMuted() )
 	}
+
+	if( IsFiringRangeGameMode() )
+	{
+		ItemFlavor musicPack = GetMusicPackForPlayer( player )
+		string desiredMusicTrack = MusicPack_GetLobbyMusic( musicPack )
+
+		EmitSoundOnEntity( player, desiredMusicTrack )
+	}
 }
 
 

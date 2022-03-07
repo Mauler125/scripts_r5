@@ -117,8 +117,6 @@ void function Sequence_Playing()
 
 		foreach ( player in GetPlayerArray() )
 		{
-			EmitSoundOnEntityOnlyToPlayer( player, player, "Music_Lobby" ) // Hard coded because idk why but can't use MusicPack_GetLobbyMusic
-			
 			SetRandomStagingPositionForPlayer( player )
 			DecideRespawnPlayer( player )
 		}
@@ -458,8 +456,6 @@ void function OnPlayerDamaged( entity victim, var damageInfo )
 
 		// Run client callback
 		int scriptDamageType = DamageInfo_GetCustomDamageType( damageInfo )
-
-		EmitSoundOnEntityExceptToPlayer( victim, victim, "flesh_bulletimpact_downedshot_3p_vs_3p" )
 
 		foreach ( cbPlayer in GetPlayerArray() )
 			Remote_CallFunction_Replay( cbPlayer, "ServerCallback_OnEnemyDowned", attacker, victim, scriptDamageType, sourceId )
