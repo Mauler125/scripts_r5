@@ -35,24 +35,25 @@ Selector Combat
 	SelectSchedule_EngagementDistMax
 	//SelectSchedule_EngagementDistMin
 	SelectSchedule_CombatFace
+	SelectSchedule_ChaseEnemy
+	SelectSchedule_CombatFace
 Selector_End
 
 
-Selector Combat
+Selector CombatEvasive
 
 	SelectSchedule_MissileDodge
 	SelectSchedule_BackwardDodge
 	SelectSchedule_StrafeDodge
 	SelectSchedule_MeleeAttack
 	SelectSchedule_EnemyAimDodge
-	SelectSchedule_TakeCoverFromEnemy health > 0.1
+	//SelectSchedule_TakeCoverFromEnemy health > 0.1
 	SelectSchedule_SpecialAttack
 	SelectSchedule_RangeAttack
-	SelectSchedule_ChaseEnemy
-	SelectSchedule_EnemyTooClose
+
+	//SelectSchedule_EnemyTooClose
 	SelectSchedule_WeaponBlocked
 	SelectSchedule_CantSeeEnemy
 	SelectSchedule_EngagementDistMax
-	SelectSchedule_EngagementDistMin
-	SelectSchedule_CombatFace
+	//SelectSchedule_EngagementDistMin
 Selector_End
