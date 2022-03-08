@@ -3,7 +3,7 @@ Selector Common
 	SelectSchedule_Flinch
 	SelectSchedule_ReactSurprised
 	SelectSchedule_LayeredBehavior
-
+	SelectSchedule_ReactJumpedOver
 Selector_End
 
 
@@ -28,7 +28,7 @@ Selector Combat
 	SelectSchedule_WeaponBlocked
 	SelectSchedule_CantSeeEnemy
 	SelectSchedule_EngagementDistMax
-	SelectSchedule_EngagementDistMax
 	SelectSchedule_CombatFace
 	SelectSchedule_EnemyTooClose
+	SelectSchedule_ChaseEnemy
 Selector_End
