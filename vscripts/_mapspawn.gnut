@@ -281,6 +281,13 @@ void function CodeCallback_MapSpawn() // original script entry point
 	PrecacheWeapon( $"mp_weapon_deployable_cover" )
 	PrecacheWeapon( $"melee_data_knife" )
 	PrecacheWeapon( $"mp_weapon_volt_smg" )
+	
+	//if ( GetMapName() == "mp_rr_canyonlands_staging" ) //Precache NPC Weapons For Firing Range
+	{
+		PrecacheWeapon( $"npc_weapon_energy_shotgun" )
+		PrecacheWeapon( $"npc_weapon_hemlok" )
+		PrecacheWeapon( $"npc_weapon_lstar" )
+	}
 
 	printl( "Code Script: _mapspawn" )
 

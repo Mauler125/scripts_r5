@@ -986,10 +986,13 @@ string function GetInfiniteAmmoText(int number)
 
 void function TeleportFRPlayer(entity player, vector pos, vector ang)
 {
-	player.SetOrigin(pos)
-	player.SetAngles(ang)
-	EmitSoundOnEntityOnlyToPlayer( player, player, "PhaseGate_Enter_1p" )
-	EmitSoundOnEntityExceptToPlayer( player, player, "PhaseGate_Enter_3p" )
+	if ( !IsValid( player ) || !IsAlive( player ) )
+	{
+		player.SetOrigin(pos)
+		player.SetAngles(ang)
+		EmitSoundOnEntityOnlyToPlayer( player, player, "PhaseGate_Enter_1p" )
+		EmitSoundOnEntityExceptToPlayer( player, player, "PhaseGate_Enter_3p" )
+	}
 }
 
 entity function CreateFRProp(asset a, vector pos, vector ang, bool mantle = false, float fade = 2000)
