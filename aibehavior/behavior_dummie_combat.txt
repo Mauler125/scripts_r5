@@ -19,7 +19,6 @@ Selector_End
 
 Selector Combat
 	SelectSchedule_MissileDodge
-	SelectSchedule_LongJump
 	SelectSchedule_StrafeDodge
 	SelectSchedule_ForwardDodge
 	SelectSchedule_MeleeAttack
