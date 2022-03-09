@@ -989,7 +989,7 @@ string function GetInfiniteAmmoText(int number)
 
 void function TeleportFRPlayer(entity player, vector pos, vector ang)
 {
-	if (IsValid(player) && IsAlive(player))
+	if (IsValid(player) && IsAlive(player) && player.IsPlayer())
 	{
 		player.SetOrigin(pos)
 		player.SetAngles(ang)
