@@ -258,6 +258,44 @@ vector function GetPlayerCrosshairOrigin( entity player )
 	return (GetPlayerCrosshairOriginRaw( player ) + Vector( 0, 0, CROSSHAIR_VERT_OFFSET ))
 }
 
+void function DEV_MoveToAllAINodes( float delay = 0.0, int loglevel = 0 )
+{
+	thread function() : ( delay, loglevel )
+	{
+		printt( "++++--------------------------------------------------------------------------------------------------------------------------++++" )
+		printt( ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> DEBUGGING AI NODEGRAPH DATA <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" )
+		printt( "++++--------------------------------------------------------------------------------------------------------------------------++++" )
+		for( int cIndex = 0; cIndex < NavMeshNode_GetNodeCount(); cIndex++ )
+		{
+			wait delay
+			vector cOrigin = NavMeshNode_GetNodePos( cIndex )
+
+			GetPlayerArray()[0].SetOrigin( cOrigin )
+
+			if ( loglevel == 1 )
+			{
+				printt( "Index: " + cIndex )
+			}
+			else if ( loglevel > 1 )
+			{
+				int nIndex =  NavMeshNode_GetNearestNodeToPos( OriginToGround( cOrigin ) )
+				vector nOrigin
+				if ( nIndex != -1 )
+				{
+					nOrigin = NavMeshNode_GetNodePos( nIndex )
+				}
+				printt( "<<<<<***********************************************************>>>>>" )
+				printt( "Current index    : " + cIndex )
+				printt( "Current position : " + cOrigin )
+				printt( "Nearest index    : " + nIndex )
+				printt( "Nearest position : " + nOrigin )
+			}
+		}
+		printt( "++++--------------------------------------------------------------------------------------------------------------------------++++" )
+		printt( "++++--------------------------------------------------------------------------------------------------------------------------++++" )
+	}()
+}
+
 void function DEV_SpawnBTAtCrosshair( bool hotdrop = false )
 {
 	// DisablePrecacheErrors()
@@ -479,7 +517,6 @@ void function DEV_SpawnNPCWithWeaponAtCrosshairEnd( bool restoreHostThreadMode )
 		RestorePrecacheErrors()
 	}
 }
-
 
 function SetAISettingsWrapper( entity npc, string settings )
 {
