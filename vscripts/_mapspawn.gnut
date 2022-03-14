@@ -281,6 +281,7 @@ void function CodeCallback_MapSpawn() // original script entry point
 	PrecacheWeapon( $"mp_weapon_deployable_cover" )
 	PrecacheWeapon( $"melee_data_knife" )
 	PrecacheWeapon( $"mp_weapon_volt_smg" )
+	PrecacheWeapon( $"mp_weapon_frag_drone" ) 
 	
 	//if ( GetMapName() == "mp_rr_canyonlands_staging" ) //Precache NPC Weapons For Firing Range
 	{

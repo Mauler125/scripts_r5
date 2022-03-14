@@ -83,7 +83,7 @@ void function SV_CL_Init()
 	IonEnergy_Init()
 	Decoy_Init()
 	ShEHI_LevelInit_End()
-
+	MpWeaponFragDrone_Init()
 	ClientSidePickups_Init()
 	GrappleWeaponInit()
 	ShInfoCords_Init()
