@@ -207,15 +207,21 @@ float function PilotShieldModifyDamage( entity player, var damageInfo )
 
 	player.SetShieldHealth( maxint( 0, int( newShieldHealth ) ) )
 
+	entity attacker = DamageInfo_GetAttacker( damageInfo )
+
 	if ( shieldHealth && newShieldHealth <= 0 )
 	{
-		// EmitSoundOnEntity( player, "humanshield_break_1p_vs_3p" )
+		if( player != attacker && attacker != null && attacker.IsPlayer() && IsValid( attacker ) )
+			EmitSoundOnEntityOnlyToPlayer( attacker, attacker, "humanshield_break_1p_vs_3p" )
+
+		EmitSoundOnEntityOnlyToPlayer( player, player, "humanshield_break_3p_vs_1p" )
+		EmitSoundOnEntity( player, "humanshield_break_3p_vs_3p" )
 	}
-if(permanentDamage > 0)
+	if(permanentDamage > 0)
 	{
 		isPermanentDmg = true
 		sPermanentDmg = damage
-	DamageInfo_SetDamage( damageInfo, permanentDamage )
-}
+		DamageInfo_SetDamage( damageInfo, permanentDamage )
+	}
 	return min( shieldHealth, damage )
 }
