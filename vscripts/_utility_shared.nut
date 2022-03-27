@@ -1399,6 +1399,11 @@ bool function GamePlayingOrSuddenDeath()
 	return gameState == eGameState.Playing || gameState == eGameState.SuddenDeath
 }
 
+int function Riff_MinimapState()
+{
+	return expect int( GetServerVar( "minimapState" ) )
+}
+
 vector function VectorReflectionAcrossNormal( vector vec, vector normal )
 {
 	return ( vec - normal * ( 2 * DotProduct( vec, normal ) ) )
