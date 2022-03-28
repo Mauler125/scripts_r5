@@ -173,6 +173,7 @@ void function RemoteFunctions_Init_Begin()
 //
 //
 #endif //
+		case CUSTOM_CTF:
 		case CUSTOM_TDM:
 		case SURVIVAL:
 			RegisterNetworkedVariable( "isPlayerShadowForm", SNDC_PLAYER_GLOBAL, SNVT_BOOL, false )
@@ -211,6 +212,28 @@ void function RemoteFunctions_Init_Begin()
 
 			Remote_RegisterClientFunction( "ServerCallback_AddWinningSquadData", "int", INT_MIN, INT_MAX, "int", INT_MIN, INT_MAX, "int", INT_MIN, INT_MAX, "int", INT_MIN, INT_MAX, "int", INT_MIN, INT_MAX, "int", INT_MIN, INT_MAX, "int", INT_MIN, INT_MAX )
 			Remote_RegisterClientFunction( "ServerCallback_ShowWinningSquadSequence" )
+
+			//CTF
+			Remote_RegisterClientFunction( "AddPointIcon", "entity", "entity", "int", 0, 255)
+			Remote_RegisterClientFunction( "RecaptureFlag", "int", 0, 999, "float", 0.0, 999.0, 32, "float", 0.0, 999.0, 32)
+			Remote_RegisterUntypedFunction_deprecated( "EndRecaptureFlag" )
+			Remote_RegisterUntypedFunction_deprecated( "ResetFlagIcons" )
+			Remote_RegisterUntypedFunction_deprecated( "ServerCallback_CTF_PointCaptured" )
+
+			Remote_RegisterClientFunction( "ServerCallback_CTF_MILCaptured", "entity" )
+			Remote_RegisterClientFunction( "ServerCallback_CTF_IMCCaptured", "entity" )
+			Remote_RegisterClientFunction( "ServerCallback_CTF_CustomMessages", "entity", "int", 0, 255 )
+			Remote_RegisterClientFunction( "ServerCallback_CTF_TeamWon", "int", 0, 999 )
+
+			Remote_RegisterClientFunction( "SetPointIconHint", "int", 0, 255, "int", 0, 255 )
+
+			Remote_RegisterClientFunction("ServerCallback_CTF_DoAnnouncement", "float", 0.0, 256.0, 32, "int", 0, 255)
+
+			Remote_RegisterClientFunction("ServerCallback_CTF_PlayerDied", "vector", -32000.0, 32000.0, 32, "int", 0, 255, "int", 0, 255, "entity")
+			Remote_RegisterClientFunction("ServerCallback_CTF_OpenCTFRespawnMenu", "vector", -32000.0, 32000.0, 32, "int", 0, 255, "int", 0, 255, "entity", "float", 0.0, 9999.0, 32)
+			Remote_RegisterClientFunction("ServerCallback_CTF_PlayerSpawning")
+			Remote_RegisterUIFunction( "OpenCTFRespawnMenu" )
+			Remote_RegisterUIFunction( "CloseCTFRespawnMenu" )
 
 #if(false)
 
