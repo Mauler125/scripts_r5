@@ -1,6 +1,7 @@
 // Credits
-// AyeZee#6969 -- whole ctf gamemode and ui
-// @Shrugtal -- score ui
+// AyeZee#6969 -- ctf gamemode and ui
+// sal#3261 -- base custom_tdm mode to work off
+// Retículo Endoplasmático#5955 -- giving me the ctf sound names
 // everyone else -- advice
 
 global function _CustomCTF_Init
@@ -201,6 +202,11 @@ void function VotingPhase()
     int choice = RandomIntRangeInclusive(0, file.locationSettings.len() - 1)
 
     file.selectedLocation = file.locationSettings[choice]
+
+    foreach(player in GetPlayerArray())
+    {
+        Remote_CallFunction_NonReplay(player, "ServerCallback_CTF_SetSelectedLocation", choice)
+    }
 }
 
 void function StartRound() 
@@ -229,11 +235,15 @@ void function StartRound()
         
     }
 
-    SendCurrentLocation(file.selectedLocation)
     SpawnCTFPoints()
 
     
     file.bubbleBoundary = CreateBubbleBoundary(file.selectedLocation)
+
+    foreach(player in GetPlayerArray())
+    {   
+        Remote_CallFunction_Replay(player, "ServerCallback_CTF_TeamText", player.GetTeam())
+    }
 
     foreach(team, v in GetPlayerTeamCountTable())
     {
@@ -541,7 +551,20 @@ void function IMCPoint_Trigger( entity trigger, entity ent )
                     foreach(player in GetPlayerArray())
                     {
                         Remote_CallFunction_Replay(player, "ServerCallback_CTF_PointCaptured", CTF.IMCPoints, CTF.MILITIAPoints)
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_IMCCaptured", MILITIAPoint.holdingplayer)
+                    }
+
+                    array<entity> teamplayers = GetPlayerArrayOfTeam( TEAM_IMC )
+	                foreach ( player in teamplayers )
+                    {
+                        Remote_CallFunction_Replay(player, "SetPointIconHint", TEAM_MILITIA, 1)
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_TeamCaptured", IMCPoint.holdingplayer)
+                    }
+
+                    array<entity> enemyplayers = GetPlayerArrayOfTeam( TEAM_MILITIA )
+	                foreach ( player in enemyplayers )
+                    {
+                        Remote_CallFunction_Replay(player, "SetPointIconHint", TEAM_MILITIA, 0)
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_EnemyCaptured", IMCPoint.holdingplayer)
                     }
 
                     if(CTF.IMCPoints >= CTF_SCORE_GOAL_TO_WIN)
@@ -560,18 +583,6 @@ void function IMCPoint_Trigger( entity trigger, entity ent )
                     MILITIAPoint.pole.ClearParent()
                     MILITIAPoint.pole.SetOrigin(MILITIAPoint.spawn)
                     MILITIAPoint.pole.MakeVisible()
-
-                    array<entity> teamplayers = GetPlayerArrayOfTeam( TEAM_IMC )
-	                foreach ( player in teamplayers )
-                    {
-                        Remote_CallFunction_Replay(player, "SetPointIconHint", TEAM_MILITIA, 1)
-                    }
-
-                    array<entity> enemyplayers = GetPlayerArrayOfTeam( TEAM_MILITIA )
-	                foreach ( player in enemyplayers )
-                    {
-                        Remote_CallFunction_Replay(player, "SetPointIconHint", TEAM_MILITIA, 0)
-                    }
 
                     EmitSoundToTeamPlayers("ui_ctf_enemy_score", TEAM_MILITIA)
                     EmitSoundToTeamPlayers("ui_ctf_team_score", TEAM_IMC)
@@ -632,7 +643,20 @@ void function MILITIA_Point_Trigger( entity trigger, entity ent )
                     foreach(player in GetPlayerArray())
                     {
                         Remote_CallFunction_Replay(player, "ServerCallback_CTF_PointCaptured", CTF.IMCPoints, CTF.MILITIAPoints)
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_MILCaptured", IMCPoint.holdingplayer)
+                    }
+
+                    array<entity> teamplayers = GetPlayerArrayOfTeam( TEAM_MILITIA )
+	                foreach ( player in teamplayers )
+                    {
+                        Remote_CallFunction_Replay(player, "SetPointIconHint", TEAM_IMC, 1)
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_TeamCaptured", IMCPoint.holdingplayer)
+                    }
+
+                    array<entity> enemyplayers = GetPlayerArrayOfTeam( TEAM_IMC )
+	                foreach ( player in enemyplayers )
+                    {
+                        Remote_CallFunction_Replay(player, "SetPointIconHint", TEAM_IMC, 0)
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_EnemyCaptured", IMCPoint.holdingplayer)
                     }
 
                     if(CTF.MILITIAPoints >= CTF_SCORE_GOAL_TO_WIN)
@@ -651,19 +675,6 @@ void function MILITIA_Point_Trigger( entity trigger, entity ent )
                     IMCPoint.pole.ClearParent()
                     IMCPoint.pole.SetOrigin(IMCPoint.spawn)
                     IMCPoint.pole.MakeVisible()
-
-                    array<entity> teamplayers = GetPlayerArrayOfTeam( TEAM_MILITIA )
-	                foreach ( player in teamplayers )
-                    {
-                        Remote_CallFunction_Replay(player, "SetPointIconHint", TEAM_IMC, 1)
-                    }
-
-                    array<entity> enemyplayers = GetPlayerArrayOfTeam( TEAM_IMC )
-	                foreach ( player in enemyplayers )
-                    {
-                        Remote_CallFunction_Replay(player, "SetPointIconHint", TEAM_IMC, 0)
-                    }
-
 
                     EmitSoundToTeamPlayers("ui_ctf_enemy_score", TEAM_IMC)
                     EmitSoundToTeamPlayers("ui_ctf_team_score", TEAM_MILITIA)
@@ -808,9 +819,6 @@ void function _OnPlayerDisconnected(entity player)
 
             if (foundSafeSpot)
             {
-                //Start recapture rui and timer
-                thread IMCReturnTimer()
-
                 //Create the recapture trigger
                 IMCPoint.returntrigger = CreateEntity( "trigger_cylinder" )
 	            IMCPoint.returntrigger.SetRadius( 150 )
@@ -880,10 +888,6 @@ void function _OnPlayerDisconnected(entity player)
 
             if (foundSafeSpot)
             {
-
-                //Start recapture rui and timer
-                thread MILITIAReturnTimer()
-
                 //Create the recapture trigger
                 MILITIAPoint.returntrigger = CreateEntity( "trigger_cylinder" )
 	            MILITIAPoint.returntrigger.SetRadius( 75 )
@@ -1097,118 +1101,7 @@ void function StartIMCFlagReturnTimer(entity player)
     }
 }
 
-void function IMCReturnTimer()
-{
-    float starttime = Time()
-    float endtime = Time() + 10
-    foreach(player in GetPlayerArray())
-    {   
-        if( IsValid( player ) )
-        {
-            if (player.GetTeam() == TEAM_IMC)
-                Remote_CallFunction_Replay(player, "RecaptureFlag", TEAM_IMC, starttime, endtime)
-        }
-    }
-
-    while(IMCPoint.dropped)
-    {
-        if (Time() > endtime)
-        {
-            IMCPoint.pole.ClearParent()
-            IMCPoint.dropped = false
-            IMCPoint.holdingplayer = null
-            IMCPoint.pickedup = false
-            IMCPoint.flagatbase = true
-            IMCPoint.pole.SetOrigin(IMCPoint.spawn)
-            IMCPoint.returntrigger.Destroy()
-            thread PlayAnim( IMCPoint.pole, "prop_fence_expand", IMCPoint.pole.GetOrigin(), IMCPoint.pole.GetAngles() )
-            IMCPoint.trigger.SearchForNewTouchingEntity()
-
-            array<entity> teamplayers = GetPlayerArrayOfTeam( TEAM_MILITIA )
-	        foreach ( player in teamplayers )
-            {
-                Remote_CallFunction_Replay(player, "SetPointIconHint", TEAM_IMC, 1)
-            }
-
-            array<entity> enemyplayers = GetPlayerArrayOfTeam( TEAM_IMC )
-	        foreach ( player in enemyplayers )
-            {
-                Remote_CallFunction_Replay(player, "SetPointIconHint", TEAM_IMC, 4)
-            }
-        }
-
-        wait 0.01
-    }
-
-    foreach(player in GetPlayerArray())
-    {   
-        if( IsValid( player ) )
-        {
-            if (player.GetTeam() == TEAM_IMC)
-                Remote_CallFunction_Replay(player, "EndRecaptureFlag")
-        }
-    }
-}
-
-void function MILITIAReturnTimer()
-{
-    float starttime = Time()
-    float endtime = Time() + 10
-    foreach(player in GetPlayerArray())
-    {   
-        if( IsValid( player ) )
-        {
-            if (player.GetTeam() == TEAM_MILITIA)
-                Remote_CallFunction_Replay(player, "RecaptureFlag", TEAM_MILITIA, starttime, endtime)
-        }
-    }
-
-    while(MILITIAPoint.dropped)
-    {
-        if (Time() > endtime)
-        {
-            try {
-                MILITIAPoint.pole.ClearParent()
-            } catch (exception){
-                
-            }
-            MILITIAPoint.dropped = false
-            MILITIAPoint.holdingplayer = null
-            MILITIAPoint.pickedup = false
-            MILITIAPoint.flagatbase = true
-            MILITIAPoint.pole.SetOrigin(MILITIAPoint.spawn)
-            MILITIAPoint.returntrigger.Destroy()
-            thread PlayAnim( MILITIAPoint.pole, "prop_fence_expand", MILITIAPoint.pole.GetOrigin(), MILITIAPoint.pole.GetAngles() )
-            MILITIAPoint.trigger.SearchForNewTouchingEntity()
-
-            array<entity> teamplayers = GetPlayerArrayOfTeam( TEAM_IMC )
-	        foreach ( player in teamplayers )
-            {
-                Remote_CallFunction_Replay(player, "SetPointIconHint", TEAM_MILITIA, 1)
-            }
-
-            array<entity> enemyplayers = GetPlayerArrayOfTeam( TEAM_MILITIA )
-	        foreach ( player in enemyplayers )
-            {
-                Remote_CallFunction_Replay(player, "SetPointIconHint", TEAM_MILITIA, 0)
-            }
-        }
-
-        wait 0.01
-    }
-
-    foreach(player in GetPlayerArray())
-    {   
-        if( IsValid( player ) )
-        {
-            if (player.GetTeam() == TEAM_MILITIA)
-                Remote_CallFunction_Replay(player, "EndRecaptureFlag")
-        }
-    }
-}
-
-
-void function _OnPlayerDied(entity victim, entity attacker, var damageInfo) 
+void function CheckPlayerForFlag(entity victim)
 {
     //Only if the flag is picked up
     if (IMCPoint.pickedup)
@@ -1265,9 +1158,6 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
 
             if (foundSafeSpot)
             {
-                //Start recapture rui and timer
-                //thread IMCReturnTimer()
-
                 //Create the recapture trigger
                 IMCPoint.returntrigger = CreateEntity( "trigger_cylinder" )
 	            IMCPoint.returntrigger.SetRadius( 100 )
@@ -1336,10 +1226,6 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
 
             if (foundSafeSpot)
             {
-
-                //Start recapture rui and timer
-                //thread MILITIAReturnTimer()
-
                 //Create the recapture trigger
                 MILITIAPoint.returntrigger = CreateEntity( "trigger_cylinder" )
 	            MILITIAPoint.returntrigger.SetRadius( 100 )
@@ -1351,7 +1237,14 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
             }
         }
     }
-    
+}
+
+
+void function _OnPlayerDied(entity victim, entity attacker, var damageInfo) 
+{
+    //If player is holding the flag on death try to drop flag at current loaction
+    CheckPlayerForFlag(victim)
+
     switch(GetGameState())
     {
     case eGameState.Playing:
@@ -1364,9 +1257,10 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
             //Remote_CallFunction_Replay( victim, "ResetFlagIcons")
             victim.p.storedWeapons = StoreWeapons(victim)
 
-            float damagetaken = GetTotalDamageTakenByPlayer( victim, attacker )
+            float damagetaken = DamageInfo_GetDamage( damageInfo )
+            Remote_CallFunction_NonReplay(victim, "ServerCallback_CTF_UpdateDamage", 0, damagetaken)
 
-            Remote_CallFunction_NonReplay(victim, "ServerCallback_CTF_OpenCTFRespawnMenu", CTF.bubbleCenter, CTF.IMCPoints, CTF.MILITIAPoints, attacker, damagetaken)
+            Remote_CallFunction_NonReplay(victim, "ServerCallback_CTF_OpenCTFRespawnMenu", CTF.bubbleCenter, CTF.IMCPoints, CTF.MILITIAPoints, attacker)
             
             float reservedTime = 4// so we dont immediately go to killcam
             wait reservedTime
@@ -1396,6 +1290,9 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
                 int invscore = attacker.GetPlayerNetInt( "kills" )
 			    invscore++;
 			    attacker.SetPlayerNetInt( "kills", invscore )
+
+                float damagegiven = DamageInfo_GetDamage( damageInfo )
+                Remote_CallFunction_NonReplay(victim, "ServerCallback_CTF_UpdateDamage", 1, damagegiven)
 
                 if(IMCPoint.holdingplayer == attacker)
                 {

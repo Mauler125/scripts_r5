@@ -1,6 +1,7 @@
 // Credits
-// AyeZee#6969 -- whole ctf gamemode and ui
-// @Shrugtal -- score ui
+// AyeZee#6969 -- ctf gamemode and ui
+// sal#3261 -- base custom_tdm mode to work off
+// Retículo Endoplasmático#5955 -- giving me the ctf sound names
 // everyone else -- advice
 
 global function Sh_CustomCTF_Init
@@ -11,8 +12,6 @@ global function CTF_GetRespawnDelay
 global function CTF_Equipment_GetDefaultShieldHP
 global function CTF_GetOOBDamagePercent
 global function CTF_GetVotingTime
-global function GetDeathcamHeight
-global function SendCurrentLocation
 
 #if SERVER
 global function CTF_Equipment_GetRespawnKitEnabled
@@ -24,7 +23,6 @@ global function GetRandomPlayerSpawnOrigin
 global function GetRandomPlayerSpawnAngles
 global function GetFlagLocation
 #endif
-
 
 global const CTF_SCORE_GOAL_TO_WIN = 5
 
@@ -59,15 +57,10 @@ struct {
 
 } file;
 
-
-
-
 void function Sh_CustomCTF_Init() 
 {
-
-
     // Map locations
-
+    //This is only used for the boundary bubble
     switch(GetMapName())
     {
     case "mp_rr_canyonlands_staging":
@@ -216,8 +209,13 @@ void function Shared_RegisterLocation(LocationSettingsCTF locationSettings)
     #if SERVER
     _CTFRegisterLocation(locationSettings)
     #endif
+
+    #if CLIENT
+    Cl_CTFRegisterLocation(locationSettings)
+    #endif
 }
 
+//Flag Spawn Locations
 vector function GetFlagLocation(LocationSettingsCTF locationSettings, int team)
 {
     vector spawnorg
@@ -259,38 +257,8 @@ vector function GetFlagLocation(LocationSettingsCTF locationSettings, int team)
     return spawnorg
 }
 
-void function SendCurrentLocation(LocationSettingsCTF locationSettings)
-{
-    file.selectedLocation = locationSettings
-}
-
-vector function GetDeathcamHeight()
-{
-    vector spawnorg
-    switch(file.selectedLocation.name)
-    {
-        case "Firing Range":
-            spawnorg = <0,0,5000>
-            break
-        case "Artillery":
-            spawnorg = <0,0,5000>
-            break
-        case "Airbase":
-            spawnorg = <0,0,5000>
-            break
-        case "Relay":
-            spawnorg = <0,0,5000>
-            break
-        case "WetLands":
-            spawnorg = <0,0,7000>
-            break
-        
-    }
-
-    return spawnorg
-}
-
 #if SERVER
+//Player Spawn Origin
 array<vector> function GetRandomPlayerSpawnOrigin(LocationSettingsCTF locationSettings, entity player)
 {
     array<vector> spawnorg
@@ -366,7 +334,7 @@ array<vector> function GetRandomPlayerSpawnOrigin(LocationSettingsCTF locationSe
         {
             case TEAM_IMC:
                 spawnorg.append(<27589, 17568, 4206>) //Ang: 0 -160 0
-                spawnorg.append(<27560, 15678, 4350>) //Ang: 0 0 0
+                spawnorg.append(<27560, 15678, 4350>) //Ang: 0 180 0
                 spawnorg.append(<29963, 17119, 4366>) //Ang: 0 165 0
                 spawnorg.append(<29234, 15319, 4206>) //Ang: 0 135 0
             break
@@ -382,18 +350,19 @@ array<vector> function GetRandomPlayerSpawnOrigin(LocationSettingsCTF locationSe
     return spawnorg
 }
 
+//Player Spawn Angles
 array<vector> function GetRandomPlayerSpawnAngles(LocationSettingsCTF locationSettings, entity player)
 {
-    array<vector> spawnorg
+    array<vector> spawnang
     if (locationSettings.name == "Firing Range")
     {
         switch(player.GetTeam())
         {
             case TEAM_IMC:
-                spawnorg.append(<32778, -3522, -29173>)
+                spawnang.append(<32778, -3522, -29173>)
             break
             case TEAM_MILITIA:
-                spawnorg.append(<32778, -3522, -29173>)
+                spawnang.append(<32778, -3522, -29173>)
             break
         }
     }
@@ -402,16 +371,16 @@ array<vector> function GetRandomPlayerSpawnAngles(LocationSettingsCTF locationSe
         switch(player.GetTeam())
         {
             case TEAM_IMC:
-                spawnorg.append(<0, -170, 0>) //Ang: 0 -170 0
-                spawnorg.append(<0, 170, 0>) //Ang: 0 170 0
-                spawnorg.append(<0, 170, 0>) //Ang: 0 170 0
-                spawnorg.append(<0, -170, 0>) //Ang: 0 -170 0
+                spawnang.append(<0, -170, 0>) //Ang: 0 -170 0
+                spawnang.append(<0, 170, 0>) //Ang: 0 170 0
+                spawnang.append(<0, 170, 0>) //Ang: 0 170 0
+                spawnang.append(<0, -170, 0>) //Ang: 0 -170 0
             break
             case TEAM_MILITIA:
-                spawnorg.append(<0, 8, 0>) //Ang: 0 8 0
-                spawnorg.append(<0, -8, 0>) //Ang: 0 -8 0
-                spawnorg.append(<0, -8, 0>) //Ang: 0 -8 0
-                spawnorg.append(<0, 8, 0>) //Ang: 0 8 0
+                spawnang.append(<0, 8, 0>) //Ang: 0 8 0
+                spawnang.append(<0, -8, 0>) //Ang: 0 -8 0
+                spawnang.append(<0, -8, 0>) //Ang: 0 -8 0
+                spawnang.append(<0, 8, 0>) //Ang: 0 8 0
             break
         }
     }
@@ -420,16 +389,16 @@ array<vector> function GetRandomPlayerSpawnAngles(LocationSettingsCTF locationSe
         switch(player.GetTeam())
         {
             case TEAM_IMC:
-                spawnorg.append(<0, -70, 0>) //Ang: 0 -70 0
-                spawnorg.append(<0, -30, 0>) //Ang: 0 -30 0
-                spawnorg.append(<0, -125, 0>) //Ang: 0 -125 0
-                spawnorg.append(<0, -20, 0>) //Ang: 0 -20 0
+                spawnang.append(<0, -70, 0>) //Ang: 0 -70 0
+                spawnang.append(<0, -30, 0>) //Ang: 0 -30 0
+                spawnang.append(<0, -125, 0>) //Ang: 0 -125 0
+                spawnang.append(<0, -20, 0>) //Ang: 0 -20 0
             break
             case TEAM_MILITIA:
-                spawnorg.append(<0, 19, 0>) //Ang: 0 19 0
-                spawnorg.append(<0, 90, 0>) //Ang: 0 90 0
-                spawnorg.append(<0, 44, 0>) //Ang: 0 44 0
-                spawnorg.append(<0, 45, 0>) //Ang: 0 45 0
+                spawnang.append(<0, 19, 0>) //Ang: 0 19 0
+                spawnang.append(<0, 90, 0>) //Ang: 0 90 0
+                spawnang.append(<0, 44, 0>) //Ang: 0 44 0
+                spawnang.append(<0, 45, 0>) //Ang: 0 45 0
             break
         }
     }
@@ -438,16 +407,16 @@ array<vector> function GetRandomPlayerSpawnAngles(LocationSettingsCTF locationSe
         switch(player.GetTeam())
         {
             case TEAM_IMC:
-                spawnorg.append(<0, 40, 0>) //Ang: 0 40 0
-                spawnorg.append(<0, 35, 0>) //Ang: 0 35 0
-                spawnorg.append(<0, 0, 0>) //Ang: 0 0 0
-                spawnorg.append(<0, -15, 0>) //Ang: 0 -15 0
+                spawnang.append(<0, 40, 0>) //Ang: 0 40 0
+                spawnang.append(<0, 35, 0>) //Ang: 0 35 0
+                spawnang.append(<0, 180, 0>) //Ang: 0 180 0
+                spawnang.append(<0, -15, 0>) //Ang: 0 -15 0
             break
             case TEAM_MILITIA:
-                spawnorg.append(<0, -135, 0>) //Ang: 0 -135 0
-                spawnorg.append(<0, 90, 0>) //Ang: 0 90 0
-                spawnorg.append(<0, -160, 0>) //Ang: 0 -160 0
-                spawnorg.append(<0, 160, 0>) //Ang: 0 160 0
+                spawnang.append(<0, -135, 0>) //Ang: 0 -135 0
+                spawnang.append(<0, 90, 0>) //Ang: 0 90 0
+                spawnang.append(<0, -160, 0>) //Ang: 0 -160 0
+                spawnang.append(<0, 160, 0>) //Ang: 0 160 0
             break
         }
     }
@@ -456,21 +425,21 @@ array<vector> function GetRandomPlayerSpawnAngles(LocationSettingsCTF locationSe
         switch(player.GetTeam())
         {
             case TEAM_IMC:
-                spawnorg.append(<0, -160, 0>) //Ang: 0 -160 0
-                spawnorg.append(<0, 0, 0>) //Ang: 0 0 0
-                spawnorg.append(<0, 165, 0>) //Ang: 0 165 0
-                spawnorg.append(<0, 135, 0>) //Ang: 0 135 0
+                spawnang.append(<0, -160, 0>) //Ang: 0 -160 0
+                spawnang.append(<0, 0, 0>) //Ang: 0 0 0
+                spawnang.append(<0, 165, 0>) //Ang: 0 165 0
+                spawnang.append(<0, 135, 0>) //Ang: 0 135 0
             break
             case TEAM_MILITIA:
-                spawnorg.append(<0, 50, 0>) //Ang: 0 50 0
-                spawnorg.append(<0, 0, 0>) //Ang: 0 0 0
-                spawnorg.append(<0, -60, 0>) //Ang: 0 -60 0
-                spawnorg.append(<0, 40, 0>) //Ang: 0 40 0
+                spawnang.append(<0, 50, 0>) //Ang: 0 50 0
+                spawnang.append(<0, 0, 0>) //Ang: 0 0 0
+                spawnang.append(<0, -60, 0>) //Ang: 0 -60 0
+                spawnang.append(<0, 40, 0>) //Ang: 0 40 0
             break
         }
     }
 
-    return spawnorg
+    return spawnang
 }
 
 

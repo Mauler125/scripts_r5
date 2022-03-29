@@ -1,21 +1,26 @@
 // Credits
 // AyeZee#6969 -- ctf gamemode and ui
-// Retículo Endoplasmático#5955 -- sounds
+// sal#3261 -- base custom_tdm mode to work off
+// Retículo Endoplasmático#5955 -- giving me the ctf sound names
 // everyone else -- advice
 
 global function Cl_CustomCTF_Init
 
 global function ServerCallback_CTF_DoAnnouncement
 global function ServerCallback_CTF_PointCaptured
+global function ServerCallback_CTF_TeamText
 
-global function ServerCallback_CTF_MILCaptured
-global function ServerCallback_CTF_IMCCaptured
+global function ServerCallback_CTF_EnemyCaptured
+global function ServerCallback_CTF_TeamCaptured
 global function ServerCallback_CTF_CustomMessages
 global function ServerCallback_CTF_PlayerDied
 global function ServerCallback_CTF_PlayerSpawning
 global function ServerCallback_CTF_OpenCTFRespawnMenu
-
+global function ServerCallback_CTF_SetSelectedLocation
 global function ServerCallback_CTF_TeamWon
+global function ServerCallback_CTF_UpdateDamage
+
+global function Cl_CTFRegisterLocation
 
 global function AddPointIcon
 
@@ -30,6 +35,7 @@ struct {
     array choices
     array<LocationSettingsCTF> locationSettings
     var scoreRui
+    var teamRui
 } file;
 
 var IMCpointicon = null
@@ -43,6 +49,72 @@ array<var> teamicons
 
 void function Cl_CustomCTF_Init()
 {
+}
+
+void function Cl_CTFRegisterLocation(LocationSettingsCTF locationSettings)
+{
+    file.locationSettings.append(locationSettings)
+}
+
+void function ServerCallback_CTF_SetSelectedLocation(int sel)
+{
+    file.selectedLocation = file.locationSettings[sel]
+}
+
+vector function GetDeathcamHeight()
+{
+    vector height
+    switch(file.selectedLocation.name)
+    {
+        case "Firing Range":
+            height = <0,0,5000>
+            break
+        case "Artillery":
+            height = <0,0,5000> // Done
+            break
+        case "Airbase":
+            height = <0,0,5000> // Done
+            break
+        case "Relay":
+            height = <0,0,6000> // Done
+            break
+        case "WetLands":
+            height = <0,0,7000> // Done
+            break
+        default:
+            height = <0,0,5000>
+            break
+    }
+
+    return height
+}
+
+vector function GetDeathcamAng()
+{
+    vector angles
+    switch(file.selectedLocation.name)
+    {
+        case "Firing Range":
+            angles = <90,90,0>
+            break
+        case "Artillery":
+            angles = <90,90,0> // Done
+            break
+        case "Airbase":
+            angles = <90,0,0> // Done
+            break
+        case "Relay":
+            angles = <90,-90,0> // Done
+            break
+        case "WetLands":
+            angles = <90,90,0> // Done
+            break
+        default:
+            angles = <90,0,0> // Done
+            break
+    }
+
+    return angles
 }
 
 void function RecaptureFlag(int team, float starttime, float endtime)
@@ -244,20 +316,34 @@ void function MakeScoreRUI()
     UISize screenSize = GetScreenSize()
     var screenAlignmentTopo = RuiTopology_CreatePlane( <( screenSize.width * 0.25),( screenSize.height * 0.31 ), 0>, <float( screenSize.width ), 0, 0>, <0, float( screenSize.height ), 0>, false )
     var rui = RuiCreate( $"ui/announcement_quick_right.rpak", screenAlignmentTopo, RUI_DRAW_HUD, RUI_SORT_SCREENFADE + 1 )
+
+    var screenAlignmentTopo2 = RuiTopology_CreatePlane( <( screenSize.width * 0.25),( screenSize.height * 0.31 ), 0>, <float( screenSize.width ), 0, 0>, <0, float( screenSize.height - 100 ), 0>, false )
+    var rui2 = RuiCreate( $"ui/announcement_quick_right.rpak", screenAlignmentTopo2, RUI_DRAW_HUD, RUI_SORT_SCREENFADE + 1 )
     
     RuiSetGameTime( rui, "startTime", Time() )
     RuiSetString( rui, "messageText", "Team IMC: 0  ||  Team MIL: 0" )
     RuiSetFloat( rui, "duration", 9999999 )
     RuiSetFloat3( rui, "eventColor", SrgbToLinear( <128, 188, 255> ) )
+
+    RuiSetGameTime( rui2, "startTime", Time() )
+    RuiSetString( rui2, "messageText", "Team: " )
+    RuiSetFloat( rui2, "duration", 9999999 )
+    RuiSetFloat3( rui2, "eventColor", SrgbToLinear( <128, 188, 255> ) )
+    
     file.scoreRui = rui
+    file.teamRui = rui2
     
     OnThreadEnd(
-		function() : ( rui )
+		function() : ( rui, rui2 )
 		{
             if ( IsValid( rui ) )
 			    RuiDestroy( rui )
+            
+            if ( IsValid( rui2 ) )
+			    RuiDestroy( rui2 )
 
 			file.scoreRui = null
+            file.teamRui = null
 		}
 	)
     
@@ -307,7 +393,18 @@ void function ServerCallback_CTF_DoAnnouncement(float duration, int type)
 void function ServerCallback_CTF_PointCaptured(int IMC, int MIL)
 {
     if(file.scoreRui)
-        RuiSetString( file.scoreRui, "messageText", "Team IMC: " + IMC + "  ||  Team MIL: " + MIL );
+        RuiSetString( file.scoreRui, "messageText", "Team IMC: " + IMC + "  ||  Team MIL: " + MIL )
+}
+
+void function ServerCallback_CTF_TeamText(int team)
+{
+    if(file.teamRui)
+    {
+        if(team == TEAM_IMC)
+            RuiSetString( file.teamRui, "messageText", "Your Team: IMC" )
+        else
+            RuiSetString( file.teamRui, "messageText", "Your Team: MILITIA")
+    }
 }
 
 void function ServerCallback_CTF_TeamWon(int team)
@@ -332,27 +429,30 @@ void function ServerCallback_CTF_TeamWon(int team)
 	Announcement_SetPurge( announcement, true )
 	Announcement_SetOptionalTextArgsArray( announcement, [ "true" ] )
 	Announcement_SetPriority( announcement, 200 ) //Be higher priority than Titanfall ready indicator etc
-	announcement.duration = 10
+	announcement.duration = 20
 	AnnouncementFromClass( GetLocalViewPlayer(), announcement )
 }
 
-void function ServerCallback_CTF_MILCaptured(entity player)
+void function ServerCallback_CTF_EnemyCaptured(entity player)
 {
-    //AnnouncementData announcement = Announcement_Create( "IMC Flag has been captured!" )
-    AnnouncementData announcement = CreateAnnouncementMessageQuick( player, "IMC Flag has been captured!", "by: " + player.GetPlayerName(), <0, 1, 1>, $"rui/hud/gametype_icons/survival/survey_beacon_only_pathfinder" )
+    AnnouncementData announcement = Announcement_Create( "Enemy team has captured your flag!" )
+    //Announcement_SetSubText(announcement, "by: " + player.GetPlayerName())
+	Announcement_SetStyle( announcement, ANNOUNCEMENT_STYLE_SWEEP )
 	Announcement_SetPurge( announcement, true )
+	Announcement_SetOptionalTextArgsArray( announcement, [ "true" ] )
 	Announcement_SetPriority( announcement, 200 )
 	announcement.duration = 3
 	AnnouncementFromClass( GetLocalViewPlayer(), announcement )
 }
 
-void function ServerCallback_CTF_IMCCaptured(entity player)
+void function ServerCallback_CTF_TeamCaptured(entity player)
 {
-    //AnnouncementData announcement = Announcement_Create( "IMC Flag has been captured!" )
-    AnnouncementData announcement = CreateAnnouncementMessageQuick( player, "MILITIA Flag has been captured!", "by: " + player.GetPlayerName(), <0, 1, 1>, $"rui/hud/gametype_icons/survival/survey_beacon_only_pathfinder" )
+    AnnouncementData announcement = Announcement_Create( "Your team has captured the enemy flag!" )
+    //Announcement_SetSubText(announcement, "by: " + player.GetPlayerName())
+	Announcement_SetStyle( announcement, ANNOUNCEMENT_STYLE_SWEEP )
 	Announcement_SetPurge( announcement, true )
-	//Announcement_SetOptionalTextArgsArray( announcement, [ "true" ] )
-	Announcement_SetPriority( announcement, 200 ) //Be higher priority than Titanfall ready indicator etc
+	Announcement_SetOptionalTextArgsArray( announcement, [ "true" ] )
+	Announcement_SetPriority( announcement, 200 )
 	announcement.duration = 3
 	AnnouncementFromClass( GetLocalViewPlayer(), announcement )
 }
@@ -373,7 +473,7 @@ void function ServerCallback_CTF_CustomMessages(entity player, int messageid)
         message = "Your teams flag has been returned to base"
     }
 
-    AnnouncementData announcement = CreateAnnouncementMessageQuick( player, message, "", <0, 1, 1>, $"rui/hud/gametype_icons/survival/survey_beacon_only_pathfinder" )
+    AnnouncementData announcement = CreateAnnouncementMessageQuick( player, message, "", <100, 0, 0>, $"rui/hud/gametype_icons/survival/survey_beacon_only_pathfinder" )
 	Announcement_SetPurge( announcement, true )
 	Announcement_SetPriority( announcement, 200 )
 	announcement.duration = 3
@@ -392,8 +492,21 @@ var function CreateTemporarySpawnRUI(entity parentEnt, float duration)
 
     parentEnt.Destroy()
 }
+void function ServerCallback_CTF_UpdateDamage(int type, float damage)
+{
+    // 0 = Damage Taken
+    // 1 = Damage Given
+    if(type == 0)
+    {
+        RunUIScript( "UpdateKillerDamage", damage)
+    }
+    else
+    {
+        RunUIScript( "UpdateDamageGiven", damage)
+    }
+}
 
-void function ServerCallback_CTF_OpenCTFRespawnMenu(vector campos, int IMCscore, int MILscore, entity attacker, float damage)
+void function ServerCallback_CTF_OpenCTFRespawnMenu(vector campos, int IMCscore, int MILscore, entity attacker)
 {
     RunUIScript( "OpenCTFRespawnMenu" )
 
@@ -408,8 +521,6 @@ void function ServerCallback_CTF_OpenCTFRespawnMenu(vector campos, int IMCscore,
     }
     else
         RunUIScript( "UpdateKillerName", "Suicide")
-
-    RunUIScript( "UpdateKillerDamage", damage)
 
     if(player.GetTeam() == TEAM_IMC)
     {
@@ -458,8 +569,8 @@ void function ServerCallback_CTF_PlayerDied(vector campos, int IMCscore, int MIL
     Deathcam.SetParent( cameraMover, "", false )
     player.SetMenuCameraEntityWithAudio( Deathcam )
     Deathcam.SetTargetFOV( 90, true, EASING_CUBIC_INOUT, 0.50 )
-    cameraMover.NonPhysicsMoveTo( campos + <0, 0, 7000>, 0.60, 0, 0.30 )
-    cameraMover.NonPhysicsRotateTo( <90,0,0>, 0.60, 0, 0.30 )
+    cameraMover.NonPhysicsMoveTo( campos + GetDeathcamHeight(), 0.60, 0, 0.30 )
+    cameraMover.NonPhysicsRotateTo( GetDeathcamAng(), 0.60, 0, 0.30 )
 }
 
 void function UpdateUIRespawnTimer()
