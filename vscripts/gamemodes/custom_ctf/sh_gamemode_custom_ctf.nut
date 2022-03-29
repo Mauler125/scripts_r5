@@ -11,6 +11,8 @@ global function CTF_GetRespawnDelay
 global function CTF_Equipment_GetDefaultShieldHP
 global function CTF_GetOOBDamagePercent
 global function CTF_GetVotingTime
+global function GetDeathcamHeight
+global function SendCurrentLocation
 
 #if SERVER
 global function CTF_Equipment_GetRespawnKitEnabled
@@ -126,6 +128,30 @@ void function Sh_CustomCTF_Init()
             )
         )
 
+        Shared_RegisterLocation(
+            NewCTFLocationSettings(
+                "Relay",
+                [
+                    NewCTFLocPair(<29625, 25371, 4216>, <0, 90, 0>),
+                    NewCTFLocPair(<22958, 22128, 3914>, <0, 18, 0>),
+                    NewCTFLocPair(<26825, 30767, 4790>, <0, 180, 0>)
+                ],
+                <0, 0, 3000>
+            )
+        )
+
+        Shared_RegisterLocation(
+            NewCTFLocationSettings(
+                "WetLands",
+                [
+                    NewCTFLocPair(<29585, 16597, 4641>, <0, 90, 0>),
+                    NewCTFLocPair(<19983, 14582, 4670>, <0, 18, 0>),
+                    NewCTFLocPair(<25244, 16658, 3871>, <0, 180, 0>)
+                ],
+                <0, 0, 3000>
+            )
+        )
+
         break
 
         case "mp_rr_desertlands_64k_x_64k":
@@ -179,6 +205,8 @@ LocationSettingsCTF function NewCTFLocationSettings(string name, array<LocPairCT
     locationSettings.spawns = spawns
     locationSettings.cinematicCameraOffset = cinematicCameraOffset
 
+    file.locationSettings.append(locationSettings)
+
     return locationSettings
 }
 
@@ -212,6 +240,49 @@ vector function GetFlagLocation(LocationSettingsCTF locationSettings, int team)
                 spawnorg = <-25775, 1599, 2583>
             if (team == TEAM_MILITIA)
                 spawnorg = <-24845,-5112,2571>
+            break
+        case "Relay":
+            if (team == TEAM_IMC)
+                spawnorg = <23258, 22476, 3914>
+            if (team == TEAM_MILITIA)
+                spawnorg = <30139,25359,4216>
+            break
+        case "WetLands":
+            if (team == TEAM_IMC)
+                spawnorg = <28495, 16316, 4206>
+            if (team == TEAM_MILITIA)
+                spawnorg = <19843, 14597, 4670>
+            break
+        
+    }
+
+    return spawnorg
+}
+
+void function SendCurrentLocation(LocationSettingsCTF locationSettings)
+{
+    file.selectedLocation = locationSettings
+}
+
+vector function GetDeathcamHeight()
+{
+    vector spawnorg
+    switch(file.selectedLocation.name)
+    {
+        case "Firing Range":
+            spawnorg = <0,0,5000>
+            break
+        case "Artillery":
+            spawnorg = <0,0,5000>
+            break
+        case "Airbase":
+            spawnorg = <0,0,5000>
+            break
+        case "Relay":
+            spawnorg = <0,0,5000>
+            break
+        case "WetLands":
+            spawnorg = <0,0,7000>
             break
         
     }
@@ -271,6 +342,42 @@ array<vector> function GetRandomPlayerSpawnOrigin(LocationSettingsCTF locationSe
             break
         }
     }
+    else if (locationSettings.name == "Relay")
+    {
+        switch(player.GetTeam())
+        {
+            case TEAM_IMC:
+                spawnorg.append(<24272, 21828, 3914>) //Ang: 0 40 0
+                spawnorg.append(<23815, 23703, 4058>) //Ang: 0 35 0
+                spawnorg.append(<22419, 23489, 4251>) //Ang: 0 0 0
+                spawnorg.append(<21577, 22943, 4256>) //Ang: 0 -15 0
+            break
+            case TEAM_MILITIA:
+                spawnorg.append(<30000, 26381, 4216>) //Ang: 0 -135 0
+                spawnorg.append(<29036, 24253, 4216>) //Ang: 0 90 0
+                spawnorg.append(<27698, 28291, 4102>) //Ang: 0 -160 0
+                spawnorg.append(<27628, 25640, 4370>) //Ang: 0 160 0
+            break
+        }
+    }
+    else if (locationSettings.name == "WetLands")
+    {
+        switch(player.GetTeam())
+        {
+            case TEAM_IMC:
+                spawnorg.append(<27589, 17568, 4206>) //Ang: 0 -160 0
+                spawnorg.append(<27560, 15678, 4350>) //Ang: 0 0 0
+                spawnorg.append(<29963, 17119, 4366>) //Ang: 0 165 0
+                spawnorg.append(<29234, 15319, 4206>) //Ang: 0 135 0
+            break
+            case TEAM_MILITIA:
+                spawnorg.append(<20337, 13229, 4670>) //Ang: 0 50 0
+                spawnorg.append(<20230, 16421, 4670>) //Ang: 0 0 0
+                spawnorg.append(<21194, 16925, 4518>) //Ang: 0 -60 0
+                spawnorg.append(<22281, 13742, 4422>) //Ang: 0 40 0
+            break
+        }
+    }
 
     return spawnorg
 }
@@ -326,9 +433,46 @@ array<vector> function GetRandomPlayerSpawnAngles(LocationSettingsCTF locationSe
             break
         }
     }
+    else if (locationSettings.name == "Relay")
+    {
+        switch(player.GetTeam())
+        {
+            case TEAM_IMC:
+                spawnorg.append(<0, 40, 0>) //Ang: 0 40 0
+                spawnorg.append(<0, 35, 0>) //Ang: 0 35 0
+                spawnorg.append(<0, 0, 0>) //Ang: 0 0 0
+                spawnorg.append(<0, -15, 0>) //Ang: 0 -15 0
+            break
+            case TEAM_MILITIA:
+                spawnorg.append(<0, -135, 0>) //Ang: 0 -135 0
+                spawnorg.append(<0, 90, 0>) //Ang: 0 90 0
+                spawnorg.append(<0, -160, 0>) //Ang: 0 -160 0
+                spawnorg.append(<0, 160, 0>) //Ang: 0 160 0
+            break
+        }
+    }
+    else if (locationSettings.name == "WetLands")
+    {
+        switch(player.GetTeam())
+        {
+            case TEAM_IMC:
+                spawnorg.append(<0, -160, 0>) //Ang: 0 -160 0
+                spawnorg.append(<0, 0, 0>) //Ang: 0 0 0
+                spawnorg.append(<0, 165, 0>) //Ang: 0 165 0
+                spawnorg.append(<0, 135, 0>) //Ang: 0 135 0
+            break
+            case TEAM_MILITIA:
+                spawnorg.append(<0, 50, 0>) //Ang: 0 50 0
+                spawnorg.append(<0, 0, 0>) //Ang: 0 0 0
+                spawnorg.append(<0, -60, 0>) //Ang: 0 -60 0
+                spawnorg.append(<0, 40, 0>) //Ang: 0 40 0
+            break
+        }
+    }
 
     return spawnorg
 }
+
 
 #endif
 

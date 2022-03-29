@@ -444,7 +444,7 @@ void function ServerCallback_CTF_PlayerDied(vector campos, int IMCscore, int MIL
             continue
         }
 
-        var newicon = AddCaptureIcon( teamplayer, $"rui/pilot_loadout/mods/hopup_skullpiercer", false, $"ui/overhead_icon_generic.rpak")
+        var newicon = AddCaptureIcon( teamplayer, $"rui/hud/gametype_icons/obj_foreground_diamond", false, $"ui/overhead_icon_generic.rpak")
 		RuiSetFloat2( newicon, "iconSize", <15,15,0> )
 		RuiSetFloat( newicon, "distanceFade", 100000 )
 		RuiSetBool( newicon, "adsFade", false )
@@ -458,7 +458,7 @@ void function ServerCallback_CTF_PlayerDied(vector campos, int IMCscore, int MIL
     Deathcam.SetParent( cameraMover, "", false )
     player.SetMenuCameraEntityWithAudio( Deathcam )
     Deathcam.SetTargetFOV( 90, true, EASING_CUBIC_INOUT, 0.50 )
-    cameraMover.NonPhysicsMoveTo( campos + <0,0,5000>, 0.60, 0, 0.30 )
+    cameraMover.NonPhysicsMoveTo( campos + <0, 0, 7000>, 0.60, 0, 0.30 )
     cameraMover.NonPhysicsRotateTo( <90,0,0>, 0.60, 0, 0.30 )
 }
 

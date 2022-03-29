@@ -229,6 +229,7 @@ void function StartRound()
         
     }
 
+    SendCurrentLocation(file.selectedLocation)
     SpawnCTFPoints()
 
     
