@@ -78,10 +78,6 @@ struct
     entity beingreturnedby
 } MILITIAPoint;
 
-//Custom Messages IDS
-int PickedUpFlag = 0
-int EnemyPickckedUpFlag = 1
-
 
 void function _CustomCTF_Init()
 {
@@ -368,7 +364,7 @@ void function StartRound()
         if( IsValid( player ) )
         {
             ClearInvincible(player)
-            Remote_CallFunction_Replay(player, "ResetFlagIcons")
+            Remote_CallFunction_Replay(player, "ServerCallback_CTF_ResetFlagIcons")
         }
     }
 }
@@ -477,11 +473,11 @@ void function SpawnCTFPoints()
         {
             if (player.GetTeam() == TEAM_IMC)
             {
-                Remote_CallFunction_Replay(player, "AddPointIcon", IMCPoint.pole, MILITIAPoint.pole, TEAM_IMC)
+                Remote_CallFunction_Replay(player, "ServerCallback_CTF_AddPointIcon", IMCPoint.pole, MILITIAPoint.pole, TEAM_IMC)
             }
             else if (player.GetTeam() == TEAM_MILITIA)
             {
-                Remote_CallFunction_Replay(player, "AddPointIcon", IMCPoint.pole, MILITIAPoint.pole, TEAM_MILITIA)
+                Remote_CallFunction_Replay(player, "ServerCallback_CTF_AddPointIcon", IMCPoint.pole, MILITIAPoint.pole, TEAM_MILITIA)
             }
         }
     }
@@ -560,14 +556,14 @@ void function IMCPoint_Trigger( entity trigger, entity ent )
                 array<entity> teamplayers = GetPlayerArrayOfTeam( TEAM_MILITIA )
 	            foreach ( player in teamplayers )
                 {
-                    Remote_CallFunction_Replay(player, "SetPointIconHint", TEAM_IMC, 3)
+                    Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_IMC, CTF_Escort)
                 }
 
                 array<entity> enemyplayers = GetPlayerArrayOfTeam( TEAM_IMC )
 	            foreach ( player in enemyplayers )
                 {
-                    Remote_CallFunction_Replay(player, "ServerCallback_CTF_CustomMessages", player, EnemyPickckedUpFlag)
-                    Remote_CallFunction_Replay(player, "SetPointIconHint", TEAM_IMC, 2)
+                    Remote_CallFunction_Replay(player, "ServerCallback_CTF_CustomMessages", player, EnemyPickedUpFlag)
+                    Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_IMC, CTF_Attack)
                 }
 
                 EmitSoundToTeamPlayers("UI_CTF_3P_TeamGrabFlag", TEAM_MILITIA)
@@ -594,14 +590,14 @@ void function IMCPoint_Trigger( entity trigger, entity ent )
                     array<entity> teamplayers = GetPlayerArrayOfTeam( TEAM_IMC )
 	                foreach ( player in teamplayers )
                     {
-                        Remote_CallFunction_Replay(player, "SetPointIconHint", TEAM_MILITIA, 1)
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_MILITIA, CTF_Capture)
                         Remote_CallFunction_Replay(player, "ServerCallback_CTF_TeamCaptured", IMCPoint.holdingplayer)
                     }
 
                     array<entity> enemyplayers = GetPlayerArrayOfTeam( TEAM_MILITIA )
 	                foreach ( player in enemyplayers )
                     {
-                        Remote_CallFunction_Replay(player, "SetPointIconHint", TEAM_MILITIA, 0)
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_MILITIA, CTF_Defend)
                         Remote_CallFunction_Replay(player, "ServerCallback_CTF_EnemyCaptured", IMCPoint.holdingplayer)
                     }
 
@@ -652,14 +648,14 @@ void function MILITIA_Point_Trigger( entity trigger, entity ent )
                 array<entity> teamplayers = GetPlayerArrayOfTeam( TEAM_IMC )
 	            foreach ( player in teamplayers )
                 {
-                    Remote_CallFunction_Replay(player, "SetPointIconHint", TEAM_MILITIA, 3)
+                    Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_MILITIA, CTF_Escort)
                 }
 
                 array<entity> enemyplayers = GetPlayerArrayOfTeam( TEAM_MILITIA )
 	            foreach ( player in enemyplayers )
                 {
-                    Remote_CallFunction_Replay(player, "ServerCallback_CTF_CustomMessages", player, EnemyPickckedUpFlag)
-                    Remote_CallFunction_Replay(player, "SetPointIconHint", TEAM_MILITIA, 2)
+                    Remote_CallFunction_Replay(player, "ServerCallback_CTF_CustomMessages", player, EnemyPickedUpFlag)
+                    Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_MILITIA, CTF_Attack)
                 }
 
                 EmitSoundToTeamPlayers("UI_CTF_3P_TeamGrabFlag", TEAM_IMC)
@@ -686,14 +682,14 @@ void function MILITIA_Point_Trigger( entity trigger, entity ent )
                     array<entity> teamplayers = GetPlayerArrayOfTeam( TEAM_MILITIA )
 	                foreach ( player in teamplayers )
                     {
-                        Remote_CallFunction_Replay(player, "SetPointIconHint", TEAM_IMC, 1)
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_IMC, CTF_Capture)
                         Remote_CallFunction_Replay(player, "ServerCallback_CTF_TeamCaptured", IMCPoint.holdingplayer)
                     }
 
                     array<entity> enemyplayers = GetPlayerArrayOfTeam( TEAM_IMC )
 	                foreach ( player in enemyplayers )
                     {
-                        Remote_CallFunction_Replay(player, "SetPointIconHint", TEAM_IMC, 0)
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_IMC, CTF_Defend)
                         Remote_CallFunction_Replay(player, "ServerCallback_CTF_EnemyCaptured", IMCPoint.holdingplayer)
                     }
 
@@ -789,11 +785,11 @@ void function _OnPlayerConnected(entity player)
 
         if (player.GetTeam() == TEAM_IMC)
         {
-            Remote_CallFunction_Replay(player, "AddPointIcon", IMCPoint.pole, MILITIAPoint.pole, TEAM_IMC)
+            Remote_CallFunction_Replay(player, "ServerCallback_CTF_AddPointIcon", IMCPoint.pole, MILITIAPoint.pole, TEAM_IMC)
         }
         else if (player.GetTeam() == TEAM_MILITIA)
         {
-            Remote_CallFunction_Replay(player, "AddPointIcon", IMCPoint.pole, MILITIAPoint.pole, TEAM_MILITIA)
+            Remote_CallFunction_Replay(player, "ServerCallback_CTF_AddPointIcon", IMCPoint.pole, MILITIAPoint.pole, TEAM_MILITIA)
         }
         break
     default: 
@@ -825,14 +821,14 @@ void function _OnPlayerDisconnected(entity player)
             array<entity> teamplayers = GetPlayerArrayOfTeam( TEAM_MILITIA )
 	        foreach ( players in teamplayers )
             {
-		        Remote_CallFunction_Replay(players, "ServerCallback_CTF_CustomMessages", players, EnemyPickckedUpFlag)
-                Remote_CallFunction_Replay(players, "SetPointIconHint", TEAM_IMC, 1)
+		        Remote_CallFunction_Replay(players, "ServerCallback_CTF_CustomMessages", players, EnemyPickedUpFlag)
+                Remote_CallFunction_Replay(players, "ServerCallback_CTF_SetPointIconHint", TEAM_IMC, CTF_Capture)
             }
 
             array<entity> enemyplayers = GetPlayerArrayOfTeam( TEAM_IMC )
 	        foreach ( players in enemyplayers )
             {
-                Remote_CallFunction_Replay(players, "SetPointIconHint", TEAM_IMC, 0)
+                Remote_CallFunction_Replay(players, "ServerCallback_CTF_SetPointIconHint", TEAM_IMC, CTF_Defend)
             }
 
             
@@ -894,14 +890,14 @@ void function _OnPlayerDisconnected(entity player)
             array<entity> teamplayers = GetPlayerArrayOfTeam( TEAM_IMC )
 	        foreach ( players in teamplayers )
             {
-		        Remote_CallFunction_Replay(players, "ServerCallback_CTF_CustomMessages", players, EnemyPickckedUpFlag)
-                Remote_CallFunction_Replay(players, "SetPointIconHint", TEAM_MILITIA, 1)
+		        Remote_CallFunction_Replay(players, "ServerCallback_CTF_CustomMessages", players, EnemyPickedUpFlag)
+                Remote_CallFunction_Replay(players, "ServerCallback_CTF_SetPointIconHint", TEAM_MILITIA, CTF_Capture)
             }
 
             array<entity> enemyplayers = GetPlayerArrayOfTeam( TEAM_MILITIA )
 	        foreach ( players in enemyplayers )
             {
-                Remote_CallFunction_Replay(players, "SetPointIconHint", TEAM_MILITIA, 4)
+                Remote_CallFunction_Replay(players, "ServerCallback_CTF_SetPointIconHint", TEAM_MILITIA, CTF_Return)
             }
             
 
@@ -962,14 +958,14 @@ void function MILITIA_PoleReturn_Trigger( entity trigger, entity ent )
             array<entity> teamplayers = GetPlayerArrayOfTeam( TEAM_IMC )
 	        foreach ( player in teamplayers )
             {
-                Remote_CallFunction_Replay(player, "SetPointIconHint", TEAM_MILITIA, 3)
+                Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_MILITIA, CTF_Escort)
             }
 
             array<entity> enemyplayers = GetPlayerArrayOfTeam( TEAM_MILITIA )
 	        foreach ( player in enemyplayers )
             {
-                Remote_CallFunction_Replay(player, "ServerCallback_CTF_CustomMessages", player, EnemyPickckedUpFlag)
-                Remote_CallFunction_Replay(player, "SetPointIconHint", TEAM_MILITIA, 2)
+                Remote_CallFunction_Replay(player, "ServerCallback_CTF_CustomMessages", player, EnemyPickedUpFlag)
+                Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_MILITIA, CTF_Attack)
             }
 
             EmitSoundToTeamPlayers("UI_CTF_3P_TeamGrabFlag", TEAM_IMC)
@@ -995,7 +991,7 @@ void function StartMILFlagReturnTimer(entity player)
 
     float starttime = Time()
     float endtime = Time() + 10
-    Remote_CallFunction_Replay(player, "RecaptureFlag", TEAM_MILITIA, starttime, endtime)
+    Remote_CallFunction_Replay(player, "ServerCallback_CTF_RecaptureFlag", TEAM_MILITIA, starttime, endtime)
 
     while(Distance(player.GetOrigin(), MILITIAPoint.pole.GetOrigin()) < 150 && IsAlive(player) && returnsuccess == false)
     {
@@ -1022,21 +1018,21 @@ void function StartMILFlagReturnTimer(entity player)
         array<entity> teamplayers = GetPlayerArrayOfTeam( TEAM_IMC )
 	    foreach ( players in teamplayers )
         {
-            Remote_CallFunction_Replay(players, "SetPointIconHint", TEAM_MILITIA, 1)
+            Remote_CallFunction_Replay(players, "ServerCallback_CTF_SetPointIconHint", TEAM_MILITIA, CTF_Capture)
         }
 
         array<entity> enemyplayers = GetPlayerArrayOfTeam( TEAM_MILITIA )
 	    foreach ( players in enemyplayers )
         {
-            Remote_CallFunction_Replay(players, "ServerCallback_CTF_CustomMessages", players, 2)
-            Remote_CallFunction_Replay(players, "SetPointIconHint", TEAM_MILITIA, 0)
+            Remote_CallFunction_Replay(players, "ServerCallback_CTF_CustomMessages", players, TeamReturnedFlag)
+            Remote_CallFunction_Replay(players, "ServerCallback_CTF_SetPointIconHint", TEAM_MILITIA, CTF_Defend)
         }
     }
     else
     {
         MILITIAPoint.isbeingreturned = false
         MILITIAPoint.beingreturnedby = null
-        Remote_CallFunction_Replay(player, "EndRecaptureFlag")
+        Remote_CallFunction_Replay(player, "ServerCallback_CTF_EndRecaptureFlag")
         MILITIAPoint.returntrigger.SearchForNewTouchingEntity()
     }
 }
@@ -1062,14 +1058,14 @@ void function IMC_PoleReturn_Trigger( entity trigger, entity ent )
             array<entity> teamplayers = GetPlayerArrayOfTeam( TEAM_MILITIA )
 	        foreach ( player in teamplayers )
             {
-                Remote_CallFunction_Replay(player, "SetPointIconHint", TEAM_IMC, 3)
+                Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_IMC, CTF_Escort)
             }
 
             array<entity> enemyplayers = GetPlayerArrayOfTeam( TEAM_IMC )
 	        foreach ( player in enemyplayers )
             {
-                Remote_CallFunction_Replay(player, "ServerCallback_CTF_CustomMessages", player, EnemyPickckedUpFlag)
-                Remote_CallFunction_Replay(player, "SetPointIconHint", TEAM_IMC, 2)
+                Remote_CallFunction_Replay(player, "ServerCallback_CTF_CustomMessages", player, EnemyPickedUpFlag)
+                Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_IMC, CTF_Attack)
             }
 
             EmitSoundToTeamPlayers("UI_CTF_3P_TeamGrabFlag", TEAM_MILITIA)
@@ -1095,7 +1091,7 @@ void function StartIMCFlagReturnTimer(entity player)
 
     float starttime = Time()
     float endtime = Time() + 10
-    Remote_CallFunction_Replay(player, "RecaptureFlag", TEAM_IMC, starttime, endtime)
+    Remote_CallFunction_Replay(player, "ServerCallback_CTF_RecaptureFlag", TEAM_IMC, starttime, endtime)
 
     while(Distance(player.GetOrigin(), IMCPoint.pole.GetOrigin()) < 150 && IsAlive(player) && returnsuccess == false)
     {
@@ -1122,27 +1118,50 @@ void function StartIMCFlagReturnTimer(entity player)
         array<entity> teamplayers = GetPlayerArrayOfTeam( TEAM_MILITIA )
 	    foreach ( players in teamplayers )
         {
-            Remote_CallFunction_Replay(players, "SetPointIconHint", TEAM_IMC, 1)
+            Remote_CallFunction_Replay(players, "ServerCallback_CTF_SetPointIconHint", TEAM_IMC, CTF_Capture)
         }
 
         array<entity> enemyplayers = GetPlayerArrayOfTeam( TEAM_IMC )
 	    foreach ( players in enemyplayers )
         {
-            Remote_CallFunction_Replay(players, "SetPointIconHint", TEAM_IMC, 0)
-            Remote_CallFunction_Replay(players, "ServerCallback_CTF_CustomMessages", players, 2)
+            Remote_CallFunction_Replay(players, "ServerCallback_CTF_SetPointIconHint", TEAM_IMC, CTF_Defend)
+            Remote_CallFunction_Replay(players, "ServerCallback_CTF_CustomMessages", players, TeamReturnedFlag)
         }
     }
     else
     {
         IMCPoint.isbeingreturned = false
         IMCPoint.beingreturnedby = null
-        Remote_CallFunction_Replay(player, "EndRecaptureFlag")
+        Remote_CallFunction_Replay(player, "ServerCallback_CTF_EndRecaptureFlag")
         IMCPoint.returntrigger.SearchForNewTouchingEntity()
     }
 }
 
 void function CheckPlayerForFlag(entity victim)
 {
+    float undermap
+
+    switch(GetMapName())
+    {
+        case "mp_rr_canyonlands_staging":
+            undermap = -30000
+            break
+        case "mp_rr_ashs_redemption":
+            undermap = 1000
+            break
+        case "mp_rr_canyonlands_mu1":
+	    case "mp_rr_canyonlands_mu1_night":
+        case "mp_rr_canyonlands_64k_x_64k":
+            undermap = 1000
+            break
+        case "mp_rr_desertlands_64k_x_64k":
+        case "mp_rr_desertlands_64k_x_64k_nx":
+            undermap = -6000
+            break
+        default:
+            undermap = 100
+    }
+    
     //Only if the flag is picked up
     if (IMCPoint.pickedup)
     {
@@ -1165,17 +1184,17 @@ void function CheckPlayerForFlag(entity victim)
             array<entity> teamplayers = GetPlayerArrayOfTeam( TEAM_MILITIA )
 	        foreach ( player in teamplayers )
             {
-                Remote_CallFunction_Replay(player, "SetPointIconHint", TEAM_IMC, 1)
+                Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_IMC, CTF_Capture)
             }
 
             array<entity> enemyplayers = GetPlayerArrayOfTeam( TEAM_IMC )
 	        foreach ( player in enemyplayers )
             {
-                Remote_CallFunction_Replay(player, "SetPointIconHint", TEAM_IMC, 0)
+                Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_IMC, CTF_Defend)
             }
 
-            
-            if(IMCPoint.pole.GetOrigin().z > 1000)
+            //Check for if the flag ends up under the map
+            if(IMCPoint.pole.GetOrigin().z > undermap)
             {
                 if(Distance(IMCPoint.pole.GetOrigin(), CTF.bubbleCenter) > CTF.bubbleRadius)
                 {
@@ -1233,17 +1252,17 @@ void function CheckPlayerForFlag(entity victim)
             array<entity> teamplayers = GetPlayerArrayOfTeam( TEAM_IMC )
 	        foreach ( player in teamplayers )
             {
-                Remote_CallFunction_Replay(player, "SetPointIconHint", TEAM_MILITIA, 1)
+                Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_MILITIA, CTF_Capture)
             }
 
             array<entity> enemyplayers = GetPlayerArrayOfTeam( TEAM_MILITIA )
 	        foreach ( player in enemyplayers )
             {
-                Remote_CallFunction_Replay(player, "SetPointIconHint", TEAM_MILITIA, 4)
+                Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_MILITIA, CTF_Return)
             }
             
-
-            if(MILITIAPoint.pole.GetOrigin().z > 1000)
+            //Check for if the flag ends up under the map
+            if(MILITIAPoint.pole.GetOrigin().z > undermap)
             {
                 if(Distance(MILITIAPoint.pole.GetOrigin(), CTF.bubbleCenter) > CTF.bubbleRadius)
                 {
@@ -1294,7 +1313,7 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
 
             if(!IsValid(victim)) return
             
-            //Remote_CallFunction_Replay( victim, "ResetFlagIcons")
+            //Remote_CallFunction_Replay( victim, "ServerCallback_CTF_ResetFlagIcons")
             victim.p.storedWeapons = StoreWeapons(victim)
 
             float damagetaken = DamageInfo_GetDamage( damageInfo )
@@ -1420,7 +1439,7 @@ void function _HandleRespawn(entity player, bool forceGive = false)
     thread GrantSpawnImmunity(player, 3)
 
     //Point icons disappear on death, so this fixes that.
-    Remote_CallFunction_Replay(player, "ResetFlagIcons")
+    Remote_CallFunction_Replay(player, "ServerCallback_CTF_ResetFlagIcons")
 
     foreach(players in GetPlayerArray())
     {   
@@ -1428,11 +1447,11 @@ void function _HandleRespawn(entity player, bool forceGive = false)
         {
             if (players.GetTeam() == TEAM_IMC)
             {
-                Remote_CallFunction_Replay(players, "AddPointIcon", IMCPoint.pole, MILITIAPoint.pole, TEAM_IMC)
+                Remote_CallFunction_Replay(players, "ServerCallback_CTF_AddPointIcon", IMCPoint.pole, MILITIAPoint.pole, TEAM_IMC)
             }
             else if (players.GetTeam() == TEAM_MILITIA)
             {
-                Remote_CallFunction_Replay(players, "AddPointIcon", IMCPoint.pole, MILITIAPoint.pole, TEAM_MILITIA)
+                Remote_CallFunction_Replay(players, "ServerCallback_CTF_AddPointIcon", IMCPoint.pole, MILITIAPoint.pole, TEAM_MILITIA)
             }
         }
     }

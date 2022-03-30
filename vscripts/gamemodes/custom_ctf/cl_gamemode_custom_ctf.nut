@@ -6,6 +6,7 @@
 
 global function Cl_CustomCTF_Init
 
+//Lots of server callbacks
 global function ServerCallback_CTF_DoAnnouncement
 global function ServerCallback_CTF_PointCaptured
 global function ServerCallback_CTF_TeamText
@@ -19,13 +20,13 @@ global function ServerCallback_CTF_SetSelectedLocation
 global function ServerCallback_CTF_TeamWon
 global function ServerCallback_CTF_UpdateDamage
 global function ServerCallback_CTF_SetObjectiveText
+global function ServerCallback_CTF_AddPointIcon
+global function ServerCallback_CTF_RecaptureFlag
+global function ServerCallback_CTF_EndRecaptureFlag
+global function ServerCallback_CTF_ResetFlagIcons
+global function ServerCallback_CTF_SetPointIconHint
 
 global function Cl_CTFRegisterLocation
-global function AddPointIcon
-global function RecaptureFlag
-global function EndRecaptureFlag
-global function ResetFlagIcons
-global function SetPointIconHint
 
 struct {
 
@@ -64,15 +65,6 @@ vector function GetDeathcamHeight()
     vector height
     switch(file.selectedLocation.name)
     {
-        case "Firing Range":
-            height = <0,0,5000>
-            break
-        case "Artillery":
-            height = <0,0,5000> // Done
-            break
-        case "Airbase":
-            height = <0,0,5000> // Done
-            break
         case "Relay":
             height = <0,0,6000> // Done
             break
@@ -83,6 +75,15 @@ vector function GetDeathcamHeight()
             height = <0,0,7000> // Done
             break
         case "Skull Town":
+            height = <0,0,7000> // Done
+            break
+        case "Refinery":
+            height = <0,0,7000> // Done
+            break
+        case "Capitol City":
+            height = <0,0,7000> // Done
+            break
+        case "Sorting Factory":
             height = <0,0,7000> // Done
             break
         default:
@@ -99,7 +100,7 @@ vector function GetDeathcamAng()
     switch(file.selectedLocation.name)
     {
         case "Firing Range":
-            angles = <90,90,0>
+            angles = <90,180,0>
             break
         case "Artillery":
             angles = <90,90,0> // Done
@@ -119,6 +120,18 @@ vector function GetDeathcamAng()
         case "Skull Town":
             angles = <90,-45,0> // Done
             break
+        case "Overlook":
+            angles = <90,27,0> // Done
+            break
+        case "Refinery":
+            angles = <90,-165,0> // Done
+            break
+        case "Capitol City":
+            angles = <90,-85,0> // Done
+            break
+        case "Sorting Factory":
+            angles = <90,-45,0> // Done
+            break
         default:
             angles = <90,0,0> // Done
             break
@@ -127,7 +140,7 @@ vector function GetDeathcamAng()
     return angles
 }
 
-void function RecaptureFlag(int team, float starttime, float endtime)
+void function ServerCallback_CTF_RecaptureFlag(int team, float starttime, float endtime)
 {
     FlagReturnRUI = CreateFullscreenRui( $"ui/health_use_progress.rpak" )
     RuiSetBool( FlagReturnRUI, "isVisible", true )
@@ -138,7 +151,7 @@ void function RecaptureFlag(int team, float starttime, float endtime)
 	RuiSetString( FlagReturnRUI, "hintController", "Returning Flag To Base" )
 }
 
-void function EndRecaptureFlag()
+void function ServerCallback_CTF_EndRecaptureFlag()
 {
     if (FlagReturnRUI != null)
     {
@@ -151,7 +164,7 @@ void function EndRecaptureFlag()
     }
 }
 
-void function ResetFlagIcons()
+void function ServerCallback_CTF_ResetFlagIcons()
 {
 
     try {
@@ -170,7 +183,7 @@ void function ResetFlagIcons()
     MILITIApointicon = null
 }
 
-void function AddPointIcon(entity imcflag, entity milflag, int team)
+void function ServerCallback_CTF_AddPointIcon(entity imcflag, entity milflag, int team)
 {
     if (team == TEAM_IMC)
     {
@@ -231,13 +244,8 @@ void function AddPointIcon(entity imcflag, entity milflag, int team)
     }
 }
 
-void function SetPointIconHint(int teamflag, int messageid)
+void function ServerCallback_CTF_SetPointIconHint(int teamflag, int messageid)
 {
-    //0 - Defend
-    //1 - Capture
-    //2 - Attack
-    //3 - Escort
-    //4 - Return
     try {
     
     if(teamflag == TEAM_IMC)
@@ -245,15 +253,15 @@ void function SetPointIconHint(int teamflag, int messageid)
         if(IMCpointicon == null)
             return
         
-        if(messageid == 0)
+        if(messageid == CTF_Defend)
             RuiSetString( IMCpointicon, "hint", "Defend" )
-        else if(messageid == 1)
+        else if(messageid == CTF_Capture)
             RuiSetString( IMCpointicon, "hint", "Capture" )
-        else if(messageid == 2)
+        else if(messageid == CTF_Attack)
             RuiSetString( IMCpointicon, "hint", "Attack" )
-        else if(messageid == 3)
+        else if(messageid == CTF_Escort)
             RuiSetString( IMCpointicon, "hint", "Escort" )
-        else if(messageid == 4)
+        else if(messageid == CTF_Return)
             RuiSetString( IMCpointicon, "hint", "Return" )
         
     }
@@ -262,15 +270,15 @@ void function SetPointIconHint(int teamflag, int messageid)
         if(MILITIApointicon == null)
             return
         
-        if(messageid == 0)
+        if(messageid == CTF_Defend)
             RuiSetString( MILITIApointicon, "hint", "Defend" )
-        else if(messageid == 1)
+        else if(messageid == CTF_Capture)
             RuiSetString( MILITIApointicon, "hint", "Capture" )
-        else if(messageid == 2)
+        else if(messageid == CTF_Attack)
             RuiSetString( MILITIApointicon, "hint", "Attack" )
-        else if(messageid == 3)
+        else if(messageid == CTF_Escort)
             RuiSetString( MILITIApointicon, "hint", "Escort" )
-        else if(messageid == 4)
+        else if(messageid == CTF_Return)
             RuiSetString( MILITIApointicon, "hint", "Return" )
     }
 
@@ -419,7 +427,6 @@ void function ServerCallback_CTF_TeamText(int team)
 
 void function ServerCallback_CTF_TeamWon(int team)
 {
-    //AnnouncementData announcement = Announcement_Create( "IMC Flag has been captured!" )
     AnnouncementData announcement
     if (team == TEAM_IMC)
     {
@@ -470,15 +477,15 @@ void function ServerCallback_CTF_TeamCaptured(entity player)
 void function ServerCallback_CTF_CustomMessages(entity player, int messageid)
 {
     string message;
-    if (messageid == 0)
+    if (messageid == PickedUpFlag)
     {
         message = "You picked up the flag"
     }
-    else if (messageid == 1)
+    else if (messageid == EnemyPickedUpFlag)
     {
         message = "Enemy team picked up your flag"
     }
-    else if (messageid == 2)
+    else if (messageid == TeamReturnedFlag)
     {
         message = "Your teams flag has been returned to base"
     }
@@ -504,8 +511,6 @@ var function CreateTemporarySpawnRUI(entity parentEnt, float duration)
 }
 void function ServerCallback_CTF_UpdateDamage(int type, float damage)
 {
-    // 0 = Damage Taken
-    // 1 = Damage Given
     if(type == 0)
     {
         RunUIScript( "UpdateKillerDamage", damage)

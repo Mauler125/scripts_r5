@@ -27,6 +27,18 @@ global function GetFlagLocation
 global int CTF_SCORE_GOAL_TO_WIN = 5
 global int CTF_ROUNDTIME = 1500
 
+//Custom Messages IDS
+global int PickedUpFlag = 0
+global int EnemyPickedUpFlag = 1
+global int TeamReturnedFlag = 2
+
+//PointHint IDS
+global int CTF_Defend = 0
+global int CTF_Capture = 1
+global int CTF_Attack = 2
+global int CTF_Escort = 3
+global int CTF_Return = 4
+
 global enum eCTFAnnounce
 {
 	NONE = 0
@@ -72,7 +84,8 @@ void function Sh_CustomCTF_Init()
                     NewCTFLocPair(<33560, -8992, -29126>, <0, 90, 0>),
 					NewCTFLocPair(<34525, -7996, -28242>, <0, 100, 0>),
                     NewCTFLocPair(<33507, -3754, -29165>, <0, -90, 0>),
-					NewCTFLocPair(<34986, -3442, -28263>, <0, -113, 0>)
+					NewCTFLocPair(<34986, -3442, -28263>, <0, -113, 0>),
+                    NewCTFLocPair(<30567, -6373, -29041>, <0, -113, 0>)
                 ],
                 <0, 0, 3000>
             )
@@ -176,22 +189,44 @@ void function Sh_CustomCTF_Init()
         case "mp_rr_desertlands_64k_x_64k_nx":
             Shared_RegisterLocation(
                 NewCTFLocationSettings(
-                    "Lava City",
+                    "Overlook",
                     [
-                        NewCTFLocPair(<22663, -28134, -2706>, <0, 40, 0>),
-                        NewCTFLocPair(<22844, -28222, -3030>, <0, 90, 0>),
-                        NewCTFLocPair(<22687, -27605, -3434>, <0, -90, 0>),
-                        NewCTFLocPair(<22610, -26999, -2949>, <0, 90, 0>),
-                        NewCTFLocPair(<22607, -26018, -2749>, <0, -90, 0>),
-                        NewCTFLocPair(<22925, -25792, -3500>, <0, -120, 0>),
-                        NewCTFLocPair(<24235, -27378, -3305>, <0, -100, 0>),
-                        NewCTFLocPair(<24345, -28872, -3433>, <0, -144, 0>),
-                        NewCTFLocPair(<24446, -28628, -3252>, <13, 0, 0>),
-                        NewCTFLocPair(<23931, -28043, -3265>, <0, 0, 0>),
-                        NewCTFLocPair(<27399, -28588, -3721>, <0, 130, 0>),
-                        NewCTFLocPair(<26610, -25784, -3400>, <0, -90, 0>),
-                        NewCTFLocPair(<26757, -26639, -3673>, <-10, 90, 0>),
-                        NewCTFLocPair(<26750, -26202, -3929>, <-10, -90, 0>)
+                        NewCTFLocPair(<26893, 13646, -3199>, <0, 40, 0>),
+                        NewCTFLocPair(<30989, 8510, -3329>, <0, 90, 0>),
+                        NewCTFLocPair(<32922, 9423, -3329>, <0, 90, 0>)
+                    ],
+                    <0, 0, 3000>
+                )
+            )
+
+            Shared_RegisterLocation(
+                NewCTFLocationSettings(
+                    "Refinery",
+                    [
+                        NewCTFLocPair(<22630, 21512, -4516>, <0, 40, 0>),
+                        NewCTFLocPair(<19147, 30973, -4602>, <0, 90, 0>)
+                    ],
+                    <0, 0, 3000>
+                )
+            )
+
+            Shared_RegisterLocation(
+                NewCTFLocationSettings(
+                    "Capitol City",
+                    [
+                        NewCTFLocPair(<1750, 5158, -3334>, <0, 40, 0>),
+                        NewCTFLocPair(<11690, 6300, -4065>, <0, 90, 0>)
+                    ],
+                    <0, 0, 3000>
+                )
+            )
+
+            Shared_RegisterLocation(
+                NewCTFLocationSettings(
+                    "Sorting Factory",
+                    [
+                        NewCTFLocPair(<1874, -25365, -3385>, <0, 40, 0>),
+                        NewCTFLocPair(<10684, -18468, -3584>, <0, 90, 0>)
                     ],
                     <0, 0, 3000>
                 )
@@ -240,6 +275,8 @@ void function Shared_RegisterLocation(LocationSettingsCTF locationSettings)
     #endif
 }
 
+#if SERVER
+
 //Flag Spawn Locations
 vector function GetFlagLocation(LocationSettingsCTF locationSettings, int team)
 {
@@ -248,9 +285,9 @@ vector function GetFlagLocation(LocationSettingsCTF locationSettings, int team)
     {
         case "Firing Range":
             if (team == TEAM_IMC)
-                spawnorg = <33040,-3430,-29226>
+                spawnorg = <33076,-8916,-29125>
             if (team == TEAM_MILITIA)
-                spawnorg = <32598,-8657,-29189>
+                spawnorg = <32856,-3596,-29165>
             break
         case "Artillery":
             if (team == TEAM_IMC)
@@ -288,12 +325,35 @@ vector function GetFlagLocation(LocationSettingsCTF locationSettings, int team)
             if (team == TEAM_MILITIA)
                 spawnorg = <-6706, -13383, 3174>
             break
+        case "Overlook":
+            if (team == TEAM_IMC)
+                spawnorg = <26893, 13646, -3199>
+            if (team == TEAM_MILITIA)
+                spawnorg = <30989, 8510, -3329>
+            break
+        case "Refinery":
+            if (team == TEAM_IMC)
+                spawnorg = <22630, 22243, -4516>
+            if (team == TEAM_MILITIA)
+                spawnorg = <19147, 30973, -4602>
+            break
+        case "Capitol City":
+            if (team == TEAM_IMC)
+                spawnorg = <1750, 5158, -3334>
+            if (team == TEAM_MILITIA)
+                spawnorg = <11690, 6300, -4065>
+            break
+        case "Sorting Factory":
+            if (team == TEAM_IMC)
+                spawnorg = <1874, -25365, -3385>
+            if (team == TEAM_MILITIA)
+                spawnorg = <10684, -18468, -3584>
+            break
         
     }
     return spawnorg
 }
 
-#if SERVER
 //Player Spawn Origin
 array<vector> function GetRandomPlayerSpawnOrigin(LocationSettingsCTF locationSettings, entity player)
 {
@@ -303,10 +363,16 @@ array<vector> function GetRandomPlayerSpawnOrigin(LocationSettingsCTF locationSe
         switch(player.GetTeam())
         {
             case TEAM_IMC:
-                spawnorg.append(<32778, -3522, -29173>)
+                spawnorg.append(<34498, -8254, -28845>) //Ang: 0 130 0
+                spawnorg.append(<31926, -8875, -29125>) //Ang: 0 105 0
+                spawnorg.append(<34529, -9354, -28972>) //Ang: 0 145 0
+                spawnorg.append(<32302, -9478, -29145>) //Ang: 0 60 0
             break
             case TEAM_MILITIA:
-                spawnorg.append(<32778, -3522, -29173>)
+                spawnorg.append(<32240, -2723, -28903>) //Ang: 0 -50 0
+                spawnorg.append(<34943, -3502, -28254>) //Ang: 0 -113 0
+                spawnorg.append(<30857, -3860, -28729>) //Ang: 0 -30 0
+                spawnorg.append(<31836, -4098, -29081>) //Ang: 0 -50 0
             break
         }
     }
@@ -418,6 +484,78 @@ array<vector> function GetRandomPlayerSpawnOrigin(LocationSettingsCTF locationSe
             break
         }
     }
+    else if (locationSettings.name == "Overlook")
+    {
+        switch(player.GetTeam())
+        {
+            case TEAM_IMC:
+                spawnorg.append(<25997, 13028, -3139>) //Ang: 0 -30 0
+                spawnorg.append(<28416, 13515, -3230>) //Ang: 0 -88 0
+                spawnorg.append(<26215, 14402, -3081>) //Ang: 0 -65 0
+                spawnorg.append(<27408, 14510, -3141>) //Ang: 0 -65 0
+            break
+            case TEAM_MILITIA:
+                spawnorg.append(<31780, 8514, -3329>) //Ang: 0 137 0
+                spawnorg.append(<30207, 7910, -3313>) //Ang: 0 101 0
+                spawnorg.append(<31254, 9956, -3393>) //Ang: 0 90 0
+                spawnorg.append(<32519, 9890, -3525>) //Ang: 0 166 0
+            break
+        }
+    }
+    else if (locationSettings.name == "Refinery")
+    {
+        switch(player.GetTeam())
+        {
+            case TEAM_IMC:
+                spawnorg.append(<21618, 22558, -4499>) //Ang: 0 110 0
+                spawnorg.append(<20873, 23929, -4557>) //Ang: 0 140 0
+                spawnorg.append(<22247, 22785, -4523>) //Ang: 0 67 0
+                spawnorg.append(<23384, 21955, -4523>) //Ang: 0 108 0
+            break
+            case TEAM_MILITIA:
+                spawnorg.append(<18034, 30657, -4578>) //Ang: 0 -42 0
+                spawnorg.append(<19757, 31462, -4340>) //Ang: 0 -63 0
+                spawnorg.append(<18320, 29370, -4778>) //Ang: 0 -101 0
+                spawnorg.append(<16344, 29093, -4441>) //Ang: 0 -13 0
+            break
+        }
+    }
+    else if (locationSettings.name == "Capitol City")
+    {
+        switch(player.GetTeam())
+        {
+            case TEAM_IMC:
+                spawnorg.append(<2102, 5999, -4225>) //Ang: 0 0 0
+                spawnorg.append(<1761, 5356, -3953>) //Ang: 0 -29 0
+                spawnorg.append(<1392, 4444, -3006>) //Ang: 0 40 0
+                spawnorg.append(<2979, 4051, -4225>) //Ang: 0 50 0
+            break
+            case TEAM_MILITIA:
+                spawnorg.append(<12050, 7446, -4281>) //Ang: 0 170 0
+                spawnorg.append(<12122, 5159, -4225>) //Ang: 0 -170 0
+                spawnorg.append(<10679, 4107, -4225>) //Ang: 0 120 0
+                spawnorg.append(<12185, 6412, -4281>) //Ang: 0 -130 0
+            break
+        }
+    }
+    else if (locationSettings.name == "Sorting Factory")
+    {
+        switch(player.GetTeam())
+        {
+            case TEAM_IMC:
+                spawnorg.append(<1747, -22990, -3561>) //Ang: 0 31 0
+                spawnorg.append(<3904, -25013, -3561>) //Ang: 0 0 0
+                spawnorg.append(<2110, -25117, -3037>) //Ang: 0 50 0
+                spawnorg.append(<2242, -21858, -3657>) //Ang: 0 -25 0
+            break
+            case TEAM_MILITIA:
+                spawnorg.append(<9020, -18238, -3563>) //Ang: 0 -118 0
+                spawnorg.append(<10076, -19642, -2889>) //Ang: 0 -148 0
+                spawnorg.append(<7793, -17583, -3657>) //Ang: 0 -80 0
+                spawnorg.append(<9377, -20718, -3569>) //Ang: 0 -179 0
+            break
+        }
+    }
     return spawnorg
 }
 
@@ -430,10 +568,16 @@ array<vector> function GetRandomPlayerSpawnAngles(LocationSettingsCTF locationSe
         switch(player.GetTeam())
         {
             case TEAM_IMC:
-                spawnang.append(<32778, -3522, -29173>)
+                spawnang.append(<0, 130, 0>) //Ang: 0 130 0
+                spawnang.append(<0, 105, 0>) //Ang: 0 105 0
+                spawnang.append(<0, 145, 0>) //Ang: 0 145 0
+                spawnang.append(<0, 60, 0>) //Ang: 0 60 0
             break
             case TEAM_MILITIA:
-                spawnang.append(<32778, -3522, -29173>)
+                spawnang.append(<0, -50, 0>) //Ang: 0 -50 0
+                spawnang.append(<0, -113, 0>) //Ang: 0 -113 0
+                spawnang.append(<0, -30, 0>) //Ang: 0 -30 0
+                spawnang.append(<0, -50, 0>) //Ang: 0 -50 0
             break
         }
     }
@@ -542,6 +686,78 @@ array<vector> function GetRandomPlayerSpawnAngles(LocationSettingsCTF locationSe
                 spawnang.append(<0, 170, 0>) //Ang: 0 170 0
                 spawnang.append(<0, -100, 0>) //Ang: 0 -100 0
                 spawnang.append(<0, -150, 0>) //Ang: 0 -150 0
+            break
+        }
+    }
+    else if (locationSettings.name == "Overlook")
+    {
+        switch(player.GetTeam())
+        {
+            case TEAM_IMC:
+                spawnang.append(<0, -30, 0>) //Ang: 0 -30 0
+                spawnang.append(<0, -88, 0>) //Ang: 0 -88 0
+                spawnang.append(<0, -65, 0>) //Ang: 0 -65 0
+                spawnang.append(<0, -65, 0>) //Ang: 0 -65 0
+            break
+            case TEAM_MILITIA:
+                spawnang.append(<0, 137, 0>) //Ang: 0 137 0
+                spawnang.append(<0, 101, 0>) //Ang: 0 101 0
+                spawnang.append(<0, 90, 0>) //Ang: 0 90 0
+                spawnang.append(<0, 166, 0>) //Ang: 0 166 0
+            break
+        }
+    }
+    else if (locationSettings.name == "Refinery")
+    {
+        switch(player.GetTeam())
+        {
+            case TEAM_IMC:
+                spawnang.append(<0, 110, 0>) //Ang: 0 110 0
+                spawnang.append(<0, 140, 0>) //Ang: 0 140 0
+                spawnang.append(<0, 67, 0>) //Ang: 0 67 0
+                spawnang.append(<0, 108, 0>) //Ang: 0 108 0
+            break
+            case TEAM_MILITIA:
+                spawnang.append(<0, -42, 0>) //Ang: 0 -42 0
+                spawnang.append(<0, -63, 0>) //Ang: 0 -63 0
+                spawnang.append(<0, -101, 0>) //Ang: 0 -101 0
+                spawnang.append(<0, -13, 0>) //Ang: 0 -13 0
+            break
+        }
+    }
+    else if (locationSettings.name == "Capitol City")
+    {
+        switch(player.GetTeam())
+        {
+            case TEAM_IMC:
+                spawnang.append(<0, 0, 0>) //Ang: 0 0 0
+                spawnang.append(<0, -29, 0>) //Ang: 0 -29 0
+                spawnang.append(<0, 40, 0>) //Ang: 0 40 0
+                spawnang.append(<0, 50, 0>) //Ang: 0 50 0
+            break
+            case TEAM_MILITIA:
+                spawnang.append(<0, 170, 0>) //Ang: 0 170 0
+                spawnang.append(<0, -170, 0>) //Ang: 0 -170 0
+                spawnang.append(<0, 120, 0>) //Ang: 0 120 0
+                spawnang.append(<0, -130, 0>) //Ang: 0 -130 0
+            break
+        }
+    }
+    else if (locationSettings.name == "Sorting Factory")
+    {
+        switch(player.GetTeam())
+        {
+            case TEAM_IMC:
+                spawnang.append(<0, 31, 0>) //Ang: 0 31 0
+                spawnang.append(<0, 0, 0>) //Ang: 0 0 0
+                spawnang.append(<0, 50, 0>) //Ang: 0 50 0
+                spawnang.append(<0, -25, 0>) //Ang: 0 -25 0
+            break
+            case TEAM_MILITIA:
+                spawnang.append(<0, -118, 0>) //Ang: 0 -118 0
+                spawnang.append(<0, -148, 0>) //Ang: 0 -148 0
+                spawnang.append(<0, -80, 0>) //Ang: 0 -80 0
+                spawnang.append(<0, -179, 0>) //Ang: 0 -179 0
             break
         }
     }
