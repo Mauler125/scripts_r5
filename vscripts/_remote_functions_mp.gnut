@@ -235,6 +235,7 @@ void function RemoteFunctions_Init_Begin()
 			Remote_RegisterClientFunction("ServerCallback_CTF_OpenCTFRespawnMenu", "vector", -32000.0, 32000.0, 32, "int", 0, 255, "int", 0, 255, "entity")
 			Remote_RegisterClientFunction("ServerCallback_CTF_UpdateDamage", "int", 0, 255, "float", 0.0, 9999.0, 32)
 			Remote_RegisterClientFunction("ServerCallback_CTF_PlayerSpawning")
+			Remote_RegisterClientFunction("ServerCallback_CTF_SetObjectiveText", "int", 0, 255)
 			Remote_RegisterUIFunction( "OpenCTFRespawnMenu" )
 			Remote_RegisterUIFunction( "CloseCTFRespawnMenu" )
 

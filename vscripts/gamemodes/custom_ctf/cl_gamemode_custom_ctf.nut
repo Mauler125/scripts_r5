@@ -9,7 +9,6 @@ global function Cl_CustomCTF_Init
 global function ServerCallback_CTF_DoAnnouncement
 global function ServerCallback_CTF_PointCaptured
 global function ServerCallback_CTF_TeamText
-
 global function ServerCallback_CTF_EnemyCaptured
 global function ServerCallback_CTF_TeamCaptured
 global function ServerCallback_CTF_CustomMessages
@@ -19,11 +18,10 @@ global function ServerCallback_CTF_OpenCTFRespawnMenu
 global function ServerCallback_CTF_SetSelectedLocation
 global function ServerCallback_CTF_TeamWon
 global function ServerCallback_CTF_UpdateDamage
+global function ServerCallback_CTF_SetObjectiveText
 
 global function Cl_CTFRegisterLocation
-
 global function AddPointIcon
-
 global function RecaptureFlag
 global function EndRecaptureFlag
 global function ResetFlagIcons
@@ -81,6 +79,12 @@ vector function GetDeathcamHeight()
         case "WetLands":
             height = <0,0,7000> // Done
             break
+        case "Repulsor":
+            height = <0,0,7000> // Done
+            break
+        case "Skull Town":
+            height = <0,0,7000> // Done
+            break
         default:
             height = <0,0,5000>
             break
@@ -108,6 +112,12 @@ vector function GetDeathcamAng()
             break
         case "WetLands":
             angles = <90,90,0> // Done
+            break
+        case "Repulsor":
+            angles = <90,90,0> // Done
+            break
+        case "Skull Town":
+            angles = <90,-45,0> // Done
             break
         default:
             angles = <90,0,0> // Done
@@ -603,7 +613,11 @@ void function ServerCallback_CTF_PlayerSpawning()
             
         }
     }
+}
 
+void function ServerCallback_CTF_SetObjectiveText(int score)
+{
+    RunUIScript( "UpdateObjectiveText", score)
 }
 
 void function waitrespawn(entity player)

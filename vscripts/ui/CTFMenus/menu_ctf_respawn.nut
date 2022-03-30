@@ -7,6 +7,7 @@ global function UpdateKillerDamage
 global function UpdateDamageGiven
 global function SetEnemyScore
 global function SetTeamScore
+global function UpdateObjectiveText
 
 struct
 {
@@ -22,6 +23,12 @@ void function OpenCTFRespawnMenu()
 void function CloseCTFRespawnMenu()
 {
 	CloseAllMenus()
+}
+
+void function UpdateObjectiveText(int score)
+{
+	var rui = Hud_GetChild( file.menu, "ObjectiveText" )
+	Hud_SetText(rui, "Capture " + score.tostring() + " Flags To Win!")
 }
 
 void function UpdateRespawnTimer(int timeleft)

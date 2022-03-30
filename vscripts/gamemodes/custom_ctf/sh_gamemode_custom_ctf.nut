@@ -24,7 +24,8 @@ global function GetRandomPlayerSpawnAngles
 global function GetFlagLocation
 #endif
 
-global const CTF_SCORE_GOAL_TO_WIN = 5
+global int CTF_SCORE_GOAL_TO_WIN = 5
+global int CTF_ROUNDTIME = 1500
 
 global enum eCTFAnnounce
 {
@@ -145,6 +146,30 @@ void function Sh_CustomCTF_Init()
             )
         )
 
+        Shared_RegisterLocation(
+            NewCTFLocationSettings(
+                "Repulsor",
+                [
+                    NewCTFLocPair(<20269, -14999, 4824>, <0, 90, 0>),
+                    NewCTFLocPair(<29000, -15195, 4726>, <0, 18, 0>),
+                    NewCTFLocPair(<24417, -15196, 5203>, <0, 180, 0>)
+                ],
+                <0, 0, 3000>
+            )
+        )
+
+        Shared_RegisterLocation(
+            NewCTFLocationSettings(
+                "Skull Town",
+                [
+                    NewCTFLocPair(<-12391, -19413, 3166>, <0, 90, 0>),
+                    NewCTFLocPair(<-6706, -13383, 3174>, <0, 18, 0>),
+                    NewCTFLocPair(<-9746, -16127, 4062>, <0, 180, 0>)
+                ],
+                <0, 0, 3000>
+            )
+        )
+
         break
 
         case "mp_rr_desertlands_64k_x_64k":
@@ -251,9 +276,20 @@ vector function GetFlagLocation(LocationSettingsCTF locationSettings, int team)
             if (team == TEAM_MILITIA)
                 spawnorg = <19843, 14597, 4670>
             break
+        case "Repulsor":
+            if (team == TEAM_IMC)
+                spawnorg = <21422, -14999, 4824>
+            if (team == TEAM_MILITIA)
+                spawnorg = <27967, -15195, 4726>
+            break
+        case "Skull Town":
+            if (team == TEAM_IMC)
+                spawnorg = <-12391, -19413, 3166>
+            if (team == TEAM_MILITIA)
+                spawnorg = <-6706, -13383, 3174>
+            break
         
     }
-
     return spawnorg
 }
 
@@ -346,7 +382,42 @@ array<vector> function GetRandomPlayerSpawnOrigin(LocationSettingsCTF locationSe
             break
         }
     }
-
+    else if (locationSettings.name == "Repulsor")
+    {
+        switch(player.GetTeam())
+        {
+            case TEAM_IMC:
+                spawnorg.append(<21925, -12916, 4726>) //Ang: 0 -50 0
+                spawnorg.append(<21925, -16826, 4726>) //Ang: 0 50 0
+                spawnorg.append(<22251, -15589, 4598>) //Ang: 0 35 0
+                spawnorg.append(<22251, -14171, 4598>) //Ang: 0 -35 0
+            break
+            case TEAM_MILITIA:
+                spawnorg.append(<28347, -13383, 4726>) //Ang: 0 180 0
+                spawnorg.append(<28347, -17113, 4726>) //Ang: 0 180 0
+                spawnorg.append(<26507, -15813, 4730>) //Ang: 0 -135 0
+                spawnorg.append(<26507, -14500, 4730>) //Ang: 0 135 0
+            break
+        }
+    }
+    else if (locationSettings.name == "Skull Town")
+    {
+        switch(player.GetTeam())
+        {
+            case TEAM_IMC:
+                spawnorg.append(<-11246, -19126, 3285>) //Ang: 0 70 0
+                spawnorg.append(<-12575, -18156, 3170>) //Ang: 0 0 0
+                spawnorg.append(<-12125, -17650, 3186>) //Ang: 0 45 0
+                spawnorg.append(<-11241, -18068, 3187>) //Ang: 0 45 0
+            break
+            case TEAM_MILITIA:
+                spawnorg.append(<-6509, -14479, 3166>) //Ang: 0 -135 0
+                spawnorg.append(<-7242, -13374, 3166>) //Ang: 0 170 0
+                spawnorg.append(<-7573, -13783, 3186>) //Ang: 0 -100 0
+                spawnorg.append(<-7472, -14763, 3183>) //Ang: 0 -150 0
+            break
+        }
+    }
     return spawnorg
 }
 
@@ -435,6 +506,42 @@ array<vector> function GetRandomPlayerSpawnAngles(LocationSettingsCTF locationSe
                 spawnang.append(<0, 0, 0>) //Ang: 0 0 0
                 spawnang.append(<0, -60, 0>) //Ang: 0 -60 0
                 spawnang.append(<0, 40, 0>) //Ang: 0 40 0
+            break
+        }
+    }
+    else if (locationSettings.name == "Repulsor")
+    {
+        switch(player.GetTeam())
+        {
+            case TEAM_IMC:
+                spawnang.append(<0, -50, 0>) //Ang: 0 -50 0
+                spawnang.append(<0, 50, 0>) //Ang: 0 50 0
+                spawnang.append(<0, 35, 0>) //Ang: 0 35 0
+                spawnang.append(<0, -35, 0>) //Ang: 0 -35 0
+            break
+            case TEAM_MILITIA:
+                spawnang.append(<0, 180, 0>) //Ang: 0 180 0
+                spawnang.append(<0, 180, 0>) //Ang: 0 180 0
+                spawnang.append(<0, -135, 0>) //Ang: 0 -135 0
+                spawnang.append(<0, 135, 0>) //Ang: 0 135 0
+            break
+        }
+    }
+    else if (locationSettings.name == "Skull Town")
+    {
+        switch(player.GetTeam())
+        {
+            case TEAM_IMC:
+                spawnang.append(<0, 70, 0>) //Ang: 0 70 0
+                spawnang.append(<0, 0, 0>) //Ang: 0 0 0
+                spawnang.append(<0, 45, 0>) //Ang: 0 45 0
+                spawnang.append(<0, 45, 0>) //Ang: 0 45 0
+            break
+            case TEAM_MILITIA:
+                spawnang.append(<0, -135, 0>) //Ang: 0 -135 0
+                spawnang.append(<0, 170, 0>) //Ang: 0 170 0
+                spawnang.append(<0, -100, 0>) //Ang: 0 -100 0
+                spawnang.append(<0, -150, 0>) //Ang: 0 -150 0
             break
         }
     }

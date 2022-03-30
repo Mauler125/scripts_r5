@@ -4,6 +4,10 @@
 // Retículo Endoplasmático#5955 -- giving me the ctf sound names
 // everyone else -- advice
 
+
+//Now listen, I know there is 1000 betterways i could of done this code better.
+//But if it works dont fix it
+
 global function _CustomCTF_Init
 global function _CTFRegisterLocation
 
@@ -33,6 +37,9 @@ struct
     int MILITIAPoints = 0
     vector bubbleCenter
     float bubbleRadius
+    bool setmap = false
+    int selectedmap
+    int currentmapindex = 0
 } CTF;
 
 struct
@@ -91,6 +98,9 @@ void function _CustomCTF_Init()
 
     AddClientCommandCallback("imc", ClientCommand_IMC)
     AddClientCommandCallback("mil", ClientCommand_MIL)
+
+    CTF_SCORE_GOAL_TO_WIN = GetCurrentPlaylistVarInt( "max_score", 5 )
+    CTF_ROUNDTIME = GetCurrentPlaylistVarInt( "round_time", 1500 )
 
     thread RunTDM()
 
@@ -199,9 +209,25 @@ void function VotingPhase()
 	    player.SetPlayerNetInt("assists", 0) //Reset for deaths
     }
     wait CTF_GetVotingTime()
-    int choice = RandomIntRangeInclusive(0, file.locationSettings.len() - 1)
 
-    file.selectedLocation = file.locationSettings[choice]
+    int choice
+
+    if(CTF.currentmapindex > file.locationSettings.len() - 1)
+        CTF.currentmapindex = 0
+
+    if(CTF.setmap)
+    {
+        file.selectedLocation = file.locationSettings[CTF.selectedmap]
+        choice = CTF.selectedmap
+    }
+    else
+    {
+        file.selectedLocation = file.locationSettings[CTF.currentmapindex]
+        choice = CTF.currentmapindex
+    }
+
+    CTF.currentmapindex++
+    CTF.setmap = false
 
     foreach(player in GetPlayerArray())
     {
@@ -224,6 +250,7 @@ void function StartRound()
                 _HandleRespawn(player)
             }
             Remote_CallFunction_NonReplay(player, "ServerCallback_CTF_DoAnnouncement", 5, eCTFAnnounce.ROUND_START)
+            Remote_CallFunction_NonReplay(player, "ServerCallback_CTF_SetObjectiveText", CTF_SCORE_GOAL_TO_WIN)
             ClearInvincible(player)
             DeployAndEnableWeapons(player)
             player.UnforceStand()  
@@ -250,7 +277,7 @@ void function StartRound()
         array<entity> squad = GetPlayerArrayOfTeam(team)
         //thread RespawnPlayersInDropshipAtPoint(squad, squad[0].GetOrigin(), squad[0].GetAngles())
     }
-    float endTime = Time() + 1500
+    float endTime = Time() + CTF_ROUNDTIME
     while( Time() <= endTime )
 	{
         if(file.tdmState == eCTFState.WINNER_DECIDED)
@@ -365,6 +392,17 @@ void function ScreenFadeToFromBlack(entity player, float fadeTime = 1, float hol
 bool function ClientCommand_NextRound(entity player, array<string> args)
 {
     if( !IsServer() ) return false;
+
+    if(args.len() < 1) 
+    {
+        file.tdmState = eCTFState.WINNER_DECIDED
+        return true
+    }
+
+    if (args[0].tointeger() > file.locationSettings.len() - 1) return false;
+
+    CTF.setmap = true
+    CTF.selectedmap = args[0].tointeger()
     file.tdmState = eCTFState.WINNER_DECIDED
     return true
 }
@@ -729,6 +767,8 @@ void function _OnPlayerConnected(entity player)
     //Give passive regen (pilot blood)
     GivePassive(player, ePassives.PAS_PILOT_BLOOD)
     //SetPlayerSettings(player, TDM_PLAYER_SETTINGS)
+
+    Remote_CallFunction_NonReplay(player, "ServerCallback_CTF_SetObjectiveText", CTF_SCORE_GOAL_TO_WIN)
 
     if(!IsAlive(player))
     {
