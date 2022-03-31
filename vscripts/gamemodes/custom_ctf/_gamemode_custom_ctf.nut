@@ -90,10 +90,10 @@ void function _CustomCTF_Init()
 
     AddClientCommandCallback("next_round", ClientCommand_NextRound)
 
-    AddClientCommandCallback("killme", ClientCommand_KillMe)
-
-    AddClientCommandCallback("imc", ClientCommand_IMC)
-    AddClientCommandCallback("mil", ClientCommand_MIL)
+    //Comands used for testing
+    //AddClientCommandCallback("killme", ClientCommand_KillMe)
+    //AddClientCommandCallback("imc", ClientCommand_IMC)
+    //AddClientCommandCallback("mil", ClientCommand_MIL)
 
     CTF_SCORE_GOAL_TO_WIN = GetCurrentPlaylistVarInt( "max_score", 5 )
     CTF_ROUNDTIME = GetCurrentPlaylistVarInt( "round_time", 1500 )
