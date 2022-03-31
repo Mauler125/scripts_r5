@@ -19,7 +19,7 @@ enum eCTFState
 }
 
 struct {
-    int tdmState = eCTFState.IN_PROGRESS
+    int ctfState = eCTFState.IN_PROGRESS
     array<entity> playerSpawnedProps
     LocationSettingsCTF& selectedLocation
 
@@ -98,7 +98,7 @@ void function _CustomCTF_Init()
     CTF_SCORE_GOAL_TO_WIN = GetCurrentPlaylistVarInt( "max_score", 5 )
     CTF_ROUNDTIME = GetCurrentPlaylistVarInt( "round_time", 1500 )
 
-    thread RunTDM()
+    thread RUNCTF()
 
     // Whitelisted weapons
     for(int i = 0; GetCurrentPlaylistVarString("whitelisted_weapon_" + i.tostring(), "~~none~~") != "~~none~~"; i++)
@@ -131,7 +131,7 @@ LocPairCTF function _GetVotingLocation()
     {
         case "mp_rr_canyonlands_staging":
             return NewCTFLocPair(<26794, -6241, -27479>, <0, 0, 0>)
-        case "mp_rr_ashs_redemption"://our first custom tdm map
+        case "mp_rr_ashs_redemption"://our first custom map
             return NewCTFLocPair(<-20917, 5852, -26741>, <0, -90, 0>)
         case "mp_rr_canyonlands_64k_x_64k":
         case "mp_rr_canyonlands_mu1":
@@ -151,7 +151,7 @@ void function _OnPropDynamicSpawned(entity prop)
     file.playerSpawnedProps.append(prop)
     
 }
-void function RunTDM()
+void function RUNCTF()
 {
     WaitForGameState(eGameState.Playing)
     AddSpawnCallback("prop_dynamic", _OnPropDynamicSpawned)
@@ -276,7 +276,7 @@ void function StartRound()
     float endTime = Time() + CTF_ROUNDTIME
     while( Time() <= endTime )
 	{
-        if(file.tdmState == eCTFState.WINNER_DECIDED)
+        if(file.ctfState == eCTFState.WINNER_DECIDED)
         {
             foreach(player in GetPlayerArray())
             {   
@@ -354,7 +354,7 @@ void function StartRound()
 		WaitFrame()
 	}
     
-    file.tdmState = eCTFState.IN_PROGRESS
+    file.ctfState = eCTFState.IN_PROGRESS
 
     file.bubbleBoundary.Destroy()
 
@@ -391,7 +391,7 @@ bool function ClientCommand_NextRound(entity player, array<string> args)
 
     if(args.len() < 1) 
     {
-        file.tdmState = eCTFState.WINNER_DECIDED
+        file.ctfState = eCTFState.WINNER_DECIDED
         return true
     }
 
@@ -399,7 +399,7 @@ bool function ClientCommand_NextRound(entity player, array<string> args)
 
     CTF.setmap = true
     CTF.selectedmap = args[0].tointeger()
-    file.tdmState = eCTFState.WINNER_DECIDED
+    file.ctfState = eCTFState.WINNER_DECIDED
     return true
 }
 
@@ -607,7 +607,7 @@ void function IMCPoint_Trigger( entity trigger, entity ent )
                         {
                             thread EmitSoundOnEntityOnlyToPlayer( player, player, "diag_ap_aiNotify_winnerFound" )
                         }
-                        file.tdmState = eCTFState.WINNER_DECIDED
+                        file.ctfState = eCTFState.WINNER_DECIDED
                     }
 
                     MILITIAPoint.holdingplayer = null
@@ -699,7 +699,7 @@ void function MILITIA_Point_Trigger( entity trigger, entity ent )
                         {
                             thread EmitSoundOnEntityOnlyToPlayer( player, player, "diag_ap_aiNotify_winnerFound" )
                         }
-                        file.tdmState = eCTFState.WINNER_DECIDED
+                        file.ctfState = eCTFState.WINNER_DECIDED
                     }
 
                     IMCPoint.holdingplayer = null
@@ -762,7 +762,7 @@ void function _OnPlayerConnected(entity player)
 
     //Give passive regen (pilot blood)
     GivePassive(player, ePassives.PAS_PILOT_BLOOD)
-    //SetPlayerSettings(player, TDM_PLAYER_SETTINGS)
+    //SetPlayerSettings(player, CTF_PLAYER_SETTINGS)
 
     Remote_CallFunction_NonReplay(player, "ServerCallback_CTF_SetObjectiveText", CTF_SCORE_GOAL_TO_WIN)
 
@@ -1432,7 +1432,7 @@ void function _HandleRespawn(entity player, bool forceGive = false)
         }
     }
     
-    SetPlayerSettings(player, TDM_PLAYER_SETTINGS)
+    SetPlayerSettings(player, CTF_PLAYER_SETTINGS)
     PlayerRestoreHP(player, 100, CTF_Equipment_GetDefaultShieldHP())
                 
     TpPlayerToSpawnPoint(player)
