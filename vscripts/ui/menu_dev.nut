@@ -802,7 +802,7 @@ void function RunCodeDevCommandByAlias( string alias )
 
 void function SetupDevCommand( string label, string command )
 {
-	command = StringReplace( command, "\"", "'" )
+	//command = StringReplace( command, "\"", "'" )
 	if ( command.slice( 0, 5 ) == "give " )
 		command = "give_server " + command.slice( 5 )
 
