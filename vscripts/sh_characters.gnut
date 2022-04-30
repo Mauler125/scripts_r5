@@ -516,7 +516,7 @@ int function SortByMenuButtonIndex( ItemFlavor a, ItemFlavor b )
 	return 0
 }
 #endif // CLIENT || UI
-#if(SERVER || CLIENT)
+#if SERVER || CLIENT
 int function GetPlayerSettingBaseHealth( entity player )
 {
 	return int( player.GetPlayerSettingFloat( "health" ) )

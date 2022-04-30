@@ -81,8 +81,8 @@ struct
 	bool mapZonesInitialized = false
 	var mapZonesDataTable
 	table<int, int> calculatedZoneTiers
-    vector hotZoneOrigin
-    float hotZoneRadius
+	vector hotZoneOrigin
+	float hotZoneRadius
 } file
 
 const int INVALID_ZONE_ID = -1

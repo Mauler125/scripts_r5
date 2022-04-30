@@ -94,9 +94,9 @@ void function SV_Survival_Loot_Init()
 	AddCallback_OnWeaponAttack( OnWeaponAttack_OrdnanceControl )
 
 	FlagInit( "Survival_LootSpawned", false )
-    FlagInit( "Survival_LootZonesLoaded", false)
+  FlagInit( "Survival_LootZonesLoaded", false)
     
-    AddCallback_EntitiesDidLoad( LoadLootZonesForMap )
+  AddCallback_EntitiesDidLoad( LoadLootZonesForMap )
 	
 	RegisterSignal( "SwitchToOrdnance" )
 	RegisterSignal( "SwapToNextOrdnance" )
@@ -668,7 +668,6 @@ bool function ClientCommand_Sur_DropEquipment( entity player, array<string> args
 	}
 	else
 	{
-		// printt( FUNC_NAME(), "unknown item", slotRef )
 		LootData itemData = EquipmentSlot_GetEquippedLootDataForSlot( player, slotRef )
 
 		if ( itemData.ref == "" )
@@ -1691,13 +1690,13 @@ void function ResetPlayerInventory( entity player )
 
 LootZone function GetLootHotZone()
 {
-    FlagWait("Survival_LootZonesLoaded")
+	FlagWait("Survival_LootZonesLoaded")
 	return file.hotZone
 }
 
 array<LootZone> function GetAllLootZones()
 {
-    FlagWait("Survival_LootZonesLoaded")
+	FlagWait("Survival_LootZonesLoaded")
 	return file.lootZones
 }
 
