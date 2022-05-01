@@ -97,15 +97,14 @@ void function DesertlandsTrain_OnNetworkRegistration()
 	Remote_RegisterClientFunction( "SCB_DLandsTrain_SetCustomSpeakerIdx", "int", 0 )
 }
 
-#if(CLIENT)
+#if CLIENT
+// S2C - set speaker idx
 void function SCB_DLandsTrain_SetCustomSpeakerIdx( int speakerIdx )
 {
 	file.customQueueIdx = speakerIdx
 	InitAnnouncerEnts()
 }
-#endif
 
-#if CLIENT
 void function InitAnnouncerEnts()
 {
 	int numTrainCars = GetCurrentPlaylistVarInt( "desertlands_script_train_car_count", TRAIN_CAR_COUNT )
@@ -129,16 +128,13 @@ void function InitAnnouncerEnts()
 		customSpeakers1.append( announcerTarget4 )
 	}
 }
-#endif
 
-
-#if CLIENT
 void function TrainOnFullUpdate()
 {
 	if ( !Desertlands_IsTrainEnabled() )
 		return
 }
-#endif
+#endif // #if CLIENT
 
 
 #if SERVER
@@ -284,16 +280,16 @@ void function DesertlandsTrain_Init()
 			if(distance > 300)
 				continue
 			
-            j++ //Spawn really good loot in the last car
-            
-            if( GetCurrentPlaylistVarBool("lootbin_loot_enable", true) == true)
-            {   
-                ClearLootBinContents( bin )
-                if(j != 2)
-                    AddMultipleLootItemsToLootBin( bin, SURVIVAL_GetMultipleWeightedItemsFromGroup( "Desertlands_Train", 4 ) )
-                else
-                    AddMultipleLootItemsToLootBin( bin, SURVIVAL_GetMultipleWeightedItemsFromGroup( "POI_Ultra", 4 ) )
-            }
+			j++ //Spawn really good loot in the last car
+
+			if( GetCurrentPlaylistVarBool("lootbin_loot_enable", true) == true)
+			{   
+				ClearLootBinContents( bin )
+				if(j != 2)
+					AddMultipleLootItemsToLootBin( bin, SURVIVAL_GetMultipleWeightedItemsFromGroup( "Desertlands_Train", 4 ) )
+				else
+					AddMultipleLootItemsToLootBin( bin, SURVIVAL_GetMultipleWeightedItemsFromGroup( "POI_Ultra", 4 ) )
+			}
 			
 			entity parentPoint = CreateEntity( "script_mover_lightweight" )
 			parentPoint.kv.solid = 0
@@ -333,127 +329,7 @@ void function DesertlandsTrain_Init()
 	
 	thread DesertlandsTrain_ThreadCheckJuncs(cars)
 }
-#endif //
-
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-#if SERVER
-
-#endif //
-
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-#if SERVER
-
-#endif //
-
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-#if SERVER
-
-#endif //
-
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-#if SERVER
-
-#endif //
-
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-#if SERVER
-
-#endif //
+#endif // #if SERVER
 
 
 #if CLIENT
@@ -486,14 +362,7 @@ void function ServerCallback_SetDesertlandsTrainAtStation( bool isAtStation )
 }
 #endif
 
-
-
 bool function IsDesertlandsTrainAtStation()
 {
 	return file.trainStoppedAtStation
 }
-
-
-#if SERVER
-
-#endif //
