@@ -29,6 +29,7 @@ void function _CustomTDM_Init()
     AddCallback_OnPlayerKilled(void function(entity victim, entity attacker, var damageInfo) {thread _OnPlayerDied(victim, attacker, damageInfo)})
 
     AddClientCommandCallback("next_round", ClientCommand_NextRound)
+    AddClientCommandCallback("say", ClientCommand_Chat)
 
 	if( CMD_GetTGiveEnabled() )
 	{
@@ -43,6 +44,26 @@ void function _CustomTDM_Init()
         file.whitelistedWeapons.append(GetCurrentPlaylistVarString("whitelisted_weapon_" + i.tostring(), "~~none~~"))
     }
 
+}
+
+//All Chat Function
+bool function ClientCommand_Chat(entity player, array<string> args)
+{
+    string str = ""
+	foreach (s in args)
+		str += s	
+
+    string sendMessage = str
+
+    foreach(sPlayer in GetPlayerArray())
+    {
+        for ( int i = 0; i < sendMessage.len(); i++ )
+		{
+			Remote_CallFunction_NonReplay( sPlayer, "ServerCallback_BuildClientMessage", sendMessage[i] )
+		}
+        Remote_CallFunction_NonReplay(sPlayer, "ServerCallback_ShowChat", player)
+    }
+	return true
 }
 
 void function _RegisterLocation(LocationSettings locationSettings)

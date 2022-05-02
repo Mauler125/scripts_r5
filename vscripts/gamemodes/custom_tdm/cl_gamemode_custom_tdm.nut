@@ -4,21 +4,103 @@ global function ServerCallback_TDM_DoAnnouncement
 global function ServerCallback_TDM_SetSelectedLocation
 global function ServerCallback_TDM_DoLocationIntroCutscene
 global function ServerCallback_TDM_PlayerKilled
+global function ServerCallback_ShowChat
+global function ServerCallback_BuildClientMessage
 
 global function Cl_RegisterLocation
+
+const int WRAP_BREAK_COUNT = 63
+const int MAX_CHAT_LINE_COUNT = 6
+
+global int currentChatLine = 0
+global string currentChat = ""
+global string clientMessageString
 
 struct {
 
     LocationSettings &selectedLocation
     array choices
     array<LocationSettings> locationSettings
+    var chatRui
+	var chatOverFlowRui
     var scoreRui
 } file;
 
+bool isFuncRegister = false
+bool isChatOverFlowRui = false
 
+//Add Chat Handler
+void function ChatEvent_Handler()
+{
+	while(true)
+	{
+		if(isChatShow && !isFuncRegister)
+		{
+			RegisterButtonPressedCallback(KEY_ENTER, SendChat);
+			isFuncRegister = true
+		}
+		else if(!isChatShow && isFuncRegister)
+		{
+			DeregisterButtonPressedCallback(KEY_ENTER, SendChat)
+			isFuncRegister = false
+		}
+
+		wait 0.5
+	}
+	
+}
+
+bool function IsChatOverflow(int len)
+{
+	if(len > WRAP_BREAK_COUNT + WRAP_BREAK_COUNT - (int(GetLocalClientPlayer().GetPlayerName().len() * 2.5) + 1))
+		return true
+	return false
+}
+
+void function SendChat(var button)
+{
+	
+	var chat = HudElement( "IngameTextChat" )
+	var chatTextEntry = Hud_GetChild( Hud_GetChild( chat, "ChatInputLine" ), "ChatInputTextEntry" )
+	if(chatText != "" && !IsChatOverflow(chatText.len()))
+	{
+		string text = "say " + "\"" + chatText + "\""
+		GetLocalClientPlayer().ClientCommand(text)
+	}	
+}
+
+void function chatOverFlow_Handler()
+{
+	while(true)
+	{
+		if(isChatShow && IsChatOverflow(chatText.len()))
+		{
+			if(file.chatOverFlowRui && !isChatOverFlowRui)
+			{
+				RuiSetVisible( file.chatOverFlowRui, true )
+				isChatOverFlowRui = true
+			}
+				
+		}
+		else
+		{
+			if(file.chatOverFlowRui && isChatOverFlowRui)
+			{
+				RuiSetVisible( file.chatOverFlowRui, false )
+				isChatOverFlowRui = false
+			}
+				
+		}
+
+		wait 0.5
+	}
+}
 
 void function Cl_CustomTDM_Init()
 {
+    //Add handler
+    thread ChatEvent_Handler()
+	thread chatOverFlow_Handler()
 }
 
 void function Cl_RegisterLocation(LocationSettings locationSettings)
@@ -26,6 +108,141 @@ void function Cl_RegisterLocation(LocationSettings locationSettings)
     file.locationSettings.append(locationSettings)
 }
 
+
+string function MakeFlatLineText(int len)
+{
+	string msg = ""
+	for(int i = 0; i < len ; i++)
+		msg = msg + " "
+	return msg
+}
+
+int function GetWrapBreakIndex(string str)
+{
+	int charCount = 0;
+
+	for(int i = 0; i < WRAP_BREAK_COUNT; i++)
+	{
+		if(format("%d", str[i]).tointeger() > 0)
+			charCount += 1;
+	}
+
+	printt("char count" + charCount);
+
+	//calculate chinese or not
+	int chineseLen = WRAP_BREAK_COUNT - charCount
+	if(chineseLen % 3 != 0)
+	{
+		return WRAP_BREAK_COUNT + (3 - chineseLen % 3)
+	}
+	else
+	{
+		return WRAP_BREAK_COUNT
+	}
+
+	return -1
+}
+
+//make chat rui
+void function MakeChatRUI(entity player, string text, float duration)
+{
+
+	string finalChat = player.GetPlayerName() + ": " + clientMessageString
+
+	if(finalChat.len() > WRAP_BREAK_COUNT)
+	{
+		int sliceIndex = GetWrapBreakIndex(finalChat)
+		if(sliceIndex != -1)
+		{
+			string origLineText = finalChat.slice(0,sliceIndex)
+			string newLineText = finalChat.slice(sliceIndex)
+			//Fill new line with blank
+			string blank = MakeFlatLineText(int(player.GetPlayerName().len() * 2.5) + 1)
+
+			finalChat = origLineText + "\n" + blank + newLineText + "\n"
+		}
+	}
+	else
+	{
+		finalChat += "\n"
+	}
+
+	if(currentChatLine < MAX_CHAT_LINE_COUNT)
+	{
+		currentChat = currentChat + finalChat
+	}
+	else
+	{
+		currentChat =  finalChat
+		currentChatLine = 0
+	}
+
+	currentChatLine++
+	clientMessageString = ""
+
+	if ( file.chatRui != null)
+    {
+		RuiSetString(file.chatRui, "messageText", currentChat)
+        return
+    }
+
+    UISize screenSize = GetScreenSize()
+    var screenAlignmentTopo = RuiTopology_CreatePlane( <( screenSize.width * -0.525 ),( screenSize.height * 0.0 ), 0>, <float( screenSize.width ), 0, 0>, <0, float( screenSize.height ), 0>, false )
+    var rui = RuiCreate( $"ui/announcement_quick_right.rpak", screenAlignmentTopo, RUI_DRAW_HUD, RUI_SORT_SCREENFADE + 1 )
+
+    RuiSetGameTime( rui, "startTime", Time() )
+
+    RuiSetString( rui, "messageText", currentChat)
+    RuiSetFloat( rui, "duration", duration )
+	RuiSetFloat3(rui, "eventColor", <RandomFloatRange(0.0, 1.0), RandomFloatRange(0.0, 1.0), RandomFloatRange(0.0, 1.0)>)
+
+    file.chatRui = rui
+
+    OnThreadEnd(
+		function() : ( rui )
+		{
+			RuiDestroy( rui )
+			file.chatRui = null
+		}
+	)
+	wait duration
+}
+
+//make chat overflow rui
+void function MakeChatOverFlowRUI()
+{
+    if ( file.chatOverFlowRui != null)
+    {
+        RuiSetString( file.chatOverFlowRui, "messageText", "over the input count limit" )
+		RuiSetVisible( file.chatOverFlowRui, false )
+        return
+    }
+
+    UISize screenSize = GetScreenSize()
+    var screenAlignmentTopo = RuiTopology_CreatePlane( <( screenSize.width * -0.3),( screenSize.height * 0.1 ), 0>, <float( screenSize.width ), 0, 0>, <0, float( screenSize.height ), 0>, false )
+    var rui = RuiCreate( $"ui/announcement_quick_right.rpak", screenAlignmentTopo, RUI_DRAW_HUD, RUI_SORT_SCREENFADE + 1 )
+
+    RuiSetGameTime( rui, "startTime", Time() )
+
+	string msg = "over the input count limit"
+    RuiSetString( rui, "messageText", msg)
+    RuiSetFloat( rui, "duration", 9999999 )
+    RuiSetFloat3( rui, "eventColor", SrgbToLinear( <128, 188, 255> ) )
+
+    file.chatOverFlowRui = rui
+
+	RuiSetVisible( file.chatOverFlowRui, false )
+
+    OnThreadEnd(
+		function() : ( rui )
+		{
+			RuiDestroy( rui )
+			file.chatOverFlowRui = null
+		}
+	)
+
+    WaitForever()
+}
 
 void function MakeScoreRUI()
 {
@@ -68,7 +285,8 @@ void function ServerCallback_TDM_DoAnnouncement(float duration, int type)
 
         case eTDMAnnounce.ROUND_START:
         {
-            thread MakeScoreRUI();
+            thread MakeScoreRUI()
+            thread MakeChatOverFlowRUI()
             message = "Round start"
             break
         }
@@ -174,6 +392,20 @@ void function ServerCallback_TDM_PlayerKilled()
 {
     if(file.scoreRui)
         RuiSetString( file.scoreRui, "messageText", "Team IMC: " + GameRules_GetTeamScore(TEAM_IMC) + "  ||  Team MIL: " + GameRules_GetTeamScore(TEAM_MILITIA) );
+}
+
+
+//chat callback
+void function ServerCallback_BuildClientMessage(...)
+{
+	for ( int i = 0; i < vargc; i++ )
+		clientMessageString += format("%c", vargv[i] )
+			
+}
+
+void function ServerCallback_ShowChat(entity player)
+{
+    thread MakeChatRUI(player, clientMessageString, 10)
 }
 
 var function CreateTemporarySpawnRUI(entity parentEnt, float duration)
