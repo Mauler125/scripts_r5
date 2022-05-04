@@ -36,8 +36,15 @@ void function GamemodeSurvival_Init()
 	
 	if ( GetMapName() == "mp_rr_ashs_redemption" )
 	{
-		//tdm map death wall
+		//tdm map push wall
 		CreateWallTrigger( <-20857, 5702, -25746> )
+	}
+	
+	if ( GetMapName() == "mp_rr_aqueduct" )
+	{
+		//tdm map death wall
+		CreateDeathWallTrigger( <425, -1590, -1689> )
+		CreateDeathWallTrigger( <774, -6394, 2067> )
 	}
 
 	FlagInit( "SpawnInDropship", false )
@@ -280,6 +287,38 @@ entity function CreateWallTrigger(vector pos, float box_radius = 30000 )
     DispatchSpawn( map_trigger )
     thread FRThrowPlayerBack( map_trigger )
     return map_trigger
+}
+
+entity function CreateDeathWallTrigger(vector pos, float box_radius = 30000 )
+{
+    entity aque_map_trigger = CreateEntity( "trigger_cylinder" )
+    aque_map_trigger.SetRadius( box_radius );aque_map_trigger.SetAboveHeight( 30 );aque_map_trigger.SetBelowHeight( 10 );
+    aque_map_trigger.SetOrigin( pos )
+    DispatchSpawn( aque_map_trigger )
+    thread JumpedtoLava( aque_map_trigger )
+    return aque_map_trigger
+}
+
+void function JumpedtoLava(entity proxy, float speed = 1)
+{ bool active = true
+    while (active)
+    {
+        if(IsValid(proxy))
+        {
+            foreach(player in GetPlayerArray())
+            {
+                if (player.GetPhysics() != MOVETYPE_NOCLIP) //won't affect noclip player
+                {
+                    if(proxy.IsTouching(player))
+						{
+							player.Zipline_Stop()
+							player.TakeDamage(player.GetMaxHealth() + 1, null, null, { damageSourceId=damagedef_suicide, scriptType=DF_BYPASS_SHIELD })
+						}
+                }
+            }
+        } else {active = false ; break}
+        wait 0.01
+    } 
 }
 
 void function FRThrowPlayerBack(entity proxy, float speed = 1)
