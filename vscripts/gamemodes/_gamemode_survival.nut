@@ -42,7 +42,6 @@ void function GamemodeSurvival_Init()
 		case "mp_rr_ashs_redemption":
 			CreateWallTrigger( <-20857, 5702, -25746> )
 		default:
-			Assert(false, "No Wall Triggers found for map!")
 			break
 	}
 
