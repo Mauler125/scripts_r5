@@ -33,18 +33,17 @@ void function GamemodeSurvival_Init()
 	SurvivalFreefall_Init()
 	Sh_ArenaDeathField_Init()
 	SurvivalShip_Init()
-	
-	if ( GetMapName() == "mp_rr_ashs_redemption" )
+
+	switch(GetMapName())
 	{
-		//tdm map push wall
-		CreateWallTrigger( <-20857, 5702, -25746> )
-	}
-	
-	if ( GetMapName() == "mp_rr_aqueduct" )
-	{
-		//tdm map death wall
-		CreateDeathWallTrigger( <425, -1590, -1689> )
-		CreateDeathWallTrigger( <774, -6394, 2067> )
+		case "mp_rr_aqueduct":
+			CreateWallTrigger( <425, -1590, -1689> )
+			CreateWallTrigger( <774, -6394, 2067> )
+		case "mp_rr_ashs_redemption":
+			CreateWallTrigger( <-20857, 5702, -25746> )
+		default:
+			Assert(false, "No Wall Triggers found for map!")
+			break
 	}
 
 	FlagInit( "SpawnInDropship", false )
@@ -287,16 +286,6 @@ entity function CreateWallTrigger(vector pos, float box_radius = 30000 )
     DispatchSpawn( map_trigger )
     thread WallTrigger( map_trigger )
     return map_trigger
-}
-
-entity function CreateDeathWallTrigger(vector pos, float box_radius = 30000 )
-{
-    entity aque_map_trigger = CreateEntity( "trigger_cylinder" )
-    aque_map_trigger.SetRadius( box_radius );aque_map_trigger.SetAboveHeight( 30 );aque_map_trigger.SetBelowHeight( 10 );
-    aque_map_trigger.SetOrigin( pos )
-    DispatchSpawn( aque_map_trigger )
-    thread WallTrigger( aque_map_trigger )
-    return aque_map_trigger
 }
 
 void function WallTrigger(entity proxy, float speed = 1)
