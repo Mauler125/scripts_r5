@@ -1,0 +1,482 @@
+scripts/resource/ui/menus/CTF/ctfvotemenu.menu
+{
+	menu
+	{
+		ControlName				Frame
+		xpos					0
+		ypos					0
+		zpos					3
+		wide					f0
+		tall					f0
+		autoResize				0
+		pinCorner				0
+		visible					1
+		enabled					1
+		tabPosition				0
+		PaintBackgroundType		0
+		infocus_bgcolor_override	"0 0 0 0"
+		outoffocus_bgcolor_override	"0 0 0 0"
+		modal					1
+
+		DarkenBackground
+		{
+			ControlName				Label
+			xpos					0
+			ypos					0
+			wide					%100
+			tall					%100
+			labelText				""
+			bgcolor_override		"0 0 0 150"
+			visible					1
+			paintbackground			1
+		}
+
+        CTFBottomFrame
+		{
+            ControlName		ImagePanel
+			wide					400
+			tall					50
+            xpos                    0
+			ypos					-75
+			visible			1
+            scaleImage		1
+            fillColor		"30 30 30 200"
+            drawColor		"30 30 30 200"
+
+			pin_to_sibling			DarkenBackground
+			pin_corner_to_sibling	CENTER
+			pin_to_sibling_corner	CENTER
+		}
+
+        ObjectiveText
+		{
+			ControlName				Label
+			xpos                    0
+			ypos					0
+			auto_wide_tocontents	1
+			tall					40
+			visible					1
+			fontHeight				30
+			labelText				"Vote For Next Location"
+			font					DefaultBold_41
+			allcaps					1
+			fgcolor_override		"100 100 255 255"
+
+			pin_to_sibling			CTFBottomFrame
+			pin_corner_to_sibling	CENTER
+			pin_to_sibling_corner	CENTER
+		}
+
+        TimerFrame
+		{
+            ControlName		ImagePanel
+			wide					f0
+			tall					125
+            xpos                    0
+			ypos					0
+			visible			1
+            scaleImage		1
+            fillColor		"30 30 30 200"
+            drawColor		"30 30 30 200"
+
+			pin_to_sibling			DarkenBackground
+			pin_corner_to_sibling	TOP
+			pin_to_sibling_corner	TOP
+		}
+
+		TimerText2
+		{
+			ControlName				Label
+			xpos                    0
+			ypos					-15
+			auto_wide_tocontents	1
+			tall					40
+			visible					1
+			fontHeight				50
+			labelText				"Voting Ends In"
+			font					DefaultBold_41
+			allcaps					1
+			fgcolor_override		"255 100 100 255"
+
+			pin_to_sibling			TimerFrame
+			pin_corner_to_sibling	TOP
+			pin_to_sibling_corner	TOP
+		}
+
+		TimerText
+		{
+			ControlName				Label
+			xpos                    0
+			ypos					15
+			auto_wide_tocontents	1
+			tall					40
+			visible					1
+			fontHeight				50
+			labelText				"30 Seconds"
+			font					DefaultBold_41
+			allcaps					1
+			fgcolor_override		"255 255 255 255"
+
+			pin_to_sibling			TimerText2
+			pin_corner_to_sibling	TOP
+			pin_to_sibling_corner	BOTTOM
+		}
+
+		MapVoteFrame
+		{
+            ControlName		ImagePanel
+			wide					f0
+			tall					175
+            xpos                    0
+			ypos					50
+			visible			1
+            scaleImage		1
+            fillColor		"30 30 30 200"
+            drawColor		"30 30 30 200"
+
+			pin_to_sibling			DarkenBackground
+			pin_corner_to_sibling	LEFT
+			pin_to_sibling_corner	LEFT
+		}
+
+		MapVoteFrame2
+		{
+            ControlName		ImagePanel
+			wide					f0
+			tall					75
+            xpos                    0
+			ypos					0
+			visible			1
+            scaleImage		1
+            fillColor		"30 30 30 200"
+            drawColor		"30 30 30 200"
+
+			pin_to_sibling			DarkenBackground
+			pin_corner_to_sibling	LEFT
+			pin_to_sibling_corner	LEFT
+		}
+
+		VotedForLbl
+		{
+			ControlName				Label
+			xpos                    0
+			ypos					0
+			auto_wide_tocontents	1
+			tall					40
+			visible					1
+			fontHeight				50
+			labelText				"Next Location: "
+			font					DefaultBold_41
+			allcaps					1
+			fgcolor_override		"100 100 255 255"
+
+			pin_to_sibling			MapVoteFrame2
+			pin_corner_to_sibling	CENTER
+			pin_to_sibling_corner	CENTER
+		}
+
+		MapVote1
+		{
+			ControlName				RuiButton
+			rui						"ui/settings_base_button.rpak"
+			labelText				"30 Seconds"
+			classname 				ServerButton
+			scriptID				0
+			wide 					330
+			tall 					150
+			xpos					-525 // include n pixels for the combo button inset
+			ypos					0
+			visible					1
+			zpos 					6
+
+			pin_to_sibling			MapVoteFrame
+			pin_corner_to_sibling	CENTER
+			pin_to_sibling_corner	CENTER
+		}
+
+		MapVote1Label
+		{
+			ControlName				Label
+			labelText				"Location: Temp One"
+			classname ServerName
+			wide 200
+			tall 20
+			ypos -5
+			xpos -5
+			zpos 7
+			interactive 		0
+
+
+			pin_to_sibling			MapVote1
+			pin_corner_to_sibling	BOTTOM_LEFT
+			pin_to_sibling_corner	BOTTOM_LEFT
+		}
+
+		MapVote1Votes
+		{
+			ControlName				Label
+			labelText				"Votes: 0"
+			classname ServerName
+			wide 200
+			tall 20
+			ypos -5
+			xpos -5
+			zpos 7
+			interactive 		0
+			fgcolor_override		"100 100 255 255"
+
+
+			pin_to_sibling			MapVote1
+			pin_corner_to_sibling	TOP_LEFT
+			pin_to_sibling_corner	TOP_LEFT
+		}
+
+		MapVote1Voted
+		{
+			ControlName				Label
+			labelText				"Voted!"
+			classname ServerName
+			auto_wide_tocontents	1
+			tall 30
+			ypos 0
+			xpos 0
+			zpos 7
+			interactive 		0
+			fgcolor_override		"100 255 100 255"
+			fontHeight				40
+
+
+			pin_to_sibling			MapVote1
+			pin_corner_to_sibling	CENTER
+			pin_to_sibling_corner	CENTER
+		}
+
+		MapVote2
+		{
+			ControlName				RuiButton
+			rui						"ui/settings_base_button.rpak"
+			labelText				"30 Seconds"
+			classname 				ServerButton
+			scriptID				0
+			wide 					330
+			tall 					150
+			xpos					20 // include n pixels for the combo button inset
+			ypos					0
+			visible					1
+			zpos 					6
+
+			pin_to_sibling			MapVote1
+			pin_corner_to_sibling	LEFT
+			pin_to_sibling_corner	RIGHT
+		}
+
+		MapVote2Label
+		{
+			ControlName				Label
+			labelText				"Location: Temp Two"
+			classname ServerName
+			wide 200
+			tall 20
+			ypos -5
+			xpos -5
+			zpos 7
+			interactive 		0
+
+
+			pin_to_sibling			MapVote2
+			pin_corner_to_sibling	BOTTOM_LEFT
+			pin_to_sibling_corner	BOTTOM_LEFT
+		}
+
+		MapVote2Votes
+		{
+			ControlName				Label
+			labelText				"Votes: 0"
+			classname ServerName
+			wide 200
+			tall 20
+			ypos -5
+			xpos -5
+			zpos 7
+			interactive 		0
+			fgcolor_override		"100 100 255 255"
+
+
+			pin_to_sibling			MapVote2
+			pin_corner_to_sibling	TOP_LEFT
+			pin_to_sibling_corner	TOP_LEFT
+		}
+
+		MapVote2Voted
+		{
+			ControlName				Label
+			labelText				"Voted!"
+			classname ServerName
+			auto_wide_tocontents	1
+			tall 30
+			ypos 0
+			xpos 0
+			zpos 7
+			interactive 		0
+			fgcolor_override		"100 255 100 255"
+			fontHeight				40
+
+
+			pin_to_sibling			MapVote2
+			pin_corner_to_sibling	CENTER
+			pin_to_sibling_corner	CENTER
+		}
+
+		MapVote3
+		{
+			ControlName				RuiButton
+			rui						"ui/settings_base_button.rpak"
+			labelText				"30 Seconds"
+			classname 				ServerButton
+			scriptID				0
+			wide 					330
+			tall 					150
+			xpos					20 // include n pixels for the combo button inset
+			ypos					0
+			visible					1
+			zpos 					6
+
+			pin_to_sibling			MapVote2
+			pin_corner_to_sibling	LEFT
+			pin_to_sibling_corner	RIGHT
+		}
+
+		MapVote3Label
+		{
+			ControlName				Label
+			labelText				"Location: Temp Three"
+			classname ServerName
+			wide 200
+			tall 20
+			ypos -5
+			xpos -5
+			zpos 7
+			interactive 		0
+
+
+			pin_to_sibling			MapVote3
+			pin_corner_to_sibling	BOTTOM_LEFT
+			pin_to_sibling_corner	BOTTOM_LEFT
+		}
+
+		MapVote3Votes
+		{
+			ControlName				Label
+			labelText				"Votes: 0"
+			classname ServerName
+			wide 200
+			tall 20
+			ypos -5
+			xpos -5
+			zpos 7
+			interactive 		0
+			fgcolor_override		"100 100 255 255"
+
+
+			pin_to_sibling			MapVote3
+			pin_corner_to_sibling	TOP_LEFT
+			pin_to_sibling_corner	TOP_LEFT
+		}
+
+		MapVote3Voted
+		{
+			ControlName				Label
+			labelText				"Voted!"
+			classname ServerName
+			auto_wide_tocontents	1
+			tall 30
+			ypos 0
+			xpos 0
+			zpos 7
+			interactive 		0
+			fgcolor_override		"100 255 100 255"
+			fontHeight				40
+
+
+			pin_to_sibling			MapVote3
+			pin_corner_to_sibling	CENTER
+			pin_to_sibling_corner	CENTER
+		}
+
+		MapVote4
+		{
+			ControlName				RuiButton
+			rui						"ui/settings_base_button.rpak"
+			labelText				"30 Seconds"
+			classname 				ServerButton
+			scriptID				0
+			wide 					330
+			tall 					150
+			xpos					20 // include n pixels for the combo button inset
+			ypos					0
+			visible					1
+			zpos 					6
+
+			pin_to_sibling			MapVote3
+			pin_corner_to_sibling	LEFT
+			pin_to_sibling_corner	RIGHT
+		}
+
+		MapVote4Label
+		{
+			ControlName				Label
+			labelText				"Location: Temp Four"
+			classname ServerName
+			wide 200
+			tall 20
+			ypos -5
+			xpos -5
+			zpos 7
+			interactive 		0
+
+
+			pin_to_sibling			MapVote4
+			pin_corner_to_sibling	BOTTOM_LEFT
+			pin_to_sibling_corner	BOTTOM_LEFT
+		}
+
+		MapVote4Votes
+		{
+			ControlName				Label
+			labelText				"Votes: 0"
+			classname ServerName
+			wide 200
+			tall 20
+			ypos -5
+			xpos -5
+			zpos 7
+			interactive 		0
+			fgcolor_override		"100 100 255 255"
+
+
+			pin_to_sibling			MapVote4
+			pin_corner_to_sibling	TOP_LEFT
+			pin_to_sibling_corner	TOP_LEFT
+		}
+
+		MapVote4Voted
+		{
+			ControlName				Label
+			labelText				"Voted!"
+			classname ServerName
+			auto_wide_tocontents	1
+			tall 30
+			ypos 0
+			xpos 0
+			zpos 7
+			interactive 		0
+			fgcolor_override		"100 255 100 255"
+			fontHeight				40
+
+
+			pin_to_sibling			MapVote4
+			pin_corner_to_sibling	CENTER
+			pin_to_sibling_corner	CENTER
+		}
+	}
+}
