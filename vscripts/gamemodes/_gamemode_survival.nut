@@ -33,11 +33,16 @@ void function GamemodeSurvival_Init()
 	SurvivalFreefall_Init()
 	Sh_ArenaDeathField_Init()
 	SurvivalShip_Init()
-	
-	if ( GetMapName() == "mp_rr_ashs_redemption" )
+
+	switch(GetMapName())
 	{
-		//tdm map death wall
-		CreateWallTrigger( <-20857, 5702, -25746> )
+		case "mp_rr_aqueduct":
+			CreateWallTrigger( <425, -1590, -1689> )
+			CreateWallTrigger( <774, -6394, 2067> )
+		case "mp_rr_ashs_redemption":
+			CreateWallTrigger( <-20857, 5702, -25746> )
+		default:
+			break
 	}
 
 	FlagInit( "SpawnInDropship", false )
@@ -278,11 +283,11 @@ entity function CreateWallTrigger(vector pos, float box_radius = 30000 )
     map_trigger.SetRadius( box_radius );map_trigger.SetAboveHeight( 350 );map_trigger.SetBelowHeight( 10 );
     map_trigger.SetOrigin( pos )
     DispatchSpawn( map_trigger )
-    thread FRThrowPlayerBack( map_trigger )
+    thread WallTrigger( map_trigger )
     return map_trigger
 }
 
-void function FRThrowPlayerBack(entity proxy, float speed = 1)
+void function WallTrigger(entity proxy, float speed = 1)
 { bool active = true
     while (active)
     {
@@ -295,18 +300,24 @@ void function FRThrowPlayerBack(entity proxy, float speed = 1)
                     if(proxy.IsTouching(player))
 						{
 							player.Zipline_Stop()
-							vector target_origin = player.GetOrigin()
-							vector proxy_origin = proxy.GetOrigin()
-							vector target_angles = player.GetAngles()
-							vector proxy_angles = proxy.GetAngles()
+							switch(GetMapName())
+								{
+									case "mp_rr_aqueduct":
+										player.TakeDamage(player.GetMaxHealth() + 1, null, null, { damageSourceId=damagedef_suicide, scriptType=DF_BYPASS_SHIELD })
+									default:
+										vector target_origin = player.GetOrigin()
+										vector proxy_origin = proxy.GetOrigin()
+										vector target_angles = player.GetAngles()
+										vector proxy_angles = proxy.GetAngles()
+						
+										vector velocity = target_origin - proxy_origin
+										velocity = velocity * speed
                     
-							vector velocity = target_origin - proxy_origin
-							velocity = velocity * speed
+										vector angles = target_angles - proxy_angles
                     
-							vector angles = target_angles - proxy_angles
-                    
-							velocity = velocity + angles
-							player.SetVelocity(velocity)
+										velocity = velocity + angles
+										player.SetVelocity(velocity)
+								}
 						}
                 }
             }
