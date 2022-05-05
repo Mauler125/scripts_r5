@@ -21,3 +21,26 @@ global const table TDM_PLAYER_SETTINGS = {
     ["slidedecel"]=50,
     ["slidevelocitydecay"]=0.7
 }
+global const table TDM_GG_PLAYER_SETTINGS = {
+    ["jumpheight"]=60,
+    ["gravityscale"]=0.80,
+    ["stepheight"]=19,
+    ["ziplineSpeed"]=600,
+    ["wallrun"] = 1,
+    ["doublejump"] = 1,
+    ["superjumpMinHeight"]=60,
+    ["superjumpMaxHeight"]=60,
+    ["superjumpHorzSpeed"]=180,
+    ["wallrun_timeLimit"]=3.23,
+    ["wallrunJumpOutwardSpeed"]=225,
+    ["wallrunJumpUpSpeed"]=250,
+    ["wallrunJumpInputDirSpeed"]=1000,
+    ["wallrunMaxSpeedVertical"]=245,
+    ["wallrunMaxSpeedHorizontal"]=440,
+    ["wallrunAccelerateVertical"]=380,
+    ["wallrunAccelerateHorizontal"]=1600,
+    ["leech_range"]=64,
+    ["impactSpeed"]=380,
+    ["slidedecel"]=30,
+    ["slidevelocitydecay"]=0.1
+}

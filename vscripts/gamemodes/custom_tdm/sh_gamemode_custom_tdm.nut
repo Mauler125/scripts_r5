@@ -1,6 +1,7 @@
 // Credits
 // sal#3261 -- main
 // @Shrugtal -- score ui
+// @KralRindo, BobTheBob#1150 -- GunGame Mode
 // everyone else -- advice
 
 
@@ -27,6 +28,8 @@ global function Equipment_GetRespawnKit_PrimaryWeapon
 global function Equipment_GetRespawnKit_SecondaryWeapon
 global function Equipment_GetRespawnKit_Tactical
 global function Equipment_GetRespawnKit_Ultimate
+global function TDM_GunGameInit
+global function GetGunGameWeapons
 #endif
 
 
@@ -41,12 +44,20 @@ global enum eTDMAnnounce
 	VOTING_PHASE = 3
 	MAP_FLYOVER = 4
 	IN_PROGRESS = 5
+	VOTING_PHASE_GG = 6
 }
 
 global struct LocPair
 {
     vector origin = <0, 0, 0>
     vector angles = <0, 0, 0>
+}
+
+global struct GunGameWeapon
+{
+	string weapon
+	array<string> mods
+	int offhandSlot = -1
 }
 
 global struct LocationSettings 
@@ -61,18 +72,15 @@ struct {
     array choices
     array<LocationSettings> locationSettings
     var scoreRui
-
+	array<GunGameWeapon> weapons
 } file;
-
-
-
 
 void function Sh_CustomTDM_Init() 
 {
 
 
     // Map locations
-
+	TDM_GunGameInit()
     switch(GetMapName())
     {
     case "mp_rr_canyonlands_staging":
@@ -429,6 +437,134 @@ void function Sh_CustomTDM_Init()
     //Client Signals
     RegisterSignal( "CloseScoreRUI" )
     
+}
+
+void function TDM_GunGameInit()
+{
+
+	//	SUB MACHINE GUNS
+	
+	//	Alternator SMG
+	GunGameWeapon Alternator = { weapon = "mp_weapon_alternator_smg", mods = [ "optic_cq_hcog_classic", "bullets_mag_l3", "barrel_stabilizer_l4_flash_hider", "stock_tactical_l3" ], ... }
+	file.weapons.append( Alternator )
+	
+	//	Volt SMG
+	GunGameWeapon Volt = { weapon = "mp_weapon_volt_smg", mods = [ "optic_cq_hcog_classic", "energy_mag_l3", "barrel_stabilizer_l4_flash_hider", "stock_tactical_l3" ],... }
+	file.weapons.append( Volt )
+		
+	//	R99
+	GunGameWeapon R99 = { weapon = "mp_weapon_r97", mods = [ "optic_cq_hcog_classic", "bullets_mag_l3", "barrel_stabilizer_l4_flash_hider", "stock_tactical_l3" ],... }
+	file.weapons.append( R99 )
+	
+	//	Prowler Burst  PDW
+	GunGameWeapon prwler = { weapon = "mp_weapon_pdw", mods = [ "optic_cq_hcog_classic", "highcal_mag_l3", "hopup_selectfire", "stock_tactical_l3" ],... }
+	file.weapons.append( prwler )
+	
+	
+	
+	
+	//	ASSAULT RIFLES
+	
+	//	Hemlok
+	GunGameWeapon Hemlok = { weapon = "mp_weapon_hemlok",mods = [ "optic_cq_hcog_bruiser", "highcal_mag_l3", "barrel_stabilizer_l4_flash_hider", "stock_tactical_l3" ], ... }
+	file.weapons.append( Hemlok )
+	
+	//	Flatline
+	GunGameWeapon Flatline = { weapon = "mp_weapon_vinson", mods = [ "optic_cq_hcog_bruiser", "highcal_mag_l3", "hopup_highcal_rounds", "stock_tactical_l3" ], ... }
+	file.weapons.append( Flatline )
+	
+	//	R301
+	GunGameWeapon R101 = { weapon = "mp_weapon_rspn101", mods = [ "optic_cq_hcog_bruiser", "bullets_mag_l3", "hopup_highcal_rounds", "stock_tactical_l3", "barrel_stabilizer_l4_flash_hider" ], ... }
+	file.weapons.append( R101 )
+	
+	//	Havoc
+	GunGameWeapon Havoc = { weapon = "mp_weapon_energy_ar", mods = [ "optic_cq_hcog_bruiser", "energy_mag_l3", "hopup_turbocharger", "stock_tactical_l3" ], ... }
+	file.weapons.append( Havoc )
+	
+	
+	
+	
+	//	LIGHT MACHINE GUNS
+	
+	//	Devotion
+	GunGameWeapon Devotion = { weapon = "mp_weapon_esaw", mods = [ "optic_cq_hcog_bruiser", "energy_mag_l3", "hopup_turbocharger", "stock_tactical_l3", "barrel_stabilizer_l4_flash_hider" ], ... }
+	file.weapons.append( Devotion )
+	
+	//	Spitfire
+	GunGameWeapon Spitfire = { weapon = "mp_weapon_lmg", mods = [ "optic_cq_hcog_bruiser", "highcal_mag_l3", "stock_tactical_l3", "barrel_stabilizer_l4_flash_hider" ], ... }
+	file.weapons.append( Spitfire )
+	
+	
+	
+	
+	//	SHOTGUNS
+	
+	//	Eva-8 Auto
+	GunGameWeapon Eva = { weapon = "mp_weapon_shotgun", mods = [ "optic_cq_hcog_classic", "shotgun_bolt_l3", "hopup_double_tap" ], ... }
+	file.weapons.append( Eva )
+	
+	//	Mozambique
+	GunGameWeapon Mozam = { weapon = "mp_weapon_shotgun_pistol", mods = [ "optic_cq_threat", "shotgun_bolt_l3", "hopup_unshielded_dmg" ], ... }
+	file.weapons.append( Mozam )
+	
+	//	Peacekeeper
+	GunGameWeapon Pk = { weapon = "mp_weapon_energy_shotgun", mods = [ "optic_cq_hcog_classic", "shotgun_bolt_l3", "hopup_energy_choke" ], ... }
+	file.weapons.append( Pk )
+	
+	
+	
+	
+	//	SNIPER RIFLES
+	
+	//	Triple Take
+	GunGameWeapon Taketake = { weapon = "mp_weapon_doubletake", mods = [ "optic_ranged_hcog", "stock_sniper_l3", "hopup_energy_choke", "energy_mag_l3" ], ... }
+	file.weapons.append( Taketake )
+	
+	//	Longbow
+	GunGameWeapon lbow = { weapon = "mp_weapon_dmr", mods = [ "optic_ranged_aog_variable", "highcal_mag_l3", "barrel_stabilizer_l4_flash_hider", "stock_sniper_l3" ], ... }
+	file.weapons.append( lbow )
+	
+	//	Charge Rifle
+	GunGameWeapon ChargeRifle = { weapon = "mp_weapon_defender", mods = [ "optic_sniper_threat", "stock_sniper_l3" ], ... }
+	file.weapons.append( ChargeRifle )
+	
+	
+	
+	
+	//	PISTOLS
+	
+	//	RE-45 AUTO
+	GunGameWeapon Re45 = { weapon = "mp_weapon_autopistol", mods = [ "optic_cq_holosight_variable", "bullets_mag_l3", "barrel_stabilizer_l4_flash_hider" ], ... }
+	file.weapons.append( Re45 )
+	
+	//	P2020
+	GunGameWeapon P2020 = { weapon = "mp_weapon_semipistol", mods = [ "optic_cq_threat", "bullets_mag_l3", "hopup_unshielded_dmg" ], ... }
+	file.weapons.append( P2020 )
+	
+	//	Wingman
+	GunGameWeapon Wingman = { weapon = "mp_weapon_wingman", mods = [ "optic_cq_hcog_classic", "highcal_mag_l3" ], ... }
+	file.weapons.append( Wingman )
+	
+	
+	//	CARE PACKAGE WEAPONS
+	if ( GetCurrentPlaylistVarBool( "GG_Drop_Guns", false ) ){
+	
+	//	Kraber
+	GunGameWeapon Kraber = { weapon = "mp_weapon_sniper", ... }
+	file.weapons.append( Kraber )
+	
+	//	L-Star
+	GunGameWeapon LSTAR = { weapon = "mp_weapon_lstar", mods = [ "optic_cq_threat" ], ... }
+	file.weapons.append( LSTAR )
+	
+	//	Mastiff
+	GunGameWeapon Mastiff = { weapon = "mp_weapon_mastiff", mods = [ "optic_cq_threat" ], ... }
+	file.weapons.append( Mastiff )}
+}
+
+array<GunGameWeapon> function GetGunGameWeapons()
+{
+	return file.weapons
 }
 
 LocPair function NewLocPair(vector origin, vector angles)
