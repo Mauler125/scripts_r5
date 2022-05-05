@@ -30,11 +30,6 @@ void function _CustomTDM_Init()
 
     AddClientCommandCallback("next_round", ClientCommand_NextRound)
 
-	if( CMD_GetTGiveEnabled() )
-	{
-		AddClientCommandCallback("tgive", ClientCommand_GiveWeapon)
-	}
-
     thread RunTDM()
 
     // Whitelisted weapons
@@ -42,6 +37,11 @@ void function _CustomTDM_Init()
     {
         file.whitelistedWeapons.append(GetCurrentPlaylistVarString("whitelisted_weapon_" + i.tostring(), "~~none~~"))
     }
+
+	if( CMD_GetTGiveEnabled() )
+	{
+		AddClientCommandCallback("tgive", ClientCommand_GiveWeapon)
+	}
 
 }
 
@@ -117,6 +117,9 @@ void function VotingPhase()
         MakeInvincible(player)
 		HolsterAndDisableWeapons( player )
         player.ForceStand()
+		if ( GetCurrentPlaylistVarBool( "tdm_gungame", false ) )
+		Remote_CallFunction_NonReplay(player, "ServerCallback_TDM_DoAnnouncement", 6, eTDMAnnounce.VOTING_PHASE_GG)
+		else
         Remote_CallFunction_NonReplay(player, "ServerCallback_TDM_DoAnnouncement", 2, eTDMAnnounce.VOTING_PHASE)
         TpPlayerToSpawnPoint(player)
         player.UnfreezeControlsOnServer();
@@ -320,6 +323,27 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
 			    invscore++;
 			    attacker.SetPlayerNetInt( "kills", invscore )
 
+				if ( GetCurrentPlaylistVarBool( "tdm_gungame", false ) )
+				{
+					
+					int currentWeaponIndex = RandomInt( 21 )
+					array<GunGameWeapon> weapons = GetGunGameWeapons()
+	
+					GunGameWeapon weapon = weapons[ currentWeaponIndex ]
+	
+    				entity primary = attacker.GetNormalWeapon( WEAPON_INVENTORY_SLOT_PRIMARY_0 )
+    				entity secondary = attacker.GetNormalWeapon( WEAPON_INVENTORY_SLOT_PRIMARY_1 )
+						{
+							if( IsValid( primary ) ) attacker.TakeWeaponByEntNow( primary )
+							if( IsValid( secondary ) ) attacker.TakeWeaponByEntNow( secondary )
+						}
+						//wait 0.001
+					attacker.GiveWeapon( weapon.weapon, WEAPON_INVENTORY_SLOT_PRIMARY_0, weapon.mods )
+					if ( GetCurrentPlaylistVarBool( "double_weapon", false ) ){
+					attacker.GiveWeapon( weapon.weapon, WEAPON_INVENTORY_SLOT_PRIMARY_1, weapon.mods )}
+					wait 0.8
+					EmitSoundOnEntityOnlyToPlayer( attacker, attacker, "pilot_collectible_pickup" )
+				}
 
                 if(score >= SCORE_GOAL_TO_WIN)
                 {
@@ -395,9 +419,23 @@ void function _HandleRespawn(entity player, bool forceGive = false)
             }
             
         }
+		if ( GetCurrentPlaylistVarBool( "tdm_gungame", false ) )
+			{
+				int currentWeaponIndex = RandomInt( 21 )
+				array<GunGameWeapon> weapons = GetGunGameWeapons()
+	
+				GunGameWeapon weapon = weapons[ currentWeaponIndex ]
+				player.GiveWeapon( weapon.weapon, WEAPON_INVENTORY_SLOT_PRIMARY_0, weapon.mods )
+				if ( GetCurrentPlaylistVarBool( "double_weapon", false ) ){
+				player.GiveWeapon( weapon.weapon, WEAPON_INVENTORY_SLOT_PRIMARY_1, weapon.mods )}
+			}
     }
     
-    SetPlayerSettings(player, TDM_PLAYER_SETTINGS)
+	if ( GetCurrentPlaylistVarBool( "tdm_gungame", false ) )
+    SetPlayerSettings(player, TDM_GG_PLAYER_SETTINGS)
+	else
+	SetPlayerSettings(player, TDM_PLAYER_SETTINGS)
+	
     PlayerRestoreHP(player, 100, Equipment_GetDefaultShieldHP())
                 
     TpPlayerToSpawnPoint(player)
@@ -467,6 +505,8 @@ void function MonitorBubbleBoundary(entity bubbleShield, vector bubbleCenter, fl
 
 void function PlayerRestoreHP(entity player, float health, float shields)
 {
+	if(!IsValid(player)) return;
+	if(!IsAlive(player)) return;
     player.SetHealth( health )
     Inventory_SetPlayerEquipment(player, "helmet_pickup_lv4_abilities", "helmet")
 

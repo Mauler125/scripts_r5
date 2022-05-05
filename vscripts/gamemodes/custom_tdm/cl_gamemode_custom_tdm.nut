@@ -75,8 +75,15 @@ void function ServerCallback_TDM_DoAnnouncement(float duration, int type)
         case eTDMAnnounce.VOTING_PHASE:
         {
             clGlobal.levelEnt.Signal( "CloseScoreRUI" )
-            message = "Welcome To Team Deathmatch"
-            subtext = "Made by sal (score UI by shrugtal)"
+				message = "Welcome To Team Deathmatch"
+				subtext = "Made by sal (score UI by shrugtal)"
+            break
+        }
+        case eTDMAnnounce.VOTING_PHASE_GG:
+        {
+            clGlobal.levelEnt.Signal( "CloseScoreRUI" )
+				message = "Welcome To Gun Game"
+				subtext = "Every time you kill someone, your weapon will replaced with a random weapon."
             break
         }
         case eTDMAnnounce.MAP_FLYOVER:
@@ -113,8 +120,10 @@ void function ServerCallback_TDM_DoLocationIntroCutscene_Body()
     
     if(!IsValid(player)) return
     
-
-    EmitSoundOnEntity( player, "music_skyway_04_smartpistolrun" )
+	if ( GetCurrentPlaylistVarBool( "tdm_gungame", false ) )
+		EmitSoundOnEntity( player, "music_tday_05_arenabattle" )
+	else
+		EmitSoundOnEntity( player, "music_skyway_04_smartpistolrun" )
      
     float playerFOV = player.GetFOV()
     
@@ -155,7 +164,10 @@ void function ServerCallback_TDM_DoLocationIntroCutscene_Body()
 
     if(IsValid(player))
     {
-        FadeOutSoundOnEntity( player, "music_skyway_04_smartpistolrun", 1 )
+        if ( GetCurrentPlaylistVarBool( "tdm_gungame", false ) )
+			FadeOutSoundOnEntity( player, "music_tday_05_arenabattle", 1 )
+		else
+			FadeOutSoundOnEntity( player, "music_skyway_04_smartpistolrun", 1 )
     }
     if(IsValid(camera))
     {
