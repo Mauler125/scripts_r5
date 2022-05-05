@@ -107,8 +107,8 @@ void function _CustomCTF_Init()
     //AddClientCommandCallback("killme", ClientCommand_KillMe)
     //AddClientCommandCallback("imc", ClientCommand_IMC)
     //AddClientCommandCallback("mil", ClientCommand_MIL)
-    AddClientCommandCallback("openvote", ClientCommand_OpenVoteMenu)
-    AddClientCommandCallback("closevote", ClientCommand_CloseVoteMenu)
+    //AddClientCommandCallback("openvote", ClientCommand_OpenVoteMenu)
+    //AddClientCommandCallback("closevote", ClientCommand_CloseVoteMenu)
 
     AddClientCommandCallback("VoteForMap", ClientCommand_VoteForMap)
 
