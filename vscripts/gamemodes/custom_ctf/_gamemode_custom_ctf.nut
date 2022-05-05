@@ -331,7 +331,7 @@ void function StartRound()
             {
                 _HandleRespawn(player)
             }
-            Remote_CallFunction_NonReplay(player, "ServerCallback_CTF_DoAnnouncement", 5, eCTFAnnounce.ROUND_START)
+            //Remote_CallFunction_NonReplay(player, "ServerCallback_CTF_DoAnnouncement", 5, eCTFAnnounce.ROUND_START)
             Remote_CallFunction_NonReplay(player, "ServerCallback_CTF_SetObjectiveText", CTF_SCORE_GOAL_TO_WIN)
             ClearInvincible(player)
             DeployAndEnableWeapons(player)
