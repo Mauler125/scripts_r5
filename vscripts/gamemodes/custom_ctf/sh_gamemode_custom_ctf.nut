@@ -70,7 +70,7 @@ struct {
 
 } file;
 
-void function Sh_CustomCTF_Init()
+void function Sh_CustomCTF_Init() 
 {
     // Map locations
     //This is only used for the boundary bubble
@@ -91,20 +91,7 @@ void function Sh_CustomCTF_Init()
             )
         )
         break
-
-    case "mp_rr_aqueduct":
-        Shared_RegisterLocation(
-            NewCTFLocationSettings(
-                "Overflow",
-                [
-                    NewCTFLocPair(<4859, -4097, 351>, <0, 0, 0>),
-					NewCTFLocPair(<-3436, -4097, 351>, <0, 0, 0>)
-                ],
-                <0, 0, 1000>
-            )
-        )
-        break
-
+		
     case "mp_rr_ashs_redemption":
         Shared_RegisterLocation(
             NewCTFLocationSettings(
@@ -245,14 +232,14 @@ void function Sh_CustomCTF_Init()
                 )
             )
 
-
+        
         default:
             Assert(false, "No TDM locations found for map!")
     }
 
     //Client Signals
     RegisterSignal( "CloseScoreRUI" )
-
+    
 }
 
 LocPairCTF function NewCTFLocPair(vector origin, vector angles)
@@ -362,13 +349,7 @@ vector function GetFlagLocation(LocationSettingsCTF locationSettings, int team)
             if (team == TEAM_MILITIA)
                 spawnorg = <10684, -18468, -3584>
             break
-        case "Overflow":
-            if (team == TEAM_IMC)
-                spawnorg = <4859, -4097, 351>
-            if (team == TEAM_MILITIA)
-                spawnorg = <-3436, -4097, 351>
-            break
-
+        
     }
     return spawnorg
 }
@@ -572,24 +553,6 @@ array<vector> function GetRandomPlayerSpawnOrigin(LocationSettingsCTF locationSe
                 spawnorg.append(<10076, -19642, -2889>) //Ang: 0 -148 0
                 spawnorg.append(<7793, -17583, -3657>) //Ang: 0 -80 0
                 spawnorg.append(<9377, -20718, -3569>) //Ang: 0 -179 0
-            break
-        }
-    }
-    else if (locationSettings.name == "Overflow")
-    {
-        switch(player.GetTeam())
-        {
-            case TEAM_IMC:
-                spawnorg.append(<4386, -3185, 332>) //Ang: 0 -145 0
-                spawnorg.append(<4372, -5591, 460>) //Ang: 0 161 0
-                spawnorg.append(<4528, -4683, 332>) //Ang: 0 -130 0
-                spawnorg.append(<4208, -3785, 332>) //Ang: 0 -165 0
-            break
-            case TEAM_MILITIA:
-                spawnorg.append(<-2914, -5607, 460>) //Ang: 0 0 0
-                spawnorg.append(<-3205, -4625, 332>) //Ang: 0 -14 0
-                spawnorg.append(<-2870, -3833, 332>) //Ang: 0 -37 0
-                spawnorg.append(<-2997, -3094, 332>) //Ang: 0 -19 0
             break
         }
     }
@@ -798,24 +761,6 @@ array<vector> function GetRandomPlayerSpawnAngles(LocationSettingsCTF locationSe
             break
         }
     }
-    else if (locationSettings.name == "Overflow")
-    {
-        switch(player.GetTeam())
-        {
-            case TEAM_IMC:
-                spawnang.append(<0, -145, 0>) //Ang: 0 -145 0
-                spawnang.append(<0, 161, 0>) //Ang: 0 161 0
-                spawnang.append(<0, -130, 0>) //Ang: 0 -130 0
-                spawnang.append(<0, -165, 0>) //Ang: 0 -165 0
-            break
-            case TEAM_MILITIA:
-                spawnang.append(<0, 0, 0>) //Ang: 0 0 0
-                spawnang.append(<0, -14, 0>) //Ang: 0 -14 0
-                spawnang.append(<0, -37, 0>) //Ang: 0 -37 0
-                spawnang.append(<0, -19, 0>) //Ang: 0 -19 0
-            break
-        }
-    }
 
     return spawnang
 }
@@ -829,20 +774,20 @@ float function CTF_GetRespawnDelay()                          { return GetCurren
 float function CTF_Equipment_GetDefaultShieldHP()                        { return GetCurrentPlaylistVarFloat("default_shield_hp", 100) }
 float function CTF_GetOOBDamagePercent()                      { return GetCurrentPlaylistVarFloat("oob_damage_percent", 25) }
 float function CTF_GetVotingTime()                            { return GetCurrentPlaylistVarFloat("voting_time", 5) }
-
-#if SERVER
+      
+#if SERVER      
 bool function CTF_Equipment_GetRespawnKitEnabled()                       { return GetCurrentPlaylistVarBool("respawn_kit_enabled", false) }
 
 StoredWeapon function CTF_Equipment_GetRespawnKit_PrimaryWeapon()
-{
+{ 
     return Equipment_GetRespawnKit_Weapon(
         GetCurrentPlaylistVarString("respawn_kit_primary_weapon", "~~none~~"),
         eStoredWeaponType.main,
         WEAPON_INVENTORY_SLOT_PRIMARY_0
-    )
+    ) 
 }
 StoredWeapon function CTF_Equipment_GetRespawnKit_SecondaryWeapon()
-{
+{ 
     return Equipment_GetRespawnKit_Weapon(
         GetCurrentPlaylistVarString("respawn_kit_secondary_weapon", "~~none~~"),
         eStoredWeaponType.main,
@@ -850,7 +795,7 @@ StoredWeapon function CTF_Equipment_GetRespawnKit_SecondaryWeapon()
     )
 }
 StoredWeapon function CTF_Equipment_GetRespawnKit_Tactical()
-{
+{ 
     return Equipment_GetRespawnKit_Weapon(
         GetCurrentPlaylistVarString("respawn_kit_tactical", "~~none~~"),
         eStoredWeaponType.offhand,
@@ -858,7 +803,7 @@ StoredWeapon function CTF_Equipment_GetRespawnKit_Tactical()
     )
 }
 StoredWeapon function CTF_Equipment_GetRespawnKit_Ultimate()
-{
+{ 
     return Equipment_GetRespawnKit_Weapon(
         GetCurrentPlaylistVarString("respawn_kit_ultimate", "~~none~~"),
         eStoredWeaponType.offhand,
