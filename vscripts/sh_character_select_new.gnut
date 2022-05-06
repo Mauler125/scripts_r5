@@ -1167,7 +1167,7 @@ void function UpdateForFocusOnButtonIndex( int buttonIndex )
 	// Update Scene
 	fileLevel.desiredCharacterOrNull = itemFlav
 	Signal( fileLevel.signalDummy, "UpdateScene" )
-	
+
 	// todo: reimplement character select models:
 	// this displays nothing.
 	// but like, using actual stgs for actual characters causes even more issues
@@ -1176,7 +1176,7 @@ void function UpdateForFocusOnButtonIndex( int buttonIndex )
 	// CreateNewCharacterModel(GetGlobalSettingsAsset( DEFAULT_PILOT_SETTINGS, "bodyModel" ))
 
 
-	
+
 	// Request Loadout. In browse mode we dont change loadout on focus, only activate
 	//if ( !fileLevel.isBrowseMode )
 	//	RequestSetLoadoutSlot( LocalClientEHI(), Loadout_CharacterClass(), itemFlav )
@@ -2217,8 +2217,8 @@ bool function CharacterSelect_AssignCharacter( entity player, ItemFlavor charact
 bool function CharacterSelect_TryAssignCharacterCandidatesToPlayer( entity player, array<SettingsAssetGUID> candidates )
 {
 	foreach ( candidate in candidates )
-		if ( !IsValidItemFlavorGUID( candidate ) 
-			|| !IsItemFlavorUnlockedForLoadoutSlot( ToEHI( player ), Loadout_CharacterClass(), GetItemFlavorByGUID( candidate ) ) 
+		if ( !IsValidItemFlavorGUID( candidate )
+			|| !IsItemFlavorUnlockedForLoadoutSlot( ToEHI( player ), Loadout_CharacterClass(), GetItemFlavorByGUID( candidate ) )
 			)
 			candidates.fastremovebyvalue( candidate )
 
