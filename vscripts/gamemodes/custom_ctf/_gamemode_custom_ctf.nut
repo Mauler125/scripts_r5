@@ -331,7 +331,7 @@ void function StartRound()
             {
                 _HandleRespawn(player)
             }
-            //Remote_CallFunction_NonReplay(player, "ServerCallback_CTF_DoAnnouncement", 5, eCTFAnnounce.ROUND_START)
+            Remote_CallFunction_NonReplay(player, "ServerCallback_CTF_DoAnnouncement", 5, eCTFAnnounce.ROUND_START)
             Remote_CallFunction_NonReplay(player, "ServerCallback_CTF_SetObjectiveText", CTF_SCORE_GOAL_TO_WIN)
             ClearInvincible(player)
             DeployAndEnableWeapons(player)
@@ -418,19 +418,19 @@ void function StartRound()
 
                     if (CTF.IMCPoints > CTF.MILITIAPoints)
                     {
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_TeamWon", TEAM_IMC)
+                        //Remote_CallFunction_Replay(player, "ServerCallback_CTF_TeamWon", TEAM_IMC)
                         if(player.GetTeam() == TEAM_IMC)
                             PlayBattleChatterLineToSpeakerAndTeam( player, "bc_weAreChampionSquad" )
                     }
                     else if (CTF.MILITIAPoints > CTF.IMCPoints)
                     {
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_TeamWon", TEAM_MILITIA)
+                        //Remote_CallFunction_Replay(player, "ServerCallback_CTF_TeamWon", TEAM_MILITIA)
                         if(player.GetTeam() == TEAM_MILITIA)
                             PlayBattleChatterLineToSpeakerAndTeam( player, "bc_weAreChampionSquad" )
                     }
                     else
                     {
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_TeamWon", 99)
+                        //Remote_CallFunction_Replay(player, "ServerCallback_CTF_TeamWon", 99)
                     }
                 }
             }
@@ -484,7 +484,24 @@ void function StartRound()
                     CTF.map4id = 3
                 }
 
-                wait 5
+                int TeamWon = 69; // haha 69 funny number
+
+                if (CTF.IMCPoints > CTF.MILITIAPoints)
+                    TeamWon = TEAM_IMC
+                else if (CTF.MILITIAPoints > CTF.IMCPoints)
+                    TeamWon = TEAM_MILITIA
+
+                foreach(player in GetPlayerArray())
+                {
+                    if( IsValid( player ) )
+                    {
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_OpenCTFVoteMenu")
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetWinnerScreen", TeamWon)
+                    }
+                }
+
+
+                wait 8
 
                 CTF.votingtime = true
 
@@ -493,11 +510,11 @@ void function StartRound()
                     if( IsValid( player ) )
                     {
                         Remote_CallFunction_Replay(player, "ServerCallback_CTF_UpdateVotingMaps", CTF.map1id, CTF.map2id, CTF.map3id, CTF.map4id)
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_OpenCTFVoteMenu")
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetVotingScreen")
                     }
                 }
 
-                wait 19
+                wait 16
 
                 CTF.votestied = false
 
@@ -527,7 +544,7 @@ void function StartRound()
                         }
                         else
                         {
-                            //Need to find a good way todo tied votes
+                            //Votes tied so pick random from the maps that tied
                             CTF.votestied = true
 
                             array<int> maps
@@ -551,9 +568,18 @@ void function StartRound()
                             Remote_CallFunction_Replay(player, "UpdateUIVotingLocationDone", maps[0])
                         }
                     }
-
-                    wait 5
                 }
+                else
+                {
+                    //No one voted so pick random map
+                    CTF.mappicked = RandomIntRange(0, file.locationSettings.len() - 1)
+                    foreach(player in GetPlayerArray())
+                    {
+                        Remote_CallFunction_Replay(player, "UpdateUIVotingLocationDone", CTF.mappicked)
+                    }
+                }
+
+                wait 5
 
                 foreach(player in GetPlayerArray())
                 {
@@ -563,16 +589,33 @@ void function StartRound()
                     }
                 }
 
+
             }
             else
             {
-                wait 5
+                int TeamWon = 69; // haha 69 funny number
+
+                if (CTF.IMCPoints > CTF.MILITIAPoints)
+                    TeamWon = TEAM_IMC
+                else
+                    TeamWon = TEAM_MILITIA
 
                 foreach(player in GetPlayerArray())
                 {
                     if( IsValid( player ) )
                     {
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_OpenCTFVoteMenuAlt")
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_OpenCTFVoteMenu")
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetWinnerScreen", TeamWon)
+                    }
+                }
+
+                wait 10
+
+                foreach(player in GetPlayerArray())
+                {
+                    if( IsValid( player ) )
+                    {
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetNextRoundScreen")
                     }
                 }
 

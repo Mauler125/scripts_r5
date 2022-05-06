@@ -29,6 +29,8 @@ global function ServerCallback_CTF_OpenCTFVoteMenu
 global function ServerCallback_CTF_CloseCTFVoteMenu
 global function ServerCallback_CTF_UpdateVotingMaps
 global function ServerCallback_CTF_OpenCTFVoteMenuAlt
+global function ServerCallback_CTF_SetVotingScreen
+global function ServerCallback_CTF_SetWinnerScreen
 global function UpdateUIVotingLocationDone
 global function UpdateMapVotesClient
 global function VoteForMap
@@ -713,8 +715,6 @@ void function CreateVotingUI()
     GetLocalClientPlayer().SetMenuCameraEntity( votecamera )
 	votecamera.SetTargetFOV( 35.5, true, EASING_CUBIC_INOUT, 0.25 )
 
-    thread UpdateUIVoteTimer()
-
     RunUIScript( "OpenCTFVoteMenu" )
 
     ScreenFade(GetLocalClientPlayer(), 0, 0, 0, 255, 0.3, 0.0, FFADE_IN | FFADE_PURGE)
@@ -753,8 +753,6 @@ void function CreateVotingUIAlt()
 
     GetLocalClientPlayer().SetMenuCameraEntity( votecamera )
 	votecamera.SetTargetFOV( 35.5, true, EASING_CUBIC_INOUT, 0.25 )
-
-    thread UpdateUIVoteTimer()
 
     RunUIScript( "OpenCTFVoteMenuAlt" )
 
@@ -826,4 +824,35 @@ void function UpdateMapVotesClient( int map1votes, int map2votes, int map3votes,
 void function ServerCallback_CTF_UpdateVotingMaps( int map1, int map2, int map3, int map4)
 {
     RunUIScript("UpdateMapsForVoting", file.locationSettings[map1].name, file.locationSettings[map2].name, file.locationSettings[map3].name, file.locationSettings[map4].name)
+}
+
+void function ServerCallback_CTF_SetWinnerScreen( int team )
+{
+    string teamwon = ""
+    switch(team)
+    {
+        case TEAM_IMC:
+            teamwon = "IMC has won"
+            break
+        case TEAM_MILITIA:
+            teamwon = "MILITIA has won"
+            break
+        case 69: // haha 69 funny number
+            teamwon = "Winner couldnt be decided"
+            break
+    }
+
+    RunUIScript("SetCTFTeamWonScreen", teamwon)
+
+}
+
+void function ServerCallback_CTF_SetVotingScreen()
+{
+    thread UpdateUIVoteTimer()
+    RunUIScript("SetCTFVotingScreen")
+}
+
+void function ServerCallback_CTF_SetNextRoundScreen()
+{
+    RunUIScript("SetCTFVoteMenuNextRound")
 }

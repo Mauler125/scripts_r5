@@ -6,7 +6,9 @@ global function UpdateVotesUI
 global function UpdateMapsForVoting
 global function UpdateVotedFor
 global function UpdateVotedLocation
-global function OpenCTFVoteMenuAlt
+global function SetCTFVoteMenuNextRound
+global function SetCTFVotingScreen
+global function SetCTFTeamWonScreen
 
 struct
 {
@@ -17,7 +19,34 @@ void function OpenCTFVoteMenu()
 {
 	CloseAllMenus()
 	AdvanceMenu( file.menu )
+}
 
+void function SetCTFTeamWonScreen(string teamwon)
+{
+	Hud_SetVisible(Hud_GetChild( file.menu, "TimerFrame"), false)
+	Hud_SetVisible(Hud_GetChild( file.menu, "TimerText2"), false)
+	Hud_SetVisible(Hud_GetChild( file.menu, "TimerText" ), false)
+
+	Hud_SetVisible( Hud_GetChild( file.menu, "MapVoteFrame" ), false )
+	Hud_SetVisible( Hud_GetChild( file.menu, "CTFBottomFrame" ), false )
+	Hud_SetVisible( Hud_GetChild( file.menu, "ObjectiveText" ), false )
+
+	Hud_SetVisible( Hud_GetChild( file.menu, "MapVote1" ), false )
+
+	Hud_SetVisible( Hud_GetChild( file.menu, "MapVote2" ), false )
+
+	Hud_SetVisible( Hud_GetChild( file.menu, "MapVote3" ), false )
+
+	Hud_SetVisible( Hud_GetChild( file.menu, "MapVote4" ), false )
+
+	Hud_SetVisible( Hud_GetChild( file.menu, "MapVoteFrame2" ), true )
+	Hud_SetVisible( Hud_GetChild( file.menu, "VotedForLbl" ), true )
+	Hud_SetText( Hud_GetChild( file.menu, "VotedForLbl" ), teamwon)
+
+}
+
+void function SetCTFVotingScreen()
+{
 	var rui = Hud_GetRui( Hud_GetChild( file.menu, "MapVote1" ))
 	RuiSetString( rui, "statusText", "Votes: 0" )
 	RuiSetString( rui, "presenseText", "" )
@@ -54,11 +83,8 @@ void function OpenCTFVoteMenu()
 	Hud_SetVisible( Hud_GetChild( file.menu, "VotedForLbl" ), false )
 }
 
-void function OpenCTFVoteMenuAlt()
+void function SetCTFVoteMenuNextRound()
 {
-	CloseAllMenus()
-	AdvanceMenu( file.menu )
-
 	Hud_SetVisible(Hud_GetChild( file.menu, "TimerFrame"), false)
 	Hud_SetVisible(Hud_GetChild( file.menu, "TimerText2"), false)
 	Hud_SetVisible(Hud_GetChild( file.menu, "TimerText" ), false)

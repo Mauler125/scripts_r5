@@ -196,14 +196,16 @@ void function RemoteFunctions_Init_Begin()
 
 			//CTF: Vote Menu
 			Remote_RegisterUIFunction( "OpenCTFVoteMenu" )
-			Remote_RegisterUIFunction( "OpenCTFVoteMenuAlt" )
 			Remote_RegisterUIFunction( "CloseCTFVoteMenu" )
 			Remote_RegisterUntypedFunction_deprecated("ServerCallback_CTF_OpenCTFVoteMenu")
 			Remote_RegisterUntypedFunction_deprecated("ServerCallback_CTF_OpenCTFVoteMenuAlt")
 			Remote_RegisterUntypedFunction_deprecated("ServerCallback_CTF_CloseCTFVoteMenu")
+			Remote_RegisterUntypedFunction_deprecated("ServerCallback_CTF_SetVotingScreen")
+			Remote_RegisterUntypedFunction_deprecated("ServerCallback_CTF_SetNextRoundScreen")
 			Remote_RegisterClientFunction("ServerCallback_CTF_UpdateVotingMaps", "int", 0, 255, "int", 0, 255, "int", 0, 255, "int", 0, 255)
 			Remote_RegisterClientFunction("UpdateMapVotesClient", "int", 0, 255, "int", 0, 255, "int", 0, 255, "int", 0, 255)
 			Remote_RegisterClientFunction("UpdateUIVotingLocationDone", "int", 0, 255)
+			Remote_RegisterClientFunction("ServerCallback_CTF_SetWinnerScreen", "int", 0, 255)
 
 			// CTF: Server to UI
 			Remote_RegisterUIFunction( "OpenCTFRespawnMenu" )
