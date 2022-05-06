@@ -115,12 +115,11 @@ void function ServerCallback_TDM_DoLocationIntroCutscene_Body()
     float desiredSpawnDuration = Deathmatch_GetIntroCutsceneSpawnDuration()
     float desireNoSpawns = Deathmatch_GetIntroCutsceneNumSpawns()
     
-
     entity player = GetLocalClientPlayer()
     
     if(!IsValid(player)) return
     
-	if ( GetCurrentPlaylistVarBool( "tdm_gungame", false ) )
+	if ( IsGunGameMode() )
 		EmitSoundOnEntity( player, "music_tday_05_arenabattle" )
 	else
 		EmitSoundOnEntity( player, "music_skyway_04_smartpistolrun" )
@@ -136,7 +135,6 @@ void function ServerCallback_TDM_DoLocationIntroCutscene_Body()
 
     ////////////////////////////////////////////////////////////////////////////////
     ///////// EFFECTIVE CUTSCENE CODE START
-
 
     array<LocPair> cutsceneSpawns
     for(int i = 0; i < desireNoSpawns; i++)
@@ -164,7 +162,7 @@ void function ServerCallback_TDM_DoLocationIntroCutscene_Body()
 
     if(IsValid(player))
     {
-        if ( GetCurrentPlaylistVarBool( "tdm_gungame", false ) )
+        if ( IsGunGameMode() )
 			FadeOutSoundOnEntity( player, "music_tday_05_arenabattle", 1 )
 		else
 			FadeOutSoundOnEntity( player, "music_skyway_04_smartpistolrun", 1 )
@@ -172,9 +170,7 @@ void function ServerCallback_TDM_DoLocationIntroCutscene_Body()
     if(IsValid(camera))
     {
         camera.Destroy()
-    }
-    
-    
+    }    
 }
 
 void function ServerCallback_TDM_SetSelectedLocation(int sel)

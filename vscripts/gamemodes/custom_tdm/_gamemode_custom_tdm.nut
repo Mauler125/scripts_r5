@@ -670,10 +670,4 @@ void function TpPlayerToSpawnPoint(entity player)
     PutEntityInSafeSpot( player, null, null, player.GetOrigin() + <0,0,128>, player.GetOrigin() )
 }
 
-// purpose: return true if using GunGame logic
-bool function IsGunGameMode()
-{
-    return GetCurrentPlaylistVarBool( "tdm_gungame", false )
-}
-
 // END

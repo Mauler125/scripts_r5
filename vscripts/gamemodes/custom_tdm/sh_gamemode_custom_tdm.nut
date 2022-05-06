@@ -19,7 +19,8 @@ global function Deathmatch_GetVotingTime
 
 global function Deathmatch_GetIntroCutsceneNumSpawns           
 global function Deathmatch_GetIntroCutsceneSpawnDuration        
-global function Deathmatch_GetIntroSpawnSpeed        
+global function Deathmatch_GetIntroSpawnSpeed      
+global function IsGunGameMode  
 
 
 #if SERVER
@@ -441,7 +442,14 @@ void function Sh_CustomTDM_Init()
 
 void function TDM_GunGameInit()
 {
+    if( !IsGunGameMode() )
+        return
 
+
+    //
+    // these should probably be moved to a datatable at some point
+    //
+    
 	//	SUB MACHINE GUNS
 	
 	//	Alternator SMG
@@ -667,3 +675,9 @@ StoredWeapon function Equipment_GetRespawnKit_Weapon(string input, int type, int
     return weapon
 }
 #endif
+
+// purpose: return true if using GunGame logic
+bool function IsGunGameMode()
+{
+    return GetCurrentPlaylistVarBool( "tdm_gungame", false )
+}
