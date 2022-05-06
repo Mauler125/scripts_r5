@@ -444,11 +444,11 @@ void function StartRound()
                     bool map3ok = false
                     bool map4ok = false
 
-                    CTF.map1id = RandomIntRange(0, file.locationSettings.len() - 1)
+                    CTF.map1id = RandomIntRange(0, file.locationSettings.len())
 
                     while(!map2ok)
                     {
-                        CTF.map2id = RandomIntRange(0, file.locationSettings.len() - 1)
+                        CTF.map2id = RandomIntRange(0, file.locationSettings.len())
 
                         if (CTF.map2id != CTF.map1id)
                         {
@@ -458,7 +458,7 @@ void function StartRound()
 
                     while(!map3ok)
                     {
-                        CTF.map3id = RandomIntRange(0, file.locationSettings.len() - 1)
+                        CTF.map3id = RandomIntRange(0, file.locationSettings.len())
 
                         if (CTF.map3id != CTF.map1id && CTF.map3id != CTF.map2id)
                         {
@@ -468,7 +468,7 @@ void function StartRound()
 
                     while(!map4ok)
                     {
-                        CTF.map4id = RandomIntRange(0, file.locationSettings.len() - 1)
+                        CTF.map4id = RandomIntRange(0, file.locationSettings.len())
 
                         if (CTF.map4id != CTF.map1id && CTF.map4id != CTF.map2id && CTF.map4id != CTF.map3id)
                         {
