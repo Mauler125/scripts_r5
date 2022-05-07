@@ -820,8 +820,8 @@ void function ServerCallback_CTF_SetWinnerScreen( int team )
         case TEAM_MILITIA:
             teamwon = "MILITIA has won"
             break
-        case 69: // haha 69 funny number
-            teamwon = "Winner couldnt be decided"
+        case 69:
+            teamwon = "Winner couldn't be decided"
             break
     }
 
