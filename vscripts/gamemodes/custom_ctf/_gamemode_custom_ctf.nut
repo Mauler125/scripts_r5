@@ -531,7 +531,7 @@ void function StartRound()
                     {
                         foreach(player in GetPlayerArray())
                         {
-                            Remote_CallFunction_Replay(player, "UpdateUIVotingLocationDone", CTF.mapIds[highestVoteId])
+                            Remote_CallFunction_Replay(player, "UpdateUIVotingLocationDone", highestVoteId)
                         }
                         CTF.mappicked = highestVoteId
                     }
