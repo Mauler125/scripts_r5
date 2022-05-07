@@ -156,10 +156,7 @@ void function RemoteFunctions_Init_Begin()
 			Remote_RegisterUntypedFunction_deprecated( "ServerCallback_CTF_TeamText" )
 
 			//CTF: Vote Menu
-			Remote_RegisterUIFunction( "OpenCTFVoteMenu" )
-			Remote_RegisterUIFunction( "CloseCTFVoteMenu" )
 			Remote_RegisterUntypedFunction_deprecated("ServerCallback_CTF_OpenCTFVoteMenu")
-			Remote_RegisterUntypedFunction_deprecated("ServerCallback_CTF_OpenCTFVoteMenuAlt")
 			Remote_RegisterUntypedFunction_deprecated("ServerCallback_CTF_CloseCTFVoteMenu")
 			Remote_RegisterUntypedFunction_deprecated("ServerCallback_CTF_SetVotingScreen")
 			Remote_RegisterUntypedFunction_deprecated("ServerCallback_CTF_SetNextRoundScreen")
@@ -172,6 +169,8 @@ void function RemoteFunctions_Init_Begin()
 			// CTF: Server to UI
 			Remote_RegisterUIFunction( "OpenCTFRespawnMenu" )
 			Remote_RegisterUIFunction( "CloseCTFRespawnMenu" )
+			Remote_RegisterUIFunction( "OpenCTFVoteMenu" )
+			Remote_RegisterUIFunction( "CloseCTFVoteMenu" )
 
 			// END CTF
 		case CUSTOM_TDM:

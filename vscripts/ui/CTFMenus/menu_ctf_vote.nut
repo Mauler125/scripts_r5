@@ -32,10 +32,9 @@ void function SetCTFTeamWonScreen(string teamwon)
 	Hud_SetVisible( Hud_GetChild( file.menu, "CTFBottomFrame" ), false )
 	Hud_SetVisible( Hud_GetChild( file.menu, "ObjectiveText" ), false )
 
-	Hud_SetVisible( Hud_GetChild( file.menu, "MapVote1" ), false )
-	Hud_SetVisible( Hud_GetChild( file.menu, "MapVote2" ), false )
-	Hud_SetVisible( Hud_GetChild( file.menu, "MapVote3" ), false )
-	Hud_SetVisible( Hud_GetChild( file.menu, "MapVote4" ), false )
+	for(int i = 1; i < 5; i++ ) {
+		Hud_SetVisible( Hud_GetChild( file.menu, "MapVote" + i ), false )
+	}
 
 	Hud_SetVisible( Hud_GetChild( file.menu, "MapVoteFrame2" ), true )
 	Hud_SetVisible( Hud_GetChild( file.menu, "VotedForLbl" ), true )
@@ -45,21 +44,13 @@ void function SetCTFTeamWonScreen(string teamwon)
 
 void function SetCTFVotingScreen()
 {
-	var rui = Hud_GetRui( Hud_GetChild( file.menu, "MapVote1" ))
-	RuiSetString( rui, "statusText", "Votes: 0" )
-	RuiSetString( rui, "presenseText", "" )
-
-	var rui2 = Hud_GetRui( Hud_GetChild( file.menu, "MapVote2" ))
-	RuiSetString( rui2, "statusText", "Votes: 0" )
-	RuiSetString( rui2, "presenseText", "" )
-
-	var rui3 = Hud_GetRui( Hud_GetChild( file.menu, "MapVote3" ))
-	RuiSetString( rui3, "statusText", "Votes: 0" )
-	RuiSetString( rui3, "presenseText", "" )
-
-	var rui4 = Hud_GetRui( Hud_GetChild( file.menu, "MapVote4" ))
-	RuiSetString( rui4, "statusText", "Votes: 0")
-	RuiSetString( rui4, "presenseText", "" )
+	for(int i = 1; i < 5; i++ ) {
+		Hud_SetVisible( Hud_GetChild( file.menu, "MapVote" + i ), true )
+		Hud_SetEnabled( Hud_GetChild( file.menu, "MapVote" + i ), true )
+		RuiSetInt( Hud_GetRui( Hud_GetChild( file.menu, "MapVote" + i )), "status", eFriendStatus.ONLINE_INGAME )
+		RuiSetString( Hud_GetRui( Hud_GetChild( file.menu, "MapVote" + i )), "statusText", "Votes: 0")
+		RuiSetString( Hud_GetRui( Hud_GetChild( file.menu, "MapVote" + i )), "presenseText", "" )
+	}
 
 	Hud_SetText(Hud_GetChild( file.menu, "TimerText2" ), "Voting Ends In")
 	Hud_SetText(Hud_GetChild( file.menu, "TimerText" ), "15")
@@ -72,27 +63,16 @@ void function SetCTFVotingScreen()
 	Hud_SetVisible( Hud_GetChild( file.menu, "CTFBottomFrame" ), true )
 	Hud_SetVisible( Hud_GetChild( file.menu, "ObjectiveText" ), true )
 
-	Hud_SetVisible( Hud_GetChild( file.menu, "MapVote1" ), true )
-	Hud_SetVisible( Hud_GetChild( file.menu, "MapVote2" ), true )
-	Hud_SetVisible( Hud_GetChild( file.menu, "MapVote3" ), true )
-	Hud_SetVisible( Hud_GetChild( file.menu, "MapVote4" ), true )
-
-	Hud_SetEnabled( Hud_GetChild( file.menu, "MapVote1" ), true )
-	Hud_SetEnabled( Hud_GetChild( file.menu, "MapVote2" ), true )
-	Hud_SetEnabled( Hud_GetChild( file.menu, "MapVote3" ), true )
-	Hud_SetEnabled( Hud_GetChild( file.menu, "MapVote4" ), true )
-
-	RuiSetInt( Hud_GetRui( Hud_GetChild( file.menu, "MapVote1" )), "status", eFriendStatus.ONLINE_INGAME )
-	RuiSetInt( Hud_GetRui( Hud_GetChild( file.menu, "MapVote2" )), "status", eFriendStatus.ONLINE_INGAME )
-	RuiSetInt( Hud_GetRui( Hud_GetChild( file.menu, "MapVote3" )), "status", eFriendStatus.ONLINE_INGAME )
-	RuiSetInt( Hud_GetRui( Hud_GetChild( file.menu, "MapVote4" )), "status", eFriendStatus.ONLINE_INGAME )
-
 	Hud_SetVisible( Hud_GetChild( file.menu, "MapVoteFrame2" ), false )
 	Hud_SetVisible( Hud_GetChild( file.menu, "VotedForLbl" ), false )
 }
 
 void function SetCTFVoteMenuNextRound()
 {
+	for(int i = 1; i < 5; i++ ) {
+		Hud_SetVisible( Hud_GetChild( file.menu, "MapVote" + i ), false )
+	}
+
 	Hud_SetVisible(Hud_GetChild( file.menu, "TimerFrame"), false)
 	Hud_SetVisible(Hud_GetChild( file.menu, "TimerText2"), false)
 	Hud_SetVisible(Hud_GetChild( file.menu, "TimerText" ), false)
@@ -101,11 +81,6 @@ void function SetCTFVoteMenuNextRound()
 	Hud_SetVisible( Hud_GetChild( file.menu, "CTFBottomFrame" ), false )
 	Hud_SetVisible( Hud_GetChild( file.menu, "ObjectiveText" ), false )
 
-	Hud_SetVisible( Hud_GetChild( file.menu, "MapVote1" ), false )
-	Hud_SetVisible( Hud_GetChild( file.menu, "MapVote2" ), false )
-	Hud_SetVisible( Hud_GetChild( file.menu, "MapVote3" ), false )
-	Hud_SetVisible( Hud_GetChild( file.menu, "MapVote4" ), false )
-
 	Hud_SetVisible( Hud_GetChild( file.menu, "MapVoteFrame2" ), true )
 	Hud_SetVisible( Hud_GetChild( file.menu, "VotedForLbl" ), true )
 	Hud_SetText( Hud_GetChild( file.menu, "VotedForLbl" ), "Starting Next Round!")
@@ -113,18 +88,10 @@ void function SetCTFVoteMenuNextRound()
 
 void function UpdateMapsForVoting(string map1, string map2, string map3, string map4)
 {
-	var rui = Hud_GetRui( Hud_GetChild( file.menu, "MapVote1" ))
-	RuiSetString( rui, "buttonText", "" + map1 )
-
-	var rui2 = Hud_GetRui( Hud_GetChild( file.menu, "MapVote2" ))
-	RuiSetString( rui2, "buttonText", "" + map2 )
-
-	var rui3 = Hud_GetRui( Hud_GetChild( file.menu, "MapVote3" ))
-	RuiSetString( rui3, "buttonText", "" + map3 )
-
-	var rui4 = Hud_GetRui( Hud_GetChild( file.menu, "MapVote4" ))
-	RuiSetString( rui4, "buttonText", "" + map4 )
-
+	RuiSetString( Hud_GetRui( Hud_GetChild( file.menu, "MapVote1" )), "buttonText", "" + map1 )
+	RuiSetString( Hud_GetRui( Hud_GetChild( file.menu, "MapVote2" )), "buttonText", "" + map2 )
+	RuiSetString( Hud_GetRui( Hud_GetChild( file.menu, "MapVote3" )), "buttonText", "" + map3 )
+	RuiSetString( Hud_GetRui( Hud_GetChild( file.menu, "MapVote4" )), "buttonText", "" + map4 )
 }
 
 void function CloseCTFVoteMenu()
@@ -134,44 +101,35 @@ void function CloseCTFVoteMenu()
 
 void function UpdateVoteTimer(int timeleft)
 {
-	var rui = Hud_GetChild( file.menu, "TimerText" )
-	Hud_SetText(rui, timeleft.tostring())
+	Hud_SetText(Hud_GetChild( file.menu, "TimerText" ), timeleft.tostring())
 }
 
 void function UpdateVotesUI(int map1, int map2, int map3, int map4)
 {
-	var rui = Hud_GetRui( Hud_GetChild( file.menu, "MapVote1" ))
-	RuiSetString( rui, "statusText", "Votes: " + map1 )
-
-	var rui2 = Hud_GetRui( Hud_GetChild( file.menu, "MapVote2" ))
-	RuiSetString( rui2, "statusText", "Votes: " + map2 )
-
-	var rui3 = Hud_GetRui( Hud_GetChild( file.menu, "MapVote3" ))
-	RuiSetString( rui3, "statusText", "Votes: " + map3 )
-
-	var rui4 = Hud_GetRui( Hud_GetChild( file.menu, "MapVote4" ))
-	RuiSetString( rui4, "statusText", "Votes: " + map4 )
+	RuiSetString( Hud_GetRui( Hud_GetChild( file.menu, "MapVote1" )), "statusText", "Votes: " + map1 )
+	RuiSetString( Hud_GetRui( Hud_GetChild( file.menu, "MapVote2" )), "statusText", "Votes: " + map2 )
+	RuiSetString( Hud_GetRui( Hud_GetChild( file.menu, "MapVote3" )), "statusText", "Votes: " + map3 )
+	RuiSetString( Hud_GetRui( Hud_GetChild( file.menu, "MapVote4" )), "statusText", "Votes: " + map4 )
 }
 
 void function UpdateVotedFor(int id)
 {
-	RuiSetInt( Hud_GetRui( Hud_GetChild( file.menu, "MapVote1" )), "status", eFriendStatus.OFFLINE )
-	RuiSetInt( Hud_GetRui( Hud_GetChild( file.menu, "MapVote2" )), "status", eFriendStatus.OFFLINE )
-	RuiSetInt( Hud_GetRui( Hud_GetChild( file.menu, "MapVote3" )), "status", eFriendStatus.OFFLINE )
-	RuiSetInt( Hud_GetRui( Hud_GetChild( file.menu, "MapVote4" )), "status", eFriendStatus.OFFLINE )
+	for(int i = 1; i < 5; i++ ) {
+		RuiSetInt( Hud_GetRui( Hud_GetChild( file.menu, "MapVote" + i )), "status", eFriendStatus.OFFLINE )
+		Hud_SetEnabled( Hud_GetChild( file.menu, "MapVote" + i ), false )
+	}
 
 	var rui = Hud_GetRui( Hud_GetChild( file.menu, "MapVote" + id ))
 	RuiSetString( rui, "presenseText", "Voted!" )
 	RuiSetInt( rui, "status", eFriendStatus.ONLINE_AWAY )
-
-	Hud_SetEnabled( Hud_GetChild( file.menu, "MapVote1" ), false )
-	Hud_SetEnabled( Hud_GetChild( file.menu, "MapVote2" ), false )
-	Hud_SetEnabled( Hud_GetChild( file.menu, "MapVote3" ), false )
-	Hud_SetEnabled( Hud_GetChild( file.menu, "MapVote4" ), false )
 }
 
 void function UpdateVotedLocation(string map)
 {
+	for(int i = 1; i < 5; i++ ) {
+		Hud_SetVisible( Hud_GetChild( file.menu, "MapVote" + i ), false )
+	}
+
 	Hud_SetVisible(Hud_GetChild( file.menu, "TimerFrame"), false)
 	Hud_SetVisible(Hud_GetChild( file.menu, "TimerText2"), false)
 	Hud_SetVisible(Hud_GetChild( file.menu, "TimerText" ), false)
@@ -180,18 +138,18 @@ void function UpdateVotedLocation(string map)
 	Hud_SetVisible( Hud_GetChild( file.menu, "CTFBottomFrame" ), false )
 	Hud_SetVisible( Hud_GetChild( file.menu, "ObjectiveText" ), false )
 
-	Hud_SetVisible( Hud_GetChild( file.menu, "MapVote1" ), false )
-	Hud_SetVisible( Hud_GetChild( file.menu, "MapVote2" ), false )
-	Hud_SetVisible( Hud_GetChild( file.menu, "MapVote3" ), false )
-	Hud_SetVisible( Hud_GetChild( file.menu, "MapVote4" ), false )
-
 	Hud_SetVisible( Hud_GetChild( file.menu, "MapVoteFrame2" ), true )
 	Hud_SetVisible( Hud_GetChild( file.menu, "VotedForLbl" ), true )
+
 	Hud_SetText( Hud_GetChild( file.menu, "VotedForLbl" ), "Next Location: " + map)
 }
 
 void function UpdateVotedLocationTied(string map)
 {
+	for(int i = 1; i < 5; i++ ) {
+		Hud_SetVisible( Hud_GetChild( file.menu, "MapVote" + i ), false )
+	}
+
 	Hud_SetVisible(Hud_GetChild( file.menu, "TimerFrame"), true)
 	Hud_SetVisible(Hud_GetChild( file.menu, "TimerText2"), true)
 	Hud_SetVisible(Hud_GetChild( file.menu, "TimerText" ), true)
@@ -199,11 +157,6 @@ void function UpdateVotedLocationTied(string map)
 	Hud_SetVisible( Hud_GetChild( file.menu, "MapVoteFrame" ), false )
 	Hud_SetVisible( Hud_GetChild( file.menu, "CTFBottomFrame" ), false )
 	Hud_SetVisible( Hud_GetChild( file.menu, "ObjectiveText" ), false )
-
-	Hud_SetVisible( Hud_GetChild( file.menu, "MapVote1" ), false )
-	Hud_SetVisible( Hud_GetChild( file.menu, "MapVote2" ), false )
-	Hud_SetVisible( Hud_GetChild( file.menu, "MapVote3" ), false )
-	Hud_SetVisible( Hud_GetChild( file.menu, "MapVote4" ), false )
 
 	Hud_SetVisible( Hud_GetChild( file.menu, "MapVoteFrame2" ), true )
 	Hud_SetVisible( Hud_GetChild( file.menu, "VotedForLbl" ), true )
@@ -217,22 +170,12 @@ void function InitCTFVoteMenu( var newMenuArg )
 	var menu = GetMenu( "CTFVoteMenu" )
 	file.menu = menu
 
-    AddMenuEventHandler( menu, eUIEvent.MENU_SHOW, OnR5RSB_Show )
-	AddMenuEventHandler( menu, eUIEvent.MENU_OPEN, OnR5RSB_Open )
-	AddMenuEventHandler( menu, eUIEvent.MENU_CLOSE, OnR5RSB_Close )
-	AddMenuEventHandler( menu, eUIEvent.MENU_NAVIGATE_BACK, OnR5RSB_NavigateBack )
+	AddMenuEventHandler( menu, eUIEvent.MENU_NAVIGATE_BACK, OnCTF_NavigateBack )
 
-	var map1 = Hud_GetChild( menu, "MapVote1" )
-	AddButtonEventHandler( map1, UIE_CLICK, OnClickMap1 )
-
-	var map2 = Hud_GetChild( menu, "MapVote2" )
-	AddButtonEventHandler( map2, UIE_CLICK, OnClickMap2 )
-
-	var map3 = Hud_GetChild( menu, "MapVote3" )
-	AddButtonEventHandler( map3, UIE_CLICK, OnClickMap3 )
-
-	var map4 = Hud_GetChild( menu, "MapVote4" )
-	AddButtonEventHandler( map4, UIE_CLICK, OnClickMap4 )
+	AddButtonEventHandler( Hud_GetChild( menu, "MapVote1" ), UIE_CLICK, OnClickMap1 )
+	AddButtonEventHandler( Hud_GetChild( menu, "MapVote2" ), UIE_CLICK, OnClickMap2 )
+	AddButtonEventHandler( Hud_GetChild( menu, "MapVote3" ), UIE_CLICK, OnClickMap3 )
+	AddButtonEventHandler( Hud_GetChild( menu, "MapVote4" ), UIE_CLICK, OnClickMap4 )
 }
 
 void function OnClickMap1( var button )
@@ -255,22 +198,7 @@ void function OnClickMap4( var button )
 	RunClientScript("VoteForMap", 3 )
 }
 
-void function OnR5RSB_Show()
+void function OnCTF_NavigateBack()
 {
-    //
-}
-
-void function OnR5RSB_Open()
-{
-	//
-}
-
-void function OnR5RSB_Close()
-{
-	//
-}
-
-void function OnR5RSB_NavigateBack()
-{
-    //
+    // gotta have NavigateBack blank so that you cant close the menu
 }

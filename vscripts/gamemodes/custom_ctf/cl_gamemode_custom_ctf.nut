@@ -28,7 +28,6 @@ global function ServerCallback_CTF_SetPointIconHint
 global function ServerCallback_CTF_OpenCTFVoteMenu
 global function ServerCallback_CTF_CloseCTFVoteMenu
 global function ServerCallback_CTF_UpdateVotingMaps
-global function ServerCallback_CTF_OpenCTFVoteMenuAlt
 global function ServerCallback_CTF_SetVotingScreen
 global function ServerCallback_CTF_SetWinnerScreen
 global function ServerCallback_CTF_SetNextRoundScreen
@@ -52,6 +51,10 @@ var IMCpointicon = null
 var MILITIApointicon = null
 var FlagReturnRUI = null
 bool hasvoted = false;
+
+entity backgroundModelSmoke
+entity backgroundModelGeo
+entity votecamera
 
 entity Deathcam
 entity cameraMover
@@ -669,18 +672,9 @@ void function waitrespawn(entity player)
     }
 }
 
-entity backgroundModelSmoke
-entity backgroundModelGeo
-entity votecamera
-
 void function ServerCallback_CTF_OpenCTFVoteMenu()
 {
     thread CreateVotingUI()
-}
-
-void function ServerCallback_CTF_OpenCTFVoteMenuAlt()
-{
-    thread CreateVotingUIAlt()
 }
 
 void function CreateVotingUI()
@@ -718,45 +712,6 @@ void function CreateVotingUI()
 	votecamera.SetTargetFOV( 35.5, true, EASING_CUBIC_INOUT, 0.25 )
 
     RunUIScript( "OpenCTFVoteMenu" )
-
-    ScreenFade(GetLocalClientPlayer(), 0, 0, 0, 255, 0.3, 0.0, FFADE_IN | FFADE_PURGE)
-}
-
-void function CreateVotingUIAlt()
-{
-    hasvoted = false
-
-    EmitSoundOnEntity( GetLocalClientPlayer(), "Music_CharacterSelect_Wattson" )
-    wait 3;
-    //EmitSoundOnEntity( GetLocalClientPlayer(), "UI_Survival_Intro_GladiatorCard_Appear" )
-    ScreenFade(GetLocalClientPlayer(), 0, 0, 0, 255, 0.4, 0.5, FFADE_OUT | FFADE_PURGE)
-    wait 0.9;
-
-    entity targetBackground = GetEntByScriptName( "target_char_sel_bg_new" )
-    entity targetCamera = GetEntByScriptName( "target_char_sel_camera_new" )
-
-	backgroundModelGeo = CreateClientSidePropDynamic( targetBackground.GetOrigin() - <0, 0, 24>, targetBackground.GetAngles(), $"mdl/levels_terrain/mp_lobby/mp_character_select_geo.rmdl" )
-	backgroundModelGeo.kv.solid = 0
-	backgroundModelGeo.kv.disableshadows = 1
-	backgroundModelGeo.kv.fadedist = -1
-	backgroundModelGeo.MakeSafeForUIScriptHack()
-
-	backgroundModelSmoke = CreateClientSidePropDynamic( targetBackground.GetOrigin() - <0, 0, 24>, targetBackground.GetAngles(), $"mdl/levels_terrain/mp_lobby/mp_character_select_smoke.rmdl" )
-	backgroundModelSmoke.kv.solid = 0
-	backgroundModelSmoke.kv.disableshadows = 1
-	backgroundModelSmoke.kv.fadedist = -1
-	backgroundModelSmoke.MakeSafeForUIScriptHack()
-
-    backgroundModelGeo.SetSkin( 3 )
-    backgroundModelSmoke.SetSkin( 3 )
-
-    vector cameraOrigin = targetCamera.GetOrigin()
-    votecamera = CreateClientSidePointCamera( cameraOrigin, targetCamera.GetAngles(), 35.5 )
-
-    GetLocalClientPlayer().SetMenuCameraEntity( votecamera )
-	votecamera.SetTargetFOV( 35.5, true, EASING_CUBIC_INOUT, 0.25 )
-
-    RunUIScript( "OpenCTFVoteMenuAlt" )
 
     ScreenFade(GetLocalClientPlayer(), 0, 0, 0, 255, 0.3, 0.0, FFADE_IN | FFADE_PURGE)
 }
@@ -817,6 +772,9 @@ void function UpdateUIVotingLocationTied(int mapid, int done)
     if (done == 0)
         EmitSoundOnEntity( GetLocalClientPlayer(), "HUD_match_start_timer_tick_1P" )
 
+    if (done == 1)
+        EmitSoundOnEntity( GetLocalClientPlayer(), "UI_PostGame_CoinMove" )
+
     if (mapid == 254)
         RunUIScript( "UpdateVotedLocationTied", "")
     else
@@ -868,7 +826,7 @@ void function ServerCallback_CTF_SetWinnerScreen( int team )
 
 void function ServerCallback_CTF_SetVotingScreen()
 {
-    EmitSoundOnEntity( GetLocalClientPlayer(), "UI_Menu_ReadyUp_1P" )
+    EmitSoundOnEntity( GetLocalClientPlayer(), "UI_PostGame_CoinMove" )
     thread UpdateUIVoteTimer()
     RunUIScript("SetCTFVotingScreen")
 }

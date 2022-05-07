@@ -60,7 +60,7 @@ scripts/resource/ui/menus/CTF/ctfvotemenu.menu
 			labelText				"Vote For Next Location"
 			font					DefaultBold_41
 			allcaps					1
-			fgcolor_override		"100 100 255 255"
+			fgcolor_override		"255 255 255 255"
 
 			pin_to_sibling			CTFBottomFrame
 			pin_corner_to_sibling	CENTER
@@ -168,7 +168,7 @@ scripts/resource/ui/menus/CTF/ctfvotemenu.menu
 			labelText				"Next Location: "
 			font					DefaultBold_41
 			allcaps					1
-			fgcolor_override		"100 100 255 255"
+			fgcolor_override		"255 255 255 255"
 
 			pin_to_sibling			MapVoteFrame2
 			pin_corner_to_sibling	CENTER
@@ -179,16 +179,14 @@ scripts/resource/ui/menus/CTF/ctfvotemenu.menu
 		{
 			ControlName				RuiButton
 			rui						"ui/generic_friend_button.rpak"
-			labelText				"30 Seconds"
-			classname 				ServerButton
-			scriptID				0
 			wide 					330
 			tall 					150
-			xpos					-525 // include n pixels for the combo button inset
+			xpos					-525
 			ypos					0
 			visible					1
 			zpos 					6
-			sound_accept            "Menu_Email_Sent"
+			sound_accept            "Titan_Tone_SonarLock_Impact_Pulse_1P"
+			sound_focus             "UI_Menu_Focus_Small"
 
 			pin_to_sibling			MapVoteFrame
 			pin_corner_to_sibling	CENTER
@@ -199,16 +197,14 @@ scripts/resource/ui/menus/CTF/ctfvotemenu.menu
 		{
 			ControlName				RuiButton
 			rui						"ui/generic_friend_button.rpak"
-			labelText				"30 Seconds"
-			classname 				ServerButton
-			scriptID				0
 			wide 					330
 			tall 					150
-			xpos					20 // include n pixels for the combo button inset
+			xpos					20
 			ypos					0
 			visible					1
 			zpos 					6
-			sound_accept            "Menu_Email_Sent"
+			sound_accept            "Titan_Tone_SonarLock_Impact_Pulse_1P"
+			sound_focus             "UI_Menu_Focus_Small"
 
 			pin_to_sibling			MapVote1
 			pin_corner_to_sibling	LEFT
@@ -219,16 +215,14 @@ scripts/resource/ui/menus/CTF/ctfvotemenu.menu
 		{
 			ControlName				RuiButton
 			rui						"ui/generic_friend_button.rpak"
-			labelText				"30 Seconds"
-			classname 				ServerButton
-			scriptID				0
 			wide 					330
 			tall 					150
-			xpos					20 // include n pixels for the combo button inset
+			xpos					20
 			ypos					0
 			visible					1
 			zpos 					6
-			sound_accept            "Menu_Email_Sent"
+			sound_accept            "Titan_Tone_SonarLock_Impact_Pulse_1P"
+			sound_focus             "UI_Menu_Focus_Small"
 
 			pin_to_sibling			MapVote2
 			pin_corner_to_sibling	LEFT
@@ -239,16 +233,14 @@ scripts/resource/ui/menus/CTF/ctfvotemenu.menu
 		{
 			ControlName				RuiButton
 			rui						"ui/generic_friend_button.rpak"
-			labelText				"30 Seconds"
-			classname 				ServerButton
-			scriptID				0
 			wide 					330
 			tall 					150
-			xpos					20 // include n pixels for the combo button inset
+			xpos					20
 			ypos					0
 			visible					1
 			zpos 					6
-			sound_accept            "Menu_Email_Sent"
+			sound_accept            "Titan_Tone_SonarLock_Impact_Pulse_1P"
+			sound_focus             "UI_Menu_Focus_Small"
 
 			pin_to_sibling			MapVote3
 			pin_corner_to_sibling	LEFT
