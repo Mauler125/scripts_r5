@@ -85,7 +85,7 @@ vector function GetDeathcamHeight()
         case "Relay":
             height = <0,0,6000> // Done
             break
-        case "WetLands":
+        case "Wetlands":
             height = <0,0,7000> // Done
             break
         case "Repulsor":
@@ -128,7 +128,7 @@ vector function GetDeathcamAng()
         case "Relay":
             angles = <90,-90,0> // Done
             break
-        case "WetLands":
+        case "Wetlands":
             angles = <90,90,0> // Done
             break
         case "Repulsor":

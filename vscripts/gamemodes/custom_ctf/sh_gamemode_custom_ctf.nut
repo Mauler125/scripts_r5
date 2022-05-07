@@ -162,7 +162,7 @@ void function Sh_CustomCTF_Init()
 
         Shared_RegisterLocation(
             NewCTFLocationSettings(
-                "WetLands",
+                "Wetlands",
                 [
                     NewCTFLocPair(<29585, 16597, 4641>, <0, 90, 0>),
                     NewCTFLocPair(<19983, 14582, 4670>, <0, 18, 0>),
@@ -320,7 +320,7 @@ vector function GetFlagLocation(LocationSettingsCTF locationSettings, int team)
             if (team == TEAM_MILITIA)
                 spawnorg = <30139,25359,4216>
             break
-        case "WetLands":
+        case "Wetlands":
             if (team == TEAM_IMC)
                 spawnorg = <28495, 16316, 4206>
             if (team == TEAM_MILITIA)
@@ -449,7 +449,7 @@ array<vector> function GetRandomPlayerSpawnOrigin(LocationSettingsCTF locationSe
             break
         }
     }
-    else if (locationSettings.name == "WetLands")
+    else if (locationSettings.name == "Wetlands")
     {
         switch(player.GetTeam())
         {
@@ -672,7 +672,7 @@ array<vector> function GetRandomPlayerSpawnAngles(LocationSettingsCTF locationSe
             break
         }
     }
-    else if (locationSettings.name == "WetLands")
+    else if (locationSettings.name == "Wetlands")
     {
         switch(player.GetTeam())
         {
