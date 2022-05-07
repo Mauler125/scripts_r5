@@ -769,11 +769,15 @@ void function UpdateUIVotingLocationDone(int mapid)
 
 void function UpdateUIVotingLocationTied(int mapid, int done)
 {
-    if (done == 0)
+    switch(done)
+    {
+    case 0:
         EmitSoundOnEntity( GetLocalClientPlayer(), "HUD_match_start_timer_tick_1P" )
-
-    if (done == 1)
-        EmitSoundOnEntity( GetLocalClientPlayer(), "UI_PostGame_CoinMove" )
+        break
+    case 1:
+        EmitSoundOnEntity( GetLocalClientPlayer(),  "UI_PostGame_CoinMove" )
+        break
+    }
 
     if (mapid == 254)
         RunUIScript( "UpdateVotedLocationTied", "")
