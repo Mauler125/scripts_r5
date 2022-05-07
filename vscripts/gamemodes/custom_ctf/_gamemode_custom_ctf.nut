@@ -40,17 +40,11 @@ struct
     bool setmap = false
     int selectedmap
     int currentmapindex = 0
-    array<string> playersthatvoted
+    array<entity> votedPlayers // array of players that have already voted (bad var name idc)
     bool votingtime = false
     bool votestied = false
-    int mapvotes1
-    int map1id
-    int mapvotes2
-    int map2id
-    int mapvotes3
-    int map3id
-    int mapvotes4
-    int map4id
+    array<int> mapVotes
+    array<int> mapIds
 
     int mappicked
 } CTF;
@@ -91,6 +85,7 @@ struct
     entity beingreturnedby
 } MILITIAPoint;
 
+const int NUMBER_OF_MAP_SLOTS = 4
 
 void function _CustomCTF_Init()
 {
@@ -139,19 +134,20 @@ bool function ClientCommand_MIL(entity player, array<string> args)
 
 bool function ClientCommand_OpenVoteMenu(entity player, array<string> args)
 {
-    Remote_CallFunction_Replay(player, "ServerCallback_CTF_OpenCTFVoteMenu")
+    Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetVoteMenuOpen", true)
     return true
 }
 
 bool function ClientCommand_CloseVoteMenu(entity player, array<string> args)
 {
-    Remote_CallFunction_Replay(player, "ServerCallback_CTF_CloseCTFVoteMenu")
+    Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetVoteMenuOpen", false)
     return true
 }
 
 bool function ClientCommand_VoteForMap(entity player, array<string> args)
 {
-    if (CTF.playersthatvoted.contains(player.GetPlayerName()))
+    // don't allow multiple votes
+    if (CTF.votedPlayers.contains(player))
         return false
 
     if (!CTF.votingtime)
@@ -159,39 +155,26 @@ bool function ClientCommand_VoteForMap(entity player, array<string> args)
 
     int mapid = args[0].tointeger()
 
-    if (mapid == 0)
-    {
-        CTF.mapvotes1++
-    }
-    else if (mapid == 1)
-    {
-        CTF.mapvotes2++
-    }
-    else if (mapid == 2)
-    {
-        CTF.mapvotes3++
-    }
-    else if (mapid == 3)
-    {
-        CTF.mapvotes4++
-    }
+    // reject map ids that are outside of the range
+    if (mapid >= NUMBER_OF_MAP_SLOTS || mapid < 0)
+        return false
+
+    CTF.mapVotes[mapid]++
 
     foreach(players in GetPlayerArray())
     {
-        Remote_CallFunction_Replay(players, "UpdateMapVotesClient", CTF.mapvotes1, CTF.mapvotes2, CTF.mapvotes3, CTF.mapvotes4)
+        Remote_CallFunction_Replay(players, "UpdateMapVotesClient", CTF.mapVotes[0], CTF.mapVotes[1], CTF.mapVotes[2], CTF.mapVotes[3])
     }
 
-    CTF.playersthatvoted.append(player.GetPlayerName())
+    CTF.votedPlayers.append(player)
 
     return true
 }
 
 void function ResetMapVotes()
 {
-    CTF.mapvotes1 = 0
-    CTF.mapvotes2 = 0
-    CTF.mapvotes3 = 0
-    CTF.mapvotes4 = 0
+    CTF.mapVotes.clear()
+    CTF.mapVotes.resize( NUMBER_OF_MAP_SLOTS )
 }
 
 void function _CTFRegisterLocation(LocationSettingsCTF locationSettings)
@@ -207,7 +190,7 @@ LocPairCTF function _GetVotingLocation()
             return NewCTFLocPair(<26794, -6241, -27479>, <0, 0, 0>)
         case "mp_rr_aqueduct":
             return NewCTFLocPair(<706, -4381, 492>, <0, 0, 0>)
-        case "mp_rr_ashs_redemption"://our first custom map
+        case "mp_rr_ashs_redemption":
             return NewCTFLocPair(<-20917, 5852, -26741>, <0, -90, 0>)
         case "mp_rr_canyonlands_64k_x_64k":
         case "mp_rr_canyonlands_mu1":
@@ -269,7 +252,9 @@ void function VotingPhase()
 
     foreach(player in GetPlayerArray())
     {
-        if(!IsValid(player)) continue;
+        if( !IsValid( player ) )
+            continue;
+        
         //_HandleRespawn(player)
         MakeInvincible(player)
 		HolsterAndDisableWeapons( player )
@@ -281,35 +266,37 @@ void function VotingPhase()
 	    player.SetPlayerNetInt("assists", 0) //Reset for deaths
     }
 
-    if (CTF.mapvotes1 > 0 || CTF.mapvotes2 > 0 || CTF.mapvotes3 > 0 || CTF.mapvotes4 > 0)
+    foreach( int votes in CTF.mapVotes )
     {
-        file.selectedLocation = file.locationSettings[CTF.mappicked]
+        if( votes > 0 )
+        {
+            file.selectedLocation = file.locationSettings[CTF.mappicked]
+            return
+        }
+    }    
+
+    int choice = 0
+
+    if(CTF.currentmapindex > file.locationSettings.len() - 1)
+        CTF.currentmapindex = 0
+
+    if(CTF.setmap)
+    {
+        file.selectedLocation = file.locationSettings[CTF.selectedmap]
+        choice = CTF.selectedmap
     }
     else
     {
-        int choice
+        file.selectedLocation = file.locationSettings[CTF.currentmapindex]
+        choice = CTF.currentmapindex
+    }
 
-        if(CTF.currentmapindex > file.locationSettings.len() - 1)
-            CTF.currentmapindex = 0
+    CTF.currentmapindex++
+    CTF.setmap = false
 
-        if(CTF.setmap)
-        {
-            file.selectedLocation = file.locationSettings[CTF.selectedmap]
-            choice = CTF.selectedmap
-        }
-        else
-        {
-            file.selectedLocation = file.locationSettings[CTF.currentmapindex]
-            choice = CTF.currentmapindex
-        }
-
-        CTF.currentmapindex++
-        CTF.setmap = false
-
-        foreach(player in GetPlayerArray())
-        {
-            Remote_CallFunction_NonReplay(player, "ServerCallback_CTF_SetSelectedLocation", choice)
-        }
+    foreach(player in GetPlayerArray())
+    {
+        Remote_CallFunction_NonReplay(player, "ServerCallback_CTF_SetSelectedLocation", choice)
     }
 }
 
@@ -339,11 +326,9 @@ void function StartRound()
 
             //AddPlayerMovementEventCallback(player, ePlayerMovementEvents.TOUCH_GROUND, _HandleRespawnOnLand)
         }
-
     }
 
     SpawnCTFPoints()
-
 
     file.bubbleBoundary = CreateBubbleBoundary(file.selectedLocation)
 
@@ -434,52 +419,31 @@ void function StartRound()
             }
 
             //Only do voting for maps with multi locations
-            if (file.locationSettings.len() >= 4)
+            if (file.locationSettings.len() >= NUMBER_OF_MAP_SLOTS)
             {
-                if(file.locationSettings.len() > 4)
+                if(file.locationSettings.len() > NUMBER_OF_MAP_SLOTS)
                 {
-                    bool map2ok = false
-                    bool map3ok = false
-                    bool map4ok = false
 
-                    CTF.map1id = RandomIntRange(0, file.locationSettings.len())
-
-                    while(!map2ok)
+                    for(int i = 0; i < NUMBER_OF_MAP_SLOTS; ++i)
                     {
-                        CTF.map2id = RandomIntRange(0, file.locationSettings.len())
-
-                        if (CTF.map2id != CTF.map1id)
+                        while(true)
                         {
-                            map2ok = true;
-                        }
-                    }
+                            int randomId = RandomIntRange(0, file.locationSettings.len())
 
-                    while(!map3ok)
-                    {
-                        CTF.map3id = RandomIntRange(0, file.locationSettings.len())
-
-                        if (CTF.map3id != CTF.map1id && CTF.map3id != CTF.map2id)
-                        {
-                            map3ok = true;
-                        }
-                    }
-
-                    while(!map4ok)
-                    {
-                        CTF.map4id = RandomIntRange(0, file.locationSettings.len())
-
-                        if (CTF.map4id != CTF.map1id && CTF.map4id != CTF.map2id && CTF.map4id != CTF.map3id)
-                        {
-                            map4ok = true;
+                            if( !CTF.mapIds.contains( randomId ) )
+                            {
+                                CTF.mapIds.append( randomId )
+                                break
+                            }
                         }
                     }
                 }
-                else if (file.locationSettings.len() == 4)
+                else if (file.locationSettings.len() == NUMBER_OF_MAP_SLOTS)
                 {
-                    CTF.map1id = 0
-                    CTF.map2id = 1
-                    CTF.map3id = 2
-                    CTF.map4id = 3
+                    CTF.mapIds[0] = 0
+                    CTF.mapIds[1] = 1
+                    CTF.mapIds[2] = 2
+                    CTF.mapIds[3] = 3
                 }
 
                 int TeamWon = 69; // haha 69 funny number
@@ -493,11 +457,10 @@ void function StartRound()
                 {
                     if( IsValid( player ) )
                     {
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_OpenCTFVoteMenu")
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetVoteMenuOpen", true)
                         Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetWinnerScreen", TeamWon)
                     }
                 }
-
 
                 wait 8
 
@@ -507,7 +470,7 @@ void function StartRound()
                 {
                     if( IsValid( player ) )
                     {
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_UpdateVotingMaps", CTF.map1id, CTF.map2id, CTF.map3id, CTF.map4id)
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_UpdateVotingMaps", CTF.mapIds[0], CTF.mapIds[1], CTF.mapIds[2], CTF.mapIds[3])
                         Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetVotingScreen")
                     }
                 }
@@ -516,60 +479,72 @@ void function StartRound()
 
                 CTF.votestied = false
 
-                if (CTF.mapvotes1 > 0 || CTF.mapvotes2 > 0 || CTF.mapvotes3 > 0 || CTF.mapvotes4 > 0)
+                bool anyVotes = false
+
+                foreach( int votes in CTF.mapVotes )
                 {
-                    foreach(player in GetPlayerArray())
+                    if( votes > 0 )
                     {
-                        if( CTF.mapvotes1 > CTF.mapvotes2 && CTF.mapvotes1 > CTF.mapvotes3 && CTF.mapvotes1 > CTF.mapvotes4)
+                        anyVotes = true
+                        break
+                    }
+                }
+
+                if (anyVotes)
+                {
+                    // store the highest vote count for any of the maps
+                    int highestVoteCount = -1
+
+                    // store the last map id of the map that has the highest vote count
+                    int highestVoteId = -1
+                    
+                    // store map ids of all the maps with the highest vote count
+                    array<int> mapsWithHighestVoteCount
+
+
+                    for(int i = 0; i < NUMBER_OF_MAP_SLOTS; ++i)
+                    {
+                        int votes = CTF.mapVotes[i]
+                        if( votes > highestVoteCount )
                         {
-                            Remote_CallFunction_Replay(player, "UpdateUIVotingLocationDone", CTF.map1id)
-                            CTF.mappicked = CTF.map1id
+                            highestVoteCount = votes
+                            highestVoteId = CTF.mapIds[i]
+
+                            // we have a new highest, so clear the array
+                            mapsWithHighestVoteCount.clear()
+                            mapsWithHighestVoteCount.append(CTF.mapIds[i])
                         }
-                        else if (CTF.mapvotes2 > CTF.mapvotes1 && CTF.mapvotes2 > CTF.mapvotes3 && CTF.mapvotes2 > CTF.mapvotes4)
+                        // if this map also has the highest vote count, add it to the array
+                        else if( votes == highestVoteCount )
                         {
-                            Remote_CallFunction_Replay(player, "UpdateUIVotingLocationDone", CTF.map2id)
-                            CTF.mappicked = CTF.map2id
+                            mapsWithHighestVoteCount.append(CTF.mapIds[i])
                         }
-                        else if (CTF.mapvotes3 > CTF.mapvotes1 && CTF.mapvotes3 > CTF.mapvotes2 && CTF.mapvotes3 > CTF.mapvotes4)
+                    }
+
+                    // if there are multiple maps with the highest vote count then it's a tie
+                    if( mapsWithHighestVoteCount.len() > 1 )
+                    {
+                        CTF.votestied = true
+                    }
+                    // else pick the map with the highest vote count
+                    else
+                    {
+                        foreach(player in GetPlayerArray())
                         {
-                            Remote_CallFunction_Replay(player, "UpdateUIVotingLocationDone", CTF.map3id)
-                            CTF.mappicked = CTF.map3id
+                            Remote_CallFunction_Replay(player, "UpdateUIVotingLocationDone", CTF.mapIds[highestVoteId])
                         }
-                        else if (CTF.mapvotes4 > CTF.mapvotes1 && CTF.mapvotes4 > CTF.mapvotes2 && CTF.mapvotes4 > CTF.mapvotes3)
-                        {
-                            Remote_CallFunction_Replay(player, "UpdateUIVotingLocationDone", CTF.map4id)
-                            CTF.mappicked = CTF.map4id
-                        }
-                        else
-                        {
-                            CTF.votestied = true
-                        }
+                        CTF.mappicked = highestVoteId
                     }
 
                     if (CTF.votestied)
                     {
-                            array<int> maps
-                            int highestvoteammount = int(max(CTF.mapvotes1, max(CTF.mapvotes2, max(CTF.mapvotes3, CTF.mapvotes4))))
+                        foreach(player in GetPlayerArray())
+                        {
+                            Remote_CallFunction_Replay(player, "UpdateUIVotingLocationTied", 254, 1)
+                        }
 
-                            if (CTF.mapvotes1 == highestvoteammount)
-                                maps.append(CTF.map1id)
-
-                            if (CTF.mapvotes2 == highestvoteammount)
-                                maps.append(CTF.map2id)
-
-                            if (CTF.mapvotes3 == highestvoteammount)
-                                maps.append(CTF.map3id)
-
-                            if (CTF.mapvotes4 == highestvoteammount)
-                                maps.append(CTF.map4id)
-
-                            foreach(player in GetPlayerArray())
-                            {
-                                Remote_CallFunction_Replay(player, "UpdateUIVotingLocationTied", 254, 1)
-                            }
-
-                            maps.randomize()
-                            waitthread RandomizeTiedLocations(maps)
+                        mapsWithHighestVoteCount.randomize()
+                        waitthread RandomizeTiedLocations(mapsWithHighestVoteCount)
                     }
                 }
                 else
@@ -588,11 +563,9 @@ void function StartRound()
                 {
                     if( IsValid( player ) )
                     {
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_CloseCTFVoteMenu")
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetVoteMenuOpen", false)
                     }
                 }
-
-
             }
             else
             {
@@ -628,13 +601,13 @@ void function StartRound()
                 {
                     if( IsValid( player ) )
                     {
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_CloseCTFVoteMenu")
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetVoteMenuOpen", false)
                     }
                 }
             }
 
             CTF.votingtime = false
-            CTF.playersthatvoted.clear()
+            CTF.votedPlayers.clear()
 
             break
         }
@@ -1116,7 +1089,6 @@ void function _OnPlayerConnected(entity player)
         _HandleRespawn(player)
     }
 
-
     switch(GetGameState())
     {
 
@@ -1128,14 +1100,9 @@ void function _OnPlayerConnected(entity player)
         player.UnfreezeControlsOnServer();
         Remote_CallFunction_NonReplay(player, "ServerCallback_CTF_DoAnnouncement", 5, eCTFAnnounce.ROUND_START)
 
-        if (player.GetTeam() == TEAM_IMC)
-        {
-            Remote_CallFunction_Replay(player, "ServerCallback_CTF_AddPointIcon", IMCPoint.pole, MILITIAPoint.pole, TEAM_IMC)
-        }
-        else if (player.GetTeam() == TEAM_MILITIA)
-        {
-            Remote_CallFunction_Replay(player, "ServerCallback_CTF_AddPointIcon", IMCPoint.pole, MILITIAPoint.pole, TEAM_MILITIA)
-        }
+        if(player.GetTeam() == TEAM_IMC || player.GetTeam() == TEAM_MILITIA)
+            Remote_CallFunction_Replay(player, "ServerCallback_CTF_AddPointIcon", IMCPoint.pole, MILITIAPoint.pole, player.GetTeam())
+
         break
     default:
         break

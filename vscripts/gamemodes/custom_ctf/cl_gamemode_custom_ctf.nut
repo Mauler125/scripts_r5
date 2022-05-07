@@ -25,10 +25,12 @@ global function ServerCallback_CTF_RecaptureFlag
 global function ServerCallback_CTF_EndRecaptureFlag
 global function ServerCallback_CTF_ResetFlagIcons
 global function ServerCallback_CTF_SetPointIconHint
-global function ServerCallback_CTF_OpenCTFVoteMenu
-global function ServerCallback_CTF_CloseCTFVoteMenu
+
+// Voting
+global function ServerCallback_CTF_SetVoteMenuOpen
 global function ServerCallback_CTF_UpdateVotingMaps
 global function ServerCallback_CTF_SetVotingScreen
+
 global function ServerCallback_CTF_SetWinnerScreen
 global function ServerCallback_CTF_SetNextRoundScreen
 global function UpdateUIVotingLocationTied
@@ -672,9 +674,12 @@ void function waitrespawn(entity player)
     }
 }
 
-void function ServerCallback_CTF_OpenCTFVoteMenu()
+void function ServerCallback_CTF_SetVoteMenuOpen(bool shouldOpen)
 {
-    thread CreateVotingUI()
+    if( shouldOpen )
+        thread CreateVotingUI()
+    else
+        thread DestroyVotingUI()
 }
 
 void function CreateVotingUI()
@@ -714,11 +719,6 @@ void function CreateVotingUI()
     RunUIScript( "OpenCTFVoteMenu" )
 
     ScreenFade(GetLocalClientPlayer(), 0, 0, 0, 255, 0.3, 0.0, FFADE_IN | FFADE_PURGE)
-}
-
-void function ServerCallback_CTF_CloseCTFVoteMenu()
-{
-    thread DestroyVotingUI()
 }
 
 void function DestroyVotingUI()
@@ -788,6 +788,7 @@ void function VoteForMap(int mapid)
 
     entity player = GetLocalClientPlayer()
 
+    // why does s3 not have remote server functions..?
     player.ClientCommand("VoteForMap " + mapid)
     RunUIScript("UpdateVotedFor", mapid + 1)
 
