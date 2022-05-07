@@ -234,7 +234,7 @@ void function DestroyPlayerProps()
 }
 
 
-
+// purpose: handle map voting phase
 void function VotingPhase()
 {
     DestroyPlayerProps();
@@ -300,6 +300,7 @@ void function VotingPhase()
     }
 }
 
+// purpose: handle the start of a new round for players and props
 void function StartRound()
 {
     SetGameState(eGameState.Playing)
@@ -629,6 +630,7 @@ void function StartRound()
     }
 }
 
+// purpose: display the UI for randomization of tied maps at the end of voting
 void function RandomizeTiedLocations(array<int> maps)
 {
     bool donerandomizing = false
@@ -694,6 +696,7 @@ void function _HandleRespawnOnLand(entity player)
     //thread f()
 
 }
+
 void function ScreenFadeToFromBlack(entity player, float fadeTime = 1, float holdTime = 1)
 {
     if( IsValid( player ) )
