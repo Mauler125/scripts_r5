@@ -166,6 +166,7 @@ void function RemoteFunctions_Init_Begin()
 			Remote_RegisterClientFunction("ServerCallback_CTF_UpdateVotingMaps", "int", 0, 255, "int", 0, 255, "int", 0, 255, "int", 0, 255)
 			Remote_RegisterClientFunction("UpdateMapVotesClient", "int", 0, 255, "int", 0, 255, "int", 0, 255, "int", 0, 255)
 			Remote_RegisterClientFunction("UpdateUIVotingLocationDone", "int", 0, 255)
+			Remote_RegisterClientFunction("UpdateUIVotingLocationTied",  "int", 0, 255, "int", 0, 255)
 			Remote_RegisterClientFunction("ServerCallback_CTF_SetWinnerScreen", "int", 0, 255)
 
 			// CTF: Server to UI

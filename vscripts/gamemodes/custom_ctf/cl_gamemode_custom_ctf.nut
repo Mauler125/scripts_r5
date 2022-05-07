@@ -32,6 +32,7 @@ global function ServerCallback_CTF_OpenCTFVoteMenuAlt
 global function ServerCallback_CTF_SetVotingScreen
 global function ServerCallback_CTF_SetWinnerScreen
 global function ServerCallback_CTF_SetNextRoundScreen
+global function UpdateUIVotingLocationTied
 global function UpdateUIVotingLocationDone
 global function UpdateMapVotesClient
 global function VoteForMap
@@ -809,6 +810,17 @@ void function UpdateUIVotingLocationDone(int mapid)
 {
     EmitSoundOnEntity( GetLocalClientPlayer(), "UI_PostGame_Level_Up_Pilot" )
     RunUIScript( "UpdateVotedLocation", file.locationSettings[mapid].name)
+}
+
+void function UpdateUIVotingLocationTied(int mapid, int done)
+{
+    if (done == 0)
+        EmitSoundOnEntity( GetLocalClientPlayer(), "HUD_match_start_timer_tick_1P" )
+
+    if (mapid == 254)
+        RunUIScript( "UpdateVotedLocationTied", "")
+    else
+        RunUIScript( "UpdateVotedLocationTied", file.locationSettings[mapid].name)
 }
 
 void function VoteForMap(int mapid)

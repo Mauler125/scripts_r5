@@ -9,6 +9,7 @@ global function UpdateVotedLocation
 global function SetCTFVoteMenuNextRound
 global function SetCTFVotingScreen
 global function SetCTFTeamWonScreen
+global function UpdateVotedLocationTied
 
 struct
 {
@@ -81,6 +82,11 @@ void function SetCTFVotingScreen()
 	Hud_SetEnabled( Hud_GetChild( file.menu, "MapVote3" ), true )
 	Hud_SetEnabled( Hud_GetChild( file.menu, "MapVote4" ), true )
 
+	RuiSetInt( Hud_GetRui( Hud_GetChild( file.menu, "MapVote1" )), "status", eFriendStatus.ONLINE_INGAME )
+	RuiSetInt( Hud_GetRui( Hud_GetChild( file.menu, "MapVote2" )), "status", eFriendStatus.ONLINE_INGAME )
+	RuiSetInt( Hud_GetRui( Hud_GetChild( file.menu, "MapVote3" )), "status", eFriendStatus.ONLINE_INGAME )
+	RuiSetInt( Hud_GetRui( Hud_GetChild( file.menu, "MapVote4" )), "status", eFriendStatus.ONLINE_INGAME )
+
 	Hud_SetVisible( Hud_GetChild( file.menu, "MapVoteFrame2" ), false )
 	Hud_SetVisible( Hud_GetChild( file.menu, "VotedForLbl" ), false )
 }
@@ -149,8 +155,14 @@ void function UpdateVotesUI(int map1, int map2, int map3, int map4)
 
 void function UpdateVotedFor(int id)
 {
+	RuiSetInt( Hud_GetRui( Hud_GetChild( file.menu, "MapVote1" )), "status", eFriendStatus.OFFLINE )
+	RuiSetInt( Hud_GetRui( Hud_GetChild( file.menu, "MapVote2" )), "status", eFriendStatus.OFFLINE )
+	RuiSetInt( Hud_GetRui( Hud_GetChild( file.menu, "MapVote3" )), "status", eFriendStatus.OFFLINE )
+	RuiSetInt( Hud_GetRui( Hud_GetChild( file.menu, "MapVote4" )), "status", eFriendStatus.OFFLINE )
+
 	var rui = Hud_GetRui( Hud_GetChild( file.menu, "MapVote" + id ))
 	RuiSetString( rui, "presenseText", "Voted!" )
+	RuiSetInt( rui, "status", eFriendStatus.ONLINE_AWAY )
 
 	Hud_SetEnabled( Hud_GetChild( file.menu, "MapVote1" ), false )
 	Hud_SetEnabled( Hud_GetChild( file.menu, "MapVote2" ), false )
@@ -169,16 +181,35 @@ void function UpdateVotedLocation(string map)
 	Hud_SetVisible( Hud_GetChild( file.menu, "ObjectiveText" ), false )
 
 	Hud_SetVisible( Hud_GetChild( file.menu, "MapVote1" ), false )
-
 	Hud_SetVisible( Hud_GetChild( file.menu, "MapVote2" ), false )
-
 	Hud_SetVisible( Hud_GetChild( file.menu, "MapVote3" ), false )
-
 	Hud_SetVisible( Hud_GetChild( file.menu, "MapVote4" ), false )
 
 	Hud_SetVisible( Hud_GetChild( file.menu, "MapVoteFrame2" ), true )
 	Hud_SetVisible( Hud_GetChild( file.menu, "VotedForLbl" ), true )
 	Hud_SetText( Hud_GetChild( file.menu, "VotedForLbl" ), "Next Location: " + map)
+}
+
+void function UpdateVotedLocationTied(string map)
+{
+	Hud_SetVisible(Hud_GetChild( file.menu, "TimerFrame"), true)
+	Hud_SetVisible(Hud_GetChild( file.menu, "TimerText2"), true)
+	Hud_SetVisible(Hud_GetChild( file.menu, "TimerText" ), true)
+
+	Hud_SetVisible( Hud_GetChild( file.menu, "MapVoteFrame" ), false )
+	Hud_SetVisible( Hud_GetChild( file.menu, "CTFBottomFrame" ), false )
+	Hud_SetVisible( Hud_GetChild( file.menu, "ObjectiveText" ), false )
+
+	Hud_SetVisible( Hud_GetChild( file.menu, "MapVote1" ), false )
+	Hud_SetVisible( Hud_GetChild( file.menu, "MapVote2" ), false )
+	Hud_SetVisible( Hud_GetChild( file.menu, "MapVote3" ), false )
+	Hud_SetVisible( Hud_GetChild( file.menu, "MapVote4" ), false )
+
+	Hud_SetVisible( Hud_GetChild( file.menu, "MapVoteFrame2" ), true )
+	Hud_SetVisible( Hud_GetChild( file.menu, "VotedForLbl" ), true )
+	Hud_SetText( Hud_GetChild( file.menu, "TimerText" ), "Picking a random location from tied locations")
+	Hud_SetText( Hud_GetChild( file.menu, "TimerText2" ), "Votes Tied!")
+	Hud_SetText( Hud_GetChild( file.menu, "VotedForLbl" ), map)
 }
 
 void function InitCTFVoteMenu( var newMenuArg )

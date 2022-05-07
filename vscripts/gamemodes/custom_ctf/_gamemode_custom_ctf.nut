@@ -542,9 +542,12 @@ void function StartRound()
                         }
                         else
                         {
-                            //Votes tied so pick random from the maps that tied
                             CTF.votestied = true
+                        }
+                    }
 
+                    if (CTF.votestied)
+                    {
                             array<int> maps
                             int highestvoteammount = int(max(CTF.mapvotes1, max(CTF.mapvotes2, max(CTF.mapvotes3, CTF.mapvotes4))))
 
@@ -560,11 +563,12 @@ void function StartRound()
                             if (CTF.mapvotes4 == highestvoteammount)
                                 maps.append(CTF.map4id)
 
-                            maps.randomize()
+                            foreach(player in GetPlayerArray())
+                            {
+                                Remote_CallFunction_Replay(player, "UpdateUIVotingLocationTied", 254, 1)
+                            }
 
-                            CTF.mappicked = maps[0]
-                            Remote_CallFunction_Replay(player, "UpdateUIVotingLocationDone", maps[0])
-                        }
+                            waitthread RandomizeTiedLocations(maps)
                     }
                 }
                 else
@@ -649,6 +653,64 @@ void function StartRound()
             Remote_CallFunction_Replay(player, "ServerCallback_CTF_ResetFlagIcons")
         }
     }
+}
+
+void function RandomizeTiedLocations(array<int> maps)
+{
+    bool donerandomizing = false
+    int randomizeammount = RandomIntRange(50, 75)
+    int i = 0
+    int mapslength = maps.len()
+    int currentmapindex = 0
+    int selectedamp = 0
+
+    while (!donerandomizing)
+    {
+        if (currentmapindex >= mapslength)
+            currentmapindex = 0
+
+        foreach(player in GetPlayerArray())
+        {
+            Remote_CallFunction_Replay(player, "UpdateUIVotingLocationTied", maps[currentmapindex], 0)
+        }
+
+        if (i >= randomizeammount)
+        {
+            donerandomizing = true
+            selectedamp = currentmapindex
+        }
+
+        i++
+        currentmapindex++
+
+        if (i >= randomizeammount - 15 && i < randomizeammount - 5)
+        {
+            wait 0.15
+        }
+        else if (i >= randomizeammount - 5)
+        {
+            wait 0.25
+        }
+        else
+        {
+            wait 0.05
+        }
+    }
+
+    //Pause on selected map for a sec for visuals
+    foreach(player in GetPlayerArray())
+    {
+        Remote_CallFunction_Replay(player, "UpdateUIVotingLocationTied", maps[selectedamp], 1)
+    }
+
+    wait 0.5
+
+    foreach(player in GetPlayerArray())
+    {
+        Remote_CallFunction_Replay(player, "UpdateUIVotingLocationDone", maps[selectedamp])
+    }
+
+    CTF.mappicked = maps[selectedamp]
 }
 
 void function _HandleRespawnOnLand(entity player)
