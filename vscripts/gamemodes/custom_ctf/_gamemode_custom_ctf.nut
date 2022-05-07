@@ -568,6 +568,7 @@ void function StartRound()
                                 Remote_CallFunction_Replay(player, "UpdateUIVotingLocationTied", 254, 1)
                             }
 
+                            maps.randomize()
                             waitthread RandomizeTiedLocations(maps)
                     }
                 }
