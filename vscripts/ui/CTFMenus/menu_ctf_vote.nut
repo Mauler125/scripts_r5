@@ -32,11 +32,8 @@ void function SetCTFTeamWonScreen(string teamwon)
 	Hud_SetVisible( Hud_GetChild( file.menu, "ObjectiveText" ), false )
 
 	Hud_SetVisible( Hud_GetChild( file.menu, "MapVote1" ), false )
-
 	Hud_SetVisible( Hud_GetChild( file.menu, "MapVote2" ), false )
-
 	Hud_SetVisible( Hud_GetChild( file.menu, "MapVote3" ), false )
-
 	Hud_SetVisible( Hud_GetChild( file.menu, "MapVote4" ), false )
 
 	Hud_SetVisible( Hud_GetChild( file.menu, "MapVoteFrame2" ), true )
@@ -78,6 +75,11 @@ void function SetCTFVotingScreen()
 	Hud_SetVisible( Hud_GetChild( file.menu, "MapVote2" ), true )
 	Hud_SetVisible( Hud_GetChild( file.menu, "MapVote3" ), true )
 	Hud_SetVisible( Hud_GetChild( file.menu, "MapVote4" ), true )
+
+	Hud_SetEnabled( Hud_GetChild( file.menu, "MapVote1" ), true )
+	Hud_SetEnabled( Hud_GetChild( file.menu, "MapVote2" ), true )
+	Hud_SetEnabled( Hud_GetChild( file.menu, "MapVote3" ), true )
+	Hud_SetEnabled( Hud_GetChild( file.menu, "MapVote4" ), true )
 
 	Hud_SetVisible( Hud_GetChild( file.menu, "MapVoteFrame2" ), false )
 	Hud_SetVisible( Hud_GetChild( file.menu, "VotedForLbl" ), false )
@@ -149,6 +151,11 @@ void function UpdateVotedFor(int id)
 {
 	var rui = Hud_GetRui( Hud_GetChild( file.menu, "MapVote" + id ))
 	RuiSetString( rui, "presenseText", "Voted!" )
+
+	Hud_SetEnabled( Hud_GetChild( file.menu, "MapVote1" ), false )
+	Hud_SetEnabled( Hud_GetChild( file.menu, "MapVote2" ), false )
+	Hud_SetEnabled( Hud_GetChild( file.menu, "MapVote3" ), false )
+	Hud_SetEnabled( Hud_GetChild( file.menu, "MapVote4" ), false )
 }
 
 void function UpdateVotedLocation(string map)

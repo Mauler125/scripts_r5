@@ -188,6 +188,7 @@ scripts/resource/ui/menus/CTF/ctfvotemenu.menu
 			ypos					0
 			visible					1
 			zpos 					6
+			sound_accept            "Menu_Email_Sent"
 
 			pin_to_sibling			MapVoteFrame
 			pin_corner_to_sibling	CENTER
@@ -207,6 +208,7 @@ scripts/resource/ui/menus/CTF/ctfvotemenu.menu
 			ypos					0
 			visible					1
 			zpos 					6
+			sound_accept            "Menu_Email_Sent"
 
 			pin_to_sibling			MapVote1
 			pin_corner_to_sibling	LEFT
@@ -226,6 +228,7 @@ scripts/resource/ui/menus/CTF/ctfvotemenu.menu
 			ypos					0
 			visible					1
 			zpos 					6
+			sound_accept            "Menu_Email_Sent"
 
 			pin_to_sibling			MapVote2
 			pin_corner_to_sibling	LEFT
@@ -245,6 +248,7 @@ scripts/resource/ui/menus/CTF/ctfvotemenu.menu
 			ypos					0
 			visible					1
 			zpos 					6
+			sound_accept            "Menu_Email_Sent"
 
 			pin_to_sibling			MapVote3
 			pin_corner_to_sibling	LEFT

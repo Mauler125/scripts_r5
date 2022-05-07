@@ -31,6 +31,7 @@ global function ServerCallback_CTF_UpdateVotingMaps
 global function ServerCallback_CTF_OpenCTFVoteMenuAlt
 global function ServerCallback_CTF_SetVotingScreen
 global function ServerCallback_CTF_SetWinnerScreen
+global function ServerCallback_CTF_SetNextRoundScreen
 global function UpdateUIVotingLocationDone
 global function UpdateMapVotesClient
 global function VoteForMap
@@ -767,7 +768,7 @@ void function ServerCallback_CTF_CloseCTFVoteMenu()
 void function DestroyVotingUI()
 {
     FadeOutSoundOnEntity( GetLocalClientPlayer(), "Music_CharacterSelect_Wattson", 0.2 )
-    EmitSoundOnEntity( GetLocalClientPlayer(), "UI_Survival_Intro_GladiatorCard_Disappear" )
+    //EmitSoundOnEntity( GetLocalClientPlayer(), "UI_InGame_FD_UnReadyUp_1p" ) //UI_InGame_FD_MetaUpgradeAnnouncement
     ScreenFade(GetLocalClientPlayer(), 0, 0, 0, 255, 0.4, 1, FFADE_OUT | FFADE_PURGE)
     wait 1;
 
@@ -791,6 +792,13 @@ void function UpdateUIVoteTimer()
     while(time > -1)
     {
         RunUIScript( "UpdateVoteTimer", time)
+
+        if (time <= 5 && time != 0)
+            EmitSoundOnEntity( GetLocalClientPlayer(), "ui_ingame_markedfordeath_countdowntomarked" )
+
+        if (time == 0)
+            EmitSoundOnEntity( GetLocalClientPlayer(), "ui_ingame_markedfordeath_countdowntoyouaremarked" )
+
         time--
 
         wait 1
@@ -848,11 +856,14 @@ void function ServerCallback_CTF_SetWinnerScreen( int team )
 
 void function ServerCallback_CTF_SetVotingScreen()
 {
+    EmitSoundOnEntity( GetLocalClientPlayer(), "UI_Menu_ReadyUp_1P" )
     thread UpdateUIVoteTimer()
     RunUIScript("SetCTFVotingScreen")
 }
 
 void function ServerCallback_CTF_SetNextRoundScreen()
 {
+    EmitSoundOnEntity( GetLocalClientPlayer(), "UI_PostGame_Level_Up_Pilot" )
+    FadeOutSoundOnEntity( GetLocalClientPlayer(), "Music_CharacterSelect_Wattson", 0.2 )
     RunUIScript("SetCTFVoteMenuNextRound")
 }

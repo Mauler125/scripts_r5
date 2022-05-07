@@ -281,8 +281,6 @@ void function VotingPhase()
 	    player.SetPlayerNetInt("assists", 0) //Reset for deaths
     }
 
-    wait 1
-
     if (CTF.mapvotes1 > 0 || CTF.mapvotes2 > 0 || CTF.mapvotes3 > 0 || CTF.mapvotes4 > 0)
     {
         file.selectedLocation = file.locationSettings[CTF.mappicked]
@@ -597,7 +595,7 @@ void function StartRound()
 
                 if (CTF.IMCPoints > CTF.MILITIAPoints)
                     TeamWon = TEAM_IMC
-                else
+                else if (CTF.MILITIAPoints > CTF.IMCPoints)
                     TeamWon = TEAM_MILITIA
 
                 foreach(player in GetPlayerArray())
@@ -619,7 +617,7 @@ void function StartRound()
                     }
                 }
 
-                wait 10
+                wait 5
 
                 foreach(player in GetPlayerArray())
                 {
