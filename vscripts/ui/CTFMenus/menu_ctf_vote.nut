@@ -172,33 +172,19 @@ void function InitCTFVoteMenu( var newMenuArg )
 
 	AddMenuEventHandler( menu, eUIEvent.MENU_NAVIGATE_BACK, OnCTF_NavigateBack )
 
-	AddButtonEventHandler( Hud_GetChild( menu, "MapVote1" ), UIE_CLICK, OnClickMap1 )
-	AddButtonEventHandler( Hud_GetChild( menu, "MapVote2" ), UIE_CLICK, OnClickMap2 )
-	AddButtonEventHandler( Hud_GetChild( menu, "MapVote3" ), UIE_CLICK, OnClickMap3 )
-	AddButtonEventHandler( Hud_GetChild( menu, "MapVote4" ), UIE_CLICK, OnClickMap4 )
+	AddButtonEventHandler( Hud_GetChild( menu, "MapVote1" ), UIE_CLICK, OnClickMap )
+	AddButtonEventHandler( Hud_GetChild( menu, "MapVote2" ), UIE_CLICK, OnClickMap )
+	AddButtonEventHandler( Hud_GetChild( menu, "MapVote3" ), UIE_CLICK, OnClickMap )
+	AddButtonEventHandler( Hud_GetChild( menu, "MapVote4" ), UIE_CLICK, OnClickMap )
 }
 
-void function OnClickMap1( var button )
+void function OnClickMap( var button )
 {
-	RunClientScript("VoteForMap", 0 )
-}
-
-void function OnClickMap2( var button )
-{
-	RunClientScript("VoteForMap", 1 )
-}
-
-void function OnClickMap3( var button )
-{
-	RunClientScript("VoteForMap", 2 )
-}
-
-void function OnClickMap4( var button )
-{
-	RunClientScript("VoteForMap", 3 )
+	int buttonId = Hud_GetScriptID( button )
+	RunClientScript("VoteForMap", buttonId )
 }
 
 void function OnCTF_NavigateBack()
 {
-    // gotta have NavigateBack blank so that you cant close the menu
+	// gotta have NavigateBack blank so that you cant close the menu
 }
