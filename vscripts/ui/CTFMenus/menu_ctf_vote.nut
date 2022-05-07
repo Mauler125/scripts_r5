@@ -180,7 +180,7 @@ void function InitCTFVoteMenu( var newMenuArg )
 
 void function OnClickMap( var button )
 {
-	int buttonId = Hud_GetScriptID( button )
+	int buttonId = Hud_GetScriptID( button ).tointeger()
 	RunClientScript("VoteForMap", buttonId )
 }
 
