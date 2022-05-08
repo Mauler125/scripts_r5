@@ -89,7 +89,6 @@ const int NUMBER_OF_MAP_SLOTS = 4
 
 void function _CustomCTF_Init()
 {
-
     PrecacheModel($"mdl/props/pathfinder_zipline/pathfinder_zipline.rmdl")
 
     AddCallback_OnClientConnected( void function(entity player) { thread _OnPlayerConnected(player) } )
@@ -434,7 +433,7 @@ void function StartRound()
                     if( IsValid( player ) )
                     {
                         Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetVoteMenuOpen", true)
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", CTF_WinnerScreen, TeamWon, CTF_NotUsed, CTF_NotUsed)
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", eCTFScreen.WinnerScreen, TeamWon, CTF_NotUsed, CTF_NotUsed)
                     }
                 }
 
@@ -450,7 +449,7 @@ void function StartRound()
                     if( IsValid( player ) )
                     {
                         Remote_CallFunction_Replay(player, "ServerCallback_CTF_UpdateVotingMaps", CTF.mapIds[0], CTF.mapIds[1], CTF.mapIds[2], CTF.mapIds[3])
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", CTF_VoteScreen, CTF_NotUsed, CTF_NotUsed, CTF_NotUsed)
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", eCTFScreen.VoteScreen, CTF_NotUsed, CTF_NotUsed, CTF_NotUsed)
                     }
                 }
 
@@ -510,7 +509,7 @@ void function StartRound()
                         //Set the vote screen for each player to show the chosen location
                         foreach(player in GetPlayerArray())
                         {
-                            Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", CTF_SelectedScreen, CTF_NotUsed, highestVoteId, CTF_NotUsed)
+                            Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", eCTFScreen.SelectedScreen, CTF_NotUsed, highestVoteId, CTF_NotUsed)
                         }
 
                         //Set the location to the location that won
@@ -521,7 +520,7 @@ void function StartRound()
                     {
                         foreach(player in GetPlayerArray())
                         {
-                            Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", CTF_TiedScreen, CTF_NotUsed, 254, CTF_NotUsed)
+                            Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", eCTFScreen.TiedScreen, CTF_NotUsed, 254, CTF_NotUsed)
                         }
 
                         mapsWithHighestVoteCount.randomize()
@@ -536,7 +535,7 @@ void function StartRound()
                     //Set the vote screen for each player to show the chosen location
                     foreach(player in GetPlayerArray())
                     {
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", CTF_SelectedScreen, CTF_NotUsed, CTF.mappicked, CTF_NotUsed)
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", eCTFScreen.SelectedScreen, CTF_NotUsed, CTF.mappicked, CTF_NotUsed)
                     }
                 }
 
@@ -560,7 +559,7 @@ void function StartRound()
                     if( IsValid( player ) )
                     {
                         Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetVoteMenuOpen", true)
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", CTF_WinnerScreen, TeamWon, CTF_NotUsed, CTF_NotUsed)
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", eCTFScreen.WinnerScreen, TeamWon, CTF_NotUsed, CTF_NotUsed)
                     }
                 }
 
@@ -572,7 +571,7 @@ void function StartRound()
                 {
                     if( IsValid( player ) )
                     {
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", CTF_NextRoundScreen, CTF_NotUsed, CTF_NotUsed, CTF_NotUsed)
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", eCTFScreen.NextRoundScreen, CTF_NotUsed, CTF_NotUsed, CTF_NotUsed)
                     }
                 }
 
@@ -638,7 +637,7 @@ void function RandomizeTiedLocations(array<int> maps)
         //Update Randomizer ui for each player
         foreach(player in GetPlayerArray())
         {
-            Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", CTF_TiedScreen, 69, maps[currentmapindex], 0)
+            Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", eCTFScreen.TiedScreen, 69, maps[currentmapindex], 0)
         }
 
         //stop randomizing once the randomize ammount is done
@@ -668,7 +667,7 @@ void function RandomizeTiedLocations(array<int> maps)
     //Show final selected map
     foreach(player in GetPlayerArray())
     {
-        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", CTF_TiedScreen, 69, maps[selectedamp], 1)
+        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", eCTFScreen.TiedScreen, 69, maps[selectedamp], 1)
     }
 
     //Pause on selected map for a sec for visuals
@@ -677,7 +676,7 @@ void function RandomizeTiedLocations(array<int> maps)
     //Procede to final location picked screen
     foreach(player in GetPlayerArray())
     {
-        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", CTF_SelectedScreen, 69, maps[selectedamp], CTF_NotUsed)
+        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", eCTFScreen.SelectedScreen, 69, maps[selectedamp], CTF_NotUsed)
     }
 
     //Set selected location on server

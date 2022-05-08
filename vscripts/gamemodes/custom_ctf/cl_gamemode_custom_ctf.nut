@@ -770,17 +770,17 @@ void function ServerCallback_CTF_SetScreen(int screen, int team, int mapid, int 
 {
     switch(screen)
     {
-        case CTF_WinnerScreen: //Sets the screen to the winners screen
+        case eCTFScreen.WinnerScreen: //Sets the screen to the winners screen
             RunUIScript("SetCTFTeamWonScreen", GetWinningTeamText(team))
             break
 
-        case CTF_VoteScreen: //Sets the screen to the vote screen
+        case eCTFScreen.VoteScreen: //Sets the screen to the vote screen
             EmitSoundOnEntity( GetLocalClientPlayer(), "UI_PostGame_CoinMove" )
             thread UpdateUIVoteTimer()
             RunUIScript("SetCTFVotingScreen")
             break
 
-        case CTF_TiedScreen: //Sets the screen to the tied screen
+        case eCTFScreen.TiedScreen: //Sets the screen to the tied screen
             switch(done)
             {
             case 0:
@@ -797,12 +797,12 @@ void function ServerCallback_CTF_SetScreen(int screen, int team, int mapid, int 
                 RunUIScript( "UpdateVotedLocationTied", file.locationSettings[mapid].name)
             break
 
-        case CTF_SelectedScreen: //Sets the screen to the selected location screen
+        case eCTFScreen.SelectedScreen: //Sets the screen to the selected location screen
             EmitSoundOnEntity( GetLocalClientPlayer(), "UI_PostGame_Level_Up_Pilot" )
             RunUIScript( "UpdateVotedLocation", file.locationSettings[mapid].name)
             break
 
-        case CTF_NextRoundScreen: //Sets the screen to the next round screen
+        case eCTFScreen.NextRoundScreen: //Sets the screen to the next round screen
             EmitSoundOnEntity( GetLocalClientPlayer(), "UI_PostGame_Level_Up_Pilot" )
             FadeOutSoundOnEntity( GetLocalClientPlayer(), "Music_CharacterSelect_Wattson", 0.2 )
             RunUIScript("SetCTFVoteMenuNextRound")
