@@ -559,7 +559,7 @@ void function StartRound()
                 {
                     if( IsValid( player ) )
                     {
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_OpenCTFVoteMenu")
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetVoteMenuOpen", true)
                         Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetWinnerScreen", TeamWon)
                     }
                 }
