@@ -39,6 +39,15 @@ global int CTF_Attack = 2
 global int CTF_Escort = 3
 global int CTF_Return = 4
 
+//Screen IDS
+global int CTF_WinnerScreen = 0
+global int CTF_VoteScreen = 1
+global int CTF_TiedScreen = 2
+global int CTF_SelectedScreen = 3
+global int CTF_NextRoundScreen = 4
+
+global int CTF_NotUsed = 230
+
 global enum eCTFAnnounce
 {
 	NONE = 0

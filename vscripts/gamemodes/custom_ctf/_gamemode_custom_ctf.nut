@@ -137,7 +137,7 @@ bool function ClientCommand_VoteForMap(entity player, array<string> args)
     // update current amount of votes for each map
     foreach(players in GetPlayerArray())
     {
-        Remote_CallFunction_Replay(players, "UpdateMapVotesClient", CTF.mapVotes[0], CTF.mapVotes[1], CTF.mapVotes[2], CTF.mapVotes[3])
+        Remote_CallFunction_Replay(players, "ServerCallback_CTF_UpdateMapVotesClient", CTF.mapVotes[0], CTF.mapVotes[1], CTF.mapVotes[2], CTF.mapVotes[3])
     }
 
     // append player to the list of players the voted so they cant vote again
@@ -434,7 +434,7 @@ void function StartRound()
                     if( IsValid( player ) )
                     {
                         Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetVoteMenuOpen", true)
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetWinnerScreen", TeamWon)
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", CTF_WinnerScreen, TeamWon, CTF_NotUsed, CTF_NotUsed)
                     }
                 }
 
@@ -450,7 +450,7 @@ void function StartRound()
                     if( IsValid( player ) )
                     {
                         Remote_CallFunction_Replay(player, "ServerCallback_CTF_UpdateVotingMaps", CTF.mapIds[0], CTF.mapIds[1], CTF.mapIds[2], CTF.mapIds[3])
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetVotingScreen")
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", CTF_VoteScreen, CTF_NotUsed, CTF_NotUsed, CTF_NotUsed)
                     }
                 }
 
@@ -510,7 +510,7 @@ void function StartRound()
                         //Set the vote screen for each player to show the chosen location
                         foreach(player in GetPlayerArray())
                         {
-                            Remote_CallFunction_Replay(player, "UpdateUIVotingLocationDone", highestVoteId)
+                            Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", CTF_SelectedScreen, CTF_NotUsed, highestVoteId, CTF_NotUsed)
                         }
 
                         //Set the location to the location that won
@@ -521,7 +521,7 @@ void function StartRound()
                     {
                         foreach(player in GetPlayerArray())
                         {
-                            Remote_CallFunction_Replay(player, "UpdateUIVotingLocationTied", 254, 1)
+                            Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", CTF_TiedScreen, CTF_NotUsed, 254, CTF_NotUsed)
                         }
 
                         mapsWithHighestVoteCount.randomize()
@@ -536,7 +536,7 @@ void function StartRound()
                     //Set the vote screen for each player to show the chosen location
                     foreach(player in GetPlayerArray())
                     {
-                        Remote_CallFunction_Replay(player, "UpdateUIVotingLocationDone", CTF.mappicked)
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", CTF_SelectedScreen, CTF_NotUsed, CTF.mappicked, CTF_NotUsed)
                     }
                 }
 
@@ -560,7 +560,7 @@ void function StartRound()
                     if( IsValid( player ) )
                     {
                         Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetVoteMenuOpen", true)
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetWinnerScreen", TeamWon)
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", CTF_WinnerScreen, TeamWon, CTF_NotUsed, CTF_NotUsed)
                     }
                 }
 
@@ -572,7 +572,7 @@ void function StartRound()
                 {
                     if( IsValid( player ) )
                     {
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetNextRoundScreen")
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", CTF_NextRoundScreen, CTF_NotUsed, CTF_NotUsed, CTF_NotUsed)
                     }
                 }
 
@@ -638,7 +638,7 @@ void function RandomizeTiedLocations(array<int> maps)
         //Update Randomizer ui for each player
         foreach(player in GetPlayerArray())
         {
-            Remote_CallFunction_Replay(player, "UpdateUIVotingLocationTied", maps[currentmapindex], 0)
+            Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", CTF_TiedScreen, 69, maps[currentmapindex], 0)
         }
 
         //stop randomizing once the randomize ammount is done
@@ -668,7 +668,7 @@ void function RandomizeTiedLocations(array<int> maps)
     //Show final selected map
     foreach(player in GetPlayerArray())
     {
-        Remote_CallFunction_Replay(player, "UpdateUIVotingLocationTied", maps[selectedamp], 1)
+        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", CTF_TiedScreen, 69, maps[selectedamp], 1)
     }
 
     //Pause on selected map for a sec for visuals
@@ -677,7 +677,7 @@ void function RandomizeTiedLocations(array<int> maps)
     //Procede to final location picked screen
     foreach(player in GetPlayerArray())
     {
-        Remote_CallFunction_Replay(player, "UpdateUIVotingLocationDone", maps[selectedamp])
+        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", CTF_SelectedScreen, 69, maps[selectedamp], CTF_NotUsed)
     }
 
     //Set selected location on server
@@ -898,14 +898,14 @@ void function IMCPoint_Trigger( entity trigger, entity ent )
 	                foreach ( player in teamplayers )
                     {
                         Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_MILITIA, CTF_Capture)
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_TeamCaptured", IMCPoint.holdingplayer)
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_FlagCaptured", IMCPoint.holdingplayer, 0)
                     }
 
                     array<entity> enemyplayers = GetPlayerArrayOfTeam( TEAM_MILITIA )
 	                foreach ( player in enemyplayers )
                     {
                         Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_MILITIA, CTF_Defend)
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_EnemyCaptured", IMCPoint.holdingplayer)
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_FlagCaptured", IMCPoint.holdingplayer, 1)
                     }
 
                     if(CTF.IMCPoints >= CTF_SCORE_GOAL_TO_WIN)
@@ -990,14 +990,14 @@ void function MILITIA_Point_Trigger( entity trigger, entity ent )
 	                foreach ( player in teamplayers )
                     {
                         Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_IMC, CTF_Capture)
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_TeamCaptured", IMCPoint.holdingplayer)
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_FlagCaptured", IMCPoint.holdingplayer, 0)
                     }
 
                     array<entity> enemyplayers = GetPlayerArrayOfTeam( TEAM_IMC )
 	                foreach ( player in enemyplayers )
                     {
                         Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_IMC, CTF_Defend)
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_EnemyCaptured", IMCPoint.holdingplayer)
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_FlagCaptured", IMCPoint.holdingplayer, 1)
                     }
 
                     if(CTF.MILITIAPoints >= CTF_SCORE_GOAL_TO_WIN)

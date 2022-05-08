@@ -138,8 +138,7 @@ void function RemoteFunctions_Init_Begin()
 			// CTF: Server to Client
 			Remote_RegisterClientFunction( "ServerCallback_CTF_AddPointIcon", "entity", "entity", "int", 0, 255)
 			Remote_RegisterClientFunction( "ServerCallback_CTF_RecaptureFlag", "int", 0, 999, "float", 0.0, 999.0, 32, "float", 0.0, 999.0, 32)
-			Remote_RegisterClientFunction( "ServerCallback_CTF_EnemyCaptured", "entity" )
-			Remote_RegisterClientFunction( "ServerCallback_CTF_TeamCaptured", "entity" )
+			Remote_RegisterClientFunction("ServerCallback_CTF_FlagCaptured", "entity", "int", 0, 255)
 			Remote_RegisterClientFunction( "ServerCallback_CTF_CustomMessages", "entity", "int", 0, 255 )
 			Remote_RegisterClientFunction( "ServerCallback_CTF_TeamWon", "int", 0, 999 )
 			Remote_RegisterClientFunction( "ServerCallback_CTF_SetSelectedLocation", "int", 0, 255)
@@ -155,14 +154,10 @@ void function RemoteFunctions_Init_Begin()
 			Remote_RegisterUntypedFunction_deprecated( "ServerCallback_CTF_TeamText" )
 
 			//CTF: Vote Menu
+			Remote_RegisterClientFunction("ServerCallback_CTF_SetScreen", "int", 0, 255, "int", 0, 255, "int", 0, 255, "int", 0, 255)
 			Remote_RegisterClientFunction("ServerCallback_CTF_SetVoteMenuOpen", "bool")
-			Remote_RegisterUntypedFunction_deprecated("ServerCallback_CTF_SetVotingScreen")
-			Remote_RegisterUntypedFunction_deprecated("ServerCallback_CTF_SetNextRoundScreen")
 			Remote_RegisterClientFunction("ServerCallback_CTF_UpdateVotingMaps", "int", 0, 255, "int", 0, 255, "int", 0, 255, "int", 0, 255)
-			Remote_RegisterClientFunction("UpdateMapVotesClient", "int", 0, 255, "int", 0, 255, "int", 0, 255, "int", 0, 255)
-			Remote_RegisterClientFunction("UpdateUIVotingLocationDone", "int", 0, 255)
-			Remote_RegisterClientFunction("UpdateUIVotingLocationTied",  "int", 0, 255, "int", 0, 255)
-			Remote_RegisterClientFunction("ServerCallback_CTF_SetWinnerScreen", "int", 0, 255)
+			Remote_RegisterClientFunction("ServerCallback_CTF_UpdateMapVotesClient", "int", 0, 255, "int", 0, 255, "int", 0, 255, "int", 0, 255)
 
 			// CTF: Server to UI
 			Remote_RegisterUIFunction( "OpenCTFRespawnMenu" )

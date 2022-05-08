@@ -10,8 +10,7 @@ global function Cl_CustomCTF_Init
 global function ServerCallback_CTF_DoAnnouncement
 global function ServerCallback_CTF_PointCaptured
 global function ServerCallback_CTF_TeamText
-global function ServerCallback_CTF_EnemyCaptured
-global function ServerCallback_CTF_TeamCaptured
+global function ServerCallback_CTF_FlagCaptured
 global function ServerCallback_CTF_CustomMessages
 global function ServerCallback_CTF_PlayerDied
 global function ServerCallback_CTF_PlayerSpawning
@@ -24,17 +23,13 @@ global function ServerCallback_CTF_RecaptureFlag
 global function ServerCallback_CTF_EndRecaptureFlag
 global function ServerCallback_CTF_ResetFlagIcons
 global function ServerCallback_CTF_SetPointIconHint
-
 // Voting
 global function ServerCallback_CTF_SetVoteMenuOpen
 global function ServerCallback_CTF_UpdateVotingMaps
-global function ServerCallback_CTF_SetVotingScreen
+global function ServerCallback_CTF_UpdateMapVotesClient
+global function ServerCallback_CTF_SetScreen
 
-global function ServerCallback_CTF_SetWinnerScreen
-global function ServerCallback_CTF_SetNextRoundScreen
-global function UpdateUIVotingLocationTied
-global function UpdateUIVotingLocationDone
-global function UpdateMapVotesClient
+//Ui callbacks
 global function VoteForMap
 
 global function Cl_CTFRegisterLocation
@@ -469,22 +464,18 @@ void function ServerCallback_CTF_TeamWon(int team)
 	AnnouncementFromClass( GetLocalViewPlayer(), announcement )
 }
 
-void function ServerCallback_CTF_EnemyCaptured(entity player)
+void function ServerCallback_CTF_FlagCaptured(entity player, int team)
 {
-    AnnouncementData announcement = Announcement_Create( "Enemy team has captured your flag!" )
-    //Announcement_SetSubText(announcement, "by: " + player.GetPlayerName())
-	Announcement_SetStyle( announcement, ANNOUNCEMENT_STYLE_SWEEP )
-	Announcement_SetPurge( announcement, true )
-	Announcement_SetOptionalTextArgsArray( announcement, [ "true" ] )
-	Announcement_SetPriority( announcement, 200 )
-	announcement.duration = 3
-	AnnouncementFromClass( GetLocalViewPlayer(), announcement )
-}
+    AnnouncementData announcement
 
-void function ServerCallback_CTF_TeamCaptured(entity player)
-{
-    AnnouncementData announcement = Announcement_Create( "Your team has captured the enemy flag!" )
-    //Announcement_SetSubText(announcement, "by: " + player.GetPlayerName())
+    switch(team)
+    {
+        case 0:
+            announcement = Announcement_Create( "Your team has captured the enemy flag!" )
+        case 1:
+            announcement = Announcement_Create( "Enemy team has captured your flag!" )
+    }
+
 	Announcement_SetStyle( announcement, ANNOUNCEMENT_STYLE_SWEEP )
 	Announcement_SetPurge( announcement, true )
 	Announcement_SetOptionalTextArgsArray( announcement, [ "true" ] )
@@ -751,30 +742,6 @@ void function UpdateUIVoteTimer()
     }
 }
 
-void function UpdateUIVotingLocationDone(int mapid)
-{
-    EmitSoundOnEntity( GetLocalClientPlayer(), "UI_PostGame_Level_Up_Pilot" )
-    RunUIScript( "UpdateVotedLocation", file.locationSettings[mapid].name)
-}
-
-void function UpdateUIVotingLocationTied(int mapid, int done)
-{
-    switch(done)
-    {
-    case 0:
-        EmitSoundOnEntity( GetLocalClientPlayer(), "HUD_match_start_timer_tick_1P" )
-        break
-    case 1:
-        EmitSoundOnEntity( GetLocalClientPlayer(),  "UI_PostGame_CoinMove" )
-        break
-    }
-
-    if (mapid == 254)
-        RunUIScript( "UpdateVotedLocationTied", "")
-    else
-        RunUIScript( "UpdateVotedLocationTied", file.locationSettings[mapid].name)
-}
-
 void function VoteForMap(int mapid)
 {
     if(hasvoted)
@@ -789,7 +756,7 @@ void function VoteForMap(int mapid)
     hasvoted = true
 }
 
-void function UpdateMapVotesClient( int map1votes, int map2votes, int map3votes, int map4votes)
+void function ServerCallback_CTF_UpdateMapVotesClient( int map1votes, int map2votes, int map3votes, int map4votes)
 {
     RunUIScript("UpdateVotesUI", map1votes, map2votes, map3votes, map4votes)
 }
@@ -799,7 +766,51 @@ void function ServerCallback_CTF_UpdateVotingMaps( int map1, int map2, int map3,
     RunUIScript("UpdateMapsForVoting", file.locationSettings[map1].name, file.locationSettings[map2].name, file.locationSettings[map3].name, file.locationSettings[map4].name)
 }
 
-void function ServerCallback_CTF_SetWinnerScreen( int team )
+void function ServerCallback_CTF_SetScreen(int screen, int team, int mapid, int done)
+{
+    switch(screen)
+    {
+        case CTF_WinnerScreen: //Sets the screen to the winners screen
+            RunUIScript("SetCTFTeamWonScreen", GetWinningTeamText(team))
+            break
+
+        case CTF_VoteScreen: //Sets the screen to the vote screen
+            EmitSoundOnEntity( GetLocalClientPlayer(), "UI_PostGame_CoinMove" )
+            thread UpdateUIVoteTimer()
+            RunUIScript("SetCTFVotingScreen")
+            break
+
+        case CTF_TiedScreen: //Sets the screen to the tied screen
+            switch(done)
+            {
+            case 0:
+                EmitSoundOnEntity( GetLocalClientPlayer(), "HUD_match_start_timer_tick_1P" )
+                break
+            case 1:
+                EmitSoundOnEntity( GetLocalClientPlayer(),  "UI_PostGame_CoinMove" )
+                break
+            }
+
+            if (mapid == 254)
+                RunUIScript( "UpdateVotedLocationTied", "")
+            else
+                RunUIScript( "UpdateVotedLocationTied", file.locationSettings[mapid].name)
+            break
+
+        case CTF_SelectedScreen: //Sets the screen to the selected location screen
+            EmitSoundOnEntity( GetLocalClientPlayer(), "UI_PostGame_Level_Up_Pilot" )
+            RunUIScript( "UpdateVotedLocation", file.locationSettings[mapid].name)
+            break
+
+        case CTF_NextRoundScreen: //Sets the screen to the next round screen
+            EmitSoundOnEntity( GetLocalClientPlayer(), "UI_PostGame_Level_Up_Pilot" )
+            FadeOutSoundOnEntity( GetLocalClientPlayer(), "Music_CharacterSelect_Wattson", 0.2 )
+            RunUIScript("SetCTFVoteMenuNextRound")
+            break
+    }
+}
+
+string function GetWinningTeamText(int team)
 {
     string teamwon = ""
     switch(team)
@@ -815,20 +826,6 @@ void function ServerCallback_CTF_SetWinnerScreen( int team )
             break
     }
 
-    RunUIScript("SetCTFTeamWonScreen", teamwon)
-
+    return teamwon
 }
 
-void function ServerCallback_CTF_SetVotingScreen()
-{
-    EmitSoundOnEntity( GetLocalClientPlayer(), "UI_PostGame_CoinMove" )
-    thread UpdateUIVoteTimer()
-    RunUIScript("SetCTFVotingScreen")
-}
-
-void function ServerCallback_CTF_SetNextRoundScreen()
-{
-    EmitSoundOnEntity( GetLocalClientPlayer(), "UI_PostGame_Level_Up_Pilot" )
-    FadeOutSoundOnEntity( GetLocalClientPlayer(), "Music_CharacterSelect_Wattson", 0.2 )
-    RunUIScript("SetCTFVoteMenuNextRound")
-}
