@@ -3,8 +3,6 @@ global function OpenCTFRespawnMenu
 global function CloseCTFRespawnMenu
 global function UpdateRespawnTimer
 global function UpdateKillerName
-global function UpdateKillerDamage
-global function UpdateDamageGiven
 global function SetEnemyScore
 global function SetTeamScore
 global function UpdateObjectiveText
@@ -41,18 +39,6 @@ void function UpdateKillerName(string name)
 {
 	var rui = Hud_GetChild( file.menu, "KilledByText" )
 	Hud_SetText(rui, name)
-}
-
-void function UpdateKillerDamage(float damage)
-{
-	var rui = Hud_GetChild( file.menu, "KilledByDamageText" )
-	Hud_SetText(rui, damage.tostring())
-}
-
-void function UpdateDamageGiven(float damage)
-{
-	var rui = Hud_GetChild( file.menu, "GivenDamageText" )
-	Hud_SetText(rui, damage.tostring())
 }
 
 void function SetEnemyScore(int score)

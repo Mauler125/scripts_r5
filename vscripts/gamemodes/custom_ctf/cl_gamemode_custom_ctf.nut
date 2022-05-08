@@ -18,7 +18,6 @@ global function ServerCallback_CTF_PlayerSpawning
 global function ServerCallback_CTF_OpenCTFRespawnMenu
 global function ServerCallback_CTF_SetSelectedLocation
 global function ServerCallback_CTF_TeamWon
-global function ServerCallback_CTF_UpdateDamage
 global function ServerCallback_CTF_SetObjectiveText
 global function ServerCallback_CTF_AddPointIcon
 global function ServerCallback_CTF_RecaptureFlag
@@ -529,17 +528,6 @@ var function CreateTemporarySpawnRUI(entity parentEnt, float duration)
 
     parentEnt.Destroy()
 }
-void function ServerCallback_CTF_UpdateDamage(int type, float damage)
-{
-    if(type == 0)
-    {
-        RunUIScript( "UpdateKillerDamage", damage)
-    }
-    else
-    {
-        RunUIScript( "UpdateDamageGiven", damage)
-    }
-}
 
 void function ServerCallback_CTF_OpenCTFRespawnMenu(vector campos, int IMCscore, int MILscore, entity attacker)
 {
@@ -549,13 +537,15 @@ void function ServerCallback_CTF_OpenCTFRespawnMenu(vector campos, int IMCscore,
 
     if(attacker != null)
     {
-        if(attacker.IsPlayer() && attacker != null)
+        if (attacker == GetLocalClientPlayer())
+            RunUIScript( "UpdateKillerName", "Suicide")
+        else if(attacker.IsPlayer() && attacker != null)
             RunUIScript( "UpdateKillerName", attacker.GetPlayerName())
         else
-            RunUIScript( "UpdateKillerName", "Suicide")
+            RunUIScript( "UpdateKillerName", "Mysterious Forces")
     }
     else
-        RunUIScript( "UpdateKillerName", "Suicide")
+        RunUIScript( "UpdateKillerName", "Mysterious Forces")
 
     if(player.GetTeam() == TEAM_IMC)
     {

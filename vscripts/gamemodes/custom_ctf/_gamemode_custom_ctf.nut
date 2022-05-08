@@ -1617,9 +1617,6 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
             //Remote_CallFunction_Replay( victim, "ServerCallback_CTF_ResetFlagIcons")
             victim.p.storedWeapons = StoreWeapons(victim)
 
-            float damagetaken = DamageInfo_GetDamage( damageInfo )
-            Remote_CallFunction_NonReplay(victim, "ServerCallback_CTF_UpdateDamage", 0, damagetaken)
-
             if (!CTF.votingtime)
             {
                 Remote_CallFunction_NonReplay(victim, "ServerCallback_CTF_OpenCTFRespawnMenu", CTF.bubbleCenter, CTF.IMCPoints, CTF.MILITIAPoints, attacker)
@@ -1653,9 +1650,6 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
                 int invscore = attacker.GetPlayerNetInt( "kills" )
 			    invscore++;
 			    attacker.SetPlayerNetInt( "kills", invscore )
-
-                float damagegiven = DamageInfo_GetDamage( damageInfo )
-                Remote_CallFunction_NonReplay(victim, "ServerCallback_CTF_UpdateDamage", 1, damagegiven)
 
                 if(IMCPoint.holdingplayer == attacker)
                 {
