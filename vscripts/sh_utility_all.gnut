@@ -394,7 +394,7 @@ vector function FindAnyPerpendicularVector( vector v )
 
 bool function IsLobbyMapName( string levelname )
 {
-	if ( levelname == "mp_lobby" )
+	if ( levelname == "mp_lobby" || levelname == "mp_npe" )
 		return true
 
 	return false
