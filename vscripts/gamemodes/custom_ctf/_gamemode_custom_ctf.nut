@@ -113,6 +113,24 @@ void function _CustomCTF_Init()
 
 }
 
+bool function ClientCommand_NextRound(entity player, array<string> args)
+{
+    if( !IsServer() ) return false;
+
+    if(args.len() < 1)
+    {
+        file.ctfState = eCTFState.WINNER_DECIDED
+        return true
+    }
+
+    if (args[0].tointeger() > file.locationSettings.len() - 1) return false;
+
+    CTF.setmap = true
+    CTF.selectedmap = args[0].tointeger()
+    file.ctfState = eCTFState.WINNER_DECIDED
+    return true
+}
+
 bool function ClientCommand_VoteForMap(entity player, array<string> args)
 {
     // don't allow multiple votes
@@ -184,6 +202,7 @@ void function _OnPropDynamicSpawned(entity prop)
     file.playerSpawnedProps.append(prop)
 
 }
+
 void function RUNCTF()
 {
     WaitForGameState(eGameState.Playing)
@@ -683,38 +702,6 @@ void function RandomizeTiedLocations(array<int> maps)
     CTF.mappicked = maps[selectedamp]
 }
 
-void function _HandleRespawnOnLand(entity player)
-{
-    RemovePlayerMovementEventCallback(player, ePlayerMovementEvents.TOUCH_GROUND, _HandleRespawnOnLand)
-}
-
-void function ScreenFadeToFromBlack(entity player, float fadeTime = 1, float holdTime = 1)
-{
-    if( IsValid( player ) )
-        ScreenFadeToBlack(player, fadeTime / 2, holdTime / 2)
-    wait fadeTime
-    if( IsValid( player ) )
-        ScreenFadeFromBlack(player, fadeTime / 2, holdTime / 2)
-}
-
-bool function ClientCommand_NextRound(entity player, array<string> args)
-{
-    if( !IsServer() ) return false;
-
-    if(args.len() < 1)
-    {
-        file.ctfState = eCTFState.WINNER_DECIDED
-        return true
-    }
-
-    if (args[0].tointeger() > file.locationSettings.len() - 1) return false;
-
-    CTF.setmap = true
-    CTF.selectedmap = args[0].tointeger()
-    file.ctfState = eCTFState.WINNER_DECIDED
-    return true
-}
-
 void function SpawnCTFPoints()
 {
     //Get ground pos below spawn points
@@ -1025,6 +1012,7 @@ void function MILITIA_Point_Trigger( entity trigger, entity ent )
     }
 }
 
+//Purpose: Take weapons from player and give ctf dataknife
 void function TakeWeaponsForFlagCarrier(entity player)
 {
     player.p.storedWeapons = StoreWeapons(player)
@@ -1034,6 +1022,7 @@ void function TakeWeaponsForFlagCarrier(entity player)
     player.SetActiveWeaponBySlot(eActiveInventorySlot.mainHand, WEAPON_INVENTORY_SLOT_PRIMARY_2)
 }
 
+//Purpose: Give player their weapons back
 void function GiveBackWeapons(entity player)
 {
     TakeAllWeapons(player)
@@ -1062,6 +1051,7 @@ void function GiveBackWeapons(entity player)
     player.SetActiveWeaponBySlot(eActiveInventorySlot.mainHand, WEAPON_INVENTORY_SLOT_PRIMARY_0)
 }
 
+//Purpose: OnPlayerConnected Callback
 void function _OnPlayerConnected(entity player)
 {
     if(!IsValid(player)) return
@@ -1097,6 +1087,7 @@ void function _OnPlayerConnected(entity player)
     }
 }
 
+//Purpose: OnPlayerDisconnected Callback
 void function _OnPlayerDisconnected(entity player)
 {
     //Only if the flag is picked up
@@ -1598,7 +1589,7 @@ void function CheckPlayerForFlag(entity victim)
     }
 }
 
-
+//Purpose: OnPlayerDied Callback
 void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
 {
     //If player is holding the flag on death try to drop flag at current loaction
@@ -1676,6 +1667,7 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
     }
 }
 
+//Purpose: Handle Player Respawn
 void function _HandleRespawn(entity player, bool forceGive = false)
 {
     if(!IsValid(player)) return
@@ -1754,7 +1746,7 @@ void function _HandleRespawn(entity player, bool forceGive = false)
     }
 }
 
-
+//Purpose: Create The BubbleBoundary
 entity function CreateBubbleBoundary(LocationSettingsCTF location)
 {
     array<LocPairCTF> spawns = location.spawns
@@ -1843,57 +1835,6 @@ void function GrantSpawnImmunity(entity player, float duration)
     ClearInvincible(player)
 }
 
-
-LocPairCTF function _GetAppropriateSpawnLocation(entity player)
-{
-    int ourTeam = player.GetTeam()
-
-    LocPairCTF selectedSpawn = _GetVotingLocation()
-
-    switch(GetGameState())
-    {
-    case eGameState.MapVoting:
-        selectedSpawn = _GetVotingLocation()
-        break
-    case eGameState.Playing:
-        float maxDistToEnemy = 0
-        foreach(spawn in file.selectedLocation.spawns)
-        {
-            vector enemyOrigin = GetClosestEnemyToOrigin(spawn.origin, ourTeam)
-            float distToEnemy = Distance(spawn.origin, enemyOrigin)
-
-            if(distToEnemy > maxDistToEnemy)
-            {
-                maxDistToEnemy = distToEnemy
-                selectedSpawn = spawn
-            }
-        }
-        break
-
-    }
-    return selectedSpawn
-}
-
-vector function GetClosestEnemyToOrigin(vector origin, int ourTeam)
-{
-    float minDist = -1
-    vector enemyOrigin = <0, 0, 0>
-
-    foreach(player in GetPlayerArray_Alive())
-    {
-        if(player.GetTeam() == ourTeam) continue
-
-        float dist = Distance(player.GetOrigin(), origin)
-        if(dist < minDist || minDist < 0)
-        {
-            minDist = dist
-            enemyOrigin = player.GetOrigin()
-        }
-    }
-
-    return enemyOrigin
-}
-
 void function TpPlayerToSpawnPoint(entity player)
 {
     array<vector> playerspawnpointorg
@@ -1921,8 +1862,6 @@ void function TpPlayerToSpawnPoint(entity player)
     default:
         break
     }
-	//LocPairCTF loc = _GetAppropriateSpawnLocation(player)
-
 
     PutEntityInSafeSpot( player, null, null, player.GetOrigin() + <0,0,128>, player.GetOrigin() )
 }

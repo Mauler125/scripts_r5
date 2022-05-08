@@ -16,12 +16,14 @@ struct
 	var menu
 } file
 
+//Opens vote menu
 void function OpenCTFVoteMenu()
 {
 	CloseAllMenus()
 	AdvanceMenu( file.menu )
 }
 
+//Sets and updates the team won screen
 void function SetCTFTeamWonScreen(string teamwon)
 {
 	Hud_SetVisible(Hud_GetChild( file.menu, "TimerFrame"), false)
@@ -42,6 +44,7 @@ void function SetCTFTeamWonScreen(string teamwon)
 
 }
 
+//Sets and updates the voting screen
 void function SetCTFVotingScreen()
 {
 	for(int i = 1; i < 5; i++ ) {
@@ -67,6 +70,7 @@ void function SetCTFVotingScreen()
 	Hud_SetVisible( Hud_GetChild( file.menu, "VotedForLbl" ), false )
 }
 
+//Sets and updates the next round screen
 void function SetCTFVoteMenuNextRound()
 {
 	for(int i = 1; i < 5; i++ ) {
@@ -86,6 +90,7 @@ void function SetCTFVoteMenuNextRound()
 	Hud_SetText( Hud_GetChild( file.menu, "VotedForLbl" ), "Starting Next Round!")
 }
 
+//Update current maps up for vote
 void function UpdateMapsForVoting(string map1, string map2, string map3, string map4)
 {
 	RuiSetString( Hud_GetRui( Hud_GetChild( file.menu, "MapVote1" )), "buttonText", "" + map1 )
@@ -94,16 +99,19 @@ void function UpdateMapsForVoting(string map1, string map2, string map3, string 
 	RuiSetString( Hud_GetRui( Hud_GetChild( file.menu, "MapVote4" )), "buttonText", "" + map4 )
 }
 
+//Closes the vote menu
 void function CloseCTFVoteMenu()
 {
 	CloseAllMenus()
 }
 
+//Update vote time left
 void function UpdateVoteTimer(int timeleft)
 {
 	Hud_SetText(Hud_GetChild( file.menu, "TimerText" ), timeleft.tostring())
 }
 
+//Update current votes for each map
 void function UpdateVotesUI(int map1, int map2, int map3, int map4)
 {
 	RuiSetString( Hud_GetRui( Hud_GetChild( file.menu, "MapVote1" )), "statusText", "Votes: " + map1 )
@@ -112,6 +120,7 @@ void function UpdateVotesUI(int map1, int map2, int map3, int map4)
 	RuiSetString( Hud_GetRui( Hud_GetChild( file.menu, "MapVote4" )), "statusText", "Votes: " + map4 )
 }
 
+//Lock Buttons and update the map player voted for
 void function UpdateVotedFor(int id)
 {
 	for(int i = 1; i < 5; i++ ) {
@@ -124,6 +133,7 @@ void function UpdateVotedFor(int id)
 	RuiSetInt( rui, "status", eFriendStatus.ONLINE_AWAY )
 }
 
+//Sets and updates selected location
 void function UpdateVotedLocation(string map)
 {
 	for(int i = 1; i < 5; i++ ) {
@@ -144,6 +154,7 @@ void function UpdateVotedLocation(string map)
 	Hud_SetText( Hud_GetChild( file.menu, "VotedForLbl" ), "Next Location: " + map)
 }
 
+//Sets and updates tied voting screen
 void function UpdateVotedLocationTied(string map)
 {
 	for(int i = 1; i < 5; i++ ) {
@@ -165,6 +176,7 @@ void function UpdateVotedLocationTied(string map)
 	Hud_SetText( Hud_GetChild( file.menu, "VotedForLbl" ), map)
 }
 
+//Inits vote menu
 void function InitCTFVoteMenu( var newMenuArg )
 {
 	var menu = GetMenu( "CTFVoteMenu" )
@@ -178,6 +190,7 @@ void function InitCTFVoteMenu( var newMenuArg )
 	AddButtonEventHandler( Hud_GetChild( menu, "MapVote4" ), UIE_CLICK, OnClickMap )
 }
 
+//Button event handlers
 void function OnClickMap( var button )
 {
 	int buttonId = Hud_GetScriptID( button ).tointeger()
