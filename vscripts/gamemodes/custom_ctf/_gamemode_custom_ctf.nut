@@ -98,13 +98,7 @@ void function _CustomCTF_Init()
 
     AddClientCommandCallback("next_round", ClientCommand_NextRound)
 
-    //Comands used for testing
-    //AddClientCommandCallback("killme", ClientCommand_KillMe)
-    //AddClientCommandCallback("imc", ClientCommand_IMC)
-    //AddClientCommandCallback("mil", ClientCommand_MIL)
-    //AddClientCommandCallback("openvote", ClientCommand_OpenVoteMenu)
-    //AddClientCommandCallback("closevote", ClientCommand_CloseVoteMenu)
-
+    //Used for sending votes from client to server
     AddClientCommandCallback("VoteForMap", ClientCommand_VoteForMap)
 
     CTF_SCORE_GOAL_TO_WIN = GetCurrentPlaylistVarInt( "max_score", 5 )
@@ -120,52 +114,33 @@ void function _CustomCTF_Init()
 
 }
 
-bool function ClientCommand_IMC(entity player, array<string> args)
-{
-    SetTeam(player, TEAM_IMC)
-    return true
-}
-
-bool function ClientCommand_MIL(entity player, array<string> args)
-{
-    SetTeam(player, TEAM_MILITIA)
-    return true
-}
-
-bool function ClientCommand_OpenVoteMenu(entity player, array<string> args)
-{
-    Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetVoteMenuOpen", true)
-    return true
-}
-
-bool function ClientCommand_CloseVoteMenu(entity player, array<string> args)
-{
-    Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetVoteMenuOpen", false)
-    return true
-}
-
 bool function ClientCommand_VoteForMap(entity player, array<string> args)
 {
     // don't allow multiple votes
     if (CTF.votedPlayers.contains(player))
         return false
 
+    // dont allow votes if its not voting time
     if (!CTF.votingtime)
         return false
 
+    //get map id from args
     int mapid = args[0].tointeger()
 
     // reject map ids that are outside of the range
     if (mapid >= NUMBER_OF_MAP_SLOTS || mapid < 0)
         return false
 
+    // add a vote for selected maps
     CTF.mapVotes[mapid]++
 
+    // update current amount of votes for each map
     foreach(players in GetPlayerArray())
     {
         Remote_CallFunction_Replay(players, "UpdateMapVotesClient", CTF.mapVotes[0], CTF.mapVotes[1], CTF.mapVotes[2], CTF.mapVotes[3])
     }
 
+    // append player to the list of players the voted so they cant vote again
     CTF.votedPlayers.append(player)
 
     return true
@@ -250,16 +225,15 @@ void function VotingPhase()
         Remote_CallFunction_Replay(player, "ServerCallback_CTF_PointCaptured", CTF.IMCPoints, CTF.MILITIAPoints)
     }
 
+    //Voting phase so disable weapons and make invincible
     foreach(player in GetPlayerArray())
     {
         if( !IsValid( player ) )
             continue;
 
-        //_HandleRespawn(player)
         MakeInvincible(player)
 		HolsterAndDisableWeapons( player )
         player.ForceStand()
-        //Remote_CallFunction_NonReplay(player, "ServerCallback_CTF_DoAnnouncement", 2, eCTFAnnounce.VOTING_PHASE)
         TpPlayerToSpawnPoint(player)
         player.UnfreezeControlsOnServer();
         player.SetPlayerNetInt("kills", 0) //Reset for kills
@@ -277,9 +251,11 @@ void function VotingPhase()
 
     int choice = 0
 
+    //if the map index is out the the range set to 0 to prevent crash
     if(CTF.currentmapindex > file.locationSettings.len() - 1)
         CTF.currentmapindex = 0
 
+    //if setmap then force that to be the next map
     if(CTF.setmap)
     {
         file.selectedLocation = file.locationSettings[CTF.selectedmap]
@@ -294,6 +270,7 @@ void function VotingPhase()
     CTF.currentmapindex++
     CTF.setmap = false
 
+    //Set the next location client side for each player
     foreach(player in GetPlayerArray())
     {
         Remote_CallFunction_NonReplay(player, "ServerCallback_CTF_SetSelectedLocation", choice)
@@ -303,16 +280,16 @@ void function VotingPhase()
 // purpose: handle the start of a new round for players and props
 void function StartRound()
 {
+    //set
     SetGameState(eGameState.Playing)
 
+    //reset map votes
     ResetMapVotes()
 
     foreach(player in GetPlayerArray())
     {
         if( IsValid( player ) )
         {
-            //thread ScreenFadeFromBlack(player, 0.5, 0.5)
-            //RemoveCinematicFlag(player, CE_FLAG_HIDE_MAIN_HUD | CE_FLAG_INTRO)
             if(!IsAlive(player))
             {
                 _HandleRespawn(player)
@@ -324,30 +301,27 @@ void function StartRound()
             player.UnforceStand()
             player.UnfreezeControlsOnServer()
             TpPlayerToSpawnPoint(player)
-
-            //AddPlayerMovementEventCallback(player, ePlayerMovementEvents.TOUCH_GROUND, _HandleRespawnOnLand)
         }
     }
 
+    //spawn CTF flags based on location
     SpawnCTFPoints()
 
+    //create the bubble based on location
     file.bubbleBoundary = CreateBubbleBoundary(file.selectedLocation)
 
+    //set the score ui and team ui
     foreach(player in GetPlayerArray())
     {
         Remote_CallFunction_Replay(player, "ServerCallback_CTF_TeamText", player.GetTeam())
     }
 
-    foreach(team, v in GetPlayerTeamCountTable())
-    {
-        array<entity> squad = GetPlayerArrayOfTeam(team)
-        //thread RespawnPlayersInDropshipAtPoint(squad, squad[0].GetOrigin(), squad[0].GetAngles())
-    }
     float endTime = Time() + CTF_ROUNDTIME
     while( Time() <= endTime )
 	{
         if(file.ctfState == eCTFState.WINNER_DECIDED)
         {
+            //for each player, if the player is holding the flag on round end. make them drop it so it dosnt cause a crash
             foreach(player in GetPlayerArray())
             {
                 if( IsValid( player ) )
@@ -372,9 +346,9 @@ void function StartRound()
                 }
             }
 
+            //remove trail fx from players
             if(IsValid(IMCPoint.trailfx))
                 IMCPoint.trailfx.Destroy()
-
             if(IsValid(MILITIAPoint.trailfx))
                 MILITIAPoint.trailfx.Destroy()
 
@@ -383,14 +357,22 @@ void function StartRound()
             IMCPoint.trigger.Destroy()
             IMCPoint.pointfx.Destroy()
             IMCPoint.beamfx.Destroy()
-
             MILITIAPoint.pole.Destroy()
             MILITIAPoint.trigger.Destroy()
             MILITIAPoint.pointfx.Destroy()
             MILITIAPoint.beamfx.Destroy()
 
+            int TeamWon = 69;
+
+            //See what team has more points to decide on the winner
+            if (CTF.IMCPoints > CTF.MILITIAPoints)
+                TeamWon = TEAM_IMC
+            else if (CTF.MILITIAPoints > CTF.IMCPoints)
+                TeamWon = TEAM_MILITIA
+
             foreach(player in GetPlayerArray())
             {
+                //if player is dead, respawn
                 if(!IsAlive(player))
                 {
                     _HandleRespawn(player)
@@ -398,23 +380,20 @@ void function StartRound()
 
                 if( IsValid( player ) )
                 {
+                    // round is over so make the player invinvible
                     MakeInvincible(player)
 
-                    if (CTF.IMCPoints > CTF.MILITIAPoints)
+                    // battle chatter we won
+                    switch(TeamWon)
                     {
-                        //Remote_CallFunction_Replay(player, "ServerCallback_CTF_TeamWon", TEAM_IMC)
-                        if(player.GetTeam() == TEAM_IMC)
-                            PlayBattleChatterLineToSpeakerAndTeam( player, "bc_weAreChampionSquad" )
-                    }
-                    else if (CTF.MILITIAPoints > CTF.IMCPoints)
-                    {
-                        //Remote_CallFunction_Replay(player, "ServerCallback_CTF_TeamWon", TEAM_MILITIA)
-                        if(player.GetTeam() == TEAM_MILITIA)
-                            PlayBattleChatterLineToSpeakerAndTeam( player, "bc_weAreChampionSquad" )
-                    }
-                    else
-                    {
-                        //Remote_CallFunction_Replay(player, "ServerCallback_CTF_TeamWon", 99)
+                        case TEAM_IMC:
+                            if(player.GetTeam() == TEAM_IMC)
+                                PlayBattleChatterLineToSpeakerAndTeam( player, "bc_weAreChampionSquad" )
+                            break
+                        case TEAM_MILITIA:
+                            if(player.GetTeam() == TEAM_MILITIA)
+                                PlayBattleChatterLineToSpeakerAndTeam( player, "bc_weAreChampionSquad" )
+                            break
                     }
                 }
             }
@@ -422,15 +401,17 @@ void function StartRound()
             //Only do voting for maps with multi locations
             if (file.locationSettings.len() >= NUMBER_OF_MAP_SLOTS)
             {
-                if(file.locationSettings.len() > NUMBER_OF_MAP_SLOTS)
+                if(file.locationSettings.len() > NUMBER_OF_MAP_SLOTS) // if the map has more then NUMBER_OF_MAP_SLOTS locations then randomize the loactions up for vote
                 {
 
                     for(int i = 0; i < NUMBER_OF_MAP_SLOTS; ++i)
                     {
                         while(true)
                         {
+                            //Get a random location id from the available locations
                             int randomId = RandomIntRange(0, file.locationSettings.len())
 
+                            //If the map already isnt picked for voting then append it to the array, otherwise keep looping till it finds one that isnt picked yet
                             if( !CTF.mapIds.contains( randomId ) )
                             {
                                 CTF.mapIds.append( randomId )
@@ -439,7 +420,7 @@ void function StartRound()
                         }
                     }
                 }
-                else if (file.locationSettings.len() == NUMBER_OF_MAP_SLOTS)
+                else if (file.locationSettings.len() == NUMBER_OF_MAP_SLOTS) // if the map has exactly 4 maps, remove the guess work for randomizing the maps as it would cause a rare crash
                 {
                     CTF.mapIds[0] = 0
                     CTF.mapIds[1] = 1
@@ -447,13 +428,7 @@ void function StartRound()
                     CTF.mapIds[3] = 3
                 }
 
-                int TeamWon = 69; // haha 69 funny number
-
-                if (CTF.IMCPoints > CTF.MILITIAPoints)
-                    TeamWon = TEAM_IMC
-                else if (CTF.MILITIAPoints > CTF.IMCPoints)
-                    TeamWon = TEAM_MILITIA
-
+                //for each player, open the vote menu and set it to the winning team screen
                 foreach(player in GetPlayerArray())
                 {
                     if( IsValid( player ) )
@@ -463,10 +438,13 @@ void function StartRound()
                     }
                 }
 
+                //Wait for timing
                 wait 8
 
+                //Set voting to be allowed
                 CTF.votingtime = true
 
+                //For each player, set voting screen and update maps that are picked for voting
                 foreach(player in GetPlayerArray())
                 {
                     if( IsValid( player ) )
@@ -476,12 +454,13 @@ void function StartRound()
                     }
                 }
 
+                //Wait for voting time to be over
                 wait 16
 
                 CTF.votestied = false
-
                 bool anyVotes = false
 
+                //See if there was any votes in the first place
                 foreach( int votes in CTF.mapVotes )
                 {
                     if( votes > 0 )
@@ -515,8 +494,7 @@ void function StartRound()
                             mapsWithHighestVoteCount.clear()
                             mapsWithHighestVoteCount.append(CTF.mapIds[i])
                         }
-                        // if this map also has the highest vote count, add it to the array
-                        else if( votes == highestVoteCount )
+                        else if( votes == highestVoteCount ) // if this map also has the highest vote count, add it to the array
                         {
                             mapsWithHighestVoteCount.append(CTF.mapIds[i])
                         }
@@ -527,13 +505,15 @@ void function StartRound()
                     {
                         CTF.votestied = true
                     }
-                    // else pick the map with the highest vote count
-                    else
+                    else // else pick the map with the highest vote count
                     {
+                        //Set the vote screen for each player to show the chosen location
                         foreach(player in GetPlayerArray())
                         {
                             Remote_CallFunction_Replay(player, "UpdateUIVotingLocationDone", highestVoteId)
                         }
+
+                        //Set the location to the location that won
                         CTF.mappicked = highestVoteId
                     }
 
@@ -548,18 +528,22 @@ void function StartRound()
                         waitthread RandomizeTiedLocations(mapsWithHighestVoteCount)
                     }
                 }
-                else
+                else //No one voted so pick random map
                 {
-                    //No one voted so pick random map
+                    //Pick a random location id from the aviable locations
                     CTF.mappicked = RandomIntRange(0, file.locationSettings.len() - 1)
+
+                    //Set the vote screen for each player to show the chosen location
                     foreach(player in GetPlayerArray())
                     {
                         Remote_CallFunction_Replay(player, "UpdateUIVotingLocationDone", CTF.mappicked)
                     }
                 }
 
+                //Just a wait for timing
                 wait 5
 
+                //Close the votemenu for each player
                 foreach(player in GetPlayerArray())
                 {
                     if( IsValid( player ) )
@@ -570,13 +554,7 @@ void function StartRound()
             }
             else
             {
-                int TeamWon = 69; // haha 69 funny number
-
-                if (CTF.IMCPoints > CTF.MILITIAPoints)
-                    TeamWon = TEAM_IMC
-                else if (CTF.MILITIAPoints > CTF.IMCPoints)
-                    TeamWon = TEAM_MILITIA
-
+                //Open the vote menu for each player and set it to the winners screen
                 foreach(player in GetPlayerArray())
                 {
                     if( IsValid( player ) )
@@ -586,8 +564,10 @@ void function StartRound()
                     }
                 }
 
+                //Wait 10 seconds so the winning team can be shown
                 wait 10
 
+                //Set the votemenu screen to show next round text
                 foreach(player in GetPlayerArray())
                 {
                     if( IsValid( player ) )
@@ -596,8 +576,10 @@ void function StartRound()
                     }
                 }
 
+                //Just a wait for timing
                 wait 5
 
+                //Close the votemenu for each player
                 foreach(player in GetPlayerArray())
                 {
                     if( IsValid( player ) )
@@ -607,8 +589,13 @@ void function StartRound()
                 }
             }
 
+            //Make voting not allowed
             CTF.votingtime = false
+
+            //Clear players the voted for next voting
             CTF.votedPlayers.clear()
+
+            //Clear mapids for next voting
             CTF.mapIds.clear()
 
             break
@@ -618,9 +605,10 @@ void function StartRound()
 
     file.ctfState = eCTFState.IN_PROGRESS
 
+    //Destory bubble
     file.bubbleBoundary.Destroy()
 
-    //Reset flag icons
+    //Reset flag icons for each player
     foreach(player in GetPlayerArray())
     {
         if( IsValid( player ) )
@@ -643,14 +631,17 @@ void function RandomizeTiedLocations(array<int> maps)
 
     while (!donerandomizing)
     {
+        //If currentmapindex is out of range set to 0
         if (currentmapindex >= mapslength)
             currentmapindex = 0
 
+        //Update Randomizer ui for each player
         foreach(player in GetPlayerArray())
         {
             Remote_CallFunction_Replay(player, "UpdateUIVotingLocationTied", maps[currentmapindex], 0)
         }
 
+        //stop randomizing once the randomize ammount is done
         if (i >= randomizeammount)
         {
             donerandomizing = true
@@ -660,42 +651,42 @@ void function RandomizeTiedLocations(array<int> maps)
         i++
         currentmapindex++
 
-        if (i >= randomizeammount - 15 && i < randomizeammount - 5)
+        if (i >= randomizeammount - 15 && i < randomizeammount - 5) // slow down voting randomizer speed
         {
             wait 0.15
         }
-        else if (i >= randomizeammount - 5)
+        else if (i >= randomizeammount - 5) // slow down voting randomizer speed
         {
             wait 0.25
         }
-        else
+        else // default voting randomizer speed
         {
             wait 0.05
         }
     }
 
-    //Pause on selected map for a sec for visuals
+    //Show final selected map
     foreach(player in GetPlayerArray())
     {
         Remote_CallFunction_Replay(player, "UpdateUIVotingLocationTied", maps[selectedamp], 1)
     }
 
+    //Pause on selected map for a sec for visuals
     wait 0.5
 
+    //Procede to final location picked screen
     foreach(player in GetPlayerArray())
     {
         Remote_CallFunction_Replay(player, "UpdateUIVotingLocationDone", maps[selectedamp])
     }
 
+    //Set selected location on server
     CTF.mappicked = maps[selectedamp]
 }
 
 void function _HandleRespawnOnLand(entity player)
 {
     RemovePlayerMovementEventCallback(player, ePlayerMovementEvents.TOUCH_GROUND, _HandleRespawnOnLand)
-
-    //thread f()
-
 }
 
 void function ScreenFadeToFromBlack(entity player, float fadeTime = 1, float holdTime = 1)
@@ -725,15 +716,9 @@ bool function ClientCommand_NextRound(entity player, array<string> args)
     return true
 }
 
-bool function ClientCommand_KillMe(entity player, array<string> args)
-{
-    Remote_CallFunction_Replay( player, "ServerCallback_PlayerTookDamage", 0, 0, 0, 0, DF_BYPASS_SHIELD | DF_DOOMED_HEALTH_LOSS, eDamageSourceId.deathField, null )
-                player.TakeDamage( 200, null, null, { scriptType = DF_BYPASS_SHIELD | DF_DOOMED_HEALTH_LOSS, damageSourceId = eDamageSourceId.deathField } )
-    return true
-}
-
 void function SpawnCTFPoints()
 {
+    //Get ground pos below spawn points
     IMCPoint.spawn = OriginToGround( GetFlagLocation(file.selectedLocation, TEAM_IMC) )
     MILITIAPoint.spawn = OriginToGround( GetFlagLocation(file.selectedLocation, TEAM_MILITIA) )
 
