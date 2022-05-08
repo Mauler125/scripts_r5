@@ -172,7 +172,7 @@
 			"pin_to_sibling"			"MapVoteFrame"
 			"pin_corner_to_sibling"		"CENTER"
 			"pin_to_sibling_corner"		"CENTER"
-			"scriptID"					"1"
+			"scriptID"					"0"
 		}
 		"MapVote2"
 		{
@@ -189,7 +189,7 @@
 			"pin_to_sibling"			"MapVote1"
 			"pin_corner_to_sibling"		"LEFT"
 			"pin_to_sibling_corner"		"RIGHT"
-			"scriptID"					"2"
+			"scriptID"					"1"
 		}
 		"MapVote3"
 		{
@@ -206,7 +206,7 @@
 			"pin_to_sibling"			"MapVote2"
 			"pin_corner_to_sibling"		"LEFT"
 			"pin_to_sibling_corner"		"RIGHT"
-			"scriptID"					"3"
+			"scriptID"					"2"
 		}
 		"MapVote4"
 		{
@@ -223,7 +223,7 @@
 			"pin_to_sibling"			"MapVote3"
 			"pin_corner_to_sibling"		"LEFT"
 			"pin_to_sibling_corner"		"RIGHT"
-			"scriptID"					"4"
+			"scriptID"					"3"
 		}
 	}
 }

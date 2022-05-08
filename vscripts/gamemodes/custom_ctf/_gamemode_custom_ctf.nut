@@ -254,7 +254,7 @@ void function VotingPhase()
     {
         if( !IsValid( player ) )
             continue;
-        
+
         //_HandleRespawn(player)
         MakeInvincible(player)
 		HolsterAndDisableWeapons( player )
@@ -273,7 +273,7 @@ void function VotingPhase()
             file.selectedLocation = file.locationSettings[CTF.mappicked]
             return
         }
-    }    
+    }
 
     int choice = 0
 
@@ -498,7 +498,7 @@ void function StartRound()
 
                     // store the last map id of the map that has the highest vote count
                     int highestVoteId = -1
-                    
+
                     // store map ids of all the maps with the highest vote count
                     array<int> mapsWithHighestVoteCount
 
@@ -609,6 +609,7 @@ void function StartRound()
 
             CTF.votingtime = false
             CTF.votedPlayers.clear()
+            CTF.mapIds.clear()
 
             break
         }
