@@ -433,7 +433,7 @@ void function StartRound()
                     if( IsValid( player ) )
                     {
                         Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetVoteMenuOpen", true)
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", eCTFScreen.WinnerScreen, TeamWon, CTF_NotUsed, CTF_NotUsed)
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", eCTFScreen.WinnerScreen, TeamWon, eCTFScreen.NotUsed, eCTFScreen.NotUsed)
                     }
                 }
 
@@ -449,7 +449,7 @@ void function StartRound()
                     if( IsValid( player ) )
                     {
                         Remote_CallFunction_Replay(player, "ServerCallback_CTF_UpdateVotingMaps", CTF.mapIds[0], CTF.mapIds[1], CTF.mapIds[2], CTF.mapIds[3])
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", eCTFScreen.VoteScreen, CTF_NotUsed, CTF_NotUsed, CTF_NotUsed)
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", eCTFScreen.VoteScreen, eCTFScreen.NotUsed, eCTFScreen.NotUsed, eCTFScreen.NotUsed)
                     }
                 }
 
@@ -509,7 +509,7 @@ void function StartRound()
                         //Set the vote screen for each player to show the chosen location
                         foreach(player in GetPlayerArray())
                         {
-                            Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", eCTFScreen.SelectedScreen, CTF_NotUsed, highestVoteId, CTF_NotUsed)
+                            Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", eCTFScreen.SelectedScreen, eCTFScreen.NotUsed, highestVoteId, eCTFScreen.NotUsed)
                         }
 
                         //Set the location to the location that won
@@ -520,7 +520,7 @@ void function StartRound()
                     {
                         foreach(player in GetPlayerArray())
                         {
-                            Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", eCTFScreen.TiedScreen, CTF_NotUsed, 254, CTF_NotUsed)
+                            Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", eCTFScreen.TiedScreen, eCTFScreen.NotUsed, 254, eCTFScreen.NotUsed)
                         }
 
                         mapsWithHighestVoteCount.randomize()
@@ -535,7 +535,7 @@ void function StartRound()
                     //Set the vote screen for each player to show the chosen location
                     foreach(player in GetPlayerArray())
                     {
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", eCTFScreen.SelectedScreen, CTF_NotUsed, CTF.mappicked, CTF_NotUsed)
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", eCTFScreen.SelectedScreen, eCTFScreen.NotUsed, CTF.mappicked, eCTFScreen.NotUsed)
                     }
                 }
 
@@ -559,7 +559,7 @@ void function StartRound()
                     if( IsValid( player ) )
                     {
                         Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetVoteMenuOpen", true)
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", eCTFScreen.WinnerScreen, TeamWon, CTF_NotUsed, CTF_NotUsed)
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", eCTFScreen.WinnerScreen, TeamWon, eCTFScreen.NotUsed, eCTFScreen.NotUsed)
                     }
                 }
 
@@ -571,7 +571,7 @@ void function StartRound()
                 {
                     if( IsValid( player ) )
                     {
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", eCTFScreen.NextRoundScreen, CTF_NotUsed, CTF_NotUsed, CTF_NotUsed)
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", eCTFScreen.NextRoundScreen, eCTFScreen.NotUsed, eCTFScreen.NotUsed, eCTFScreen.NotUsed)
                     }
                 }
 
@@ -676,7 +676,7 @@ void function RandomizeTiedLocations(array<int> maps)
     //Procede to final location picked screen
     foreach(player in GetPlayerArray())
     {
-        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", eCTFScreen.SelectedScreen, 69, maps[selectedamp], CTF_NotUsed)
+        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", eCTFScreen.SelectedScreen, 69, maps[selectedamp], eCTFScreen.NotUsed)
     }
 
     //Set selected location on server
@@ -819,7 +819,7 @@ void function PlayerPickedUpFlag(entity ent)
 	    MILITIAPoint.trailfx = StartParticleEffectOnEntity_ReturnEntity( ent, GetParticleSystemIndex( $"P_ar_holopilot_trail" ), FX_PATTACH_ABSORIGIN_FOLLOW, AttachID )
     }
     TakeWeaponsForFlagCarrier( ent )
-    Remote_CallFunction_Replay(ent, "ServerCallback_CTF_CustomMessages", ent, PickedUpFlag)
+    Remote_CallFunction_Replay(ent, "ServerCallback_CTF_CustomMessages", ent, eCTFMessage.PickedUpFlag)
 }
 
 void function PlayerDroppedFlag(entity ent)
@@ -862,14 +862,14 @@ void function IMCPoint_Trigger( entity trigger, entity ent )
                 array<entity> teamplayers = GetPlayerArrayOfTeam( TEAM_MILITIA )
 	            foreach ( player in teamplayers )
                 {
-                    Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_IMC, CTF_Escort)
+                    Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_IMC, eCTFFlag.Escort)
                 }
 
                 array<entity> enemyplayers = GetPlayerArrayOfTeam( TEAM_IMC )
 	            foreach ( player in enemyplayers )
                 {
-                    Remote_CallFunction_Replay(player, "ServerCallback_CTF_CustomMessages", player, EnemyPickedUpFlag)
-                    Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_IMC, CTF_Attack)
+                    Remote_CallFunction_Replay(player, "ServerCallback_CTF_CustomMessages", player, eCTFMessage.EnemyPickedUpFlag)
+                    Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_IMC, eCTFFlag.Attack)
                 }
 
                 EmitSoundToTeamPlayers("UI_CTF_3P_TeamGrabFlag", TEAM_MILITIA)
@@ -896,15 +896,15 @@ void function IMCPoint_Trigger( entity trigger, entity ent )
                     array<entity> teamplayers = GetPlayerArrayOfTeam( TEAM_IMC )
 	                foreach ( player in teamplayers )
                     {
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_MILITIA, CTF_Capture)
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_FlagCaptured", IMCPoint.holdingplayer, 0)
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_MILITIA, eCTFFlag.Capture)
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_FlagCaptured", MILITIAPoint.holdingplayer, 0)
                     }
 
                     array<entity> enemyplayers = GetPlayerArrayOfTeam( TEAM_MILITIA )
 	                foreach ( player in enemyplayers )
                     {
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_MILITIA, CTF_Defend)
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_FlagCaptured", IMCPoint.holdingplayer, 1)
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_MILITIA, eCTFFlag.Defend)
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_FlagCaptured", MILITIAPoint.holdingplayer, 1)
                     }
 
                     if(CTF.IMCPoints >= CTF_SCORE_GOAL_TO_WIN)
@@ -954,14 +954,14 @@ void function MILITIA_Point_Trigger( entity trigger, entity ent )
                 array<entity> teamplayers = GetPlayerArrayOfTeam( TEAM_IMC )
 	            foreach ( player in teamplayers )
                 {
-                    Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_MILITIA, CTF_Escort)
+                    Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_MILITIA, eCTFFlag.Escort)
                 }
 
                 array<entity> enemyplayers = GetPlayerArrayOfTeam( TEAM_MILITIA )
 	            foreach ( player in enemyplayers )
                 {
-                    Remote_CallFunction_Replay(player, "ServerCallback_CTF_CustomMessages", player, EnemyPickedUpFlag)
-                    Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_MILITIA, CTF_Attack)
+                    Remote_CallFunction_Replay(player, "ServerCallback_CTF_CustomMessages", player, eCTFMessage.EnemyPickedUpFlag)
+                    Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_MILITIA, eCTFFlag.Attack)
                 }
 
                 EmitSoundToTeamPlayers("UI_CTF_3P_TeamGrabFlag", TEAM_IMC)
@@ -988,14 +988,14 @@ void function MILITIA_Point_Trigger( entity trigger, entity ent )
                     array<entity> teamplayers = GetPlayerArrayOfTeam( TEAM_MILITIA )
 	                foreach ( player in teamplayers )
                     {
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_IMC, CTF_Capture)
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_IMC, eCTFFlag.Capture)
                         Remote_CallFunction_Replay(player, "ServerCallback_CTF_FlagCaptured", IMCPoint.holdingplayer, 0)
                     }
 
                     array<entity> enemyplayers = GetPlayerArrayOfTeam( TEAM_IMC )
 	                foreach ( player in enemyplayers )
                     {
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_IMC, CTF_Defend)
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_IMC, eCTFFlag.Defend)
                         Remote_CallFunction_Replay(player, "ServerCallback_CTF_FlagCaptured", IMCPoint.holdingplayer, 1)
                     }
 
@@ -1121,14 +1121,14 @@ void function _OnPlayerDisconnected(entity player)
             array<entity> teamplayers = GetPlayerArrayOfTeam( TEAM_MILITIA )
 	        foreach ( players in teamplayers )
             {
-		        Remote_CallFunction_Replay(players, "ServerCallback_CTF_CustomMessages", players, EnemyPickedUpFlag)
-                Remote_CallFunction_Replay(players, "ServerCallback_CTF_SetPointIconHint", TEAM_IMC, CTF_Capture)
+		        Remote_CallFunction_Replay(players, "ServerCallback_CTF_CustomMessages", players, eCTFMessage.EnemyPickedUpFlag)
+                Remote_CallFunction_Replay(players, "ServerCallback_CTF_SetPointIconHint", TEAM_IMC, eCTFFlag.Capture)
             }
 
             array<entity> enemyplayers = GetPlayerArrayOfTeam( TEAM_IMC )
 	        foreach ( players in enemyplayers )
             {
-                Remote_CallFunction_Replay(players, "ServerCallback_CTF_SetPointIconHint", TEAM_IMC, CTF_Defend)
+                Remote_CallFunction_Replay(players, "ServerCallback_CTF_SetPointIconHint", TEAM_IMC, eCTFFlag.Defend)
             }
 
 
@@ -1190,14 +1190,14 @@ void function _OnPlayerDisconnected(entity player)
             array<entity> teamplayers = GetPlayerArrayOfTeam( TEAM_IMC )
 	        foreach ( players in teamplayers )
             {
-		        Remote_CallFunction_Replay(players, "ServerCallback_CTF_CustomMessages", players, EnemyPickedUpFlag)
-                Remote_CallFunction_Replay(players, "ServerCallback_CTF_SetPointIconHint", TEAM_MILITIA, CTF_Capture)
+		        Remote_CallFunction_Replay(players, "ServerCallback_CTF_CustomMessages", players, eCTFMessage.EnemyPickedUpFlag)
+                Remote_CallFunction_Replay(players, "ServerCallback_CTF_SetPointIconHint", TEAM_MILITIA, eCTFFlag.Capture)
             }
 
             array<entity> enemyplayers = GetPlayerArrayOfTeam( TEAM_MILITIA )
 	        foreach ( players in enemyplayers )
             {
-                Remote_CallFunction_Replay(players, "ServerCallback_CTF_SetPointIconHint", TEAM_MILITIA, CTF_Return)
+                Remote_CallFunction_Replay(players, "ServerCallback_CTF_SetPointIconHint", TEAM_MILITIA, eCTFFlag.Return)
             }
 
 
@@ -1258,14 +1258,14 @@ void function MILITIA_PoleReturn_Trigger( entity trigger, entity ent )
             array<entity> teamplayers = GetPlayerArrayOfTeam( TEAM_IMC )
 	        foreach ( player in teamplayers )
             {
-                Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_MILITIA, CTF_Escort)
+                Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_MILITIA, eCTFFlag.Escort)
             }
 
             array<entity> enemyplayers = GetPlayerArrayOfTeam( TEAM_MILITIA )
 	        foreach ( player in enemyplayers )
             {
-                Remote_CallFunction_Replay(player, "ServerCallback_CTF_CustomMessages", player, EnemyPickedUpFlag)
-                Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_MILITIA, CTF_Attack)
+                Remote_CallFunction_Replay(player, "ServerCallback_CTF_CustomMessages", player, eCTFMessage.EnemyPickedUpFlag)
+                Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_MILITIA, eCTFFlag.Attack)
             }
 
             EmitSoundToTeamPlayers("UI_CTF_3P_TeamGrabFlag", TEAM_IMC)
@@ -1318,14 +1318,14 @@ void function StartMILFlagReturnTimer(entity player)
         array<entity> teamplayers = GetPlayerArrayOfTeam( TEAM_IMC )
 	    foreach ( players in teamplayers )
         {
-            Remote_CallFunction_Replay(players, "ServerCallback_CTF_SetPointIconHint", TEAM_MILITIA, CTF_Capture)
+            Remote_CallFunction_Replay(players, "ServerCallback_CTF_SetPointIconHint", TEAM_MILITIA, eCTFFlag.Capture)
         }
 
         array<entity> enemyplayers = GetPlayerArrayOfTeam( TEAM_MILITIA )
 	    foreach ( players in enemyplayers )
         {
-            Remote_CallFunction_Replay(players, "ServerCallback_CTF_CustomMessages", players, TeamReturnedFlag)
-            Remote_CallFunction_Replay(players, "ServerCallback_CTF_SetPointIconHint", TEAM_MILITIA, CTF_Defend)
+            Remote_CallFunction_Replay(players, "ServerCallback_CTF_CustomMessages", players, eCTFMessage.TeamReturnedFlag)
+            Remote_CallFunction_Replay(players, "ServerCallback_CTF_SetPointIconHint", TEAM_MILITIA, eCTFFlag.Defend)
         }
     }
     else
@@ -1358,14 +1358,14 @@ void function IMC_PoleReturn_Trigger( entity trigger, entity ent )
             array<entity> teamplayers = GetPlayerArrayOfTeam( TEAM_MILITIA )
 	        foreach ( player in teamplayers )
             {
-                Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_IMC, CTF_Escort)
+                Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_IMC, eCTFFlag.Escort)
             }
 
             array<entity> enemyplayers = GetPlayerArrayOfTeam( TEAM_IMC )
 	        foreach ( player in enemyplayers )
             {
-                Remote_CallFunction_Replay(player, "ServerCallback_CTF_CustomMessages", player, EnemyPickedUpFlag)
-                Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_IMC, CTF_Attack)
+                Remote_CallFunction_Replay(player, "ServerCallback_CTF_CustomMessages", player, eCTFMessage.EnemyPickedUpFlag)
+                Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_IMC, eCTFFlag.Attack)
             }
 
             EmitSoundToTeamPlayers("UI_CTF_3P_TeamGrabFlag", TEAM_MILITIA)
@@ -1418,14 +1418,14 @@ void function StartIMCFlagReturnTimer(entity player)
         array<entity> teamplayers = GetPlayerArrayOfTeam( TEAM_MILITIA )
 	    foreach ( players in teamplayers )
         {
-            Remote_CallFunction_Replay(players, "ServerCallback_CTF_SetPointIconHint", TEAM_IMC, CTF_Capture)
+            Remote_CallFunction_Replay(players, "ServerCallback_CTF_SetPointIconHint", TEAM_IMC, eCTFFlag.Capture)
         }
 
         array<entity> enemyplayers = GetPlayerArrayOfTeam( TEAM_IMC )
 	    foreach ( players in enemyplayers )
         {
-            Remote_CallFunction_Replay(players, "ServerCallback_CTF_SetPointIconHint", TEAM_IMC, CTF_Defend)
-            Remote_CallFunction_Replay(players, "ServerCallback_CTF_CustomMessages", players, TeamReturnedFlag)
+            Remote_CallFunction_Replay(players, "ServerCallback_CTF_SetPointIconHint", TEAM_IMC, eCTFFlag.Defend)
+            Remote_CallFunction_Replay(players, "ServerCallback_CTF_CustomMessages", players, eCTFMessage.TeamReturnedFlag)
         }
     }
     else
@@ -1484,13 +1484,13 @@ void function CheckPlayerForFlag(entity victim)
             array<entity> teamplayers = GetPlayerArrayOfTeam( TEAM_MILITIA )
 	        foreach ( player in teamplayers )
             {
-                Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_IMC, CTF_Capture)
+                Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_IMC, eCTFFlag.Capture)
             }
 
             array<entity> enemyplayers = GetPlayerArrayOfTeam( TEAM_IMC )
 	        foreach ( player in enemyplayers )
             {
-                Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_IMC, CTF_Defend)
+                Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_IMC, eCTFFlag.Defend)
             }
 
             //Check for if the flag ends up under the map
@@ -1552,13 +1552,13 @@ void function CheckPlayerForFlag(entity victim)
             array<entity> teamplayers = GetPlayerArrayOfTeam( TEAM_IMC )
 	        foreach ( player in teamplayers )
             {
-                Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_MILITIA, CTF_Capture)
+                Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_MILITIA, eCTFFlag.Capture)
             }
 
             array<entity> enemyplayers = GetPlayerArrayOfTeam( TEAM_MILITIA )
 	        foreach ( player in enemyplayers )
             {
-                Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_MILITIA, CTF_Return)
+                Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_MILITIA, eCTFFlag.Return)
             }
 
             //Check for if the flag ends up under the map

@@ -267,15 +267,15 @@ void function ServerCallback_CTF_SetPointIconHint(int teamflag, int messageid)
         if(IMCpointicon == null)
             return
 
-        if(messageid == CTF_Defend)
+        if (messageid == eCTFFlag.Defend)
             RuiSetString( IMCpointicon, "hint", "Defend" )
-        else if(messageid == CTF_Capture)
+        else if(messageid == eCTFFlag.Capture)
             RuiSetString( IMCpointicon, "hint", "Capture" )
-        else if(messageid == CTF_Attack)
+        else if(messageid == eCTFFlag.Attack)
             RuiSetString( IMCpointicon, "hint", "Attack" )
-        else if(messageid == CTF_Escort)
+        else if(messageid == eCTFFlag.Escort)
             RuiSetString( IMCpointicon, "hint", "Escort" )
-        else if(messageid == CTF_Return)
+        else if(messageid == eCTFFlag.Return)
             RuiSetString( IMCpointicon, "hint", "Return" )
 
     }
@@ -284,15 +284,15 @@ void function ServerCallback_CTF_SetPointIconHint(int teamflag, int messageid)
         if(MILITIApointicon == null)
             return
 
-        if(messageid == CTF_Defend)
+        if(messageid == eCTFFlag.Defend)
             RuiSetString( MILITIApointicon, "hint", "Defend" )
-        else if(messageid == CTF_Capture)
+        else if(messageid == eCTFFlag.Capture)
             RuiSetString( MILITIApointicon, "hint", "Capture" )
-        else if(messageid == CTF_Attack)
+        else if(messageid == eCTFFlag.Attack)
             RuiSetString( MILITIApointicon, "hint", "Attack" )
-        else if(messageid == CTF_Escort)
+        else if(messageid == eCTFFlag.Escort)
             RuiSetString( MILITIApointicon, "hint", "Escort" )
-        else if(messageid == CTF_Return)
+        else if(messageid == eCTFFlag.Return)
             RuiSetString( MILITIApointicon, "hint", "Return" )
     }
 
@@ -464,16 +464,18 @@ void function ServerCallback_CTF_TeamWon(int team)
 	AnnouncementFromClass( GetLocalViewPlayer(), announcement )
 }
 
-void function ServerCallback_CTF_FlagCaptured(entity player, int team)
+void function ServerCallback_CTF_FlagCaptured(entity player, int messageid)
 {
     AnnouncementData announcement
 
-    switch(team)
+    switch(messageid)
     {
         case 0:
             announcement = Announcement_Create( "Your team has captured the enemy flag!" )
+            break
         case 1:
             announcement = Announcement_Create( "Enemy team has captured your flag!" )
+            break
     }
 
 	Announcement_SetStyle( announcement, ANNOUNCEMENT_STYLE_SWEEP )
@@ -487,15 +489,15 @@ void function ServerCallback_CTF_FlagCaptured(entity player, int team)
 void function ServerCallback_CTF_CustomMessages(entity player, int messageid)
 {
     string message;
-    if (messageid == PickedUpFlag)
+    if (messageid == eCTFMessage.PickedUpFlag)
     {
         message = "You picked up the flag"
     }
-    else if (messageid == EnemyPickedUpFlag)
+    else if (messageid == eCTFMessage.EnemyPickedUpFlag)
     {
         message = "Enemy team picked up your flag"
     }
-    else if (messageid == TeamReturnedFlag)
+    else if (messageid == eCTFMessage.TeamReturnedFlag)
     {
         message = "Your teams flag has been returned to base"
     }

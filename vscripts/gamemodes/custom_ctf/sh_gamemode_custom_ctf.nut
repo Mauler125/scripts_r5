@@ -28,16 +28,22 @@ global int CTF_SCORE_GOAL_TO_WIN = 5
 global int CTF_ROUNDTIME = 1500
 
 //Custom Messages IDS
-global int PickedUpFlag = 0
-global int EnemyPickedUpFlag = 1
-global int TeamReturnedFlag = 2
+global enum eCTFMessage
+{
+    PickedUpFlag = 0
+    EnemyPickedUpFlag = 1
+    TeamReturnedFlag = 2
+}
 
 //PointHint IDS
-global int CTF_Defend = 0
-global int CTF_Capture = 1
-global int CTF_Attack = 2
-global int CTF_Escort = 3
-global int CTF_Return = 4
+global enum eCTFFlag
+{
+    Defend = 0
+    Capture = 1
+    Attack = 2
+    Escort = 3
+    Return = 4
+}
 
 //Screen IDS
 global enum eCTFScreen
@@ -47,9 +53,8 @@ global enum eCTFScreen
 	TiedScreen = 2
 	SelectedScreen = 3
 	NextRoundScreen = 4
+    NotUsed = 230
 }
-
-global int CTF_NotUsed = 230
 
 global enum eCTFAnnounce
 {
