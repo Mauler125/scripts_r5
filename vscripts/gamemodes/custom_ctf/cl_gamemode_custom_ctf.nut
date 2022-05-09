@@ -34,12 +34,14 @@ global function VoteForMap
 global function UI_To_Client_UpdateSelectedClass
 
 global function Cl_CTFRegisterLocation
+global function Cl_CTFRegisterCTFClass
 
 struct {
 
     LocationSettingsCTF &selectedLocation
     array choices
     array<LocationSettingsCTF> locationSettings
+    array<CTFClasses> ctfclasses
     var scoreRui
     var teamRui
 } file;
@@ -58,6 +60,8 @@ entity cameraMover
 
 array<var> teamicons
 
+int ClassID = 0
+
 void function Cl_CustomCTF_Init()
 {
 }
@@ -65,6 +69,11 @@ void function Cl_CustomCTF_Init()
 void function Cl_CTFRegisterLocation(LocationSettingsCTF locationSettings)
 {
     file.locationSettings.append(locationSettings)
+}
+
+void function Cl_CTFRegisterCTFClass(CTFClasses ctfclass)
+{
+    file.ctfclasses.append(ctfclass)
 }
 
 void function ServerCallback_CTF_SetSelectedLocation(int sel)
@@ -527,6 +536,8 @@ void function UI_To_Client_UpdateSelectedClass(int selectedclass)
 {
     ClassID = selectedclass;
 
+    RunUIScript("UpdateSelectedClass", ClassID, file.ctfclasses[ClassID].primary, file.ctfclasses[ClassID].secondary, file.ctfclasses[ClassID].tactical, file.ctfclasses[ClassID].ult)
+
     entity player = GetLocalClientPlayer()
     // why does s3 not have remote server functions..?
     player.ClientCommand("SetPlayerClass " + selectedclass)
@@ -535,7 +546,7 @@ void function UI_To_Client_UpdateSelectedClass(int selectedclass)
 void function ServerCallback_CTF_OpenCTFRespawnMenu(vector campos, int IMCscore, int MILscore, entity attacker)
 {
     RunUIScript( "OpenCTFRespawnMenu" )
-    RunUIScript( "UpdateSelectedClass", ClassID )
+    RunUIScript("UpdateSelectedClass", ClassID, file.ctfclasses[ClassID].primary, file.ctfclasses[ClassID].secondary, file.ctfclasses[ClassID].tactical, file.ctfclasses[ClassID].ult)
     RunUIScript( "EnableClassSelect")
 
     entity player = GetLocalClientPlayer()
