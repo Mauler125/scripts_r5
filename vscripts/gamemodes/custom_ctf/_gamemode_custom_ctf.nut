@@ -104,8 +104,6 @@ void function _CustomCTF_Init()
     AddClientCommandCallback("VoteForMap", ClientCommand_VoteForMap)
     AddClientCommandCallback("SetPlayerClass", ClientCommand_SetPlayerClass)
 
-    AddClientCommandCallback("openrespawn", ClientCommand_OpenRespawnMenu)
-
     CTF_SCORE_GOAL_TO_WIN = GetCurrentPlaylistVarInt( "max_score", 5 )
     CTF_ROUNDTIME = GetCurrentPlaylistVarInt( "round_time", 1500 )
 
@@ -134,12 +132,6 @@ bool function ClientCommand_NextRound(entity player, array<string> args)
     CTF.setmap = true
     CTF.selectedmap = args[0].tointeger()
     file.ctfState = eCTFState.WINNER_DECIDED
-    return true
-}
-
-bool function ClientCommand_OpenRespawnMenu(entity player, array<string> args)
-{
-    Remote_CallFunction_NonReplay(player, "ServerCallback_CTF_OpenCTFRespawnMenu", CTF.bubbleCenter, CTF.IMCPoints, CTF.MILITIAPoints, player)
     return true
 }
 
@@ -187,6 +179,7 @@ bool function ClientCommand_SetPlayerClass(entity player, array<string> args)
     if (classid >= NUMBER_OF_CLASS_SLOTS || classid < 0)
         return false
 
+    // set players classid for next spawn and every spawn after that
     player.p.CTFClassID = classid
 
     return true
