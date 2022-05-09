@@ -64,6 +64,7 @@ int ClassID = 0
 
 void function Cl_CustomCTF_Init()
 {
+
 }
 
 void function Cl_CTFRegisterLocation(LocationSettingsCTF locationSettings)
@@ -543,10 +544,10 @@ void function UI_To_Client_UpdateSelectedClass(int selectedclass)
     player.ClientCommand("SetPlayerClass " + selectedclass)
 }
 
-void function ServerCallback_CTF_OpenCTFRespawnMenu(vector campos, int IMCscore, int MILscore, entity attacker)
+void function ServerCallback_CTF_OpenCTFRespawnMenu(vector campos, int IMCscore, int MILscore, entity attacker, int selectedclassid)
 {
     RunUIScript("OpenCTFRespawnMenu", file.ctfclasses[0].name, file.ctfclasses[1].name, file.ctfclasses[2].name, file.ctfclasses[3].name, file.ctfclasses[4].name)
-    RunUIScript("UpdateSelectedClass", ClassID, file.ctfclasses[ClassID].primary, file.ctfclasses[ClassID].secondary, file.ctfclasses[ClassID].tactical, file.ctfclasses[ClassID].ult)
+    RunUIScript("UpdateSelectedClass", selectedclassid, file.ctfclasses[selectedclassid].primary, file.ctfclasses[selectedclassid].secondary, file.ctfclasses[selectedclassid].tactical, file.ctfclasses[selectedclassid].ult)
 
     entity player = GetLocalClientPlayer()
 

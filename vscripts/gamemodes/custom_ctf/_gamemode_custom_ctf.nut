@@ -181,6 +181,7 @@ bool function ClientCommand_SetPlayerClass(entity player, array<string> args)
 
     // set players classid for next spawn and every spawn after that
     player.p.CTFClassID = classid
+    player.SetPersistentVar( "gen", classid )
 
     return true
 }
@@ -364,6 +365,9 @@ void function StartRound()
     float endTime = Time() + CTF_ROUNDTIME
     while( Time() <= endTime )
 	{
+        if(Time() > endTime - 5)
+            file.ctfState = eCTFState.WINNER_DECIDED
+
         if(file.ctfState == eCTFState.WINNER_DECIDED)
         {
             //for each player, if the player is holding the flag on round end. make them drop it so it dosnt cause a crash
@@ -1080,6 +1084,12 @@ void function _OnPlayerConnected(entity player)
 
     Remote_CallFunction_NonReplay(player, "ServerCallback_CTF_SetObjectiveText", CTF_SCORE_GOAL_TO_WIN)
 
+    int SavedPlayerClass = player.GetPersistentVarAsInt( "gen" )
+    if (SavedPlayerClass > NUMBER_OF_CLASS_SLOTS || SavedPlayerClass < 0)
+        SavedPlayerClass = 0
+
+    player.p.CTFClassID = SavedPlayerClass
+
     if(!IsAlive(player))
     {
         _HandleRespawn(player)
@@ -1624,7 +1634,7 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
 
             if (!CTF.votingtime)
             {
-                Remote_CallFunction_NonReplay(victim, "ServerCallback_CTF_OpenCTFRespawnMenu", CTF.bubbleCenter, CTF.IMCPoints, CTF.MILITIAPoints, attacker)
+                Remote_CallFunction_NonReplay(victim, "ServerCallback_CTF_OpenCTFRespawnMenu", CTF.bubbleCenter, CTF.IMCPoints, CTF.MILITIAPoints, attacker, victim.p.CTFClassID)
 
                 float reservedTime = 4// so we dont immediately go to killcam
                 wait reservedTime
