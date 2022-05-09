@@ -83,12 +83,6 @@ void function InitCTFRespawnMenu( var newMenuArg )
 	AddButtonEventHandler( Hud_GetChild( menu, "Class3" ), UIE_CLICK, OnClickClass )
 	AddButtonEventHandler( Hud_GetChild( menu, "Class4" ), UIE_CLICK, OnClickClass )
 	AddButtonEventHandler( Hud_GetChild( menu, "Class5" ), UIE_CLICK, OnClickClass )
-
-	RuiSetString( Hud_GetRui( Hud_GetChild( file.menu, "Class1" )), "buttonText", "Close-Quarters" )
-	RuiSetString( Hud_GetRui( Hud_GetChild( file.menu, "Class2" )), "buttonText", "Heavy" )
-	RuiSetString( Hud_GetRui( Hud_GetChild( file.menu, "Class3" )), "buttonText", "Assault" )
-	RuiSetString( Hud_GetRui( Hud_GetChild( file.menu, "Class4" )), "buttonText", "Marksman" )
-	RuiSetString( Hud_GetRui( Hud_GetChild( file.menu, "Class5" )), "buttonText", "Sniper" )
 }
 
 //Button event handlers

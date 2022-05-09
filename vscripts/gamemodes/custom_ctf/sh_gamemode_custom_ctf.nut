@@ -22,6 +22,10 @@ global function GetFlagLocation
 global int CTF_SCORE_GOAL_TO_WIN = 5
 global int CTF_ROUNDTIME = 1500
 
+#if CLIENT
+bool CTF_INSPECT_MENU_OPEN = false
+#endif
+
 //Custom Messages IDS
 global enum eCTFMessage
 {
@@ -136,8 +140,20 @@ void function Shared_RegisterCTFClass(CTFClasses ctfclass)
     #endif
 }
 
+#if CLIENT
+void function OnInspectKeyPressed( entity localPlayer )
+{
+    //Todo: Maybe Add Attachment Customization
+}
+#endif
+
+
 void function Sh_CustomCTF_Init()
 {
+    #if CLIENT
+		RegisterConCommandTriggeredCallback( "weapon_inspect", OnInspectKeyPressed )
+    #endif
+
     //Register Classes
     for(int i = 1; i < 6; i++ ) {
         Shared_RegisterCTFClass(

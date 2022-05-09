@@ -477,6 +477,9 @@ void function StartRound()
                     CTF.mapIds[3] = 3
                 }
 
+                //Set voting to be allowed
+                CTF.votingtime = true
+
                 //for each player, open the vote menu and set it to the winning team screen
                 foreach(player in GetPlayerArray())
                 {
@@ -489,9 +492,6 @@ void function StartRound()
 
                 //Wait for timing
                 wait 8
-
-                //Set voting to be allowed
-                CTF.votingtime = true
 
                 //For each player, set voting screen and update maps that are picked for voting
                 foreach(player in GetPlayerArray())
@@ -1648,7 +1648,7 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
 
                 wait 6
 
-                if(IsValid(victim) )
+                if (IsValid(victim) && !CTF.votingtime)
                 {
                     Remote_CallFunction_NonReplay(victim, "ServerCallback_CTF_PlayerSpawning")
                     _HandleRespawn( victim )

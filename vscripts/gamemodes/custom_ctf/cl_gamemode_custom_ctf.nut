@@ -50,6 +50,7 @@ var IMCpointicon = null
 var MILITIApointicon = null
 var FlagReturnRUI = null
 bool hasvoted = false;
+bool isvoting = false;
 
 entity backgroundModelSmoke
 entity backgroundModelGeo
@@ -546,6 +547,9 @@ void function UI_To_Client_UpdateSelectedClass(int selectedclass)
 
 void function ServerCallback_CTF_OpenCTFRespawnMenu(vector campos, int IMCscore, int MILscore, entity attacker, int selectedclassid)
 {
+    if(isvoting)
+        return
+
     RunUIScript("OpenCTFRespawnMenu", file.ctfclasses[0].name, file.ctfclasses[1].name, file.ctfclasses[2].name, file.ctfclasses[3].name, file.ctfclasses[4].name)
     RunUIScript("UpdateSelectedClass", selectedclassid, file.ctfclasses[selectedclassid].primary, file.ctfclasses[selectedclassid].secondary, file.ctfclasses[selectedclassid].tactical, file.ctfclasses[selectedclassid].ult)
 
@@ -638,7 +642,6 @@ void function UpdateUIRespawnTimer()
 
 void function ServerCallback_CTF_PlayerSpawning()
 {
-
     foreach ( iconvar in teamicons )
     {
         try {
@@ -661,18 +664,21 @@ void function waitrespawn(entity player)
         cameraMover.Destroy()
     } catch (exception){ }
 
-    try {
-        cameraMover = CreateClientsideScriptMover( $"mdl/dev/empty_model.rmdl", Deathcam.GetOrigin(), Deathcam.GetAngles() )
-        Deathcam.SetParent( cameraMover, "", false )
-        player.SetMenuCameraEntityWithAudio( Deathcam )
-        cameraMover.NonPhysicsMoveTo( player.GetOrigin(), 0.40, 0, 0.20 )
-        cameraMover.NonPhysicsRotateTo( player.CameraAngles(), 0.40, 0, 0.20 )
-    } catch (exception2){ }
+    if(!isvoting)
+    {
+        try {
+            cameraMover = CreateClientsideScriptMover( $"mdl/dev/empty_model.rmdl", Deathcam.GetOrigin(), Deathcam.GetAngles() )
+            Deathcam.SetParent( cameraMover, "", false )
+            player.SetMenuCameraEntityWithAudio( Deathcam )
+            cameraMover.NonPhysicsMoveTo( player.GetOrigin(), 0.40, 0, 0.20 )
+            cameraMover.NonPhysicsRotateTo( player.CameraAngles(), 0.40, 0, 0.20 )
+        } catch (exception2){ }
 
-    wait 0.40
+        wait 0.40
 
-    RunUIScript( "CloseCTFRespawnMenu" )
-    player.ClearMenuCameraEntity()
+        RunUIScript( "CloseCTFRespawnMenu" )
+        player.ClearMenuCameraEntity()
+    }
 
     try {
         Deathcam.ClearParent()
@@ -694,6 +700,7 @@ void function ServerCallback_CTF_SetVoteMenuOpen(bool shouldOpen)
 void function CreateVotingUI()
 {
     hasvoted = false
+    isvoting = true
 
     EmitSoundOnEntity( GetLocalClientPlayer(), "Music_CharacterSelect_Wattson" )
     wait 3;
@@ -747,6 +754,7 @@ void function DestroyVotingUI()
     GetLocalClientPlayer().ClearMenuCameraEntity()
 
     RunUIScript( "CloseCTFVoteMenu" )
+    isvoting = false
 
     ScreenFade(GetLocalClientPlayer(), 0, 0, 0, 255, 0.3, 0.5, FFADE_IN | FFADE_PURGE)
 }
