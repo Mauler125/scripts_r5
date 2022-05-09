@@ -101,7 +101,6 @@ void function OnClickClass( var button )
 	RuiSetInt( Hud_GetRui( button ), "status", eFriendStatus.ONLINE_AWAY )
 
 	int buttonId = Hud_GetScriptID( button ).tointeger()
-	//SetWeaponIcons(buttonId)
 	RunClientScript("UI_To_Client_UpdateSelectedClass", buttonId )
 }
 
@@ -115,7 +114,7 @@ void function UpdateSelectedClass(int classid, string primary, string secondary,
 
 	RuiSetInt( Hud_GetRui( Hud_GetChild( file.menu, "Class" + finalclassid )), "status", eFriendStatus.ONLINE_AWAY )
 
-	SetWeaponIcons(primary, secondary, tactical, ult)
+	Set_CTF_Class(primary, secondary, tactical, ult)
 }
 
 void function DisableClassSelect()
@@ -125,7 +124,7 @@ void function DisableClassSelect()
 	}
 }
 
-void function SetWeaponIcons(string primary, string secondary, string tactical, string ult)
+void function Set_CTF_Class(string primary, string secondary, string tactical, string ult)
 {
 	LootData primaryData = SURVIVAL_Loot_GetLootDataByRef( primary )
 	LootData secondaryData = SURVIVAL_Loot_GetLootDataByRef( secondary )
