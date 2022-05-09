@@ -123,127 +123,19 @@ void function EnableClassSelect()
 	}
 }
 
-//used to set weapon icons
-//plan is to change all of this once i get time to allow classes to be set via playlist
 void function SetWeaponIcons(string primary, string secondary, string tactical, string ult)
 {
 	LootData primaryData = SURVIVAL_Loot_GetLootDataByRef( primary )
 	LootData secondaryData = SURVIVAL_Loot_GetLootDataByRef( secondary )
-	Abilitys tacticalData = GetAbilityData(tactical)
-	Abilitys ultData = GetAbilityData(ult)
 
 	RuiSetImage(Hud_GetRui(Hud_GetChild(file.menu, "Weapon1Img")), "basicImage", primaryData.hudIcon)
 	RuiSetImage(Hud_GetRui(Hud_GetChild( file.menu, "Weapon2Img" )), "basicImage", secondaryData.hudIcon)
-	RuiSetImage(Hud_GetRui(Hud_GetChild(file.menu, "Ability1Img")), "basicImage", tacticalData.icon)
-	RuiSetImage(Hud_GetRui(Hud_GetChild(file.menu, "Ability2Img")), "basicImage", ultData.icon)
+	RuiSetImage(Hud_GetRui(Hud_GetChild(file.menu, "Ability1Img")), "basicImage", GetWeaponInfoFileKeyFieldAsset_Global(tactical, "hud_icon"))
+	RuiSetImage(Hud_GetRui(Hud_GetChild(file.menu, "Ability2Img")), "basicImage", GetWeaponInfoFileKeyFieldAsset_Global(ult, "hud_icon"))
 	Hud_SetText(Hud_GetChild(file.menu, "Weapon1Text"), "Primary: " + GetWeaponInfoFileKeyField_GlobalString(primaryData.baseWeapon, "shortprintname"))
 	Hud_SetText(Hud_GetChild(file.menu, "Weapon2Text"), "Secondary: " + GetWeaponInfoFileKeyField_GlobalString(secondaryData.baseWeapon, "shortprintname"))
-	Hud_SetText(Hud_GetChild(file.menu, "Ability2Text"), "Ultimate: " + ultData.name)
-	Hud_SetText(Hud_GetChild(file.menu, "Ability1Text"), "Tactical: " + tacticalData.name)
-}
-
-//There has to be a way to get ult and tac data the same way as weapons right?
-//LootData secondaryData = SURVIVAL_Loot_GetLootDataByRef( secondary )
-Abilitys function GetAbilityData(string name)
-{
-	Abilitys abilitys
-	switch(name)
-	{
-		case "mp_weapon_grenade_bangalore":
-			abilitys.name = Localize( "#WPN_GRENADE_ELECTRIC_SMOKE_SHORT" )
-			abilitys.icon = $"rui/hud/tactical_icons/tactical_bangalore"
-			break
-		case "mp_weapon_grenade_creeping_bombardment":
-			abilitys.name = Localize( "#WPN_CREEPING_BOMBARDMENT_SHORT" )
-			abilitys.icon = $"rui/hud/ultimate_icons/ultimate_bangalore"
-			break
-		case "mp_ability_area_sonar_scan":
-			abilitys.name = Localize( "#WPN_AREA_SONAR_SCAN_SHORT" )
-			abilitys.icon = $"rui/hud/tactical_icons/tactical_bloodhound"
-			break
-		case "mp_ability_hunt_mode":
-			abilitys.name = Localize( "#WPN_HUNT_MODE" )
-			abilitys.icon = $"rui/hud/ultimate_icons/ultimate_bloodhound"
-			break
-		case "mp_weapon_dirty_bomb":
-			abilitys.name = Localize( "#WPN_DIRTY_BOMB_SHORT" )
-			abilitys.icon = $"rui/hud/tactical_icons/tactical_caustic"
-			break
-		case "mp_weapon_grenade_gas":
-			abilitys.name = Localize( "#WPN_GRENADE_ELECTRIC_SMOKE_SHORT" )
-			abilitys.icon = $"rui/hud/ultimate_icons/ultimate_caustic"
-			break
-		case "mp_ability_crypto_drone":
-			abilitys.name = Localize( "#WPN_AERIAL_DRONE_SHORT" )
-			abilitys.icon = $"rui/hud/tactical_icons/tactical_crypto"
-			break
-		case "mp_ability_crypto_drone_emp":
-			abilitys.name = Localize( "#WPN_DRONE_EMP" )
-			abilitys.icon = $"rui/hud/ultimate_icons/ultimate_crypto"
-			break
-		case "mp_weapon_bubble_bunker":
-			abilitys.name = Localize( "#WPN_BUBBLE_BUNKER_SHORT" )
-			abilitys.icon = $"rui/hud/tactical_icons/tactical_gibraltar"
-			break
-		case "mp_weapon_grenade_defensive_bombardment":
-			abilitys.name = Localize( "#WPN_DEFENSIVE_BOMBARDMENT_SHORT" )
-			abilitys.icon = $"rui/hud/ultimate_icons/ultimate_gibraltar"
-			break
-		case "mp_weapon_deployable_medic":
-			abilitys.name = Localize( "#WPN_DEPLOYABLE_MEDIC_SHORT" )
-			abilitys.icon = $"rui/hud/tactical_icons/tactical_lifeline"
-			break
-		case "mp_ability_care_package":
-			abilitys.name = Localize( "#WPN_CARE_PACKAGE_SHORT" )
-			abilitys.icon = $"rui/hud/ultimate_icons/ultimate_lifeline"
-			break
-		case "mp_ability_holopilot":
-			abilitys.name = Localize( "#WPN_HOLOPILOT" )
-			abilitys.icon = $"rui/hud/tactical_icons/tactical_mirage"
-			break
-		case "mp_ability_mirage_ultimate":
-			abilitys.name = Localize( "#WPN_DISGUISE_SHORT" )
-			abilitys.icon = $"rui/hud/ultimate_icons/ultimate_mirage"
-			break
-		case "mp_ability_heal":
-			abilitys.name = Localize( "#WPN_OCTANE_STIM" )
-			abilitys.icon = $"rui/hud/tactical_icons/tactical_octane"
-			break
-		case "mp_weapon_jump_pad":
-			abilitys.name = Localize( "#WPN_JUMP_PAD_SHORT" )
-			abilitys.icon = $"rui/hud/ultimate_icons/ultimate_octane"
-			break
-		case "mp_ability_grapple":
-			abilitys.name = Localize( "#WPN_GRAPPLE" )
-			abilitys.icon = $"rui/hud/tactical_icons/tactical_pathfinder"
-			break
-		case "mp_weapon_zipline":
-			abilitys.name = "Zipline Gun" //Why the fuck dosnt this have a localized shortnname?
-			abilitys.icon = $"rui/hud/ultimate_icons/ultimate_pathfinder"
-			break
-		case "mp_weapon_tesla_trap":
-			abilitys.name = Localize( "#WPN_TESLA_TRAP_SHORT" )
-			abilitys.icon = $"rui/hud/tactical_icons/tactical_wattson"
-			break
-		case "mp_weapon_trophy_defense_system":
-			abilitys.name = Localize( "#WPN_TROPHY_SYSTEM_SHORT" )
-			abilitys.icon = $"rui/hud/ultimate_icons/ultimate_wattson"
-			break
-		case "mp_ability_phase_walk":
-			abilitys.name = Localize( "#WPN_PHASE_WALK_SHORT" )
-			abilitys.icon = $"rui/hud/tactical_icons/tactical_wraith"
-			break
-		case "mp_weapon_phase_tunnel":
-			abilitys.name = Localize( "#WPN_PHASE_TUNNEL_SHORT" )
-			abilitys.icon = $"rui/hud/ultimate_icons/ultimate_wraith"
-			break
-		case "mp_ability_3dash":
-			abilitys.name = Localize( "#WPN_3DASH_SHORT" )
-			abilitys.icon = $"rui/hud/ultimate_icons/ultimate_wraith"
-			break
-	}
-
-	return abilitys
+	Hud_SetText(Hud_GetChild(file.menu, "Ability2Text"), "Ultimate: " + GetWeaponInfoFileKeyField_GlobalString(ult, "shortprintname"))
+	Hud_SetText(Hud_GetChild(file.menu, "Ability1Text"), "Tactical: " + GetWeaponInfoFileKeyField_GlobalString(tactical, "shortprintname"))
 }
 
 void function ChangeLegend(var button)
