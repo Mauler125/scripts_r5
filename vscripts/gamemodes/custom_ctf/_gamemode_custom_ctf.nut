@@ -10,6 +10,7 @@
 
 global function _CustomCTF_Init
 global function _CTFRegisterLocation
+global function _CTFRegisterCTFClass
 
 
 enum eCTFState
@@ -25,6 +26,7 @@ struct {
 
     array<LocationSettingsCTF> locationSettings
 
+    array<CTFClasses> ctfclasses
 
     array<string> whitelistedWeapons
 
@@ -86,6 +88,7 @@ struct
 } MILITIAPoint;
 
 const int NUMBER_OF_MAP_SLOTS = 4
+const int NUMBER_OF_CLASS_SLOTS = 5
 
 void function _CustomCTF_Init()
 {
@@ -99,6 +102,9 @@ void function _CustomCTF_Init()
 
     //Used for sending votes from client to server
     AddClientCommandCallback("VoteForMap", ClientCommand_VoteForMap)
+    AddClientCommandCallback("SetPlayerClass", ClientCommand_SetPlayerClass)
+
+    AddClientCommandCallback("openrespawn", ClientCommand_OpenRespawnMenu)
 
     CTF_SCORE_GOAL_TO_WIN = GetCurrentPlaylistVarInt( "max_score", 5 )
     CTF_ROUNDTIME = GetCurrentPlaylistVarInt( "round_time", 1500 )
@@ -128,6 +134,12 @@ bool function ClientCommand_NextRound(entity player, array<string> args)
     CTF.setmap = true
     CTF.selectedmap = args[0].tointeger()
     file.ctfState = eCTFState.WINNER_DECIDED
+    return true
+}
+
+bool function ClientCommand_OpenRespawnMenu(entity player, array<string> args)
+{
+    Remote_CallFunction_NonReplay(player, "ServerCallback_CTF_OpenCTFRespawnMenu", CTF.bubbleCenter, CTF.IMCPoints, CTF.MILITIAPoints, player)
     return true
 }
 
@@ -163,6 +175,23 @@ bool function ClientCommand_VoteForMap(entity player, array<string> args)
     return true
 }
 
+bool function ClientCommand_SetPlayerClass(entity player, array<string> args)
+{
+    if (!IsValid(player))
+        return false
+
+    //get class id from args
+    int classid = args[0].tointeger()
+
+    // reject class ids that are outside of the range
+    if (classid >= NUMBER_OF_CLASS_SLOTS || classid < 0)
+        return false
+
+    player.p.CTFClassID = classid
+
+    return true
+}
+
 void function ResetMapVotes()
 {
     CTF.mapVotes.clear()
@@ -172,6 +201,11 @@ void function ResetMapVotes()
 void function _CTFRegisterLocation(LocationSettingsCTF locationSettings)
 {
     file.locationSettings.append(locationSettings)
+}
+
+void function _CTFRegisterCTFClass(CTFClasses ctfclass)
+{
+    file.ctfclasses.append(ctfclass)
 }
 
 LocPairCTF function _GetVotingLocation()
@@ -1020,33 +1054,24 @@ void function TakeWeaponsForFlagCarrier(entity player)
     player.GiveWeapon( "mp_weapon_melee_survival", WEAPON_INVENTORY_SLOT_PRIMARY_2, [] )
     player.GiveOffhandWeapon( "melee_data_knife", OFFHAND_MELEE, ["ctf_knife"] )
     player.SetActiveWeaponBySlot(eActiveInventorySlot.mainHand, WEAPON_INVENTORY_SLOT_PRIMARY_2)
+
 }
 
 //Purpose: Give player their weapons back
 void function GiveBackWeapons(entity player)
 {
     TakeAllWeapons(player)
+
     player.TakeOffhandWeapon(OFFHAND_TACTICAL)
     player.TakeOffhandWeapon(OFFHAND_ULTIMATE)
+
+    player.GiveWeapon(file.ctfclasses[player.p.CTFClassID].primary, WEAPON_INVENTORY_SLOT_PRIMARY_0, file.ctfclasses[player.p.CTFClassID].primaryattachments)
+    player.GiveWeapon(file.ctfclasses[player.p.CTFClassID].secondary, WEAPON_INVENTORY_SLOT_PRIMARY_1, file.ctfclasses[player.p.CTFClassID].secondaryattachments)
+
+    player.GiveOffhandWeapon( file.ctfclasses[player.p.CTFClassID].tactical, OFFHAND_TACTICAL )
+    player.GiveOffhandWeapon( file.ctfclasses[player.p.CTFClassID].ult, OFFHAND_ULTIMATE )
+
     player.TakeOffhandWeapon(OFFHAND_MELEE)
-    array<StoredWeapon> weapons = [
-        CTF_Equipment_GetRespawnKit_PrimaryWeapon(),
-        CTF_Equipment_GetRespawnKit_SecondaryWeapon(),
-        CTF_Equipment_GetRespawnKit_Tactical(),
-        CTF_Equipment_GetRespawnKit_Ultimate()
-    ]
-
-    foreach (storedWeapon in weapons)
-    {
-        if ( !storedWeapon.name.len() ) continue
-        printl(storedWeapon.name + " " + storedWeapon.weaponType)
-        if( storedWeapon.weaponType == eStoredWeaponType.main)
-            player.GiveWeapon( storedWeapon.name, storedWeapon.inventoryIndex, storedWeapon.mods )
-        else
-            player.GiveOffhandWeapon( storedWeapon.name, storedWeapon.inventoryIndex, storedWeapon.mods )
-    }
-
-    player.GiveWeapon( "mp_weapon_melee_survival", WEAPON_INVENTORY_SLOT_PRIMARY_2, [] )
     player.GiveOffhandWeapon( "melee_data_knife", OFFHAND_MELEE, [] )
     player.SetActiveWeaponBySlot(eActiveInventorySlot.mainHand, WEAPON_INVENTORY_SLOT_PRIMARY_0)
 }
@@ -1604,9 +1629,6 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
 
             if(!IsValid(victim)) return
 
-            //Remote_CallFunction_Replay( victim, "ServerCallback_CTF_ResetFlagIcons")
-            victim.p.storedWeapons = StoreWeapons(victim)
-
             if (!CTF.votingtime)
             {
                 Remote_CallFunction_NonReplay(victim, "ServerCallback_CTF_OpenCTFRespawnMenu", CTF.bubbleCenter, CTF.IMCPoints, CTF.MILITIAPoints, attacker)
@@ -1680,45 +1702,19 @@ void function _HandleRespawn(entity player, bool forceGive = false)
 
     if(!IsAlive(player) || forceGive)
     {
+        DecideRespawnPlayer(player, true)
+        player.TakeOffhandWeapon(OFFHAND_TACTICAL)
+        player.TakeOffhandWeapon(OFFHAND_ULTIMATE)
 
-        if(CTF_Equipment_GetRespawnKitEnabled())
-        {
-            DecideRespawnPlayer(player, true)
-            player.TakeOffhandWeapon(OFFHAND_TACTICAL)
-            player.TakeOffhandWeapon(OFFHAND_ULTIMATE)
-            array<StoredWeapon> weapons = [
-                CTF_Equipment_GetRespawnKit_PrimaryWeapon(),
-                CTF_Equipment_GetRespawnKit_SecondaryWeapon(),
-                CTF_Equipment_GetRespawnKit_Tactical(),
-                CTF_Equipment_GetRespawnKit_Ultimate()
-            ]
+        player.GiveWeapon(file.ctfclasses[player.p.CTFClassID].primary, WEAPON_INVENTORY_SLOT_PRIMARY_0, file.ctfclasses[player.p.CTFClassID].primaryattachments)
+        player.GiveWeapon(file.ctfclasses[player.p.CTFClassID].secondary, WEAPON_INVENTORY_SLOT_PRIMARY_1, file.ctfclasses[player.p.CTFClassID].secondaryattachments)
 
-            foreach (storedWeapon in weapons)
-            {
-                if ( !storedWeapon.name.len() ) continue
-                printl(storedWeapon.name + " " + storedWeapon.weaponType)
-                if( storedWeapon.weaponType == eStoredWeaponType.main)
-                    player.GiveWeapon( storedWeapon.name, storedWeapon.inventoryIndex, storedWeapon.mods )
-                else
-                    player.GiveOffhandWeapon( storedWeapon.name, storedWeapon.inventoryIndex, storedWeapon.mods )
-            }
-            player.TakeOffhandWeapon(OFFHAND_MELEE)
-            player.GiveOffhandWeapon( "melee_data_knife", OFFHAND_MELEE, [] )
-            player.SetActiveWeaponBySlot(eActiveInventorySlot.mainHand, WEAPON_INVENTORY_SLOT_PRIMARY_0)
-        }
-        else
-        {
-            if(!player.p.storedWeapons.len())
-            {
-                DecideRespawnPlayer(player, true)
-            }
-            else
-            {
-                DecideRespawnPlayer(player, false)
-                GiveWeaponsFromStoredArray(player, player.p.storedWeapons)
-            }
+        player.GiveOffhandWeapon( file.ctfclasses[player.p.CTFClassID].tactical, OFFHAND_TACTICAL )
+        player.GiveOffhandWeapon( file.ctfclasses[player.p.CTFClassID].ult, OFFHAND_ULTIMATE )
 
-        }
+        player.TakeOffhandWeapon(OFFHAND_MELEE)
+        player.GiveOffhandWeapon( "melee_data_knife", OFFHAND_MELEE, [] )
+        player.SetActiveWeaponBySlot(eActiveInventorySlot.mainHand, WEAPON_INVENTORY_SLOT_PRIMARY_0)
     }
 
     SetPlayerSettings(player, CTF_PLAYER_SETTINGS)

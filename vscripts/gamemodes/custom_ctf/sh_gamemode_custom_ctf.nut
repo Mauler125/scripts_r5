@@ -27,6 +27,8 @@ global function GetFlagLocation
 global int CTF_SCORE_GOAL_TO_WIN = 5
 global int CTF_ROUNDTIME = 1500
 
+global int ClassID = 0
+
 //Custom Messages IDS
 global enum eCTFMessage
 {
@@ -43,6 +45,15 @@ global enum eCTFFlag
     Attack = 2
     Escort = 3
     Return = 4
+}
+
+//PointHint IDS
+global enum eCTFClassSlot
+{
+    Primary = 0
+    Secondary = 1
+    Tactical = 2
+    Ultimate = 3
 }
 
 //Screen IDS
@@ -79,16 +90,145 @@ global struct LocationSettingsCTF
     vector cinematicCameraOffset
 }
 
+global struct CTFClasses
+{
+    string primary
+    string secondary
+    array<string> primaryattachments
+    array<string> secondaryattachments
+    string tactical
+    string ult
+}
+
 struct {
     LocationSettingsCTF &selectedLocation
     array choices
     array<LocationSettingsCTF> locationSettings
+    array<CTFClasses> ctfclasses
     var scoreRui
 
 } file;
 
+CTFClasses function NewCTFClass(string primary, array<string> primaryattachments, string secondary, array<string> secondaryattachments, string tactical, string ult)
+{
+    CTFClasses ctfclass
+    ctfclass.primary = primary
+    ctfclass.secondary = secondary
+    ctfclass.primaryattachments = primaryattachments
+    ctfclass.secondaryattachments = secondaryattachments
+    ctfclass.tactical = tactical
+    ctfclass.ult = ult
+
+    file.ctfclasses.append(ctfclass)
+
+    return ctfclass
+}
+
+void function Shared_RegisterCTFClass(CTFClasses ctfclass)
+{
+    #if SERVER
+    _CTFRegisterCTFClass(ctfclass)
+    #endif
+}
+
 void function Sh_CustomCTF_Init()
 {
+    //Register Classes
+    Shared_RegisterCTFClass(
+        NewCTFClass(
+            "mp_weapon_r97",
+            [
+                "optic_cq_hcog_classic",
+                "barrel_stabilizer_l4_flash_hider",
+                "stock_tactical_l3",
+                "bullets_mag_l3"
+            ],
+            "mp_weapon_autopistol",
+            [
+                "optic_cq_hcog_classic",
+                "barrel_stabilizer_l4_flash_hider",
+                "bullets_mag_l3"
+            ],
+            "mp_ability_area_sonar_scan",
+            "mp_weapon_jump_pad"
+        )
+    )
+
+    Shared_RegisterCTFClass(
+        NewCTFClass(
+            "mp_weapon_lmg",
+            [
+                "optic_cq_hcog_classic",
+                "barrel_stabilizer_l4_flash_hider",
+                "stock_tactical_l3",
+                "highcal_mag_l3"
+            ],
+            "mp_weapon_energy_shotgun",
+            [
+                "shotgun_bolt_l3"
+            ],
+            "mp_weapon_bubble_bunker",
+            "mp_weapon_grenade_gas"
+        )
+    )
+
+    Shared_RegisterCTFClass(
+        NewCTFClass(
+            "mp_weapon_vinson",
+            [
+                "optic_cq_hcog_classic",
+                "stock_tactical_l3",
+                "highcal_mag_l3"
+            ],
+            "mp_weapon_wingman",
+            [
+                "optic_cq_hcog_classic",
+                "highcal_mag_l3"
+            ],
+            "mp_ability_area_sonar_scan",
+            "mp_weapon_jump_pad"
+        )
+    )
+
+    Shared_RegisterCTFClass(
+        NewCTFClass(
+            "mp_weapon_g2",
+            [
+                "optic_ranged_aog_variable",
+                "barrel_stabilizer_l4_flash_hider",
+                "stock_sniper_l3",
+                "bullets_mag_l3"
+            ],
+            "mp_weapon_alternator_smg",
+            [
+                "optic_cq_hcog_classic",
+                "bullets_mag_l3",
+                "barrel_stabilizer_l4_flash_hider",
+                "stock_tactical_l3"
+            ],
+            "mp_weapon_dirty_bomb",
+            "mp_weapon_grenade_defensive_bombardment"
+        )
+    )
+
+    Shared_RegisterCTFClass(
+        NewCTFClass(
+            "mp_weapon_doubletake",
+            [
+                "optic_ranged_aog_variable",
+                "stock_sniper_l3",
+                "energy_mag_l3"
+            ],
+            "mp_weapon_shotgun",
+            [
+                "optic_cq_hcog_classic",
+                "shotgun_bolt_l3"
+            ],
+            "mp_ability_grapple",
+            "mp_weapon_jump_pad"
+        )
+    )
+
     // Map locations
     //This is only used for the boundary bubble
     switch(GetMapName())

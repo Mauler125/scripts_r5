@@ -31,6 +31,7 @@ global function ServerCallback_CTF_SetScreen
 
 //Ui callbacks
 global function VoteForMap
+global function UI_To_Client_UpdateSelectedClass
 
 global function Cl_CTFRegisterLocation
 
@@ -522,9 +523,20 @@ var function CreateTemporarySpawnRUI(entity parentEnt, float duration)
     parentEnt.Destroy()
 }
 
+void function UI_To_Client_UpdateSelectedClass(int selectedclass)
+{
+    ClassID = selectedclass;
+
+    entity player = GetLocalClientPlayer()
+    // why does s3 not have remote server functions..?
+    player.ClientCommand("SetPlayerClass " + selectedclass)
+}
+
 void function ServerCallback_CTF_OpenCTFRespawnMenu(vector campos, int IMCscore, int MILscore, entity attacker)
 {
     RunUIScript( "OpenCTFRespawnMenu" )
+    RunUIScript( "UpdateSelectedClass", ClassID )
+    RunUIScript( "EnableClassSelect")
 
     entity player = GetLocalClientPlayer()
 
@@ -599,6 +611,9 @@ void function UpdateUIRespawnTimer()
         RunUIScript( "UpdateRespawnTimer", time)
         time--
 
+        if (time == 1)
+            RunUIScript( "DisableClassSelect")
+
         if(time == -1)
         {
             entity player = GetLocalClientPlayer()
@@ -633,15 +648,15 @@ void function waitrespawn(entity player)
     try {
         Deathcam.ClearParent()
         cameraMover.Destroy()
-    } catch (exception){
+    } catch (exception){ }
 
-    }
-
-    cameraMover = CreateClientsideScriptMover( $"mdl/dev/empty_model.rmdl", Deathcam.GetOrigin(), Deathcam.GetAngles() )
-    Deathcam.SetParent( cameraMover, "", false )
-    player.SetMenuCameraEntityWithAudio( Deathcam )
-    cameraMover.NonPhysicsMoveTo( player.GetOrigin(), 0.40, 0, 0.20 )
-    cameraMover.NonPhysicsRotateTo( player.CameraAngles(), 0.40, 0, 0.20 )
+    try {
+        cameraMover = CreateClientsideScriptMover( $"mdl/dev/empty_model.rmdl", Deathcam.GetOrigin(), Deathcam.GetAngles() )
+        Deathcam.SetParent( cameraMover, "", false )
+        player.SetMenuCameraEntityWithAudio( Deathcam )
+        cameraMover.NonPhysicsMoveTo( player.GetOrigin(), 0.40, 0, 0.20 )
+        cameraMover.NonPhysicsRotateTo( player.CameraAngles(), 0.40, 0, 0.20 )
+    } catch (exception2){ }
 
     wait 0.40
 
