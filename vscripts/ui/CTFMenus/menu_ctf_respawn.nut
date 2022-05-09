@@ -8,7 +8,6 @@ global function SetTeamScore
 global function UpdateObjectiveText
 global function UpdateSelectedClass
 global function DisableClassSelect
-global function EnableClassSelect
 
 struct
 {
@@ -21,10 +20,20 @@ struct Abilitys
     asset icon
 }
 
-void function OpenCTFRespawnMenu()
+void function OpenCTFRespawnMenu(string classname1, string classname2, string classname3, string classname4, string classname5)
 {
 	CloseAllMenus()
 	AdvanceMenu( file.menu )
+
+	RuiSetString( Hud_GetRui( Hud_GetChild( file.menu, "Class1" )), "buttonText", classname1 )
+	RuiSetString( Hud_GetRui( Hud_GetChild( file.menu, "Class2" )), "buttonText", classname2 )
+	RuiSetString( Hud_GetRui( Hud_GetChild( file.menu, "Class3" )), "buttonText", classname3 )
+	RuiSetString( Hud_GetRui( Hud_GetChild( file.menu, "Class4" )), "buttonText", classname4 )
+	RuiSetString( Hud_GetRui( Hud_GetChild( file.menu, "Class5" )), "buttonText", classname5 )
+
+	for(int i = 1; i < 6; i++ ) {
+		Hud_SetEnabled( Hud_GetChild( file.menu, "Class" + i ), true )
+	}
 }
 
 void function CloseCTFRespawnMenu()
@@ -113,13 +122,6 @@ void function DisableClassSelect()
 {
 	for(int i = 1; i < 6; i++ ) {
 		Hud_SetEnabled( Hud_GetChild( file.menu, "Class" + i ), false )
-	}
-}
-
-void function EnableClassSelect()
-{
-	for(int i = 1; i < 6; i++ ) {
-		Hud_SetEnabled( Hud_GetChild( file.menu, "Class" + i ), true )
 	}
 }
 

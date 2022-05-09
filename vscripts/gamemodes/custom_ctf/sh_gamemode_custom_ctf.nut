@@ -85,6 +85,7 @@ global struct LocationSettingsCTF
 
 global struct CTFClasses
 {
+    string name
     string primary
     string secondary
     array<string> primaryattachments
@@ -108,9 +109,10 @@ struct {
 
 } file;
 
-CTFClasses function NewCTFClass(string primary, array<string> primaryattachments, string secondary, array<string> secondaryattachments, string tactical, string ult)
+CTFClasses function NewCTFClass(string name, string primary, array<string> primaryattachments, string secondary, array<string> secondaryattachments, string tactical, string ult)
 {
     CTFClasses ctfclass
+    ctfclass.name = name
     ctfclass.primary = primary
     ctfclass.secondary = secondary
     ctfclass.primaryattachments = primaryattachments
@@ -137,60 +139,19 @@ void function Shared_RegisterCTFClass(CTFClasses ctfclass)
 void function Sh_CustomCTF_Init()
 {
     //Register Classes
-    Shared_RegisterCTFClass(
-        NewCTFClass(
-            CTF_Equipment_GetClass1_PrimaryWeapon().name,
-            CTF_Equipment_GetClass1_PrimaryWeapon().mods,
-            CTF_Equipment_GetClass1_SecondaryWeapon().name,
-            CTF_Equipment_GetClass1_SecondaryWeapon().mods,
-            CTF_Equipment_GetClass1_Tactical().name,
-            CTF_Equipment_GetClass1_Ultimate().name
+    for(int i = 1; i < 6; i++ ) {
+        Shared_RegisterCTFClass(
+            NewCTFClass(
+                CTF_Equipment_GetClass_PrimaryWeapon("ctf_respawn_class" + i + "_name").name,
+                CTF_Equipment_GetClass_PrimaryWeapon("ctf_respawn_class" + i + "_primary").name,
+                CTF_Equipment_GetClass_PrimaryWeapon("ctf_respawn_class" + i + "_primary").mods,
+                CTF_Equipment_GetClass_SecondaryWeapon("ctf_respawn_class" + i + "_secondary").name,
+                CTF_Equipment_GetClass_SecondaryWeapon("ctf_respawn_class" + i + "_secondary").mods,
+                CTF_Equipment_GetClass_Tactical("ctf_respawn_class" + i + "_tactical").name,
+                CTF_Equipment_GetClass_Ultimate("ctf_respawn_class" + i + "_ultimate").name
+            )
         )
-    )
-
-    Shared_RegisterCTFClass(
-        NewCTFClass(
-            CTF_Equipment_GetClass2_PrimaryWeapon().name,
-            CTF_Equipment_GetClass2_PrimaryWeapon().mods,
-            CTF_Equipment_GetClass2_SecondaryWeapon().name,
-            CTF_Equipment_GetClass2_SecondaryWeapon().mods,
-            CTF_Equipment_GetClass2_Tactical().name,
-            CTF_Equipment_GetClass2_Ultimate().name
-        )
-    )
-
-    Shared_RegisterCTFClass(
-        NewCTFClass(
-            CTF_Equipment_GetClass3_PrimaryWeapon().name,
-            CTF_Equipment_GetClass3_PrimaryWeapon().mods,
-            CTF_Equipment_GetClass3_SecondaryWeapon().name,
-            CTF_Equipment_GetClass3_SecondaryWeapon().mods,
-            CTF_Equipment_GetClass3_Tactical().name,
-            CTF_Equipment_GetClass3_Ultimate().name
-        )
-    )
-
-    Shared_RegisterCTFClass(
-        NewCTFClass(
-            CTF_Equipment_GetClass4_PrimaryWeapon().name,
-            CTF_Equipment_GetClass4_PrimaryWeapon().mods,
-            CTF_Equipment_GetClass4_SecondaryWeapon().name,
-            CTF_Equipment_GetClass4_SecondaryWeapon().mods,
-            CTF_Equipment_GetClass4_Tactical().name,
-            CTF_Equipment_GetClass4_Ultimate().name
-        )
-    )
-
-    Shared_RegisterCTFClass(
-        NewCTFClass(
-            CTF_Equipment_GetClass5_PrimaryWeapon().name,
-            CTF_Equipment_GetClass5_PrimaryWeapon().mods,
-            CTF_Equipment_GetClass5_SecondaryWeapon().name,
-            CTF_Equipment_GetClass5_SecondaryWeapon().mods,
-            CTF_Equipment_GetClass5_Tactical().name,
-            CTF_Equipment_GetClass5_Ultimate().name
-        )
-    )
+    }
 
     // Map locations
     //This is only used for the boundary bubble
@@ -951,105 +912,24 @@ float function CTF_GetOOBDamagePercent()                      { return GetCurren
 float function CTF_GetVotingTime()                            { return GetCurrentPlaylistVarFloat("voting_time", 5) }
 bool function CTF_Equipment_GetRespawnKitEnabled()                       { return GetCurrentPlaylistVarBool("respawn_kit_enabled", false) }
 
-//I phsictly dont have the brain function atm to make this better. my brain is fucking dying from no sleep
-CTFPlaylistWeapons function CTF_Equipment_GetClass1_PrimaryWeapon()
+CTFPlaylistWeapons function CTF_Equipment_GetClass_PrimaryWeapon(string playlistvar)
 {
-    return Equipment_GetClass_Weapon(GetCurrentPlaylistVarString("ctf_respawn_class1_primary", "~~none~~"))
+    return Equipment_GetClass_Weapon(GetCurrentPlaylistVarString(playlistvar, "~~none~~"))
 }
 
-CTFPlaylistWeapons function CTF_Equipment_GetClass2_PrimaryWeapon()
+CTFPlaylistWeapons function CTF_Equipment_GetClass_SecondaryWeapon(string playlistvar)
 {
-    return Equipment_GetClass_Weapon(GetCurrentPlaylistVarString("ctf_respawn_class2_primary", "~~none~~"))
+    return Equipment_GetClass_Weapon(GetCurrentPlaylistVarString(playlistvar, "~~none~~"))
 }
 
-CTFPlaylistWeapons function CTF_Equipment_GetClass3_PrimaryWeapon()
+CTFPlaylistWeapons function CTF_Equipment_GetClass_Tactical(string playlistvar)
 {
-    return Equipment_GetClass_Weapon(GetCurrentPlaylistVarString("ctf_respawn_class3_primary", "~~none~~"))
+    return Equipment_GetClass_Weapon(GetCurrentPlaylistVarString(playlistvar, "~~none~~"))
 }
 
-CTFPlaylistWeapons function CTF_Equipment_GetClass4_PrimaryWeapon()
+CTFPlaylistWeapons function CTF_Equipment_GetClass_Ultimate(string playlistvar)
 {
-    return Equipment_GetClass_Weapon(GetCurrentPlaylistVarString("ctf_respawn_class4_primary", "~~none~~"))
-}
-
-CTFPlaylistWeapons function CTF_Equipment_GetClass5_PrimaryWeapon()
-{
-    return Equipment_GetClass_Weapon(GetCurrentPlaylistVarString("ctf_respawn_class5_primary", "~~none~~"))
-}
-
-CTFPlaylistWeapons function CTF_Equipment_GetClass1_SecondaryWeapon()
-{
-    return Equipment_GetClass_Weapon(GetCurrentPlaylistVarString("ctf_respawn_class1_secondary", "~~none~~"))
-}
-
-CTFPlaylistWeapons function CTF_Equipment_GetClass2_SecondaryWeapon()
-{
-    return Equipment_GetClass_Weapon(GetCurrentPlaylistVarString("ctf_respawn_class2_secondary", "~~none~~"))
-}
-
-CTFPlaylistWeapons function CTF_Equipment_GetClass3_SecondaryWeapon()
-{
-    return Equipment_GetClass_Weapon(GetCurrentPlaylistVarString("ctf_respawn_class3_secondary", "~~none~~"))
-}
-
-CTFPlaylistWeapons function CTF_Equipment_GetClass4_SecondaryWeapon()
-{
-    return Equipment_GetClass_Weapon(GetCurrentPlaylistVarString("ctf_respawn_class4_secondary", "~~none~~"))
-}
-
-CTFPlaylistWeapons function CTF_Equipment_GetClass5_SecondaryWeapon()
-{
-    return Equipment_GetClass_Weapon(GetCurrentPlaylistVarString("ctf_respawn_class5_secondary", "~~none~~"))
-}
-
-CTFPlaylistWeapons function CTF_Equipment_GetClass1_Tactical()
-{
-    return Equipment_GetClass_Weapon(GetCurrentPlaylistVarString("ctf_respawn_class1_tactical", "~~none~~"))
-}
-
-CTFPlaylistWeapons function CTF_Equipment_GetClass2_Tactical()
-{
-    return Equipment_GetClass_Weapon(GetCurrentPlaylistVarString("ctf_respawn_class2_tactical", "~~none~~"))
-}
-
-CTFPlaylistWeapons function CTF_Equipment_GetClass3_Tactical()
-{
-    return Equipment_GetClass_Weapon(GetCurrentPlaylistVarString("ctf_respawn_class3_tactical", "~~none~~"))
-}
-
-CTFPlaylistWeapons function CTF_Equipment_GetClass4_Tactical()
-{
-    return Equipment_GetClass_Weapon(GetCurrentPlaylistVarString("ctf_respawn_class4_tactical", "~~none~~"))
-}
-
-CTFPlaylistWeapons function CTF_Equipment_GetClass5_Tactical()
-{
-    return Equipment_GetClass_Weapon(GetCurrentPlaylistVarString("ctf_respawn_class5_tactical", "~~none~~"))
-}
-
-CTFPlaylistWeapons function CTF_Equipment_GetClass1_Ultimate()
-{
-    return Equipment_GetClass_Weapon(GetCurrentPlaylistVarString("ctf_respawn_class1_ultimate", "~~none~~"))
-}
-
-CTFPlaylistWeapons function CTF_Equipment_GetClass2_Ultimate()
-{
-    return Equipment_GetClass_Weapon(GetCurrentPlaylistVarString("ctf_respawn_class2_ultimate", "~~none~~"))
-}
-
-CTFPlaylistWeapons function CTF_Equipment_GetClass3_Ultimate()
-{
-    return Equipment_GetClass_Weapon(GetCurrentPlaylistVarString("ctf_respawn_class3_ultimate", "~~none~~"))
-}
-
-CTFPlaylistWeapons function CTF_Equipment_GetClass4_Ultimate()
-{
-    return Equipment_GetClass_Weapon(GetCurrentPlaylistVarString("ctf_respawn_class4_ultimate", "~~none~~"))
-}
-
-CTFPlaylistWeapons function CTF_Equipment_GetClass5_Ultimate()
-{
-    return Equipment_GetClass_Weapon(GetCurrentPlaylistVarString("ctf_respawn_class5_ultimate", "~~none~~"))
+    return Equipment_GetClass_Weapon(GetCurrentPlaylistVarString(playlistvar, "~~none~~"))
 }
 
 CTFPlaylistWeapons function Equipment_GetClass_Weapon(string input)
