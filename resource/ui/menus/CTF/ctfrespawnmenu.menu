@@ -409,7 +409,7 @@
 			"tall"						"50"
 			"xpos"						"0"
 			"ypos"						"10"
-			"visible"					"1"
+			"visible"					"0"
 			"zpos"						"6"
 			"sound_accept"				"ui_rankedsummary_circletick_reached"
 			"sound_focus"				"UI_Menu_Focus_Small"
