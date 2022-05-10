@@ -629,7 +629,7 @@
 			"tall"						"40"
 			"visible"					"1"
 			"fontHeight"				"30"
-			"labelText"					"> Killed By <"
+			"labelText"					"Killed By"
 			"font"						"DefaultBold_41"
 			"allcaps"					"1"
 			"fgcolor_override"			"255 255 255 255"
@@ -641,7 +641,7 @@
 		{
 			"ControlName"				"Label"
 			"xpos"						"0"
-			"ypos"						"-5"
+			"ypos"						"-15"
 			"auto_wide_tocontents"		"1"
 			"tall"						"40"
 			"visible"					"1"
@@ -650,8 +650,8 @@
 			"font"						"DefaultBold_41"
 			"allcaps"					"1"
 			"fgcolor_override"			"255 255 255 255"
-			"pin_to_sibling"			"KilledByText1"
-			"pin_corner_to_sibling"		"TOP"
+			"pin_to_sibling"			"KilledBy"
+			"pin_corner_to_sibling"		"BOTTOM"
 			"pin_to_sibling_corner"		"BOTTOM"
 		}
 	}
