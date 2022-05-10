@@ -23,6 +23,7 @@ global function ServerCallback_CTF_RecaptureFlag
 global function ServerCallback_CTF_EndRecaptureFlag
 global function ServerCallback_CTF_ResetFlagIcons
 global function ServerCallback_CTF_SetPointIconHint
+global function ServerCallback_CTF_SetCorrectTime
 // Voting
 global function ServerCallback_CTF_SetVoteMenuOpen
 global function ServerCallback_CTF_UpdateVotingMaps
@@ -53,7 +54,9 @@ bool hasvoted = false;
 bool isvoting = false;
 bool roundover = false
 
-int gamestarttime = 0
+int gamestarttime
+int endingtime
+int seconds
 
 entity backgroundModelSmoke
 entity backgroundModelGeo
@@ -68,7 +71,18 @@ int ClassID = 0
 
 void function Cl_CustomCTF_Init()
 {
+    AddClientCallback_OnResolutionChanged( UpdateTimeLeftTimer )
+}
 
+void function ServerCallback_CTF_SetCorrectTime(int serverseconds)
+{
+    seconds = serverseconds
+}
+
+void function UpdateTimeLeftTimer()
+{
+    entity player = GetLocalClientPlayer()
+    player.ClientCommand("GetTimeFromServer")
 }
 
 void function Cl_CTFRegisterLocation(LocationSettingsCTF locationSettings)
@@ -380,7 +394,7 @@ void function MakeScoreRUI()
     WaitForever()
 }
 
-void function ServerCallback_CTF_DoAnnouncement(float duration, int type)
+void function ServerCallback_CTF_DoAnnouncement(float duration, int type, float starttime)
 {
     string message = ""
     string subtext = ""
@@ -393,7 +407,12 @@ void function ServerCallback_CTF_DoAnnouncement(float duration, int type)
             //message = "Round start"
             message = "Match Start"
             subtext = "Score 5 points to win!"
+
+            //Timer Stuff
             roundover = false
+            gamestarttime = starttime.tointeger()
+            endingtime = gamestarttime + CTF_ROUNDTIME
+            seconds = 60
             thread StartGameTimer()
             break
         }
@@ -415,12 +434,6 @@ void function ServerCallback_CTF_DoAnnouncement(float duration, int type)
 
 void function StartGameTimer()
 {
-    //Get Ending Time
-    int endingtime = Time().tointeger() + CTF_ROUNDTIME
-
-    //Set Seconds Counter
-    int seconds = 60
-
     //Filler for when time is < 10
     string secondsfiller = ""
     string minsfiller = ""

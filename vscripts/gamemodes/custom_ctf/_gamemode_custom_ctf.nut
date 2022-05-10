@@ -49,6 +49,7 @@ struct
     array<int> mapIds
 
     int mappicked
+    float roundstarttime
 } CTF;
 
 struct
@@ -87,6 +88,13 @@ struct
     entity beingreturnedby
 } MILITIAPoint;
 
+struct
+{
+	int seconds
+    int endtime
+    bool roundover
+} ServerTimer;
+
 void function _CustomCTF_Init()
 {
     PrecacheModel($"mdl/props/pathfinder_zipline/pathfinder_zipline.rmdl")
@@ -100,10 +108,17 @@ void function _CustomCTF_Init()
     //Used for sending votes from client to server
     AddClientCommandCallback("VoteForMap", ClientCommand_VoteForMap)
     AddClientCommandCallback("SetPlayerClass", ClientCommand_SetPlayerClass)
+    AddClientCommandCallback("GetTimeFromServer", ClientCommand_GetCorrectTimeFromServer)
 
     GIVE_ALT_AFTER_CAPTURE = GetCurrentPlaylistVarBool( "give_ult_after_capture", false )
 
     thread RUNCTF()
+}
+
+bool function ClientCommand_GetCorrectTimeFromServer(entity player, array<string> args)
+{
+    Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetCorrectTime", ServerTimer.seconds)
+    return true
 }
 
 bool function ClientCommand_NextRound(entity player, array<string> args)
@@ -312,11 +327,31 @@ void function VotingPhase()
     }
 }
 
+// purpose: for sending correct time to client after resolution change
+void function StartServerRoundTimer()
+{
+	while (!ServerTimer.roundover)
+	{
+        if(ServerTimer.seconds < 1)
+            ServerTimer.seconds = 60
+
+        //Calculate Elapsed Time
+		wait 1
+        ServerTimer.seconds--
+	}
+}
+
 // purpose: handle the start of a new round for players and props
 void function StartRound()
 {
     //set
     SetGameState(eGameState.Playing)
+
+    CTF.roundstarttime = Time()
+
+    ServerTimer.roundover = false
+    ServerTimer.seconds = 60
+    thread StartServerRoundTimer()
 
     //reset map votes
     ResetMapVotes()
@@ -329,7 +364,7 @@ void function StartRound()
             {
                 _HandleRespawn(player)
             }
-            Remote_CallFunction_NonReplay(player, "ServerCallback_CTF_DoAnnouncement", 5, eCTFAnnounce.ROUND_START)
+            Remote_CallFunction_NonReplay(player, "ServerCallback_CTF_DoAnnouncement", 5, eCTFAnnounce.ROUND_START, CTF.roundstarttime)
             Remote_CallFunction_NonReplay(player, "ServerCallback_CTF_SetObjectiveText", CTF_SCORE_GOAL_TO_WIN)
             ClearInvincible(player)
             DeployAndEnableWeapons(player)
@@ -401,6 +436,9 @@ void function StartRound()
             MILITIAPoint.beamfx.Destroy()
 
             int TeamWon = 69;
+
+            //Destory bubble
+            file.bubbleBoundary.Destroy()
 
             //See what team has more points to decide on the winner
             if (CTF.IMCPoints > CTF.MILITIAPoints)
@@ -478,6 +516,8 @@ void function StartRound()
                         Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", eCTFScreen.WinnerScreen, TeamWon, eCTFScreen.NotUsed, eCTFScreen.NotUsed)
                     }
                 }
+
+                ServerTimer.roundover = true
 
                 //Wait for timing
                 wait 8
@@ -602,6 +642,8 @@ void function StartRound()
                     }
                 }
 
+                ServerTimer.roundover = true
+
                 //Wait 10 seconds so the winning team can be shown
                 wait 10
 
@@ -642,9 +684,6 @@ void function StartRound()
 	}
 
     file.ctfState = eCTFState.IN_PROGRESS
-
-    //Destory bubble
-    file.bubbleBoundary.Destroy()
 
     //Reset flag icons for each player
     foreach(player in GetPlayerArray())
@@ -1094,11 +1133,11 @@ void function _OnPlayerConnected(entity player)
 
     case eGameState.WaitingForPlayers:
         player.FreezeControlsOnServer()
-        Remote_CallFunction_NonReplay(player, "ServerCallback_CTF_DoAnnouncement", 2, eCTFAnnounce.VOTING_PHASE)
+        Remote_CallFunction_NonReplay(player, "ServerCallback_CTF_DoAnnouncement", 2, eCTFAnnounce.VOTING_PHASE, CTF.roundstarttime)
         break
     case eGameState.Playing:
         player.UnfreezeControlsOnServer();
-        Remote_CallFunction_NonReplay(player, "ServerCallback_CTF_DoAnnouncement", 5, eCTFAnnounce.ROUND_START)
+        Remote_CallFunction_NonReplay(player, "ServerCallback_CTF_DoAnnouncement", 5, eCTFAnnounce.ROUND_START, CTF.roundstarttime)
 
         if(player.GetTeam() == TEAM_IMC || player.GetTeam() == TEAM_MILITIA)
             Remote_CallFunction_Replay(player, "ServerCallback_CTF_AddPointIcon", IMCPoint.pole, MILITIAPoint.pole, player.GetTeam())
