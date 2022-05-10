@@ -34,6 +34,12 @@ void function OpenCTFRespawnMenu(string classname1, string classname2, string cl
 	for(int i = 1; i < 6; i++ ) {
 		Hud_SetEnabled( Hud_GetChild( file.menu, "Class" + i ), true )
 	}
+
+	entity player = GetLocalClientPlayer()
+	ItemFlavor character = LoadoutSlot_WaitForItemFlavor( ToEHI( player ), Loadout_CharacterClass() )
+	asset classIcon      = CharacterClass_GetGalleryPortrait( character )
+	RuiSetImage(Hud_GetRui(Hud_GetChild(file.menu, "PlayerImage")), "basicImage", classIcon)
+	RuiSetString( Hud_GetRui( Hud_GetChild( file.menu, "ChangeLegend" )), "buttonText", "Change Legend" )
 }
 
 void function CloseCTFRespawnMenu()
@@ -92,7 +98,7 @@ void function OnClickClass( var button )
 		RuiSetInt( Hud_GetRui( Hud_GetChild( file.menu, "Class" + i )), "status", eFriendStatus.OFFLINE )
 	}
 
-	RuiSetInt( Hud_GetRui( button ), "status", eFriendStatus.ONLINE_AWAY )
+	RuiSetInt( Hud_GetRui( button ), "status", eFriendStatus.ONLINE_INGAME )
 
 	int buttonId = Hud_GetScriptID( button ).tointeger()
 	RunClientScript("UI_To_Client_UpdateSelectedClass", buttonId )
@@ -106,7 +112,7 @@ void function UpdateSelectedClass(int classid, string primary, string secondary,
 
 	int finalclassid = classid + 1
 
-	RuiSetInt( Hud_GetRui( Hud_GetChild( file.menu, "Class" + finalclassid )), "status", eFriendStatus.ONLINE_AWAY )
+	RuiSetInt( Hud_GetRui( Hud_GetChild( file.menu, "Class" + finalclassid )), "status", eFriendStatus.ONLINE_INGAME )
 
 	Set_CTF_Class(primary, secondary, tactical, ult)
 }
@@ -127,10 +133,10 @@ void function Set_CTF_Class(string primary, string secondary, string tactical, s
 	RuiSetImage(Hud_GetRui(Hud_GetChild( file.menu, "Weapon2Img" )), "basicImage", secondaryData.hudIcon)
 	RuiSetImage(Hud_GetRui(Hud_GetChild(file.menu, "Ability1Img")), "basicImage", GetWeaponInfoFileKeyFieldAsset_Global(tactical, "hud_icon"))
 	RuiSetImage(Hud_GetRui(Hud_GetChild(file.menu, "Ability2Img")), "basicImage", GetWeaponInfoFileKeyFieldAsset_Global(ult, "hud_icon"))
-	Hud_SetText(Hud_GetChild(file.menu, "Weapon1Text"), "Primary: " + GetWeaponInfoFileKeyField_GlobalString(primaryData.baseWeapon, "shortprintname"))
-	Hud_SetText(Hud_GetChild(file.menu, "Weapon2Text"), "Secondary: " + GetWeaponInfoFileKeyField_GlobalString(secondaryData.baseWeapon, "shortprintname"))
-	Hud_SetText(Hud_GetChild(file.menu, "Ability2Text"), "Ultimate: " + GetWeaponInfoFileKeyField_GlobalString(ult, "shortprintname"))
-	Hud_SetText(Hud_GetChild(file.menu, "Ability1Text"), "Tactical: " + GetWeaponInfoFileKeyField_GlobalString(tactical, "shortprintname"))
+	Hud_SetText(Hud_GetChild(file.menu, "Weapon1Text"), GetWeaponInfoFileKeyField_GlobalString(primaryData.baseWeapon, "shortprintname"))
+	Hud_SetText(Hud_GetChild(file.menu, "Weapon2Text"), GetWeaponInfoFileKeyField_GlobalString(secondaryData.baseWeapon, "shortprintname"))
+	Hud_SetText(Hud_GetChild(file.menu, "Ability2Text"), GetWeaponInfoFileKeyField_GlobalString(ult, "shortprintname"))
+	Hud_SetText(Hud_GetChild(file.menu, "Ability1Text"), GetWeaponInfoFileKeyField_GlobalString(tactical, "shortprintname"))
 }
 
 void function ChangeLegend(var button)
