@@ -649,7 +649,7 @@
 			"labelText"					"PlaceHolder Name"
 			"font"						"DefaultBold_41"
 			"allcaps"					"1"
-			"fgcolor_override"			"255 100 100 255"
+			"fgcolor_override"			"255 255 255 255"
 			"pin_to_sibling"			"KilledByText1"
 			"pin_corner_to_sibling"		"TOP"
 			"pin_to_sibling_corner"		"BOTTOM"
