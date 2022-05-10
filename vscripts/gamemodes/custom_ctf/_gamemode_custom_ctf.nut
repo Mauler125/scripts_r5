@@ -89,6 +89,7 @@ struct
 
 const int NUMBER_OF_MAP_SLOTS = 4
 const int NUMBER_OF_CLASS_SLOTS = 5
+bool GIVE_ALT_AFTER_CAPTURE
 
 void function _CustomCTF_Init()
 {
@@ -106,15 +107,9 @@ void function _CustomCTF_Init()
 
     CTF_SCORE_GOAL_TO_WIN = GetCurrentPlaylistVarInt( "max_score", 5 )
     CTF_ROUNDTIME = GetCurrentPlaylistVarInt( "round_time", 1500 )
+    GIVE_ALT_AFTER_CAPTURE = GetCurrentPlaylistVarBool( "give_ult_after_capture", false )
 
     thread RUNCTF()
-
-    // Whitelisted weapons
-    for(int i = 0; GetCurrentPlaylistVarString("whitelisted_weapon_" + i.tostring(), "~~none~~") != "~~none~~"; i++)
-    {
-        file.whitelistedWeapons.append(GetCurrentPlaylistVarString("whitelisted_weapon_" + i.tostring(), "~~none~~"))
-    }
-
 }
 
 bool function ClientCommand_NextRound(entity player, array<string> args)
@@ -905,6 +900,9 @@ void function IMCPoint_Trigger( entity trigger, entity ent )
                 {
                     PlayerDroppedFlag(ent)
 
+                    if(GIVE_ALT_AFTER_CAPTURE)
+                        ent.GetOffhandWeapon( OFFHAND_INVENTORY ).SetWeaponPrimaryClipCount( ent.GetOffhandWeapon( OFFHAND_INVENTORY ).GetWeaponPrimaryClipCountMax() )
+
                     CTF.IMCPoints++
                     foreach(player in GetPlayerArray())
                     {
@@ -996,6 +994,9 @@ void function MILITIA_Point_Trigger( entity trigger, entity ent )
                 if (MILITIAPoint.flagatbase)
                 {
                     PlayerDroppedFlag(ent)
+
+                    if(GIVE_ALT_AFTER_CAPTURE)
+                        ent.GetOffhandWeapon( OFFHAND_LEFT ).SetWeaponPrimaryClipCount( ent.GetOffhandWeapon( OFFHAND_LEFT ).GetWeaponPrimaryClipCountMax() )
 
                     CTF.MILITIAPoints++
                     foreach(player in GetPlayerArray())
