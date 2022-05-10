@@ -3,21 +3,28 @@ global function OpenCTFRespawnMenu
 global function CloseCTFRespawnMenu
 global function UpdateRespawnTimer
 global function UpdateKillerName
-global function SetEnemyScore
-global function SetTeamScore
 global function UpdateObjectiveText
 global function UpdateSelectedClass
 global function DisableClassSelect
+global function SetCTFScores
+global function SetGameTimer
 
 struct
 {
 	var menu
+	bool roundover = false
+	int eFriendStatus
 } file
 
 struct Abilitys
 {
     string name
     asset icon
+}
+
+void function SetGameTimer(string time)
+{
+	Hud_SetText(Hud_GetChild(file.menu, "GameTime"), time)
 }
 
 void function OpenCTFRespawnMenu(string classname1, string classname2, string classname3, string classname4, string classname5)
@@ -40,6 +47,8 @@ void function OpenCTFRespawnMenu(string classname1, string classname2, string cl
 	asset classIcon      = CharacterClass_GetGalleryPortrait( character )
 	RuiSetImage(Hud_GetRui(Hud_GetChild(file.menu, "PlayerImage")), "basicImage", classIcon)
 	RuiSetString( Hud_GetRui( Hud_GetChild( file.menu, "ChangeLegend" )), "buttonText", "Change Legend" )
+
+	file.eFriendStatus = eFriendStatus.ONLINE_INGAME
 }
 
 void function CloseCTFRespawnMenu()
@@ -65,16 +74,17 @@ void function UpdateKillerName(string name)
 	Hud_SetText(rui, name)
 }
 
-void function SetEnemyScore(int score)
+void function SetCTFScores(int imc, int mil, int maxscore)
 {
-	var rui = Hud_GetChild( file.menu, "EnemyScoreText" )
-	Hud_SetText(rui, score.tostring() + " Captures")
-}
+	int widthpiece = 400 / maxscore
+	int imcscorewidth = widthpiece * imc
+	int milscorewidth = widthpiece * mil
 
-void function SetTeamScore(int score)
-{
-	var rui = Hud_GetChild( file.menu, "TeamScoreText" )
-	Hud_SetText(rui, score.tostring() + " Captures")
+	Hud_SetWidth( Hud_GetChild( file.menu, "IMCScoreBar" ), imcscorewidth )
+	Hud_SetWidth( Hud_GetChild( file.menu, "MilScoreBar" ), milscorewidth )
+
+	Hud_SetText(Hud_GetChild( file.menu, "IMCScoreInt" ), imc + " Captures")
+	Hud_SetText(Hud_GetChild( file.menu, "MilScoreInt" ), mil + " Captures")
 }
 
 void function InitCTFRespawnMenu( var newMenuArg )
@@ -98,7 +108,7 @@ void function OnClickClass( var button )
 		RuiSetInt( Hud_GetRui( Hud_GetChild( file.menu, "Class" + i )), "status", eFriendStatus.OFFLINE )
 	}
 
-	RuiSetInt( Hud_GetRui( button ), "status", eFriendStatus.ONLINE_INGAME )
+	RuiSetInt( Hud_GetRui( button ), "status", file.eFriendStatus )
 
 	int buttonId = Hud_GetScriptID( button ).tointeger()
 	RunClientScript("UI_To_Client_UpdateSelectedClass", buttonId )
@@ -112,7 +122,7 @@ void function UpdateSelectedClass(int classid, string primary, string secondary,
 
 	int finalclassid = classid + 1
 
-	RuiSetInt( Hud_GetRui( Hud_GetChild( file.menu, "Class" + finalclassid )), "status", eFriendStatus.ONLINE_INGAME )
+	RuiSetInt( Hud_GetRui( Hud_GetChild( file.menu, "Class" + finalclassid )), "status", file.eFriendStatus )
 
 	Set_CTF_Class(primary, secondary, tactical, ult)
 }

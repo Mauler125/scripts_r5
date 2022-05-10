@@ -19,8 +19,8 @@ global function GetRandomPlayerSpawnAngles
 global function GetFlagLocation
 #endif
 
-global int CTF_SCORE_GOAL_TO_WIN = 5
-global int CTF_ROUNDTIME = 1500
+global int CTF_SCORE_GOAL_TO_WIN
+global int CTF_ROUNDTIME
 
 #if CLIENT
 bool CTF_INSPECT_MENU_OPEN = false
@@ -150,6 +150,9 @@ void function OnInspectKeyPressed( entity localPlayer )
 
 void function Sh_CustomCTF_Init()
 {
+    CTF_SCORE_GOAL_TO_WIN = GetCurrentPlaylistVarInt( "max_score", 5 )
+    CTF_ROUNDTIME = GetCurrentPlaylistVarInt( "round_time", 1500 )
+
     #if CLIENT
 		RegisterConCommandTriggeredCallback( "weapon_inspect", OnInspectKeyPressed )
     #endif

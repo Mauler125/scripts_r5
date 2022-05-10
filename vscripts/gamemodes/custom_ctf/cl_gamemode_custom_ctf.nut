@@ -51,6 +51,9 @@ var MILITIApointicon = null
 var FlagReturnRUI = null
 bool hasvoted = false;
 bool isvoting = false;
+bool roundover = false
+
+int gamestarttime = 0
 
 entity backgroundModelSmoke
 entity backgroundModelGeo
@@ -407,6 +410,8 @@ void function ServerCallback_CTF_DoAnnouncement(float duration, int type)
             //message = "Round start"
             message = "Match Start"
             subtext = "Score 5 points to win!"
+            roundover = false
+            thread StartGameTimer()
             break
         }
         case eCTFAnnounce.VOTING_PHASE:
@@ -434,10 +439,44 @@ void function ServerCallback_CTF_DoAnnouncement(float duration, int type)
 	AnnouncementFromClass( GetLocalViewPlayer(), announcement )
 }
 
+void function StartGameTimer()
+{
+    int endingtime = Time().tointeger() + CTF_ROUNDTIME
+    int seconds = 60
+    string secondsfiller = ""
+    string minsfiller = ""
+
+	while (!roundover)
+	{
+        int elapsedtime = endingtime - Time().tointeger()
+		int minutes = floor( elapsedtime / 60 ).tointeger()
+
+        if(seconds < 1)
+            seconds = 60
+
+        if(seconds < 10)
+            secondsfiller = "0"
+        else
+            secondsfiller = ""
+
+        if(minutes < 10)
+            minsfiller = "0"
+        else
+            minsfiller = ""
+
+        RunUIScript("SetGameTimer", minsfiller + minutes + ":" + secondsfiller + seconds)
+
+		wait 1
+        seconds--
+	}
+}
+
 void function ServerCallback_CTF_PointCaptured(int IMC, int MIL)
 {
     if(file.scoreRui)
         RuiSetString( file.scoreRui, "messageText", "Team IMC: " + IMC + "  ||  Team MIL: " + MIL )
+
+    RunUIScript("SetCTFScores", IMC, MIL, CTF_SCORE_GOAL_TO_WIN)
 }
 
 void function ServerCallback_CTF_TeamText(int team)
@@ -550,10 +589,10 @@ void function ServerCallback_CTF_OpenCTFRespawnMenu(vector campos, int IMCscore,
     if(isvoting)
         return
 
+    entity player = GetLocalClientPlayer()
+
     RunUIScript("OpenCTFRespawnMenu", file.ctfclasses[0].name, file.ctfclasses[1].name, file.ctfclasses[2].name, file.ctfclasses[3].name, file.ctfclasses[4].name)
     RunUIScript("UpdateSelectedClass", selectedclassid, file.ctfclasses[selectedclassid].primary, file.ctfclasses[selectedclassid].secondary, file.ctfclasses[selectedclassid].tactical, file.ctfclasses[selectedclassid].ult)
-
-    entity player = GetLocalClientPlayer()
 
     if(attacker != null)
     {
@@ -567,16 +606,7 @@ void function ServerCallback_CTF_OpenCTFRespawnMenu(vector campos, int IMCscore,
     else
         RunUIScript( "UpdateKillerName", "Mysterious Forces")
 
-    if(player.GetTeam() == TEAM_IMC)
-    {
-        RunUIScript( "SetTeamScore", IMCscore)
-        RunUIScript( "SetEnemyScore", MILscore)
-    }
-    else
-    {
-        RunUIScript( "SetTeamScore", MILscore)
-        RunUIScript( "SetEnemyScore", IMCscore)
-    }
+    RunUIScript("SetCTFScores", IMCscore, MILscore, CTF_SCORE_GOAL_TO_WIN)
 
     thread UpdateUIRespawnTimer()
 }
@@ -707,6 +737,8 @@ void function CreateVotingUI()
     //EmitSoundOnEntity( GetLocalClientPlayer(), "UI_Survival_Intro_GladiatorCard_Appear" )
     ScreenFade(GetLocalClientPlayer(), 0, 0, 0, 255, 0.4, 0.5, FFADE_OUT | FFADE_PURGE)
     wait 0.9;
+
+    roundover = true
 
     entity targetBackground = GetEntByScriptName( "target_char_sel_bg_new" )
     entity targetCamera = GetEntByScriptName( "target_char_sel_camera_new" )

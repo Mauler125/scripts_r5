@@ -105,8 +105,6 @@ void function _CustomCTF_Init()
     AddClientCommandCallback("VoteForMap", ClientCommand_VoteForMap)
     AddClientCommandCallback("SetPlayerClass", ClientCommand_SetPlayerClass)
 
-    CTF_SCORE_GOAL_TO_WIN = GetCurrentPlaylistVarInt( "max_score", 5 )
-    CTF_ROUNDTIME = GetCurrentPlaylistVarInt( "round_time", 1500 )
     GIVE_ALT_AFTER_CAPTURE = GetCurrentPlaylistVarBool( "give_ult_after_capture", false )
 
     thread RUNCTF()
@@ -904,6 +902,7 @@ void function IMCPoint_Trigger( entity trigger, entity ent )
                         ent.GetOffhandWeapon( OFFHAND_INVENTORY ).SetWeaponPrimaryClipCount( ent.GetOffhandWeapon( OFFHAND_INVENTORY ).GetWeaponPrimaryClipCountMax() )
 
                     CTF.IMCPoints++
+
                     foreach(player in GetPlayerArray())
                     {
                         Remote_CallFunction_Replay(player, "ServerCallback_CTF_PointCaptured", CTF.IMCPoints, CTF.MILITIAPoints)
