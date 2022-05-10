@@ -6,7 +6,7 @@
 
 global function Cl_CustomCTF_Init
 
-//Lots of server callbacks
+//Server Callbacks
 global function ServerCallback_CTF_DoAnnouncement
 global function ServerCallback_CTF_PointCaptured
 global function ServerCallback_CTF_TeamText
@@ -30,7 +30,7 @@ global function ServerCallback_CTF_UpdateMapVotesClient
 global function ServerCallback_CTF_SetScreen
 
 //Ui callbacks
-global function VoteForMap
+global function UI_To_Client_VoteForMap
 global function UI_To_Client_UpdateSelectedClass
 
 global function Cl_CTFRegisterLocation
@@ -184,29 +184,15 @@ void function ServerCallback_CTF_EndRecaptureFlag()
 {
     if (FlagReturnRUI != null)
     {
-        try {
-            RuiDestroy(FlagReturnRUI)
-        } catch (pe1){
-
-        }
+        try { RuiDestroy(FlagReturnRUI) } catch (pe1){ }
         FlagReturnRUI = null
     }
 }
 
 void function ServerCallback_CTF_ResetFlagIcons()
 {
-
-    try {
-        RuiDestroy(IMCpointicon)
-    } catch (pe1){
-
-    }
-
-    try {
-        RuiDestroy(MILITIApointicon)
-    } catch (pe2){
-
-    }
+    try { RuiDestroy(IMCpointicon) } catch (pe1){  }
+    try { RuiDestroy(MILITIApointicon) } catch (pe2){ }
 
     IMCpointicon = null
     MILITIApointicon = null
@@ -337,11 +323,8 @@ void function AddCaptureIconThread( entity prop, var rui )
 	OnThreadEnd(
 		function() : ( prop, rui )
 		{
-            try {
-			    RuiDestroy( rui )
-            } catch (pe3){
-
-            }
+            if ( IsValid( rui ) )
+                try { RuiDestroy( rui ) } catch (pe3){ }
 
 			if ( IsValid( prop ) )
 				prop.e.overheadRui = null
@@ -384,10 +367,10 @@ void function MakeScoreRUI()
 		function() : ( rui, rui2 )
 		{
             if ( IsValid( rui ) )
-			    RuiDestroy( rui )
+			    try { RuiDestroy( rui ) } catch (pe3){ }
 
             if ( IsValid( rui2 ) )
-			    RuiDestroy( rui2 )
+			    try { RuiDestroy( rui2 ) } catch (pe4){ }
 
 			file.scoreRui = null
             file.teamRui = null
@@ -417,15 +400,6 @@ void function ServerCallback_CTF_DoAnnouncement(float duration, int type)
         case eCTFAnnounce.VOTING_PHASE:
         {
             clGlobal.levelEnt.Signal( "CloseScoreRUI" )
-            message = "Welcome To Capture The Flag"
-            subtext = "Made by AyeZee#6969"
-            break
-        }
-        case eCTFAnnounce.MAP_FLYOVER:
-        {
-
-            if(file.locationSettings.len())
-                message = file.selectedLocation.name
             break
         }
     }
@@ -434,36 +408,48 @@ void function ServerCallback_CTF_DoAnnouncement(float duration, int type)
 	Announcement_SetStyle( announcement, ANNOUNCEMENT_STYLE_CIRCLE_WARNING )
 	Announcement_SetPurge( announcement, true )
 	Announcement_SetOptionalTextArgsArray( announcement, [ "true" ] )
-	Announcement_SetPriority( announcement, 200 ) //Be higher priority than Titanfall ready indicator etc
+	Announcement_SetPriority( announcement, 200 )
 	announcement.duration = duration
 	AnnouncementFromClass( GetLocalViewPlayer(), announcement )
 }
 
 void function StartGameTimer()
 {
+    //Get Ending Time
     int endingtime = Time().tointeger() + CTF_ROUNDTIME
+
+    //Set Seconds Counter
     int seconds = 60
+
+    //Filler for when time is < 10
     string secondsfiller = ""
     string minsfiller = ""
 
 	while (!roundover)
 	{
+        //Calculate Elapsed Time
         int elapsedtime = endingtime - Time().tointeger()
+
+        //Calculate Seconds To Minutes
 		int minutes = floor( elapsedtime / 60 ).tointeger()
 
+        //If Seconds is < 1 Set Back To 60
         if(seconds < 1)
             seconds = 60
 
+        //This isnt neede but is there to make the time left counter look nicer when the timer is < 10
         if(seconds < 10)
             secondsfiller = "0"
         else
             secondsfiller = ""
 
+        //This isnt neede but is there to make the time left counter look nicer when the timer is < 10
         if(minutes < 10)
             minsfiller = "0"
         else
             minsfiller = ""
 
+        //Update the counter on the UI
         RunUIScript("SetGameTimer", minsfiller + minutes + ":" + secondsfiller + seconds)
 
 		wait 1
@@ -483,27 +469,31 @@ void function ServerCallback_CTF_TeamText(int team)
 {
     if(file.teamRui)
     {
-        if(team == TEAM_IMC)
-            RuiSetString( file.teamRui, "messageText", "Your Team: IMC" )
-        else
-            RuiSetString( file.teamRui, "messageText", "Your Team: MILITIA")
+        switch(team)
+        {
+            case TEAM_IMC:
+                RuiSetString( file.teamRui, "messageText", "Your Team: IMC" )
+                break
+            case TEAM_MILITIA:
+                RuiSetString( file.teamRui, "messageText", "Your Team: MILITIA")
+                break
+        }
     }
 }
 
 void function ServerCallback_CTF_TeamWon(int team)
 {
     AnnouncementData announcement
-    if (team == TEAM_IMC)
+    switch(team)
     {
-        announcement = Announcement_Create( "IMC has won the round!" )
-    }
-    else if (team == TEAM_MILITIA)
-    {
-        announcement = Announcement_Create( "MILITIA has won the round!" )
-    }
-    else
-    {
-        announcement = Announcement_Create( "Couldnt decide on the winner!" )
+        case TEAM_IMC:
+            announcement = Announcement_Create( "IMC has won the round!" )
+            break
+        case TEAM_MILITIA:
+            announcement = Announcement_Create( "MILITIA has won the round!" )
+            break
+        default:
+            announcement = Announcement_Create( "Couldnt decide on the winner!" )
     }
 
     Announcement_SetSubText(announcement, "Starting vote for next location")
@@ -560,19 +550,6 @@ void function ServerCallback_CTF_CustomMessages(entity player, int messageid)
 	AnnouncementFromClass( GetLocalViewPlayer(), announcement )
 }
 
-var function CreateTemporarySpawnRUI(entity parentEnt, float duration)
-{
-	var rui = AddOverheadIcon( parentEnt, RESPAWN_BEACON_ICON, false, $"ui/overhead_icon_respawn_beacon.rpak" )
-	RuiSetFloat2( rui, "iconSize", <80,80,0> )
-	RuiSetFloat( rui, "distanceFade", 50000 )
-	RuiSetBool( rui, "adsFade", true )
-	RuiSetString( rui, "hint", "SPAWN POINT" )
-
-    wait duration
-
-    parentEnt.Destroy()
-}
-
 void function UI_To_Client_UpdateSelectedClass(int selectedclass)
 {
     ClassID = selectedclass;
@@ -613,6 +590,9 @@ void function ServerCallback_CTF_OpenCTFRespawnMenu(vector campos, int IMCscore,
 
 void function ServerCallback_CTF_PlayerDied(vector campos, int IMCscore, int MILscore, entity attacker)
 {
+    if(isvoting)
+        return
+
     entity player = GetLocalClientPlayer()
 
     array<entity> players = GetPlayerArrayOfTeam( player.GetTeam() )
@@ -674,11 +654,8 @@ void function ServerCallback_CTF_PlayerSpawning()
 {
     foreach ( iconvar in teamicons )
     {
-        try {
-            RuiDestroy(iconvar)
-        } catch (exception2){
-
-        }
+        if(IsValid(iconvar))
+            try { RuiDestroy(iconvar) } catch (exception2){ }
     }
 }
 
@@ -689,10 +666,7 @@ void function ServerCallback_CTF_SetObjectiveText(int score)
 
 void function waitrespawn(entity player)
 {
-    try {
-        Deathcam.ClearParent()
-        cameraMover.Destroy()
-    } catch (exception){ }
+    try { Deathcam.ClearParent(); cameraMover.Destroy() } catch (exception){ }
 
     if(!isvoting)
     {
@@ -710,13 +684,7 @@ void function waitrespawn(entity player)
         player.ClearMenuCameraEntity()
     }
 
-    try {
-        Deathcam.ClearParent()
-        Deathcam.Destroy()
-        cameraMover.Destroy()
-    } catch (exceptio2n){
-
-    }
+    try { Deathcam.ClearParent(); Deathcam.Destroy(); cameraMover.Destroy() } catch (exceptio2n){ }
 }
 
 void function ServerCallback_CTF_SetVoteMenuOpen(bool shouldOpen)
@@ -734,7 +702,6 @@ void function CreateVotingUI()
 
     EmitSoundOnEntity( GetLocalClientPlayer(), "Music_CharacterSelect_Wattson" )
     wait 3;
-    //EmitSoundOnEntity( GetLocalClientPlayer(), "UI_Survival_Intro_GladiatorCard_Appear" )
     ScreenFade(GetLocalClientPlayer(), 0, 0, 0, 255, 0.4, 0.5, FFADE_OUT | FFADE_PURGE)
     wait 0.9;
 
@@ -772,7 +739,6 @@ void function CreateVotingUI()
 void function DestroyVotingUI()
 {
     FadeOutSoundOnEntity( GetLocalClientPlayer(), "Music_CharacterSelect_Wattson", 0.2 )
-    //EmitSoundOnEntity( GetLocalClientPlayer(), "UI_InGame_FD_UnReadyUp_1p" ) //UI_InGame_FD_MetaUpgradeAnnouncement
     ScreenFade(GetLocalClientPlayer(), 0, 0, 0, 255, 0.4, 1, FFADE_OUT | FFADE_PURGE)
     wait 1;
 
@@ -810,7 +776,7 @@ void function UpdateUIVoteTimer()
     }
 }
 
-void function VoteForMap(int mapid)
+void function UI_To_Client_VoteForMap(int mapid)
 {
     if(hasvoted)
         return

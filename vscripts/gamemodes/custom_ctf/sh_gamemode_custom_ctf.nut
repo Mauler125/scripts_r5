@@ -8,10 +8,8 @@ global function Sh_CustomCTF_Init
 global function NewCTFLocationSettings
 global function NewCTFLocPair
 
-global function CTF_GetRespawnDelay
 global function CTF_Equipment_GetDefaultShieldHP
 global function CTF_GetOOBDamagePercent
-global function CTF_GetVotingTime
 
 #if SERVER
 global function GetRandomPlayerSpawnOrigin
@@ -21,10 +19,9 @@ global function GetFlagLocation
 
 global int CTF_SCORE_GOAL_TO_WIN
 global int CTF_ROUNDTIME
-
-#if CLIENT
-bool CTF_INSPECT_MENU_OPEN = false
-#endif
+global const int NUMBER_OF_MAP_SLOTS = 4
+global const int NUMBER_OF_CLASS_SLOTS = 5
+global bool GIVE_ALT_AFTER_CAPTURE
 
 //Custom Messages IDS
 global enum eCTFMessage
@@ -140,22 +137,11 @@ void function Shared_RegisterCTFClass(CTFClasses ctfclass)
     #endif
 }
 
-#if CLIENT
-void function OnInspectKeyPressed( entity localPlayer )
-{
-    //Todo: Maybe Add Attachment Customization
-}
-#endif
-
-
 void function Sh_CustomCTF_Init()
 {
+    //Set Playlist Vars
     CTF_SCORE_GOAL_TO_WIN = GetCurrentPlaylistVarInt( "max_score", 5 )
     CTF_ROUNDTIME = GetCurrentPlaylistVarInt( "round_time", 1500 )
-
-    #if CLIENT
-		RegisterConCommandTriggeredCallback( "weapon_inspect", OnInspectKeyPressed )
-    #endif
 
     //Register Classes
     for(int i = 1; i < 6; i++ ) {
@@ -919,17 +905,11 @@ array<vector> function GetRandomPlayerSpawnAngles(LocationSettingsCTF locationSe
 
     return spawnang
 }
-
-
 #endif
 
-
 // Playlist GET
-float function CTF_GetRespawnDelay()                          { return GetCurrentPlaylistVarFloat("respawn_delay", 8) }
 float function CTF_Equipment_GetDefaultShieldHP()                        { return GetCurrentPlaylistVarFloat("default_shield_hp", 100) }
 float function CTF_GetOOBDamagePercent()                      { return GetCurrentPlaylistVarFloat("oob_damage_percent", 25) }
-float function CTF_GetVotingTime()                            { return GetCurrentPlaylistVarFloat("voting_time", 5) }
-bool function CTF_Equipment_GetRespawnKitEnabled()                       { return GetCurrentPlaylistVarBool("respawn_kit_enabled", false) }
 
 CTFPlaylistWeapons function CTF_Equipment_GetClass_PrimaryWeapon(string playlistvar)
 {

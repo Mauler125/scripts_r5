@@ -26,20 +26,8 @@ void function OpenCTFVoteMenu()
 //Sets and updates the team won screen
 void function SetCTFTeamWonScreen(string teamwon)
 {
-	Hud_SetVisible(Hud_GetChild( file.menu, "TimerFrame"), false)
-	Hud_SetVisible(Hud_GetChild( file.menu, "TimerText2"), false)
-	Hud_SetVisible(Hud_GetChild( file.menu, "TimerText" ), false)
+	SetVoteHudElems(false, false, false, false, false, false, false, true, true)
 
-	Hud_SetVisible( Hud_GetChild( file.menu, "MapVoteFrame" ), false )
-	Hud_SetVisible( Hud_GetChild( file.menu, "CTFBottomFrame" ), false )
-	Hud_SetVisible( Hud_GetChild( file.menu, "ObjectiveText" ), false )
-
-	for(int i = 1; i < 5; i++ ) {
-		Hud_SetVisible( Hud_GetChild( file.menu, "MapVote" + i ), false )
-	}
-
-	Hud_SetVisible( Hud_GetChild( file.menu, "MapVoteFrame2" ), true )
-	Hud_SetVisible( Hud_GetChild( file.menu, "VotedForLbl" ), true )
 	Hud_SetText( Hud_GetChild( file.menu, "VotedForLbl" ), teamwon)
 
 }
@@ -47,46 +35,21 @@ void function SetCTFTeamWonScreen(string teamwon)
 //Sets and updates the voting screen
 void function SetCTFVotingScreen()
 {
+	SetVoteHudElems(true, true, true, true, true, true, true, false, false)
+
 	for(int i = 1; i < 5; i++ ) {
-		Hud_SetVisible( Hud_GetChild( file.menu, "MapVote" + i ), true )
 		Hud_SetEnabled( Hud_GetChild( file.menu, "MapVote" + i ), true )
 		RuiSetInt( Hud_GetRui( Hud_GetChild( file.menu, "MapVote" + i )), "status", eFriendStatus.ONLINE_INGAME )
 		RuiSetString( Hud_GetRui( Hud_GetChild( file.menu, "MapVote" + i )), "statusText", "Votes: 0")
 		RuiSetString( Hud_GetRui( Hud_GetChild( file.menu, "MapVote" + i )), "presenseText", "" )
 	}
-
-	Hud_SetText(Hud_GetChild( file.menu, "TimerText2" ), "Voting Ends In")
-	Hud_SetText(Hud_GetChild( file.menu, "TimerText" ), "15")
-
-	Hud_SetVisible(Hud_GetChild( file.menu, "TimerFrame"), true)
-	Hud_SetVisible(Hud_GetChild( file.menu, "TimerText2"), true)
-	Hud_SetVisible(Hud_GetChild( file.menu, "TimerText" ), true)
-
-	Hud_SetVisible( Hud_GetChild( file.menu, "MapVoteFrame" ), true )
-	Hud_SetVisible( Hud_GetChild( file.menu, "CTFBottomFrame" ), true )
-	Hud_SetVisible( Hud_GetChild( file.menu, "ObjectiveText" ), true )
-
-	Hud_SetVisible( Hud_GetChild( file.menu, "MapVoteFrame2" ), false )
-	Hud_SetVisible( Hud_GetChild( file.menu, "VotedForLbl" ), false )
 }
 
 //Sets and updates the next round screen
 void function SetCTFVoteMenuNextRound()
 {
-	for(int i = 1; i < 5; i++ ) {
-		Hud_SetVisible( Hud_GetChild( file.menu, "MapVote" + i ), false )
-	}
+	SetVoteHudElems(false, false, false, false, false, false, false, true, true)
 
-	Hud_SetVisible(Hud_GetChild( file.menu, "TimerFrame"), false)
-	Hud_SetVisible(Hud_GetChild( file.menu, "TimerText2"), false)
-	Hud_SetVisible(Hud_GetChild( file.menu, "TimerText" ), false)
-
-	Hud_SetVisible( Hud_GetChild( file.menu, "MapVoteFrame" ), false )
-	Hud_SetVisible( Hud_GetChild( file.menu, "CTFBottomFrame" ), false )
-	Hud_SetVisible( Hud_GetChild( file.menu, "ObjectiveText" ), false )
-
-	Hud_SetVisible( Hud_GetChild( file.menu, "MapVoteFrame2" ), true )
-	Hud_SetVisible( Hud_GetChild( file.menu, "VotedForLbl" ), true )
 	Hud_SetText( Hud_GetChild( file.menu, "VotedForLbl" ), "Starting Next Round!")
 }
 
@@ -136,20 +99,7 @@ void function UpdateVotedFor(int id)
 //Sets and updates selected location
 void function UpdateVotedLocation(string map)
 {
-	for(int i = 1; i < 5; i++ ) {
-		Hud_SetVisible( Hud_GetChild( file.menu, "MapVote" + i ), false )
-	}
-
-	Hud_SetVisible(Hud_GetChild( file.menu, "TimerFrame"), false)
-	Hud_SetVisible(Hud_GetChild( file.menu, "TimerText2"), false)
-	Hud_SetVisible(Hud_GetChild( file.menu, "TimerText" ), false)
-
-	Hud_SetVisible( Hud_GetChild( file.menu, "MapVoteFrame" ), false )
-	Hud_SetVisible( Hud_GetChild( file.menu, "CTFBottomFrame" ), false )
-	Hud_SetVisible( Hud_GetChild( file.menu, "ObjectiveText" ), false )
-
-	Hud_SetVisible( Hud_GetChild( file.menu, "MapVoteFrame2" ), true )
-	Hud_SetVisible( Hud_GetChild( file.menu, "VotedForLbl" ), true )
+	SetVoteHudElems(false, false, false, false, false, false, false, true, true)
 
 	Hud_SetText( Hud_GetChild( file.menu, "VotedForLbl" ), "Next Location: " + map)
 }
@@ -157,20 +107,8 @@ void function UpdateVotedLocation(string map)
 //Sets and updates tied voting screen
 void function UpdateVotedLocationTied(string map)
 {
-	for(int i = 1; i < 5; i++ ) {
-		Hud_SetVisible( Hud_GetChild( file.menu, "MapVote" + i ), false )
-	}
+	SetVoteHudElems(false, true, true, true, false, false, false, true, true)
 
-	Hud_SetVisible(Hud_GetChild( file.menu, "TimerFrame"), true)
-	Hud_SetVisible(Hud_GetChild( file.menu, "TimerText2"), true)
-	Hud_SetVisible(Hud_GetChild( file.menu, "TimerText" ), true)
-
-	Hud_SetVisible( Hud_GetChild( file.menu, "MapVoteFrame" ), false )
-	Hud_SetVisible( Hud_GetChild( file.menu, "CTFBottomFrame" ), false )
-	Hud_SetVisible( Hud_GetChild( file.menu, "ObjectiveText" ), false )
-
-	Hud_SetVisible( Hud_GetChild( file.menu, "MapVoteFrame2" ), true )
-	Hud_SetVisible( Hud_GetChild( file.menu, "VotedForLbl" ), true )
 	Hud_SetText( Hud_GetChild( file.menu, "TimerText" ), "Picking a random location from tied locations")
 	Hud_SetText( Hud_GetChild( file.menu, "TimerText2" ), "Votes Tied!")
 	Hud_SetText( Hud_GetChild( file.menu, "VotedForLbl" ), map)
@@ -190,11 +128,29 @@ void function InitCTFVoteMenu( var newMenuArg )
 	AddButtonEventHandler( Hud_GetChild( menu, "MapVote4" ), UIE_CLICK, OnClickMap )
 }
 
+void function SetVoteHudElems(bool MapVote, bool TimerFrame, bool TimerText2, bool TimerText, bool MapVoteFrame, bool CTFBottomFrame, bool ObjectiveText, bool MapVoteFrame2, bool VotedForLbl)
+{
+	for(int i = 1; i < 5; i++ ) {
+		Hud_SetVisible( Hud_GetChild( file.menu, "MapVote" + i ), MapVote )
+	}
+
+	Hud_SetVisible(Hud_GetChild( file.menu, "TimerFrame"), TimerFrame)
+	Hud_SetVisible(Hud_GetChild( file.menu, "TimerText2"), TimerText2)
+	Hud_SetVisible(Hud_GetChild( file.menu, "TimerText" ), TimerText)
+
+	Hud_SetVisible( Hud_GetChild( file.menu, "MapVoteFrame" ), MapVoteFrame )
+	Hud_SetVisible( Hud_GetChild( file.menu, "CTFBottomFrame" ), CTFBottomFrame )
+	Hud_SetVisible( Hud_GetChild( file.menu, "ObjectiveText" ), ObjectiveText )
+
+	Hud_SetVisible( Hud_GetChild( file.menu, "MapVoteFrame2" ), MapVoteFrame2 )
+	Hud_SetVisible( Hud_GetChild( file.menu, "VotedForLbl" ), VotedForLbl )
+}
+
 //Button event handlers
 void function OnClickMap( var button )
 {
 	int buttonId = Hud_GetScriptID( button ).tointeger()
-	RunClientScript("VoteForMap", buttonId )
+	RunClientScript("UI_To_Client_VoteForMap", buttonId )
 }
 
 void function OnCTF_NavigateBack()

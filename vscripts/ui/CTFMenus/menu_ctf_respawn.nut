@@ -13,7 +13,6 @@ struct
 {
 	var menu
 	bool roundover = false
-	int eFriendStatus
 } file
 
 struct Abilitys
@@ -43,12 +42,12 @@ void function OpenCTFRespawnMenu(string classname1, string classname2, string cl
 	}
 
 	entity player = GetLocalClientPlayer()
+
 	ItemFlavor character = LoadoutSlot_WaitForItemFlavor( ToEHI( player ), Loadout_CharacterClass() )
 	asset classIcon      = CharacterClass_GetGalleryPortrait( character )
+
 	RuiSetImage(Hud_GetRui(Hud_GetChild(file.menu, "PlayerImage")), "basicImage", classIcon)
 	RuiSetString( Hud_GetRui( Hud_GetChild( file.menu, "ChangeLegend" )), "buttonText", "Change Legend" )
-
-	file.eFriendStatus = eFriendStatus.ONLINE_INGAME
 }
 
 void function CloseCTFRespawnMenu()
@@ -108,7 +107,7 @@ void function OnClickClass( var button )
 		RuiSetInt( Hud_GetRui( Hud_GetChild( file.menu, "Class" + i )), "status", eFriendStatus.OFFLINE )
 	}
 
-	RuiSetInt( Hud_GetRui( button ), "status", file.eFriendStatus )
+	RuiSetInt( Hud_GetRui( button ), "status", eFriendStatus.ONLINE_INGAME )
 
 	int buttonId = Hud_GetScriptID( button ).tointeger()
 	RunClientScript("UI_To_Client_UpdateSelectedClass", buttonId )
@@ -122,7 +121,7 @@ void function UpdateSelectedClass(int classid, string primary, string secondary,
 
 	int finalclassid = classid + 1
 
-	RuiSetInt( Hud_GetRui( Hud_GetChild( file.menu, "Class" + finalclassid )), "status", file.eFriendStatus )
+	RuiSetInt( Hud_GetRui( Hud_GetChild( file.menu, "Class" + finalclassid )), "status", eFriendStatus.ONLINE_INGAME )
 
 	Set_CTF_Class(primary, secondary, tactical, ult)
 }
@@ -147,11 +146,6 @@ void function Set_CTF_Class(string primary, string secondary, string tactical, s
 	Hud_SetText(Hud_GetChild(file.menu, "Weapon2Text"), GetWeaponInfoFileKeyField_GlobalString(secondaryData.baseWeapon, "shortprintname"))
 	Hud_SetText(Hud_GetChild(file.menu, "Ability2Text"), GetWeaponInfoFileKeyField_GlobalString(ult, "shortprintname"))
 	Hud_SetText(Hud_GetChild(file.menu, "Ability1Text"), GetWeaponInfoFileKeyField_GlobalString(tactical, "shortprintname"))
-}
-
-void function ChangeLegend(var button)
-{
-    RunClientScript("OpenCharacterSelectNewMenu", true)
 }
 
 void function OnR5RSB_NavigateBack()

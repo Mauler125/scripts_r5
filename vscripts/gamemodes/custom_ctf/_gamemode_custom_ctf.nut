@@ -87,10 +87,6 @@ struct
     entity beingreturnedby
 } MILITIAPoint;
 
-const int NUMBER_OF_MAP_SLOTS = 4
-const int NUMBER_OF_CLASS_SLOTS = 5
-bool GIVE_ALT_AFTER_CAPTURE
-
 void function _CustomCTF_Init()
 {
     PrecacheModel($"mdl/props/pathfinder_zipline/pathfinder_zipline.rmdl")
@@ -1046,12 +1042,10 @@ void function MILITIA_Point_Trigger( entity trigger, entity ent )
 //Purpose: Take weapons from player and give ctf dataknife
 void function TakeWeaponsForFlagCarrier(entity player)
 {
-    player.p.storedWeapons = StoreWeapons(player)
     TakeAllWeapons(player)
     player.GiveWeapon( "mp_weapon_melee_survival", WEAPON_INVENTORY_SLOT_PRIMARY_2, [] )
     player.GiveOffhandWeapon( "melee_data_knife", OFFHAND_MELEE, ["ctf_knife"] )
     player.SetActiveWeaponBySlot(eActiveInventorySlot.mainHand, WEAPON_INVENTORY_SLOT_PRIMARY_2)
-
 }
 
 //Purpose: Give player their weapons back
