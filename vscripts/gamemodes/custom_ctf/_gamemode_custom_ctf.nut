@@ -21,35 +21,29 @@ enum eCTFState
 
 struct {
     int ctfState = eCTFState.IN_PROGRESS
-    array<entity> playerSpawnedProps
     LocationSettingsCTF& selectedLocation
-
     array<LocationSettingsCTF> locationSettings
-
+    array<entity> playerSpawnedProps
     array<CTFClasses> ctfclasses
-
-    array<string> whitelistedWeapons
-
     entity bubbleBoundary
 } file;
 
 struct
 {
+    //Base
 	int IMCPoints = 0
     int MILITIAPoints = 0
     vector bubbleCenter
     float bubbleRadius
-    bool setmap = false
-    int selectedmap
-    int currentmapindex = 0
+    float roundstarttime
+
+    //Voting
     array<entity> votedPlayers // array of players that have already voted (bad var name idc)
     bool votingtime = false
     bool votestied = false
     array<int> mapVotes
     array<int> mapIds
-
     int mappicked = 0
-    float roundstarttime
 } CTF;
 
 struct
@@ -110,11 +104,27 @@ void function _CustomCTF_Init()
     AddClientCommandCallback("SetPlayerClass", ClientCommand_SetPlayerClass)
     AddClientCommandCallback("GetTimeFromServer", ClientCommand_GetCorrectTimeFromServer)
 
-    GIVE_ALT_AFTER_CAPTURE = GetCurrentPlaylistVarBool( "give_ult_after_capture", false )
-
     thread RUNCTF()
 }
 
+//Register location settings from sh_ file
+void function _CTFRegisterLocation(LocationSettingsCTF locationSettings)
+{
+    file.locationSettings.append(locationSettings)
+}
+
+//Register classes from sh_ file
+void function _CTFRegisterCTFClass(CTFClasses ctfclass)
+{
+    file.ctfclasses.append(ctfclass)
+}
+
+
+/////////////////////////////////////////////
+//                                         //
+//             Client Commands             //
+//                                         //
+/////////////////////////////////////////////
 bool function ClientCommand_GetCorrectTimeFromServer(entity player, array<string> args)
 {
     Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetCorrectTime", ServerTimer.seconds)
@@ -125,16 +135,6 @@ bool function ClientCommand_NextRound(entity player, array<string> args)
 {
     if( !IsServer() ) return false;
 
-    if(args.len() < 1)
-    {
-        file.ctfState = eCTFState.WINNER_DECIDED
-        return true
-    }
-
-    if (args[0].tointeger() > file.locationSettings.len() - 1) return false;
-
-    CTF.setmap = true
-    CTF.selectedmap = args[0].tointeger()
     file.ctfState = eCTFState.WINNER_DECIDED
     return true
 }
@@ -189,22 +189,7 @@ bool function ClientCommand_SetPlayerClass(entity player, array<string> args)
 
     return true
 }
-
-void function ResetMapVotes()
-{
-    CTF.mapVotes.clear()
-    CTF.mapVotes.resize( NUMBER_OF_MAP_SLOTS )
-}
-
-void function _CTFRegisterLocation(LocationSettingsCTF locationSettings)
-{
-    file.locationSettings.append(locationSettings)
-}
-
-void function _CTFRegisterCTFClass(CTFClasses ctfclass)
-{
-    file.ctfclasses.append(ctfclass)
-}
+// End of client commands
 
 LocPairCTF function _GetVotingLocation()
 {
@@ -235,6 +220,22 @@ void function _OnPropDynamicSpawned(entity prop)
 
 }
 
+void function DestroyPlayerProps()
+{
+    foreach(prop in file.playerSpawnedProps)
+    {
+        if(IsValid(prop))
+            prop.Destroy()
+    }
+    file.playerSpawnedProps.clear()
+}
+
+void function ResetMapVotes()
+{
+    CTF.mapVotes.clear()
+    CTF.mapVotes.resize( NUMBER_OF_MAP_SLOTS )
+}
+
 void function RUNCTF()
 {
     WaitForGameState(eGameState.Playing)
@@ -247,17 +248,6 @@ void function RUNCTF()
     }
     WaitForever()
 }
-
-void function DestroyPlayerProps()
-{
-    foreach(prop in file.playerSpawnedProps)
-    {
-        if(IsValid(prop))
-            prop.Destroy()
-    }
-    file.playerSpawnedProps.clear()
-}
-
 
 // purpose: handle map voting phase
 void function VotingPhase()
@@ -905,9 +895,6 @@ void function IMCPoint_Trigger( entity trigger, entity ent )
                 {
                     PlayerDroppedFlag(ent)
 
-                    if(GIVE_ALT_AFTER_CAPTURE)
-                        ent.GetOffhandWeapon( OFFHAND_INVENTORY ).SetWeaponPrimaryClipCount( ent.GetOffhandWeapon( OFFHAND_INVENTORY ).GetWeaponPrimaryClipCountMax() )
-
                     CTF.IMCPoints++
 
                     foreach(player in GetPlayerArray())
@@ -949,6 +936,9 @@ void function IMCPoint_Trigger( entity trigger, entity ent )
                     EmitSoundToTeamPlayers("ui_ctf_enemy_score", TEAM_MILITIA)
                     EmitSoundToTeamPlayers("ui_ctf_team_score", TEAM_IMC)
                     thread PlayAnim( MILITIAPoint.pole, "prop_fence_expand", MILITIAPoint.pole.GetOrigin(), MILITIAPoint.pole.GetAngles() )
+
+                    if(GIVE_ALT_AFTER_CAPTURE)
+                        ent.GetOffhandWeapon( OFFHAND_INVENTORY ).SetWeaponPrimaryClipCount( ent.GetOffhandWeapon( OFFHAND_INVENTORY ).GetWeaponPrimaryClipCountMax() )
                 }
             }
         }
@@ -1064,14 +1054,22 @@ void function GiveBackWeapons(entity player)
 {
     TakeAllWeapons(player)
 
-    player.TakeOffhandWeapon(OFFHAND_TACTICAL)
-    player.TakeOffhandWeapon(OFFHAND_ULTIMATE)
-
     player.GiveWeapon(file.ctfclasses[player.p.CTFClassID].primary, WEAPON_INVENTORY_SLOT_PRIMARY_0, file.ctfclasses[player.p.CTFClassID].primaryattachments)
     player.GiveWeapon(file.ctfclasses[player.p.CTFClassID].secondary, WEAPON_INVENTORY_SLOT_PRIMARY_1, file.ctfclasses[player.p.CTFClassID].secondaryattachments)
 
-    player.GiveOffhandWeapon( file.ctfclasses[player.p.CTFClassID].tactical, OFFHAND_TACTICAL )
-    player.GiveOffhandWeapon( file.ctfclasses[player.p.CTFClassID].ult, OFFHAND_ULTIMATE )
+    if(!USE_LEGEND_ABILITYS)
+    {
+        player.GiveOffhandWeapon( file.ctfclasses[player.p.CTFClassID].tactical, OFFHAND_TACTICAL )
+        player.GiveOffhandWeapon( file.ctfclasses[player.p.CTFClassID].ult, OFFHAND_ULTIMATE )
+    }
+    else
+    {
+        ItemFlavor character = LoadoutSlot_WaitForItemFlavor( ToEHI( player ), Loadout_CharacterClass() )
+	    ItemFlavor ultiamteAbility = CharacterClass_GetUltimateAbility( character )
+        ItemFlavor tacticalAbility = CharacterClass_GetTacticalAbility( character )
+        player.GiveOffhandWeapon(CharacterAbility_GetWeaponClassname(tacticalAbility), OFFHAND_TACTICAL, [] )
+	    player.GiveOffhandWeapon( CharacterAbility_GetWeaponClassname( ultiamteAbility ), OFFHAND_ULTIMATE, [] )
+    }
 
     player.TakeOffhandWeapon(OFFHAND_MELEE)
     player.GiveOffhandWeapon( "melee_data_knife", OFFHAND_MELEE, [] )
@@ -1082,6 +1080,11 @@ void function GiveBackWeapons(entity player)
 void function _OnPlayerConnected(entity player)
 {
     if(!IsValid(player)) return
+
+    //This for some reason dosnt register until the player has respawned so i will disable for now
+    //array<ItemFlavor> characters = clone GetAllCharacters()
+    //int ri = RandomIntRange( 0, 10 )
+    //SetItemFlavorLoadoutSlot( ToEHI( player ), Loadout_CharacterClass(), characters[ri] )
 
     //Give passive regen (pilot blood)
     GivePassive(player, ePassives.PAS_PILOT_BLOOD)
@@ -1711,14 +1714,26 @@ void function _HandleRespawn(entity player, bool forceGive = false)
     if(!IsAlive(player) || forceGive)
     {
         DecideRespawnPlayer(player, true)
+
         player.TakeOffhandWeapon(OFFHAND_TACTICAL)
         player.TakeOffhandWeapon(OFFHAND_ULTIMATE)
 
         player.GiveWeapon(file.ctfclasses[player.p.CTFClassID].primary, WEAPON_INVENTORY_SLOT_PRIMARY_0, file.ctfclasses[player.p.CTFClassID].primaryattachments)
         player.GiveWeapon(file.ctfclasses[player.p.CTFClassID].secondary, WEAPON_INVENTORY_SLOT_PRIMARY_1, file.ctfclasses[player.p.CTFClassID].secondaryattachments)
 
-        player.GiveOffhandWeapon( file.ctfclasses[player.p.CTFClassID].tactical, OFFHAND_TACTICAL )
-        player.GiveOffhandWeapon( file.ctfclasses[player.p.CTFClassID].ult, OFFHAND_ULTIMATE )
+        if(!USE_LEGEND_ABILITYS)
+        {
+            player.GiveOffhandWeapon( file.ctfclasses[player.p.CTFClassID].tactical, OFFHAND_TACTICAL )
+            player.GiveOffhandWeapon( file.ctfclasses[player.p.CTFClassID].ult, OFFHAND_ULTIMATE )
+        }
+        else
+        {
+            ItemFlavor character = LoadoutSlot_WaitForItemFlavor( ToEHI( player ), Loadout_CharacterClass() )
+	        ItemFlavor ultiamteAbility = CharacterClass_GetUltimateAbility( character )
+            ItemFlavor tacticalAbility = CharacterClass_GetTacticalAbility( character )
+            player.GiveOffhandWeapon(CharacterAbility_GetWeaponClassname(tacticalAbility), OFFHAND_TACTICAL, [] )
+	        player.GiveOffhandWeapon( CharacterAbility_GetWeaponClassname( ultiamteAbility ), OFFHAND_ULTIMATE, [] )
+        }
 
         player.TakeOffhandWeapon(OFFHAND_MELEE)
         player.GiveOffhandWeapon( "melee_data_knife", OFFHAND_MELEE, [] )

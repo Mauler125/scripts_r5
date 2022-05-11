@@ -15,6 +15,7 @@ struct
 	bool roundover = false
 	bool legendspanelopen = false
 	bool setupLegendCallbacks = false
+	bool defaultabilitys
 } file
 
 struct Abilitys
@@ -107,6 +108,19 @@ void function SetupLegendButtonsCallBacks(array<ItemFlavor> characters)
 			DEV_RequestSetItemFlavorLoadoutSlot( LocalClientEHI(), Loadout_CharacterClass(), character )
 			ToggleLegendsUI(false)
 			RuiSetImage(Hud_GetRui(Hud_GetChild(file.menu, "PlayerImage")), "basicImage", CharacterClass_GetGalleryPortrait( character ))
+
+			if (file.defaultabilitys)
+			{
+				//Could sometimes cause a very rare index out of range crash, i couldnt find out why so try catch will save the day
+				try {
+					ItemFlavor ultiamteAbility = CharacterClass_GetUltimateAbility( character )
+        			ItemFlavor tacticalAbility = CharacterClass_GetTacticalAbility( character )
+					RuiSetImage(Hud_GetRui(Hud_GetChild(file.menu, "Ability1Img")), "basicImage", GetWeaponInfoFileKeyFieldAsset_Global(CharacterAbility_GetWeaponClassname(tacticalAbility), "hud_icon"))
+					RuiSetImage(Hud_GetRui(Hud_GetChild(file.menu, "Ability2Img")), "basicImage", GetWeaponInfoFileKeyFieldAsset_Global(CharacterAbility_GetWeaponClassname(ultiamteAbility), "hud_icon"))
+					Hud_SetText(Hud_GetChild(file.menu, "Ability2Text"), GetWeaponInfoFileKeyField_GlobalString(CharacterAbility_GetWeaponClassname(tacticalAbility), "shortprintname"))
+					Hud_SetText(Hud_GetChild(file.menu, "Ability1Text"), GetWeaponInfoFileKeyField_GlobalString(CharacterAbility_GetWeaponClassname(ultiamteAbility), "shortprintname"))
+				} catch (exception){ }
+			}
 			} )
 
 		i++
@@ -182,8 +196,10 @@ void function LegendPanel( var button )
 		ToggleLegendsUI(false)
 }
 
-void function UpdateSelectedClass(int classid, string primary, string secondary, string tactical, string ult)
+void function UpdateSelectedClass(int classid, string primary, string secondary, string tactical, string ult, bool defaultabilitys)
 {
+	file.defaultabilitys = defaultabilitys
+
 	for(int i = 1; i < 6; i++ ) {
 		RuiSetInt( Hud_GetRui( Hud_GetChild( file.menu, "Class" + i )), "status", eFriendStatus.OFFLINE )
 	}
@@ -192,7 +208,7 @@ void function UpdateSelectedClass(int classid, string primary, string secondary,
 
 	RuiSetInt( Hud_GetRui( Hud_GetChild( file.menu, "Class" + finalclassid )), "status", eFriendStatus.ONLINE_INGAME )
 
-	Set_CTF_Class(primary, secondary, tactical, ult)
+	Set_CTF_Class(primary, secondary, tactical, ult, defaultabilitys)
 }
 
 void function DisableClassSelect()
@@ -202,19 +218,38 @@ void function DisableClassSelect()
 	}
 }
 
-void function Set_CTF_Class(string primary, string secondary, string tactical, string ult)
+void function Set_CTF_Class(string primary, string secondary, string tactical, string ult, bool defaultabilitys )
 {
 	LootData primaryData = SURVIVAL_Loot_GetLootDataByRef( primary )
 	LootData secondaryData = SURVIVAL_Loot_GetLootDataByRef( secondary )
 
 	RuiSetImage(Hud_GetRui(Hud_GetChild(file.menu, "Weapon1Img")), "basicImage", primaryData.hudIcon)
 	RuiSetImage(Hud_GetRui(Hud_GetChild( file.menu, "Weapon2Img" )), "basicImage", secondaryData.hudIcon)
-	RuiSetImage(Hud_GetRui(Hud_GetChild(file.menu, "Ability1Img")), "basicImage", GetWeaponInfoFileKeyFieldAsset_Global(tactical, "hud_icon"))
-	RuiSetImage(Hud_GetRui(Hud_GetChild(file.menu, "Ability2Img")), "basicImage", GetWeaponInfoFileKeyFieldAsset_Global(ult, "hud_icon"))
+
+	if(defaultabilitys)
+	{
+		//Could sometimes cause a very rare index out of range crash, i couldnt find out why so try catch will save the day
+		try {
+		entity player = GetLocalClientPlayer()
+		ItemFlavor character = LoadoutSlot_WaitForItemFlavor( ToEHI( player ), Loadout_CharacterClass() )
+	    ItemFlavor ultiamteAbility = CharacterClass_GetUltimateAbility( character )
+        ItemFlavor tacticalAbility = CharacterClass_GetTacticalAbility( character )
+		RuiSetImage(Hud_GetRui(Hud_GetChild(file.menu, "Ability1Img")), "basicImage", GetWeaponInfoFileKeyFieldAsset_Global(CharacterAbility_GetWeaponClassname(tacticalAbility), "hud_icon"))
+		RuiSetImage(Hud_GetRui(Hud_GetChild(file.menu, "Ability2Img")), "basicImage", GetWeaponInfoFileKeyFieldAsset_Global(CharacterAbility_GetWeaponClassname(ultiamteAbility), "hud_icon"))
+		Hud_SetText(Hud_GetChild(file.menu, "Ability2Text"), GetWeaponInfoFileKeyField_GlobalString(CharacterAbility_GetWeaponClassname(tacticalAbility), "shortprintname"))
+		Hud_SetText(Hud_GetChild(file.menu, "Ability1Text"), GetWeaponInfoFileKeyField_GlobalString(CharacterAbility_GetWeaponClassname(ultiamteAbility), "shortprintname"))
+		} catch(e) {}
+	}
+	else
+	{
+		RuiSetImage(Hud_GetRui(Hud_GetChild(file.menu, "Ability1Img")), "basicImage", GetWeaponInfoFileKeyFieldAsset_Global(tactical, "hud_icon"))
+		RuiSetImage(Hud_GetRui(Hud_GetChild(file.menu, "Ability2Img")), "basicImage", GetWeaponInfoFileKeyFieldAsset_Global(ult, "hud_icon"))
+		Hud_SetText(Hud_GetChild(file.menu, "Ability2Text"), GetWeaponInfoFileKeyField_GlobalString(ult, "shortprintname"))
+		Hud_SetText(Hud_GetChild(file.menu, "Ability1Text"), GetWeaponInfoFileKeyField_GlobalString(tactical, "shortprintname"))
+	}
+
 	Hud_SetText(Hud_GetChild(file.menu, "Weapon1Text"), GetWeaponInfoFileKeyField_GlobalString(primaryData.baseWeapon, "shortprintname"))
 	Hud_SetText(Hud_GetChild(file.menu, "Weapon2Text"), GetWeaponInfoFileKeyField_GlobalString(secondaryData.baseWeapon, "shortprintname"))
-	Hud_SetText(Hud_GetChild(file.menu, "Ability2Text"), GetWeaponInfoFileKeyField_GlobalString(ult, "shortprintname"))
-	Hud_SetText(Hud_GetChild(file.menu, "Ability1Text"), GetWeaponInfoFileKeyField_GlobalString(tactical, "shortprintname"))
 }
 
 void function OnR5RSB_NavigateBack()
