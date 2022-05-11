@@ -1737,7 +1737,6 @@ void function _HandleRespawn(entity player, bool forceGive = false)
 
         player.TakeOffhandWeapon(OFFHAND_MELEE)
         player.GiveOffhandWeapon( "melee_data_knife", OFFHAND_MELEE, [] )
-        player.SetActiveWeaponBySlot(eActiveInventorySlot.mainHand, WEAPON_INVENTORY_SLOT_PRIMARY_0)
     }
 
     SetPlayerSettings(player, CTF_PLAYER_SETTINGS)
@@ -1763,6 +1762,8 @@ void function _HandleRespawn(entity player, bool forceGive = false)
             }
         }
     }
+
+    player.SetActiveWeaponBySlot(eActiveInventorySlot.mainHand, WEAPON_INVENTORY_SLOT_PRIMARY_0)
 }
 
 //Purpose: Create The BubbleBoundary
