@@ -512,7 +512,7 @@ void function StartRound()
                 {
                     if( IsValid( player ) )
                     {
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetVoteMenuOpen", true)
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetVoteMenuOpen", true, TeamWon)
                         Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", eCTFScreen.WinnerScreen, TeamWon, eCTFScreen.NotUsed, eCTFScreen.NotUsed)
                     }
                 }
@@ -626,7 +626,7 @@ void function StartRound()
                 {
                     if( IsValid( player ) )
                     {
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetVoteMenuOpen", false)
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetVoteMenuOpen", false, TeamWon)
                     }
                 }
             }
@@ -637,7 +637,7 @@ void function StartRound()
                 {
                     if( IsValid( player ) )
                     {
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetVoteMenuOpen", true)
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetVoteMenuOpen", true, TeamWon)
                         Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", eCTFScreen.WinnerScreen, TeamWon, eCTFScreen.NotUsed, eCTFScreen.NotUsed)
                     }
                 }
@@ -664,7 +664,7 @@ void function StartRound()
                 {
                     if( IsValid( player ) )
                     {
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetVoteMenuOpen", false)
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetVoteMenuOpen", false, TeamWon)
                     }
                 }
             }
@@ -764,8 +764,8 @@ void function RandomizeTiedLocations(array<int> maps)
 void function SpawnCTFPoints()
 {
     //Get ground pos below spawn points
-    IMCPoint.spawn = OriginToGround( GetFlagLocation(file.selectedLocation, TEAM_IMC) )
-    MILITIAPoint.spawn = OriginToGround( GetFlagLocation(file.selectedLocation, TEAM_MILITIA) )
+    IMCPoint.spawn = OriginToGround( file.selectedLocation.imcflagspawn )
+    MILITIAPoint.spawn = OriginToGround( file.selectedLocation.milflagspawn )
 
     //Point 1
     IMCPoint.pole = CreateEntity( "prop_dynamic" )
@@ -1781,7 +1781,7 @@ void function _HandleRespawn(entity player, bool forceGive = false)
 //Purpose: Create The BubbleBoundary
 entity function CreateBubbleBoundary(LocationSettingsCTF location)
 {
-    array<LocPairCTF> spawns = location.spawns
+    array<LocPairCTF> spawns = location.bubblespots
 
     vector bubbleCenter
     foreach(spawn in spawns)
@@ -1869,12 +1869,8 @@ void function GrantSpawnImmunity(entity player, float duration)
 
 void function TpPlayerToSpawnPoint(entity player)
 {
-    array<vector> playerspawnpointorg
-    array<vector> playerspawnpointang
     switch(GetGameState())
     {
-
-    case eGameState.WaitingForPlayers:
     case eGameState.WaitingForPlayers:
         LocPairCTF loc = _GetVotingLocation()
 
@@ -1882,14 +1878,18 @@ void function TpPlayerToSpawnPoint(entity player)
         player.SetAngles(loc.angles)
         break
     case eGameState.Playing:
-            playerspawnpointorg = GetRandomPlayerSpawnOrigin(file.selectedLocation, player)
-            playerspawnpointang = GetRandomPlayerSpawnAngles(file.selectedLocation, player)
-
             int ri = RandomIntRange( 0, 4 )
-
-            player.SetOrigin(playerspawnpointorg[ri])
-            player.SetAngles(playerspawnpointang[ri])
-
+            switch (player.GetTeam())
+            {
+                case TEAM_IMC:
+                    player.SetOrigin(file.selectedLocation.imcspawns[ri].origin)
+                    player.SetAngles(file.selectedLocation.imcspawns[ri].angles)
+                    break
+                case TEAM_MILITIA:
+                    player.SetOrigin(file.selectedLocation.milspawns[ri].origin)
+                    player.SetAngles(file.selectedLocation.milspawns[ri].angles)
+                    break
+            }
         break
     default:
         break

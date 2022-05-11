@@ -13,6 +13,8 @@ struct
 {
 	var menu
 	bool roundover = false
+	bool legendspanelopen = false
+	bool setupLegendCallbacks = false
 } file
 
 struct Abilitys
@@ -48,11 +50,69 @@ void function OpenCTFRespawnMenu(string classname1, string classname2, string cl
 
 	RuiSetImage(Hud_GetRui(Hud_GetChild(file.menu, "PlayerImage")), "basicImage", classIcon)
 	RuiSetString( Hud_GetRui( Hud_GetChild( file.menu, "ChangeLegend" )), "buttonText", "Change Legend" )
+
+	SetupLegendButtonsUI()
 }
 
 void function CloseCTFRespawnMenu()
 {
+	ToggleLegendsUI(false)
 	CloseAllMenus()
+}
+
+void function ToggleLegendsUI(bool open)
+{
+	file.legendspanelopen = open
+	for(int i = 0; i < 11; i++ ) {
+		Hud_SetVisible(Hud_GetChild( file.menu, "CharButton" + i ), open)
+	}
+	Hud_SetVisible(Hud_GetChild( file.menu, "LegendsFrame" ), open)
+	Hud_SetVisible(Hud_GetChild( file.menu, "LegendsFrameText" ), open)
+	Hud_SetVisible(Hud_GetChild( file.menu, "LegendsText" ), open)
+}
+
+void function SetupLegendButtonsUI()
+{
+	array<ItemFlavor> characters = clone GetAllCharacters()
+
+	characters.sort( int function( ItemFlavor a, ItemFlavor b ) {
+			if ( Localize( ItemFlavor_GetLongName( a ) ) < Localize( ItemFlavor_GetLongName( b ) ) )
+				return -1
+			if ( Localize( ItemFlavor_GetLongName( a ) ) > Localize( ItemFlavor_GetLongName( b ) ) )
+				return 1
+			return 0
+		} )
+
+	for(int i = 0; i < 11; i++ ) {
+		var buttonRui = Hud_GetRui( Hud_GetChild( file.menu, "CharButton" + i ))
+
+		RuiSetImage( buttonRui, "portraitImage", CharacterClass_GetGalleryPortrait( characters[i] ) )
+		RuiSetImage( buttonRui, "portraitBackground", CharacterClass_GetGalleryPortraitBackground( characters[i] ) )
+		RuiSetString( buttonRui, "portraitName", Localize( ItemFlavor_GetLongName( characters[i] ) ) )
+		RuiSetImage( buttonRui, "roleImage", CharacterClass_GetCharacterRoleImage( characters[i] ) )
+	}
+
+	if (!file.setupLegendCallbacks)
+		SetupLegendButtonsCallBacks(characters)
+}
+
+//Cant do this in init cause you need to be in a map in to get item flavors
+void function SetupLegendButtonsCallBacks(array<ItemFlavor> characters)
+{
+	int i = 0
+	foreach( ItemFlavor character in characters )
+	{
+		AddButtonEventHandler( Hud_GetChild( file.menu, "CharButton" + i ), UIE_CLICK, void function( var unused ) : ( character ) {
+			ClientCommand( "Sur_UpdateCharacterLock 0" )
+			DEV_RequestSetItemFlavorLoadoutSlot( LocalClientEHI(), Loadout_CharacterClass(), character )
+			ToggleLegendsUI(false)
+			RuiSetImage(Hud_GetRui(Hud_GetChild(file.menu, "PlayerImage")), "basicImage", CharacterClass_GetGalleryPortrait( character ))
+			} )
+
+		i++
+	}
+
+	file.setupLegendCallbacks = true
 }
 
 void function UpdateObjectiveText(int score)
@@ -98,6 +158,7 @@ void function InitCTFRespawnMenu( var newMenuArg )
 	AddButtonEventHandler( Hud_GetChild( menu, "Class3" ), UIE_CLICK, OnClickClass )
 	AddButtonEventHandler( Hud_GetChild( menu, "Class4" ), UIE_CLICK, OnClickClass )
 	AddButtonEventHandler( Hud_GetChild( menu, "Class5" ), UIE_CLICK, OnClickClass )
+	AddButtonEventHandler( Hud_GetChild( menu, "ChangeLegend" ), UIE_CLICK, LegendPanel )
 }
 
 //Button event handlers
@@ -111,6 +172,14 @@ void function OnClickClass( var button )
 
 	int buttonId = Hud_GetScriptID( button ).tointeger()
 	RunClientScript("UI_To_Client_UpdateSelectedClass", buttonId )
+}
+
+void function LegendPanel( var button )
+{
+	if (!file.legendspanelopen)
+		ToggleLegendsUI(true)
+	else
+		ToggleLegendsUI(false)
 }
 
 void function UpdateSelectedClass(int classid, string primary, string secondary, string tactical, string ult)

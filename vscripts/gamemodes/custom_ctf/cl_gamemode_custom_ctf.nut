@@ -45,7 +45,18 @@ struct {
     array<CTFClasses> ctfclasses
     var scoreRui
     var teamRui
+
+	vector victorySequencePosition = < 0, 0, 10000 >
+	vector victorySequenceAngles = < 0, 0, 0 >
+
+	SquadSummaryData squadSummaryData
+	SquadSummaryData winnerSquadSummaryData
+
+    int teamwon
 } file;
+
+array<entity> cleanupEnts
+array<var> overHeadRuis
 
 var IMCpointicon = null
 var MILITIApointicon = null
@@ -98,89 +109,6 @@ void function Cl_CTFRegisterCTFClass(CTFClasses ctfclass)
 void function ServerCallback_CTF_SetSelectedLocation(int sel)
 {
     file.selectedLocation = file.locationSettings[sel]
-}
-
-vector function GetDeathcamHeight()
-{
-    vector height
-    switch(file.selectedLocation.name)
-    {
-        case "Relay":
-            height = <0,0,6000> // Done
-            break
-        case "Wetlands":
-            height = <0,0,7000> // Done
-            break
-        case "Repulsor":
-            height = <0,0,7000> // Done
-            break
-        case "Skull Town":
-            height = <0,0,7000> // Done
-            break
-        case "Refinery":
-            height = <0,0,7000> // Done
-            break
-        case "Capitol City":
-            height = <0,0,7000> // Done
-            break
-        case "Sorting Factory":
-            height = <0,0,7000> // Done
-            break
-        default:
-            height = <0,0,5000>
-            break
-    }
-
-    return height
-}
-
-vector function GetDeathcamAng()
-{
-    vector angles
-    switch(file.selectedLocation.name)
-    {
-        case "Firing Range":
-            angles = <90,180,0>
-            break
-        case "Artillery":
-            angles = <90,90,0> // Done
-            break
-        case "Airbase":
-            angles = <90,0,0> // Done
-            break
-        case "Relay":
-            angles = <90,-90,0> // Done
-            break
-        case "Wetlands":
-            angles = <90,90,0> // Done
-            break
-        case "Repulsor":
-            angles = <90,90,0> // Done
-            break
-        case "Skull Town":
-            angles = <90,-45,0> // Done
-            break
-        case "Overlook":
-            angles = <90,27,0> // Done
-            break
-        case "Refinery":
-            angles = <90,-165,0> // Done
-            break
-        case "Capitol City":
-            angles = <90,-85,0> // Done
-            break
-        case "Sorting Factory":
-            angles = <90,-45,0> // Done
-            break
-        case "Overflow":
-            angles = <90,-90,0> // Done
-            break
-        default:
-            angles = <90,0,0> // Done
-            break
-    }
-
-    return angles
 }
 
 void function ServerCallback_CTF_RecaptureFlag(int team, float starttime, float endtime)
@@ -599,6 +527,8 @@ void function ServerCallback_CTF_OpenCTFRespawnMenu(vector campos, int IMCscore,
     RunUIScript("SetCTFScores", IMCscore, MILscore, CTF_SCORE_GOAL_TO_WIN)
 
     thread UpdateUIRespawnTimer()
+
+    Signal( player, "OnDeath" )
 }
 
 void function ServerCallback_CTF_PlayerDied(vector campos, int IMCscore, int MILscore, entity attacker)
@@ -637,8 +567,8 @@ void function ServerCallback_CTF_PlayerDied(vector campos, int IMCscore, int MIL
     Deathcam.SetParent( cameraMover, "", false )
     player.SetMenuCameraEntityWithAudio( Deathcam )
     Deathcam.SetTargetFOV( 90, true, EASING_CUBIC_INOUT, 0.50 )
-    cameraMover.NonPhysicsMoveTo( campos + GetDeathcamHeight(), 0.60, 0, 0.30 )
-    cameraMover.NonPhysicsRotateTo( GetDeathcamAng(), 0.60, 0, 0.30 )
+    cameraMover.NonPhysicsMoveTo(campos + file.selectedLocation.deathcam[0].origin, 0.60, 0, 0.30)
+    cameraMover.NonPhysicsRotateTo( file.selectedLocation.deathcam[0].angles, 0.60, 0, 0.30 )
 }
 
 void function UpdateUIRespawnTimer()
@@ -700,8 +630,10 @@ void function waitrespawn(entity player)
     try { Deathcam.ClearParent(); Deathcam.Destroy(); cameraMover.Destroy() } catch (exceptio2n){ }
 }
 
-void function ServerCallback_CTF_SetVoteMenuOpen(bool shouldOpen)
+void function ServerCallback_CTF_SetVoteMenuOpen(bool shouldOpen, int TeamWon)
 {
+    file.teamwon = TeamWon
+
     if( shouldOpen )
         thread CreateVotingUI()
     else
@@ -723,30 +655,37 @@ void function CreateVotingUI()
     entity targetBackground = GetEntByScriptName( "target_char_sel_bg_new" )
     entity targetCamera = GetEntByScriptName( "target_char_sel_camera_new" )
 
-	backgroundModelGeo = CreateClientSidePropDynamic( targetBackground.GetOrigin() - <0, 0, 24>, targetBackground.GetAngles(), $"mdl/levels_terrain/mp_lobby/mp_character_select_geo.rmdl" )
-	backgroundModelGeo.kv.solid = 0
-	backgroundModelGeo.kv.disableshadows = 1
-	backgroundModelGeo.kv.fadedist = -1
-	backgroundModelGeo.MakeSafeForUIScriptHack()
+    AddWinningSquadData( -1, -1, 0, 0, 0, 0, 0 )
+	foreach( int i, entity player in GetPlayerArrayOfTeam( file.teamwon ) )
+    {
+		AddWinningSquadData( i, player.GetEncodedEHandle(), 2, 1234, 600, 3, 1 )
+    }
 
-	backgroundModelSmoke = CreateClientSidePropDynamic( targetBackground.GetOrigin() - <0, 0, 24>, targetBackground.GetAngles(), $"mdl/levels_terrain/mp_lobby/mp_character_select_smoke.rmdl" )
-	backgroundModelSmoke.kv.solid = 0
-	backgroundModelSmoke.kv.disableshadows = 1
-	backgroundModelSmoke.kv.fadedist = -1
-	backgroundModelSmoke.MakeSafeForUIScriptHack()
-
-    backgroundModelGeo.SetSkin( 3 )
-    backgroundModelSmoke.SetSkin( 3 )
-
-    vector cameraOrigin = targetCamera.GetOrigin()
-    votecamera = CreateClientSidePointCamera( cameraOrigin, targetCamera.GetAngles(), 35.5 )
-
-    GetLocalClientPlayer().SetMenuCameraEntity( votecamera )
-	votecamera.SetTargetFOV( 35.5, true, EASING_CUBIC_INOUT, 0.25 )
+    thread ShowCTFVictorySequence()
 
     RunUIScript( "OpenCTFVoteMenu" )
 
     ScreenFade(GetLocalClientPlayer(), 0, 0, 0, 255, 0.3, 0.0, FFADE_IN | FFADE_PURGE)
+}
+
+void function AddWinningSquadData( int index, int eHandle, int kills, int damageDealt, int survivalTime, int revivesGiven, int respawnsGiven )
+{
+	if ( index == -1 )
+	{
+		file.winnerSquadSummaryData.playerData.clear()
+		file.winnerSquadSummaryData.squadPlacement = -1
+		return
+	}
+
+	SquadSummaryPlayerData data
+	data.eHandle = eHandle
+	data.kills = kills
+	data.damageDealt = damageDealt
+	data.survivalTime = survivalTime
+	data.revivesGiven = revivesGiven
+	data.respawnsGiven = respawnsGiven
+	file.winnerSquadSummaryData.playerData.append( data )
+	file.winnerSquadSummaryData.squadPlacement = 1
 }
 
 void function DestroyVotingUI()
@@ -765,6 +704,16 @@ void function DestroyVotingUI()
     GetLocalClientPlayer().ClearMenuCameraEntity()
 
     RunUIScript( "CloseCTFVoteMenu" )
+
+    foreach( rui in overHeadRuis )
+		RuiDestroyIfAlive( rui )
+
+    foreach( entity ent in cleanupEnts )
+		ent.Destroy()
+
+    overHeadRuis.clear()
+    cleanupEnts.clear()
+
     isvoting = false
 
     ScreenFade(GetLocalClientPlayer(), 0, 0, 0, 255, 0.3, 0.5, FFADE_IN | FFADE_PURGE)
@@ -876,3 +825,176 @@ string function GetWinningTeamText(int team)
     return teamwon
 }
 
+//Orginal code from cl_gamemode_survival.nut
+//Modifed slightly
+void function ShowCTFVictorySequence()
+{
+	entity player = GetLocalClientPlayer()
+
+    //Todo: each maps victory pos and ang
+    file.victorySequencePosition = < -29300, -4209, 2488 >
+	file.victorySequenceAngles = < 0, 100, 0>
+
+	asset defaultModel                = GetGlobalSettingsAsset( DEFAULT_PILOT_SETTINGS, "bodyModel" )
+	LoadoutEntry loadoutSlotCharacter = Loadout_CharacterClass()
+	vector characterAngles            = < file.victorySequenceAngles.x / 2.0, file.victorySequenceAngles.y, file.victorySequenceAngles.z >
+
+	VictoryPlatformModelData victoryPlatformModelData = GetVictorySequencePlatformModel()
+	entity platformModel
+	int maxPlayersToShow = 16
+
+	if ( victoryPlatformModelData.isSet )
+	{
+		platformModel = CreateClientSidePropDynamic( file.victorySequencePosition + victoryPlatformModelData.originOffset, victoryPlatformModelData.modelAngles, $"mdl/dev/empty_model.rmdl" )
+
+		cleanupEnts.append( platformModel )
+		int playersOnPodium = 0
+
+		VictorySequenceOrderLocalPlayerFirst( player )
+
+		foreach( int i, SquadSummaryPlayerData data in file.winnerSquadSummaryData.playerData )
+		{
+			if ( maxPlayersToShow > 0 && i > maxPlayersToShow )
+				break
+
+			string playerName = ""
+			if ( EHIHasValidScriptStruct( data.eHandle ) )
+				playerName = EHI_GetName( data.eHandle )
+
+			if ( !LoadoutSlot_IsReady( data.eHandle, loadoutSlotCharacter ) )
+				continue
+
+			ItemFlavor character = LoadoutSlot_GetItemFlavor( data.eHandle, loadoutSlotCharacter )
+
+			if ( !LoadoutSlot_IsReady( data.eHandle, Loadout_CharacterSkin( character ) ) )
+				continue
+
+			ItemFlavor characterSkin = LoadoutSlot_GetItemFlavor( data.eHandle, Loadout_CharacterSkin( character ) )
+
+			vector pos = GetVictorySquadFormationPosition( file.victorySequencePosition, file.victorySequenceAngles, i )
+
+			//
+			entity characterNode = CreateScriptRef( pos, characterAngles )
+			characterNode.SetParent( platformModel, "", true )
+			entity characterModel = CreateClientSidePropDynamic( pos, characterAngles, defaultModel )
+			SetForceDrawWhileParented( characterModel, true )
+			characterModel.MakeSafeForUIScriptHack()
+			CharacterSkin_Apply( characterModel, characterSkin )
+			cleanupEnts.append( characterModel )
+
+			//
+			foreach( func in s_callbacks_OnVictoryCharacterModelSpawned )
+				func( characterModel, character, data.eHandle )
+
+			//
+			characterModel.SetParent( characterNode, "", false )
+			string victoryAnim = "ACT_MP_MENU_LOBBY_SELECT_IDLE"
+			characterModel.Anim_Play( victoryAnim )
+			characterModel.Anim_EnableUseAnimatedRefAttachmentInsteadOfRootMotion()
+
+			//
+			float duration = characterModel.GetSequenceDuration( victoryAnim )
+			float initialTime = RandomFloatRange( 0, duration )
+			characterModel.Anim_SetInitialTime( initialTime )
+
+			//
+			bool createOverheadRui = true
+
+			entity overheadEnt = CreateClientSidePropDynamic( pos + (AnglesToUp( file.victorySequenceAngles ) * 78), <0, 0, 0>, $"mdl/dev/empty_model.rmdl" )
+			overheadEnt.Hide()
+			var overheadRui = RuiCreate( $"ui/winning_squad_member_overhead_name.rpak", clGlobal.topoFullScreen, RUI_DRAW_HUD, 0 )
+			RuiSetString( overheadRui, "playerName", playerName )
+			RuiTrackFloat3( overheadRui, "position", overheadEnt, RUI_TRACK_ABSORIGIN_FOLLOW )
+			overHeadRuis.append( overheadRui )
+
+			playersOnPodium++
+		}
+
+		//
+		string dialogueApexChampion
+        if (file.teamwon == TEAM_IMC || file.teamwon == TEAM_MILITIA)
+        {
+            if (player.GetTeam() == file.teamwon)
+            {
+                //
+                if ( playersOnPodium > 1 )
+                    dialogueApexChampion = "diag_ap_aiNotify_winnerFound_07"
+                else
+                    dialogueApexChampion = "diag_ap_aiNotify_winnerFound_10"
+            }
+            else
+            {
+                if ( playersOnPodium > 1 )
+                    dialogueApexChampion = "diag_ap_aiNotify_winnerFound_08"
+                else
+                    dialogueApexChampion = "diag_ap_ainotify_introchampion_01_02"
+            }
+
+            EmitSoundOnEntityAfterDelay( platformModel, dialogueApexChampion, 0.5 )
+        }
+
+		//Setup camera pos and angles
+		vector camera_start_pos = OffsetPointRelativeToVector( file.victorySequencePosition, <0, 1000, 500>, AnglesToForward( file.victorySequenceAngles ) )
+		vector camera_end_pos   = OffsetPointRelativeToVector( file.victorySequencePosition, <0, 400, 200>, AnglesToForward( file.victorySequenceAngles ) )
+		vector camera_focus_pos = OffsetPointRelativeToVector( file.victorySequencePosition, <0, 0, 36>, AnglesToForward( file.victorySequenceAngles ) )
+		vector camera_start_angles = VectorToAngles( camera_focus_pos - camera_start_pos )
+		vector camera_end_angles   = VectorToAngles( camera_focus_pos - camera_end_pos )
+
+        //Create camera and mover
+		entity cameraMover = CreateClientsideScriptMover( $"mdl/dev/empty_model.rmdl", camera_start_pos, camera_start_angles )
+		entity camera      = CreateClientSidePointCamera( camera_start_pos, camera_start_angles, 80 )
+		player.SetMenuCameraEntity( camera )
+		camera.SetTargetFOV( 80, true, EASING_CUBIC_INOUT, 0.0 )
+		camera.SetParent( cameraMover, "", false )
+		cleanupEnts.append( camera )
+
+		//Move camera to end pos
+		cameraMover.NonPhysicsMoveTo( camera_end_pos, 6.5, 0.0, 6.5 / 2.0 )
+		cameraMover.NonPhysicsRotateTo( camera_end_angles, 6.5, 0.0, 6.5 / 2.0 )
+		cleanupEnts.append( cameraMover )
+	}
+}
+
+void function VictorySequenceOrderLocalPlayerFirst( entity player )
+{
+	int playerEHandle = player.GetEncodedEHandle()
+	bool hadLocalPlayer = false
+	array<SquadSummaryPlayerData> playerDataArray
+	SquadSummaryPlayerData localPlayerData
+
+	foreach( SquadSummaryPlayerData data in file.winnerSquadSummaryData.playerData )
+	{
+		if ( data.eHandle == playerEHandle )
+		{
+			localPlayerData = data
+			hadLocalPlayer = true
+			continue
+		}
+
+		playerDataArray.append( data )
+	}
+
+	file.winnerSquadSummaryData.playerData = playerDataArray
+	if ( hadLocalPlayer )
+		file.winnerSquadSummaryData.playerData.insert( 0, localPlayerData )
+}
+
+vector function GetVictorySquadFormationPosition( vector mainPosition, vector angles, int index )
+{
+	if ( index == 0 )
+		return mainPosition - <0, 0, 8>
+
+	float offset_side = 90.0
+	float offset_back = -60.0
+
+	int countBack = (index + 1) / 2
+	vector offset = < offset_side, offset_back, 0 > * countBack
+
+	if ( index % 2 == 0 )
+		offset.x *= -1
+
+	vector point = OffsetPointRelativeToVector( mainPosition, offset, AnglesToForward( angles ) )
+	return point - <0, 0, 8>
+}
+
+array<void functionref( entity, ItemFlavor, int )> s_callbacks_OnVictoryCharacterModelSpawned
