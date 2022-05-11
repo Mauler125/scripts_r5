@@ -48,7 +48,7 @@ struct
     array<int> mapVotes
     array<int> mapIds
 
-    int mappicked
+    int mappicked = 0
     float roundstarttime
 } CTF;
 
@@ -290,40 +290,12 @@ void function VotingPhase()
 	    player.SetPlayerNetInt("assists", 0) //Reset for deaths
     }
 
-    foreach( int votes in CTF.mapVotes )
-    {
-        if( votes > 0 )
-        {
-            file.selectedLocation = file.locationSettings[CTF.mappicked]
-            return
-        }
-    }
-
-    int choice = 0
-
-    //if the map index is out the the range set to 0 to prevent crash
-    if(CTF.currentmapindex > file.locationSettings.len() - 1)
-        CTF.currentmapindex = 0
-
-    //if setmap then force that to be the next map
-    if(CTF.setmap)
-    {
-        file.selectedLocation = file.locationSettings[CTF.selectedmap]
-        choice = CTF.selectedmap
-    }
-    else
-    {
-        file.selectedLocation = file.locationSettings[CTF.currentmapindex]
-        choice = CTF.currentmapindex
-    }
-
-    CTF.currentmapindex++
-    CTF.setmap = false
+    file.selectedLocation = file.locationSettings[CTF.mappicked]
 
     //Set the next location client side for each player
     foreach(player in GetPlayerArray())
     {
-        Remote_CallFunction_NonReplay(player, "ServerCallback_CTF_SetSelectedLocation", choice)
+        Remote_CallFunction_NonReplay(player, "ServerCallback_CTF_SetSelectedLocation", CTF.mappicked)
     }
 }
 

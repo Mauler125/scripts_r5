@@ -307,7 +307,7 @@ void function Sh_CustomCTF_Init()
                         NewCTFLocPair(<27628, 25640, 4370>, <0, 160, 0>)
                     ],
                     [ //deathcam angle and height
-                        NewCTFLocPair(<0,0,6000>, <90,-90,0>)
+                        NewCTFLocPair(<0,0,6000>, <90,-70,0>)
                     ]
                 )
             )
