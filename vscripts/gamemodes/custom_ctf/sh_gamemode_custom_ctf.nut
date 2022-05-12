@@ -17,6 +17,7 @@ global const int NUMBER_OF_MAP_SLOTS = 4
 global const int NUMBER_OF_CLASS_SLOTS = 5
 global bool GIVE_ALT_AFTER_CAPTURE
 global bool USE_LEGEND_ABILITYS
+global int CTF_RESPAWN_TIMER
 
 //Custom Messages IDS
 global enum eCTFMessage
@@ -152,6 +153,7 @@ void function Sh_CustomCTF_Init()
     CTF_ROUNDTIME = GetCurrentPlaylistVarInt( "round_time", 1500 )
     GIVE_ALT_AFTER_CAPTURE = GetCurrentPlaylistVarBool( "give_ult_after_capture", false )
     USE_LEGEND_ABILITYS = GetCurrentPlaylistVarBool( "use_legend_abilitys", false )
+    CTF_RESPAWN_TIMER = GetCurrentPlaylistVarInt( "respawn_timer", 10 )
 
     //Register Classes
     for(int i = 1; i < 6; i++ ) {

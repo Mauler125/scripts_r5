@@ -12,11 +12,8 @@ global function ServerCallback_CTF_PointCaptured
 global function ServerCallback_CTF_TeamText
 global function ServerCallback_CTF_FlagCaptured
 global function ServerCallback_CTF_CustomMessages
-global function ServerCallback_CTF_PlayerDied
-global function ServerCallback_CTF_PlayerSpawning
 global function ServerCallback_CTF_OpenCTFRespawnMenu
 global function ServerCallback_CTF_SetSelectedLocation
-global function ServerCallback_CTF_TeamWon
 global function ServerCallback_CTF_SetObjectiveText
 global function ServerCallback_CTF_AddPointIcon
 global function ServerCallback_CTF_RecaptureFlag
@@ -143,106 +140,74 @@ void function ServerCallback_CTF_ResetFlagIcons()
 
 void function ServerCallback_CTF_AddPointIcon(entity imcflag, entity milflag, int team)
 {
-    if (team == TEAM_IMC)
+    switch(team)
     {
-        if (IMCpointicon == null)
-        {
-            asset icon = $"rui/hud/gametype_icons/survival/survey_beacon_only_pathfinder"
-            bool pinToEdge = true
-            asset ruiFile = $"ui/overhead_icon_generic.rpak"
-
-            IMCpointicon = AddCaptureIcon( imcflag, icon, pinToEdge, ruiFile)
-		    RuiSetFloat2( IMCpointicon, "iconSize", <40,40,0> )
-		    RuiSetFloat( IMCpointicon, "distanceFade", 100000 )
-		    RuiSetBool( IMCpointicon, "adsFade", false )
-		    RuiSetString( IMCpointicon, "hint", "Defend" )
-        }
-
-        if (MILITIApointicon == null)
-        {
-            asset icon = $"rui/hud/gametype_icons/survival/survey_beacon_only_pathfinder"
-            bool pinToEdge = true
-            asset ruiFile = $"ui/overhead_icon_generic.rpak"
-
-            MILITIApointicon = AddCaptureIcon( milflag, icon, pinToEdge, ruiFile)
-		    RuiSetFloat2( MILITIApointicon, "iconSize", <40,40,0> )
-		    RuiSetFloat( MILITIApointicon, "distanceFade", 100000 )
-		    RuiSetBool( MILITIApointicon, "adsFade", false )
-		    RuiSetString( MILITIApointicon, "hint", "Capture" )
-        }
+        case TEAM_IMC:
+            if(IMCpointicon == null)
+                IMCpointicon = AddPointIconRUI(IMCpointicon, imcflag, "Defend")
+            if(MILITIApointicon == null)
+                MILITIApointicon = AddPointIconRUI(MILITIApointicon, milflag, "Capture")
+            break
+        case TEAM_MILITIA:
+            if(IMCpointicon == null)
+                IMCpointicon = AddPointIconRUI(IMCpointicon, imcflag, "Capture")
+            if(MILITIApointicon == null)
+                MILITIApointicon = AddPointIconRUI(MILITIApointicon, milflag, "Defend")
+            break
     }
+}
 
-    if (team == TEAM_MILITIA)
-    {
-        if (IMCpointicon == null)
-        {
-            asset icon = $"rui/hud/gametype_icons/survival/survey_beacon_only_pathfinder"
-            bool pinToEdge = true
-            asset ruiFile = $"ui/overhead_icon_generic.rpak"
+var function AddPointIconRUI(var rui, entity flag, string text)
+{
+    asset icon = $"rui/hud/gametype_icons/survival/survey_beacon_only_pathfinder"
+    bool pinToEdge = true
+    asset ruiFile = $"ui/overhead_icon_generic.rpak"
 
-            IMCpointicon = AddCaptureIcon( imcflag, icon, pinToEdge, ruiFile)
-		    RuiSetFloat2( IMCpointicon, "iconSize", <40,40,0> )
-		    RuiSetFloat( IMCpointicon, "distanceFade", 100000 )
-		    RuiSetBool( IMCpointicon, "adsFade", false )
-		    RuiSetString( IMCpointicon, "hint", "Capture" )
-        }
-
-        if (MILITIApointicon == null)
-        {
-            asset icon = $"rui/hud/gametype_icons/survival/survey_beacon_only_pathfinder"
-            bool pinToEdge = true
-            asset ruiFile = $"ui/overhead_icon_generic.rpak"
-
-            MILITIApointicon = AddCaptureIcon( milflag, icon, pinToEdge, ruiFile)
-		    RuiSetFloat2( MILITIApointicon, "iconSize", <40,40,0> )
-		    RuiSetFloat( MILITIApointicon, "distanceFade", 100000 )
-		    RuiSetBool( MILITIApointicon, "adsFade", false )
-		    RuiSetString( MILITIApointicon, "hint", "Defend" )
-        }
-    }
+    rui = AddCaptureIcon( flag, icon, pinToEdge, ruiFile)
+	RuiSetFloat2( rui, "iconSize", <40,40,0> )
+	RuiSetFloat( rui, "distanceFade", 100000 )
+	RuiSetBool( rui, "adsFade", false )
+	RuiSetString( rui, "hint", text )
+    return rui
 }
 
 void function ServerCallback_CTF_SetPointIconHint(int teamflag, int messageid)
 {
     try {
+        var selected
 
-    if(teamflag == TEAM_IMC)
-    {
-        if(IMCpointicon == null)
+        switch(teamflag)
+        {
+            case TEAM_IMC:
+                selected = IMCpointicon
+                break
+            case TEAM_MILITIA:
+                selected = MILITIApointicon
+                break
+        }
+
+        if(selected == null)
             return
 
-        if (messageid == eCTFFlag.Defend)
-            RuiSetString( IMCpointicon, "hint", "Defend" )
-        else if(messageid == eCTFFlag.Capture)
-            RuiSetString( IMCpointicon, "hint", "Capture" )
-        else if(messageid == eCTFFlag.Attack)
-            RuiSetString( IMCpointicon, "hint", "Attack" )
-        else if(messageid == eCTFFlag.Escort)
-            RuiSetString( IMCpointicon, "hint", "Escort" )
-        else if(messageid == eCTFFlag.Return)
-            RuiSetString( IMCpointicon, "hint", "Return" )
-
-    }
-    else if (teamflag == TEAM_MILITIA)
-    {
-        if(MILITIApointicon == null)
-            return
-
-        if(messageid == eCTFFlag.Defend)
-            RuiSetString( MILITIApointicon, "hint", "Defend" )
-        else if(messageid == eCTFFlag.Capture)
-            RuiSetString( MILITIApointicon, "hint", "Capture" )
-        else if(messageid == eCTFFlag.Attack)
-            RuiSetString( MILITIApointicon, "hint", "Attack" )
-        else if(messageid == eCTFFlag.Escort)
-            RuiSetString( MILITIApointicon, "hint", "Escort" )
-        else if(messageid == eCTFFlag.Return)
-            RuiSetString( MILITIApointicon, "hint", "Return" )
-    }
-
-    } catch (pe3){
-
-    }
+        switch(messageid)
+        {
+            case eCTFFlag.Defend:
+                RuiSetString( selected, "hint", "Defend" )
+                break
+            case eCTFFlag.Capture:
+                RuiSetString( selected, "hint", "Capture" )
+                break
+            case eCTFFlag.Attack:
+                RuiSetString( selected, "hint", "Attack" )
+                break
+            case eCTFFlag.Escort:
+                RuiSetString( selected, "hint", "Escort" )
+                break
+            case eCTFFlag.Return:
+                RuiSetString( selected, "hint", "Return" )
+                break
+        }
+    } catch (pe3){ }
 }
 
 var function AddCaptureIcon( entity prop, asset icon, bool pinToEdge = true, asset ruiFile = $"ui/overhead_icon_generic.rpak" )
@@ -379,13 +344,13 @@ void function StartGameTimer()
         if(seconds < 1)
             seconds = 60
 
-        //This isnt neede but is there to make the time left counter look nicer when the timer is < 10
+        //This isnt needed but is there to make the time left counter look nicer when the timer is < 10
         if(seconds < 10)
             secondsfiller = "0"
         else
             secondsfiller = ""
 
-        //This isnt neede but is there to make the time left counter look nicer when the timer is < 10
+        //This isnt needed but is there to make the time left counter look nicer when the timer is < 10
         if(minutes < 10)
             minsfiller = "0"
         else
@@ -421,30 +386,6 @@ void function ServerCallback_CTF_TeamText(int team)
                 break
         }
     }
-}
-
-void function ServerCallback_CTF_TeamWon(int team)
-{
-    AnnouncementData announcement
-    switch(team)
-    {
-        case TEAM_IMC:
-            announcement = Announcement_Create( "IMC has won the round!" )
-            break
-        case TEAM_MILITIA:
-            announcement = Announcement_Create( "MILITIA has won the round!" )
-            break
-        default:
-            announcement = Announcement_Create( "Couldnt decide on the winner!" )
-    }
-
-    Announcement_SetSubText(announcement, "Starting vote for next location")
-	Announcement_SetStyle( announcement, ANNOUNCEMENT_STYLE_CIRCLE_WARNING )
-	Announcement_SetPurge( announcement, true )
-	Announcement_SetOptionalTextArgsArray( announcement, [ "true" ] )
-	Announcement_SetPriority( announcement, 200 ) //Be higher priority than Titanfall ready indicator etc
-	announcement.duration = 5
-	AnnouncementFromClass( GetLocalViewPlayer(), announcement )
 }
 
 void function ServerCallback_CTF_FlagCaptured(entity player, int messageid)
@@ -508,7 +449,8 @@ void function ServerCallback_CTF_OpenCTFRespawnMenu(vector campos, int IMCscore,
     if(isvoting)
         return
 
-    entity player = GetLocalClientPlayer()
+    entity localplayer = GetLocalClientPlayer()
+    array<entity> teamplayers = GetPlayerArrayOfTeam( localplayer.GetTeam() )
 
     RunUIScript("OpenCTFRespawnMenu", file.ctfclasses[0].name, file.ctfclasses[1].name, file.ctfclasses[2].name, file.ctfclasses[3].name, file.ctfclasses[4].name)
     RunUIScript("UpdateSelectedClass", selectedclassid, file.ctfclasses[selectedclassid].primary, file.ctfclasses[selectedclassid].secondary, file.ctfclasses[selectedclassid].tactical, file.ctfclasses[selectedclassid].ult, USE_LEGEND_ABILITYS)
@@ -527,74 +469,61 @@ void function ServerCallback_CTF_OpenCTFRespawnMenu(vector campos, int IMCscore,
 
     RunUIScript("SetCTFScores", IMCscore, MILscore, CTF_SCORE_GOAL_TO_WIN)
 
-    thread UpdateUIRespawnTimer()
-
-    Signal( player, "OnDeath" )
-}
-
-void function ServerCallback_CTF_PlayerDied(vector campos, int IMCscore, int MILscore, entity attacker)
-{
-    if(isvoting)
-        return
-
-    entity player = GetLocalClientPlayer()
-
-    array<entity> players = GetPlayerArrayOfTeam( player.GetTeam() )
-    foreach ( teamplayer in players )
+    foreach ( player in teamplayers )
     {
-        if(teamplayer == player)
+        if(player == localplayer)
         {
-            var newicon = AddCaptureIcon( teamplayer, $"rui/pilot_loadout/mods/hopup_skullpiercer", false, $"ui/overhead_icon_generic.rpak")
-		    RuiSetFloat2( newicon, "iconSize", <25,25,0> )
-		    RuiSetFloat( newicon, "distanceFade", 100000 )
-		    RuiSetBool( newicon, "adsFade", false )
-		    RuiSetString( newicon, "hint", "Death Location" )
-
-            teamicons.append(newicon)
-            continue
+            AddTeamIcons(player, $"rui/pilot_loadout/mods/hopup_skullpiercer", <25,25,0>, "Death Location")
         }
-
-        var newicon = AddCaptureIcon( teamplayer, $"rui/hud/gametype_icons/obj_foreground_diamond", false, $"ui/overhead_icon_generic.rpak")
-		RuiSetFloat2( newicon, "iconSize", <15,15,0> )
-		RuiSetFloat( newicon, "distanceFade", 100000 )
-		RuiSetBool( newicon, "adsFade", false )
-		RuiSetString( newicon, "hint", teamplayer.GetPlayerName() )
-
-        teamicons.append(newicon)
+        else
+        {
+            AddTeamIcons(player, $"rui/hud/gametype_icons/obj_foreground_diamond", <15,15,0>, player.GetPlayerName())
+        }
     }
 
-    cameraMover = CreateClientsideScriptMover( $"mdl/dev/empty_model.rmdl", player.GetOrigin(), player.CameraAngles() )
-    Deathcam = CreateClientSidePointCamera( player.GetOrigin(), player.CameraAngles(), 90 )
+    cameraMover = CreateClientsideScriptMover( $"mdl/dev/empty_model.rmdl", localplayer.GetOrigin(), localplayer.CameraAngles() )
+    Deathcam = CreateClientSidePointCamera( localplayer.GetOrigin(), localplayer.CameraAngles(), 90 )
     Deathcam.SetParent( cameraMover, "", false )
-    player.SetMenuCameraEntityWithAudio( Deathcam )
+    localplayer.SetMenuCameraEntityWithAudio( Deathcam )
     Deathcam.SetTargetFOV( 90, true, EASING_CUBIC_INOUT, 0.50 )
     cameraMover.NonPhysicsMoveTo(campos + file.selectedLocation.deathcam.origin, 0.60, 0, 0.30)
     cameraMover.NonPhysicsRotateTo( file.selectedLocation.deathcam.angles, 0.60, 0, 0.30 )
+
+    thread UpdateUIRespawnTimer()
+}
+
+void function AddTeamIcons(entity player, asset icon, vector iconsize, string text)
+{
+    var newicon = AddCaptureIcon( player, icon, false, $"ui/overhead_icon_generic.rpak")
+	RuiSetFloat2( newicon, "iconSize", iconsize )
+	RuiSetFloat( newicon, "distanceFade", 100000 )
+	RuiSetBool( newicon, "adsFade", false )
+	RuiSetString( newicon, "hint", text )
+
+    teamicons.append(newicon)
 }
 
 void function UpdateUIRespawnTimer()
 {
-    int time = 10
+    int time = CTF_RESPAWN_TIMER
     while(time > -1)
     {
         RunUIScript( "UpdateRespawnTimer", time)
-        time--
 
-        if (time == 1)
-            RunUIScript( "DisableClassSelect")
-
-        if(time == -1)
+        if(time == 0)
         {
             entity player = GetLocalClientPlayer()
-
+            RunUIScript( "DisableClassSelect")
+            DestoryTeamIcons()
             thread waitrespawn(player)
         }
 
+        time--
         wait 1
     }
 }
 
-void function ServerCallback_CTF_PlayerSpawning()
+void function DestoryTeamIcons()
 {
     foreach ( iconvar in teamicons )
     {
@@ -614,17 +543,18 @@ void function waitrespawn(entity player)
 
     if(!isvoting)
     {
+        RunUIScript( "CloseCTFRespawnMenu" )
+
         try {
             cameraMover = CreateClientsideScriptMover( $"mdl/dev/empty_model.rmdl", Deathcam.GetOrigin(), Deathcam.GetAngles() )
             Deathcam.SetParent( cameraMover, "", false )
             player.SetMenuCameraEntityWithAudio( Deathcam )
-            cameraMover.NonPhysicsMoveTo( player.GetOrigin(), 0.40, 0, 0.20 )
-            cameraMover.NonPhysicsRotateTo( player.CameraAngles(), 0.40, 0, 0.20 )
+            cameraMover.NonPhysicsMoveTo( player.GetOrigin(), 0.6, 0.6 / 2, 0.6 / 2 )
+            cameraMover.NonPhysicsRotateTo( player.CameraAngles(), 0.6, 0.6 / 2, 0.6 / 2 )
         } catch (exception2){ }
 
-        wait 0.40
+        wait 0.6
 
-        RunUIScript( "CloseCTFRespawnMenu" )
         player.ClearMenuCameraEntity()
     }
 
@@ -676,14 +606,8 @@ void function DestroyVotingUI()
 {
     FadeOutSoundOnEntity( GetLocalClientPlayer(), "Music_CharacterSelect_Wattson", 0.2 )
     ScreenFade(GetLocalClientPlayer(), 0, 0, 0, 255, 0.4, 1, FFADE_OUT | FFADE_PURGE)
-    wait 1;
 
-    if ( IsValid( backgroundModelSmoke ) )
-		backgroundModelSmoke.Destroy()
-	if ( IsValid( backgroundModelGeo ) )
-		backgroundModelGeo.Destroy()
-    if ( IsValid( votecamera ) )
-		votecamera.Destroy()
+    wait 1;
 
     GetLocalClientPlayer().ClearMenuCameraEntity()
 

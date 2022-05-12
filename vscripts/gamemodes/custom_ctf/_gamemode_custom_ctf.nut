@@ -332,6 +332,7 @@ void function StartRound()
             }
             Remote_CallFunction_NonReplay(player, "ServerCallback_CTF_DoAnnouncement", 5, eCTFAnnounce.ROUND_START, CTF.roundstarttime)
             Remote_CallFunction_NonReplay(player, "ServerCallback_CTF_SetObjectiveText", CTF_SCORE_GOAL_TO_WIN)
+            Remote_CallFunction_Replay(player, "ServerCallback_CTF_TeamText", player.GetTeam())
             ClearInvincible(player)
             DeployAndEnableWeapons(player)
             player.UnforceStand()
@@ -345,12 +346,6 @@ void function StartRound()
 
     //create the bubble based on location
     file.bubbleBoundary = CreateBubbleBoundary(file.selectedLocation)
-
-    //set the score ui and team ui
-    foreach(player in GetPlayerArray())
-    {
-        Remote_CallFunction_Replay(player, "ServerCallback_CTF_TeamText", player.GetTeam())
-    }
 
     float endTime = Time() + CTF_ROUNDTIME
     while( Time() <= endTime )
@@ -1095,7 +1090,6 @@ void function _OnPlayerConnected(entity player)
 
     //Give passive regen (pilot blood)
     GivePassive(player, ePassives.PAS_PILOT_BLOOD)
-    //SetPlayerSettings(player, CTF_PLAYER_SETTINGS)
 
     Remote_CallFunction_NonReplay(player, "ServerCallback_CTF_SetObjectiveText", CTF_SCORE_GOAL_TO_WIN)
 
@@ -1120,10 +1114,8 @@ void function _OnPlayerConnected(entity player)
     case eGameState.Playing:
         player.UnfreezeControlsOnServer();
         Remote_CallFunction_NonReplay(player, "ServerCallback_CTF_DoAnnouncement", 5, eCTFAnnounce.ROUND_START, CTF.roundstarttime)
-
-        if(player.GetTeam() == TEAM_IMC || player.GetTeam() == TEAM_MILITIA)
-            Remote_CallFunction_Replay(player, "ServerCallback_CTF_AddPointIcon", IMCPoint.pole, MILITIAPoint.pole, player.GetTeam())
-
+        Remote_CallFunction_Replay(player, "ServerCallback_CTF_AddPointIcon", IMCPoint.pole, MILITIAPoint.pole, player.GetTeam())
+        Remote_CallFunction_Replay(player, "ServerCallback_CTF_TeamText", player.GetTeam())
         break
     default:
         break
@@ -1473,6 +1465,7 @@ void function StartIMCFlagReturnTimer(entity player)
 
 void function CheckPlayerForFlag(entity victim)
 {
+    //need to register each undermap pos for each location in Sh_CustomCTF_Init eventually just to make it a bit more accurate
     float undermap
 
     switch(GetMapName())
@@ -1649,24 +1642,22 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
 
             if (!CTF.votingtime)
             {
-                //victim.p.CTFDeaths++
-                Remote_CallFunction_NonReplay(victim, "ServerCallback_CTF_OpenCTFRespawnMenu", CTF.bubbleCenter, CTF.IMCPoints, CTF.MILITIAPoints, attacker, victim.p.CTFClassID)
-
-                float reservedTime = 4// so we dont immediately go to killcam
-                wait reservedTime
-
-                Remote_CallFunction_NonReplay(victim, "ServerCallback_CTF_PlayerDied", CTF.bubbleCenter, CTF.IMCPoints, CTF.MILITIAPoints, attacker)
-
                 //Add a death to the victim
                 int invscore = victim.GetPlayerNetInt( "assists" )
                 invscore++;
                 victim.SetPlayerNetInt( "assists", invscore )
 
-                wait 6
+                wait 4 // so we dont go straight to respawn menu
 
+                //Open respawn menu
+                Remote_CallFunction_NonReplay(victim, "ServerCallback_CTF_OpenCTFRespawnMenu", CTF.bubbleCenter, CTF.IMCPoints, CTF.MILITIAPoints, attacker, victim.p.CTFClassID)
+
+                //Wait Respawn Timer
+                wait CTF_RESPAWN_TIMER
+
+                //Respawn Player
                 if (IsValid(victim) && !CTF.votingtime)
                 {
-                    Remote_CallFunction_NonReplay(victim, "ServerCallback_CTF_PlayerSpawning")
                     _HandleRespawn( victim )
                 }
             }
@@ -1683,21 +1674,8 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
 			    invscore++;
 			    attacker.SetPlayerNetInt( "kills", invscore )
 
-                if(IMCPoint.holdingplayer == attacker)
-                {
-                    //Do Nothing
-                }
-                else
-                {
-                    if(MILITIAPoint.holdingplayer == attacker)
-                    {
-                        //Do Nothing
-                    }
-                    else
-                    {
-                        PlayerRestoreHP(attacker, 100, CTF_Equipment_GetDefaultShieldHP())
-                    }
-                }
+                if(attacker != IMCPoint.holdingplayer && attacker != MILITIAPoint.holdingplayer)
+                    PlayerRestoreHP(attacker, 100, CTF_Equipment_GetDefaultShieldHP())
             }
         }
 
