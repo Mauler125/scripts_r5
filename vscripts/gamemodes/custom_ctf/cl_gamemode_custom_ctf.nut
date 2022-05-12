@@ -655,10 +655,13 @@ void function CreateVotingUI()
     entity targetBackground = GetEntByScriptName( "target_char_sel_bg_new" )
     entity targetCamera = GetEntByScriptName( "target_char_sel_camera_new" )
 
-    AddWinningSquadData( -1, -1, 0, 0, 0, 0, 0 )
+    //Clear Winning Squad Data
+    AddWinningSquadData( -1, -1)
+
+    //Set Squad Data For Each Player In Winning Team
 	foreach( int i, entity player in GetPlayerArrayOfTeam( file.teamwon ) )
     {
-		AddWinningSquadData( i, player.GetEncodedEHandle(), 2, 1234, 600, 3, 1 )
+		AddWinningSquadData( i, player.GetEncodedEHandle())
     }
 
     thread ShowCTFVictorySequence()
@@ -666,26 +669,6 @@ void function CreateVotingUI()
     RunUIScript( "OpenCTFVoteMenu" )
 
     ScreenFade(GetLocalClientPlayer(), 0, 0, 0, 255, 0.3, 0.0, FFADE_IN | FFADE_PURGE)
-}
-
-void function AddWinningSquadData( int index, int eHandle, int kills, int damageDealt, int survivalTime, int revivesGiven, int respawnsGiven )
-{
-	if ( index == -1 )
-	{
-		file.winnerSquadSummaryData.playerData.clear()
-		file.winnerSquadSummaryData.squadPlacement = -1
-		return
-	}
-
-	SquadSummaryPlayerData data
-	data.eHandle = eHandle
-	data.kills = kills
-	data.damageDealt = damageDealt
-	data.survivalTime = survivalTime
-	data.revivesGiven = revivesGiven
-	data.respawnsGiven = respawnsGiven
-	file.winnerSquadSummaryData.playerData.append( data )
-	file.winnerSquadSummaryData.squadPlacement = 1
 }
 
 void function DestroyVotingUI()
@@ -953,6 +936,21 @@ void function ShowCTFVictorySequence()
 		cameraMover.NonPhysicsRotateTo( camera_end_angles, 2.5, 0.0, 2.5 / 2.0 )
 		cleanupEnts.append( cameraMover )
 	}
+}
+
+void function AddWinningSquadData( int index, int eHandle)
+{
+	if ( index == -1 )
+	{
+		file.winnerSquadSummaryData.playerData.clear()
+		file.winnerSquadSummaryData.squadPlacement = -1
+		return
+	}
+
+	SquadSummaryPlayerData data
+	data.eHandle = eHandle
+	file.winnerSquadSummaryData.playerData.append( data )
+	file.winnerSquadSummaryData.squadPlacement = 1
 }
 
 void function VictorySequenceOrderLocalPlayerFirst( entity player )
