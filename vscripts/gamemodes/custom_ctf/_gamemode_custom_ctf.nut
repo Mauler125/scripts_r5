@@ -262,7 +262,11 @@ void function VotingPhase()
     //Reset score RUI
     foreach(player in GetPlayerArray())
     {
+        //Reset client rui score
         Remote_CallFunction_Replay(player, "ServerCallback_CTF_PointCaptured", CTF.IMCPoints, CTF.MILITIAPoints)
+
+        //Reset Player Stats
+        Remote_CallFunction_NonReplay(player, "ServerCallback_CTF_UpdatePlayerStats", eCTFStats.Clear)
     }
 
     //Voting phase so disable weapons and make invincible
@@ -460,10 +464,10 @@ void function StartRound()
                 }
                 else if (file.locationSettings.len() == NUMBER_OF_MAP_SLOTS) // if the map has exactly 4 maps, remove the guess work for randomizing the maps as it would cause a rare crash
                 {
-                    CTF.mapIds[0] = 0
-                    CTF.mapIds[1] = 1
-                    CTF.mapIds[2] = 2
-                    CTF.mapIds[3] = 3
+                    CTF.mapIds.append( 0 )
+                    CTF.mapIds.append( 1 )
+                    CTF.mapIds.append( 2 )
+                    CTF.mapIds.append( 3 )
                 }
 
                 //Set voting to be allowed
@@ -896,6 +900,7 @@ void function IMCPoint_Trigger( entity trigger, entity ent )
                     PlayerDroppedFlag(ent)
 
                     CTF.IMCPoints++
+                    Remote_CallFunction_NonReplay(ent, "ServerCallback_CTF_UpdatePlayerStats", eCTFStats.Captures)
 
                     foreach(player in GetPlayerArray())
                     {
@@ -995,6 +1000,8 @@ void function MILITIA_Point_Trigger( entity trigger, entity ent )
                         ent.GetOffhandWeapon( OFFHAND_LEFT ).SetWeaponPrimaryClipCount( ent.GetOffhandWeapon( OFFHAND_LEFT ).GetWeaponPrimaryClipCountMax() )
 
                     CTF.MILITIAPoints++
+                    Remote_CallFunction_NonReplay(ent, "ServerCallback_CTF_UpdatePlayerStats", eCTFStats.Captures)
+
                     foreach(player in GetPlayerArray())
                     {
                         Remote_CallFunction_Replay(player, "ServerCallback_CTF_PointCaptured", CTF.IMCPoints, CTF.MILITIAPoints)
@@ -1642,6 +1649,7 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
 
             if (!CTF.votingtime)
             {
+                //victim.p.CTFDeaths++
                 Remote_CallFunction_NonReplay(victim, "ServerCallback_CTF_OpenCTFRespawnMenu", CTF.bubbleCenter, CTF.IMCPoints, CTF.MILITIAPoints, attacker, victim.p.CTFClassID)
 
                 float reservedTime = 4// so we dont immediately go to killcam
@@ -1670,6 +1678,7 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
         void functionref() attackerHandleFunc = void function() : (victim, attacker, damageInfo)  {
             if(IsValid(attacker) && attacker.IsPlayer() && IsAlive(attacker) && attacker != victim)
             {
+                Remote_CallFunction_NonReplay(attacker, "ServerCallback_CTF_UpdatePlayerStats", eCTFStats.Kills)
                 int invscore = attacker.GetPlayerNetInt( "kills" )
 			    invscore++;
 			    attacker.SetPlayerNetInt( "kills", invscore )

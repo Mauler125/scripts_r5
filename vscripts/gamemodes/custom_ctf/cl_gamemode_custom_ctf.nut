@@ -24,6 +24,7 @@ global function ServerCallback_CTF_EndRecaptureFlag
 global function ServerCallback_CTF_ResetFlagIcons
 global function ServerCallback_CTF_SetPointIconHint
 global function ServerCallback_CTF_SetCorrectTime
+global function ServerCallback_CTF_UpdatePlayerStats
 // Voting
 global function ServerCallback_CTF_SetVoteMenuOpen
 global function ServerCallback_CTF_UpdateVotingMaps
@@ -54,6 +55,12 @@ struct {
 
     int teamwon
 } file;
+
+struct {
+    int CTFFlagCaptures = 0
+	int CTFKills = 0
+	int CTFDeaths = 0
+} PlayerStats;
 
 array<entity> cleanupEnts
 array<var> overHeadRuis
@@ -567,8 +574,8 @@ void function ServerCallback_CTF_PlayerDied(vector campos, int IMCscore, int MIL
     Deathcam.SetParent( cameraMover, "", false )
     player.SetMenuCameraEntityWithAudio( Deathcam )
     Deathcam.SetTargetFOV( 90, true, EASING_CUBIC_INOUT, 0.50 )
-    cameraMover.NonPhysicsMoveTo(campos + file.selectedLocation.deathcam[0].origin, 0.60, 0, 0.30)
-    cameraMover.NonPhysicsRotateTo( file.selectedLocation.deathcam[0].angles, 0.60, 0, 0.30 )
+    cameraMover.NonPhysicsMoveTo(campos + file.selectedLocation.deathcam.origin, 0.60, 0, 0.30)
+    cameraMover.NonPhysicsRotateTo( file.selectedLocation.deathcam.angles, 0.60, 0, 0.30 )
 }
 
 void function UpdateUIRespawnTimer()
@@ -808,6 +815,25 @@ string function GetWinningTeamText(int team)
     return teamwon
 }
 
+void function ServerCallback_CTF_UpdatePlayerStats(int id)
+{
+    entity player = GetLocalClientPlayer()
+
+    switch(id)
+    {
+        case eCTFStats.Clear:
+            player.p.CTFCaptures = 0
+	        player.p.CTFKills = 0
+            break
+        case eCTFStats.Captures:
+            player.p.CTFCaptures++
+            break
+        case eCTFStats.Kills:
+            player.p.CTFKills++
+            break
+    }
+}
+
 //Orginal code from cl_gamemode_survival.nut
 //Modifed slightly
 void function ShowCTFVictorySequence()
@@ -815,8 +841,8 @@ void function ShowCTFVictorySequence()
 	entity player = GetLocalClientPlayer()
 
     //Todo: each maps victory pos and ang
-    file.victorySequencePosition = < -29300, -4209, 2488 >
-	file.victorySequenceAngles = < 0, 100, 0>
+    file.victorySequencePosition = file.selectedLocation.victorypos.origin - < 0, 0, 52>
+	file.victorySequenceAngles = file.selectedLocation.victorypos.angles
 
 	asset defaultModel                = GetGlobalSettingsAsset( DEFAULT_PILOT_SETTINGS, "bodyModel" )
 	LoadoutEntry loadoutSlotCharacter = Loadout_CharacterClass()
@@ -824,7 +850,9 @@ void function ShowCTFVictorySequence()
 
 	VictoryPlatformModelData victoryPlatformModelData = GetVictorySequencePlatformModel()
 	entity platformModel
-	int maxPlayersToShow = 8
+
+    //6 players is what i find best for showing name and stats without them overlapping
+	int maxPlayersToShow = 6
 
 	if ( victoryPlatformModelData.isSet )
 	{
@@ -881,14 +909,28 @@ void function ShowCTFVictorySequence()
 			characterModel.Anim_SetInitialTime( initialTime )
 
 			//
-			bool createOverheadRui = true
+			entity overheadNameEnt = CreateClientSidePropDynamic( pos + (AnglesToUp( file.victorySequenceAngles ) * 78), <0, 0, 0>, $"mdl/dev/empty_model.rmdl" )
+            entity overheadCapturesEnt = CreateClientSidePropDynamic(pos + (AnglesToUp(file.victorySequenceAngles) * 78) + < 0, 0, 15>, < 0, 0, 0 > , $"mdl/dev/empty_model.rmdl")
+            entity overheadKillsEnt = CreateClientSidePropDynamic( pos + (AnglesToUp( file.victorySequenceAngles ) * 78) + < 0, 0, 30>, <0, 0, 0>, $"mdl/dev/empty_model.rmdl" )
 
-			entity overheadEnt = CreateClientSidePropDynamic( pos + (AnglesToUp( file.victorySequenceAngles ) * 78), <0, 0, 0>, $"mdl/dev/empty_model.rmdl" )
-			overheadEnt.Hide()
-			var overheadRui = RuiCreate( $"ui/winning_squad_member_overhead_name.rpak", clGlobal.topoFullScreen, RUI_DRAW_HUD, 0 )
-			RuiSetString( overheadRui, "playerName", playerName )
-			RuiTrackFloat3( overheadRui, "position", overheadEnt, RUI_TRACK_ABSORIGIN_FOLLOW )
-			overHeadRuis.append( overheadRui )
+			overheadNameEnt.Hide()
+            overheadCapturesEnt.Hide()
+            overheadKillsEnt.Hide()
+
+			var overheadRuiName = RuiCreate( $"ui/winning_squad_member_overhead_name.rpak", clGlobal.topoFullScreen, RUI_DRAW_HUD, 0 )
+            var overheadRuiCaptures = RuiCreate( $"ui/winning_squad_member_overhead_name.rpak", clGlobal.topoFullScreen, RUI_DRAW_HUD, 0 )
+            var overheadRuiKills = RuiCreate( $"ui/winning_squad_member_overhead_name.rpak", clGlobal.topoFullScreen, RUI_DRAW_HUD, 0 )
+
+			RuiSetString(overheadRuiName, "playerName", playerName)
+			RuiTrackFloat3(overheadRuiName, "position", overheadNameEnt, RUI_TRACK_ABSORIGIN_FOLLOW)
+            RuiSetString(overheadRuiCaptures, "playerName", "Captures: " + FromEHI( data.eHandle ).p.CTFCaptures)
+			RuiTrackFloat3(overheadRuiCaptures, "position", overheadCapturesEnt, RUI_TRACK_ABSORIGIN_FOLLOW)
+            RuiSetString(overheadRuiKills, "playerName", "Kills: " + FromEHI( data.eHandle ).p.CTFKills)
+			RuiTrackFloat3( overheadRuiKills, "position", overheadKillsEnt, RUI_TRACK_ABSORIGIN_FOLLOW )
+
+			overHeadRuis.append( overheadRuiName )
+            overHeadRuis.append( overheadRuiCaptures )
+            overHeadRuis.append( overheadRuiKills )
 
 			playersOnPodium++
 		}
@@ -918,7 +960,7 @@ void function ShowCTFVictorySequence()
 
 		//Setup camera pos and angles
 		vector camera_start_pos = OffsetPointRelativeToVector( file.victorySequencePosition, <0, 1000, 200>, AnglesToForward( file.victorySequenceAngles ) )
-		vector camera_end_pos   = OffsetPointRelativeToVector( file.victorySequencePosition, <0, 150, 0>, AnglesToForward( file.victorySequenceAngles ) )
+		vector camera_end_pos   = OffsetPointRelativeToVector( file.victorySequencePosition, <0, 220, 0>, AnglesToForward( file.victorySequenceAngles ) )
 		vector camera_focus_pos = OffsetPointRelativeToVector( file.victorySequencePosition, <0, 0, 36>, AnglesToForward( file.victorySequenceAngles ) )
 		vector camera_start_angles = VectorToAngles( camera_focus_pos - camera_start_pos )
 		vector camera_end_angles   = VectorToAngles( camera_focus_pos - camera_end_pos )
@@ -927,7 +969,7 @@ void function ShowCTFVictorySequence()
 		entity cameraMover = CreateClientsideScriptMover( $"mdl/dev/empty_model.rmdl", camera_start_pos, camera_start_angles )
 		entity camera      = CreateClientSidePointCamera( camera_start_pos, camera_start_angles, 80 )
 		player.SetMenuCameraEntity( camera )
-		camera.SetTargetFOV( 80, true, EASING_CUBIC_INOUT, 0.0 )
+		camera.SetTargetFOV( 110, true, EASING_CUBIC_INOUT, 0.0 )
 		camera.SetParent( cameraMover, "", false )
 		cleanupEnts.append( camera )
 
@@ -982,8 +1024,8 @@ vector function GetVictorySquadFormationPosition( vector mainPosition, vector an
 	if ( index == 0 )
 		return mainPosition - <0, 0, 8>
 
-	float offset_side = 80.0
-	float offset_back = -60.0
+	float offset_side = 100.0
+	float offset_back = -30.0
 
 	int countBack = (index + 1) / 2
 	vector offset = < offset_side, offset_back, 0 > * countBack

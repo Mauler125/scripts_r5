@@ -56,6 +56,14 @@ global enum eCTFScreen
     NotUsed = 230
 }
 
+//Stats IDS
+global enum eCTFStats
+{
+    Clear = 0
+    Captures = 1
+    Kills = 2
+}
+
 global enum eCTFAnnounce
 {
 	NONE = 0
@@ -80,7 +88,8 @@ global struct LocationSettingsCTF
     vector milflagspawn
     array<LocPairCTF> imcspawns
     array<LocPairCTF> milspawns
-    array<LocPairCTF> deathcam
+    LocPairCTF &deathcam
+    LocPairCTF &victorypos
 }
 
 global struct CTFClasses
@@ -188,9 +197,8 @@ void function Sh_CustomCTF_Init()
                         NewCTFLocPair(<30857, -3860, -28729>, <0, -30, 0>),
                         NewCTFLocPair(<31836, -4098, -29081>, <0, -50, 0>)
                     ],
-                    [ //deathcam angle and height
-                        NewCTFLocPair(<0,0,5000>, <90,180,0>)
-                    ]
+                    NewCTFLocPair(<0,0,5000>, <90,180,0>), //deathcam angle and height
+                    NewCTFLocPair(<32575,-5068, -28845>, <0, 0, 0>) //Victory Pos
                 )
             )
             break
@@ -217,9 +225,8 @@ void function Sh_CustomCTF_Init()
                         NewCTFLocPair(<-2870, -3833, 332>, <0, -37, 0>),
                         NewCTFLocPair(<-2997, -3094, 332>, <0, -19, 0>)
                     ],
-                    [ //deathcam angle and height
-                        NewCTFLocPair(<0,0,5000>, <90,-90,0>)
-                    ]
+                    NewCTFLocPair(<0,0,5000>, <90,-90,0>), //deathcam angle and height
+                    NewCTFLocPair(<8212, -3014, 783>, <0, 120, 0>) //Victory Pos
                 )
             )
             break
@@ -253,9 +260,8 @@ void function Sh_CustomCTF_Init()
                         NewCTFLocPair(<3415, 30626, 4832>, <0, -8, 0>),
                         NewCTFLocPair(<3263, 30943, 4828>, <0, 8, 0>)
                     ],
-                    [ //deathcam angle and height
-                        NewCTFLocPair(<0,0,5000>, <90,90,0>)
-                    ]
+                    NewCTFLocPair(<0,0,5000>, <90,90,0>), //deathcam angle and height
+                    NewCTFLocPair(<-29300, -4209, 2540>, <0, 100, 0>) //Victory Pos
                 )
             )
 
@@ -281,9 +287,8 @@ void function Sh_CustomCTF_Init()
                         NewCTFLocPair(<-26251, -4939, 2573>, <0, 44, 0>),
                         NewCTFLocPair(<-27554, -4611, 2536>, <0, 45, 0>)
                     ],
-                    [ //deathcam angle and height
-                        NewCTFLocPair(<0,0,5000>, <90,0,0>)
-                    ]
+                    NewCTFLocPair(<0,0,5000>, <90,0,0>), //deathcam angle and height
+                    NewCTFLocPair(<-29300, -4209, 2540>, <0, 100, 0>) //Victory Pos
                 )
             )
 
@@ -309,9 +314,8 @@ void function Sh_CustomCTF_Init()
                         NewCTFLocPair(<27698, 28291, 4102>, <0, -160, 0>),
                         NewCTFLocPair(<27628, 25640, 4370>, <0, 160, 0>)
                     ],
-                    [ //deathcam angle and height
-                        NewCTFLocPair(<0,0,6000>, <90,-70,0>)
-                    ]
+                    NewCTFLocPair(<0,0,6000>, <90,-70,0>), //deathcam angle and height
+                    NewCTFLocPair(<-29300, -4209, 2540>, <0, 100, 0>) //Victory Pos
                 )
             )
 
@@ -337,9 +341,8 @@ void function Sh_CustomCTF_Init()
                         NewCTFLocPair(<21194, 16925, 4518>, <0, -60, 0>),
                         NewCTFLocPair(<22281, 13742, 4422>, <0, 40, 0>)
                     ],
-                    [ //deathcam angle and height
-                        NewCTFLocPair(<0,0,7000>, <90,90,0>)
-                    ]
+                    NewCTFLocPair(<0,0,7000>, <90,90,0>), //deathcam angle and height
+                    NewCTFLocPair(<-29300, -4209, 2540>, <0, 100, 0>) //Victory Pos
                 )
             )
 
@@ -365,9 +368,8 @@ void function Sh_CustomCTF_Init()
                         NewCTFLocPair(<26507, -15813, 4730>, <0, -135, 0>),
                         NewCTFLocPair(<26507, -14500, 4730>, <0, 135, 0>)
                     ],
-                    [ //deathcam angle and height
-                        NewCTFLocPair(<0,0,7000>, <90,90,0>)
-                    ]
+                    NewCTFLocPair(<0,0,7000>, <90,90,0>), //deathcam angle and height
+                    NewCTFLocPair(<-29300, -4209, 2540>, <0, 100, 0>) //Victory Pos
                 )
             )
 
@@ -393,9 +395,8 @@ void function Sh_CustomCTF_Init()
                         NewCTFLocPair(<-7573, -13783, 3186>, <0, -100, 0>),
                         NewCTFLocPair(<-7472, -14763, 3183>, <0, -150, 0>)
                     ],
-                    [ //deathcam angle and height
-                        NewCTFLocPair(<0,0,7000>, <90,-45,0>)
-                    ]
+                    NewCTFLocPair(<0,0,7000>, <90,-45,0>), //deathcam angle and height
+                    NewCTFLocPair(<-29300, -4209, 2540>, <0, 100, 0>) //Victory Pos
                 )
             )
 
@@ -425,9 +426,8 @@ void function Sh_CustomCTF_Init()
                         NewCTFLocPair(<31254, 9956, -3393>, <0, 90, 0>),
                         NewCTFLocPair(<32519, 9890, -3525>, <0, 166, 0>)
                     ],
-                    [ //deathcam angle and height
-                        NewCTFLocPair(<0,0,5000>, <90,27,0>)
-                    ]
+                    NewCTFLocPair(<0,0,5000>, <90,27,0>), //deathcam angle and height
+                    NewCTFLocPair(<3990,7540,-4242>, <0,90,0>) //Victory Pos
                 )
             )
 
@@ -452,9 +452,8 @@ void function Sh_CustomCTF_Init()
                         NewCTFLocPair(<18320, 29370, -4778>, <0, -101, 0>),
                         NewCTFLocPair(<16344, 29093, -4441>, <0, -13, 0>)
                     ],
-                    [ //deathcam angle and height
-                        NewCTFLocPair(<0,0,7000>, <90,-165,0>)
-                    ]
+                    NewCTFLocPair(<0,0,7000>, <90,-165,0>),//deathcam angle and height
+                    NewCTFLocPair(<3990,7540,-4242>, <0,90,0>) //Victory Pos
                 )
             )
 
@@ -479,9 +478,8 @@ void function Sh_CustomCTF_Init()
                         NewCTFLocPair(<10679, 4107, -4225>, <0, 120, 0>),
                         NewCTFLocPair(<12185, 6412, -4281>, <0, -130, 0>)
                     ],
-                    [ //deathcam angle and height
-                        NewCTFLocPair(<0,0,7000>, <90,-85,0>)
-                    ]
+                    NewCTFLocPair( < 0, 0, 7000 > , < 90, -85, 0 > ), //deathcam angle and height
+                    NewCTFLocPair(<3990,7540,-4242>, <0,90,0>) //Victory Pos
                 )
             )
 
@@ -506,9 +504,8 @@ void function Sh_CustomCTF_Init()
                         NewCTFLocPair(<7793, -17583, -3657>, <0, -80, 0>),
                         NewCTFLocPair(<9377, -20718, -3569>, <0, -179, 0>)
                     ],
-                    [ //deathcam angle and height
-                        NewCTFLocPair(<0,0,7000>, <90,-45,0>)
-                    ]
+                    NewCTFLocPair( < 0, 0, 7000 > , < 90, -45, 0 > ), //deathcam angle and height
+                    NewCTFLocPair(<3990,7540,-4242>, <0,90,0>) //Victory Pos
                 )
             )
 
@@ -531,7 +528,7 @@ LocPairCTF function NewCTFLocPair(vector origin, vector angles)
     return locPair
 }
 
-LocationSettingsCTF function NewCTFLocationSettings(string name, array < LocPairCTF > bubblespots, vector imcflagspawn, vector milflagspawn, array < LocPairCTF > imcspawns, array < LocPairCTF > milspawns, array < LocPairCTF > deathcam)
+LocationSettingsCTF function NewCTFLocationSettings(string name, array < LocPairCTF > bubblespots, vector imcflagspawn, vector milflagspawn, array < LocPairCTF > imcspawns, array < LocPairCTF > milspawns, LocPairCTF deathcam, LocPairCTF victorypos)
 {
     LocationSettingsCTF locationSettings
     locationSettings.name = name
@@ -541,6 +538,7 @@ LocationSettingsCTF function NewCTFLocationSettings(string name, array < LocPair
     locationSettings.imcspawns = imcspawns
     locationSettings.milspawns = milspawns
     locationSettings.deathcam = deathcam
+    locationSettings.victorypos = victorypos
 
     file.locationSettings.append(locationSettings)
 
