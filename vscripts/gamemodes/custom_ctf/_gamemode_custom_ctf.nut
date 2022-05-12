@@ -88,7 +88,6 @@ void function _CustomCTF_Init()
     AddClientCommandCallback("VoteForMap", ClientCommand_VoteForMap)
     AddClientCommandCallback("SetPlayerClass", ClientCommand_SetPlayerClass)
     AddClientCommandCallback("GetTimeFromServer", ClientCommand_GetCorrectTimeFromServer)
-    AddClientCommandCallback("team", ClientCommand_ChangeTeam)
 
     thread RUNCTF()
 }
@@ -111,15 +110,6 @@ void function _CTFRegisterCTFClass(CTFClasses ctfclass)
 //             Client Commands             //
 //                                         //
 /////////////////////////////////////////////
-bool function ClientCommand_ChangeTeam(entity player, array<string> args)
-{
-    if(player.GetTeam() == TEAM_IMC)
-        SetTeam(player, TEAM_MILITIA)
-    else
-        SetTeam(player, TEAM_IMC)
-
-    return true
-}
 
 bool function ClientCommand_GetCorrectTimeFromServer(entity player, array<string> args)
 {
