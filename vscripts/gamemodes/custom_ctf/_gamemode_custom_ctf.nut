@@ -15,8 +15,8 @@ global function _CTFRegisterCTFClass
 
 enum eCTFState
 {
-	IN_PROGRESS = 0
-	WINNER_DECIDED = 1
+    IN_PROGRESS = 0
+    WINNER_DECIDED = 1
 }
 
 struct {
@@ -30,7 +30,7 @@ struct {
 
 struct CTFPoint
 {
-	entity pole
+    entity pole
     entity pointfx
     entity beamfx
     entity trigger
@@ -52,7 +52,7 @@ CTFPoint MILITIAPoint
 struct
 {
     //Base
-	int IMCPoints = 0
+    int IMCPoints = 0
     int MILITIAPoints = 0
     vector bubbleCenter
     float bubbleRadius
@@ -69,7 +69,7 @@ struct
 
 struct
 {
-	int seconds
+    int seconds
     int endtime
     bool roundover
 } ServerTimer;
@@ -113,14 +113,15 @@ void function _CTFRegisterCTFClass(CTFClasses ctfclass)
 
 bool function ClientCommand_GetCorrectTimeFromServer(entity player, array<string> args)
 {
+    if( !IsValid( player ) )
+        return false
+    
     Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetCorrectTime", ServerTimer.seconds)
     return true
 }
 
 bool function ClientCommand_NextRound(entity player, array<string> args)
 {
-    if( !IsServer() ) return false;
-
     file.ctfState = eCTFState.WINNER_DECIDED
     return true
 }
@@ -146,9 +147,12 @@ bool function ClientCommand_VoteForMap(entity player, array<string> args)
     CTF.mapVotes[mapid]++
 
     // update current amount of votes for each map
-    foreach(players in GetPlayerArray())
+    foreach(p in GetPlayerArray())
     {
-        Remote_CallFunction_Replay(players, "ServerCallback_CTF_UpdateMapVotesClient", CTF.mapVotes[0], CTF.mapVotes[1], CTF.mapVotes[2], CTF.mapVotes[3])
+        if( !IsValid( p ) )
+            continue
+
+        Remote_CallFunction_Replay(p, "ServerCallback_CTF_UpdateMapVotesClient", CTF.mapVotes[0], CTF.mapVotes[1], CTF.mapVotes[2], CTF.mapVotes[3])
     }
 
     // append player to the list of players the voted so they cant vote again
@@ -159,7 +163,7 @@ bool function ClientCommand_VoteForMap(entity player, array<string> args)
 
 bool function ClientCommand_SetPlayerClass(entity player, array<string> args)
 {
-    if (!IsValid(player))
+    if ( !IsValid( player ) )
         return false
 
     //get class id from args
@@ -179,7 +183,7 @@ bool function ClientCommand_SetPlayerClass(entity player, array<string> args)
 
 LocPairCTF function _GetVotingLocation()
 {
-    switch(GetMapName())
+    switch( GetMapName() )
     {
         case "mp_rr_canyonlands_staging":
             return NewCTFLocPair(<26794, -6241, -27479>, <0, 0, 0>)
@@ -203,14 +207,13 @@ LocPairCTF function _GetVotingLocation()
 void function _OnPropDynamicSpawned(entity prop)
 {
     file.playerSpawnedProps.append(prop)
-
 }
 
 void function DestroyPlayerProps()
 {
     foreach(prop in file.playerSpawnedProps)
     {
-        if(IsValid(prop))
+        if( IsValid( prop ) )
             prop.Destroy()
     }
     file.playerSpawnedProps.clear()
@@ -227,7 +230,7 @@ void function RUNCTF()
     WaitForGameState(eGameState.Playing)
     AddSpawnCallback("prop_dynamic", _OnPropDynamicSpawned)
 
-    for(; ; )
+    for( ; ; )
     {
         VotingPhase();
         StartRound();
@@ -248,6 +251,9 @@ void function VotingPhase()
     //Reset score RUI
     foreach(player in GetPlayerArray())
     {
+        if( !IsValid( player ) )
+            continue
+        
         //Reset client rui score
         Remote_CallFunction_Replay(player, "ServerCallback_CTF_PointCaptured", CTF.IMCPoints, CTF.MILITIAPoints)
 
@@ -259,15 +265,15 @@ void function VotingPhase()
     foreach(player in GetPlayerArray())
     {
         if( !IsValid( player ) )
-            continue;
+            continue
 
         MakeInvincible(player)
-		HolsterAndDisableWeapons( player )
+        HolsterAndDisableWeapons( player )
         player.ForceStand()
         TpPlayerToSpawnPoint(player)
         player.UnfreezeControlsOnServer();
         player.SetPlayerNetInt("kills", 0) //Reset for kills
-	    player.SetPlayerNetInt("assists", 0) //Reset for deaths
+        player.SetPlayerNetInt("assists", 0) //Reset for deaths
     }
 
     file.selectedLocation = file.locationSettings[CTF.mappicked]
@@ -275,6 +281,9 @@ void function VotingPhase()
     //Set the next location client side for each player
     foreach(player in GetPlayerArray())
     {
+        if( !IsVaild( player ) )
+            continue
+        
         Remote_CallFunction_NonReplay(player, "ServerCallback_CTF_SetSelectedLocation", CTF.mappicked)
     }
 }
@@ -282,15 +291,15 @@ void function VotingPhase()
 // purpose: for sending correct time to client after resolution change
 void function StartServerRoundTimer()
 {
-	while (!ServerTimer.roundover)
-	{
+    while (!ServerTimer.roundover)
+    {
         if(ServerTimer.seconds < 1)
             ServerTimer.seconds = 60
 
         //Calculate Elapsed Time
-		wait 1
+        wait 1
         ServerTimer.seconds--
-	}
+    }
 }
 
 // purpose: handle the start of a new round for players and props
@@ -310,21 +319,20 @@ void function StartRound()
 
     foreach(player in GetPlayerArray())
     {
-        if( IsValid( player ) )
-        {
-            if(!IsAlive(player))
-            {
-                _HandleRespawn(player)
-            }
-            Remote_CallFunction_NonReplay(player, "ServerCallback_CTF_DoAnnouncement", 5, eCTFAnnounce.ROUND_START, CTF.roundstarttime)
-            Remote_CallFunction_NonReplay(player, "ServerCallback_CTF_SetObjectiveText", CTF_SCORE_GOAL_TO_WIN)
-            Remote_CallFunction_Replay(player, "ServerCallback_CTF_TeamText", player.GetTeam())
-            ClearInvincible(player)
-            DeployAndEnableWeapons(player)
-            player.UnforceStand()
-            player.UnfreezeControlsOnServer()
-            TpPlayerToSpawnPoint(player)
-        }
+        if( !IsValid( player ) )
+            continue
+
+        if( !IsAlive( player ) )
+            _HandleRespawn(player)
+
+        Remote_CallFunction_NonReplay(player, "ServerCallback_CTF_DoAnnouncement", 5, eCTFAnnounce.ROUND_START, CTF.roundstarttime)
+        Remote_CallFunction_NonReplay(player, "ServerCallback_CTF_SetObjectiveText", CTF_SCORE_GOAL_TO_WIN)
+        Remote_CallFunction_Replay(player, "ServerCallback_CTF_TeamText", player.GetTeam())
+        ClearInvincible(player)
+        DeployAndEnableWeapons(player)
+        player.UnforceStand()
+        player.UnfreezeControlsOnServer()
+        TpPlayerToSpawnPoint(player)
     }
 
     //spawn CTF flags based on location
@@ -335,7 +343,7 @@ void function StartRound()
 
     float endTime = Time() + CTF_ROUNDTIME
     while( Time() <= endTime )
-	{
+    {
         if(Time() > endTime - 5)
             file.ctfState = eCTFState.WINNER_DECIDED
 
@@ -344,32 +352,33 @@ void function StartRound()
             //for each player, if the player is holding the flag on round end. make them drop it so it dosnt cause a crash
             foreach(player in GetPlayerArray())
             {
-                if( IsValid( player ) )
-                {
-                    if (player == IMCPoint.holdingplayer)
-                    {
-                        IMCPoint.pole.ClearParent()
-                        IMCPoint.dropped = false
-                        IMCPoint.holdingplayer = null
-                        IMCPoint.pickedup = false
-                        IMCPoint.flagatbase = true
-                    }
+                if( !IsValid( player ) )
+                    continue
 
-                    if (player == MILITIAPoint.holdingplayer)
-                    {
-                        MILITIAPoint.pole.ClearParent()
-                        MILITIAPoint.dropped = false
-                        MILITIAPoint.holdingplayer = null
-                        MILITIAPoint.pickedup = false
-                        MILITIAPoint.flagatbase = true
-                    }
+                if (player == IMCPoint.holdingplayer)
+                {
+                    IMCPoint.pole.ClearParent()
+                    IMCPoint.dropped = false
+                    IMCPoint.holdingplayer = null
+                    IMCPoint.pickedup = false
+                    IMCPoint.flagatbase = true
+                }
+
+                if (player == MILITIAPoint.holdingplayer)
+                {
+                    MILITIAPoint.pole.ClearParent()
+                    MILITIAPoint.dropped = false
+                    MILITIAPoint.holdingplayer = null
+                    MILITIAPoint.pickedup = false
+                    MILITIAPoint.flagatbase = true
                 }
             }
 
             //remove trail fx from players
-            if(IsValid(IMCPoint.trailfx))
+            if( IsValid( IMCPoint.trailfx ) )
                 IMCPoint.trailfx.Destroy()
-            if(IsValid(MILITIAPoint.trailfx))
+
+            if( IsValid( MILITIAPoint.trailfx ) )
                 MILITIAPoint.trailfx.Destroy()
 
             //Destroy old flags, triggers, and fx
@@ -395,30 +404,17 @@ void function StartRound()
 
             foreach(player in GetPlayerArray())
             {
+                if( !IsValid( player ) )
+                    continue
+
                 //if player is dead, respawn
                 if(!IsAlive(player))
                 {
                     _HandleRespawn(player)
                 }
 
-                if( IsValid( player ) )
-                {
-                    // round is over so make the player invinvible
-                    MakeInvincible(player)
-
-                    // battle chatter we won
-                    switch(TeamWon)
-                    {
-                        case TEAM_IMC:
-                            if(player.GetTeam() == TEAM_IMC)
-                                PlayBattleChatterLineToSpeakerAndTeam( player, "bc_weAreChampionSquad" )
-                            break
-                        case TEAM_MILITIA:
-                            if(player.GetTeam() == TEAM_MILITIA)
-                                PlayBattleChatterLineToSpeakerAndTeam( player, "bc_weAreChampionSquad" )
-                            break
-                    }
-                }
+                // round is over so make the player invinvible
+                MakeInvincible(player)
             }
 
             //Only do voting for maps with multi locations
@@ -455,13 +451,13 @@ void function StartRound()
                 CTF.votingtime = true
 
                 //for each player, open the vote menu and set it to the winning team screen
-                foreach(player in GetPlayerArray())
+                foreach( player in GetPlayerArray() )
                 {
-                    if( IsValid( player ) )
-                    {
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetVoteMenuOpen", true, TeamWon)
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", eCTFScreen.WinnerScreen, TeamWon, eCTFScreen.NotUsed, eCTFScreen.NotUsed)
-                    }
+                    if( !IsValid( player ) )
+                        continue
+
+                    Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetVoteMenuOpen", true, TeamWon)
+                    Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", eCTFScreen.WinnerScreen, TeamWon, eCTFScreen.NotUsed, eCTFScreen.NotUsed)
                 }
 
                 ServerTimer.roundover = true
@@ -472,11 +468,11 @@ void function StartRound()
                 //For each player, set voting screen and update maps that are picked for voting
                 foreach(player in GetPlayerArray())
                 {
-                    if( IsValid( player ) )
-                    {
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_UpdateVotingMaps", CTF.mapIds[0], CTF.mapIds[1], CTF.mapIds[2], CTF.mapIds[3])
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", eCTFScreen.VoteScreen, eCTFScreen.NotUsed, eCTFScreen.NotUsed, eCTFScreen.NotUsed)
-                    }
+                    if( !IsValid( player ) )
+                        continue
+
+                    Remote_CallFunction_Replay(player, "ServerCallback_CTF_UpdateVotingMaps", CTF.mapIds[0], CTF.mapIds[1], CTF.mapIds[2], CTF.mapIds[3])
+                    Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", eCTFScreen.VoteScreen, eCTFScreen.NotUsed, eCTFScreen.NotUsed, eCTFScreen.NotUsed)
                 }
 
                 //Wait for voting time to be over
@@ -495,7 +491,7 @@ void function StartRound()
                     }
                 }
 
-                if (anyVotes)
+                if ( anyVotes )
                 {
                     // store the highest vote count for any of the maps
                     int highestVoteCount = -1
@@ -533,8 +529,11 @@ void function StartRound()
                     else // else pick the map with the highest vote count
                     {
                         //Set the vote screen for each player to show the chosen location
-                        foreach(player in GetPlayerArray())
+                        foreach( player in GetPlayerArray() )
                         {
+                            if( !IsValid( player ) )
+                                continue
+
                             Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", eCTFScreen.SelectedScreen, eCTFScreen.NotUsed, highestVoteId, eCTFScreen.NotUsed)
                         }
 
@@ -546,6 +545,9 @@ void function StartRound()
                     {
                         foreach(player in GetPlayerArray())
                         {
+                            if( !IsVaild( player ) )
+                                continue
+
                             Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", eCTFScreen.TiedScreen, eCTFScreen.NotUsed, 254, eCTFScreen.NotUsed)
                         }
 
@@ -561,6 +563,9 @@ void function StartRound()
                     //Set the vote screen for each player to show the chosen location
                     foreach(player in GetPlayerArray())
                     {
+                        if( !IsValid( player ) )
+                            continue
+
                         Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", eCTFScreen.SelectedScreen, eCTFScreen.NotUsed, CTF.mappicked, eCTFScreen.NotUsed)
                     }
                 }
@@ -571,10 +576,10 @@ void function StartRound()
                 //Close the votemenu for each player
                 foreach(player in GetPlayerArray())
                 {
-                    if( IsValid( player ) )
-                    {
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetVoteMenuOpen", false, TeamWon)
-                    }
+                    if( !IsValid( player ) )
+                        continue
+
+                    Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetVoteMenuOpen", false, TeamWon)
                 }
             }
             else
@@ -582,11 +587,11 @@ void function StartRound()
                 //Open the vote menu for each player and set it to the winners screen
                 foreach(player in GetPlayerArray())
                 {
-                    if( IsValid( player ) )
-                    {
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetVoteMenuOpen", true, TeamWon)
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", eCTFScreen.WinnerScreen, TeamWon, eCTFScreen.NotUsed, eCTFScreen.NotUsed)
-                    }
+                    if( !IsValid( player ) )
+                        continue
+
+                    Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetVoteMenuOpen", true, TeamWon)
+                    Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", eCTFScreen.WinnerScreen, TeamWon, eCTFScreen.NotUsed, eCTFScreen.NotUsed)
                 }
 
                 ServerTimer.roundover = true
@@ -597,10 +602,10 @@ void function StartRound()
                 //Set the votemenu screen to show next round text
                 foreach(player in GetPlayerArray())
                 {
-                    if( IsValid( player ) )
-                    {
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", eCTFScreen.NextRoundScreen, eCTFScreen.NotUsed, eCTFScreen.NotUsed, eCTFScreen.NotUsed)
-                    }
+                    if( !IsValid( player ) )
+                        continue
+                    
+                    Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", eCTFScreen.NextRoundScreen, eCTFScreen.NotUsed, eCTFScreen.NotUsed, eCTFScreen.NotUsed)
                 }
 
                 //Just a wait for timing
@@ -609,10 +614,10 @@ void function StartRound()
                 //Close the votemenu for each player
                 foreach(player in GetPlayerArray())
                 {
-                    if( IsValid( player ) )
-                    {
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetVoteMenuOpen", false, TeamWon)
-                    }
+                    if( !IsValid( player ) )
+                        continue
+
+                    Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetVoteMenuOpen", false, TeamWon)
                 }
             }
 
@@ -627,19 +632,19 @@ void function StartRound()
 
             break
         }
-		WaitFrame()
-	}
+        WaitFrame()
+    }
 
     file.ctfState = eCTFState.IN_PROGRESS
 
     //Reset flag icons for each player
     foreach(player in GetPlayerArray())
     {
-        if( IsValid( player ) )
-        {
-            ClearInvincible(player)
-            Remote_CallFunction_Replay(player, "ServerCallback_CTF_ResetFlagIcons")
-        }
+        if( !IsValid( player ) )
+            continue
+
+        ClearInvincible(player)
+        Remote_CallFunction_Replay(player, "ServerCallback_CTF_ResetFlagIcons")
     }
 }
 
@@ -662,6 +667,9 @@ void function RandomizeTiedLocations(array<int> maps)
         //Update Randomizer ui for each player
         foreach(player in GetPlayerArray())
         {
+            if( !IsValid( player ) )
+                continue
+
             Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", eCTFScreen.TiedScreen, 69, maps[currentmapindex], 0)
         }
 
@@ -692,6 +700,9 @@ void function RandomizeTiedLocations(array<int> maps)
     //Show final selected map
     foreach(player in GetPlayerArray())
     {
+        if( !IsValid( player ) )
+            continue
+
         Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", eCTFScreen.TiedScreen, 69, maps[selectedamp], 1)
     }
 
@@ -701,6 +712,9 @@ void function RandomizeTiedLocations(array<int> maps)
     //Procede to final location picked screen
     foreach(player in GetPlayerArray())
     {
+        if( !IsValid( player ) )
+            continue
+
         Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", eCTFScreen.SelectedScreen, 69, maps[selectedamp], eCTFScreen.NotUsed)
     }
 
@@ -716,19 +730,19 @@ void function SpawnCTFPoints()
 
     //Point 1
     IMCPoint.pole = CreateEntity( "prop_dynamic" )
-	IMCPoint.pole.SetValueForModelKey( $"mdl/props/wattson_electric_fence/wattson_electric_fence.rmdl" )
+    IMCPoint.pole.SetValueForModelKey( $"mdl/props/wattson_electric_fence/wattson_electric_fence.rmdl" )
     IMCPoint.pole.SetOrigin(IMCPoint.spawn)
     DispatchSpawn( IMCPoint.pole )
 
     thread PlayAnim( IMCPoint.pole, "prop_fence_expand", IMCPoint.pole.GetOrigin(), IMCPoint.pole.GetAngles() )
 
     IMCPoint.trigger = CreateEntity( "trigger_cylinder" )
-	IMCPoint.trigger.SetRadius( 75 )
-	IMCPoint.trigger.SetAboveHeight( 100 ) //Still not quite a sphere, will see if close enough
-	IMCPoint.trigger.SetBelowHeight( 0 )
-	IMCPoint.trigger.SetOrigin( IMCPoint.spawn )
+    IMCPoint.trigger.SetRadius( 75 )
+    IMCPoint.trigger.SetAboveHeight( 100 ) //Still not quite a sphere, will see if close enough
+    IMCPoint.trigger.SetBelowHeight( 0 )
+    IMCPoint.trigger.SetOrigin( IMCPoint.spawn )
     IMCPoint.trigger.SetEnterCallback( IMCPoint_Trigger )
-	DispatchSpawn( IMCPoint.trigger )
+    DispatchSpawn( IMCPoint.trigger )
 
     IMCPoint.pointfx = StartParticleEffectInWorld_ReturnEntity(GetParticleSystemIndex( $"P_ar_loot_drop_point" ), IMCPoint.pole.GetOrigin(), <0, 0, 0> )
     IMCPoint.beamfx = StartParticleEffectInWorld_ReturnEntity(GetParticleSystemIndex( $"P_ar_loot_drop_point_far" ), IMCPoint.pole.GetOrigin(), <0, 0, 0> )
@@ -741,19 +755,19 @@ void function SpawnCTFPoints()
 
     //Point 2
     MILITIAPoint.pole = CreateEntity( "prop_dynamic" )
-	MILITIAPoint.pole.SetValueForModelKey( $"mdl/props/wattson_electric_fence/wattson_electric_fence.rmdl" )
+    MILITIAPoint.pole.SetValueForModelKey( $"mdl/props/wattson_electric_fence/wattson_electric_fence.rmdl" )
     MILITIAPoint.pole.SetOrigin(MILITIAPoint.spawn)
     DispatchSpawn( MILITIAPoint.pole )
 
     thread PlayAnim( MILITIAPoint.pole, "prop_fence_expand", MILITIAPoint.pole.GetOrigin(), MILITIAPoint.pole.GetAngles() )
 
     MILITIAPoint.trigger = CreateEntity( "trigger_cylinder" )
-	MILITIAPoint.trigger.SetRadius( 75 )
-	MILITIAPoint.trigger.SetAboveHeight( 100 ) //Still not quite a sphere, will see if close enough
-	MILITIAPoint.trigger.SetBelowHeight( 0 )
-	MILITIAPoint.trigger.SetOrigin( MILITIAPoint.spawn )
+    MILITIAPoint.trigger.SetRadius( 75 )
+    MILITIAPoint.trigger.SetAboveHeight( 100 ) //Still not quite a sphere, will see if close enough
+    MILITIAPoint.trigger.SetBelowHeight( 0 )
+    MILITIAPoint.trigger.SetOrigin( MILITIAPoint.spawn )
     MILITIAPoint.trigger.SetEnterCallback( MILITIA_Point_Trigger )
-	DispatchSpawn( MILITIAPoint.trigger )
+    DispatchSpawn( MILITIAPoint.trigger )
 
     MILITIAPoint.pointfx = StartParticleEffectInWorld_ReturnEntity(GetParticleSystemIndex( $"P_ar_loot_drop_point" ), MILITIAPoint.pole.GetOrigin(), <0, 0, 0> )
     MILITIAPoint.beamfx = StartParticleEffectInWorld_ReturnEntity(GetParticleSystemIndex( $"P_ar_loot_drop_point_far" ), MILITIAPoint.pole.GetOrigin(), <0, 0, 0> )
@@ -768,24 +782,17 @@ void function SpawnCTFPoints()
 
     foreach(player in GetPlayerArray())
     {
-        if( IsValid( player ) )
-        {
-            if (player.GetTeam() == TEAM_IMC)
-            {
-                Remote_CallFunction_Replay(player, "ServerCallback_CTF_AddPointIcon", IMCPoint.pole, MILITIAPoint.pole, TEAM_IMC)
-            }
-            else if (player.GetTeam() == TEAM_MILITIA)
-            {
-                Remote_CallFunction_Replay(player, "ServerCallback_CTF_AddPointIcon", IMCPoint.pole, MILITIAPoint.pole, TEAM_MILITIA)
-            }
-        }
+        if( !IsValid( player ) )
+            continue
+
+        Remote_CallFunction_Replay( player, "ServerCallback_CTF_AddPointIcon", IMCPoint.pole, MILITIAPoint.pole, player.GetTeam() )
     }
 }
 
 void function CustomHighlight(entity e, int r, int g, int b)
 {
     e.Highlight_ShowInside( 1.0 )
-	e.Highlight_ShowOutline( 1.0 )
+    e.Highlight_ShowOutline( 1.0 )
     e.Highlight_SetFunctions( 0, 114, true, 125, 2.0, 2, false )
     e.Highlight_SetParam( 0, 0, <r, g, b> )
 }
@@ -804,12 +811,12 @@ void function PlayerPickedUpFlag(entity ent)
     if(ent.GetTeam() == TEAM_IMC)
     {
         int AttachID = ent.LookupAttachment( "CHESTFOCUS" )
-	    IMCPoint.trailfx = StartParticleEffectOnEntity_ReturnEntity( ent, GetParticleSystemIndex( $"P_ar_holopilot_trail" ), FX_PATTACH_ABSORIGIN_FOLLOW, AttachID )
+        IMCPoint.trailfx = StartParticleEffectOnEntity_ReturnEntity( ent, GetParticleSystemIndex( $"P_ar_holopilot_trail" ), FX_PATTACH_ABSORIGIN_FOLLOW, AttachID )
     }
     else
     {
         int AttachID = ent.LookupAttachment( "CHESTFOCUS" )
-	    MILITIAPoint.trailfx = StartParticleEffectOnEntity_ReturnEntity( ent, GetParticleSystemIndex( $"P_ar_holopilot_trail" ), FX_PATTACH_ABSORIGIN_FOLLOW, AttachID )
+        MILITIAPoint.trailfx = StartParticleEffectOnEntity_ReturnEntity( ent, GetParticleSystemIndex( $"P_ar_holopilot_trail" ), FX_PATTACH_ABSORIGIN_FOLLOW, AttachID )
     }
     TakeWeaponsForFlagCarrier( ent )
     Remote_CallFunction_Replay(ent, "ServerCallback_CTF_CustomMessages", ent, eCTFMessage.PickedUpFlag)
@@ -827,7 +834,7 @@ void function PlayerDroppedFlag(entity ent)
         if(IsValid(IMCPoint.trailfx))
             IMCPoint.trailfx.Destroy()
     }
-    else
+    else // TEAM_MILITIA
     {
         if(IsValid(MILITIAPoint.trailfx))
             MILITIAPoint.trailfx.Destroy()
@@ -864,14 +871,20 @@ void function PickUpFlag(entity ent, int team, CTFPoint teamflagpoint)
     PlayerPickedUpFlag(ent)
 
     array<entity> teamplayers = GetPlayerArrayOfTeam( team )
-	foreach ( player in teamplayers )
+    foreach ( player in teamplayers )
     {
+        if( !IsValid( player ) )
+            continue
+
         Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", enemyteam, eCTFFlag.Escort)
     }
 
     array<entity> enemyplayers = GetPlayerArrayOfTeam( enemyteam )
-	foreach ( player in enemyplayers )
+    foreach ( player in enemyplayers )
     {
+        if( !IsValid( player ) )
+            continue
+
         Remote_CallFunction_Replay(player, "ServerCallback_CTF_CustomMessages", player, eCTFMessage.EnemyPickedUpFlag)
         Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", enemyteam, eCTFFlag.Attack)
     }
@@ -897,19 +910,28 @@ void function CaptureFlag(entity ent, int team, CTFPoint teamflagpoint)
 
     foreach(player in GetPlayerArray())
     {
+        if( !IsValid( player ) )
+            continue
+
         Remote_CallFunction_Replay(player, "ServerCallback_CTF_PointCaptured", CTF.IMCPoints, CTF.MILITIAPoints)
     }
 
     array<entity> teamplayers = GetPlayerArrayOfTeam( team )
-	foreach ( player in teamplayers )
+    foreach ( player in teamplayers )
     {
+        if( !IsValid( player ) )
+            continue
+
         Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", enemyteam, eCTFFlag.Capture)
         Remote_CallFunction_Replay(player, "ServerCallback_CTF_FlagCaptured", teamflagpoint.holdingplayer, eCTFMessage.PickedUpFlag)
     }
 
     array<entity> enemyplayers = GetPlayerArrayOfTeam( enemyteam )
-	foreach ( player in enemyplayers )
+    foreach ( player in enemyplayers )
     {
+        if( !IsValid( player ) )
+            continue
+
         Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", enemyteam, eCTFFlag.Defend)
         Remote_CallFunction_Replay(player, "ServerCallback_CTF_FlagCaptured", teamflagpoint.holdingplayer, eCTFMessage.EnemyPickedUpFlag)
     }
@@ -933,6 +955,9 @@ void function CaptureFlag(entity ent, int team, CTFPoint teamflagpoint)
     {
         foreach( entity player in GetPlayerArray() )
         {
+            if( !IsValid( player ) )
+                continue
+
             thread EmitSoundOnEntityOnlyToPlayer( player, player, "diag_ap_aiNotify_winnerFound" )
         }
         file.ctfState = eCTFState.WINNER_DECIDED
@@ -941,7 +966,7 @@ void function CaptureFlag(entity ent, int team, CTFPoint teamflagpoint)
 
 void function IMCPoint_Trigger( entity trigger, entity ent )
 {
-	if ( ent.IsPlayer() && IsValid(ent))
+    if ( ent.IsPlayer() && IsValid( ent ) )
     {
         if (ent.GetTeam() != TEAM_IMC)
         {
@@ -966,7 +991,7 @@ void function IMCPoint_Trigger( entity trigger, entity ent )
 
 void function MILITIA_Point_Trigger( entity trigger, entity ent )
 {
-	if ( ent.IsPlayer() && IsValid(ent))
+    if ( ent.IsPlayer() && IsValid(ent))
     {
         if (ent.GetTeam() != TEAM_MILITIA)
         {
@@ -989,7 +1014,7 @@ void function MILITIA_Point_Trigger( entity trigger, entity ent )
     }
 }
 
-//Purpose: Take weapons from player and give ctf dataknife
+// purpose: Take weapons from player and give ctf dataknife
 void function TakeWeaponsForFlagCarrier(entity player)
 {
     TakeAllWeapons(player)
@@ -998,7 +1023,7 @@ void function TakeWeaponsForFlagCarrier(entity player)
     player.SetActiveWeaponBySlot(eActiveInventorySlot.mainHand, WEAPON_INVENTORY_SLOT_PRIMARY_2)
 }
 
-//Purpose: Give player their weapons back
+// purpose: Give player their weapons back
 void function GiveBackWeapons(entity player)
 {
     TakeAllWeapons(player)
@@ -1014,10 +1039,10 @@ void function GiveBackWeapons(entity player)
     else
     {
         ItemFlavor character = LoadoutSlot_WaitForItemFlavor( ToEHI( player ), Loadout_CharacterClass() )
-	    ItemFlavor ultiamteAbility = CharacterClass_GetUltimateAbility( character )
+        ItemFlavor ultiamteAbility = CharacterClass_GetUltimateAbility( character )
         ItemFlavor tacticalAbility = CharacterClass_GetTacticalAbility( character )
         player.GiveOffhandWeapon(CharacterAbility_GetWeaponClassname(tacticalAbility), OFFHAND_TACTICAL, [] )
-	    player.GiveOffhandWeapon( CharacterAbility_GetWeaponClassname( ultiamteAbility ), OFFHAND_ULTIMATE, [] )
+        player.GiveOffhandWeapon( CharacterAbility_GetWeaponClassname( ultiamteAbility ), OFFHAND_ULTIMATE, [] )
     }
 
     player.TakeOffhandWeapon(OFFHAND_MELEE)
@@ -1025,7 +1050,7 @@ void function GiveBackWeapons(entity player)
     player.SetActiveWeaponBySlot(eActiveInventorySlot.mainHand, WEAPON_INVENTORY_SLOT_PRIMARY_0)
 }
 
-//Purpose: OnPlayerConnected Callback
+// purpose: OnPlayerConnected Callback
 void function _OnPlayerConnected(entity player)
 {
     if(!IsValid(player)) return
@@ -1069,7 +1094,7 @@ void function _OnPlayerConnected(entity player)
     }
 }
 
-//Purpose: OnPlayerDisconnected Callback
+// purpose: OnPlayerDisconnected Callback
 void function _OnPlayerDisconnected(entity player)
 {
     //Only if the flag is picked up
@@ -1112,14 +1137,20 @@ void function MILITIA_PoleReturn_Trigger( entity trigger, entity ent )
             MILITIAPoint.dropped = false
 
             array<entity> teamplayers = GetPlayerArrayOfTeam( TEAM_IMC )
-	        foreach ( player in teamplayers )
+            foreach ( player in teamplayers )
             {
+                if( !IsValid( player ) )
+                    continue
+
                 Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_MILITIA, eCTFFlag.Escort)
             }
 
             array<entity> enemyplayers = GetPlayerArrayOfTeam( TEAM_MILITIA )
-	        foreach ( player in enemyplayers )
+            foreach ( player in enemyplayers )
             {
+                if( !IsValid( player ) )
+                    continue
+
                 Remote_CallFunction_Replay(player, "ServerCallback_CTF_CustomMessages", player, eCTFMessage.EnemyPickedUpFlag)
                 Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_MILITIA, eCTFFlag.Attack)
             }
@@ -1160,14 +1191,20 @@ void function IMC_PoleReturn_Trigger( entity trigger, entity ent)
             IMCPoint.dropped = false
 
             array<entity> teamplayers = GetPlayerArrayOfTeam( TEAM_MILITIA )
-	        foreach ( player in teamplayers )
+            foreach ( player in teamplayers )
             {
+                if( !IsValid( player ) )
+                    continue
+
                 Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_IMC, eCTFFlag.Escort)
             }
 
             array<entity> enemyplayers = GetPlayerArrayOfTeam( TEAM_IMC )
-	        foreach ( player in enemyplayers )
+            foreach ( player in enemyplayers )
             {
+                if( !IsValid( player ) )
+                    continue
+
                 Remote_CallFunction_Replay(player, "ServerCallback_CTF_CustomMessages", player, eCTFMessage.EnemyPickedUpFlag)
                 Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_IMC, eCTFFlag.Attack)
             }
@@ -1222,14 +1259,20 @@ void function StartFlagReturn(entity player, int team, CTFPoint teamflagpoint)
         teamflagpoint.trigger.SearchForNewTouchingEntity()
 
         array<entity> enemyplayers = GetPlayerArrayOfTeam( enemyteam )
-	    foreach ( players in enemyplayers )
+        foreach ( players in enemyplayers )
         {
+            if( !IsValid( players ) )
+                continue
+
             Remote_CallFunction_Replay(players, "ServerCallback_CTF_SetPointIconHint", team, eCTFFlag.Capture)
         }
 
         array<entity> teamplayers = GetPlayerArrayOfTeam( team )
-	    foreach ( players in teamplayers )
+        foreach ( players in teamplayers )
         {
+            if( !IsValid( players ) )
+                continue
+
             Remote_CallFunction_Replay(players, "ServerCallback_CTF_CustomMessages", players, eCTFMessage.TeamReturnedFlag)
             Remote_CallFunction_Replay(players, "ServerCallback_CTF_SetPointIconHint", team, eCTFFlag.Defend)
         }
@@ -1261,7 +1304,7 @@ void function PlayerDiedWithFlag(entity victim, int team, CTFPoint teamflagpoint
             undermap = 1000
             break
         case "mp_rr_canyonlands_mu1":
-	    case "mp_rr_canyonlands_mu1_night":
+        case "mp_rr_canyonlands_mu1_night":
         case "mp_rr_canyonlands_64k_x_64k":
             undermap = 1000
             break
@@ -1289,13 +1332,16 @@ void function PlayerDiedWithFlag(entity victim, int team, CTFPoint teamflagpoint
     teamflagpoint.pole.SetOrigin(OriginToGround( teamflagpoint.pole.GetOrigin() ))
 
     array<entity> enemyplayers = GetPlayerArrayOfTeam( enemyteam )
-	foreach ( player in enemyplayers )
+    foreach ( player in enemyplayers )
     {
+        if( !IsValid( player ) )
+            continue
+
         Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_IMC, eCTFFlag.Capture)
     }
 
     array<entity> teamplayers = GetPlayerArrayOfTeam( team )
-	foreach ( player in teamplayers )
+    foreach ( player in teamplayers )
     {
         Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", team, eCTFFlag.Return)
     }
@@ -1326,17 +1372,17 @@ void function PlayerDiedWithFlag(entity victim, int team, CTFPoint teamflagpoint
     {
         //Create the recapture trigger
         teamflagpoint.returntrigger = CreateEntity( "trigger_cylinder" )
-	    teamflagpoint.returntrigger.SetRadius( 100 )
-	    teamflagpoint.returntrigger.SetAboveHeight( 200 )
-	    teamflagpoint.returntrigger.SetBelowHeight( 200 )
-	    teamflagpoint.returntrigger.SetOrigin( teamflagpoint.pole.GetOrigin() )
+        teamflagpoint.returntrigger.SetRadius( 100 )
+        teamflagpoint.returntrigger.SetAboveHeight( 200 )
+        teamflagpoint.returntrigger.SetBelowHeight( 200 )
+        teamflagpoint.returntrigger.SetOrigin( teamflagpoint.pole.GetOrigin() )
 
         if(team == TEAM_IMC)
             teamflagpoint.returntrigger.SetEnterCallback( IMC_PoleReturn_Trigger )
         else
             teamflagpoint.returntrigger.SetEnterCallback( MILITIA_PoleReturn_Trigger )
 
-	    DispatchSpawn( teamflagpoint.returntrigger )
+        DispatchSpawn( teamflagpoint.returntrigger )
     }
 }
 
@@ -1409,8 +1455,8 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
             {
                 Remote_CallFunction_NonReplay(attacker, "ServerCallback_CTF_UpdatePlayerStats", eCTFStats.Kills)
                 int invscore = attacker.GetPlayerNetInt( "kills" )
-			    invscore++;
-			    attacker.SetPlayerNetInt( "kills", invscore )
+                invscore++;
+                attacker.SetPlayerNetInt( "kills", invscore )
 
                 if(attacker != IMCPoint.holdingplayer && attacker != MILITIAPoint.holdingplayer)
                     PlayerRestoreHP(attacker, 100, CTF_Equipment_GetDefaultShieldHP())
@@ -1497,7 +1543,7 @@ entity function CreateBubbleBoundary(LocationSettingsCTF location)
     CTF.bubbleRadius = bubbleRadius
 
     entity bubbleShield = CreateEntity( "prop_dynamic" )
-	bubbleShield.SetValueForModelKey( BUBBLE_BUNKER_SHIELD_COLLISION_MODEL )
+    bubbleShield.SetValueForModelKey( BUBBLE_BUNKER_SHIELD_COLLISION_MODEL )
     bubbleShield.SetOrigin(bubbleCenter)
     bubbleShield.SetModelScale(bubbleRadius / 235)
     bubbleShield.kv.CollisionGroup = 0
@@ -1524,7 +1570,7 @@ void function MonitorBubbleBoundary(entity bubbleShield, vector bubbleCenter, fl
             if(!IsValid(player)) continue
             if(Distance(player.GetOrigin(), bubbleCenter) > bubbleRadius)
             {
-				Remote_CallFunction_Replay( player, "ServerCallback_PlayerTookDamage", 0, 0, 0, 0, DF_BYPASS_SHIELD | DF_DOOMED_HEALTH_LOSS, eDamageSourceId.deathField, null )
+                Remote_CallFunction_Replay( player, "ServerCallback_PlayerTookDamage", 0, 0, 0, 0, DF_BYPASS_SHIELD | DF_DOOMED_HEALTH_LOSS, eDamageSourceId.deathField, null )
                 player.TakeDamage( int( CTF_GetOOBDamagePercent() / 100 * float( player.GetMaxHealth() ) ), null, null, { scriptType = DF_BYPASS_SHIELD | DF_DOOMED_HEALTH_LOSS, damageSourceId = eDamageSourceId.deathField } )
             }
         }
