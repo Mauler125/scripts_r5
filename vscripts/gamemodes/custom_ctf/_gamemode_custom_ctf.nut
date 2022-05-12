@@ -906,14 +906,14 @@ void function IMCPoint_Trigger( entity trigger, entity ent )
 	                foreach ( player in teamplayers )
                     {
                         Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_MILITIA, eCTFFlag.Capture)
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_FlagCaptured", MILITIAPoint.holdingplayer, 0)
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_FlagCaptured", MILITIAPoint.holdingplayer, eCTFMessage.PickedUpFlag)
                     }
 
                     array<entity> enemyplayers = GetPlayerArrayOfTeam( TEAM_MILITIA )
 	                foreach ( player in enemyplayers )
                     {
                         Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_MILITIA, eCTFFlag.Defend)
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_FlagCaptured", MILITIAPoint.holdingplayer, 1)
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_FlagCaptured", MILITIAPoint.holdingplayer, eCTFMessage.EnemyPickedUpFlag)
                     }
 
                     if(CTF.IMCPoints >= CTF_SCORE_GOAL_TO_WIN)
@@ -1006,14 +1006,14 @@ void function MILITIA_Point_Trigger( entity trigger, entity ent )
 	                foreach ( player in teamplayers )
                     {
                         Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_IMC, eCTFFlag.Capture)
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_FlagCaptured", IMCPoint.holdingplayer, 0)
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_FlagCaptured", IMCPoint.holdingplayer, eCTFMessage.PickedUpFlag)
                     }
 
                     array<entity> enemyplayers = GetPlayerArrayOfTeam( TEAM_IMC )
 	                foreach ( player in enemyplayers )
                     {
                         Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_IMC, eCTFFlag.Defend)
-                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_FlagCaptured", IMCPoint.holdingplayer, 1)
+                        Remote_CallFunction_Replay(player, "ServerCallback_CTF_FlagCaptured", IMCPoint.holdingplayer, eCTFMessage.EnemyPickedUpFlag)
                     }
 
                     if(CTF.MILITIAPoints >= CTF_SCORE_GOAL_TO_WIN)
@@ -1317,7 +1317,7 @@ void function StartMILFlagReturnTimer(entity player)
 
     float starttime = Time()
     float endtime = Time() + 10
-    Remote_CallFunction_Replay(player, "ServerCallback_CTF_RecaptureFlag", TEAM_MILITIA, starttime, endtime)
+    Remote_CallFunction_Replay(player, "ServerCallback_CTF_RecaptureFlag", TEAM_MILITIA, starttime, endtime, true)
 
     while(Distance(player.GetOrigin(), MILITIAPoint.pole.GetOrigin()) < 150 && IsAlive(player) && returnsuccess == false)
     {
@@ -1358,7 +1358,7 @@ void function StartMILFlagReturnTimer(entity player)
     {
         MILITIAPoint.isbeingreturned = false
         MILITIAPoint.beingreturnedby = null
-        Remote_CallFunction_Replay(player, "ServerCallback_CTF_EndRecaptureFlag")
+        Remote_CallFunction_Replay(player, "ServerCallback_CTF_RecaptureFlag", 0, 0, 0, false)
         MILITIAPoint.returntrigger.SearchForNewTouchingEntity()
     }
 }
@@ -1417,7 +1417,7 @@ void function StartIMCFlagReturnTimer(entity player)
 
     float starttime = Time()
     float endtime = Time() + 10
-    Remote_CallFunction_Replay(player, "ServerCallback_CTF_RecaptureFlag", TEAM_IMC, starttime, endtime)
+    Remote_CallFunction_Replay(player, "ServerCallback_CTF_RecaptureFlag", TEAM_IMC, starttime, endtime, true)
 
     while(Distance(player.GetOrigin(), IMCPoint.pole.GetOrigin()) < 150 && IsAlive(player) && returnsuccess == false)
     {
@@ -1458,7 +1458,7 @@ void function StartIMCFlagReturnTimer(entity player)
     {
         IMCPoint.isbeingreturned = false
         IMCPoint.beingreturnedby = null
-        Remote_CallFunction_Replay(player, "ServerCallback_CTF_EndRecaptureFlag")
+        Remote_CallFunction_Replay(player, "ServerCallback_CTF_RecaptureFlag", 0, 0, 0, false)
         IMCPoint.returntrigger.SearchForNewTouchingEntity()
     }
 }

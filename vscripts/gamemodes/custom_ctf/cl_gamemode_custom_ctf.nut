@@ -17,7 +17,6 @@ global function ServerCallback_CTF_SetSelectedLocation
 global function ServerCallback_CTF_SetObjectiveText
 global function ServerCallback_CTF_AddPointIcon
 global function ServerCallback_CTF_RecaptureFlag
-global function ServerCallback_CTF_EndRecaptureFlag
 global function ServerCallback_CTF_ResetFlagIcons
 global function ServerCallback_CTF_SetPointIconHint
 global function ServerCallback_CTF_SetCorrectTime
@@ -109,23 +108,25 @@ void function ServerCallback_CTF_SetSelectedLocation(int sel)
     file.selectedLocation = file.locationSettings[sel]
 }
 
-void function ServerCallback_CTF_RecaptureFlag(int team, float starttime, float endtime)
+void function ServerCallback_CTF_RecaptureFlag(int team, float starttime, float endtime, bool start)
 {
-    FlagReturnRUI = CreateFullscreenRui( $"ui/health_use_progress.rpak" )
-    RuiSetBool( FlagReturnRUI, "isVisible", true )
-	RuiSetImage( FlagReturnRUI, "icon", $"rui/hud/gametype_icons/survival/survey_beacon_only_pathfinder" )
-	RuiSetGameTime( FlagReturnRUI, "startTime", starttime )
-	RuiSetGameTime( FlagReturnRUI, "endTime", endtime )
-    RuiSetString( FlagReturnRUI, "hintKeyboardMouse", "Returning Flag To Base" )
-	RuiSetString( FlagReturnRUI, "hintController", "Returning Flag To Base" )
-}
-
-void function ServerCallback_CTF_EndRecaptureFlag()
-{
-    if (FlagReturnRUI != null)
+    if(start)
     {
-        try { RuiDestroy(FlagReturnRUI) } catch (pe1){ }
-        FlagReturnRUI = null
+        FlagReturnRUI = CreateFullscreenRui( $"ui/health_use_progress.rpak" )
+        RuiSetBool( FlagReturnRUI, "isVisible", true )
+	    RuiSetImage( FlagReturnRUI, "icon", $"rui/hud/gametype_icons/survival/survey_beacon_only_pathfinder" )
+	    RuiSetGameTime( FlagReturnRUI, "startTime", starttime )
+	    RuiSetGameTime( FlagReturnRUI, "endTime", endtime )
+        RuiSetString( FlagReturnRUI, "hintKeyboardMouse", "Returning Flag To Base" )
+	    RuiSetString( FlagReturnRUI, "hintController", "Returning Flag To Base" )
+    }
+    else
+    {
+        if (FlagReturnRUI != null)
+        {
+            try { RuiDestroy(FlagReturnRUI) } catch (pe1){ }
+            FlagReturnRUI = null
+        }
     }
 }
 
@@ -390,18 +391,18 @@ void function ServerCallback_CTF_TeamText(int team)
 
 void function ServerCallback_CTF_FlagCaptured(entity player, int messageid)
 {
-    AnnouncementData announcement
-
+    string message
     switch(messageid)
     {
-        case 0:
-            announcement = Announcement_Create( "Your team has captured the enemy flag!" )
+        case eCTFMessage.PickedUpFlag:
+            message = "Your team has captured the enemy flag!"
             break
-        case 1:
-            announcement = Announcement_Create( "Enemy team has captured your flag!" )
+        case eCTFMessage.EnemyPickedUpFlag:
+            message = "Enemy team has captured your flag!"
             break
     }
 
+    AnnouncementData announcement = Announcement_Create( message )
 	Announcement_SetStyle( announcement, ANNOUNCEMENT_STYLE_SWEEP )
 	Announcement_SetPurge( announcement, true )
 	Announcement_SetOptionalTextArgsArray( announcement, [ "true" ] )
@@ -412,18 +413,17 @@ void function ServerCallback_CTF_FlagCaptured(entity player, int messageid)
 
 void function ServerCallback_CTF_CustomMessages(entity player, int messageid)
 {
-    string message;
-    if (messageid == eCTFMessage.PickedUpFlag)
+    string message
+    switch(messageid)
     {
-        message = "You picked up the flag"
-    }
-    else if (messageid == eCTFMessage.EnemyPickedUpFlag)
-    {
-        message = "Enemy team picked up your flag"
-    }
-    else if (messageid == eCTFMessage.TeamReturnedFlag)
-    {
-        message = "Your teams flag has been returned to base"
+        case eCTFMessage.PickedUpFlag:
+            message = "You picked up the flag"
+            break
+        case eCTFMessage.EnemyPickedUpFlag:
+            message = "Enemy team picked up your flag"
+            break
+        case eCTFMessage.TeamReturnedFlag:
+            message = "Your teams flag has been returned to base"
     }
 
     AnnouncementData announcement = CreateAnnouncementMessageQuick( player, message, "", <100, 0, 0>, $"rui/hud/gametype_icons/survival/survey_beacon_only_pathfinder" )
@@ -465,7 +465,9 @@ void function ServerCallback_CTF_OpenCTFRespawnMenu(vector campos, int IMCscore,
             RunUIScript( "UpdateKillerName", "Mysterious Forces")
     }
     else
+    {
         RunUIScript( "UpdateKillerName", "Mysterious Forces")
+    }
 
     RunUIScript("SetCTFScores", IMCscore, MILscore, CTF_SCORE_GOAL_TO_WIN)
 
