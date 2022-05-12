@@ -56,12 +56,6 @@ struct {
     int teamwon
 } file;
 
-struct {
-    int CTFFlagCaptures = 0
-	int CTFKills = 0
-	int CTFDeaths = 0
-} PlayerStats;
-
 array<entity> cleanupEnts
 array<var> overHeadRuis
 
