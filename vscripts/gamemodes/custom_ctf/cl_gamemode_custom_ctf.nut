@@ -841,7 +841,7 @@ void function ShowCTFVictorySequence()
 
 	VictoryPlatformModelData victoryPlatformModelData = GetVictorySequencePlatformModel()
 	entity platformModel
-	int maxPlayersToShow = 16
+	int maxPlayersToShow = 8
 
 	if ( victoryPlatformModelData.isSet )
 	{
@@ -934,8 +934,8 @@ void function ShowCTFVictorySequence()
         }
 
 		//Setup camera pos and angles
-		vector camera_start_pos = OffsetPointRelativeToVector( file.victorySequencePosition, <0, 1000, 500>, AnglesToForward( file.victorySequenceAngles ) )
-		vector camera_end_pos   = OffsetPointRelativeToVector( file.victorySequencePosition, <0, 400, 200>, AnglesToForward( file.victorySequenceAngles ) )
+		vector camera_start_pos = OffsetPointRelativeToVector( file.victorySequencePosition, <0, 1000, 200>, AnglesToForward( file.victorySequenceAngles ) )
+		vector camera_end_pos   = OffsetPointRelativeToVector( file.victorySequencePosition, <0, 150, 0>, AnglesToForward( file.victorySequenceAngles ) )
 		vector camera_focus_pos = OffsetPointRelativeToVector( file.victorySequencePosition, <0, 0, 36>, AnglesToForward( file.victorySequenceAngles ) )
 		vector camera_start_angles = VectorToAngles( camera_focus_pos - camera_start_pos )
 		vector camera_end_angles   = VectorToAngles( camera_focus_pos - camera_end_pos )
@@ -949,8 +949,8 @@ void function ShowCTFVictorySequence()
 		cleanupEnts.append( camera )
 
 		//Move camera to end pos
-		cameraMover.NonPhysicsMoveTo( camera_end_pos, 6.5, 0.0, 6.5 / 2.0 )
-		cameraMover.NonPhysicsRotateTo( camera_end_angles, 6.5, 0.0, 6.5 / 2.0 )
+		cameraMover.NonPhysicsMoveTo( camera_end_pos, 2.5, 0.0, 2.5 / 2.0 )
+		cameraMover.NonPhysicsRotateTo( camera_end_angles, 2.5, 0.0, 2.5 / 2.0 )
 		cleanupEnts.append( cameraMover )
 	}
 }
@@ -984,7 +984,7 @@ vector function GetVictorySquadFormationPosition( vector mainPosition, vector an
 	if ( index == 0 )
 		return mainPosition - <0, 0, 8>
 
-	float offset_side = 90.0
+	float offset_side = 80.0
 	float offset_back = -60.0
 
 	int countBack = (index + 1) / 2
