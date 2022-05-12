@@ -452,6 +452,8 @@ void function ServerCallback_CTF_OpenCTFRespawnMenu(vector campos, int IMCscore,
     entity localplayer = GetLocalClientPlayer()
     array<entity> teamplayers = GetPlayerArrayOfTeam( localplayer.GetTeam() )
 
+    HealthHUD_StopUpdate( localplayer)
+
     RunUIScript("OpenCTFRespawnMenu", file.ctfclasses[0].name, file.ctfclasses[1].name, file.ctfclasses[2].name, file.ctfclasses[3].name, file.ctfclasses[4].name)
     RunUIScript("UpdateSelectedClass", selectedclassid, file.ctfclasses[selectedclassid].primary, file.ctfclasses[selectedclassid].secondary, file.ctfclasses[selectedclassid].tactical, file.ctfclasses[selectedclassid].ult, USE_LEGEND_ABILITYS)
 
@@ -558,6 +560,7 @@ void function waitrespawn(entity player)
         wait 0.6
 
         player.ClearMenuCameraEntity()
+        HealthHUD_Update( player )
     }
 
     try { Deathcam.ClearParent(); Deathcam.Destroy(); cameraMover.Destroy() } catch (exceptio2n){ }

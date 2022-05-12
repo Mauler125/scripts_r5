@@ -115,7 +115,7 @@ bool function ClientCommand_GetCorrectTimeFromServer(entity player, array<string
 {
     if( !IsValid( player ) )
         return false
-    
+
     Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetCorrectTime", ServerTimer.seconds)
     return true
 }
@@ -253,7 +253,7 @@ void function VotingPhase()
     {
         if( !IsValid( player ) )
             continue
-        
+
         //Reset client rui score
         Remote_CallFunction_Replay(player, "ServerCallback_CTF_PointCaptured", CTF.IMCPoints, CTF.MILITIAPoints)
 
@@ -281,9 +281,9 @@ void function VotingPhase()
     //Set the next location client side for each player
     foreach(player in GetPlayerArray())
     {
-        if( !IsVaild( player ) )
+        if( !IsValid( player ) )
             continue
-        
+
         Remote_CallFunction_NonReplay(player, "ServerCallback_CTF_SetSelectedLocation", CTF.mappicked)
     }
 }
@@ -545,7 +545,7 @@ void function StartRound()
                     {
                         foreach(player in GetPlayerArray())
                         {
-                            if( !IsVaild( player ) )
+                            if( !IsValid( player ) )
                                 continue
 
                             Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", eCTFScreen.TiedScreen, eCTFScreen.NotUsed, 254, eCTFScreen.NotUsed)
@@ -604,7 +604,7 @@ void function StartRound()
                 {
                     if( !IsValid( player ) )
                         continue
-                    
+
                     Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", eCTFScreen.NextRoundScreen, eCTFScreen.NotUsed, eCTFScreen.NotUsed, eCTFScreen.NotUsed)
                 }
 
