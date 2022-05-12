@@ -16,6 +16,8 @@ struct
 	bool legendspanelopen = false
 	bool setupLegendCallbacks = false
 	bool defaultabilitys
+	ItemFlavor& oldcharacter
+	ItemFlavor& newcharacter
 } file
 
 struct Abilitys
@@ -49,6 +51,8 @@ void function OpenCTFRespawnMenu(string classname1, string classname2, string cl
 	ItemFlavor character = LoadoutSlot_WaitForItemFlavor( ToEHI( player ), Loadout_CharacterClass() )
 	asset classIcon      = CharacterClass_GetGalleryPortrait( character )
 
+	file.oldcharacter = character
+
 	RuiSetImage(Hud_GetRui(Hud_GetChild(file.menu, "PlayerImage")), "basicImage", classIcon)
 	RuiSetString( Hud_GetRui( Hud_GetChild( file.menu, "ChangeLegend" )), "buttonText", "Change Legend" )
 
@@ -57,6 +61,9 @@ void function OpenCTFRespawnMenu(string classname1, string classname2, string cl
 
 void function CloseCTFRespawnMenu()
 {
+	if(file.newcharacter != file.oldcharacter)
+		DEV_RequestSetItemFlavorLoadoutSlot( LocalClientEHI(), Loadout_CharacterClass(), file.newcharacter )
+
 	ToggleLegendsUI(false)
 	CloseAllMenus()
 }
@@ -94,7 +101,11 @@ void function SetupLegendButtonsUI()
 	}
 
 	if (!file.setupLegendCallbacks)
+	{
+		file.oldcharacter = LoadoutSlot_WaitForItemFlavor( ToEHI( GetLocalClientPlayer() ), Loadout_CharacterClass() )
+		file.newcharacter = LoadoutSlot_WaitForItemFlavor( ToEHI( GetLocalClientPlayer() ), Loadout_CharacterClass() )
 		SetupLegendButtonsCallBacks(characters)
+	}
 }
 
 //Cant do this in init cause you need to be in a map in to get item flavors
@@ -105,7 +116,7 @@ void function SetupLegendButtonsCallBacks(array<ItemFlavor> characters)
 	{
 		AddButtonEventHandler( Hud_GetChild( file.menu, "CharButton" + i ), UIE_CLICK, void function( var unused ) : ( character ) {
 			ClientCommand( "Sur_UpdateCharacterLock 0" )
-			DEV_RequestSetItemFlavorLoadoutSlot( LocalClientEHI(), Loadout_CharacterClass(), character )
+			file.newcharacter = character
 			ToggleLegendsUI(false)
 			RuiSetImage(Hud_GetRui(Hud_GetChild(file.menu, "PlayerImage")), "basicImage", CharacterClass_GetGalleryPortrait( character ))
 
