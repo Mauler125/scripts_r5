@@ -1088,6 +1088,7 @@ void function _OnPlayerConnected(entity player)
         Remote_CallFunction_NonReplay(player, "ServerCallback_CTF_DoAnnouncement", 5, eCTFAnnounce.ROUND_START, CTF.roundstarttime)
         Remote_CallFunction_Replay(player, "ServerCallback_CTF_AddPointIcon", IMCPoint.pole, MILITIAPoint.pole, player.GetTeam())
         Remote_CallFunction_Replay(player, "ServerCallback_CTF_TeamText", player.GetTeam())
+        Remote_CallFunction_NonReplay(player, "ServerCallback_CTF_SetSelectedLocation", CTF.mappicked)
         break
     default:
         break
