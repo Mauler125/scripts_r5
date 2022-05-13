@@ -250,6 +250,11 @@ void function MakeScoreRUI()
         RuiSetString( file.scoreRui, "messageText", "Team IMC: 0  ||  Team MIL: 0" )
         return
     }
+
+    var compass = GetCompassRui()
+    if ( IsValid( compass ) )
+        RuiDestroy( compass )
+
     clGlobal.levelEnt.EndSignal( "CloseScoreRUI" )
 
     UISize screenSize = GetScreenSize()
