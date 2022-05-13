@@ -14,7 +14,7 @@ global function CTF_GetOOBDamagePercent
 global int CTF_SCORE_GOAL_TO_WIN
 global int CTF_ROUNDTIME
 global const int NUMBER_OF_MAP_SLOTS = 4
-global const int NUMBER_OF_CLASS_SLOTS = 5
+global const int NUMBER_OF_CLASS_SLOTS = 6
 global bool GIVE_ALT_AFTER_CAPTURE
 global bool USE_LEGEND_ABILITYS
 global int CTF_RESPAWN_TIMER

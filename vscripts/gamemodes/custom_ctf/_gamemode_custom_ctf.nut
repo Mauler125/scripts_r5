@@ -1282,7 +1282,10 @@ void function StartFlagReturn(entity player, int team, CTFPoint teamflagpoint)
         teamflagpoint.isbeingreturned = false
         teamflagpoint.beingreturnedby = null
         Remote_CallFunction_Replay(player, "ServerCallback_CTF_RecaptureFlag", 0, 0, 0, false)
+
+        try {
         teamflagpoint.returntrigger.SearchForNewTouchingEntity()
+        } catch(stop) {}
     }
 }
 
