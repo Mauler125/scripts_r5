@@ -1,12 +1,11 @@
 // Credits
 // AyeZee#6969 -- ctf gamemode and ui
+// Rexx and IcePixelx -- Help with code improvments
 // sal#3261 -- base custom_tdm mode to work off
 // Retículo Endoplasmático#5955 -- giving me the ctf sound names
 // everyone else -- advice
 
-
-//Ok now, this code is not good and im sorry, im not a code wizard like rexx
-//But if it works dont fix it
+//TODO: Fix VoteMenu Stats
 
 global function _CustomCTF_Init
 global function _CTFRegisterLocation
