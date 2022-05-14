@@ -762,14 +762,14 @@ void function ServerCallback_CTF_UpdatePlayerStats(int id)
     switch(id)
     {
         case eCTFStats.Clear:
-            player.p.CTFCaptures = 0
-	        player.p.CTFKills = 0
+            GetEHIScriptStruct( player.GetEncodedEHandle() ).CTFCaptures = 0
+	        GetEHIScriptStruct( player.GetEncodedEHandle() ).CTFKills = 0
             break
         case eCTFStats.Captures:
-            player.p.CTFCaptures++
+            GetEHIScriptStruct( player.GetEncodedEHandle() ).CTFCaptures++
             break
         case eCTFStats.Kills:
-            player.p.CTFKills++
+            GetEHIScriptStruct( player.GetEncodedEHandle() ).CTFKills++
             break
     }
 }
@@ -863,9 +863,9 @@ void function ShowCTFVictorySequence()
 
 			RuiSetString(overheadRuiName, "playerName", playerName)
 			RuiTrackFloat3(overheadRuiName, "position", overheadNameEnt, RUI_TRACK_ABSORIGIN_FOLLOW)
-            RuiSetString(overheadRuiCaptures, "playerName", "Captures: " + FromEHI( data.eHandle ).p.CTFCaptures)
+            RuiSetString(overheadRuiCaptures, "playerName", "Captures: " + GetEHIScriptStruct( data.eHandle ).CTFCaptures)
 			RuiTrackFloat3(overheadRuiCaptures, "position", overheadCapturesEnt, RUI_TRACK_ABSORIGIN_FOLLOW)
-            RuiSetString(overheadRuiKills, "playerName", "Kills: " + FromEHI( data.eHandle ).p.CTFKills)
+            RuiSetString(overheadRuiKills, "playerName", "Kills: " + GetEHIScriptStruct( data.eHandle ).CTFKills)
 			RuiTrackFloat3( overheadRuiKills, "position", overheadKillsEnt, RUI_TRACK_ABSORIGIN_FOLLOW )
 
 			overHeadRuis.append( overheadRuiName )
