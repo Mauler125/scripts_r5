@@ -22,6 +22,7 @@ global function ServerCallback_CTF_SetPointIconHint
 global function ServerCallback_CTF_SetCorrectTime
 global function ServerCallback_CTF_UpdatePlayerStats
 global function ServerCallback_CTF_CheckUpdatePlayerLegend
+global function ServerCallback_CTF_PickedUpFlag
 // Voting
 global function ServerCallback_CTF_SetVoteMenuOpen
 global function ServerCallback_CTF_UpdateVotingMaps
@@ -43,6 +44,7 @@ struct {
     array<CTFClasses> ctfclasses
     var scoreRui
     var teamRui
+    var dropflagrui
 
 	vector victorySequencePosition = < 0, 0, 10000 >
 	vector victorySequenceAngles = < 0, 0, 0 >
@@ -81,7 +83,7 @@ int ClassID = 0
 void function Cl_CustomCTF_Init()
 {
     AddClientCallback_OnResolutionChanged( UpdateTimeLeftTimer )
-    RegisterConCommandTriggeredCallback( "weapon_inspect", OnInspectKeyPressed )
+    RegisterConCommandTriggeredCallback( "+use_alt", OnInspectKeyPressed )
 }
 
 void function OnInspectKeyPressed( entity localPlayer )
@@ -248,6 +250,48 @@ void function AddCaptureIconThread( entity prop, var rui )
 	)
 
 	WaitForever()
+}
+
+void function ServerCallback_CTF_PickedUpFlag(entity player, bool pickedup)
+{
+    switch(player.GetTeam())
+    {
+        case TEAM_IMC:
+            if(IMCpointicon == null)
+                break
+
+            if(pickedup)
+                RuiSetVisible( MILITIApointicon, false )
+            else
+                RuiSetVisible( MILITIApointicon, true )
+            break
+        case TEAM_MILITIA:
+            if(MILITIApointicon == null)
+                break
+
+            if(pickedup)
+                RuiSetVisible( IMCpointicon, false )
+            else
+                RuiSetVisible( IMCpointicon, true )
+            break
+    }
+
+    if(pickedup)
+    {
+        UISize screenSize = GetScreenSize()
+        var screenAlignmentTopo = RuiTopology_CreatePlane( <float( screenSize.width ) * 0.25, 0, 0>, <float( screenSize.width ), 0, 0>, <0, float( screenSize.height ) + 100, 0>, false )
+        file.dropflagrui = RuiCreate( $"ui/announcement_quick_right.rpak", screenAlignmentTopo, RUI_DRAW_HUD, RUI_SORT_SCREENFADE + 1 )
+
+        RuiSetGameTime( file.dropflagrui, "startTime", Time() )
+        RuiSetString( file.dropflagrui, "messageText", "Press %use_alt% to drop the flag" )
+        RuiSetFloat( file.dropflagrui, "duration", 9999999 )
+        RuiSetFloat3( file.dropflagrui, "eventColor", SrgbToLinear( <128, 188, 255> ) )
+    }
+    else
+    {
+        if(IsValid( file.dropflagrui ))
+            RuiDestroy( file.dropflagrui )
+    }
 }
 
 void function MakeScoreRUI()

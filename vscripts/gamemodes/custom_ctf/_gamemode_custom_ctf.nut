@@ -819,8 +819,7 @@ void function PlayerPickedUpFlag(entity ent)
 {
     CustomHighlight(ent, 0, 0, 1)
     Highlight_SetEnemyHighlightWithParam0( ent, "bloodhound_sonar", <0,0,1> )
-    //ent.SetShieldHealthMax( 0 )
-    //StatusEffect_AddEndless( ent, eStatusEffect.speed_boost, 0.1 )
+
     if(ent.GetTeam() == TEAM_IMC)
     {
         int AttachID = ent.LookupAttachment( "CHESTFOCUS" )
@@ -831,17 +830,31 @@ void function PlayerPickedUpFlag(entity ent)
         int AttachID = ent.LookupAttachment( "CHESTFOCUS" )
         MILITIAPoint.trailfx = StartParticleEffectOnEntity_ReturnEntity( ent, GetParticleSystemIndex( $"P_ar_holopilot_trail" ), FX_PATTACH_ABSORIGIN_FOLLOW, AttachID )
     }
-    TakeWeaponsForFlagCarrier( ent )
+
+    if(TAKE_WEAPONS_FROM_FLAG_CARRIER)
+        TakeWeaponsForFlagCarrier( ent )
+
+    if(GIVE_FLAG_CARRIER_SPEED_BOOST)
+        StatusEffect_AddEndless( ent, eStatusEffect.speed_boost, 0.1 )
+
+    Remote_CallFunction_Replay(ent, "ServerCallback_CTF_PickedUpFlag", ent, true)
+
     Remote_CallFunction_Replay(ent, "ServerCallback_CTF_CustomMessages", ent, eCTFMessage.PickedUpFlag)
 }
 
 void function PlayerDroppedFlag(entity ent)
 {
-    GiveBackWeapons(ent)
-    ClearCustomHighlight(ent)
-    Highlight_ClearEnemyHighlight(ent)
-    //ent.SetShieldHealthMax( CTF_Equipment_GetDefaultShieldHP() )
-    //StatusEffect_StopAllOfType( ent, eStatusEffect.speed_boost )
+    ClearCustomHighlight( ent )
+    Highlight_ClearEnemyHighlight( ent )
+
+    if(TAKE_WEAPONS_FROM_FLAG_CARRIER)
+        GiveBackWeapons( ent )
+
+    if(GIVE_FLAG_CARRIER_SPEED_BOOST)
+        StatusEffect_StopAllOfType( ent, eStatusEffect.speed_boost )
+
+    Remote_CallFunction_Replay(ent, "ServerCallback_CTF_PickedUpFlag", ent, false)
+
     if(ent.GetTeam() == TEAM_IMC)
     {
         if(IsValid(IMCPoint.trailfx))
@@ -1352,11 +1365,6 @@ void function PlayerDiedWithFlag(entity victim, int team, CTFPoint teamflagpoint
     //Play expand anim
     thread PlayAnim( teamflagpoint.pole, "prop_fence_expand", teamflagpoint.pole.GetOrigin(), teamflagpoint.pole.GetAngles() )
 
-    wait 0.8
-
-    teamflagpoint.pickedup = false
-    teamflagpoint.dropped = true
-
     array<entity> enemyplayers = GetPlayerArrayOfTeam( enemyteam )
     foreach ( player in enemyplayers )
     {
@@ -1371,6 +1379,11 @@ void function PlayerDiedWithFlag(entity victim, int team, CTFPoint teamflagpoint
     {
         Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", team, eCTFFlag.Return)
     }
+
+    wait 0.8
+
+    teamflagpoint.pickedup = false
+    teamflagpoint.dropped = true
 
     //Check for if the flag ends up under the map
     if(teamflagpoint.pole.GetOrigin().z > undermap)

@@ -18,6 +18,8 @@ global const int NUMBER_OF_CLASS_SLOTS = 6
 global bool GIVE_ALT_AFTER_CAPTURE
 global bool USE_LEGEND_ABILITYS
 global int CTF_RESPAWN_TIMER
+global bool TAKE_WEAPONS_FROM_FLAG_CARRIER
+global bool GIVE_FLAG_CARRIER_SPEED_BOOST
 
 //Custom Messages IDS
 global enum eCTFMessage
@@ -154,6 +156,8 @@ void function Sh_CustomCTF_Init()
     GIVE_ALT_AFTER_CAPTURE = GetCurrentPlaylistVarBool( "give_ult_after_capture", false )
     USE_LEGEND_ABILITYS = GetCurrentPlaylistVarBool( "use_legend_abilitys", false )
     CTF_RESPAWN_TIMER = GetCurrentPlaylistVarInt( "respawn_timer", 10 )
+    TAKE_WEAPONS_FROM_FLAG_CARRIER = GetCurrentPlaylistVarBool( "take_weapons_from_flag_carrier", false )
+    GIVE_FLAG_CARRIER_SPEED_BOOST = GetCurrentPlaylistVarBool( "give_flag_carrier_speed_boost", false )
 
     //Register Classes
     for(int i = 1; i < 6; i++ ) {
