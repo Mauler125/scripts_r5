@@ -86,8 +86,12 @@ void function _CustomCTF_Init()
 
     //Used for sending votes from client to server
     AddClientCommandCallback("VoteForMap", ClientCommand_VoteForMap)
+    //Used for setting players class
     AddClientCommandCallback("SetPlayerClass", ClientCommand_SetPlayerClass)
+    //Used for sync remaining time on resolution change
     AddClientCommandCallback("GetTimeFromServer", ClientCommand_GetCorrectTimeFromServer)
+    //Used for telling the server the player wants to drop the flag
+    AddClientCommandCallback("DropFlag", ClientCommand_DropFlag)
 
     thread RUNCTF()
 }
@@ -110,6 +114,16 @@ void function _CTFRegisterCTFClass(CTFClasses ctfclass)
 //             Client Commands             //
 //                                         //
 /////////////////////////////////////////////
+
+bool function ClientCommand_DropFlag(entity player, array<string> args)
+{
+    if( !IsValid( player ) )
+        return false
+
+    CheckPlayerForFlag(player)
+
+    return true
+}
 
 bool function ClientCommand_GetCorrectTimeFromServer(entity player, array<string> args)
 {
@@ -806,8 +820,8 @@ void function PlayerPickedUpFlag(entity ent)
 {
     CustomHighlight(ent, 0, 0, 1)
     Highlight_SetEnemyHighlightWithParam0( ent, "bloodhound_sonar", <0,0,1> )
-    ent.SetShieldHealthMax( 0 )
-    StatusEffect_AddEndless( ent, eStatusEffect.speed_boost, 0.1 )
+    //ent.SetShieldHealthMax( 0 )
+    //StatusEffect_AddEndless( ent, eStatusEffect.speed_boost, 0.1 )
     if(ent.GetTeam() == TEAM_IMC)
     {
         int AttachID = ent.LookupAttachment( "CHESTFOCUS" )
@@ -827,8 +841,8 @@ void function PlayerDroppedFlag(entity ent)
     GiveBackWeapons(ent)
     ClearCustomHighlight(ent)
     Highlight_ClearEnemyHighlight(ent)
-    ent.SetShieldHealthMax( CTF_Equipment_GetDefaultShieldHP() )
-    StatusEffect_StopAllOfType( ent, eStatusEffect.speed_boost )
+    //ent.SetShieldHealthMax( CTF_Equipment_GetDefaultShieldHP() )
+    //StatusEffect_StopAllOfType( ent, eStatusEffect.speed_boost )
     if(ent.GetTeam() == TEAM_IMC)
     {
         if(IsValid(IMCPoint.trailfx))
@@ -1046,6 +1060,7 @@ void function GiveBackWeapons(entity player)
     }
 
     player.TakeOffhandWeapon(OFFHAND_MELEE)
+    player.GiveWeapon( "mp_weapon_melee_survival", WEAPON_INVENTORY_SLOT_PRIMARY_2, [] )
     player.GiveOffhandWeapon( "melee_data_knife", OFFHAND_MELEE, [] )
     player.SetActiveWeaponBySlot(eActiveInventorySlot.mainHand, WEAPON_INVENTORY_SLOT_PRIMARY_0)
 }
@@ -1257,7 +1272,9 @@ void function StartFlagReturn(entity player, int team, CTFPoint teamflagpoint)
         teamflagpoint.pole.SetOrigin(teamflagpoint.spawn)
         teamflagpoint.returntrigger.Destroy()
         thread PlayAnim( teamflagpoint.pole, "prop_fence_expand", teamflagpoint.pole.GetOrigin(), teamflagpoint.pole.GetAngles() )
-        teamflagpoint.trigger.SearchForNewTouchingEntity()
+        try {
+        teamflagpoint.returntrigger.SearchForNewTouchingEntity()
+        } catch(stop) {}
 
         array<entity> enemyplayers = GetPlayerArrayOfTeam( enemyteam )
         foreach ( players in enemyplayers )
@@ -1329,11 +1346,17 @@ void function PlayerDiedWithFlag(entity victim, int team, CTFPoint teamflagpoint
 
     //Clear parent and set the flag to current death location
     teamflagpoint.holdingplayer = null
-    teamflagpoint.pickedup = false
-    teamflagpoint.dropped = true
     teamflagpoint.pole.MakeVisible()
 
     teamflagpoint.pole.SetOrigin(OriginToGround( teamflagpoint.pole.GetOrigin() ))
+
+    //Play expand anim
+    thread PlayAnim( teamflagpoint.pole, "prop_fence_expand", teamflagpoint.pole.GetOrigin(), teamflagpoint.pole.GetAngles() )
+
+    wait 0.8
+
+    teamflagpoint.pickedup = false
+    teamflagpoint.dropped = true
 
     array<entity> enemyplayers = GetPlayerArrayOfTeam( enemyteam )
     foreach ( player in enemyplayers )
@@ -1341,7 +1364,7 @@ void function PlayerDiedWithFlag(entity victim, int team, CTFPoint teamflagpoint
         if( !IsValid( player ) )
             continue
 
-        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", TEAM_IMC, eCTFFlag.Capture)
+        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetPointIconHint", team, eCTFFlag.Capture)
     }
 
     array<entity> teamplayers = GetPlayerArrayOfTeam( team )
@@ -1368,9 +1391,6 @@ void function PlayerDiedWithFlag(entity victim, int team, CTFPoint teamflagpoint
         teamflagpoint.flagatbase = true
         teamflagpoint.pole.SetOrigin(OriginToGround( teamflagpoint.spawn ))
     }
-
-    //Play expand anim
-    thread PlayAnim( teamflagpoint.pole, "prop_fence_expand", teamflagpoint.pole.GetOrigin(), teamflagpoint.pole.GetAngles() )
 
     if (foundSafeSpot)
     {
@@ -1442,6 +1462,9 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
 
                 //Wait Respawn Timer
                 wait CTF_RESPAWN_TIMER
+
+                //Needed as if you change players legend after respawn it will give you that legends abilitys instead of the classes
+                Remote_CallFunction_NonReplay(victim, "ServerCallback_CTF_CheckUpdatePlayerLegend")
 
                 //Respawn Player
                 if (IsValid(victim) && !CTF.votingtime)

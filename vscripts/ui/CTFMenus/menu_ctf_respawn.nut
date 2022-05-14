@@ -8,6 +8,7 @@ global function UpdateSelectedClass
 global function DisableClassSelect
 global function SetCTFScores
 global function SetGameTimer
+global function CTFUpdatePlayerLegend
 
 struct
 {
@@ -61,11 +62,14 @@ void function OpenCTFRespawnMenu(string classname1, string classname2, string cl
 
 void function CloseCTFRespawnMenu()
 {
-	if(file.newcharacter != file.oldcharacter)
-		DEV_RequestSetItemFlavorLoadoutSlot( LocalClientEHI(), Loadout_CharacterClass(), file.newcharacter )
-
 	ToggleLegendsUI(false)
 	CloseAllMenus()
+}
+
+void function CTFUpdatePlayerLegend()
+{
+	if(file.newcharacter != file.oldcharacter)
+		RequestSetItemFlavorLoadoutSlot( LocalClientEHI(), Loadout_CharacterClass(), file.newcharacter )
 }
 
 void function ToggleLegendsUI(bool open)

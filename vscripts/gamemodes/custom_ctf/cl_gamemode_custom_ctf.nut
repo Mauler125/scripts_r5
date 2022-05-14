@@ -21,6 +21,7 @@ global function ServerCallback_CTF_ResetFlagIcons
 global function ServerCallback_CTF_SetPointIconHint
 global function ServerCallback_CTF_SetCorrectTime
 global function ServerCallback_CTF_UpdatePlayerStats
+global function ServerCallback_CTF_CheckUpdatePlayerLegend
 // Voting
 global function ServerCallback_CTF_SetVoteMenuOpen
 global function ServerCallback_CTF_UpdateVotingMaps
@@ -80,6 +81,12 @@ int ClassID = 0
 void function Cl_CustomCTF_Init()
 {
     AddClientCallback_OnResolutionChanged( UpdateTimeLeftTimer )
+    RegisterConCommandTriggeredCallback( "weapon_inspect", OnInspectKeyPressed )
+}
+
+void function OnInspectKeyPressed( entity localPlayer )
+{
+	GetLocalClientPlayer().ClientCommand("DropFlag")
 }
 
 void function ServerCallback_CTF_SetCorrectTime(int serverseconds)
@@ -447,6 +454,11 @@ void function UI_To_Client_UpdateSelectedClass(int selectedclass)
     entity player = GetLocalClientPlayer()
     // why does s3 not have remote server functions..?
     player.ClientCommand("SetPlayerClass " + selectedclass)
+}
+
+void function ServerCallback_CTF_CheckUpdatePlayerLegend()
+{
+    RunUIScript("CTFUpdatePlayerLegend")
 }
 
 void function ServerCallback_CTF_OpenCTFRespawnMenu(vector campos, int IMCscore, int MILscore, entity attacker, int selectedclassid)
