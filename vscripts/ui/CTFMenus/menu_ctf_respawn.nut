@@ -69,7 +69,7 @@ void function CloseCTFRespawnMenu()
 void function CTFUpdatePlayerLegend()
 {
 	if(file.newcharacter != file.oldcharacter)
-		RequestSetItemFlavorLoadoutSlot( LocalClientEHI(), Loadout_CharacterClass(), file.newcharacter )
+		try{RequestSetItemFlavorLoadoutSlot( LocalClientEHI(), Loadout_CharacterClass(), file.newcharacter )} catch(e0){}
 }
 
 void function ToggleLegendsUI(bool open)

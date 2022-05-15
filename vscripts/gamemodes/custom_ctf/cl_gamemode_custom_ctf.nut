@@ -55,6 +55,21 @@ struct {
     int teamwon
 } file;
 
+struct {
+    var imcscorebg
+    var imcscorecurrentbg
+    var milscorebg
+    var milscorecurrentbg
+    var miltext
+    var imctext
+    var milscore
+    var imcscore
+    var timer
+
+    int milscore2
+    int imcscore2
+} teamscore;
+
 array<entity> cleanupEnts
 array<var> overHeadRuis
 
@@ -296,11 +311,8 @@ void function ServerCallback_CTF_PickedUpFlag(entity player, bool pickedup)
 
 void function MakeScoreRUI()
 {
-    if ( file.scoreRui != null)
-    {
-        RuiSetString( file.scoreRui, "messageText", "Team IMC: 0  ||  Team MIL: 0" )
+    if ( file.teamRui != null)
         return
-    }
 
     var compass = GetCompassRui()
     if ( IsValid( compass ) )
@@ -309,35 +321,32 @@ void function MakeScoreRUI()
     clGlobal.levelEnt.EndSignal( "CloseScoreRUI" )
 
     UISize screenSize = GetScreenSize()
-    var screenAlignmentTopo = RuiTopology_CreatePlane( <( screenSize.width * 0.25),( screenSize.height * 0.31 ), 0>, <float( screenSize.width ), 0, 0>, <0, float( screenSize.height ), 0>, false )
-    var rui = RuiCreate( $"ui/announcement_quick_right.rpak", screenAlignmentTopo, RUI_DRAW_HUD, RUI_SORT_SCREENFADE + 1 )
+    var screenAlignmentTopo2 = RuiTopology_CreatePlane( <( screenSize.width * 0.25),( screenSize.height * 0.31 ), 0>, <float( screenSize.width ), 0, 0>, <0, float( screenSize.height ), 0>, false )
+    file.teamRui = RuiCreate( $"ui/announcement_quick_right.rpak", screenAlignmentTopo2, RUI_DRAW_HUD, RUI_SORT_SCREENFADE + 1 )
 
-    var screenAlignmentTopo2 = RuiTopology_CreatePlane( <( screenSize.width * 0.25),( screenSize.height * 0.31 ), 0>, <float( screenSize.width ), 0, 0>, <0, float( screenSize.height - 100 ), 0>, false )
-    var rui2 = RuiCreate( $"ui/announcement_quick_right.rpak", screenAlignmentTopo2, RUI_DRAW_HUD, RUI_SORT_SCREENFADE + 1 )
+    var screenAlignmentTopoTimer = RuiTopology_CreatePlane( <(screenSize.width / 2) - 135, -305, 0>, <200, 0, 0>, <0, 800, 0>, false )
+    teamscore.timer = RuiCreate( $"ui/announcement_quick_right.rpak", screenAlignmentTopoTimer, RUI_DRAW_HUD, RUI_SORT_SCREENFADE + 1 )
 
-    RuiSetGameTime( rui, "startTime", Time() )
-    RuiSetString( rui, "messageText", "Team IMC: 0  ||  Team MIL: 0" )
-    RuiSetFloat( rui, "duration", 9999999 )
-    RuiSetFloat3( rui, "eventColor", SrgbToLinear( <128, 188, 255> ) )
+    RuiSetGameTime( file.teamRui, "startTime", Time() )
+    RuiSetString( file.teamRui, "messageText", "Team: " )
+    RuiSetFloat( file.teamRui, "duration", 9999999 )
+    RuiSetFloat3( file.teamRui, "eventColor", SrgbToLinear( <128, 188, 255> ) )
 
-    RuiSetGameTime( rui2, "startTime", Time() )
-    RuiSetString( rui2, "messageText", "Team: " )
-    RuiSetFloat( rui2, "duration", 9999999 )
-    RuiSetFloat3( rui2, "eventColor", SrgbToLinear( <128, 188, 255> ) )
-
-    file.scoreRui = rui
-    file.teamRui = rui2
+    RuiSetGameTime( teamscore.timer, "startTime", Time() )
+    RuiSetString( teamscore.timer, "messageText", "00:00" )
+    RuiSetFloat( teamscore.timer, "duration", 9999999 )
+    RuiSetFloat3( teamscore.timer, "eventColor", SrgbToLinear( <128, 188, 255> ) )
 
     OnThreadEnd(
-		function() : ( rui, rui2 )
+		function() : ()
 		{
-            if ( IsValid( rui ) )
-			    try { RuiDestroy( rui ) } catch (pe3){ }
+            if ( IsValid( file.teamRui ) )
+			    try { RuiDestroy( file.teamRui ) } catch (pe4){ }
 
-            if ( IsValid( rui2 ) )
-			    try { RuiDestroy( rui2 ) } catch (pe4){ }
+            if ( IsValid( teamscore.timer ) )
+			    try { RuiDestroy( teamscore.timer ) } catch (pe4){ }
 
-			file.scoreRui = null
+            teamscore.timer = null
             file.teamRui = null
 		}
 	)
@@ -416,6 +425,9 @@ void function StartGameTimer()
         //Update the counter on the UI
         RunUIScript("SetGameTimer", minsfiller + minutes + ":" + secondsfiller + seconds)
 
+        if(IsValid(teamscore.timer))
+            RuiSetString( teamscore.timer, "messageText", minsfiller + minutes + ":" + secondsfiller + seconds )
+
 		wait 1
         seconds--
 	}
@@ -423,10 +435,125 @@ void function StartGameTimer()
 
 void function ServerCallback_CTF_PointCaptured(int IMC, int MIL)
 {
-    if(file.scoreRui)
-        RuiSetString( file.scoreRui, "messageText", "Team IMC: " + IMC + "  ||  Team MIL: " + MIL )
+    //if(file.scoreRui)
+        //RuiSetString( file.scoreRui, "messageText", "Team IMC: " + IMC + "  ||  Team MIL: " + MIL )
 
     RunUIScript("SetCTFScores", IMC, MIL, CTF_SCORE_GOAL_TO_WIN)
+
+    int startwidth = 400 / CTF_SCORE_GOAL_TO_WIN
+    int imcwidth = startwidth * IMC
+    int milwidth = startwidth * MIL
+
+    UISize screenSize = GetScreenSize()
+
+    DeleteScoreRUI()
+
+    var screenAlignmentTopoIMCBG = RuiTopology_CreatePlane( <(screenSize.width / 2) - 420, 100, 0>, <400, 0, 0>, <0, 10, 0>, false )
+    var screenAlignmentTopoMILBG = RuiTopology_CreatePlane( <(screenSize.width / 2) + 20, 100, 0>, <400, 0, 0>, <0, 10, 0>, false )
+    var screenAlignmentTopoIMC = RuiTopology_CreatePlane( <(screenSize.width / 2) - 420, 100, 0>, <imcwidth, 0, 0>, <0, 10, 0>, false )
+    var screenAlignmentTopoMIL = RuiTopology_CreatePlane( <(screenSize.width / 2) + 20, 100, 0>, <milwidth, 0, 0>, <0, 10, 0>, false )
+
+    var screenAlignmentTopoMILText = RuiTopology_CreatePlane( <(screenSize.width / 2) - 200, -230, 0>, <400, 0, 0>, <0, 600, 0>, false )
+    var screenAlignmentTopoMILScore = RuiTopology_CreatePlane( <(screenSize.width / 2) + 125, -230, 0>, <400, 0, 0>, <0, 600, 0>, false )
+    var screenAlignmentTopoIMCText = RuiTopology_CreatePlane( <(screenSize.width / 2) - 640, -230, 0>, <400, 0, 0>, <0, 600, 0>, false )
+    var screenAlignmentTopoIMCScore = RuiTopology_CreatePlane( <(screenSize.width / 2) - 315, -230, 0>, <400, 0, 0>, <0, 600, 0>, false )
+
+    teamscore.imcscorebg = RuiCreate( $"ui/basic_image.rpak", screenAlignmentTopoIMCBG, RUI_DRAW_HUD, RUI_SORT_SCREENFADE + 1)
+    teamscore.milscorebg = RuiCreate( $"ui/basic_image.rpak", screenAlignmentTopoMILBG, RUI_DRAW_HUD, RUI_SORT_SCREENFADE + 1)
+    teamscore.imcscorecurrentbg = RuiCreate( $"ui/basic_image.rpak", screenAlignmentTopoIMC, RUI_DRAW_HUD, RUI_SORT_SCREENFADE + 1)
+    teamscore.milscorecurrentbg = RuiCreate( $"ui/basic_image.rpak", screenAlignmentTopoMIL, RUI_DRAW_HUD, RUI_SORT_SCREENFADE + 1)
+
+    if(!IsValid(teamscore.miltext))
+    {
+        teamscore.miltext = RuiCreate( $"ui/announcement_quick_right.rpak", screenAlignmentTopoMILText, RUI_DRAW_HUD, RUI_SORT_SCREENFADE + 1 )
+        RuiSetGameTime( teamscore.miltext, "startTime", Time() )
+        RuiSetString( teamscore.miltext, "messageText", "MILITIA" )
+        RuiSetFloat( teamscore.miltext, "duration", 9999999 )
+        RuiSetFloat3( teamscore.miltext, "eventColor", SrgbToLinear( <128, 188, 255> ) )
+    }
+
+    if(!IsValid(teamscore.imctext))
+    {
+        teamscore.imctext = RuiCreate( $"ui/announcement_quick_right.rpak", screenAlignmentTopoIMCText, RUI_DRAW_HUD, RUI_SORT_SCREENFADE + 1 )
+        RuiSetGameTime( teamscore.imctext, "startTime", Time() )
+        RuiSetString( teamscore.imctext, "messageText", "IMC" )
+        RuiSetFloat( teamscore.imctext, "duration", 9999999 )
+        RuiSetFloat3( teamscore.imctext, "eventColor", SrgbToLinear( <128, 188, 255> ) )
+    }
+
+    if(IMC > teamscore.imcscore2 || !IsValid( teamscore.imcscore ))
+    {
+        if ( IsValid( teamscore.imcscore ) )
+	        try { RuiDestroy( teamscore.imcscore ) } catch (pe4){ }
+
+        teamscore.imcscore = RuiCreate( $"ui/announcement_quick_right.rpak", screenAlignmentTopoIMCScore, RUI_DRAW_HUD, RUI_SORT_SCREENFADE + 1 )
+        RuiSetGameTime( teamscore.imcscore, "startTime", Time() )
+        RuiSetString( teamscore.imcscore, "messageText", "Captures: " + IMC)
+        RuiSetFloat( teamscore.imcscore, "duration", 9999999 )
+        RuiSetFloat3( teamscore.imcscore, "eventColor", SrgbToLinear( <100, 100, 255> / 255 ))
+    }
+
+    if(MIL > teamscore.milscore2 || !IsValid( teamscore.milscore ))
+    {
+        if ( IsValid( teamscore.milscore ) )
+	        try { RuiDestroy( teamscore.milscore ) } catch (pe4){ }
+
+        teamscore.milscore = RuiCreate( $"ui/announcement_quick_right.rpak", screenAlignmentTopoMILScore, RUI_DRAW_HUD, RUI_SORT_SCREENFADE + 1 )
+        RuiSetGameTime( teamscore.milscore, "startTime", Time() )
+        RuiSetString( teamscore.milscore, "messageText", "Captures: " + MIL )
+        RuiSetFloat( teamscore.milscore, "duration", 9999999 )
+        RuiSetFloat3( teamscore.milscore, "eventColor", SrgbToLinear( <255, 100, 100> / 255 ))
+    }
+
+    RuiSetFloat3( teamscore.imcscorebg, "basicImageColor", SrgbToLinear( <30, 30, 30> / 255 ))
+    RuiSetFloat3( teamscore.milscorebg, "basicImageColor", SrgbToLinear( <30, 30, 30> / 255 ))
+    RuiSetFloat3( teamscore.imcscorecurrentbg, "basicImageColor", SrgbToLinear( <100, 100, 255> / 255 ))
+    RuiSetFloat3( teamscore.milscorecurrentbg, "basicImageColor", SrgbToLinear( <255, 100, 100> / 255 ))
+
+    teamscore.milscore2 = MIL
+    teamscore.imcscore2 = IMC
+}
+
+void function DeleteScoreRUI()
+{
+    if ( IsValid(  teamscore.imcscorecurrentbg ) )
+		try { RuiDestroy(  teamscore.imcscorecurrentbg ) } catch (pe4){ }
+
+    if ( IsValid( teamscore.milscorecurrentbg ) )
+	    try { RuiDestroy( teamscore.milscorecurrentbg ) } catch (pe4){ }
+
+    if ( IsValid( teamscore.imcscorebg ) )
+		try { RuiDestroy( teamscore.imcscorebg ) } catch (pe4){ }
+
+    if ( IsValid( teamscore.milscorebg ) )
+        try { RuiDestroy( teamscore.milscorebg ) } catch (pe4){ }
+}
+
+void function ShowScoreRUI(bool show)
+{
+    if ( IsValid(  teamscore.imcscorecurrentbg ) )
+		RuiSetVisible(  teamscore.imcscorecurrentbg, show )
+
+    if ( IsValid( teamscore.milscorecurrentbg ) )
+	    RuiSetVisible( teamscore.milscorecurrentbg, show )
+
+    if ( IsValid( teamscore.imcscorebg ) )
+		RuiSetVisible( teamscore.imcscorebg, show )
+
+    if ( IsValid( teamscore.milscorebg ) )
+		RuiSetVisible( teamscore.milscorebg, show )
+
+    if ( IsValid( teamscore.miltext ) )
+		RuiSetVisible( teamscore.miltext, show )
+
+    if ( IsValid(  teamscore.imctext ) )
+		RuiSetVisible(  teamscore.imctext, show )
+
+    if ( IsValid( teamscore.imcscore ) )
+	    RuiSetVisible( teamscore.imcscore, show )
+
+    if ( IsValid( teamscore.milscore ) )
+		RuiSetVisible( teamscore.milscore, show )
 }
 
 void function ServerCallback_CTF_TeamText(int team)
@@ -532,6 +659,8 @@ void function ServerCallback_CTF_OpenCTFRespawnMenu(vector campos, int IMCscore,
         RunUIScript( "UpdateKillerName", "Mysterious Forces")
     }
 
+    ShowScoreRUI(false)
+
     RunUIScript("SetCTFScores", IMCscore, MILscore, CTF_SCORE_GOAL_TO_WIN)
 
     foreach ( player in teamplayers )
@@ -609,6 +738,7 @@ void function waitrespawn(entity player)
     if(!isvoting)
     {
         RunUIScript( "CloseCTFRespawnMenu" )
+        ShowScoreRUI(true)
 
         try {
             cameraMover = CreateClientsideScriptMover( $"mdl/dev/empty_model.rmdl", Deathcam.GetOrigin(), Deathcam.GetAngles() )
@@ -641,13 +771,14 @@ void function CreateVotingUI()
 {
     hasvoted = false
     isvoting = true
+    roundover = true
 
     EmitSoundOnEntity( GetLocalClientPlayer(), "Music_CharacterSelect_Wattson" )
     wait 3;
     ScreenFade(GetLocalClientPlayer(), 0, 0, 0, 255, 0.4, 0.5, FFADE_OUT | FFADE_PURGE)
     wait 0.9;
 
-    roundover = true
+    DeleteScoreRUI()
 
     entity targetBackground = GetEntByScriptName( "target_char_sel_bg_new" )
     entity targetCamera = GetEntByScriptName( "target_char_sel_camera_new" )

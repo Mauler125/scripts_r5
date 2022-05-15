@@ -848,7 +848,7 @@ void function PlayerDroppedFlag(entity ent)
     Highlight_ClearEnemyHighlight( ent )
 
     if(TAKE_WEAPONS_FROM_FLAG_CARRIER)
-        GiveBackWeapons( ent )
+        thread GiveBackWeapons( ent )
 
     if(GIVE_FLAG_CARRIER_SPEED_BOOST)
         StatusEffect_StopAllOfType( ent, eStatusEffect.speed_boost )
@@ -925,12 +925,12 @@ void function CaptureFlag(entity ent, int team, CTFPoint teamflagpoint)
 {
     int enemyteam = GetCTFEnemyTeam(team)
 
+    PlayerDroppedFlag(ent)
+
     if(team == TEAM_IMC)
         CTF.IMCPoints++
     else
         CTF.MILITIAPoints++
-
-    PlayerDroppedFlag(ent)
 
     Remote_CallFunction_NonReplay(ent, "ServerCallback_CTF_UpdatePlayerStats", eCTFStats.Captures)
 
@@ -1052,6 +1052,11 @@ void function TakeWeaponsForFlagCarrier(entity player)
 // purpose: Give player their weapons back
 void function GiveBackWeapons(entity player)
 {
+    //Needs to check and set legend change before taking weapons
+    Remote_CallFunction_NonReplay(player, "ServerCallback_CTF_CheckUpdatePlayerLegend")
+
+    wait 0.5
+
     TakeAllWeapons(player)
 
     player.GiveWeapon(file.ctfclasses[player.p.CTFClassID].primary, WEAPON_INVENTORY_SLOT_PRIMARY_0, file.ctfclasses[player.p.CTFClassID].primaryattachments)
@@ -1116,6 +1121,7 @@ void function _OnPlayerConnected(entity player)
         Remote_CallFunction_Replay(player, "ServerCallback_CTF_AddPointIcon", IMCPoint.pole, MILITIAPoint.pole, player.GetTeam())
         Remote_CallFunction_Replay(player, "ServerCallback_CTF_TeamText", player.GetTeam())
         Remote_CallFunction_NonReplay(player, "ServerCallback_CTF_SetSelectedLocation", CTF.mappicked)
+        Remote_CallFunction_Replay(player, "ServerCallback_CTF_PointCaptured", CTF.IMCPoints, CTF.MILITIAPoints)
         break
     default:
         break
@@ -1475,9 +1481,6 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
                 //Wait Respawn Timer
                 wait CTF_RESPAWN_TIMER
 
-                //Needed as if you change players legend after respawn it will give you that legends abilitys instead of the classes
-                Remote_CallFunction_NonReplay(victim, "ServerCallback_CTF_CheckUpdatePlayerLegend")
-
                 //Respawn Player
                 if (IsValid(victim) && !CTF.votingtime)
                 {
@@ -1525,7 +1528,7 @@ void function _HandleRespawn(entity player, bool forceGive = false)
     {
         DecideRespawnPlayer(player, true)
 
-        GiveBackWeapons(player)
+        thread GiveBackWeapons(player)
     }
 
     SetPlayerSettings(player, CTF_PLAYER_SETTINGS)
