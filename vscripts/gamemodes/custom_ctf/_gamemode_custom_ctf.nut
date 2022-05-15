@@ -1122,6 +1122,7 @@ void function _OnPlayerConnected(entity player)
         Remote_CallFunction_Replay(player, "ServerCallback_CTF_TeamText", player.GetTeam())
         Remote_CallFunction_NonReplay(player, "ServerCallback_CTF_SetSelectedLocation", CTF.mappicked)
         Remote_CallFunction_Replay(player, "ServerCallback_CTF_PointCaptured", CTF.IMCPoints, CTF.MILITIAPoints)
+        Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetCorrectTime", ServerTimer.seconds)
         break
     default:
         break

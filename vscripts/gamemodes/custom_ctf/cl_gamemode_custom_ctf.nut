@@ -435,9 +435,6 @@ void function StartGameTimer()
 
 void function ServerCallback_CTF_PointCaptured(int IMC, int MIL)
 {
-    //if(file.scoreRui)
-        //RuiSetString( file.scoreRui, "messageText", "Team IMC: " + IMC + "  ||  Team MIL: " + MIL )
-
     RunUIScript("SetCTFScores", IMC, MIL, CTF_SCORE_GOAL_TO_WIN)
 
     int startwidth = 400 / CTF_SCORE_GOAL_TO_WIN
