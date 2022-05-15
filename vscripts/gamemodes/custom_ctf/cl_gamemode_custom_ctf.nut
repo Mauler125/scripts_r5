@@ -448,20 +448,27 @@ void function ServerCallback_CTF_PointCaptured(int IMC, int MIL)
 
     DeleteScoreRUI()
 
+    //Alignment
     var screenAlignmentTopoIMCBG = RuiTopology_CreatePlane( <(screenSize.width / 2) - 420, 100, 0>, <400, 0, 0>, <0, 10, 0>, false )
     var screenAlignmentTopoMILBG = RuiTopology_CreatePlane( <(screenSize.width / 2) + 20, 100, 0>, <400, 0, 0>, <0, 10, 0>, false )
     var screenAlignmentTopoIMC = RuiTopology_CreatePlane( <(screenSize.width / 2) - 420, 100, 0>, <imcwidth, 0, 0>, <0, 10, 0>, false )
     var screenAlignmentTopoMIL = RuiTopology_CreatePlane( <(screenSize.width / 2) + 20, 100, 0>, <milwidth, 0, 0>, <0, 10, 0>, false )
-
     var screenAlignmentTopoMILText = RuiTopology_CreatePlane( <(screenSize.width / 2) - 200, -230, 0>, <400, 0, 0>, <0, 600, 0>, false )
     var screenAlignmentTopoMILScore = RuiTopology_CreatePlane( <(screenSize.width / 2) + 125, -230, 0>, <400, 0, 0>, <0, 600, 0>, false )
     var screenAlignmentTopoIMCText = RuiTopology_CreatePlane( <(screenSize.width / 2) - 640, -230, 0>, <400, 0, 0>, <0, 600, 0>, false )
     var screenAlignmentTopoIMCScore = RuiTopology_CreatePlane( <(screenSize.width / 2) - 315, -230, 0>, <400, 0, 0>, <0, 600, 0>, false )
 
     teamscore.imcscorebg = RuiCreate( $"ui/basic_image.rpak", screenAlignmentTopoIMCBG, RUI_DRAW_HUD, RUI_SORT_SCREENFADE + 1)
+    RuiSetFloat3( teamscore.imcscorebg, "basicImageColor", SrgbToLinear( <30, 30, 30> / 255 ))
+
     teamscore.milscorebg = RuiCreate( $"ui/basic_image.rpak", screenAlignmentTopoMILBG, RUI_DRAW_HUD, RUI_SORT_SCREENFADE + 1)
+    RuiSetFloat3( teamscore.milscorebg, "basicImageColor", SrgbToLinear( <30, 30, 30> / 255 ))
+
     teamscore.imcscorecurrentbg = RuiCreate( $"ui/basic_image.rpak", screenAlignmentTopoIMC, RUI_DRAW_HUD, RUI_SORT_SCREENFADE + 1)
+    RuiSetFloat3( teamscore.imcscorecurrentbg, "basicImageColor", SrgbToLinear( <100, 100, 255> / 255 ))
+
     teamscore.milscorecurrentbg = RuiCreate( $"ui/basic_image.rpak", screenAlignmentTopoMIL, RUI_DRAW_HUD, RUI_SORT_SCREENFADE + 1)
+    RuiSetFloat3( teamscore.milscorecurrentbg, "basicImageColor", SrgbToLinear( <255, 100, 100> / 255 ))
 
     if(!IsValid(teamscore.miltext))
     {
@@ -504,11 +511,6 @@ void function ServerCallback_CTF_PointCaptured(int IMC, int MIL)
         RuiSetFloat( teamscore.milscore, "duration", 9999999 )
         RuiSetFloat3( teamscore.milscore, "eventColor", SrgbToLinear( <255, 100, 100> / 255 ))
     }
-
-    RuiSetFloat3( teamscore.imcscorebg, "basicImageColor", SrgbToLinear( <30, 30, 30> / 255 ))
-    RuiSetFloat3( teamscore.milscorebg, "basicImageColor", SrgbToLinear( <30, 30, 30> / 255 ))
-    RuiSetFloat3( teamscore.imcscorecurrentbg, "basicImageColor", SrgbToLinear( <100, 100, 255> / 255 ))
-    RuiSetFloat3( teamscore.milscorecurrentbg, "basicImageColor", SrgbToLinear( <255, 100, 100> / 255 ))
 
     teamscore.milscore2 = MIL
     teamscore.imcscore2 = IMC
