@@ -267,7 +267,7 @@ void function Sh_CustomCTF_Init()
                         NewCTFLocPair(<3263, 30943, 4828>, <0, 8, 0>)
                     ],
                     NewCTFLocPair(<0,0,5000>, <90,90,0>), //deathcam angle and height
-                    NewCTFLocPair(<-29300, -4209, 2540>, <0, 100, 0>) //Victory Pos
+                    NewCTFLocPair(<6547, 31977, 5470>, <0, -90, 0>) //Victory Pos
                 )
             )
 
@@ -321,7 +321,7 @@ void function Sh_CustomCTF_Init()
                         NewCTFLocPair(<27628, 25640, 4370>, <0, 160, 0>)
                     ],
                     NewCTFLocPair(<0,0,6000>, <90,-70,0>), //deathcam angle and height
-                    NewCTFLocPair(<-29300, -4209, 2540>, <0, 100, 0>) //Victory Pos
+                    NewCTFLocPair(<29665, 26180, 4206>, <0, -90, 0>) //Victory Pos
                 )
             )
 
@@ -348,7 +348,7 @@ void function Sh_CustomCTF_Init()
                         NewCTFLocPair(<22281, 13742, 4422>, <0, 40, 0>)
                     ],
                     NewCTFLocPair(<0,0,7000>, <90,90,0>), //deathcam angle and height
-                    NewCTFLocPair(<-29300, -4209, 2540>, <0, 100, 0>) //Victory Pos
+                    NewCTFLocPair(<22867, 14375, 4412>, <0, 90, 0>) //Victory Pos
                 )
             )
 
@@ -375,7 +375,7 @@ void function Sh_CustomCTF_Init()
                         NewCTFLocPair(<26507, -14500, 4730>, <0, 135, 0>)
                     ],
                     NewCTFLocPair(<0,0,7000>, <90,90,0>), //deathcam angle and height
-                    NewCTFLocPair(<-29300, -4209, 2540>, <0, 100, 0>) //Victory Pos
+                    NewCTFLocPair(<23495, -17625, 5424>, <0, 90, 0>) //Victory Pos
                 )
             )
 
@@ -402,7 +402,7 @@ void function Sh_CustomCTF_Init()
                         NewCTFLocPair(<-7472, -14763, 3183>, <0, -150, 0>)
                     ],
                     NewCTFLocPair(<0,0,7000>, <90,-45,0>), //deathcam angle and height
-                    NewCTFLocPair(<-29300, -4209, 2540>, <0, 100, 0>) //Victory Pos
+                    NewCTFLocPair(<-9774, -15325, 4056>, <0, 135, 0>) //Victory Pos
                 )
             )
 

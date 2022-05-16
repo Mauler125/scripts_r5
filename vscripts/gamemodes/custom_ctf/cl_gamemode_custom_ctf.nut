@@ -1052,27 +1052,27 @@ void function ShowCTFVictorySequence()
 
 			//
 			entity overheadNameEnt = CreateClientSidePropDynamic( pos + (AnglesToUp( file.victorySequenceAngles ) * 78), <0, 0, 0>, $"mdl/dev/empty_model.rmdl" )
-            entity overheadCapturesEnt = CreateClientSidePropDynamic(pos + (AnglesToUp(file.victorySequenceAngles) * 78) + < 0, 0, 15>, < 0, 0, 0 > , $"mdl/dev/empty_model.rmdl")
-            entity overheadKillsEnt = CreateClientSidePropDynamic( pos + (AnglesToUp( file.victorySequenceAngles ) * 78) + < 0, 0, 30>, <0, 0, 0>, $"mdl/dev/empty_model.rmdl" )
+            //entity overheadCapturesEnt = CreateClientSidePropDynamic(pos + (AnglesToUp(file.victorySequenceAngles) * 78) + < 0, 0, 15>, < 0, 0, 0 > , $"mdl/dev/empty_model.rmdl")
+            //entity overheadKillsEnt = CreateClientSidePropDynamic( pos + (AnglesToUp( file.victorySequenceAngles ) * 78) + < 0, 0, 30>, <0, 0, 0>, $"mdl/dev/empty_model.rmdl" )
 
 			overheadNameEnt.Hide()
-            overheadCapturesEnt.Hide()
-            overheadKillsEnt.Hide()
+            //overheadCapturesEnt.Hide()
+            //overheadKillsEnt.Hide()
 
 			var overheadRuiName = RuiCreate( $"ui/winning_squad_member_overhead_name.rpak", clGlobal.topoFullScreen, RUI_DRAW_HUD, 0 )
-            var overheadRuiCaptures = RuiCreate( $"ui/winning_squad_member_overhead_name.rpak", clGlobal.topoFullScreen, RUI_DRAW_HUD, 0 )
-            var overheadRuiKills = RuiCreate( $"ui/winning_squad_member_overhead_name.rpak", clGlobal.topoFullScreen, RUI_DRAW_HUD, 0 )
+            //var overheadRuiCaptures = RuiCreate( $"ui/winning_squad_member_overhead_name.rpak", clGlobal.topoFullScreen, RUI_DRAW_HUD, 0 )
+            //var overheadRuiKills = RuiCreate( $"ui/winning_squad_member_overhead_name.rpak", clGlobal.topoFullScreen, RUI_DRAW_HUD, 0 )
 
 			RuiSetString(overheadRuiName, "playerName", playerName)
 			RuiTrackFloat3(overheadRuiName, "position", overheadNameEnt, RUI_TRACK_ABSORIGIN_FOLLOW)
-            RuiSetString(overheadRuiCaptures, "playerName", "Captures: " + GetEHIScriptStruct( data.eHandle ).CTFCaptures)
-			RuiTrackFloat3(overheadRuiCaptures, "position", overheadCapturesEnt, RUI_TRACK_ABSORIGIN_FOLLOW)
-            RuiSetString(overheadRuiKills, "playerName", "Kills: " + GetEHIScriptStruct( data.eHandle ).CTFKills)
-			RuiTrackFloat3( overheadRuiKills, "position", overheadKillsEnt, RUI_TRACK_ABSORIGIN_FOLLOW )
+            //RuiSetString(overheadRuiCaptures, "playerName", "Captures: " + GetEHIScriptStruct( data.eHandle ).CTFCaptures)
+			//RuiTrackFloat3(overheadRuiCaptures, "position", overheadCapturesEnt, RUI_TRACK_ABSORIGIN_FOLLOW)
+            //RuiSetString(overheadRuiKills, "playerName", "Kills: " + GetEHIScriptStruct( data.eHandle ).CTFKills)
+			//RuiTrackFloat3( overheadRuiKills, "position", overheadKillsEnt, RUI_TRACK_ABSORIGIN_FOLLOW )
 
 			overHeadRuis.append( overheadRuiName )
-            overHeadRuis.append( overheadRuiCaptures )
-            overHeadRuis.append( overheadRuiKills )
+            //overHeadRuis.append( overheadRuiCaptures )
+            //overHeadRuis.append( overheadRuiKills )
 
 			playersOnPodium++
 		}
