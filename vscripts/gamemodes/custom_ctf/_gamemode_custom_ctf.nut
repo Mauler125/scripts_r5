@@ -369,6 +369,7 @@ void function StartRound()
         player.UnforceStand()
         player.UnfreezeControlsOnServer()
         TpPlayerToSpawnPoint(player)
+        GiveBackWeapons(player)
     }
 
     //spawn CTF flags based on location

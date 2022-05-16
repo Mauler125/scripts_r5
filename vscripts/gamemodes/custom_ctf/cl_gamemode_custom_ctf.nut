@@ -206,36 +206,28 @@ void function ServerCallback_CTF_SetPointIconHint(int teamflag, int messageid)
     try {
         var selected
 
-        switch(teamflag)
-        {
-            case TEAM_IMC:
-                selected = IMCpointicon
-                break
-            case TEAM_MILITIA:
-                selected = MILITIApointicon
-                break
-        }
-
-        if(selected == null)
-            return
+        if(teamflag == TEAM_IMC)
+            selected = IMCpointicon
+        else
+            selected = MILITIApointicon
 
         switch(messageid)
         {
-            case eCTFFlag.Defend:
-                RuiSetString( selected, "hint", "Defend" )
-                break
-            case eCTFFlag.Capture:
-                RuiSetString( selected, "hint", "Capture" )
-                break
-            case eCTFFlag.Attack:
-                RuiSetString( selected, "hint", "Attack" )
-                break
-            case eCTFFlag.Escort:
-                RuiSetString( selected, "hint", "Escort" )
-                break
-            case eCTFFlag.Return:
-                RuiSetString( selected, "hint", "Return" )
-                break
+        case eCTFFlag.Defend:
+            RuiSetString( selected, "hint", "Defend" )
+            break
+        case eCTFFlag.Capture:
+            RuiSetString( selected, "hint", "Capture" )
+            break
+        case eCTFFlag.Attack:
+            RuiSetString( selected, "hint", "Attack" )
+            break
+        case eCTFFlag.Escort:
+            RuiSetString( selected, "hint", "Escort" )
+            break
+        case eCTFFlag.Return:
+            RuiSetString( selected, "hint", "Return" )
+            break
         }
     } catch (pe3){ }
 }
