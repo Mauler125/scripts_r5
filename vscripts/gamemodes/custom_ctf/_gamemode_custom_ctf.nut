@@ -295,8 +295,6 @@ void function VotingPhase()
 
         //Reset Player Stats
         Remote_CallFunction_NonReplay(player, "ServerCallback_CTF_UpdatePlayerStats", eCTFStats.Clear)
-        GetEHIScriptStruct( ToEHI( player ) ).CTFCaptures = 0
-        GetEHIScriptStruct( ToEHI( player ) ).CTFKills = 0
     }
 
     //Voting phase so disable weapons and make invincible
@@ -962,8 +960,6 @@ void function CaptureFlag(entity ent, int team, CTFPoint teamflagpoint)
 
     Remote_CallFunction_NonReplay(ent, "ServerCallback_CTF_UpdatePlayerStats", eCTFStats.Captures)
 
-    GetEHIScriptStruct( ToEHI( ent ) ).CTFCaptures++
-
     foreach(player in GetPlayerArray())
     {
         if( !IsValid( player ) )
@@ -1534,6 +1530,8 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
                 invscore++;
                 victim.SetPlayerNetInt( "assists", invscore )
 
+                Remote_CallFunction_NonReplay(victim, "ServerCallback_CTF_HideCustomUI")
+
                 wait 4 // so we dont go straight to respawn menu
 
                 //Open respawn menu
@@ -1557,7 +1555,6 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
             if(IsValid(attacker) && attacker.IsPlayer() && IsAlive(attacker) && attacker != victim)
             {
                 Remote_CallFunction_NonReplay(attacker, "ServerCallback_CTF_UpdatePlayerStats", eCTFStats.Kills)
-                GetEHIScriptStruct( ToEHI( attacker ) ).CTFKills++
                 int invscore = attacker.GetPlayerNetInt( "kills" )
                 invscore++;
                 attacker.SetPlayerNetInt( "kills", invscore )

@@ -23,6 +23,7 @@ global function ServerCallback_CTF_SetCorrectTime
 global function ServerCallback_CTF_UpdatePlayerStats
 global function ServerCallback_CTF_CheckUpdatePlayerLegend
 global function ServerCallback_CTF_PickedUpFlag
+global function ServerCallback_CTF_HideCustomUI
 // Voting
 global function ServerCallback_CTF_SetVoteMenuOpen
 global function ServerCallback_CTF_UpdateVotingMaps
@@ -101,6 +102,11 @@ void function Cl_CustomCTF_Init()
     RegisterConCommandTriggeredCallback( "+use_alt", OnInspectKeyPressed )
 }
 
+void function ServerCallback_CTF_HideCustomUI()
+{
+    ShowScoreRUI(false)
+}
+
 void function OnInspectKeyPressed( entity localPlayer )
 {
 	GetLocalClientPlayer().ClientCommand("DropFlag")
@@ -114,7 +120,6 @@ void function ServerCallback_CTF_SetCorrectTime(int serverseconds)
 void function UpdateTimeLeftTimer()
 {
     GetLocalClientPlayer().ClientCommand("GetTimeFromServer")
-    RunUIScript("ResolutionChangedUpdateButtonCallbacks")
 }
 
 void function Cl_CTFRegisterLocation(LocationSettingsCTF locationSettings)
@@ -581,6 +586,12 @@ void function ShowScoreRUI(bool show)
 
     if ( IsValid( teamscore.milscore ) )
 		RuiSetVisible( teamscore.milscore, show )
+
+    if ( IsValid( teamscore.timer ))
+        RuiSetVisible( teamscore.timer, show )
+
+    if ( IsValid( file.teamRui ))
+        RuiSetVisible( file.teamRui, show )
 }
 
 void function ServerCallback_CTF_TeamText(int team)
@@ -686,8 +697,6 @@ void function ServerCallback_CTF_OpenCTFRespawnMenu(vector campos, int IMCscore,
         RunUIScript( "UpdateKillerName", "Mysterious Forces")
     }
 
-    ShowScoreRUI(false)
-
     RunUIScript("SetCTFScores", IMCscore, MILscore, CTF_SCORE_GOAL_TO_WIN)
 
     foreach ( player in teamplayers )
@@ -765,7 +774,6 @@ void function waitrespawn(entity player)
     if(!isvoting)
     {
         RunUIScript( "CloseCTFRespawnMenu" )
-        ShowScoreRUI(true)
 
         try {
             cameraMover = CreateClientsideScriptMover( $"mdl/dev/empty_model.rmdl", Deathcam.GetOrigin(), Deathcam.GetAngles() )
@@ -776,6 +784,8 @@ void function waitrespawn(entity player)
         } catch (exception2){ }
 
         wait 0.6
+
+        ShowScoreRUI(true)
 
         player.ClearMenuCameraEntity()
         HealthHUD_Update( player )
@@ -829,7 +839,7 @@ void function CreateVotingUI()
 void function DestroyVotingUI()
 {
     FadeOutSoundOnEntity( GetLocalClientPlayer(), "Music_CharacterSelect_Wattson", 0.2 )
-    ScreenFade(GetLocalClientPlayer(), 0, 0, 0, 255, 0.4, 1, FFADE_OUT | FFADE_PURGE)
+    ScreenCoverTransition( Time() + 0.2 )
 
     wait 1;
 
@@ -847,8 +857,6 @@ void function DestroyVotingUI()
     cleanupEnts.clear()
 
     isvoting = false
-
-    ScreenFade(GetLocalClientPlayer(), 0, 0, 0, 255, 0.3, 0.5, FFADE_IN | FFADE_PURGE)
 }
 
 void function UpdateUIVoteTimer()
@@ -993,8 +1001,7 @@ void function ShowCTFVictorySequence()
 	VictoryPlatformModelData victoryPlatformModelData = GetVictorySequencePlatformModel()
 	entity platformModel
 
-    //6 players is what i find best for showing name and stats without them overlapping
-	int maxPlayersToShow = 6
+	int maxPlayersToShow = 9
 
 	if ( victoryPlatformModelData.isSet )
 	{
@@ -1101,23 +1108,23 @@ void function ShowCTFVictorySequence()
         }
 
 		//Setup camera pos and angles
-		vector camera_start_pos = OffsetPointRelativeToVector( file.victorySequencePosition, <0, 1000, 200>, AnglesToForward( file.victorySequenceAngles ) )
-		vector camera_end_pos   = OffsetPointRelativeToVector( file.victorySequencePosition, <0, 220, 0>, AnglesToForward( file.victorySequenceAngles ) )
-		vector camera_focus_pos = OffsetPointRelativeToVector( file.victorySequencePosition, <0, 0, 36>, AnglesToForward( file.victorySequenceAngles ) )
+		vector camera_start_pos = OffsetPointRelativeToVector( file.victorySequencePosition, <0, 480, 108>, AnglesToForward( file.victorySequenceAngles ) )
+		vector camera_end_pos   = OffsetPointRelativeToVector( file.victorySequencePosition, <0, 350, 88>, AnglesToForward( file.victorySequenceAngles ) )
+		vector camera_focus_pos = OffsetPointRelativeToVector( file.victorySequencePosition, <0, 0, 56>, AnglesToForward( file.victorySequenceAngles ) )
 		vector camera_start_angles = VectorToAngles( camera_focus_pos - camera_start_pos )
 		vector camera_end_angles   = VectorToAngles( camera_focus_pos - camera_end_pos )
 
         //Create camera and mover
 		entity cameraMover = CreateClientsideScriptMover( $"mdl/dev/empty_model.rmdl", camera_start_pos, camera_start_angles )
-		entity camera      = CreateClientSidePointCamera( camera_start_pos, camera_start_angles, 80 )
+		entity camera      = CreateClientSidePointCamera( camera_start_pos, camera_start_angles, 35.5 )
 		player.SetMenuCameraEntity( camera )
-		camera.SetTargetFOV( 110, true, EASING_CUBIC_INOUT, 0.0 )
+		camera.SetTargetFOV( 35.5, true, EASING_CUBIC_INOUT, 0.0 )
 		camera.SetParent( cameraMover, "", false )
 		cleanupEnts.append( camera )
 
 		//Move camera to end pos
-		cameraMover.NonPhysicsMoveTo( camera_end_pos, 2.5, 0.0, 2.5 / 2.0 )
-		cameraMover.NonPhysicsRotateTo( camera_end_angles, 2.5, 0.0, 2.5 / 2.0 )
+		cameraMover.NonPhysicsMoveTo( camera_end_pos, 6, 0.0, 6 / 2.0 )
+		cameraMover.NonPhysicsRotateTo( camera_end_angles, 6, 0.0, 6 / 2.0 )
 		cleanupEnts.append( cameraMover )
 	}
 }
@@ -1166,17 +1173,23 @@ vector function GetVictorySquadFormationPosition( vector mainPosition, vector an
 	if ( index == 0 )
 		return mainPosition - <0, 0, 8>
 
-	float offset_side = 100.0
-	float offset_back = -30.0
+	float offset_side = 48.0
+	float offset_back = -28.0
 
-	int countBack = (index + 1) / 2
-	vector offset = < offset_side, offset_back, 0 > * countBack
+	int groupOffsetIndex = index / 3
+	int internalGroupOffsetIndex = index % 3
 
-	if ( index % 2 == 0 )
-		offset.x *= -1
+	float internalGroupOffsetSide = 34.0                                                                                           
+	float internalGroupOffsetBack = -38.0                                                                              
 
-	vector point = OffsetPointRelativeToVector( mainPosition, offset, AnglesToForward( angles ) )
-	return point - <0, 0, 8>
+	float groupOffsetSide = 114.0                                                                                            
+	float groupOffsetBack = -64.0                                                                               
+
+	float finalOffsetSide = ( groupOffsetSide * ( groupOffsetIndex % 2 == 0 ? 1 : -1 ) * ( groupOffsetIndex == 0 ? 0 : 1 ) ) + ( internalGroupOffsetSide * ( internalGroupOffsetIndex % 2 == 0 ? 1 : -1 ) * ( internalGroupOffsetIndex == 0 ? 0 : 1 ) )
+	float finalOffsetBack = ( groupOffsetBack * ( groupOffsetIndex == 0 ? 0 : 1 ) ) + ( internalGroupOffsetBack * ( internalGroupOffsetIndex == 0 ? 0 : 1 ) )
+
+	vector offset = < finalOffsetSide, finalOffsetBack, -8 >
+	return OffsetPointRelativeToVector( mainPosition, offset, AnglesToForward( angles ) )
 }
 
 array<void functionref( entity, ItemFlavor, int )> s_callbacks_OnVictoryCharacterModelSpawned
