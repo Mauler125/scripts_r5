@@ -113,8 +113,8 @@ void function ServerCallback_CTF_SetCorrectTime(int serverseconds)
 
 void function UpdateTimeLeftTimer()
 {
-    entity player = GetLocalClientPlayer()
-    player.ClientCommand("GetTimeFromServer")
+    GetLocalClientPlayer().ClientCommand("GetTimeFromServer")
+    RunUIScript("ResolutionChangedUpdateButtonCallbacks")
 }
 
 void function Cl_CTFRegisterLocation(LocationSettingsCTF locationSettings)
@@ -337,6 +337,9 @@ void function MakeScoreRUI()
     RuiSetFloat( teamscore.timer, "duration", 9999999 )
     RuiSetFloat3( teamscore.timer, "eventColor", SrgbToLinear( <128, 188, 255> ) )
 
+    if(GetLocalClientPlayer().GetTeam() == TEAM_SPECTATOR)
+        RuiSetVisible( file.teamRui, false )
+
     OnThreadEnd(
 		function() : ()
 		{
@@ -443,7 +446,7 @@ void function ServerCallback_CTF_PointCaptured(int IMC, int MIL)
 
     UISize screenSize = GetScreenSize()
 
-    DeleteScoreRUI()
+    DeleteScoreRUI(false)
 
     //Alignment
     var screenAlignmentTopoIMCBG = RuiTopology_CreatePlane( <(screenSize.width / 2) - 420, 100, 0>, <400, 0, 0>, <0, 10, 0>, false )
@@ -513,7 +516,7 @@ void function ServerCallback_CTF_PointCaptured(int IMC, int MIL)
     teamscore.imcscore2 = IMC
 }
 
-void function DeleteScoreRUI()
+void function DeleteScoreRUI(bool newround)
 {
     if ( IsValid(  teamscore.imcscorecurrentbg ) )
 		try { RuiDestroy(  teamscore.imcscorecurrentbg ) } catch (pe4){ }
@@ -526,6 +529,31 @@ void function DeleteScoreRUI()
 
     if ( IsValid( teamscore.milscorebg ) )
         try { RuiDestroy( teamscore.milscorebg ) } catch (pe4){ }
+
+    teamscore.milscorebg = null
+    teamscore.imcscorebg = null
+    teamscore.milscorecurrentbg = null
+    teamscore.imcscorecurrentbg = null
+
+    if(newround)
+    {
+        if ( IsValid(  teamscore.imcscore ) )
+		    try { RuiDestroy(  teamscore.imcscore ) } catch (pe4){ }
+
+        if ( IsValid( teamscore.milscore ) )
+            try { RuiDestroy( teamscore.milscore ) } catch (pe4){ }
+
+        if ( IsValid( teamscore.miltext ) )
+            try { RuiDestroy( teamscore.miltext ) } catch (pe4){ }
+
+        if ( IsValid( teamscore.imctext ) )
+            try { RuiDestroy( teamscore.imctext ) } catch (pe4){ }
+
+        teamscore.imcscore = null
+        teamscore.milscore = null
+        teamscore.miltext = null
+        teamscore.imctext = null
+    }
 }
 
 void function ShowScoreRUI(bool show)
@@ -777,7 +805,7 @@ void function CreateVotingUI()
     ScreenFade(GetLocalClientPlayer(), 0, 0, 0, 255, 0.4, 0.5, FFADE_OUT | FFADE_PURGE)
     wait 0.9;
 
-    DeleteScoreRUI()
+    DeleteScoreRUI(true)
 
     entity targetBackground = GetEntByScriptName( "target_char_sel_bg_new" )
     entity targetCamera = GetEntByScriptName( "target_char_sel_camera_new" )

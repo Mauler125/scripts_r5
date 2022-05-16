@@ -9,6 +9,7 @@ global function DisableClassSelect
 global function SetCTFScores
 global function SetGameTimer
 global function CTFUpdatePlayerLegend
+global function ResolutionChangedUpdateButtonCallbacks
 
 struct
 {
@@ -110,6 +111,21 @@ void function SetupLegendButtonsUI()
 		file.newcharacter = LoadoutSlot_WaitForItemFlavor( ToEHI( GetLocalClientPlayer() ), Loadout_CharacterClass() )
 		SetupLegendButtonsCallBacks(characters)
 	}
+}
+
+void function ResolutionChangedUpdateButtonCallbacks()
+{
+	array<ItemFlavor> characters = clone GetAllCharacters()
+
+	characters.sort( int function( ItemFlavor a, ItemFlavor b ) {
+			if ( Localize( ItemFlavor_GetLongName( a ) ) < Localize( ItemFlavor_GetLongName( b ) ) )
+				return -1
+			if ( Localize( ItemFlavor_GetLongName( a ) ) > Localize( ItemFlavor_GetLongName( b ) ) )
+				return 1
+			return 0
+		} )
+
+		SetupLegendButtonsCallBacks(characters)
 }
 
 //Cant do this in init cause you need to be in a map in to get item flavors
