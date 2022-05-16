@@ -93,6 +93,7 @@ global struct LocationSettingsCTF
     array<LocPairCTF> milspawns
     LocPairCTF &deathcam
     LocPairCTF &victorypos
+    int undermap
 }
 
 global struct CTFClasses
@@ -204,7 +205,8 @@ void function Sh_CustomCTF_Init()
                         NewCTFLocPair(<31836, -4098, -29081>, <0, -50, 0>)
                     ],
                     NewCTFLocPair(<0,0,5000>, <90,180,0>), //deathcam angle and height
-                    NewCTFLocPair(<32575,-5068, -28845>, <0, 0, 0>) //Victory Pos
+                    NewCTFLocPair(<32575,-5068, -28845>, <0, 0, 0>), //Victory Pos
+                    -29446 //Undermap Z
                 )
             )
             break
@@ -232,7 +234,8 @@ void function Sh_CustomCTF_Init()
                         NewCTFLocPair(<-2997, -3094, 332>, <0, -19, 0>)
                     ],
                     NewCTFLocPair(<0,0,5000>, <90,-90,0>), //deathcam angle and height
-                    NewCTFLocPair(<8212, -3014, 783>, <0, 120, 0>) //Victory Pos
+                    NewCTFLocPair(<8212, -3014, 783>, <0, 120, 0>), //Victory Pos
+                    -554 //Undermap Z
                 )
             )
             break
@@ -267,7 +270,8 @@ void function Sh_CustomCTF_Init()
                         NewCTFLocPair(<3263, 30943, 4828>, <0, 8, 0>)
                     ],
                     NewCTFLocPair(<0,0,5000>, <90,90,0>), //deathcam angle and height
-                    NewCTFLocPair(<6547, 31977, 5470>, <0, -90, 0>) //Victory Pos
+                    NewCTFLocPair(<6547, 31977, 5470>, <0, -90, 0>), //Victory Pos
+                    4683 //Undermap Z
                 )
             )
 
@@ -294,7 +298,8 @@ void function Sh_CustomCTF_Init()
                         NewCTFLocPair(<-27554, -4611, 2536>, <0, 45, 0>)
                     ],
                     NewCTFLocPair(<0,0,5000>, <90,0,0>), //deathcam angle and height
-                    NewCTFLocPair(<-29300, -4209, 2540>, <0, 100, 0>) //Victory Pos
+                    NewCTFLocPair(<-29300, -4209, 2540>, <0, 100, 0>), //Victory Pos
+                    2183 //Undermap Z
                 )
             )
 
@@ -321,7 +326,8 @@ void function Sh_CustomCTF_Init()
                         NewCTFLocPair(<27628, 25640, 4370>, <0, 160, 0>)
                     ],
                     NewCTFLocPair(<0,0,6000>, <90,-70,0>), //deathcam angle and height
-                    NewCTFLocPair(<29665, 26180, 4206>, <0, -90, 0>) //Victory Pos
+                    NewCTFLocPair(<29665, 26180, 4206>, <0, -90, 0>), //Victory Pos
+                    3330 //Undermap Z
                 )
             )
 
@@ -348,7 +354,8 @@ void function Sh_CustomCTF_Init()
                         NewCTFLocPair(<22281, 13742, 4422>, <0, 40, 0>)
                     ],
                     NewCTFLocPair(<0,0,7000>, <90,90,0>), //deathcam angle and height
-                    NewCTFLocPair(<22867, 14375, 4412>, <0, 90, 0>) //Victory Pos
+                    NewCTFLocPair(<22867, 14375, 4412>, <0, 90, 0>), //Victory Pos
+                    3072 //Undermap Z
                 )
             )
 
@@ -375,7 +382,8 @@ void function Sh_CustomCTF_Init()
                         NewCTFLocPair(<26507, -14500, 4730>, <0, 135, 0>)
                     ],
                     NewCTFLocPair(<0,0,7000>, <90,90,0>), //deathcam angle and height
-                    NewCTFLocPair(<23495, -17625, 5424>, <0, 90, 0>) //Victory Pos
+                    NewCTFLocPair(<23495, -17625, 5424>, <0, 90, 0>), //Victory Pos
+                    3879 //Undermap Z
                 )
             )
 
@@ -402,7 +410,8 @@ void function Sh_CustomCTF_Init()
                         NewCTFLocPair(<-7472, -14763, 3183>, <0, -150, 0>)
                     ],
                     NewCTFLocPair(<0,0,7000>, <90,-45,0>), //deathcam angle and height
-                    NewCTFLocPair(<-9774, -15325, 4056>, <0, 135, 0>) //Victory Pos
+                    NewCTFLocPair(<-9774, -15325, 4056>, <0, 135, 0>), //Victory Pos
+                    2762 //Undermap Z
                 )
             )
 
@@ -433,7 +442,8 @@ void function Sh_CustomCTF_Init()
                         NewCTFLocPair(<32519, 9890, -3525>, <0, 166, 0>)
                     ],
                     NewCTFLocPair(<0,0,5000>, <90,27,0>), //deathcam angle and height
-                    NewCTFLocPair(<3990,7540,-4242>, <0,90,0>) //Victory Pos
+                    NewCTFLocPair(<3990,7540,-4242>, <0,90,0>), //Victory Pos
+                    -3893 //Undermap Z
                 )
             )
 
@@ -459,7 +469,8 @@ void function Sh_CustomCTF_Init()
                         NewCTFLocPair(<16344, 29093, -4441>, <0, -13, 0>)
                     ],
                     NewCTFLocPair(<0,0,7000>, <90,-165,0>),//deathcam angle and height
-                    NewCTFLocPair(<3990,7540,-4242>, <0,90,0>) //Victory Pos
+                    NewCTFLocPair(<3990,7540,-4242>, <0,90,0>), //Victory Pos
+                    -5123 //Undermap Z
                 )
             )
 
@@ -485,7 +496,8 @@ void function Sh_CustomCTF_Init()
                         NewCTFLocPair(<12185, 6412, -4281>, <0, -130, 0>)
                     ],
                     NewCTFLocPair( < 0, 0, 7000 > , < 90, -85, 0 > ), //deathcam angle and height
-                    NewCTFLocPair(<3990,7540,-4242>, <0,90,0>) //Victory Pos
+                    NewCTFLocPair(<3990,7540,-4242>, <0,90,0>), //Victory Pos
+                    -4754 //Undermap Z
                 )
             )
 
@@ -511,13 +523,14 @@ void function Sh_CustomCTF_Init()
                         NewCTFLocPair(<9377, -20718, -3569>, <0, -179, 0>)
                     ],
                     NewCTFLocPair( < 0, 0, 7000 > , < 90, -45, 0 > ), //deathcam angle and height
-                    NewCTFLocPair(<3990,7540,-4242>, <0,90,0>) //Victory Pos
+                    NewCTFLocPair(<3990,7540,-4242>, <0,90,0>), //Victory Pos
+                    -4808 //Undermap Z
                 )
             )
 
 
         default:
-            Assert(false, "No TDM locations found for map!")
+            Assert(false, "No CTF locations found for map!")
     }
 
     //Client Signals
@@ -534,7 +547,7 @@ LocPairCTF function NewCTFLocPair(vector origin, vector angles)
     return locPair
 }
 
-LocationSettingsCTF function NewCTFLocationSettings(string name, array < LocPairCTF > bubblespots, vector imcflagspawn, vector milflagspawn, array < LocPairCTF > imcspawns, array < LocPairCTF > milspawns, LocPairCTF deathcam, LocPairCTF victorypos)
+LocationSettingsCTF function NewCTFLocationSettings(string name, array < LocPairCTF > bubblespots, vector imcflagspawn, vector milflagspawn, array < LocPairCTF > imcspawns, array < LocPairCTF > milspawns, LocPairCTF deathcam, LocPairCTF victorypos, int undermap)
 {
     LocationSettingsCTF locationSettings
     locationSettings.name = name
@@ -545,6 +558,7 @@ LocationSettingsCTF function NewCTFLocationSettings(string name, array < LocPair
     locationSettings.milspawns = milspawns
     locationSettings.deathcam = deathcam
     locationSettings.victorypos = victorypos
+    locationSettings.undermap = undermap
 
     file.locationSettings.append(locationSettings)
 

@@ -1385,34 +1385,6 @@ void function StartFlagReturn(entity player, int team, CTFPoint teamflagpoint)
 
 void function PlayerDiedWithFlag(entity victim, int team, CTFPoint teamflagpoint)
 {
-    //need to register each undermap pos for each location in Sh_CustomCTF_Init eventually just to make it a bit more accurate
-    //not super needed tho would just be nice
-    float undermap
-
-    switch(GetMapName())
-    {
-        case "mp_rr_canyonlands_staging":
-            undermap = -30000
-            break
-        case "mp_rr_aqueduct":
-            undermap = -900
-            break
-        case "mp_rr_ashs_redemption":
-            undermap = 1500
-            break
-        case "mp_rr_canyonlands_mu1":
-        case "mp_rr_canyonlands_mu1_night":
-        case "mp_rr_canyonlands_64k_x_64k":
-            undermap = 1500
-            break
-        case "mp_rr_desertlands_64k_x_64k":
-        case "mp_rr_desertlands_64k_x_64k_nx":
-            undermap = -6000
-            break
-        default:
-            undermap = 1500
-    }
-
     int enemyteam = GetCTFEnemyTeam(team)
 
     teamflagpoint.pole.ClearParent()
@@ -1442,7 +1414,7 @@ void function PlayerDiedWithFlag(entity victim, int team, CTFPoint teamflagpoint
     }
 
     //Check for if the flag ends up under the map
-    if(teamflagpoint.pole.GetOrigin().z > undermap)
+    if(teamflagpoint.pole.GetOrigin().z > file.selectedLocation.undermap)
     {
         if(Distance(teamflagpoint.pole.GetOrigin(), CTF.bubbleCenter) > CTF.bubbleRadius)
         {
