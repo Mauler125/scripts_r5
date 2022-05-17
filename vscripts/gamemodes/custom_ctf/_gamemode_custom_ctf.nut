@@ -95,7 +95,7 @@ void function _CustomCTF_Init()
     //TestingCommands
     //AddClientCommandCallback("imc", ClientCommand_IMC)
     //AddClientCommandCallback("mil", ClientCommand_MIL)
-    AddClientCommandCallback("hideall", ClientCommand_HideAll)
+    //AddClientCommandCallback("hideall", ClientCommand_HideAll)
 
     thread RUNCTF()
 }
