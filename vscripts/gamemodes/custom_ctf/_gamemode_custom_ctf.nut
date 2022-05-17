@@ -95,6 +95,7 @@ void function _CustomCTF_Init()
     //TestingCommands
     //AddClientCommandCallback("imc", ClientCommand_IMC)
     //AddClientCommandCallback("mil", ClientCommand_MIL)
+    AddClientCommandCallback("hideall", ClientCommand_HideAll)
 
     thread RUNCTF()
 }
@@ -116,6 +117,15 @@ void function _CTFRegisterCTFClass(CTFClasses ctfclass)
 //             Client Commands             //
 //                                         //
 /////////////////////////////////////////////
+
+bool function ClientCommand_HideAll(entity player, array<string> args)
+{
+    if( !IsValid( player ) ) return false
+
+    Remote_CallFunction_Replay(player, "ServerCallback_CTF_HideCustomUI", ServerTimer.seconds)
+
+    return true
+}
 
 bool function ClientCommand_IMC(entity player, array<string> args)
 {
@@ -345,6 +355,12 @@ void function StartRound()
     //reset map votes
     ResetMapVotes()
 
+    //spawn CTF flags based on location
+    SpawnCTFPoints()
+
+    //create the bubble based on location
+    file.bubbleBoundary = CreateBubbleBoundary(file.selectedLocation)
+
     foreach(player in GetPlayerArray())
     {
         if( !IsValid( player ) )
@@ -363,12 +379,6 @@ void function StartRound()
         TpPlayerToSpawnPoint(player)
         GiveBackWeapons(player)
     }
-
-    //spawn CTF flags based on location
-    SpawnCTFPoints()
-
-    //create the bubble based on location
-    file.bubbleBoundary = CreateBubbleBoundary(file.selectedLocation)
 
     float endTime = Time() + CTF_ROUNDTIME
     while( Time() <= endTime )

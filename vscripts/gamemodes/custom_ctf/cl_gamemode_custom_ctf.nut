@@ -839,6 +839,8 @@ void function CreateVotingUI()
 
 void function DestroyVotingUI()
 {
+    isvoting = false
+    
     FadeOutSoundOnEntity( GetLocalClientPlayer(), "Music_CharacterSelect_Wattson", 0.2 )
     ScreenCoverTransition( Time() + 0.2 )
 
@@ -856,8 +858,6 @@ void function DestroyVotingUI()
 
     overHeadRuis.clear()
     cleanupEnts.clear()
-
-    isvoting = false
 }
 
 void function UpdateUIVoteTimer()
