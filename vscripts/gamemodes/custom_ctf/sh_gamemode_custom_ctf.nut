@@ -175,8 +175,7 @@ void function Sh_CustomCTF_Init()
         )
     }
 
-    // Map locations
-    //This is only used for the boundary bubble
+    // Map locations, flag spawns, team spawns, deathcam, victory pos, and undermap Z
     switch(GetMapName())
     {
         case "mp_rr_canyonlands_staging":
@@ -215,7 +214,7 @@ void function Sh_CustomCTF_Init()
             Shared_RegisterLocation(
                 NewCTFLocationSettings(
                     "Overflow",
-                    [
+                    [ //bubblespots
                         NewCTFLocPair(<4859, -4097, 351>, <0, 0, 0>),
                         NewCTFLocPair(<-3436, -4097, 351>, <0, 0, 0>)
                     ],
@@ -249,7 +248,7 @@ void function Sh_CustomCTF_Init()
             Shared_RegisterLocation(
                 NewCTFLocationSettings(
                     "Artillery",
-                    [
+                    [ //bubblespots
                         NewCTFLocPair(<9614, 30792, 4868>, <0, 90, 0>),
                         NewCTFLocPair(<6379, 30792, 4868>, <0, 18, 0>),
                         NewCTFLocPair(<3603, 30792, 4868>, <0, 180, 0>),
@@ -278,7 +277,7 @@ void function Sh_CustomCTF_Init()
             Shared_RegisterLocation(
                 NewCTFLocationSettings(
                     "Airbase",
-                    [
+                    [ //bubblespots
                         NewCTFLocPair(<-25775, 1599, 2583>, <0, 90, 0>),
                         NewCTFLocPair(<-24845,-5112,2571>, <0, 18, 0>),
                         NewCTFLocPair(<-28370, -2238, 2550>, <0, 180, 0>)
@@ -306,7 +305,7 @@ void function Sh_CustomCTF_Init()
             Shared_RegisterLocation(
                 NewCTFLocationSettings(
                     "Relay",
-                    [
+                    [ //bubblespots
                         NewCTFLocPair(<29625, 25371, 4216>, <0, 90, 0>),
                         NewCTFLocPair(<22958, 22128, 3914>, <0, 18, 0>),
                         NewCTFLocPair(<26825, 30767, 4790>, <0, 180, 0>)
@@ -334,7 +333,7 @@ void function Sh_CustomCTF_Init()
             Shared_RegisterLocation(
                 NewCTFLocationSettings(
                     "Wetlands",
-                    [
+                    [ //bubblespots
                         NewCTFLocPair(<29585, 16597, 4641>, <0, 90, 0>),
                         NewCTFLocPair(<19983, 14582, 4670>, <0, 18, 0>),
                         NewCTFLocPair(<25244, 16658, 3871>, <0, 180, 0>)
@@ -362,7 +361,7 @@ void function Sh_CustomCTF_Init()
             Shared_RegisterLocation(
                 NewCTFLocationSettings(
                     "Repulsor",
-                    [
+                    [ //bubblespots
                         NewCTFLocPair(<20269, -14999, 4824>, <0, 90, 0>),
                         NewCTFLocPair(<29000, -15195, 4726>, <0, 18, 0>),
                         NewCTFLocPair(<24417, -15196, 5203>, <0, 180, 0>)
@@ -390,7 +389,7 @@ void function Sh_CustomCTF_Init()
             Shared_RegisterLocation(
                 NewCTFLocationSettings(
                     "Skull Town",
-                    [
+                    [ //bubblespots
                         NewCTFLocPair(<-12391, -19413, 3166>, <0, 90, 0>),
                         NewCTFLocPair(<-6706, -13383, 3174>, <0, 18, 0>),
                         NewCTFLocPair(<-9746, -16127, 4062>, <0, 180, 0>)
@@ -422,7 +421,7 @@ void function Sh_CustomCTF_Init()
             Shared_RegisterLocation(
                 NewCTFLocationSettings(
                     "Overlook",
-                    [
+                    [ //bubblespots
                         NewCTFLocPair(<26893, 13646, -3199>, <0, 40, 0>),
                         NewCTFLocPair(<30989, 8510, -3329>, <0, 90, 0>),
                         NewCTFLocPair(<32922, 9423, -3329>, <0, 90, 0>)
@@ -450,7 +449,7 @@ void function Sh_CustomCTF_Init()
             Shared_RegisterLocation(
                 NewCTFLocationSettings(
                     "Refinery",
-                    [
+                    [ //bubblespots
                         NewCTFLocPair(<22630, 21512, -4516>, <0, 40, 0>),
                         NewCTFLocPair(<19147, 30973, -4602>, <0, 90, 0>)
                     ],
@@ -477,7 +476,7 @@ void function Sh_CustomCTF_Init()
             Shared_RegisterLocation(
                 NewCTFLocationSettings(
                     "Capitol City",
-                    [
+                    [ //bubblespots
                         NewCTFLocPair(<1750, 5158, -3334>, <0, 40, 0>),
                         NewCTFLocPair(<11690, 6300, -4065>, <0, 90, 0>)
                     ],

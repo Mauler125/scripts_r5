@@ -54,6 +54,8 @@ struct {
 	SquadSummaryData winnerSquadSummaryData
 
     int teamwon
+
+    int ClassID = 0
 } file;
 
 struct {
@@ -71,34 +73,34 @@ struct {
     int imcscore2
 } teamscore;
 
-array<entity> cleanupEnts
-array<var> overHeadRuis
+struct {
+    var IMCpointicon = null
+    var MILITIApointicon = null
+    var FlagReturnRUI = null
+} FlagRUI;
 
-var IMCpointicon = null
-var MILITIApointicon = null
-var FlagReturnRUI = null
+struct {
+    int gamestarttime
+    int endingtime
+    int seconds
+} clientgametimer;
+
+struct {
+    entity e
+    entity m
+} deathcam;
+
 bool hasvoted = false;
 bool isvoting = false;
 bool roundover = false
 
-int gamestarttime
-int endingtime
-int seconds
-
-entity backgroundModelSmoke
-entity backgroundModelGeo
-entity votecamera
-
-entity Deathcam
-entity cameraMover
-
 array<var> teamicons
-
-int ClassID = 0
+array<entity> cleanupEnts
+array<var> overHeadRuis
 
 void function Cl_CustomCTF_Init()
 {
-    AddClientCallback_OnResolutionChanged( UpdateTimeLeftTimer )
+    AddClientCallback_OnResolutionChanged( GetTimeFromServer )
     RegisterConCommandTriggeredCallback( "+use_alt", OnInspectKeyPressed )
 }
 
@@ -114,10 +116,10 @@ void function OnInspectKeyPressed( entity localPlayer )
 
 void function ServerCallback_CTF_SetCorrectTime(int serverseconds)
 {
-    seconds = serverseconds
+    clientgametimer.seconds = serverseconds
 }
 
-void function UpdateTimeLeftTimer()
+void function GetTimeFromServer()
 {
     GetLocalClientPlayer().ClientCommand("GetTimeFromServer")
 }
@@ -141,31 +143,31 @@ void function ServerCallback_CTF_RecaptureFlag(int team, float starttime, float 
 {
     if(start)
     {
-        FlagReturnRUI = CreateFullscreenRui( $"ui/health_use_progress.rpak" )
-        RuiSetBool( FlagReturnRUI, "isVisible", true )
-	    RuiSetImage( FlagReturnRUI, "icon", $"rui/hud/gametype_icons/survival/survey_beacon_only_pathfinder" )
-	    RuiSetGameTime( FlagReturnRUI, "startTime", starttime )
-	    RuiSetGameTime( FlagReturnRUI, "endTime", endtime )
-        RuiSetString( FlagReturnRUI, "hintKeyboardMouse", "Returning Flag To Base" )
-	    RuiSetString( FlagReturnRUI, "hintController", "Returning Flag To Base" )
+        FlagRUI.FlagReturnRUI = CreateFullscreenRui( $"ui/health_use_progress.rpak" )
+        RuiSetBool( FlagRUI.FlagReturnRUI, "isVisible", true )
+	    RuiSetImage( FlagRUI.FlagReturnRUI, "icon", $"rui/hud/gametype_icons/survival/survey_beacon_only_pathfinder" )
+	    RuiSetGameTime( FlagRUI.FlagReturnRUI, "startTime", starttime )
+	    RuiSetGameTime( FlagRUI.FlagReturnRUI, "endTime", endtime )
+        RuiSetString( FlagRUI.FlagReturnRUI, "hintKeyboardMouse", "Returning Flag To Base" )
+	    RuiSetString( FlagRUI.FlagReturnRUI, "hintController", "Returning Flag To Base" )
     }
     else
     {
-        if (FlagReturnRUI != null)
+        if (FlagRUI.FlagReturnRUI != null)
         {
-            try { RuiDestroy(FlagReturnRUI) } catch (pe1){ }
-            FlagReturnRUI = null
+            try { RuiDestroy(FlagRUI.FlagReturnRUI) } catch (pe1){ }
+            FlagRUI.FlagReturnRUI = null
         }
     }
 }
 
 void function ServerCallback_CTF_ResetFlagIcons()
 {
-    try { RuiDestroy(IMCpointicon) } catch (pe1){  }
-    try { RuiDestroy(MILITIApointicon) } catch (pe2){ }
+    try { RuiDestroy(FlagRUI.IMCpointicon) } catch (pe1){  }
+    try { RuiDestroy(FlagRUI.MILITIApointicon) } catch (pe2){ }
 
-    IMCpointicon = null
-    MILITIApointicon = null
+    FlagRUI.IMCpointicon = null
+    FlagRUI.MILITIApointicon = null
 }
 
 void function ServerCallback_CTF_AddPointIcon(entity imcflag, entity milflag, int team)
@@ -173,16 +175,16 @@ void function ServerCallback_CTF_AddPointIcon(entity imcflag, entity milflag, in
     switch(team)
     {
         case TEAM_IMC:
-            if(IMCpointicon == null)
-                IMCpointicon = AddPointIconRUI(IMCpointicon, imcflag, "Defend")
-            if(MILITIApointicon == null)
-                MILITIApointicon = AddPointIconRUI(MILITIApointicon, milflag, "Capture")
+            if(FlagRUI.IMCpointicon == null)
+            FlagRUI.IMCpointicon = AddPointIconRUI(FlagRUI.IMCpointicon, imcflag, "Defend")
+            if(FlagRUI.MILITIApointicon == null)
+                FlagRUI.MILITIApointicon = AddPointIconRUI(FlagRUI.MILITIApointicon, milflag, "Capture")
             break
         case TEAM_MILITIA:
-            if(IMCpointicon == null)
-                IMCpointicon = AddPointIconRUI(IMCpointicon, imcflag, "Capture")
-            if(MILITIApointicon == null)
-                MILITIApointicon = AddPointIconRUI(MILITIApointicon, milflag, "Defend")
+            if(FlagRUI.IMCpointicon == null)
+                FlagRUI.IMCpointicon = AddPointIconRUI(FlagRUI.IMCpointicon, imcflag, "Capture")
+            if(FlagRUI.MILITIApointicon == null)
+                FlagRUI.MILITIApointicon = AddPointIconRUI(FlagRUI.MILITIApointicon, milflag, "Defend")
             break
     }
 }
@@ -207,9 +209,9 @@ void function ServerCallback_CTF_SetPointIconHint(int teamflag, int messageid)
         var selected
 
         if(teamflag == TEAM_IMC)
-            selected = IMCpointicon
+            selected = FlagRUI.IMCpointicon
         else
-            selected = MILITIApointicon
+            selected = FlagRUI.MILITIApointicon
 
         switch(messageid)
         {
@@ -269,22 +271,22 @@ void function ServerCallback_CTF_PickedUpFlag(entity player, bool pickedup)
     switch(player.GetTeam())
     {
         case TEAM_IMC:
-            if(IMCpointicon == null)
+            if(FlagRUI.IMCpointicon == null)
                 break
 
             if(pickedup)
-                RuiSetVisible( MILITIApointicon, false )
+                RuiSetVisible( FlagRUI.MILITIApointicon, false )
             else
-                RuiSetVisible( MILITIApointicon, true )
+                RuiSetVisible( FlagRUI.MILITIApointicon, true )
             break
         case TEAM_MILITIA:
-            if(MILITIApointicon == null)
+            if(FlagRUI.MILITIApointicon == null)
                 break
 
             if(pickedup)
-                RuiSetVisible( IMCpointicon, false )
+                RuiSetVisible( FlagRUI.IMCpointicon, false )
             else
-                RuiSetVisible( IMCpointicon, true )
+                RuiSetVisible( FlagRUI.IMCpointicon, true )
             break
     }
 
@@ -370,9 +372,9 @@ void function ServerCallback_CTF_DoAnnouncement(float duration, int type, float 
 
             //Timer Stuff
             roundover = false
-            gamestarttime = starttime.tointeger()
-            endingtime = gamestarttime + CTF_ROUNDTIME
-            seconds = 60
+            clientgametimer.gamestarttime = starttime.tointeger()
+            clientgametimer.endingtime = clientgametimer.gamestarttime + CTF_ROUNDTIME
+            clientgametimer.seconds = 60
             thread StartGameTimer()
             break
         }
@@ -401,17 +403,17 @@ void function StartGameTimer()
 	while (!roundover)
 	{
         //Calculate Elapsed Time
-        int elapsedtime = endingtime - Time().tointeger()
+        int elapsedtime = clientgametimer.endingtime - Time().tointeger()
 
         //Calculate Seconds To Minutes
 		int minutes = floor( elapsedtime / 60 ).tointeger()
 
         //If Seconds is < 1 Set Back To 60
-        if(seconds < 1)
-            seconds = 60
+        if(clientgametimer.seconds < 1)
+            clientgametimer.seconds = 60
 
         //This isnt needed but is there to make the time left counter look nicer when the timer is < 10
-        if(seconds < 10)
+        if(clientgametimer.seconds < 10)
             secondsfiller = "0"
         else
             secondsfiller = ""
@@ -423,13 +425,13 @@ void function StartGameTimer()
             minsfiller = ""
 
         //Update the counter on the UI
-        RunUIScript("SetGameTimer", minsfiller + minutes + ":" + secondsfiller + seconds)
+        RunUIScript("SetGameTimer", minsfiller + minutes + ":" + secondsfiller + clientgametimer.seconds)
 
         if(IsValid(teamscore.timer))
-            RuiSetString( teamscore.timer, "messageText", minsfiller + minutes + ":" + secondsfiller + seconds )
+            RuiSetString( teamscore.timer, "messageText", minsfiller + minutes + ":" + secondsfiller + clientgametimer.seconds )
 
 		wait 1
-        seconds--
+        clientgametimer.seconds--
 	}
 }
 
@@ -648,9 +650,9 @@ void function ServerCallback_CTF_CustomMessages(entity player, int messageid)
 
 void function UI_To_Client_UpdateSelectedClass(int selectedclass)
 {
-    ClassID = selectedclass;
+    file.ClassID = selectedclass;
 
-    RunUIScript("UpdateSelectedClass", ClassID, file.ctfclasses[ClassID].primary, file.ctfclasses[ClassID].secondary, file.ctfclasses[ClassID].tactical, file.ctfclasses[ClassID].ult, USE_LEGEND_ABILITYS)
+    RunUIScript("UpdateSelectedClass", file.ClassID, file.ctfclasses[file.ClassID].primary, file.ctfclasses[file.ClassID].secondary, file.ctfclasses[file.ClassID].tactical, file.ctfclasses[file.ClassID].ult, USE_LEGEND_ABILITYS)
 
     entity player = GetLocalClientPlayer()
     // why does s3 not have remote server functions..?
@@ -703,13 +705,13 @@ void function ServerCallback_CTF_OpenCTFRespawnMenu(vector campos, int IMCscore,
         }
     }
 
-    cameraMover = CreateClientsideScriptMover( $"mdl/dev/empty_model.rmdl", localplayer.GetOrigin(), localplayer.CameraAngles() )
-    Deathcam = CreateClientSidePointCamera( localplayer.GetOrigin(), localplayer.CameraAngles(), 90 )
-    Deathcam.SetParent( cameraMover, "", false )
-    localplayer.SetMenuCameraEntityWithAudio( Deathcam )
-    Deathcam.SetTargetFOV( 90, true, EASING_CUBIC_INOUT, 0.50 )
-    cameraMover.NonPhysicsMoveTo(campos + file.selectedLocation.deathcam.origin, 0.60, 0, 0.30)
-    cameraMover.NonPhysicsRotateTo( file.selectedLocation.deathcam.angles, 0.60, 0, 0.30 )
+    deathcam.m = CreateClientsideScriptMover( $"mdl/dev/empty_model.rmdl", localplayer.GetOrigin(), localplayer.CameraAngles() )
+    deathcam.e = CreateClientSidePointCamera( localplayer.GetOrigin(), localplayer.CameraAngles(), 90 )
+    deathcam.e.SetParent( deathcam.m, "", false )
+    localplayer.SetMenuCameraEntityWithAudio( deathcam.e )
+    deathcam.e.SetTargetFOV( 90, true, EASING_CUBIC_INOUT, 0.50 )
+    deathcam.m.NonPhysicsMoveTo(campos + file.selectedLocation.deathcam.origin, 0.60, 0, 0.30)
+    deathcam.m.NonPhysicsRotateTo( file.selectedLocation.deathcam.angles, 0.60, 0, 0.30 )
 
     thread UpdateUIRespawnTimer()
 }
@@ -761,18 +763,18 @@ void function ServerCallback_CTF_SetObjectiveText(int score)
 
 void function waitrespawn(entity player)
 {
-    try { Deathcam.ClearParent(); cameraMover.Destroy() } catch (exception){ }
+    try { deathcam.e.ClearParent(); deathcam.m.Destroy() } catch (exception){ }
 
     if(!isvoting)
     {
         RunUIScript( "CloseCTFRespawnMenu" )
 
         try {
-            cameraMover = CreateClientsideScriptMover( $"mdl/dev/empty_model.rmdl", Deathcam.GetOrigin(), Deathcam.GetAngles() )
-            Deathcam.SetParent( cameraMover, "", false )
-            player.SetMenuCameraEntityWithAudio( Deathcam )
-            cameraMover.NonPhysicsMoveTo( player.GetOrigin(), 0.6, 0.6 / 2, 0.6 / 2 )
-            cameraMover.NonPhysicsRotateTo( player.CameraAngles(), 0.6, 0.6 / 2, 0.6 / 2 )
+            deathcam.m = CreateClientsideScriptMover( $"mdl/dev/empty_model.rmdl", deathcam.e.GetOrigin(), deathcam.e.GetAngles() )
+            deathcam.e.SetParent( deathcam.m, "", false )
+            player.SetMenuCameraEntityWithAudio( deathcam.e )
+            deathcam.m.NonPhysicsMoveTo( player.GetOrigin(), 0.6, 0.6 / 2, 0.6 / 2 )
+            deathcam.m.NonPhysicsRotateTo( player.CameraAngles(), 0.6, 0.6 / 2, 0.6 / 2 )
         } catch (exception2){ }
 
         wait 0.6
@@ -783,7 +785,7 @@ void function waitrespawn(entity player)
         HealthHUD_Update( player )
     }
 
-    try { Deathcam.ClearParent(); Deathcam.Destroy(); cameraMover.Destroy() } catch (exceptio2n){ }
+    try { deathcam.e.ClearParent(); deathcam.e.Destroy(); deathcam.m.Destroy() } catch (exceptio2n){ }
 }
 
 void function ServerCallback_CTF_SetVoteMenuOpen(bool shouldOpen, int TeamWon)

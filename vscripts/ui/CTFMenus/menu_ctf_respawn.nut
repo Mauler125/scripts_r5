@@ -247,6 +247,7 @@ void function Set_CTF_Class(string primary, string secondary, string tactical, s
 	if(defaultabilitys)
 	{
 		//Could sometimes cause a very rare index out of range crash, i couldnt find out why so try catch will save the day
+		//again this is a very rare crash and try catching it wont cause any adverse side effects
 		try {
 		entity player = GetLocalClientPlayer()
 		ItemFlavor character = LoadoutSlot_WaitForItemFlavor( ToEHI( player ), Loadout_CharacterClass() )
