@@ -374,7 +374,7 @@ void function Sh_CustomCTF_Init()
                     <19843, 14597, 4670>, //mil flag spawn
                     [ //imc spawns
                         NewCTFLocPair(<27589, 17568, 4206>, <0, -160, 0>),
-                        NewCTFLocPair(<27560, 15678, 4350>, <0, 0, 0>),
+                        NewCTFLocPair(<27560, 15678, 4350>, <0, 180, 0>),
                         NewCTFLocPair(<29963, 17119, 4366>, <0, 165, 0>),
                         NewCTFLocPair(<29234, 15319, 4206>, <0, 135, 0>)
                     ],
