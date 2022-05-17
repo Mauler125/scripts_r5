@@ -373,7 +373,7 @@ void function StartRound()
     float endTime = Time() + CTF_ROUNDTIME
     while( Time() <= endTime )
     {
-        if(Time() > endTime - 5)
+        if(Time() > endTime - 1)
             file.ctfState = eCTFState.WINNER_DECIDED
 
         if(file.ctfState == eCTFState.WINNER_DECIDED)

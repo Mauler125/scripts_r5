@@ -160,6 +160,10 @@ void function Sh_CustomCTF_Init()
     TAKE_WEAPONS_FROM_FLAG_CARRIER = GetCurrentPlaylistVarBool( "take_weapons_from_flag_carrier", false )
     GIVE_FLAG_CARRIER_SPEED_BOOST = GetCurrentPlaylistVarBool( "give_flag_carrier_speed_boost", false )
 
+    //Round time
+    int mins_to_seconds = floor( GetCurrentPlaylistVarInt( "round_time", 25 ) * 60 ).tointeger()
+    CTF_ROUNDTIME = mins_to_seconds
+
     //Register Classes
     for(int i = 1; i < 6; i++ ) {
         Shared_RegisterCTFClass(
@@ -234,12 +238,40 @@ void function Sh_CustomCTF_Init()
                     ],
                     NewCTFLocPair(<0,0,5000>, <90,-90,0>), //deathcam angle and height
                     NewCTFLocPair(<8212, -3014, 783>, <0, 120, 0>), //Victory Pos
-                    -554 //Undermap Z
+                    -408 //Undermap Z
                 )
             )
             break
 
         case "mp_rr_ashs_redemption":
+            Shared_RegisterLocation(
+                NewCTFLocationSettings(
+                    "Ash's Redemption",
+                    [ //bubblespots
+                        NewCTFLocPair(<-22104, 6009, -26929>, <0, 0, 0>),
+                        NewCTFLocPair(<-21372, 3709, -26955>, <-5, 55, 0>),
+                        NewCTFLocPair(<-19356, 6397, -26861>, <-4, -166, 0>),
+                        NewCTFLocPair(<-20713, 7409, -26742>, <-4, -114, 0>)
+                    ],
+                    <-20127, 7319, -27038>, //imc flag spawn
+                    <-21784, 4144, -27039>, //mil flag spawn
+                    [ //imc spawns
+                        NewCTFLocPair(<-19363, 6818, -27054>, <0, -130, 0>),
+                        NewCTFLocPair(<-19544, 7284, -26833>, <0, -117, 0>),
+                        NewCTFLocPair(<-19199, 6382, -27059>, <0, -116, 0>),
+                        NewCTFLocPair(<-20866, 6935, -27006>, <0, 173, 0>)
+                    ],
+                    [ //mil spawns
+                        NewCTFLocPair(<-22452, 4873, -26918>, <0, 93, 0>),
+                        NewCTFLocPair(<-21644, 3908, -27033>, <0, 89, 0>),
+                        NewCTFLocPair(<-22439, 5075, -26994>, <0, 73, 0>),
+                        NewCTFLocPair(<-22024, 4408, -26938>, <0, -35, 0>)
+                    ],
+                    NewCTFLocPair(<0,0,3000>, <90,4,0>), //deathcam angle and height
+                    NewCTFLocPair(<-20904, 5797, -26745>, <0, -75, 0>), //Victory Pos
+                    -27272 //Undermap Z
+                )
+            )
             break
 
         case "mp_rr_canyonlands_mu1":
@@ -411,6 +443,60 @@ void function Sh_CustomCTF_Init()
                     NewCTFLocPair(<0,0,7000>, <90,-45,0>), //deathcam angle and height
                     NewCTFLocPair(<-9774, -15325, 4056>, <0, 135, 0>), //Victory Pos
                     2762 //Undermap Z
+                )
+            )
+
+            Shared_RegisterLocation(
+                NewCTFLocationSettings(
+                    "Tunnel",
+                    [ //bubblespots
+                        NewCTFLocPair(<770, 30495, 4835>, <0, 0, 0>),
+                        NewCTFLocPair(<-3298, 27005, 4835>, <0, 0, 0>)
+                    ],
+                    <770, 30495, 4835>, //imc flag spawn
+                    <-3298, 27005, 4835>, //mil flag spawn
+                    [ //imc spawns
+                        NewCTFLocPair(<555, 30966, 4892>, <0, -148, 0>),
+                        NewCTFLocPair(<626, 30006, 4835>, <0, 167, 0>),
+                        NewCTFLocPair(<89, 30026, 4835>, <0, 169, 0>),
+                        NewCTFLocPair(<580, 30274, 4835>, <0, -162, 0>)
+                    ],
+                    [ //mil spawns
+                        NewCTFLocPair(<-2828, 27144, 4835>, <0, 92, 0>),
+                        NewCTFLocPair(<-2811, 27374, 4835>, <0, 92, 0>),
+                        NewCTFLocPair(<-3743, 27144, 4892>, <0, 66, 0>),
+                        NewCTFLocPair(<-3597, 27462, 4835>, <0, 75, 0>)
+                    ],
+                    NewCTFLocPair(<-1208,30559,5079>, <12,-61,0>), //deathcam angle and height
+                    NewCTFLocPair(<-1771, 29459, 4835>, <0, 135, 0>), //Victory Pos
+                    4600 //Undermap Z
+                )
+            )
+
+            Shared_RegisterLocation(
+                NewCTFLocationSettings(
+                    "Watch Tower",
+                    [ //bubblespots
+                        NewCTFLocPair(<-1542, 19654, 4380>, <0, 0, 0>),
+                        NewCTFLocPair(<2336, 23735, 4188>, <0, 0, 0>)
+                    ],
+                    <-1542, 19654, 4380>, //imc flag spawn
+                    <2336, 23735, 4188>, //mil flag spawn
+                    [ //imc spawns
+                        NewCTFLocPair(<-1362, 19638, 4630>, <0, 38, 0>),
+                        NewCTFLocPair(<-1538, 19815, 4630>, <0, 52, 0>),
+                        NewCTFLocPair(<-746, 19892, 4380>, <0, 118, 0>),
+                        NewCTFLocPair(<-1652, 20027, 4348>, <0, 33, 0>)
+                    ],
+                    [ //mil spawns
+                        NewCTFLocPair(<2089, 23868, 4188>, <0, -139, 0>),
+                        NewCTFLocPair(<2474, 23495, 4188>, <0, -124, 0>),
+                        NewCTFLocPair(<2291, 22911, 3996>, <0, -125, 0>),
+                        NewCTFLocPair(<1463, 23680, 3996>, <0, -117, 0>)
+                    ],
+                    NewCTFLocPair(<0,0,5000>, <90,-42,0>), //deathcam angle and height
+                    NewCTFLocPair(<1456, 22294, 4304>, <0, 136, 0>), //Victory Pos
+                    2343 //Undermap Z
                 )
             )
 

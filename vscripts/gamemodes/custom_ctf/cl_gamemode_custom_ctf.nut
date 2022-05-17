@@ -710,7 +710,14 @@ void function ServerCallback_CTF_OpenCTFRespawnMenu(vector campos, int IMCscore,
     deathcam.e.SetParent( deathcam.m, "", false )
     localplayer.SetMenuCameraEntityWithAudio( deathcam.e )
     deathcam.e.SetTargetFOV( 90, true, EASING_CUBIC_INOUT, 0.50 )
-    deathcam.m.NonPhysicsMoveTo(campos + file.selectedLocation.deathcam.origin, 0.60, 0, 0.30)
+
+    vector finalorg = campos + file.selectedLocation.deathcam.origin
+
+    //Special Cases
+    if(file.selectedLocation.name == "Tunnel")
+        finalorg = file.selectedLocation.deathcam.origin
+
+    deathcam.m.NonPhysicsMoveTo(finalorg, 0.60, 0, 0.30)
     deathcam.m.NonPhysicsRotateTo( file.selectedLocation.deathcam.angles, 0.60, 0, 0.30 )
 
     thread UpdateUIRespawnTimer()
