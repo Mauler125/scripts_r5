@@ -21,6 +21,8 @@ void function CodeCallback_PreSpawn( entity npc )
 	If you want to fix an AI field on spawned, you should do it in ai_spawn_content, unless the field change is related to code functionality and needs
 	to change before code spawns the AI. Then, it should be here.
 
+	amogus
+
 	Thanks
 	-Mackey
 	*/

@@ -176,25 +176,25 @@ bool function ClientCommand_NextRound(entity player, array<string> args)
 bool function ClientCommand_VoteForMap(entity player, array<string> args)
 {
     // don't allow multiple votes
-    if (CTF.votedPlayers.contains(player))
+    if ( CTF.votedPlayers.contains( player ) )
         return false
 
     // dont allow votes if its not voting time
-    if (!CTF.votingtime)
+    if ( !CTF.votingtime )
         return false
 
     // get map id from args
     int mapid = args[0].tointeger()
 
     // reject map ids that are outside of the range
-    if (mapid >= NUMBER_OF_MAP_SLOTS || mapid < 0)
+    if ( mapid >= NUMBER_OF_MAP_SLOTS || mapid < 0 )
         return false
 
     // add a vote for selected maps
     CTF.mapVotes[mapid]++
 
     // update current amount of votes for each map
-    foreach(p in GetPlayerArray())
+    foreach( p in GetPlayerArray() )
     {
         if( !IsValid( p ) )
             continue
@@ -257,7 +257,7 @@ void function _OnPropDynamicSpawned(entity prop)
 
 void function DestroyPlayerProps()
 {
-    foreach(prop in file.playerSpawnedProps)
+    foreach( prop in file.playerSpawnedProps )
     {
         if( IsValid( prop ) )
             prop.Destroy()
@@ -296,7 +296,7 @@ void function VotingPhase()
     CTF.IMCPoints = 0
 
     // Reset score RUI
-    foreach(player in GetPlayerArray())
+    foreach( player in GetPlayerArray() )
     {
         if( !IsValid( player ) )
             continue
@@ -309,7 +309,7 @@ void function VotingPhase()
     }
 
     // Voting phase so disable weapons and make invincible
-    foreach(player in GetPlayerArray())
+    foreach( player in GetPlayerArray() )
     {
         if( !IsValid( player ) )
             continue
@@ -326,7 +326,7 @@ void function VotingPhase()
     file.selectedLocation = file.locationSettings[CTF.mappicked]
 
     // Set the next location client side for each player
-    foreach(player in GetPlayerArray())
+    foreach( player in GetPlayerArray() )
     {
         if( !IsValid( player ) )
             continue
@@ -393,10 +393,10 @@ void function StartRound()
     float endTime = Time() + CTF_ROUNDTIME
     while( Time() <= endTime )
     {
-        if(Time() > endTime - 1)
+        if( Time() > endTime - 1 )
             file.ctfState = eCTFState.WINNER_DECIDED
 
-        if(file.ctfState == eCTFState.WINNER_DECIDED)
+        if( file.ctfState == eCTFState.WINNER_DECIDED )
         {
             // for each player, if the player is holding the flag on round end. make them drop it so it dosnt cause a crash
             foreach(player in GetPlayerArray())
@@ -457,7 +457,7 @@ void function StartRound()
                     continue
 
                 // if player is dead, respawn
-                if(!IsAlive(player))
+                if( !IsAlive( player ) )
                     _HandleRespawn(player)
 
                 // round is over so make the player invinvible
@@ -486,7 +486,7 @@ void function StartRound()
                         }
                     }
                 }
-                else if (file.locationSettings.len() == NUMBER_OF_MAP_SLOTS) // if the map has exactly 4 maps, remove the guess work for randomizing the maps as it would cause a rare crash
+                else if ( file.locationSettings.len() == NUMBER_OF_MAP_SLOTS ) // if the map has exactly 4 maps, remove the guess work for randomizing the maps as it would cause a rare crash
                 {
                     CTF.mapIds.append( 0 )
                     CTF.mapIds.append( 1 )
@@ -513,7 +513,7 @@ void function StartRound()
                 wait 8
 
                 // For each player, set voting screen and update maps that are picked for voting
-                foreach(player in GetPlayerArray())
+                foreach( player in GetPlayerArray() )
                 {
                     if( !IsValid( player ) )
                         continue
@@ -588,9 +588,9 @@ void function StartRound()
                         CTF.mappicked = highestVoteId
                     }
 
-                    if (CTF.votestied)
+                    if ( CTF.votestied )
                     {
-                        foreach(player in GetPlayerArray())
+                        foreach( player in GetPlayerArray() )
                         {
                             if( !IsValid( player ) )
                                 continue
@@ -608,7 +608,7 @@ void function StartRound()
                     CTF.mappicked = RandomIntRange(0, file.locationSettings.len() - 1)
 
                     // Set the vote screen for each player to show the chosen location
-                    foreach(player in GetPlayerArray())
+                    foreach( player in GetPlayerArray() )
                     {
                         if( !IsValid( player ) )
                             continue
@@ -621,7 +621,7 @@ void function StartRound()
                 wait 5
 
                 // Close the votemenu for each player
-                foreach(player in GetPlayerArray())
+                foreach( player in GetPlayerArray() )
                 {
                     if( !IsValid( player ) )
                         continue
@@ -632,7 +632,7 @@ void function StartRound()
             else
             {
                 // Open the vote menu for each player and set it to the winners screen
-                foreach(player in GetPlayerArray())
+                foreach( player in GetPlayerArray() )
                 {
                     if( !IsValid( player ) )
                         continue
@@ -647,7 +647,7 @@ void function StartRound()
                 wait 10
 
                 // Set the votemenu screen to show next round text
-                foreach(player in GetPlayerArray())
+                foreach( player in GetPlayerArray() )
                 {
                     if( !IsValid( player ) )
                         continue
@@ -659,7 +659,7 @@ void function StartRound()
                 wait 5
 
                 // Close the votemenu for each player
-                foreach(player in GetPlayerArray())
+                foreach( player in GetPlayerArray() )
                 {
                     if( !IsValid( player ) )
                         continue
@@ -685,7 +685,7 @@ void function StartRound()
     file.ctfState = eCTFState.IN_PROGRESS
 
     // Reset flag icons for each player
-    foreach(player in GetPlayerArray())
+    foreach( player in GetPlayerArray() )
     {
         if( !IsValid( player ) )
             continue
@@ -712,7 +712,7 @@ void function RandomizeTiedLocations(array<int> maps)
             currentmapindex = 0
 
         // Update Randomizer ui for each player
-        foreach(player in GetPlayerArray())
+        foreach( player in GetPlayerArray() )
         {
             if( !IsValid( player ) )
                 continue
@@ -745,7 +745,7 @@ void function RandomizeTiedLocations(array<int> maps)
     }
 
     // Show final selected map
-    foreach(player in GetPlayerArray())
+    foreach( player in GetPlayerArray() )
     {
         if( !IsValid( player ) )
             continue
@@ -757,7 +757,7 @@ void function RandomizeTiedLocations(array<int> maps)
     wait 0.5
 
     // Procede to final location picked screen
-    foreach(player in GetPlayerArray())
+    foreach( player in GetPlayerArray() )
     {
         if( !IsValid( player ) )
             continue
@@ -827,7 +827,7 @@ void function SpawnCTFPoints()
 
     MILITIAPoint.flagatbase = true
 
-    foreach(player in GetPlayerArray())
+    foreach( player in GetPlayerArray() )
     {
         if( !IsValid( player ) )
             continue
@@ -851,7 +851,7 @@ void function ClearCustomHighlight(entity e)
 
 void function PlayerPickedUpFlag(entity ent)
 {
-    if(ent.GetTeam() == TEAM_IMC)
+    if( ent.GetTeam() == TEAM_IMC )
     {
         CustomHighlight(ent, 0, 0, 1)
         Highlight_SetEnemyHighlightWithParam0( ent, "bloodhound_sonar", <0,0,1> )
@@ -866,10 +866,10 @@ void function PlayerPickedUpFlag(entity ent)
         MILITIAPoint.trailfx = StartParticleEffectOnEntity_ReturnEntity( ent, GetParticleSystemIndex( $"P_ar_holopilot_trail" ), FX_PATTACH_ABSORIGIN_FOLLOW, AttachID )
     }
 
-    if(TAKE_WEAPONS_FROM_FLAG_CARRIER)
+    if( TAKE_WEAPONS_FROM_FLAG_CARRIER )
         TakeWeaponsForFlagCarrier( ent )
 
-    if(GIVE_FLAG_CARRIER_SPEED_BOOST)
+    if( GIVE_FLAG_CARRIER_SPEED_BOOST )
         StatusEffect_AddEndless( ent, eStatusEffect.speed_boost, 0.1 )
 
     Remote_CallFunction_Replay(ent, "ServerCallback_CTF_PickedUpFlag", ent, true)
@@ -882,22 +882,22 @@ void function PlayerDroppedFlag(entity ent)
     ClearCustomHighlight( ent )
     Highlight_ClearEnemyHighlight( ent )
 
-    if(TAKE_WEAPONS_FROM_FLAG_CARRIER)
+    if( TAKE_WEAPONS_FROM_FLAG_CARRIER )
         thread GiveBackWeapons( ent )
 
-    if(GIVE_FLAG_CARRIER_SPEED_BOOST)
+    if( GIVE_FLAG_CARRIER_SPEED_BOOST )
         StatusEffect_StopAllOfType( ent, eStatusEffect.speed_boost )
 
     Remote_CallFunction_Replay(ent, "ServerCallback_CTF_PickedUpFlag", ent, false)
 
-    if(ent.GetTeam() == TEAM_IMC)
+    if( ent.GetTeam() == TEAM_IMC )
     {
-        if(IsValid(IMCPoint.trailfx))
+        if( IsValid( IMCPoint.trailfx ) )
             IMCPoint.trailfx.Destroy()
     }
     else // TEAM_MILITIA
     {
-        if(IsValid(MILITIAPoint.trailfx))
+        if( IsValid( MILITIAPoint.trailfx ) )
             MILITIAPoint.trailfx.Destroy()
     }
 }
@@ -905,7 +905,7 @@ void function PlayerDroppedFlag(entity ent)
 int function GetCTFEnemyTeam(int team)
 {
     int enemyteam
-    switch(team)
+    switch( team )
     {
         case TEAM_IMC:
             enemyteam = TEAM_MILITIA
@@ -964,7 +964,7 @@ void function CaptureFlag(entity ent, int team, CTFPoint teamflagpoint)
 
     wait 0.2
 
-    if(team == TEAM_IMC)
+    if( team == TEAM_IMC )
         CTF.IMCPoints++
     else
         CTF.MILITIAPoints++
@@ -1031,19 +1031,19 @@ void function IMCPoint_Trigger( entity trigger, entity ent )
 {
     if ( ent.IsPlayer() && IsValid( ent ) )
     {
-        if (ent.GetTeam() != TEAM_IMC)
+        if ( ent.GetTeam() != TEAM_IMC )
         {
-            if (!IMCPoint.pickedup)
+            if ( !IMCPoint.pickedup )
             {
                 thread PickUpFlag(ent, TEAM_MILITIA, IMCPoint)
             }
         }
 
-        if (MILITIAPoint.pickedup)
+        if ( MILITIAPoint.pickedup )
         {
-            if(MILITIAPoint.holdingplayer == ent)
+            if( MILITIAPoint.holdingplayer == ent )
             {
-                if (IMCPoint.flagatbase)
+                if ( IMCPoint.flagatbase )
                 {
                     thread CaptureFlag(ent, TEAM_IMC, MILITIAPoint)
                 }
@@ -1054,9 +1054,9 @@ void function IMCPoint_Trigger( entity trigger, entity ent )
 
 void function MILITIA_Point_Trigger( entity trigger, entity ent )
 {
-    if ( ent.IsPlayer() && IsValid(ent))
+    if( ent.IsPlayer() && IsValid( ent ) )
     {
-        if (ent.GetTeam() != TEAM_MILITIA)
+        if( ent.GetTeam() != TEAM_MILITIA )
         {
             if (!MILITIAPoint.pickedup)
             {
@@ -1064,9 +1064,9 @@ void function MILITIA_Point_Trigger( entity trigger, entity ent )
             }
         }
 
-        if (IMCPoint.pickedup)
+        if( IMCPoint.pickedup )
         {
-            if(IMCPoint.holdingplayer == ent)
+            if( IMCPoint.holdingplayer == ent )
             {
                 if (MILITIAPoint.flagatbase)
                 {
@@ -1105,7 +1105,7 @@ void function GiveBackWeapons(entity player)
     player.GiveWeapon(file.ctfclasses[player.p.CTFClassID].primary, WEAPON_INVENTORY_SLOT_PRIMARY_0, file.ctfclasses[player.p.CTFClassID].primaryattachments)
     player.GiveWeapon(file.ctfclasses[player.p.CTFClassID].secondary, WEAPON_INVENTORY_SLOT_PRIMARY_1, file.ctfclasses[player.p.CTFClassID].secondaryattachments)
 
-    if(!USE_LEGEND_ABILITYS)
+    if( !USE_LEGEND_ABILITYS )
     {
         player.GiveOffhandWeapon( file.ctfclasses[player.p.CTFClassID].tactical, OFFHAND_TACTICAL )
         player.GiveOffhandWeapon( file.ctfclasses[player.p.CTFClassID].ult, OFFHAND_ULTIMATE )
@@ -1128,7 +1128,7 @@ void function GiveBackWeapons(entity player)
 // purpose: OnPlayerConnected Callback
 void function _OnPlayerConnected(entity player)
 {
-    if( !IsValid(player) )
+    if( !IsValid( player ) )
         return
 
     // Give passive regen (pilot blood)
@@ -1136,20 +1136,18 @@ void function _OnPlayerConnected(entity player)
 
     Remote_CallFunction_NonReplay(player, "ServerCallback_CTF_SetObjectiveText", CTF_SCORE_GOAL_TO_WIN)
 
+    // why gen
     int SavedPlayerClass = player.GetPersistentVarAsInt( "gen" )
     if (SavedPlayerClass > NUMBER_OF_CLASS_SLOTS || SavedPlayerClass < 0)
         SavedPlayerClass = 0
 
     player.p.CTFClassID = SavedPlayerClass
 
-    if(!IsAlive(player))
-    {
+    if( !IsAlive(player) )
         _HandleRespawn(player)
-    }
 
-    switch(GetGameState())
+    switch ( GetGameState() )
     {
-
     case eGameState.WaitingForPlayers:
         player.FreezeControlsOnServer()
         Remote_CallFunction_NonReplay(player, "ServerCallback_CTF_DoAnnouncement", 2, eCTFAnnounce.VOTING_PHASE, CTF.roundstarttime)
@@ -1172,20 +1170,20 @@ void function _OnPlayerConnected(entity player)
 void function _OnPlayerDisconnected(entity player)
 {
     // Only if the flag is picked up
-    if (IMCPoint.pickedup)
+    if ( IMCPoint.pickedup )
     {
         // Only if the flag is held by said player
-        if(IMCPoint.holdingplayer == player)
+        if ( IMCPoint.holdingplayer == player )
         {
             thread PlayerDiedWithFlag(player, TEAM_IMC, IMCPoint)
         }
     }
 
     // Only if the flag is picked up
-    if (MILITIAPoint.pickedup)
+    if ( MILITIAPoint.pickedup )
     {
         // Only if the flag is held by said player
-        if(MILITIAPoint.holdingplayer == player)
+        if ( MILITIAPoint.holdingplayer == player )
         {
             thread PlayerDiedWithFlag(player, TEAM_MILITIA, MILITIAPoint)
         }
@@ -1197,7 +1195,7 @@ void function MILITIA_PoleReturn_Trigger( entity trigger, entity ent )
     if ( ent.IsPlayer() && IsValid(ent) )
     {
         // If is on team IMC pick back up
-        if (ent.GetTeam() == TEAM_IMC)
+        if ( ent.GetTeam() == TEAM_IMC )
         {
             MILITIAPoint.returntrigger.Destroy()
             MILITIAPoint.pole.SetParent(ent)
@@ -1234,9 +1232,9 @@ void function MILITIA_PoleReturn_Trigger( entity trigger, entity ent )
         }
 
         // If is on team MIL start return countdown
-        if (ent.GetTeam() == TEAM_MILITIA)
+        if ( ent.GetTeam() == TEAM_MILITIA )
         {
-            if(!IMCPoint.isbeingreturned)
+            if( !IMCPoint.isbeingreturned )
             {
                 MILITIAPoint.isbeingreturned = true
                 MILITIAPoint.beingreturnedby = ent
@@ -1251,7 +1249,7 @@ void function IMC_PoleReturn_Trigger( entity trigger, entity ent)
     if ( ent.IsPlayer() && IsValid(ent) )
     {
         // If is on team MILITIA pick back up
-        if (ent.GetTeam() == TEAM_MILITIA)
+        if ( ent.GetTeam() == TEAM_MILITIA )
         {
             IMCPoint.returntrigger.Destroy()
             IMCPoint.pole.SetParent(ent)
@@ -1288,9 +1286,9 @@ void function IMC_PoleReturn_Trigger( entity trigger, entity ent)
         }
 
         // If is on team IMC start return countdown
-        if (ent.GetTeam() == TEAM_IMC)
+        if ( ent.GetTeam() == TEAM_IMC )
         {
-            if(!IMCPoint.isbeingreturned)
+            if( !IMCPoint.isbeingreturned )
             {
                 IMCPoint.isbeingreturned = true
                 IMCPoint.beingreturnedby = ent
@@ -1312,24 +1310,24 @@ void function StartFlagReturn(entity player, int team, CTFPoint teamflagpoint)
     float endtime = Time() + 5
     Remote_CallFunction_Replay(player, "ServerCallback_CTF_RecaptureFlag", team, starttime, endtime, true)
 
-    while(Distance(player.GetOrigin(), teamflagpoint.pole.GetOrigin()) < 150 && IsAlive(player) && returnsuccess == false || playerpickedupflag || playerleftarea)
+    while( Distance( player.GetOrigin(), teamflagpoint.pole.GetOrigin() ) < 150 && IsAlive( player ) && returnsuccess == false || playerpickedupflag || playerleftarea )
     {
-        if(Time() >= endtime)
+        if( Time() >= endtime )
         {
             returnsuccess = true
             teamflagpoint.isbeingreturned = false
         }
 
-        if(!teamflagpoint.dropped)
+        if( !teamflagpoint.dropped )
             playerpickedupflag = true
 
-        if(Distance(player.GetOrigin(), teamflagpoint.pole.GetOrigin()) > 150)
+        if( Distance( player.GetOrigin(), teamflagpoint.pole.GetOrigin() ) > 150 )
             playerleftarea = true
 
         wait 0.01
     }
 
-    if(playerpickedupflag)
+    if( playerpickedupflag )
     {
         teamflagpoint.isbeingreturned = false
         teamflagpoint.beingreturnedby = null
@@ -1341,7 +1339,7 @@ void function StartFlagReturn(entity player, int team, CTFPoint teamflagpoint)
         return
     }
 
-    if(playerleftarea)
+    if( playerleftarea )
     {
         teamflagpoint.isbeingreturned = false
         teamflagpoint.beingreturnedby = null
@@ -1353,7 +1351,7 @@ void function StartFlagReturn(entity player, int team, CTFPoint teamflagpoint)
         return
     }
 
-    if(returnsuccess)
+    if( returnsuccess )
     {
         teamflagpoint.pole.ClearParent()
         teamflagpoint.dropped = false
@@ -1390,7 +1388,7 @@ void function StartFlagReturn(entity player, int team, CTFPoint teamflagpoint)
         teamflagpoint.isbeingreturned = false
         teamflagpoint.beingreturnedby = null
 
-        if(IsValid(player))
+        if( IsValid( player ) )
             Remote_CallFunction_Replay(player, "ServerCallback_CTF_RecaptureFlag", 0, 0, 0, false)
 
         try { teamflagpoint.returntrigger.SearchForNewTouchingEntity() } catch(stop) {}
@@ -1410,7 +1408,7 @@ void function PlayerDiedWithFlag(entity victim, int team, CTFPoint teamflagpoint
     teamflagpoint.holdingplayer = null
     teamflagpoint.pole.MakeVisible()
 
-    teamflagpoint.pole.SetOrigin(OriginToGround( teamflagpoint.pole.GetOrigin() ))
+    teamflagpoint.pole.SetOrigin( OriginToGround( teamflagpoint.pole.GetOrigin() ) )
 
     array<entity> enemyplayers = GetPlayerArrayOfTeam( enemyteam )
     foreach ( player in enemyplayers )
@@ -1428,9 +1426,9 @@ void function PlayerDiedWithFlag(entity victim, int team, CTFPoint teamflagpoint
     }
 
     // Check for if the flag ends up under the map
-    if(teamflagpoint.pole.GetOrigin().z > file.selectedLocation.undermap)
+    if( teamflagpoint.pole.GetOrigin().z > file.selectedLocation.undermap )
     {
-        if(Distance(teamflagpoint.pole.GetOrigin(), CTF.bubbleCenter) > CTF.bubbleRadius)
+        if( Distance( teamflagpoint.pole.GetOrigin(), CTF.bubbleCenter ) > CTF.bubbleRadius )
         {
             teamflagpoint.flagatbase = true
             teamflagpoint.pole.SetOrigin(OriginToGround( teamflagpoint.spawn ))
@@ -1454,7 +1452,7 @@ void function PlayerDiedWithFlag(entity victim, int team, CTFPoint teamflagpoint
     teamflagpoint.pickedup = false
     teamflagpoint.dropped = true
 
-    if (foundSafeSpot)
+    if ( foundSafeSpot )
     {
         // Create the recapture trigger
         teamflagpoint.returntrigger = CreateEntity( "trigger_cylinder" )
@@ -1463,7 +1461,7 @@ void function PlayerDiedWithFlag(entity victim, int team, CTFPoint teamflagpoint
         teamflagpoint.returntrigger.SetBelowHeight( 200 )
         teamflagpoint.returntrigger.SetOrigin( teamflagpoint.pole.GetOrigin() )
 
-        if(team == TEAM_IMC)
+        if( team == TEAM_IMC )
             teamflagpoint.returntrigger.SetEnterCallback( IMC_PoleReturn_Trigger )
         else
             teamflagpoint.returntrigger.SetEnterCallback( MILITIA_PoleReturn_Trigger )
@@ -1475,20 +1473,20 @@ void function PlayerDiedWithFlag(entity victim, int team, CTFPoint teamflagpoint
 void function CheckPlayerForFlag(entity victim)
 {
     // Only if the flag is picked up
-    if (IMCPoint.pickedup)
+    if ( IMCPoint.pickedup )
     {
         // Only if the flag is held by said player
-        if(IMCPoint.holdingplayer == victim)
+        if( IMCPoint.holdingplayer == victim )
         {
             thread PlayerDiedWithFlag(victim, TEAM_IMC, IMCPoint)
         }
     }
 
     // Only if the flag is picked up
-    if (MILITIAPoint.pickedup)
+    if ( MILITIAPoint.pickedup )
     {
         // Only if the flag is held by said player
-        if(MILITIAPoint.holdingplayer == victim)
+        if( MILITIAPoint.holdingplayer == victim )
         {
             thread PlayerDiedWithFlag(victim, TEAM_MILITIA, MILITIAPoint)
         }
@@ -1537,9 +1535,7 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
                     _HandleRespawn( victim )
                 }
             }
-
         }
-
 
         // What happens to attacker
         void functionref() attackerHandleFunc = void function() : (victim, attacker, damageInfo)  {
