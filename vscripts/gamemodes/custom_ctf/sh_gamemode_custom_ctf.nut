@@ -663,8 +663,8 @@ void function Shared_RegisterLocation(LocationSettingsCTF locationSettings)
 }
 
 // Playlist GET
-float function CTF_Equipment_GetDefaultShieldHP()                        { return GetCurrentPlaylistVarFloat("default_shield_hp", 100) }
-float function CTF_GetOOBDamagePercent()                      { return GetCurrentPlaylistVarFloat("oob_damage_percent", 25) }
+float function CTF_Equipment_GetDefaultShieldHP() { return GetCurrentPlaylistVarFloat("default_shield_hp", 100) }
+float function CTF_GetOOBDamagePercent() { return GetCurrentPlaylistVarFloat("oob_damage_percent", 25) }
 
 CTFPlaylistWeapons function CTF_Equipment_GetClass_PrimaryWeapon(string playlistvar)
 {
