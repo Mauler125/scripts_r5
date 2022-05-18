@@ -122,7 +122,7 @@ bool function ClientCommand_HideAll(entity player, array<string> args)
 {
     if( !IsValid( player ) ) return false
 
-    Remote_CallFunction_Replay(player, "ServerCallback_CTF_HideCustomUI", ServerTimer.seconds)
+    Remote_CallFunction_Replay(player, "ServerCallback_CTF_HideCustomUI")
 
     return true
 }
