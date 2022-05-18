@@ -98,10 +98,20 @@ array<var> teamicons
 array<entity> cleanupEnts
 array<var> overHeadRuis
 
+PakHandle &CTFRpak
+
 void function Cl_CustomCTF_Init()
 {
     AddClientCallback_OnResolutionChanged( GetTimeFromServer )
     RegisterConCommandTriggeredCallback( "+use_alt", OnInspectKeyPressed )
+
+    CTFRpak = RequestPakFile( $"common_ctf" )
+}
+
+void function Release()
+{
+    if ( CTFRpak.isAvailable )
+		ReleasePakFile( CTFRpak )
 }
 
 void function ServerCallback_CTF_HideCustomUI()
@@ -176,22 +186,21 @@ void function ServerCallback_CTF_AddPointIcon(entity imcflag, entity milflag, in
     {
         case TEAM_IMC:
             if(FlagRUI.IMCpointicon == null)
-            FlagRUI.IMCpointicon = AddPointIconRUI(FlagRUI.IMCpointicon, imcflag, "Defend")
+            FlagRUI.IMCpointicon = AddPointIconRUI(FlagRUI.IMCpointicon, imcflag, "Defend", $"ctf/ctf_imc_flag")
             if(FlagRUI.MILITIApointicon == null)
-                FlagRUI.MILITIApointicon = AddPointIconRUI(FlagRUI.MILITIApointicon, milflag, "Capture")
+                FlagRUI.MILITIApointicon = AddPointIconRUI(FlagRUI.MILITIApointicon, milflag, "Capture", $"ctf/ctf_mil_flag")
             break
         case TEAM_MILITIA:
             if(FlagRUI.IMCpointicon == null)
-                FlagRUI.IMCpointicon = AddPointIconRUI(FlagRUI.IMCpointicon, imcflag, "Capture")
+                FlagRUI.IMCpointicon = AddPointIconRUI(FlagRUI.IMCpointicon, imcflag, "Capture", $"ctf/ctf_imc_flag")
             if(FlagRUI.MILITIApointicon == null)
-                FlagRUI.MILITIApointicon = AddPointIconRUI(FlagRUI.MILITIApointicon, milflag, "Defend")
+                FlagRUI.MILITIApointicon = AddPointIconRUI(FlagRUI.MILITIApointicon, milflag, "Defend", $"ctf/ctf_mil_flag")
             break
     }
 }
 
-var function AddPointIconRUI(var rui, entity flag, string text)
+var function AddPointIconRUI(var rui, entity flag, string text, asset icon)
 {
-    asset icon = $"rui/hud/gametype_icons/survival/survey_beacon_only_pathfinder"
     bool pinToEdge = true
     asset ruiFile = $"ui/overhead_icon_generic.rpak"
 
@@ -320,21 +329,24 @@ void function MakeScoreRUI()
     clGlobal.levelEnt.EndSignal( "CloseScoreRUI" )
 
     UISize screenSize = GetScreenSize()
-    var screenAlignmentTopo2 = RuiTopology_CreatePlane( <( screenSize.width * 0.25),( screenSize.height * 0.31 ), 0>, <float( screenSize.width ), 0, 0>, <0, float( screenSize.height ), 0>, false )
-    file.teamRui = RuiCreate( $"ui/announcement_quick_right.rpak", screenAlignmentTopo2, RUI_DRAW_HUD, RUI_SORT_SCREENFADE + 1 )
+
+    var logoTopo = RuiTopology_CreatePlane( <(screenSize.width / 2) - 25, 25, 0>, <50, 0, 0>, <0, 50, 0>, false )
+    file.teamRui = RuiCreate( $"ui/basic_image.rpak", logoTopo, RUI_DRAW_HUD, RUI_SORT_SCREENFADE + 1)
+    asset icon
+    if(GetLocalClientPlayer().GetTeam() == TEAM_IMC)
+        icon = $"ctf/ctf_imc_logo"
+    else
+        icon = $"ctf/ctf_mil_logo"
 
     var screenAlignmentTopoTimer = RuiTopology_CreatePlane( <(screenSize.width / 2) - 135, -305, 0>, <200, 0, 0>, <0, 800, 0>, false )
     teamscore.timer = RuiCreate( $"ui/announcement_quick_right.rpak", screenAlignmentTopoTimer, RUI_DRAW_HUD, RUI_SORT_SCREENFADE + 1 )
-
-    RuiSetGameTime( file.teamRui, "startTime", Time() )
-    RuiSetString( file.teamRui, "messageText", "Team: " )
-    RuiSetFloat( file.teamRui, "duration", 9999999 )
-    RuiSetFloat3( file.teamRui, "eventColor", SrgbToLinear( <128, 188, 255> ) )
 
     RuiSetGameTime( teamscore.timer, "startTime", Time() )
     RuiSetString( teamscore.timer, "messageText", "00:00" )
     RuiSetFloat( teamscore.timer, "duration", 9999999 )
     RuiSetFloat3( teamscore.timer, "eventColor", SrgbToLinear( <128, 188, 255> ) )
+
+    RuiSetImage( file.teamRui, "basicImage", icon)
 
     if(GetLocalClientPlayer().GetTeam() == TEAM_SPECTATOR)
         RuiSetVisible( file.teamRui, false )
@@ -595,10 +607,10 @@ void function ServerCallback_CTF_TeamText(int team)
         switch(team)
         {
             case TEAM_IMC:
-                RuiSetString( file.teamRui, "messageText", "Your Team: IMC" )
+                RuiSetImage( file.teamRui, "basicImage", $"ctf/ctf_imc_logo")
                 break
             case TEAM_MILITIA:
-                RuiSetString( file.teamRui, "messageText", "Your Team: MILITIA")
+                RuiSetImage( file.teamRui, "basicImage", $"ctf/ctf_mil_logo")
                 break
         }
     }
