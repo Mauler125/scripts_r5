@@ -1591,9 +1591,9 @@ void function _HandleRespawn(entity player, bool forceGive = false)
     // Point icons disappear on death, so this fixes that.
     Remote_CallFunction_Replay(player, "ServerCallback_CTF_ResetFlagIcons")
 
-    foreach(players in GetPlayerArray())
+    foreach( players in GetPlayerArray() )
     {
-        if( IsValid( players ) && IsValid(IMCPoint.pole) && IsValid(MILITIAPoint.pole))
+        if( IsValid( players ) && IsValid( IMCPoint.pole ) && IsValid( MILITIAPoint.pole ) )
         {
             if (players.GetTeam() == TEAM_IMC)
             {
@@ -1615,7 +1615,7 @@ entity function CreateBubbleBoundary(LocationSettingsCTF location)
     array<LocPairCTF> spawns = location.bubblespots
 
     vector bubbleCenter
-    foreach(spawn in spawns)
+    foreach( spawn in spawns )
     {
         bubbleCenter += spawn.origin
     }
@@ -1624,9 +1624,9 @@ entity function CreateBubbleBoundary(LocationSettingsCTF location)
 
     float bubbleRadius = 0
 
-    foreach(LocPairCTF spawn in spawns)
+    foreach( LocPairCTF spawn in spawns )
     {
-        if(Distance(spawn.origin, bubbleCenter) > bubbleRadius)
+        if( Distance( spawn.origin, bubbleCenter ) > bubbleRadius )
             bubbleRadius = Distance(spawn.origin, bubbleCenter)
     }
 
@@ -1645,9 +1645,7 @@ entity function CreateBubbleBoundary(LocationSettingsCTF location)
 
     thread MonitorBubbleBoundary(bubbleShield, bubbleCenter, bubbleRadius)
 
-
     return bubbleShield
-
 }
 
 
@@ -1688,8 +1686,8 @@ void function PlayerRestoreHP(entity player, float health, float shields)
         Inventory_SetPlayerEquipment(player, "armor_pickup_lv2", "armor")
     else if(shields <= 100)
         Inventory_SetPlayerEquipment(player, "armor_pickup_lv3", "armor")
+    
     player.SetShieldHealth( shields )
-
 }
 
 void function GrantSpawnImmunity(entity player, float duration)
