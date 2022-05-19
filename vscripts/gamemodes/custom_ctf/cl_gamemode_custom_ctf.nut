@@ -288,6 +288,7 @@ void function ServerCallback_CTF_PickedUpFlag(entity player, bool pickedup)
 {
     asset icon = $"rui/gamemodes/capture_the_flag/arrow"
     vector emptymdlloc
+    vector color
 
     switch(player.GetTeam())
     {
@@ -296,6 +297,7 @@ void function ServerCallback_CTF_PickedUpFlag(entity player, bool pickedup)
                 break
 
             emptymdlloc = file.selectedLocation.imcflagspawn
+            color = SrgbToLinear( <100,100,255> / 255 )
 
             if(pickedup)
                 RuiSetVisible( FlagRUI.MILITIApointicon, false )
@@ -307,6 +309,7 @@ void function ServerCallback_CTF_PickedUpFlag(entity player, bool pickedup)
                 break
 
             emptymdlloc = file.selectedLocation.milflagspawn
+            color = SrgbToLinear( <255,100,100> / 255 )
 
             if(pickedup)
                 RuiSetVisible( FlagRUI.IMCpointicon, false )
@@ -324,7 +327,7 @@ void function ServerCallback_CTF_PickedUpFlag(entity player, bool pickedup)
         RuiSetGameTime( file.dropflagrui, "startTime", Time() )
         RuiSetString( file.dropflagrui, "messageText", "Press %use_alt% to drop the flag" )
         RuiSetFloat( file.dropflagrui, "duration", 9999999 )
-        RuiSetFloat3( file.dropflagrui, "eventColor", SrgbToLinear( <128, 188, 255> ) )
+        RuiSetFloat3( file.dropflagrui, "eventColor", color )
 
         file.baseiconmdl = CreateClientSidePropDynamic( emptymdlloc + <0,0,100>, <0,0,0>, $"mdl/dev/empty_model.rmdl" )
         file.baseicon = AddCaptureIcon( file.baseiconmdl, icon, false, $"ui/overhead_icon_generic.rpak")
@@ -671,6 +674,7 @@ void function ServerCallback_CTF_FlagCaptured(entity player, int messageid)
 void function ServerCallback_CTF_CustomMessages(entity player, int messageid)
 {
     string message
+    vector color = <0,0,0>
     switch(messageid)
     {
         case eCTFMessage.PickedUpFlag:
@@ -683,7 +687,16 @@ void function ServerCallback_CTF_CustomMessages(entity player, int messageid)
             message = "Your teams flag has been returned to base"
     }
 
-    AnnouncementData announcement = CreateAnnouncementMessageQuick( player, message, "", <100, 0, 0>, $"rui/hud/gametype_icons/survival/survey_beacon_only_pathfinder" )
+    switch(GetLocalClientPlayer().GetTeam())
+    {
+        case TEAM_IMC:
+            color = SrgbToLinear( <100,100,255> / 255 )
+            break
+        case TEAM_MILITIA:
+            color = SrgbToLinear( <255,100,100> / 255 )
+    }
+
+    AnnouncementData announcement = CreateAnnouncementMessageQuick( player, message, "", color, $"rui/hud/gametype_icons/survival/survey_beacon_only_pathfinder" )
 	Announcement_SetPurge( announcement, true )
 	Announcement_SetPriority( announcement, 200 )
 	announcement.duration = 3

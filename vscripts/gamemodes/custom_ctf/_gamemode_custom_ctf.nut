@@ -93,8 +93,8 @@ void function _CustomCTF_Init()
     AddClientCommandCallback("DropFlag", ClientCommand_DropFlag)
 
     // TestingCommands
-     AddClientCommandCallback("imc", ClientCommand_IMC)
-     AddClientCommandCallback("mil", ClientCommand_MIL)
+    // AddClientCommandCallback("imc", ClientCommand_IMC)
+    // AddClientCommandCallback("mil", ClientCommand_MIL)
     // AddClientCommandCallback("hideall", ClientCommand_HideAll)
 
     thread RUNCTF()
