@@ -798,9 +798,9 @@ void function UpdateUIRespawnTimer()
 
         if(time == 0)
         {
+            DestoryTeamIcons()
             entity player = GetLocalClientPlayer()
             RunUIScript( "DisableClassSelect")
-            DestoryTeamIcons()
             thread waitrespawn(player)
         }
 
