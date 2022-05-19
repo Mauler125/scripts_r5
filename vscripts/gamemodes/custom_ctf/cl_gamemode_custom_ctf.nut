@@ -46,6 +46,8 @@ struct {
     var scoreRui
     var teamRui
     var dropflagrui
+    var baseicon
+    entity baseiconmdl
 
 	vector victorySequencePosition = < 0, 0, 10000 >
 	vector victorySequenceAngles = < 0, 0, 0 >
@@ -186,15 +188,15 @@ void function ServerCallback_CTF_AddPointIcon(entity imcflag, entity milflag, in
     {
         case TEAM_IMC:
             if(FlagRUI.IMCpointicon == null)
-            FlagRUI.IMCpointicon = AddPointIconRUI(FlagRUI.IMCpointicon, imcflag, "Defend", $"ctf/ctf_imc_flag")
+            FlagRUI.IMCpointicon = AddPointIconRUI(FlagRUI.IMCpointicon, imcflag, "Defend", $"rui/gamemodes/capture_the_flag/ctf_imc_flag")
             if(FlagRUI.MILITIApointicon == null)
-                FlagRUI.MILITIApointicon = AddPointIconRUI(FlagRUI.MILITIApointicon, milflag, "Capture", $"ctf/ctf_mil_flag")
+                FlagRUI.MILITIApointicon = AddPointIconRUI(FlagRUI.MILITIApointicon, milflag, "Capture", $"rui/gamemodes/capture_the_flag/ctf_mil_flag")
             break
         case TEAM_MILITIA:
             if(FlagRUI.IMCpointicon == null)
-                FlagRUI.IMCpointicon = AddPointIconRUI(FlagRUI.IMCpointicon, imcflag, "Capture", $"ctf/ctf_imc_flag")
+                FlagRUI.IMCpointicon = AddPointIconRUI(FlagRUI.IMCpointicon, imcflag, "Capture", $"rui/gamemodes/capture_the_flag/ctf_imc_flag")
             if(FlagRUI.MILITIApointicon == null)
-                FlagRUI.MILITIApointicon = AddPointIconRUI(FlagRUI.MILITIApointicon, milflag, "Defend", $"ctf/ctf_mil_flag")
+                FlagRUI.MILITIApointicon = AddPointIconRUI(FlagRUI.MILITIApointicon, milflag, "Defend", $"rui/gamemodes/capture_the_flag/ctf_mil_flag")
             break
     }
 }
@@ -277,11 +279,16 @@ void function AddCaptureIconThread( entity prop, var rui )
 
 void function ServerCallback_CTF_PickedUpFlag(entity player, bool pickedup)
 {
+    asset icon = $"rui/gamemodes/capture_the_flag/ctf_arrow"
+    vector emptymdlloc
+
     switch(player.GetTeam())
     {
         case TEAM_IMC:
             if(FlagRUI.IMCpointicon == null)
                 break
+
+            emptymdlloc = file.selectedLocation.imcflagspawn
 
             if(pickedup)
                 RuiSetVisible( FlagRUI.MILITIApointicon, false )
@@ -291,6 +298,8 @@ void function ServerCallback_CTF_PickedUpFlag(entity player, bool pickedup)
         case TEAM_MILITIA:
             if(FlagRUI.MILITIApointicon == null)
                 break
+
+            emptymdlloc = file.selectedLocation.milflagspawn
 
             if(pickedup)
                 RuiSetVisible( FlagRUI.IMCpointicon, false )
@@ -309,11 +318,25 @@ void function ServerCallback_CTF_PickedUpFlag(entity player, bool pickedup)
         RuiSetString( file.dropflagrui, "messageText", "Press %use_alt% to drop the flag" )
         RuiSetFloat( file.dropflagrui, "duration", 9999999 )
         RuiSetFloat3( file.dropflagrui, "eventColor", SrgbToLinear( <128, 188, 255> ) )
+
+        file.baseiconmdl = CreateClientSidePropDynamic( emptymdlloc + <0,0,100>, <0,0,0>, $"mdl/dev/empty_model.rmdl" )
+        file.baseicon = AddCaptureIcon( file.baseiconmdl, icon, false, $"ui/overhead_icon_generic.rpak")
+        RuiSetFloat2( file.baseicon, "iconSize", <25,25,0> )
+        RuiSetFloat( file.baseicon, "distanceFade", 100000 )
+        RuiSetBool( file.baseicon, "adsFade", false )
+        RuiSetString( file.baseicon, "hint", "" )
+
     }
     else
     {
         if(IsValid( file.dropflagrui ))
             RuiDestroy( file.dropflagrui )
+
+        if(IsValid( file.baseicon ))
+            RuiDestroy( file.baseicon )
+
+        if(IsValid( file.baseiconmdl ))
+            file.baseiconmdl.Destroy()
     }
 }
 
@@ -334,9 +357,9 @@ void function MakeScoreRUI()
     file.teamRui = RuiCreate( $"ui/basic_image.rpak", logoTopo, RUI_DRAW_HUD, RUI_SORT_SCREENFADE + 1)
     asset icon
     if(GetLocalClientPlayer().GetTeam() == TEAM_IMC)
-        icon = $"ctf/ctf_imc_logo"
+        icon = $"rui/gamemodes/capture_the_flag/ctf_imc_logo"
     else
-        icon = $"ctf/ctf_mil_logo"
+        icon = $"rui/gamemodes/capture_the_flag/ctf_mil_logo"
 
     var screenAlignmentTopoTimer = RuiTopology_CreatePlane( <(screenSize.width / 2) - 135, -305, 0>, <200, 0, 0>, <0, 800, 0>, false )
     teamscore.timer = RuiCreate( $"ui/announcement_quick_right.rpak", screenAlignmentTopoTimer, RUI_DRAW_HUD, RUI_SORT_SCREENFADE + 1 )
@@ -607,10 +630,10 @@ void function ServerCallback_CTF_TeamText(int team)
         switch(team)
         {
             case TEAM_IMC:
-                RuiSetImage( file.teamRui, "basicImage", $"ctf/ctf_imc_logo")
+                RuiSetImage( file.teamRui, "basicImage", $"rui/gamemodes/capture_the_flag/ctf_imc_logo")
                 break
             case TEAM_MILITIA:
-                RuiSetImage( file.teamRui, "basicImage", $"ctf/ctf_mil_logo")
+                RuiSetImage( file.teamRui, "basicImage", $"rui/gamemodes/capture_the_flag/ctf_mil_logo")
                 break
         }
     }
@@ -845,6 +868,7 @@ void function CreateVotingUI()
     thread ShowCTFVictorySequence()
 
     RunUIScript( "OpenCTFVoteMenu" )
+    ShowScoreRUI(false)
 
     ScreenFade(GetLocalClientPlayer(), 0, 0, 0, 255, 0.3, 0.0, FFADE_IN | FFADE_PURGE)
 }
@@ -861,6 +885,7 @@ void function DestroyVotingUI()
     GetLocalClientPlayer().ClearMenuCameraEntity()
 
     RunUIScript( "CloseCTFVoteMenu" )
+    ShowScoreRUI(true)
 
     foreach( rui in overHeadRuis )
 		RuiDestroyIfAlive( rui )
