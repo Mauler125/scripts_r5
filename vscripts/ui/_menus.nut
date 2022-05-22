@@ -193,7 +193,11 @@ void function UICodeCallback_ActivateMenus()
 	if ( IsConnected() )
 		return
 
-	var mainMenu = GetMenu( "MainMenu" )
+	//Old MainMenu
+	//var mainMenu = GetMenu( "MainMenu" )
+
+	//New R5RMainMenu
+	var mainMenu = GetMenu( "R5RMainMenu" )
 
 	printt( "UICodeCallback_ActivateMenus:", GetActiveMenu() && Hud_GetHudName( GetActiveMenu() ) != "" )
 	if ( uiGlobal.menuStack.len() == 0 )
@@ -1510,6 +1514,13 @@ void function InitMenus()
 
 	AddMenu( "PlayVideoMenu", $"resource/ui/menus/play_video.menu", InitPlayVideoMenu )
 	AddMenu( "EliteIntroMenu", $"resource/ui/menus/elite_intro.menu", InitEliteIntroMenu )
+
+	//R5Reloaded UI
+	var r5rmainmenu = AddMenu( "R5RMainMenu", $"scripts/resource/ui/menus/R5R/mainmenu.menu", InitR5RMainMenu )
+	AddPanel( r5rmainmenu, "R5RHomePanel", InitR5RHomePanel )
+	AddPanel( r5rmainmenu, "R5RCreateServerPanel", InitR5RCreateServerPanel )
+	AddPanel( r5rmainmenu, "R5RServerBrowserPanel", InitR5RServerBrowserPanel )
+	////////
 
 	//CTF UI
 	var controlmenu = AddMenu( "CTFRespawnMenu", $"scripts/resource/ui/menus/CTF/ctfrespawnmenu.menu", InitCTFRespawnMenu )

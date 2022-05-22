@@ -796,6 +796,12 @@ Scripts:
 	ui/menu_loadscreen_preview.nut
 
 	ui/CTFMenus/menu_ctf_respawn.nut
+
+	//R5RUI
+	ui/R5RMenus/menu_main.nut
+	ui/R5RMenus/panel_home.nut
+	ui/R5RMenus/panel_createserver.nut
+	ui/R5RMenus/panel_serverbrowser.nut
 ]
 
 When: "SERVER && DEV || UI && DEV"
