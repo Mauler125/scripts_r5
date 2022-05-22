@@ -45,6 +45,8 @@ void function InitR5RMainMenu( var newMenuArg )
 	RuiSetString( Hud_GetRui( ServerBrowser ), "buttonText", "Server Browser" )
 	RuiSetString( Hud_GetRui( Settings ), "buttonText", "Settings" )
 	RuiSetString( Hud_GetRui( Quit ), "buttonText", "Quit" )
+
+	ClientCommand("pak_requestload common_r5r.rpak")
 }
 
 void function HomePressed(var button)

@@ -35,7 +35,7 @@ scripts/resource/ui/menus/R5R/mainmenu.menu
 		{
             "ControlName"			"ImagePanel"
 			"wide"					"f0"
-			"tall"					"75"
+			"tall"					"125"
 			"visible"				"1"
             "scaleImage"			"1"
 			zpos					"0"
