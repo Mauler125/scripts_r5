@@ -16,6 +16,13 @@ void function InitR5RHomePanel( var panel )
 	AddPanelEventHandler( file.panel, eUIEvent.PANEL_HIDE, Home_OnHide )
 
 	RuiSetImage( Hud_GetRui( Hud_GetChild( file.panel, "R5RPicBox" ) ), "basicImage", $"rui/menu/home/bg" )
+	
+	thread SetUIPlayerName()
+}
+
+void function SetUIPlayerName()
+{
+	wait 10
 	Hud_SetText(Hud_GetChild( file.panel, "PlayerName" ), GetPlayerName())
 }
 

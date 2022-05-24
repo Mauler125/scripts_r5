@@ -1,5 +1,8 @@
 global function InitR5RLobbyMenu
 
+global function OpenPlaylistUI
+global function OpenMapUI
+
 struct
 {
 	var menu
@@ -8,7 +11,30 @@ struct
 	var HomePanel
 	var CreateServerPanel
 	var ServerBrowserPanel
+	var PlaylistPanel
+	var MapPanel
 } file
+
+global const table<string, asset> maptoasset = {
+	[ "mp_rr_aqueduct" ] = $"rui/menu/maps/mp_rr_aqueduct",
+	[ "mp_rr_canyonlands_64k_x_64k" ] = $"rui/menu/maps/mp_rr_canyonlands_64k_x_64k",
+	[ "mp_rr_canyonlands_mu1" ] = $"rui/menu/maps/mp_rr_canyonlands_mu1",
+	[ "mp_rr_desertlands_64k_x_64k" ] = $"rui/menu/maps/mp_rr_desertlands_64k_x_64k"
+}
+
+global const table<string, string> maptoname = {
+	[ "mp_rr_aqueduct" ] = "Overflow",
+	[ "mp_rr_canyonlands_64k_x_64k" ] = "Kings Canyon S1",
+	[ "mp_rr_canyonlands_mu1" ] = "Kings Canyon S2",
+	[ "mp_rr_desertlands_64k_x_64k" ] = "Worlds Edge"
+}
+
+global const table<string, string> playlisttoname = {
+	[ "custom_tdm" ] = "Team Deathmatch",
+	[ "custom_ctf" ] = "Capture The Flag",
+	[ "tdm_gg" ] = "Gun Game",
+	[ "tdm_gg_double" ] = "Team Gun Game"
+}
 
 void function InitR5RLobbyMenu( var newMenuArg )
 {
@@ -29,6 +55,8 @@ void function InitR5RLobbyMenu( var newMenuArg )
 	file.HomePanel = Hud_GetChild(menu, "R5RHomePanel")
 	file.CreateServerPanel = Hud_GetChild(menu, "R5RCreateServerPanel")
 	file.ServerBrowserPanel = Hud_GetChild(menu, "R5RServerBrowserPanel")
+	file.PlaylistPanel = Hud_GetChild(menu, "R5RPlaylistPanel")
+	file.MapPanel = Hud_GetChild(menu, "R5RMapPanel")
 
 	file.buttons.append(Home)
 	file.buttons.append(CreateServer)
@@ -58,6 +86,8 @@ void function HomePressed(var button)
 	Hud_SetVisible( file.HomePanel, true )
 	Hud_SetVisible( file.CreateServerPanel, false )
 	Hud_SetVisible( file.ServerBrowserPanel, false )
+	Hud_SetVisible( file.PlaylistPanel, false )
+	Hud_SetVisible( file.MapPanel, false )
 }
 
 void function CreateServerPressed(var button)
@@ -67,6 +97,8 @@ void function CreateServerPressed(var button)
 	Hud_SetVisible( file.HomePanel, false )
 	Hud_SetVisible( file.CreateServerPanel, true )
 	Hud_SetVisible( file.ServerBrowserPanel, false )
+	Hud_SetVisible( file.PlaylistPanel, false )
+	Hud_SetVisible( file.MapPanel, false )
 }
 
 void function ServerBrowserPressed(var button)
@@ -76,6 +108,26 @@ void function ServerBrowserPressed(var button)
 	Hud_SetVisible( file.HomePanel, false )
 	Hud_SetVisible( file.CreateServerPanel, false )
 	Hud_SetVisible( file.ServerBrowserPanel, true )
+	Hud_SetVisible( file.PlaylistPanel, false )
+	Hud_SetVisible( file.MapPanel, false )
+}
+
+void function OpenPlaylistUI( var button )
+{
+	Hud_SetVisible( file.HomePanel, false )
+	Hud_SetVisible( file.CreateServerPanel, false )
+	Hud_SetVisible( file.ServerBrowserPanel, false )
+	Hud_SetVisible( file.PlaylistPanel, true )
+	Hud_SetVisible( file.MapPanel, false )
+}
+
+void function OpenMapUI( var button )
+{
+	Hud_SetVisible( file.HomePanel, false )
+	Hud_SetVisible( file.CreateServerPanel, false )
+	Hud_SetVisible( file.ServerBrowserPanel, false )
+	Hud_SetVisible( file.PlaylistPanel, false )
+	Hud_SetVisible( file.MapPanel, true )
 }
 
 void function SettingsPressed(var button)

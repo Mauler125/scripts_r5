@@ -1514,13 +1514,14 @@ void function InitMenus()
 
 	//R5Reloaded UI
 	var r5rmainMenu = AddMenu( "R5RMainMenu", $"scripts/resource/ui/menus/R5R/main.res", InitR5RMainMenu, "#MAIN" )
-	AddPanel( r5rmainMenu, "R5REstablishUserPanel", InitR5REstablishUserPanel )
 	AddPanel( r5rmainMenu, "R5RMainMenuPanel", InitR5RMainMenuPanel )
 
 	var r5rlobbymenu = AddMenu( "R5RLobbyMenu", $"scripts/resource/ui/menus/R5R/lobbymenu.res", InitR5RLobbyMenu )
 	AddPanel( r5rlobbymenu, "R5RHomePanel", InitR5RHomePanel )
 	AddPanel( r5rlobbymenu, "R5RCreateServerPanel", InitR5RCreateServerPanel )
 	AddPanel( r5rlobbymenu, "R5RServerBrowserPanel", InitR5RServerBrowserPanel )
+	AddPanel( r5rlobbymenu, "R5RPlaylistPanel", InitR5RPlaylistPanel )
+	AddPanel( r5rlobbymenu, "R5RMapPanel", InitR5RMapPanel )
 	////////
 
 	//CTF UI

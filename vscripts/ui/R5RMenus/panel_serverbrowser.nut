@@ -41,27 +41,6 @@ global struct ServerInfo
 
 global ServerInfo SelectedServerInfo
 
-const table<string, asset> maptoasset = {
-	[ "mp_rr_aqueduct" ] = $"rui/menu/maps/mp_rr_aqueduct",
-	[ "mp_rr_canyonlands_64k_x_64k" ] = $"rui/menu/maps/mp_rr_canyonlands_64k_x_64k",
-	[ "mp_rr_canyonlands_mu1" ] = $"rui/menu/maps/mp_rr_canyonlands_mu1",
-	[ "mp_rr_desertlands_64k_x_64k" ] = $"rui/menu/maps/mp_rr_desertlands_64k_x_64k"
-}
-
-const table<string, string> maptoname = {
-	[ "mp_rr_aqueduct" ] = "Overflow",
-	[ "mp_rr_canyonlands_64k_x_64k" ] = "Kings Canyon S1",
-	[ "mp_rr_canyonlands_mu1" ] = "Kings Canyon S2",
-	[ "mp_rr_desertlands_64k_x_64k" ] = "Worlds Edge"
-}
-
-const table<string, string> playlisttoname = {
-	[ "custom_tdm" ] = "Team Deathmatch",
-	[ "custom_ctf" ] = "Capture The Flag",
-	[ "tdm_gg" ] = "Gun Game",
-	[ "tdm_gg_double" ] = "Team Gun Game"
-}
-
 void function InitR5RServerBrowserPanel( var panel )
 {
 	file.panel = panel

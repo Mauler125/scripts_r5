@@ -109,16 +109,6 @@ resource/ui/menus/main.menu
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	    R5REstablishUserPanel
-	    {
-		    ControlName				CNestedPanel
-		    classname				"MainMenuPanelClass"
-			wide					1920
-			tall					1080
-		    visible					0
-		    controlSettingsFile		"scripts/resource/ui/menus/R5R/panels/establish_user.res"
-	    }
-
 	    R5RMainMenuPanel
 	    {
 		    ControlName				CNestedPanel

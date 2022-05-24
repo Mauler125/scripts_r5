@@ -804,7 +804,8 @@ Scripts:
 	ui/R5RMenus/panel_createserver.nut
 	ui/R5RMenus/panel_serverbrowser.nut
 	ui/R5RMenus/panel_mainmenu.nut
-	ui/R5RMenus/panel_establishuser.nut
+	ui/R5RMenus/panel_playlist.nut
+	ui/R5RMenus/panel_map.nut
 ]
 
 When: "SERVER && DEV || UI && DEV"
