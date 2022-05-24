@@ -1,8 +1,5 @@
 global function InitR5RLobbyMenu
 
-global function OpenPlaylistUI
-global function OpenMapUI
-
 struct
 {
 	var menu
@@ -77,8 +74,6 @@ void function InitR5RLobbyMenu( var newMenuArg )
 	file.HomePanel = Hud_GetChild(menu, "R5RHomePanel")
 	file.CreateServerPanel = Hud_GetChild(menu, "R5RCreateServerPanel")
 	file.ServerBrowserPanel = Hud_GetChild(menu, "R5RServerBrowserPanel")
-	file.PlaylistPanel = Hud_GetChild(menu, "R5RPlaylistPanel")
-	file.MapPanel = Hud_GetChild(menu, "R5RMapPanel")
 
 	file.buttons.append(Home)
 	file.buttons.append(CreateServer)
@@ -108,8 +103,6 @@ void function HomePressed(var button)
 	Hud_SetVisible( file.HomePanel, true )
 	Hud_SetVisible( file.CreateServerPanel, false )
 	Hud_SetVisible( file.ServerBrowserPanel, false )
-	Hud_SetVisible( file.PlaylistPanel, false )
-	Hud_SetVisible( file.MapPanel, false )
 }
 
 void function CreateServerPressed(var button)
@@ -119,8 +112,6 @@ void function CreateServerPressed(var button)
 	Hud_SetVisible( file.HomePanel, false )
 	Hud_SetVisible( file.CreateServerPanel, true )
 	Hud_SetVisible( file.ServerBrowserPanel, false )
-	Hud_SetVisible( file.PlaylistPanel, false )
-	Hud_SetVisible( file.MapPanel, false )
 }
 
 void function ServerBrowserPressed(var button)
@@ -130,26 +121,6 @@ void function ServerBrowserPressed(var button)
 	Hud_SetVisible( file.HomePanel, false )
 	Hud_SetVisible( file.CreateServerPanel, false )
 	Hud_SetVisible( file.ServerBrowserPanel, true )
-	Hud_SetVisible( file.PlaylistPanel, false )
-	Hud_SetVisible( file.MapPanel, false )
-}
-
-void function OpenPlaylistUI( var button )
-{
-	Hud_SetVisible( file.HomePanel, false )
-	Hud_SetVisible( file.CreateServerPanel, false )
-	Hud_SetVisible( file.ServerBrowserPanel, false )
-	Hud_SetVisible( file.PlaylistPanel, true )
-	Hud_SetVisible( file.MapPanel, false )
-}
-
-void function OpenMapUI( var button )
-{
-	Hud_SetVisible( file.HomePanel, false )
-	Hud_SetVisible( file.CreateServerPanel, false )
-	Hud_SetVisible( file.ServerBrowserPanel, false )
-	Hud_SetVisible( file.PlaylistPanel, false )
-	Hud_SetVisible( file.MapPanel, true )
 }
 
 void function SettingsPressed(var button)

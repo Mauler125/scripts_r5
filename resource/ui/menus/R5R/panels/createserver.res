@@ -294,5 +294,35 @@ scripts/resource/ui/menus/R5R/panels/createserver.res
 		pin_corner_to_sibling		TOP
 		pin_to_sibling_corner		BOTTOM
 	}
+
+	"R5RPlaylistPanel"
+    	{
+    	    "ControlName"				"CNestedPanel"
+    	    "ypos"						"20"
+    	    "wide"						"f0"
+			"tall"						"960"
+			"visible"					"0"
+    	    "controlSettingsFile"		"scripts/resource/ui/menus/R5R/panels/playlist.res"
+    	    "proportionalToParent"    	"1"
+
+    	    "pin_to_sibling"          	"DarkenBackground"
+    	    "pin_corner_to_sibling"		"TOP_RIGHT"
+    	    "pin_to_sibling_corner"		"TOP_RIGHT"
+    	}
+
+		"R5RMapPanel"
+    	{
+    	    "ControlName"				"CNestedPanel"
+    	    "ypos"						"20"
+    	    "wide"						"f0"
+			"tall"						"960"
+			"visible"					"0"
+    	    "controlSettingsFile"		"scripts/resource/ui/menus/R5R/panels/map.res"
+    	    "proportionalToParent"    	"1"
+
+    	    "pin_to_sibling"          	"DarkenBackground"
+    	    "pin_corner_to_sibling"		"TOP_RIGHT"
+    	    "pin_to_sibling_corner"		"TOP_RIGHT"
+    	}
 }
 
