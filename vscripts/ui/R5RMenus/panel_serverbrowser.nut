@@ -1,7 +1,6 @@
 global function InitR5RServerBrowserPanel
+global function RefreshServerListing
 
-// arbitrary large number
-global const SB_MAX_SERVER_COUNT = 999
 global const SB_MAX_SERVER_PER_PAGE = 19
 
 struct R5RServer
@@ -15,22 +14,6 @@ struct R5RServer
 	int currentplayers
 }
 
-struct
-{
-	var menu
-	var panel
-
-	var listPanel
-
-	table<var, int> buttonToServerID
-	table<var, bool> buttonEventHandlersAdded
-
-	array<R5RServer> Servers
-	int pages
-	int currentpage
-	int pageoffset
-} file
-
 global struct ServerInfo
 {
 	int ServerID = -1
@@ -38,6 +21,18 @@ global struct ServerInfo
 	string Map = ""
 	string Playlist = ""
 }
+
+struct
+{
+	var menu
+	var panel
+
+	array<R5RServer> Servers
+
+	int pages
+	int currentpage
+	int pageoffset
+} file
 
 global ServerInfo SelectedServerInfo
 
@@ -49,51 +44,90 @@ void function InitR5RServerBrowserPanel( var panel )
 	AddPanelEventHandler( panel, eUIEvent.PANEL_SHOW, ServerBrowser_OnShow )
 	AddPanelEventHandler( panel, eUIEvent.PANEL_HIDE, ServerBrowser_OnHide )
 
+	//Setup Page Nav Buttons
 	Hud_AddEventHandler( Hud_GetChild( file.panel, "BtnServerListRightArrow" ), UIE_CLICK, NextPage )
 	Hud_AddEventHandler( Hud_GetChild( file.panel, "BtnServerListLeftArrow" ), UIE_CLICK, PrevPage )
+	//Setup Connect Button
+	Hud_AddEventHandler( Hud_GetChild( file.panel, "ConnectButton" ), UIE_CLICK, ConnectToServer )
+	RuiSetString( Hud_GetRui( Hud_GetChild( file.panel, "ConnectButton" ) ), "buttonText", "Connect")
 
 	array<var> serverbuttons = GetElementsByClassname( file.menu, "ServBtn" )
-
 	foreach ( var elem in serverbuttons )
 	{
 		RuiSetString( Hud_GetRui( elem ), "buttonText", "")
-		Hud_SetVisible(elem, false)
 		Hud_AddEventHandler( elem, UIE_CLICK, SelectServer )
 	}
 
+	//Clear Server List Text
 	ResetServerLabels()
-	thread RefreshServerListing()
 
-	Hud_AddEventHandler( Hud_GetChild( file.panel, "ConnectButton" ), UIE_CLICK, ConnectToServer )
-	RuiSetString( Hud_GetRui( Hud_GetChild( file.panel, "ConnectButton" ) ), "buttonText", "Connect")
-	Hud_SetText(Hud_GetChild( file.panel, "ServerNameInfoEdit" ), file.Servers[0].Name)
-	Hud_SetText(Hud_GetChild( file.panel, "PlaylistInfoEdit" ), file.Servers[0].Playlist)
+	//Refresh Server Browser
+	thread RefreshServerListing()
 }
 
 void function ConnectToServer(var button)
 {
+	//If server isnt selected return
 	if(SelectedServerInfo.ServerID == -1)
 		return
 
-	//Connect Code Later
+	//Connect to server
+	thread StartServerConnection()
 	printf("Debug (Server ID: " + SelectedServerInfo.ServerID + " | Server Name: " + SelectedServerInfo.ServerName + " | Map: " + SelectedServerInfo.Map + " | Playlist: " + SelectedServerInfo.Playlist + ")")
+}
+
+void function StartServerConnection()
+{
+	//Currently crashes due to being in lobby, waiting on Amos to fix
+	//SetEncKeyAndConnect(SelectedServerInfo.ServerID)
+}
+
+void function SetSideBarElems(string servername, string playlistname, string desc, asset map)
+{
+	Hud_SetText(Hud_GetChild( file.panel, "ServerNameInfoEdit" ), servername )
+	Hud_SetText(Hud_GetChild( file.panel, "PlaylistInfoEdit" ), playlistname )
+	Hud_SetText(Hud_GetChild( file.panel, "ServerDesc" ), desc )
+	RuiSetImage( Hud_GetRui( Hud_GetChild( file.panel, "ServerMapImg" ) ), "loadscreenImage", map )
+}
+
+void function SetSelectedServer(int id, string name, string map, string playlist)
+{
+	SelectedServerInfo.ServerID = id
+	SelectedServerInfo.ServerName = name
+	SelectedServerInfo.Map = map
+	SelectedServerInfo.Playlist = playlist
+}
+
+string function GetUIPlaylistName(string playlist)
+{
+	string finalplaylistname = playlist
+
+	try{
+		finalplaylistname = playlisttoname[playlist]
+	} catch(e1) {}
+
+	return finalplaylistname
+}
+
+string function GetUIMapName(string map)
+{
+	string mapname = map
+
+	try{
+		mapname = maptoname[map]
+	} catch(e2) {}
+
+	return mapname
 }
 
 void function SelectServer(var button)
 {
 	int buttonid = Hud_GetScriptID( button ).tointeger()
-
 	int finalid = buttonid + file.pageoffset
+	string playlistname = GetUIPlaylistName(file.Servers[finalid].Playlist)
 
-	SelectedServerInfo.ServerID = finalid
-	SelectedServerInfo.ServerName = file.Servers[finalid].Name
-	SelectedServerInfo.Map = file.Servers[finalid].Map
-	SelectedServerInfo.Playlist = file.Servers[finalid].Playlist
-
-	Hud_SetText(Hud_GetChild( file.panel, "ServerNameInfoEdit" ), file.Servers[finalid].Name)
-	Hud_SetText(Hud_GetChild( file.panel, "PlaylistInfoEdit" ), playlisttoname[file.Servers[finalid].Playlist])
-	Hud_SetText(Hud_GetChild( file.panel, "ServerDesc" ), file.Servers[finalid].Desc)
-	RuiSetImage( Hud_GetRui( Hud_GetChild( file.panel, "ServerMapImg" ) ), "loadscreenImage", maptoasset[file.Servers[finalid].Map] )
+	SetSelectedServer(finalid, file.Servers[finalid].Name, file.Servers[finalid].Map, file.Servers[finalid].Playlist)
+	SetSideBarElems(file.Servers[finalid].Name, playlistname, file.Servers[finalid].Desc, maptoasset[file.Servers[finalid].Map])
 }
 
 void function AddServer(int id, string name, string playlist, string map, string desc, int maxplayers, int currentplayers)
@@ -127,29 +161,33 @@ void function ResetServerLabels()
 
 void function RefreshServerListing()
 {
+	//Hide no servers found ui
+	ShowNoServersFound(false)
+
 	// Clear table and servers
-	file.buttonToServerID.clear()
 	file.Servers.clear()
 
 	//Get Servercount
 	int serverCount = GetServerCount()
-
-	int serverCount2 = 999999
 
 	//Reset pages
 	file.pages = 0
 
 	int getpages = 0
 	//Add each server to the array
-	for( int i=0; i < serverCount2; i++ )
+	for( int i=0; i < serverCount; i++ )
 	{
-		string servername = RandomServerName(RandomIntRange(0, 5))
-		string playlistname = RandomPlaylistName(RandomIntRange(0, 4))
-		string mapname = RandomMapName(RandomIntRange(0, 4))
-		string desc = RandomDesc(RandomIntRange(0, 4))
-		int maxplayers = 32
-		int current = RandomIntRange(0, 32)
-		AddServer(i, servername, playlistname, mapname, desc, maxplayers, current)
+		string servername = GetServerName(i)
+		string playlistname = GetServerPlaylist(i)
+		string mapname = GetServerMap(i)
+
+		//Descption and player count will come at a later date
+		string desc = ""
+		int maxplayers = 0
+		int current = 0
+		//
+
+		thread AddServer(i, servername, playlistname, mapname, desc, maxplayers, current)
 
 		if(getpages == SB_MAX_SERVER_PER_PAGE)
 		{
@@ -160,21 +198,43 @@ void function RefreshServerListing()
 		getpages++
 	}
 
-	Hud_SetText(Hud_GetChild( file.panel, "Pages" ), "Page: 0/" + file.pages)
-
 	//Setup Buttons and labels/
 	for( int i=0; i < file.Servers.len() && i < SB_MAX_SERVER_PER_PAGE; i++ )
 	{
+		string mapname = GetUIMapName(file.Servers[i].Map)
+		string playlistname = GetUIPlaylistName(file.Servers[i].Playlist)
+
 		Hud_SetText( Hud_GetChild( file.panel, "ServerName" + i ), file.Servers[i].Name)
-		Hud_SetText( Hud_GetChild( file.panel, "Playlist" + i ), playlisttoname[file.Servers[i].Playlist])
-		Hud_SetText( Hud_GetChild( file.panel, "Map" + i ), maptoname[file.Servers[i].Map])
+		Hud_SetText( Hud_GetChild( file.panel, "Playlist" + i ), playlistname)
+		Hud_SetText( Hud_GetChild( file.panel, "Map" + i ), mapname)
 		Hud_SetText( Hud_GetChild( file.panel, "PlayerCount" + i ), file.Servers[i].currentplayers + "/" + file.Servers[i].maxplayers)
 		Hud_SetVisible(Hud_GetChild( file.panel, "ServerButton" + i ), true)
 	}
+
+	Hud_SetText(Hud_GetChild( file.panel, "Pages" ), "Page: 0/" + file.pages)
+
+	if(file.Servers.len() > 0) {
+		string playlistname = GetUIPlaylistName(file.Servers[0].Playlist)
+		SetSelectedServer(0, file.Servers[0].Name, file.Servers[0].Map, file.Servers[0].Playlist)
+		SetSideBarElems(file.Servers[0].Name, playlistname, file.Servers[0].Desc, maptoasset[file.Servers[0].Map])
+	} else {
+		//Show no servers found ui
+		ShowNoServersFound(true)
+		SetSelectedServer(-1, "", "", "")
+		SetSideBarElems("", "", "", $"")
+	}
+}
+
+void function ShowNoServersFound(bool show)
+{
+	//Todo: Add No Servers UI
 }
 
 void function NextPage(var button)
 {
+	if(file.pages == 0)
+		return
+
 	ResetServerLabels()
 
 	file.currentpage++
@@ -203,9 +263,12 @@ void function NextPage(var button)
 	int id = 0
 	for( int i=startint; i < endint; i++ )
 	{
+		string mapname = GetUIMapName(file.Servers[startint].Map)
+		string playlistname = GetUIPlaylistName(file.Servers[startint].Playlist)
+
 		Hud_SetText( Hud_GetChild( file.panel, "ServerName" + id ), file.Servers[startint].Name)
-		Hud_SetText( Hud_GetChild( file.panel, "Playlist" + id ), file.Servers[startint].Playlist)
-		Hud_SetText( Hud_GetChild( file.panel, "Map" + id ), file.Servers[startint].Map)
+		Hud_SetText( Hud_GetChild( file.panel, "Playlist" + id ), playlistname)
+		Hud_SetText( Hud_GetChild( file.panel, "Map" + id ), mapname)
 		Hud_SetText( Hud_GetChild( file.panel, "PlayerCount" + id ), file.Servers[startint].currentplayers + "/" + file.Servers[startint].maxplayers)
 		Hud_SetVisible(Hud_GetChild( file.panel, "ServerButton" + id ), true)
 		startint++
@@ -215,6 +278,9 @@ void function NextPage(var button)
 
 void function PrevPage(var button)
 {
+	if(file.pages == 0)
+		return
+
 	ResetServerLabels()
 
 	file.currentpage--
@@ -225,14 +291,11 @@ void function PrevPage(var button)
 	int startint
 	int endint
 
-	if(file.currentpage == 0)
-	{
+	if(file.currentpage == 0) {
 		startint = 0
 		endint = SB_MAX_SERVER_PER_PAGE
 		file.pageoffset = 0
-	}
-	else
-	{
+	} else {
 		startint = file.currentpage * SB_MAX_SERVER_PER_PAGE
 		endint = startint + SB_MAX_SERVER_PER_PAGE
 		file.pageoffset = file.currentpage * SB_MAX_SERVER_PER_PAGE
@@ -246,109 +309,17 @@ void function PrevPage(var button)
 	int id = 0
 	for( int i=startint; i < endint; i++ )
 	{
+		string mapname = GetUIMapName(file.Servers[startint].Map)
+		string playlistname = GetUIPlaylistName(file.Servers[startint].Playlist)
+
 		Hud_SetText( Hud_GetChild( file.panel, "ServerName" + id ), file.Servers[startint].Name)
-		Hud_SetText( Hud_GetChild( file.panel, "Playlist" + id ), file.Servers[startint].Playlist)
-		Hud_SetText( Hud_GetChild( file.panel, "Map" + id ), file.Servers[startint].Map)
+		Hud_SetText( Hud_GetChild( file.panel, "Playlist" + id ), playlistname)
+		Hud_SetText( Hud_GetChild( file.panel, "Map" + id ), mapname)
 		Hud_SetText( Hud_GetChild( file.panel, "PlayerCount" + id ), file.Servers[startint].currentplayers + "/" + file.Servers[startint].maxplayers)
 		Hud_SetVisible(Hud_GetChild( file.panel, "ServerButton" + id ), true)
 		startint++
 		id++
 	}
-}
-
-string function RandomMapName(int rand)
-{
-	string servername
-
-	switch(rand)
-	{
-		case 0:
-			servername = "mp_rr_aqueduct"
-			break
-		case 1:
-			servername = "mp_rr_canyonlands_64k_x_64k"
-			break
-		case 2:
-			servername = "mp_rr_canyonlands_mu1"
-			break
-		case 3:
-			servername = "mp_rr_desertlands_64k_x_64k"
-			break
-	}
-
-	return servername
-}
-
-string function RandomDesc(int rand)
-{
-	string servername
-
-	switch(rand)
-	{
-		case 0:
-			servername = "Some Cool Random Server Yo"
-			break
-		case 1:
-			servername = "Join The Server Ok"
-			break
-		case 2:
-			servername = "Ikd Man"
-			break
-		case 3:
-			servername = "R5Reloaded Server For Cool People"
-			break
-	}
-
-	return servername
-}
-
-string function RandomPlaylistName(int rand)
-{
-	string servername
-
-	switch(rand)
-	{
-		case 0:
-			servername = "custom_tdm"
-			break
-		case 1:
-			servername = "custom_ctf"
-			break
-		case 2:
-			servername = "tdm_gg"
-			break
-		case 3:
-			servername = "tdm_gg_double"
-			break
-	}
-
-	return servername
-}
-
-string function RandomServerName(int rand)
-{
-	string servername
-
-	switch(rand)
-	{
-		case 0:
-			servername = "Super Random Server"
-			break
-		case 1:
-			servername = "Apex Server Duh"
-			break
-		case 2:
-			servername = "Wraiths Wingman Only"
-			break
-		case 3:
-			servername = "Gibby Dance Party Come Have Fun"
-			break
-		case 4:
-			servername = "Idk Some Server Name"
-			break
-	}
-
-	return servername
 }
 
 void function ServerBrowser_OnShow( var panel )

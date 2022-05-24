@@ -392,7 +392,6 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		ypos					0
 		fgcolor_override		"240 240 240 255"
 		bgcolor_override		"0 0 0 255"
-		"classname"					"ServerLabels"
 
 		pin_to_sibling				ServerNameBG
 		pin_corner_to_sibling		LEFT
@@ -429,7 +428,6 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		ypos					0
 		fgcolor_override		"240 240 240 255"
 		bgcolor_override		"0 0 0 255"
-		"classname"					"ServerLabels"
 
 		pin_to_sibling				PlaylistNameBG
 		pin_corner_to_sibling		RIGHT
@@ -449,7 +447,6 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		ypos					-15
 		"textAlignment"			"north-west"
 		"fgcolor_override"		"255 255 255 255"
-		"classname"					"ServerLabels"
 
 		pin_to_sibling				ServerInfoBG
 		pin_corner_to_sibling		TOP_LEFT

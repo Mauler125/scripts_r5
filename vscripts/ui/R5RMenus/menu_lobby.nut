@@ -15,25 +15,47 @@ struct
 	var MapPanel
 } file
 
-global const table<string, asset> maptoasset = {
+global table<string, asset> maptoasset = {
+	[ "mp_rr_canyonlands_staging" ] = $"rui/menu/maps/mp_rr_canyonlands_staging",
 	[ "mp_rr_aqueduct" ] = $"rui/menu/maps/mp_rr_aqueduct",
+	[ "mp_rr_ashs_redemption" ] = $"rui/menu/maps/mp_rr_ashs_redemption",
 	[ "mp_rr_canyonlands_64k_x_64k" ] = $"rui/menu/maps/mp_rr_canyonlands_64k_x_64k",
 	[ "mp_rr_canyonlands_mu1" ] = $"rui/menu/maps/mp_rr_canyonlands_mu1",
-	[ "mp_rr_desertlands_64k_x_64k" ] = $"rui/menu/maps/mp_rr_desertlands_64k_x_64k"
+	[ "mp_rr_canyonlands_mu1_night" ] = $"rui/menu/maps/mp_rr_canyonlands_mu1_night",
+	[ "mp_rr_desertlands_64k_x_64k" ] = $"rui/menu/maps/mp_rr_desertlands_64k_x_64k",
+	[ "mp_rr_desertlands_64k_x_64k_nx" ] = $"rui/menu/maps/mp_rr_desertlands_64k_x_64k_nx"
 }
 
-global const table<string, string> maptoname = {
+global table<string, string> maptoname = {
+	[ "mp_rr_canyonlands_staging" ] = "Firing Range",
 	[ "mp_rr_aqueduct" ] = "Overflow",
+	[ "mp_rr_ashs_redemption" ] = "Ash's Redemption",
 	[ "mp_rr_canyonlands_64k_x_64k" ] = "Kings Canyon S1",
 	[ "mp_rr_canyonlands_mu1" ] = "Kings Canyon S2",
-	[ "mp_rr_desertlands_64k_x_64k" ] = "Worlds Edge"
+	[ "mp_rr_canyonlands_mu1_night" ] = "Kings Canyon S2 After Dark",
+	[ "mp_rr_desertlands_64k_x_64k" ] = "Worlds Edge",
+	[ "mp_rr_desertlands_64k_x_64k_nx" ] = "Worlds Edge After Dark"
 }
 
-global const table<string, string> playlisttoname = {
+global table<string, string> playlisttoname = {
+	[ "survival_staging_baseline" ] = "survival_staging_baseline",
+	[ "sutvival_training" ] = "Training",
+	[ "survival_firingrange" ] = "Firing Range",
+	[ "survival" ] = "Survival",
+	[ "defaults" ] = "defaults",
+	[ "ranked" ] = "Ranked",
+	[ "FallLTM" ] = "ShadowFall",
+	[ "duos" ] = "Duos",
+	[ "iron_crown" ] = "Iron Crown",
+	[ "elite" ] = "Elite",
+	[ "armed_and_dangerous" ] = "Armed and Dangerous",
+	[ "wead" ] = "wead",
 	[ "custom_tdm" ] = "Team Deathmatch",
 	[ "custom_ctf" ] = "Capture The Flag",
 	[ "tdm_gg" ] = "Gun Game",
-	[ "tdm_gg_double" ] = "Team Gun Game"
+	[ "tdm_gg_double" ] = "Team Gun Game",
+	[ "survival_dev" ] = "Survival Dev",
+	[ "dev_default" ] = "dev_default"
 }
 
 void function InitR5RLobbyMenu( var newMenuArg )
@@ -137,7 +159,7 @@ void function SettingsPressed(var button)
 
 void function QuitPressed(var button)
 {
-	
+	OpenConfirmExitToDesktopDialog()
 }
 
 void function SetSelectedButton(var button)
@@ -156,6 +178,7 @@ void function OnR5RSB_Show()
     ClientCommand( "ViewingMainLobbyPage" )
 	UI_SetPresentationType( ePresentationType.PLAY )
 	thread TryRunDialogFlowThread()
+	SetUIPlayerName()
 }
 
 void function OnR5RSB_Open()
@@ -164,6 +187,7 @@ void function OnR5RSB_Open()
 	ClientCommand( "ViewingMainLobbyPage" )
 	UI_SetPresentationType( ePresentationType.PLAY )
 	thread TryRunDialogFlowThread()
+	SetUIPlayerName()
 }
 
 void function OnR5RSB_Close()

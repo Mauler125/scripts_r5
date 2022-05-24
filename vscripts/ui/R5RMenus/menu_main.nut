@@ -72,15 +72,5 @@ void function OnR5RSB_Close()
 
 void function OnR5RSB_NavigateBack()
 {
-    AdvanceMenu( GetMenu( "MiscMenu" ) )
-
-	/*if ( IsSearchingForPartyServer() )
-	{
-		StopSearchForPartyServer( "", Localize( "#MAINMENU_CONTINUE" ) )
-		return
-	}
-
-	#if PC_PROG
-		OpenConfirmExitToDesktopDialog()
-	#endif // PC_PROG/*/
+    OpenConfirmExitToDesktopDialog()
 }
