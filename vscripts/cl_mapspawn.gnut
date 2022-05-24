@@ -350,6 +350,13 @@ void function Init_ClientScripts( entity player )
 
 	DoF_SetNearDepthToDefault()
 	DoF_SetFarDepthToDefault()
+
+	if ( IsLobby() )
+	{
+		PakHandle unusedHandle1 = RequestPakFile( "common_reloaded" ) // Contains images for promo dialogue and store.
+		// (dw): The pak request is cleaned up when the lobby client VM is destroyed, so there is no need for script
+		// to keep the handle around.
+	}
 }
 
 

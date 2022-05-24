@@ -12,15 +12,16 @@ void function InitR5RHomePanel( var panel )
 	file.panel = panel
 	file.menu = GetParentMenu( file.panel )
 
-	AddPanelEventHandler( panel, eUIEvent.PANEL_SHOW, Home_OnShow )
-	AddPanelEventHandler( panel, eUIEvent.PANEL_HIDE, Home_OnHide )
+	AddPanelEventHandler( file.panel, eUIEvent.PANEL_SHOW, Home_OnShow )
+	AddPanelEventHandler( file.panel, eUIEvent.PANEL_HIDE, Home_OnHide )
 
-	RuiSetImage( Hud_GetRui( Hud_GetChild( file.panel, "R5RPicBox" ) ), "basicImage", $"rui/menu/gamemode/solo_iron_crown" )
+	RuiSetImage( Hud_GetRui( Hud_GetChild( file.panel, "R5RPicBox" ) ), "basicImage", $"rui/menu/home/bg" )
+	Hud_SetText(Hud_GetChild( file.panel, "PlayerName" ), GetPlayerName())
 }
 
 void function Home_OnShow( var panel )
 {
-	
+	Hud_SetText(Hud_GetChild( file.panel, "PlayerName" ), GetPlayerName())
 }
 
 void function Home_OnHide( var panel )

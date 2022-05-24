@@ -3,11 +3,11 @@ global function InitR5RMainMenu
 struct
 {
 	var menu
-	array<var> buttons
 
-	var HomePanel
-	var CreateServerPanel
-	var ServerBrowserPanel
+	var titleArt
+	var subtitle
+	var versionDisplay
+	var signedInDisplay
 } file
 
 void function InitR5RMainMenu( var newMenuArg )
@@ -20,98 +20,67 @@ void function InitR5RMainMenu( var newMenuArg )
 	AddMenuEventHandler( menu, eUIEvent.MENU_CLOSE, OnR5RSB_Close )
 	AddMenuEventHandler( menu, eUIEvent.MENU_NAVIGATE_BACK, OnR5RSB_NavigateBack )
 
-	var Home = Hud_GetChild(menu, "HomeBtn")
-	var CreateServer = Hud_GetChild(menu, "CreateServerBtn")
-	var ServerBrowser = Hud_GetChild(menu, "ServerBrowserBtn")
-	var Settings = Hud_GetChild(menu, "SettingsBtn")
-	var Quit = Hud_GetChild(menu, "QuitBtn")
+	file.titleArt = Hud_GetChild( file.menu, "TitleArt" )
+	var titleArtRui = Hud_GetRui( file.titleArt )
+	RuiSetImage( titleArtRui, "basicImage", $"ui/menu/title_screen/title_art" )
 
-	file.HomePanel = Hud_GetChild(menu, "R5RHomePanel")
-	file.CreateServerPanel = Hud_GetChild(menu, "R5RCreateServerPanel")
-	file.ServerBrowserPanel = Hud_GetChild(menu, "R5RServerBrowserPanel")
+	file.subtitle = Hud_GetChild( file.menu, "Subtitle" )
+	var subtitleRui = Hud_GetRui( file.subtitle )
+	RuiSetString( subtitleRui, "subtitleText", Localize( "#SEASON_N", 3 ).toupper() )
 
-	file.buttons.append(Home)
-	file.buttons.append(CreateServer)
-	file.buttons.append(ServerBrowser)
-
-	Hud_AddEventHandler( Home, UIE_CLICK, HomePressed )
-	Hud_AddEventHandler( CreateServer, UIE_CLICK, CreateServerPressed )
-	Hud_AddEventHandler( ServerBrowser, UIE_CLICK, ServerBrowserPressed )
-	Hud_AddEventHandler( Settings, UIE_CLICK, SettingsPressed )
-	Hud_AddEventHandler( Quit, UIE_CLICK, QuitPressed )
-
-	RuiSetString( Hud_GetRui( Home ), "buttonText", "Home" )
-	RuiSetString( Hud_GetRui( CreateServer ), "buttonText", "Create Server" )
-	RuiSetString( Hud_GetRui( ServerBrowser ), "buttonText", "Server Browser" )
-	RuiSetString( Hud_GetRui( Settings ), "buttonText", "Settings" )
-	RuiSetString( Hud_GetRui( Quit ), "buttonText", "Quit" )
-
-	ClientCommand("pak_requestload common_r5r.rpak")
+	file.versionDisplay = Hud_GetChild( menu, "VersionDisplay" )
+	file.signedInDisplay = Hud_GetChild( menu, "SignInDisplay" )
 }
 
-void function HomePressed(var button)
+void function ActivatePanel( var panel )
 {
-	SetSelectedButton(button)
+	Assert( panel != null )
 
-	Hud_SetVisible( file.HomePanel, true )
-	Hud_SetVisible( file.CreateServerPanel, false )
-	Hud_SetVisible( file.ServerBrowserPanel, false )
-}
-
-void function CreateServerPressed(var button)
-{
-	SetSelectedButton(button)
-
-	Hud_SetVisible( file.HomePanel, false )
-	Hud_SetVisible( file.CreateServerPanel, true )
-	Hud_SetVisible( file.ServerBrowserPanel, false )
-}
-
-void function ServerBrowserPressed(var button)
-{
-	SetSelectedButton(button)
-
-	Hud_SetVisible( file.HomePanel, false )
-	Hud_SetVisible( file.CreateServerPanel, false )
-	Hud_SetVisible( file.ServerBrowserPanel, true )
-}
-
-void function SettingsPressed(var button)
-{
-	AdvanceMenu( GetMenu( "MiscMenu" ) )
-}
-
-void function QuitPressed(var button)
-{
-	
-}
-
-void function SetSelectedButton(var button)
-{
-	foreach ( btn in file.buttons )
+	array<var> elems = GetElementsByClassname( file.menu, "MainMenuPanelClass" )
+	foreach ( elem in elems )
 	{
-		RuiSetBool( Hud_GetRui( btn ) ,"isSelected", false )
+		if ( elem != panel && Hud_IsVisible( elem ) )
+			HidePanel( elem )
 	}
 
-	RuiSetBool( Hud_GetRui( button ) ,"isSelected", true )
+	ShowPanel( panel )
 }
 
 void function OnR5RSB_Show()
 {
-    //
+	int width = int( Hud_GetHeight( file.titleArt ) * 1.77777778 )
+	Hud_SetWidth( file.titleArt, width )
+	Hud_SetWidth( file.subtitle, width )
+
+	Hud_SetText( file.versionDisplay, GetPublicGameVersion() )
+	Hud_Show( file.versionDisplay )
+
+	ActivatePanel( GetPanel( "R5RMainMenuPanel" ) )
+
+	Chroma_MainMenu()
 }
 
 void function OnR5RSB_Open()
 {
-	//
+	
 }
 
 void function OnR5RSB_Close()
 {
-	//
+	HidePanel( GetPanel( "R5RMainMenuPanel" ) )
 }
 
 void function OnR5RSB_NavigateBack()
 {
-    //
+    AdvanceMenu( GetMenu( "MiscMenu" ) )
+
+	/*if ( IsSearchingForPartyServer() )
+	{
+		StopSearchForPartyServer( "", Localize( "#MAINMENU_CONTINUE" ) )
+		return
+	}
+
+	#if PC_PROG
+		OpenConfirmExitToDesktopDialog()
+	#endif // PC_PROG/*/
 }
