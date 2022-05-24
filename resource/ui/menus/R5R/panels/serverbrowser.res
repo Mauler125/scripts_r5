@@ -35,9 +35,9 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	{
 		ControlName				ImagePanel
 		xpos					0
-		ypos					800
-		tall					50
-		wide 					1395
+		ypos					760
+		tall					70
+		wide 					1185
 		fillColor		"30 30 30 200"
         drawColor		"30 30 30 200"
 		wrap					1
@@ -45,48 +45,134 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		zpos					3
 
 		pin_to_sibling				ServerBrowserBG
-		pin_corner_to_sibling		TOP_LEFT
-		pin_to_sibling_corner		BOTTOM_LEFT
+		pin_corner_to_sibling		TOP
+		pin_to_sibling_corner		BOTTOM
 	}
 
-	LeftPageButton
+	BtnServerListLeftArrowPanel
 	{
-		ControlName				RuiButton
-        rui						"ui/settings_base_button.rpak"
-        wide                    130
-        tall					50
-        enabled					1
-        visible					1
-		zpos					6
+		ControlName RuiPanel
+		wide 100
+		tall 70
+		xpos 5
+		ypos 0
 
-		ruiArgs
-        {
-            buttonText "< Prev Page"
-    	}
+		rui "ui/control_options_description.rpak"
 
-		pin_to_sibling			ServerBrowserBGBottom
-		pin_corner_to_sibling	LEFT
-		pin_to_sibling_corner	LEFT
-	}
-
-	RightPageButton
-	{
-		ControlName				RuiButton
-        rui						"ui/settings_base_button.rpak"
-        wide                    130
-        tall					50
-        enabled					1
-        visible					1
-		zpos					6
-
-		ruiArgs
-        {
-            buttonText "Next Page >"
-    	}
+		visible 1
+		zpos 0
 
 		pin_to_sibling			ServerBrowserBGBottom
 		pin_corner_to_sibling	RIGHT
+		pin_to_sibling_corner	LEFT
+	}
+
+	BtnServerListLeftArrow
+	{
+		ControlName RuiButton
+		InheritProperties RuiSmallButton
+		wide 100
+		tall 70
+		xpos 0
+		ypos 0
+		zpos 6
+
+		image "vgui/hud/white"
+		drawColor "255 255 255 128"
+
+		pin_to_sibling BtnServerListLeftArrowPanel
+		pin_corner_to_sibling CENTER
+		pin_to_sibling_corner CENTER
+	}
+
+	BtnServerListLeftArrowText
+	{
+		ControlName				Label
+		labelText				"<<<"
+		"font"					"DefaultBold_41"
+		"allcaps"				"1"
+		auto_wide_tocontents	1
+		zpos 					3
+		fontHeight				25
+		xpos					0
+		ypos					0
+		"fgcolor_override"		"255 255 255 255"
+
+		pin_to_sibling BtnServerListLeftArrowPanel
+		pin_corner_to_sibling CENTER
+		pin_to_sibling_corner CENTER
+	}
+
+	BtnServerListRightArrowPanel
+	{
+		ControlName RuiPanel
+		wide 100
+		tall 70
+		xpos 5
+		ypos 0
+
+		rui "ui/control_options_description.rpak"
+
+		visible 1
+		zpos 0
+
+		pin_to_sibling			ServerBrowserBGBottom
+		pin_corner_to_sibling	LEFT
 		pin_to_sibling_corner	RIGHT
+	}
+
+	BtnServerListRightArrow
+	{
+		ControlName RuiButton
+		InheritProperties RuiSmallButton
+		wide 100
+		tall 70
+		xpos 0
+		ypos 0
+		zpos 6
+
+		image "vgui/hud/white"
+		drawColor "255 255 255 128"
+
+		pin_to_sibling BtnServerListRightArrowPanel
+		pin_corner_to_sibling CENTER
+		pin_to_sibling_corner CENTER
+	}
+
+	BtnServerListRightArrowText
+	{
+		ControlName				Label
+		labelText				">>>"
+		"font"					"DefaultBold_41"
+		"allcaps"				"1"
+		auto_wide_tocontents	1
+		zpos 					3
+		fontHeight				25
+		xpos					0
+		ypos					0
+		"fgcolor_override"		"255 255 255 255"
+
+		pin_to_sibling BtnServerListRightArrowPanel
+		pin_corner_to_sibling CENTER
+		pin_to_sibling_corner CENTER
+	}
+
+	Pages
+	{
+		ControlName				Label
+		labelText				"Page: 0/0"
+		"font"						"DefaultBold_41"
+		"allcaps"					"1"
+		wide					200
+		zpos 					7
+		fontHeight				25
+		xpos					0
+		ypos					0
+		"fgcolor_override"		"255 255 255 255"
+
+		pin_to_sibling			ServerBrowserBGBottom
+		pin_corner_to_sibling	CENTER
+		pin_to_sibling_corner	CENTER
 	}
 
 	ServerNameLbl
@@ -109,7 +195,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		ControlName				ImagePanel
 		xpos					0
 		ypos					0
-		tall					800
+		tall					760
 		wide 					2
 		fillColor		"255 255 255 200"
         drawColor		"255 255 255 200"
@@ -126,15 +212,17 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	{
 		ControlName				Label
 		labelText				"Players"
-		xpos					-660 // include n pixels for the combo button inset
-		ypos					-15
-		auto_wide_tocontents	1
+		"xpos"						"-670" // include n pixels for the combo button inset
+		"ypos"						"0"
+		"zpos"						"6"
+		textalignment			"center"
+		"wide"						"110"
 		zpos 					4
 		fontHeight				30
 
 		pin_to_sibling				ServerBrowserBG
-		pin_corner_to_sibling		TOP_LEFT
-		pin_to_sibling_corner		TOP_LEFT
+		pin_corner_to_sibling		LEFT
+		pin_to_sibling_corner		LEFT
 	}
 
 	PlayerCountLine
@@ -142,7 +230,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		ControlName				ImagePanel
 		xpos					-660
 		ypos					0
-		tall					800
+		tall					760
 		wide 					2
 		fillColor		"255 255 255 200"
         drawColor		"255 255 255 200"
@@ -159,15 +247,16 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	{
 		ControlName				Label
 		labelText				"Playlist"
-		xpos					-790 // include n pixels for the combo button inset
-		ypos					-15
-		auto_wide_tocontents	1
-		zpos 					4
+		"xpos"						"-800" // include n pixels for the combo button inset
+		"ypos"						"0"
+		"zpos"						"6"
+		textalignment				"center"
+		"wide"						"230"
 		fontHeight				30
 
 		pin_to_sibling				ServerBrowserBG
-		pin_corner_to_sibling		TOP_LEFT
-		pin_to_sibling_corner		TOP_LEFT
+		pin_corner_to_sibling		LEFT
+		pin_to_sibling_corner		LEFT
 	}
 
 	PlaylistLine
@@ -175,7 +264,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		ControlName				ImagePanel
 		xpos					-790
 		ypos					0
-		tall					800
+		tall					760
 		wide 					2
 		fillColor		"255 255 255 200"
         drawColor		"255 255 255 200"
@@ -190,17 +279,18 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 
 	MapLbl
 	{
-		ControlName				Label
-		labelText				"Map"
-		xpos					-1040 // include n pixels for the combo button inset
-		ypos					-15
-		auto_wide_tocontents	1
-		zpos 					4
-		fontHeight				30
+		ControlName					Label
+		labelText					"Map"
+		"xpos"						"-1050" // include n pixels for the combo button inset
+		"ypos"						"0"
+		"zpos"						"6"
+		textalignment				"center"
+		"wide"						"330"
+		fontHeight					30
 
 		pin_to_sibling				ServerBrowserBG
-		pin_corner_to_sibling		TOP_LEFT
-		pin_to_sibling_corner		TOP_LEFT
+		pin_corner_to_sibling		LEFT
+		pin_to_sibling_corner		LEFT
 	}
 
 	MapLine
@@ -208,7 +298,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		ControlName				ImagePanel
 		xpos					-1040
 		ypos					0
-		tall					800
+		tall					760
 		wide 					2
 		fillColor		"255 255 255 200"
         drawColor		"255 255 255 200"
@@ -226,7 +316,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		ControlName				ImagePanel
 		xpos					0
 		ypos					0
-		tall					800
+		tall					760
 		wide 					2
 		fillColor		"255 255 255 200"
         drawColor		"255 255 255 200"
@@ -293,14 +383,16 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	{
 		ControlName				Label
 		labelText				"Temp"
-		"font"						"DefaultBold_41"
-		"allcaps"					"1"
+		"font"					"Default_27_Outline"
+		"allcaps"				"1"
 		wide					410
 		zpos 					7
 		fontHeight				25
 		xpos					-5 // include n pixels for the combo button inset
 		ypos					0
-		"fgcolor_override"		"255 255 255 255"
+		fgcolor_override		"240 240 240 255"
+		bgcolor_override		"0 0 0 255"
+		"classname"					"ServerLabels"
 
 		pin_to_sibling				ServerNameBG
 		pin_corner_to_sibling		LEFT
@@ -328,14 +420,16 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	{
 		ControlName				Label
 		labelText				"custom_tdm"
-		"font"						"DefaultBold_41"
-		"allcaps"					"1"
+		font					Default_27_Outline
+		"allcaps"				"1"
 		wide					200
 		zpos 					7
 		fontHeight				25
 		xpos					5
 		ypos					0
-		"fgcolor_override"		"255 255 255 255"
+		fgcolor_override		"240 240 240 255"
+		bgcolor_override		"0 0 0 255"
+		"classname"					"ServerLabels"
 
 		pin_to_sibling				PlaylistNameBG
 		pin_corner_to_sibling		RIGHT
@@ -345,9 +439,9 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	ServerDesc
 	{
 		ControlName				Label
-		labelText				"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+		labelText				"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen."
 		wide					390
-		tall					550
+		tall					130
 		wrap					1
 		zpos 					7
 		fontHeight				25
@@ -355,6 +449,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		ypos					-15
 		"textAlignment"			"north-west"
 		"fgcolor_override"		"255 255 255 255"
+		"classname"					"ServerLabels"
 
 		pin_to_sibling				ServerInfoBG
 		pin_corner_to_sibling		TOP_LEFT
@@ -785,7 +880,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-15" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		"wide"						"630"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -802,7 +897,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-15" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		"wide"						"630"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -819,7 +914,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-15" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		"wide"						"630"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -836,7 +931,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-15" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		"wide"						"630"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -853,7 +948,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-15" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		"wide"						"630"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -870,7 +965,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-15" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		"wide"						"630"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -887,7 +982,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-15" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		"wide"						"630"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -904,7 +999,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-15" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		"wide"						"630"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -921,7 +1016,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-15" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		"wide"						"630"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -938,7 +1033,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-15" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		"wide"						"630"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -955,7 +1050,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-15" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		"wide"						"630"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -972,7 +1067,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-15" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		"wide"						"630"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -989,7 +1084,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-15" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		"wide"						"630"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1006,7 +1101,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-15" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		"wide"						"630"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1023,7 +1118,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-15" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		"wide"						"630"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1040,7 +1135,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-15" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		"wide"						"630"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1057,7 +1152,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-15" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		"wide"						"630"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1074,7 +1169,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-15" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		"wide"						"630"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1091,7 +1186,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-15" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		"wide"						"630"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1108,7 +1203,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-15" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		"wide"						"630"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1125,7 +1220,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-800" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textAlignment			"center"
+		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1142,7 +1238,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-800" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1159,7 +1256,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-800" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1176,7 +1274,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-800" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1193,7 +1292,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-800" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1210,7 +1310,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-800" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1227,7 +1328,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-800" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1244,7 +1346,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-800" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1261,7 +1364,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-800" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1278,7 +1382,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-800" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1295,7 +1400,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-800" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1312,7 +1418,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-800" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1329,7 +1436,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-800" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1346,7 +1454,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-800" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1363,7 +1472,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-800" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1380,7 +1490,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-800" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1397,7 +1508,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-800" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1414,7 +1526,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-800" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1431,7 +1544,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-800" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1448,7 +1562,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-800" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1465,7 +1580,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-670" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textAlignment			"center"
+		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1482,7 +1598,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-670" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1499,7 +1616,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-670" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1516,7 +1634,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-670" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1533,7 +1652,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-670" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1550,7 +1670,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-670" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1567,7 +1688,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-670" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1584,7 +1706,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-670" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1601,7 +1724,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-670" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1618,7 +1742,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-670" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1635,7 +1760,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-670" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1652,7 +1778,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-670" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1669,7 +1796,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-670" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1686,7 +1814,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-670" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1703,7 +1832,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-670" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1720,7 +1850,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-670" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1737,7 +1868,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-670" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1754,7 +1886,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-670" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1771,7 +1904,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-670" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1788,7 +1922,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-670" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1805,7 +1940,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-1050" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"330"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1822,7 +1958,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-1050" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"330"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1839,7 +1976,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-1050" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"330"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1856,7 +1994,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-1050" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"330"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1873,7 +2012,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-1050" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"330"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1890,7 +2030,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-1050" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"330"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1907,7 +2048,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-1050" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"330"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1924,7 +2066,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-1050" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"330"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1941,7 +2084,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-1050" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"330"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1958,7 +2102,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-1050" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"330"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1975,7 +2120,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-1050" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"330"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -1992,7 +2138,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-1050" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"330"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -2009,7 +2156,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-1050" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"330"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -2026,7 +2174,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-1050" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"330"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -2043,7 +2192,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-1050" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"330"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -2060,7 +2210,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-1050" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"330"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -2077,7 +2228,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-1050" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"330"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -2094,7 +2246,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-1050" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"330"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -2111,7 +2264,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-1050" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"330"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
@@ -2128,7 +2282,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"						"-1050" // include n pixels for the combo button inset
 		"ypos"						"0"
 		"zpos"						"0"
-		"wide"						"1200"
+		textalignment			"center"
+		"wide"						"330"
 		"zpos" 						"4"
 		"fontHeight"				"30"
 		"classname"					"ServerLabels"
