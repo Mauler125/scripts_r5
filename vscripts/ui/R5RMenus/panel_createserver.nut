@@ -1,4 +1,5 @@
 global function InitR5RCreateServerPanel
+global function SetSelectedServerMap
 
 struct
 {
@@ -8,6 +9,14 @@ struct
 	var PlaylistPanel
 	var MapPanel
 } file
+
+struct
+{
+	string name
+	string map
+	string playlist
+	int vis
+} NewServer
 
 void function InitR5RCreateServerPanel( var panel )
 {
@@ -43,6 +52,13 @@ void function OpenMapUI( var button )
 void function StartNewGame( var button )
 {
 
+}
+
+void function SetSelectedServerMap( string map )
+{
+	NewServer.map = map
+	Hud_SetVisible( file.MapPanel, false )
+	RuiSetImage( Hud_GetRui( Hud_GetChild( file.panel, "ServerMapImg" ) ), "loadscreenImage", maptoasset[map] )
 }
 
 void function CreateServer_OnShow( var panel )

@@ -20,7 +20,7 @@ scripts/resource/ui/menus/R5R/panels/createserver.res
 		tall            270
 		visible			1
 		rui           	"ui/custom_loadscreen_image.rpak"
-		ypos 			-400
+		ypos 			-350
 		xpos			-25
 		zpos 4
 
@@ -132,7 +132,7 @@ scripts/resource/ui/menus/R5R/panels/createserver.res
 		visible 1
 		zpos 0
 
-		pin_to_sibling			StartGamePanel
+		pin_to_sibling			VisPanel
 		pin_corner_to_sibling	BOTTOM_LEFT
 		pin_to_sibling_corner	TOP_LEFT
 	}
@@ -169,6 +169,60 @@ scripts/resource/ui/menus/R5R/panels/createserver.res
 		"fgcolor_override"		"255 255 255 255"
 
 		pin_to_sibling PlaylistPanel
+		pin_corner_to_sibling CENTER
+		pin_to_sibling_corner CENTER
+	}
+
+	VisPanel
+	{
+		ControlName RuiPanel
+		wide 480
+		tall 50
+		xpos 0
+		ypos 15
+
+		rui "ui/control_options_description.rpak"
+
+		visible 1
+		zpos 0
+
+		pin_to_sibling			StartGamePanel
+		pin_corner_to_sibling	BOTTOM_LEFT
+		pin_to_sibling_corner	TOP_LEFT
+	}
+
+	BtnVis
+	{
+		ControlName RuiButton
+		InheritProperties RuiSmallButton
+		wide 480
+		tall 50
+		xpos 0
+		ypos 0
+		zpos 6
+
+		image "vgui/hud/white"
+		drawColor "255 255 255 128"
+
+		pin_to_sibling VisPanel
+		pin_corner_to_sibling CENTER
+		pin_to_sibling_corner CENTER
+	}
+
+	BtnVisText
+	{
+		ControlName				Label
+		labelText				"Select Visibility"
+		"font"					"DefaultBold_41"
+		"allcaps"				"1"
+		auto_wide_tocontents	1
+		zpos 					3
+		fontHeight				25
+		xpos					0
+		ypos					0
+		"fgcolor_override"		"255 255 255 255"
+
+		pin_to_sibling VisPanel
 		pin_corner_to_sibling CENTER
 		pin_to_sibling_corner CENTER
 	}
