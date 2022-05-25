@@ -27,6 +27,7 @@ void function InitR5RCreateServerPanel( var panel )
 
 	//Setup EventHandlers
 	Hud_AddEventHandler( Hud_GetChild( file.panel, "BtnStartGame" ), UIE_CLICK, StartNewGame )
+	AddButtonEventHandler( Hud_GetChild( file.panel, "BtnServerName"), UIE_CHANGE, UpdateServerName )
 
 	array<var> buttons = GetElementsByClassname( file.menu, "createserverbuttons" )
 	foreach ( var elem in buttons )
@@ -48,6 +49,7 @@ void function InitR5RCreateServerPanel( var panel )
 	Hud_SetText(Hud_GetChild( file.panel, "PlaylistInfoEdit" ), playlisttoname[NewServer.playlist])
 	RuiSetImage( Hud_GetRui( Hud_GetChild( file.panel, "ServerMapImg" ) ), "loadscreenImage", maptoasset[NewServer.map] )
 	Hud_SetText(Hud_GetChild( file.panel, "VisInfoEdit" ), vistoname[NewServer.vis])
+	Hud_SetText( Hud_GetChild( file.panel, "BtnServerName" ), "A R5Reloaded Server" )
 }
 
 void function OpenSelectedPanel( var button )
@@ -64,8 +66,16 @@ void function StartNewGame( var button )
 void function SetSelectedServerMap( string map )
 {
 	NewServer.map = map
+	asset mapasset
+
+	try {
+		mapasset = maptoasset[map]
+	} catch(e1) {
+		mapasset = $"rui/menu/maps/map_not_found"
+	}
+
 	Hud_SetVisible( file.panels[0], false )
-	RuiSetImage( Hud_GetRui( Hud_GetChild( file.panel, "ServerMapImg" ) ), "loadscreenImage", maptoasset[map] )
+	RuiSetImage( Hud_GetRui( Hud_GetChild( file.panel, "ServerMapImg" ) ), "loadscreenImage", mapasset )
 }
 
 void function SetSelectedServerPlaylist( string playlist )
@@ -91,4 +101,10 @@ void function ShowSelectedPanel(var panel)
 
 	//Show selected panel
 	Hud_SetVisible( panel, true )
+}
+
+void function UpdateServerName( var button )
+{
+    //Update the servername when the text is changed
+    NewServer.name = Hud_GetUTF8Text( Hud_GetChild( file.menu, "BtnServerName" ) )
 }

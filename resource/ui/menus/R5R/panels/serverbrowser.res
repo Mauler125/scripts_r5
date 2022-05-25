@@ -31,11 +31,47 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		pin_to_sibling_corner		TOP_LEFT
 	}
 
+	ServersBG
+	{
+		ControlName				ImagePanel
+		xpos					0
+		ypos					0
+		tall					760
+		wide 					1395
+		fillColor		"30 30 30 120"
+        drawColor		"30 30 30 120"
+		wrap					1
+		visible					1
+		zpos					0
+
+		pin_to_sibling				ServerBrowserBG
+		pin_corner_to_sibling		TOP_LEFT
+		pin_to_sibling_corner		BOTTOM_LEFT
+	}
+
+	BottomLine
+	{
+		ControlName				ImagePanel
+		xpos					0
+		ypos					0
+		tall					2
+		wide 					1395
+		fillColor		"255 255 255 200"
+        drawColor		"255 255 255 200"
+		wrap					1
+		visible					1
+		zpos					3
+
+		pin_to_sibling				ServersBG
+		pin_corner_to_sibling		BOTTOM_LEFT
+		pin_to_sibling_corner		BOTTOM_LEFT
+	}
+
 	ServerBrowserBGBottom
 	{
 		ControlName				ImagePanel
 		xpos					0
-		ypos					760
+		ypos					780
 		tall					70
 		wide 					1185
 		fillColor		"30 30 30 200"
@@ -385,9 +421,9 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		labelText				"Temp"
 		"font"					"Default_27_Outline"
 		"allcaps"				"1"
-		wide					410
+		wide					430
 		zpos 					7
-		fontHeight				25
+		fontHeight				20
 		xpos					-5 // include n pixels for the combo button inset
 		ypos					0
 		fgcolor_override		"240 240 240 255"
@@ -402,9 +438,9 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	{
 		ControlName				ImagePanel
 		xpos 0
-		ypos -15
+		ypos 0
 		tall					30
-		wide 					200
+		wide 					225
 		fillColor		"30 30 30 200"
         drawColor		"30 30 30 200"
 		wrap					1
@@ -421,11 +457,12 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		labelText				"custom_tdm"
 		font					Default_27_Outline
 		"allcaps"				"1"
-		wide					200
+		wide					225
 		zpos 					7
 		fontHeight				25
 		xpos					5
 		ypos					0
+		textAlignment			"center"
 		fgcolor_override		"240 240 240 255"
 		bgcolor_override		"0 0 0 255"
 

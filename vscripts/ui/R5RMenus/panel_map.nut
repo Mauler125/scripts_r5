@@ -46,7 +46,8 @@ void function InitR5RMapPanel( var panel )
 			Hud_SetText( Hud_GetChild( file.panel, "MapText" + i ), maptoname[availablemaps[i]])
 			RuiSetImage( Hud_GetRui( Hud_GetChild( file.panel, "MapImg" + i ) ), "loadscreenImage", maptoasset[availablemaps[i]] )
 		} catch(e1) {
-			//if it dosnt exist, dont set map name and just use original map name
+			//if it dosnt exist, set map image not found
+			RuiSetImage( Hud_GetRui( Hud_GetChild( file.panel, "MapImg" + i ) ), "loadscreenImage", $"rui/menu/maps/map_not_found" )
 			Hud_SetText( Hud_GetChild( file.panel, "MapText" + i ), availablemaps[i])
 		}
 

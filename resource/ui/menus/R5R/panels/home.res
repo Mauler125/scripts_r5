@@ -148,7 +148,7 @@
 		"wrap"					"1"
 		"fontHeight"			"25"
 		"textAlignment"			"north-west"
-		"labelText"				"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+		"labelText"				"This project allows you to run APEX Legends with mods, by running the embedded server and loading custom scripts/global compile lists into the scripting VM. This allows you to create custom gamemodes, levels, weapons and more."
 		"font"					"DefaultBold_41"
 		"allcaps"				"0"
 		"fgcolor_override"		"200 200 200 255"
@@ -156,6 +156,26 @@
 		"pin_to_sibling"		"Welcome"
 		"pin_corner_to_sibling"	"TOP_LEFT"
 		"pin_to_sibling_corner"	"BOTTOM_LEFT"
+	}
+
+	"VersionNumber"
+	{
+		"ControlName"			"Label"
+		"labelText"				"custom_tdm"
+		"font"					"Default_27_Outline"
+		"allcaps"				"1"
+		"wide"					"225"
+		"zpos" 					"7"
+		"fontHeight"			"25"
+		"xpos"					"-15"
+		"ypos"					"-15"
+		"textAlignment"			"east"
+		"fgcolor_override"		"240 240 240 255"
+		"bgcolor_override"		"0 0 0 255"
+
+		"pin_to_sibling"		"HomeBackground"
+		"pin_corner_to_sibling"	"BOTTOM_RIGHT"
+		"pin_to_sibling_corner"	"BOTTOM_RIGHT"
 	}
 }
 

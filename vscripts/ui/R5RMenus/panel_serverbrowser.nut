@@ -128,7 +128,15 @@ void function SelectServer(var button)
 	string playlistname = GetUIPlaylistName(file.Servers[finalid].Playlist)
 
 	SetSelectedServer(finalid, file.Servers[finalid].Name, file.Servers[finalid].Map, file.Servers[finalid].Playlist)
-	SetSideBarElems(file.Servers[finalid].Name, playlistname, file.Servers[finalid].Desc, maptoasset[file.Servers[finalid].Map])
+
+	asset mapimg
+	try{
+		mapimg = maptoasset[file.Servers[finalid].Map]
+	} catch(e0) {
+		mapimg = $"rui/menu/maps/map_not_found"
+	}
+
+	SetSideBarElems(file.Servers[finalid].Name, playlistname, file.Servers[finalid].Desc, mapimg)
 }
 
 void function AddServer(int id, string name, string playlist, string map, string desc, int maxplayers, int currentplayers)
@@ -183,7 +191,7 @@ void function RefreshServerListing()
 		string mapname = GetServerMap(i)
 
 		//Descption and player count will come at a later date
-		string desc = ""
+		string desc = "Server description coming soon."
 		int maxplayers = 0
 		int current = 0
 		//

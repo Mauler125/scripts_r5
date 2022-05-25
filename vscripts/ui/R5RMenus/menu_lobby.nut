@@ -80,6 +80,7 @@ void function InitR5RLobbyMenu( var newMenuArg )
 	//Add menu event handlers
     AddMenuEventHandler( menu, eUIEvent.MENU_SHOW, OnR5RSB_Show )
 	AddMenuEventHandler( menu, eUIEvent.MENU_OPEN, OnR5RSB_Open )
+	AddMenuEventHandler( menu, eUIEvent.MENU_NAVIGATE_BACK, OnR5RSB_Back )
 
 	//Button event handlers
 	Hud_AddEventHandler( Hud_GetChild(menu, "SettingsBtn"), UIE_CLICK, SettingsPressed )
@@ -161,4 +162,9 @@ void function ShowSelectedPanel(var panel)
 
 	//Show selected panel
 	Hud_SetVisible( panel, true )
+}
+
+void function OnR5RSB_Back()
+{
+	//
 }
