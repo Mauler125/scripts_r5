@@ -10,14 +10,6 @@ struct
 	bool			   hasinited = false
 } file
 
-// do not change this enum without modifying it in code at gameui/IBrowser.h
-global enum eServerVisibility
-{
-	OFFLINE,
-	HIDDEN,
-	PUBLIC
-}
-
 void function InitR5RMainMenuPanel( var panel )
 {
 	file.panel = GetPanel( "R5RMainMenuPanel" )

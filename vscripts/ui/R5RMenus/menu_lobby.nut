@@ -12,6 +12,14 @@ struct
 	var MapPanel
 } file
 
+// do not change this enum without modifying it in code at gameui/IBrowser.h
+global enum eServerVisibility
+{
+	OFFLINE,
+	HIDDEN,
+	PUBLIC
+}
+
 global table<string, asset> maptoasset = {
 	[ "mp_rr_canyonlands_staging" ] = $"rui/menu/maps/mp_rr_canyonlands_staging",
 	[ "mp_rr_aqueduct" ] = $"rui/menu/maps/mp_rr_aqueduct",
