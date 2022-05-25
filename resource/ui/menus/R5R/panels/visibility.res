@@ -1,4 +1,4 @@
-"scripts/resource/ui/menus/R5R/panels/playlist.res"
+"scripts/resource/ui/menus/R5R/panels/visibility.res"
 {
 	"DarkenBackground"
 	{

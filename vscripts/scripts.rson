@@ -806,6 +806,7 @@ Scripts:
 	ui/R5RMenus/panel_mainmenu.nut
 	ui/R5RMenus/panel_playlist.nut
 	ui/R5RMenus/panel_map.nut
+	ui/R5RMenus/panel_visibility.nut
 ]
 
 When: "SERVER && DEV || UI && DEV"

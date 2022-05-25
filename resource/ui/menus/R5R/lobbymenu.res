@@ -92,10 +92,12 @@
 			"xpos"                    	"-900"
 			"wide"						"240"
 			"tall"						"50"
+			"scriptID"					"0"
 
 			ruiArgs
 			{
 				isSelected 1
+				buttonText "Home"
 			}
 
 			"pin_to_sibling"			"MainButtonsFrame"
@@ -112,6 +114,14 @@
 			"xpos"                    	"-35"
 			"wide"						"240"
 			"tall"						"50"
+			"scriptID"					"1"
+
+			ruiArgs
+			{
+				isSelected 0
+				buttonText "Create Server"
+			}
+
 			"pin_to_sibling"			"HomeBtn"
 			"pin_corner_to_sibling"		"BOTTOM_LEFT"
 			"pin_to_sibling_corner"		"BOTTOM_RIGHT"
@@ -126,6 +136,14 @@
 			"xpos"                    	"-35"
 			"wide"						"240"
 			"tall"						"50"
+			"scriptID"					"2"
+
+			ruiArgs
+			{
+				isSelected 0
+				buttonText "Server Browser"
+			}
+
 			"pin_to_sibling"			"CreateServerBtn"
 			"pin_corner_to_sibling"		"BOTTOM_LEFT"
 			"pin_to_sibling_corner"		"BOTTOM_RIGHT"
@@ -135,11 +153,17 @@
 		{
 			"ControlName"				"RuiButton"
 			"InheritProperties"			"TabButtonStore"
-			"classname" 				"TopButtons"
 			"zpos"						"3"
 			"xpos"                    	"-35"
 			"wide"						"240"
 			"tall"						"50"
+			
+			ruiArgs
+			{
+				isSelected 0
+				buttonText "Settings"
+			}
+
 			"pin_to_sibling"			"ServerBrowserBtn"
 			"pin_corner_to_sibling"		"BOTTOM_LEFT"
 			"pin_to_sibling_corner"		"BOTTOM_RIGHT"
@@ -149,11 +173,17 @@
 		{
 			"ControlName"				"RuiButton"
 			"InheritProperties"			"TabButtonStore"
-			"classname" 				"TopButtons"
 			"zpos"						"3"
 			"xpos"                    	"-35"
 			"wide"						"240"
 			"tall"						"50"
+			
+			ruiArgs
+			{
+				isSelected 0
+				buttonText "Quit"
+			}
+
 			"pin_to_sibling"			"SettingsBtn"
 			"pin_corner_to_sibling"		"BOTTOM_LEFT"
 			"pin_to_sibling_corner"		"BOTTOM_RIGHT"

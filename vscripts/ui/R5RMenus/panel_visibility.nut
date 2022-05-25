@@ -1,4 +1,4 @@
-global function InitR5RPlaylistPanel
+global function InitR5RVisPanel
 
 struct
 {
@@ -6,7 +6,7 @@ struct
 	var panel
 } file
 
-void function InitR5RPlaylistPanel( var panel )
+void function InitR5RVisPanel( var panel )
 {
 	file.panel = panel
 	file.menu = GetParentMenu( file.panel )

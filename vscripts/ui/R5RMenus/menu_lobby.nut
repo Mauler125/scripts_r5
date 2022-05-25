@@ -9,8 +9,6 @@ struct
 	var HomePanel
 	var CreateServerPanel
 	var ServerBrowserPanel
-	var PlaylistPanel
-	var MapPanel
 } file
 
 // do not change this enum without modifying it in code at gameui/IBrowser.h
@@ -67,6 +65,13 @@ global table<string, string> playlisttoname = {
 	[ "dev_default" ] = "dev_default"
 }
 
+//Vis int to readable name
+global table<int, string> vistoname = {
+	[ eServerVisibility.OFFLINE ] = "Offline",
+	[ eServerVisibility.HIDDEN ] = "Hidden",
+	[ eServerVisibility.PUBLIC ] = "Public"
+}
+
 void function InitR5RLobbyMenu( var newMenuArg )
 {
 	var menu = GetMenu( "R5RLobbyMenu" )
@@ -76,55 +81,34 @@ void function InitR5RLobbyMenu( var newMenuArg )
     AddMenuEventHandler( menu, eUIEvent.MENU_SHOW, OnR5RSB_Show )
 	AddMenuEventHandler( menu, eUIEvent.MENU_OPEN, OnR5RSB_Open )
 
-	//Setup Button Vars
-	var Home = Hud_GetChild(menu, "HomeBtn")
-	var CreateServer = Hud_GetChild(menu, "CreateServerBtn")
-	var ServerBrowser = Hud_GetChild(menu, "ServerBrowserBtn")
-	var Settings = Hud_GetChild(menu, "SettingsBtn")
-	var Quit = Hud_GetChild(menu, "QuitBtn")
-	file.buttons.append(Home)
-	file.buttons.append(CreateServer)
-	file.buttons.append(ServerBrowser)
+	//Button event handlers
+	Hud_AddEventHandler( Hud_GetChild(menu, "SettingsBtn"), UIE_CLICK, SettingsPressed )
+	Hud_AddEventHandler( Hud_GetChild(menu, "QuitBtn"), UIE_CLICK, QuitPressed )
+	array<var> buttons = GetElementsByClassname( file.menu, "TopButtons" )
+	foreach ( var elem in buttons )
+	{
+		Hud_AddEventHandler( elem, UIE_CLICK, OpenSelectedPanel )
+	}
 
-	//Setup Panel Array
+	//Setup panel array
 	file.panels.append(Hud_GetChild(menu, "R5RHomePanel"))
 	file.panels.append(Hud_GetChild(menu, "R5RCreateServerPanel"))
 	file.panels.append(Hud_GetChild(menu, "R5RServerBrowserPanel"))
 
-	//Setup Event Handlers
-	Hud_AddEventHandler( Home, UIE_CLICK, HomePressed )
-	Hud_AddEventHandler( CreateServer, UIE_CLICK, CreateServerPressed )
-	Hud_AddEventHandler( ServerBrowser, UIE_CLICK, ServerBrowserPressed )
-	Hud_AddEventHandler( Settings, UIE_CLICK, SettingsPressed )
-	Hud_AddEventHandler( Quit, UIE_CLICK, QuitPressed )
-
-	//Setup Button Text
-	RuiSetString( Hud_GetRui( Home ), "buttonText", "Home" )
-	RuiSetString( Hud_GetRui( CreateServer ), "buttonText", "Create Server" )
-	RuiSetString( Hud_GetRui( ServerBrowser ), "buttonText", "Server Browser" )
-	RuiSetString( Hud_GetRui( Settings ), "buttonText", "Settings" )
-	RuiSetString( Hud_GetRui( Quit ), "buttonText", "Quit" )
+	//Setup Button Vars
+	file.buttons.append(Hud_GetChild(menu, "HomeBtn"))
+	file.buttons.append(Hud_GetChild(menu, "CreateServerBtn"))
+	file.buttons.append(Hud_GetChild(menu, "ServerBrowserBtn"))
 
 	//Show Home Panel
-	ShowSelectedPanel(file.HomePanel)
+	ShowSelectedPanel( file.panels[0] )
 }
 
-void function HomePressed(var button)
+void function OpenSelectedPanel(var button)
 {
-	SetSelectedButton(button)
-	ShowSelectedPanel(file.HomePanel)
-}
-
-void function CreateServerPressed(var button)
-{
+	int scriptid = Hud_GetScriptID( button ).tointeger()
+	ShowSelectedPanel( file.panels[scriptid] )
 	SetSelectedButton( button )
-	ShowSelectedPanel( file.CreateServerPanel )
-}
-
-void function ServerBrowserPressed(var button)
-{
-	SetSelectedButton(button)
-	ShowSelectedPanel( file.ServerBrowserPanel )
 }
 
 void function SettingsPressed(var button)

@@ -35,7 +35,7 @@ scripts/resource/ui/menus/R5R/panels/createserver.res
 		xpos 0
 		ypos -15
 		tall					30
-		wide 					200
+		wide 					225
 		fillColor		"30 30 30 200"
         drawColor		"30 30 30 200"
 		wrap					1
@@ -52,15 +52,53 @@ scripts/resource/ui/menus/R5R/panels/createserver.res
 		labelText				"custom_tdm"
 		font					Default_27_Outline
 		"allcaps"				"1"
-		wide					200
+		wide					225
 		zpos 					7
 		fontHeight				25
+		textAlignment			"center"
 		xpos					5
 		ypos					0
 		fgcolor_override		"240 240 240 255"
 		bgcolor_override		"0 0 0 255"
 
 		pin_to_sibling				PlaylistNameBG
+		pin_corner_to_sibling		RIGHT
+		pin_to_sibling_corner		RIGHT
+	}
+
+	VisBG
+	{
+		ControlName				ImagePanel
+		xpos 0
+		ypos -15
+		tall					30
+		wide 					125
+		fillColor		"30 30 30 200"
+        drawColor		"30 30 30 200"
+		wrap					1
+		visible					1
+		zpos					6
+		pin_to_sibling				ServerMapImg
+		pin_corner_to_sibling		TOP_LEFT
+		pin_to_sibling_corner		TOP_LEFT
+	}
+
+	VisInfoEdit
+	{
+		ControlName				Label
+		labelText				"custom_tdm"
+		font					Default_27_Outline
+		"allcaps"				"1"
+		wide					125
+		zpos 					7
+		fontHeight				25
+		textAlignment			"center"
+		xpos					0
+		ypos					0
+		fgcolor_override		"240 240 240 255"
+		bgcolor_override		"0 0 0 255"
+
+		pin_to_sibling				VisBG
 		pin_corner_to_sibling		RIGHT
 		pin_to_sibling_corner		RIGHT
 	}
@@ -146,6 +184,8 @@ scripts/resource/ui/menus/R5R/panels/createserver.res
 		xpos 0
 		ypos 0
 		zpos 6
+		classname			"createserverbuttons"
+		"scriptID"					"1"
 
 		image "vgui/hud/white"
 		drawColor "255 255 255 128"
@@ -200,6 +240,8 @@ scripts/resource/ui/menus/R5R/panels/createserver.res
 		xpos 0
 		ypos 0
 		zpos 6
+		classname			"createserverbuttons"
+		"scriptID"					"2"
 
 		image "vgui/hud/white"
 		drawColor "255 255 255 128"
@@ -254,6 +296,8 @@ scripts/resource/ui/menus/R5R/panels/createserver.res
 		xpos 0
 		ypos 0
 		zpos 6
+		classname			"createserverbuttons"
+		"scriptID"					"0"
 
 		image "vgui/hud/white"
 		drawColor "255 255 255 128"
@@ -350,33 +394,48 @@ scripts/resource/ui/menus/R5R/panels/createserver.res
 	}
 
 	"R5RPlaylistPanel"
-    	{
-    	    "ControlName"				"CNestedPanel"
-    	    "ypos"						"20"
-    	    "wide"						"f0"
-			"tall"						"960"
-			"visible"					"0"
-    	    "controlSettingsFile"		"scripts/resource/ui/menus/R5R/panels/playlist.res"
-    	    "proportionalToParent"    	"1"
+    {
+    	"ControlName"				"CNestedPanel"
+    	"ypos"						"20"
+    	"wide"						"f0"
+		"tall"						"960"
+		"visible"					"0"
+    	"controlSettingsFile"		"scripts/resource/ui/menus/R5R/panels/playlist.res"
+    	"proportionalToParent"    	"1"
 
-    	    "pin_to_sibling"          	"DarkenBackground"
-    	    "pin_corner_to_sibling"		"TOP_RIGHT"
-    	    "pin_to_sibling_corner"		"TOP_RIGHT"
-    	}
+    	"pin_to_sibling"          	"DarkenBackground"
+    	"pin_corner_to_sibling"		"TOP_RIGHT"
+    	"pin_to_sibling_corner"		"TOP_RIGHT"
+    }
 
-		"R5RMapPanel"
-    	{
-    	    "ControlName"				"CNestedPanel"
-    	    "ypos"						"20"
-    	    "wide"						"f0"
-			"tall"						"960"
-			"visible"					"0"
-    	    "controlSettingsFile"		"scripts/resource/ui/menus/R5R/panels/map.res"
-    	    "proportionalToParent"    	"1"
+	"R5RMapPanel"
+    {
+    	"ControlName"				"CNestedPanel"
+    	"ypos"						"20"
+    	"wide"						"f0"
+		"tall"						"960"
+		"visible"					"0"
+    	"controlSettingsFile"		"scripts/resource/ui/menus/R5R/panels/map.res"
+    	"proportionalToParent"    	"1"
 
-    	    "pin_to_sibling"          	"DarkenBackground"
-    	    "pin_corner_to_sibling"		"TOP_RIGHT"
-    	    "pin_to_sibling_corner"		"TOP_RIGHT"
-    	}
+    	"pin_to_sibling"          	"DarkenBackground"
+    	"pin_corner_to_sibling"		"TOP_RIGHT"
+    	"pin_to_sibling_corner"		"TOP_RIGHT"
+    }
+
+	"R5RVisPanel"
+    {
+    	"ControlName"				"CNestedPanel"
+    	"ypos"						"20"
+    	"wide"						"f0"
+		"tall"						"960"
+		"visible"					"0"
+    	"controlSettingsFile"		"scripts/resource/ui/menus/R5R/panels/visibility.res"
+    	"proportionalToParent"    	"1"
+
+    	"pin_to_sibling"          	"DarkenBackground"
+    	"pin_corner_to_sibling"		"TOP_RIGHT"
+    	"pin_to_sibling_corner"		"TOP_RIGHT"
+    }
 }
 

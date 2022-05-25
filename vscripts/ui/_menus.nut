@@ -1522,6 +1522,7 @@ void function InitMenus()
 	AddPanel( r5rlobbymenu, "R5RServerBrowserPanel", InitR5RServerBrowserPanel )
 	AddPanel( createserverpanel, "R5RPlaylistPanel", InitR5RPlaylistPanel )
 	AddPanel( createserverpanel, "R5RMapPanel", InitR5RMapPanel )
+	AddPanel( createserverpanel, "R5RVisPanel", InitR5RVisPanel )
 	////////
 
 	//CTF UI

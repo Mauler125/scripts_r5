@@ -9,8 +9,7 @@ struct
 	var menu
 	var panel
 
-	var PlaylistPanel
-	var MapPanel
+	array<var> panels
 } file
 
 struct
@@ -28,43 +27,33 @@ void function InitR5RCreateServerPanel( var panel )
 
 	//Setup EventHandlers
 	Hud_AddEventHandler( Hud_GetChild( file.panel, "BtnStartGame" ), UIE_CLICK, StartNewGame )
-	Hud_AddEventHandler( Hud_GetChild( file.panel, "BtnPlaylist" ), UIE_CLICK, OpenPlaylistUI )
-	Hud_AddEventHandler( Hud_GetChild( file.panel, "BtnVis" ), UIE_CLICK, OpenVisUI )
-	Hud_AddEventHandler( Hud_GetChild( file.panel, "BtnMap" ), UIE_CLICK, OpenMapUI )
 
-	//Setup Panels
-	file.PlaylistPanel = Hud_GetChild(file.panel, "R5RPlaylistPanel")
-	file.MapPanel = Hud_GetChild(file.panel, "R5RMapPanel")
+	array<var> buttons = GetElementsByClassname( file.menu, "createserverbuttons" )
+	foreach ( var elem in buttons )
+	{
+		Hud_AddEventHandler( elem, UIE_CLICK, OpenSelectedPanel )
+	}
+
+	//Setup panel array
+	file.panels.append(Hud_GetChild(file.panel, "R5RMapPanel"))
+	file.panels.append(Hud_GetChild(file.panel, "R5RPlaylistPanel"))
+	file.panels.append(Hud_GetChild(file.panel, "R5RVisPanel"))
 
 	//Setup Default Server Config
-	Hud_SetText(Hud_GetChild( file.panel, "PlaylistInfoEdit" ), playlisttoname["custom_tdm"])
-	RuiSetImage( Hud_GetRui( Hud_GetChild( file.panel, "ServerMapImg" ) ), "loadscreenImage", maptoasset["mp_rr_aqueduct"] )
-
 	NewServer.name = "R5Reloaded Server"
 	NewServer.map = "mp_rr_aqueduct"
 	NewServer.playlist = "custom_tdm"
 	NewServer.vis = eServerVisibility.OFFLINE
+
+	Hud_SetText(Hud_GetChild( file.panel, "PlaylistInfoEdit" ), playlisttoname[NewServer.playlist])
+	RuiSetImage( Hud_GetRui( Hud_GetChild( file.panel, "ServerMapImg" ) ), "loadscreenImage", maptoasset[NewServer.map] )
+	Hud_SetText(Hud_GetChild( file.panel, "VisInfoEdit" ), vistoname[NewServer.vis])
 }
 
-void function OpenPlaylistUI( var button )
+void function OpenSelectedPanel( var button )
 {
-	Hud_SetVisible( file.PlaylistPanel, true )
-	Hud_SetVisible( file.MapPanel, false )
-	//Hud_SetVisible( file.VisPanel, false )
-}
-
-void function OpenMapUI( var button )
-{
-	Hud_SetVisible( file.PlaylistPanel, false )
-	Hud_SetVisible( file.MapPanel, true )
-	//Hud_SetVisible( file.VisPanel, false )
-}
-
-void function OpenVisUI( var button )
-{
-	Hud_SetVisible( file.PlaylistPanel, false )
-	Hud_SetVisible( file.MapPanel, false )
-	//Hud_SetVisible( file.VisPanel, true )
+	int scriptid = Hud_GetScriptID( button ).tointeger()
+	ShowSelectedPanel( file.panels[scriptid] )
 }
 
 void function StartNewGame( var button )
@@ -75,20 +64,31 @@ void function StartNewGame( var button )
 void function SetSelectedServerMap( string map )
 {
 	NewServer.map = map
-	Hud_SetVisible( file.MapPanel, false )
+	Hud_SetVisible( file.panels[0], false )
 	RuiSetImage( Hud_GetRui( Hud_GetChild( file.panel, "ServerMapImg" ) ), "loadscreenImage", maptoasset[map] )
 }
 
 void function SetSelectedServerPlaylist( string playlist )
 {
 	NewServer.playlist = playlist
-	Hud_SetVisible( file.PlaylistPanel, false )
+	Hud_SetVisible( file.panels[1], false )
 	Hud_SetText(Hud_GetChild( file.panel, "PlaylistInfoEdit" ), playlisttoname[playlist])
 }
 
 void function SetSelectedServerVis( int vis )
 {
 	NewServer.vis = vis
-	//Hud_SetVisible( file.VisPanel, false )
-	//Hud_SetText(Hud_GetChild( file.panel, "VisInfoEdit" ), vistoname[vis])
+	Hud_SetVisible( file.panels[2], false )
+	Hud_SetText(Hud_GetChild( file.panel, "VisInfoEdit" ), vistoname[vis])
+}
+
+void function ShowSelectedPanel(var panel)
+{
+	//Hide all panels
+	foreach ( p in file.panels ) {
+		Hud_SetVisible( p, false )
+	}
+
+	//Show selected panel
+	Hud_SetVisible( panel, true )
 }
