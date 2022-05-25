@@ -42,9 +42,11 @@ void function InitR5RMapPanel( var panel )
 	for( int i=0; i < number_of_maps; i++ ) {
 		//Try catch was the best way i found for if the map isnt found in the table then it will just set the map name text ui
 		try {
+			//If map exists in table, set map name and map image
 			Hud_SetText( Hud_GetChild( file.panel, "MapText" + i ), maptoname[availablemaps[i]])
 			RuiSetImage( Hud_GetRui( Hud_GetChild( file.panel, "MapImg" + i ) ), "loadscreenImage", maptoasset[availablemaps[i]] )
 		} catch(e1) {
+			//if it dosnt exist, dont set map name and just use original map name
 			Hud_SetText( Hud_GetChild( file.panel, "MapText" + i ), availablemaps[i])
 		}
 

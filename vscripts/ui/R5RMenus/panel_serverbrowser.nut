@@ -103,6 +103,7 @@ string function GetUIPlaylistName(string playlist)
 	string finalplaylistname = playlist
 
 	try{
+		//If playlist is in table use better playlistname
 		finalplaylistname = playlisttoname[playlist]
 	} catch(e1) {}
 

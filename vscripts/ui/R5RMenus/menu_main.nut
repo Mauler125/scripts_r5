@@ -28,7 +28,7 @@ void function InitR5RMainMenu( var newMenuArg )
 	//Setup subtitle
 	file.subtitle = Hud_GetChild( file.menu, "Subtitle" )
 	var subtitleRui = Hud_GetRui( file.subtitle )
-	RuiSetString( subtitleRui, "subtitleText", Localize( "#SEASON_N", 3 ).toupper() )
+	RuiSetString( subtitleRui, "subtitleText", Localize( "Reloaded" ).toupper() )
 
 	file.versionDisplay = Hud_GetChild( menu, "VersionDisplay" )
 	file.signedInDisplay = Hud_GetChild( menu, "SignInDisplay" )
