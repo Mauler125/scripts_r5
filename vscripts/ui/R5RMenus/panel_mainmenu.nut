@@ -5,9 +5,8 @@ struct
 {
 	var                menu
 	var                panel
-	var                launchButton
-	bool			   working = false
-	bool			   hasinited = false
+
+	bool			   isworking = false
 } file
 
 void function InitR5RMainMenuPanel( var panel )
@@ -15,59 +14,59 @@ void function InitR5RMainMenuPanel( var panel )
 	file.panel = GetPanel( "R5RMainMenuPanel" )
 	file.menu = GetParentMenu( file.panel )
 
+	//Setup panel event handlers
 	AddPanelEventHandler( file.panel, eUIEvent.PANEL_SHOW, OnMainMenuPanel_Show )
-	AddPanelEventHandler( file.panel, eUIEvent.PANEL_HIDE, OnMainMenuPanel_Hide )
 
-	file.launchButton = Hud_GetChild( panel, "LaunchButton" )
-	Hud_AddEventHandler( file.launchButton, UIE_CLICK, LaunchButton_OnActivate )
+	//Setup button event handlers
+	Hud_AddEventHandler( Hud_GetChild( panel, "LaunchButton" ), UIE_CLICK, LaunchButton_OnActivate )
 
-	RuiSetString( Hud_GetRui( Hud_GetChild( file.panel, "StatusDetails" ) ), "details", "Press Enter to continue" )
-	RuiSetBool( Hud_GetRui( Hud_GetChild( file.panel, "StatusDetails" ) ), "isVisible", true )
-	RuiSetGameTime( Hud_GetRui( Hud_GetChild( file.panel, "StatusDetails" ) ), "initTime", Time() )
-
-	//AddPanelFooterOption( panel, LEFT, BUTTON_B, true, "#B_BUTTON_EXIT_TO_DESKTOP", "#B_BUTTON_EXIT_TO_DESKTOP", null, true )
-	//AddPanelFooterOption( panel, LEFT, BUTTON_START, true, "#START_BUTTON_ACCESSIBLITY", "#BUTTON_ACCESSIBLITY", Accessibility_OnActivate, true )
+	//Setup rui
+	SetupRUI()
 }
 
 void function OnMainMenuPanel_Show( var panel )
 {
-	RuiSetString( Hud_GetRui( Hud_GetChild( file.panel, "StatusDetails" ) ), "details", "Press Enter to continue" )
-	RuiSetBool( Hud_GetRui( Hud_GetChild( file.panel, "StatusDetails" ) ), "isVisible", true )
-	RuiSetGameTime( Hud_GetRui( Hud_GetChild( file.panel, "StatusDetails" ) ), "initTime", Time() )
-
-	RuiSetString( Hud_GetRui( Hud_GetChild( file.panel, "Status" ) ), "prompt", "" )
-	RuiSetBool( Hud_GetRui( Hud_GetChild( file.panel, "Status" ) ), "showPrompt", false )
-	RuiSetBool( Hud_GetRui( Hud_GetChild( file.panel, "Status" ) ), "showSpinner", false )
-
-	file.working = false
-}
-
-void function OnMainMenuPanel_Hide( var panel )
-{
-	
+	//Setup rui
+	SetupRUI()
 }
 
 void function LaunchButton_OnActivate( var button )
 {
-	if(file.working)
+	//return if is already working
+	if(file.isworking)
 		return
 
-	file.working = true
-	file.hasinited = true
-	thread launchlobby()
+	//Launch lobby
+	thread LaunchLobby()
 }
 
-void function launchlobby()
+void function LaunchLobby()
 {
-	RuiSetString( Hud_GetRui( Hud_GetChild( file.panel, "StatusDetails" ) ), "details", "Press Enter to continue" )
-	RuiSetBool( Hud_GetRui( Hud_GetChild( file.panel, "StatusDetails" ) ), "isVisible", false )
-	RuiSetGameTime( Hud_GetRui( Hud_GetChild( file.panel, "StatusDetails" ) ), "initTime", Time() )
+	file.isworking = true
 
-	RuiSetString( Hud_GetRui( Hud_GetChild( file.panel, "Status" ) ), "prompt", "" )
-	RuiSetBool( Hud_GetRui( Hud_GetChild( file.panel, "Status" ) ), "showPrompt", false )
+	//Hide status panel
+	RuiSetBool( Hud_GetRui( Hud_GetChild( file.panel, "StatusDetails" ) ), "isVisible", false )
+
+	//Show spinner
 	RuiSetBool( Hud_GetRui( Hud_GetChild( file.panel, "Status" ) ), "showSpinner", true )
 
 	wait 1 //idk not needed but gives a feeling that its doing somthing
 
+	//Create lobby server
 	CreateServer("Lobby", "mp_lobby", "menufall", eServerVisibility.OFFLINE)
+}
+
+void function SetupRUI()
+{
+	file.isworking = false
+	
+	//Setup StatusDetails ui
+	RuiSetString( Hud_GetRui( Hud_GetChild( file.panel, "StatusDetails" ) ), "details", "Press Enter to continue" )
+	RuiSetBool( Hud_GetRui( Hud_GetChild( file.panel, "StatusDetails" ) ), "isVisible", true )
+	RuiSetGameTime( Hud_GetRui( Hud_GetChild( file.panel, "StatusDetails" ) ), "initTime", Time() )
+
+	//Setup Status ui
+	RuiSetString( Hud_GetRui( Hud_GetChild( file.panel, "Status" ) ), "prompt", "" )
+	RuiSetBool( Hud_GetRui( Hud_GetChild( file.panel, "Status" ) ), "showPrompt", false )
+	RuiSetBool( Hud_GetRui( Hud_GetChild( file.panel, "Status" ) ), "showSpinner", false )
 }

@@ -198,7 +198,7 @@ void function RefreshServerListing()
 		getpages++
 	}
 
-	//Setup Buttons and labels/
+	//Setup Buttons and labels
 	for( int i=0; i < file.Servers.len() && i < SB_MAX_SERVER_PER_PAGE; i++ )
 	{
 		string mapname = GetUIMapName(file.Servers[i].Map)
