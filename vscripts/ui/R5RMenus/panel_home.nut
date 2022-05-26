@@ -18,6 +18,9 @@ void function InitR5RHomePanel( var panel )
 
 void function SetUIPlayerName()
 {
+	//Set playername text
 	Hud_SetText(Hud_GetChild( file.panel, "PlayerName" ), GetPlayerName())
+
+	//Set SDK version text
 	Hud_SetText( Hud_GetChild( file.panel, "VersionNumber" ), GetSDKVersion() )
 }

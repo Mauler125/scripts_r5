@@ -6,8 +6,6 @@ struct
 
 	var titleArt
 	var subtitle
-	var versionDisplay
-	var signedInDisplay
 } file
 
 void function InitR5RMainMenu( var newMenuArg )
@@ -29,9 +27,6 @@ void function InitR5RMainMenu( var newMenuArg )
 	file.subtitle = Hud_GetChild( file.menu, "Subtitle" )
 	var subtitleRui = Hud_GetRui( file.subtitle )
 	RuiSetString( subtitleRui, "subtitleText", Localize( "Reloaded" ).toupper() )
-
-	file.versionDisplay = Hud_GetChild( menu, "VersionDisplay" )
-	file.signedInDisplay = Hud_GetChild( menu, "SignInDisplay" )
 }
 
 void function ActivatePanel( var panel )
@@ -53,9 +48,6 @@ void function OnR5RSB_Show()
 	int width = int( Hud_GetHeight( file.titleArt ) * 1.77777778 )
 	Hud_SetWidth( file.titleArt, width )
 	Hud_SetWidth( file.subtitle, width )
-
-	Hud_SetText( file.versionDisplay, GetPublicGameVersion() )
-	Hud_Show( file.versionDisplay )
 
 	ActivatePanel( GetPanel( "R5RMainMenuPanel" ) )
 

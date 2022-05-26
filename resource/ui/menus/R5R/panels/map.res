@@ -4,14 +4,69 @@
 	{
 		"ControlName"			"Label"
 		"xpos"					"550"
-		"ypos"					"25"
+		"ypos"					"0"
 		"zpos"					"0"
-		"wide"					"30"
-		"tall"					"815"
+		"wide"					"f0"
+		"tall"					"935"
 		"labelText"				""
-		"bgcolor_override"		"0 0 0 150"
+		"bgcolor_override"		"0 0 0 200"
 		"visible"				"0"
 		"paintbackground"		"1"
+	}
+
+	"PanelBG"
+	{
+		"ControlName"			"Label"
+		"xpos"					"0"
+		"ypos"					"0"
+		"zpos"					"0"
+		"wide"					"30"
+		"tall"					"745"
+		"labelText"				""
+		"bgcolor_override"		"50 50 50 100"
+		"visible"				"1"
+		"paintbackground"		"1"
+
+		"pin_to_sibling"		"DarkenBackground"
+		"pin_corner_to_sibling"	"LEFT"
+		"pin_to_sibling_corner"	"LEFT"
+	}
+
+	"PanelTopBG"
+	{
+		"ControlName"			"Label"
+		"xpos"					"1"
+		"ypos"					"0"
+		"zpos"					"0"
+		"wide"					"490"
+		"tall"					"40"
+		"labelText"				""
+		"bgcolor_override"		"30 30 30 150"
+		"visible"				"1"
+		"paintbackground"		"1"
+
+		"pin_to_sibling"		"PanelBG"
+		"pin_corner_to_sibling"	"BOTTOM"
+		"pin_to_sibling_corner"	"TOP"
+	}
+
+	"PanelTopText"
+	{
+		"ControlName"			"Label"
+		"labelText"				"Maps"
+		"font"					"DefaultBold_41"
+		"allcaps"				"1"
+		"auto_wide_tocontents"	"1"
+		"zpos" 					"3"
+		"fontHeight"			"25"
+		"xpos"					"0"
+		"ypos"					"0"
+		"fgcolor_override"		"255 255 255 255"
+		"visible" 				"1"
+
+		"pin_to_sibling" 		"PanelTopBG"
+		"pin_corner_to_sibling" "CENTER"
+		"pin_to_sibling_corner" "CENTER"
 	}
 
 	MapImg0
@@ -21,12 +76,12 @@
 		tall            180
 		visible			0
 		rui           	"ui/custom_loadscreen_image.rpak"
-		ypos 			-35
-		xpos			-15
+		ypos 			-5
+		xpos			-5
 		zpos 1
 		classname		mapimages
 
-		pin_to_sibling				DarkenBackground
+		pin_to_sibling				PanelBG
 		pin_corner_to_sibling		TOP_LEFT
 		pin_to_sibling_corner		TOP_LEFT
 	}
@@ -38,7 +93,7 @@
 		tall            180
 		visible			0
 		rui           	"ui/custom_loadscreen_image.rpak"
-		ypos 			15
+		ypos 			5
 		xpos			0
 		zpos 1
 		classname		mapimages
@@ -55,7 +110,7 @@
 		tall            180
 		visible			0
 		rui           	"ui/custom_loadscreen_image.rpak"
-		ypos 			15
+		ypos 			5
 		xpos			0
 		zpos 1
 		classname		mapimages
@@ -72,7 +127,7 @@
 		tall            180
 		visible			0
 		rui           	"ui/custom_loadscreen_image.rpak"
-		ypos 			15
+		ypos 			5
 		xpos			0
 		zpos 1
 		classname		mapimages
@@ -90,7 +145,7 @@
 		visible			0
 		rui           	"ui/custom_loadscreen_image.rpak"
 		ypos 			0
-		xpos			15
+		xpos			5
 		zpos 1
 		classname		mapimages
 
@@ -106,7 +161,7 @@
 		tall            180
 		visible			0
 		rui           	"ui/custom_loadscreen_image.rpak"
-		ypos 			15
+		ypos 			5
 		xpos			0
 		zpos 1
 		classname		mapimages
@@ -123,7 +178,7 @@
 		tall            180
 		visible			0
 		rui           	"ui/custom_loadscreen_image.rpak"
-		ypos 			15
+		ypos 			5
 		xpos			0
 		zpos 1
 		classname		mapimages
@@ -140,7 +195,7 @@
 		tall            180
 		visible			0
 		rui           	"ui/custom_loadscreen_image.rpak"
-		ypos 			15
+		ypos 			5
 		xpos			0
 		zpos 1
 		classname		mapimages
@@ -158,7 +213,7 @@
 		visible			0
 		rui           	"ui/custom_loadscreen_image.rpak"
 		ypos 			0
-		xpos			15
+		xpos			5
 		zpos 1
 		classname		mapimages
 
@@ -174,7 +229,7 @@
 		tall            180
 		visible			0
 		rui           	"ui/custom_loadscreen_image.rpak"
-		ypos 			15
+		ypos 			5
 		xpos			0
 		zpos 1
 		classname		mapimages
@@ -191,7 +246,7 @@
 		tall            180
 		visible			0
 		rui           	"ui/custom_loadscreen_image.rpak"
-		ypos 			15
+		ypos 			5
 		xpos			0
 		zpos 1
 		classname		mapimages
@@ -208,7 +263,7 @@
 		tall            180
 		visible			0
 		rui           	"ui/custom_loadscreen_image.rpak"
-		ypos 			15
+		ypos 			5
 		xpos			0
 		zpos 1
 		classname		mapimages
@@ -226,7 +281,7 @@
 		visible			0
 		rui           	"ui/custom_loadscreen_image.rpak"
 		ypos 			0
-		xpos			15
+		xpos			5
 		zpos 1
 		classname		mapimages
 
@@ -242,7 +297,7 @@
 		tall            180
 		visible			0
 		rui           	"ui/custom_loadscreen_image.rpak"
-		ypos 			15
+		ypos 			5
 		xpos			0
 		zpos 1
 		classname		mapimages
@@ -259,7 +314,7 @@
 		tall            180
 		visible			0
 		rui           	"ui/custom_loadscreen_image.rpak"
-		ypos 			15
+		ypos 			5
 		xpos			0
 		zpos 1
 		classname		mapimages
@@ -276,7 +331,7 @@
 		tall            180
 		visible			0
 		rui           	"ui/custom_loadscreen_image.rpak"
-		ypos 			15
+		ypos 			5
 		xpos			0
 		zpos 1
 		classname		mapimages

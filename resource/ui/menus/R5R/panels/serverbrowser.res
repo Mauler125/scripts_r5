@@ -16,7 +16,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	ServerBrowserBG
 	{
 		ControlName				ImagePanel
-		xpos					-20
+		xpos					-235
 		ypos					0
 		tall					50
 		wide 					1395
@@ -27,8 +27,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		zpos					3
 
 		pin_to_sibling				DarkenBackground
-		pin_corner_to_sibling		TOP_LEFT
-		pin_to_sibling_corner		TOP_LEFT
+		pin_corner_to_sibling		TOP
+		pin_to_sibling_corner		TOP
 	}
 
 	ServersBG

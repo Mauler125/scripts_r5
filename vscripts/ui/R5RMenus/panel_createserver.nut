@@ -3,6 +3,7 @@ global function InitR5RCreateServerPanel
 global function SetSelectedServerMap
 global function SetSelectedServerPlaylist
 global function SetSelectedServerVis
+global function HideAllCreateServerPanels
 
 struct
 {
@@ -25,13 +26,11 @@ void function InitR5RCreateServerPanel( var panel )
 	file.panel = panel
 	file.menu = GetParentMenu( file.panel )
 
-	//Setup EventHandlers
+	//Setup Button EventHandlers
 	Hud_AddEventHandler( Hud_GetChild( file.panel, "BtnStartGame" ), UIE_CLICK, StartNewGame )
 	AddButtonEventHandler( Hud_GetChild( file.panel, "BtnServerName"), UIE_CHANGE, UpdateServerName )
-
 	array<var> buttons = GetElementsByClassname( file.menu, "createserverbuttons" )
-	foreach ( var elem in buttons )
-	{
+	foreach ( var elem in buttons ) {
 		Hud_AddEventHandler( elem, UIE_CLICK, OpenSelectedPanel )
 	}
 
@@ -46,6 +45,7 @@ void function InitR5RCreateServerPanel( var panel )
 	NewServer.playlist = "custom_tdm"
 	NewServer.vis = eServerVisibility.OFFLINE
 
+	//Set selected ui
 	Hud_SetText(Hud_GetChild( file.panel, "PlaylistInfoEdit" ), playlisttoname[NewServer.playlist])
 	RuiSetImage( Hud_GetRui( Hud_GetChild( file.panel, "ServerMapImg" ) ), "loadscreenImage", maptoasset[NewServer.map] )
 	Hud_SetText(Hud_GetChild( file.panel, "VisInfoEdit" ), vistoname[NewServer.vis])
@@ -60,35 +60,56 @@ void function OpenSelectedPanel( var button )
 
 void function StartNewGame( var button )
 {
+	//Start new server with selected options
 	CreateServer(NewServer.name, NewServer.map, NewServer.playlist, NewServer.vis)
 }
 
 void function SetSelectedServerMap( string map )
 {
+	//set map
 	NewServer.map = map
-	asset mapasset
 
+	//Get map asset
+	asset mapasset = $"rui/menu/maps/map_not_found"
 	try {
+		//if mapname is in tabel then get the correct asset from it
 		mapasset = maptoasset[map]
-	} catch(e1) {
-		mapasset = $"rui/menu/maps/map_not_found"
-	}
-
+	} catch(e1) { }
+	//Set the panel to not visible
 	Hud_SetVisible( file.panels[0], false )
+
+	//Set the new map image
 	RuiSetImage( Hud_GetRui( Hud_GetChild( file.panel, "ServerMapImg" ) ), "loadscreenImage", mapasset )
 }
 
 void function SetSelectedServerPlaylist( string playlist )
 {
+	//set playlist
 	NewServer.playlist = playlist
+
+	//Get playlist name
+	string playlistname = playlist
+	try {
+		//if mapname is in tabel then get the correct asset from it
+		playlistname = playlisttoname[playlist]
+	} catch(e1) { }
+
+	//Set the panel to not visible
 	Hud_SetVisible( file.panels[1], false )
-	Hud_SetText(Hud_GetChild( file.panel, "PlaylistInfoEdit" ), playlisttoname[playlist])
+
+	//Set the new playlist text
+	Hud_SetText(Hud_GetChild( file.panel, "PlaylistInfoEdit" ), playlistname)
 }
 
 void function SetSelectedServerVis( int vis )
 {
+	//set visibility
 	NewServer.vis = vis
+
+	//Set the panel to not visible
 	Hud_SetVisible( file.panels[2], false )
+
+	//Set the new visibility text
 	Hud_SetText(Hud_GetChild( file.panel, "VisInfoEdit" ), vistoname[vis])
 }
 
@@ -101,6 +122,14 @@ void function ShowSelectedPanel(var panel)
 
 	//Show selected panel
 	Hud_SetVisible( panel, true )
+}
+
+void function HideAllCreateServerPanels()
+{
+	//Hide all panels
+	foreach ( p in file.panels ) {
+		Hud_SetVisible( p, false )
+	}
 }
 
 void function UpdateServerName( var button )

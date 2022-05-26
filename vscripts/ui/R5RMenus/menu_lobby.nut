@@ -78,16 +78,15 @@ void function InitR5RLobbyMenu( var newMenuArg )
 	file.menu = menu
 
 	//Add menu event handlers
-    AddMenuEventHandler( menu, eUIEvent.MENU_SHOW, OnR5RSB_Show )
-	AddMenuEventHandler( menu, eUIEvent.MENU_OPEN, OnR5RSB_Open )
-	AddMenuEventHandler( menu, eUIEvent.MENU_NAVIGATE_BACK, OnR5RSB_Back )
+    AddMenuEventHandler( menu, eUIEvent.MENU_SHOW, OnR5RLobby_Open )
+	AddMenuEventHandler( menu, eUIEvent.MENU_OPEN, OnR5RLobby_Open )
+	AddMenuEventHandler( menu, eUIEvent.MENU_NAVIGATE_BACK, OnR5RLobby_Back )
 
 	//Button event handlers
 	Hud_AddEventHandler( Hud_GetChild(menu, "SettingsBtn"), UIE_CLICK, SettingsPressed )
 	Hud_AddEventHandler( Hud_GetChild(menu, "QuitBtn"), UIE_CLICK, QuitPressed )
 	array<var> buttons = GetElementsByClassname( file.menu, "TopButtons" )
-	foreach ( var elem in buttons )
-	{
+	foreach ( var elem in buttons ) {
 		Hud_AddEventHandler( elem, UIE_CLICK, OpenSelectedPanel )
 	}
 
@@ -102,14 +101,16 @@ void function InitR5RLobbyMenu( var newMenuArg )
 	file.buttons.append(Hud_GetChild(menu, "ServerBrowserBtn"))
 
 	//Show Home Panel
-	ShowSelectedPanel( file.panels[0] )
+	ShowSelectedPanel( file.panels[0], file.buttons[0] )
 }
 
 void function OpenSelectedPanel(var button)
 {
 	int scriptid = Hud_GetScriptID( button ).tointeger()
-	ShowSelectedPanel( file.panels[scriptid] )
-	SetSelectedButton( button )
+	ShowSelectedPanel( file.panels[scriptid], button )
+
+	if(scriptid == 1)
+		HideAllCreateServerPanels()
 }
 
 void function SettingsPressed(var button)
@@ -122,27 +123,27 @@ void function QuitPressed(var button)
 	OpenConfirmExitToDesktopDialog()
 }
 
-void function OnR5RSB_Show()
+void function OnR5RLobby_Open()
 {
-	SetupLobby()
-}
-
-void function OnR5RSB_Open()
-{
+	//needed on both show and open
 	SetupLobby()
 }
 
 void function SetupLobby()
 {
-	//needed on both show and open
 	ClientCommand( "ViewingMainLobbyPage" )
 	UI_SetPresentationType( ePresentationType.PLAY )
 	thread TryRunDialogFlowThread()
 	SetUIPlayerName()
 }
 
-void function SetSelectedButton(var button)
+void function ShowSelectedPanel(var panel, var button)
 {
+	//Hide all panels
+	foreach ( p in file.panels ) {
+		Hud_SetVisible( p, false )
+	}
+
 	//Unselect all buttons
 	foreach ( btn in file.buttons )
 	{
@@ -151,20 +152,12 @@ void function SetSelectedButton(var button)
 
 	//Select button
 	RuiSetBool( Hud_GetRui( button ) ,"isSelected", true )
-}
-
-void function ShowSelectedPanel(var panel)
-{
-	//Hide all panels
-	foreach ( p in file.panels ) {
-		Hud_SetVisible( p, false )
-	}
 
 	//Show selected panel
 	Hud_SetVisible( panel, true )
 }
 
-void function OnR5RSB_Back()
+void function OnR5RLobby_Back()
 {
-	//
+	// Do nothing so it dosnt hide the menu
 }

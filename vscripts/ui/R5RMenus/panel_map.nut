@@ -37,7 +37,7 @@ void function InitR5RMapPanel( var panel )
 		number_of_maps = 16
 
 	int current_row_items = 0
-	int map_bg_width = 350
+	int map_bg_width = 330
 
 	for( int i=0; i < number_of_maps; i++ ) {
 		//Try catch was the best way i found for if the map isnt found in the table then it will just set the map name text ui
@@ -65,7 +65,7 @@ void function InitR5RMapPanel( var panel )
 		//For calculating map selection background width
 		if(current_row_items > 3)
 		{
-			map_bg_width = map_bg_width + 335
+			map_bg_width = map_bg_width + 325
 			current_row_items = 0
 		}
 
@@ -73,11 +73,13 @@ void function InitR5RMapPanel( var panel )
 	}
 
 	//Set the map selection background width
-	Hud_SetWidth( Hud_GetChild( file.panel, "DarkenBackground" ), map_bg_width )
+	Hud_SetWidth( Hud_GetChild( file.panel, "PanelBG" ), map_bg_width )
+	Hud_SetWidth( Hud_GetChild( file.panel, "PanelTopBG" ), map_bg_width )
 }
 
 bool function IsValidMap(string map)
 {
+	//Dont show these maps in the map selection
 	if( map == "mp_lobby" || map == "mp_npe")
 		return false
 

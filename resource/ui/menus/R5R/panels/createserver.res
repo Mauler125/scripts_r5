@@ -20,7 +20,7 @@ scripts/resource/ui/menus/R5R/panels/createserver.res
 		tall            270
 		visible			1
 		rui           	"ui/custom_loadscreen_image.rpak"
-		ypos 			-350
+		ypos 			-355
 		xpos			-25
 		zpos 4
 
