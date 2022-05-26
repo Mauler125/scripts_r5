@@ -178,6 +178,7 @@ void function RefreshServerListing()
 
 	//Get Servercount
 	int serverCount = GetServerCount()
+	int totalplayers = 0
 
 	//Reset pages
 	file.pages = 0
@@ -195,6 +196,8 @@ void function RefreshServerListing()
 		int maxplayers = 0
 		int current = 0
 		//
+
+		totalplayers = totalplayers + current
 
 		thread AddServer(i, servername, playlistname, mapname, desc, maxplayers, current)
 
@@ -220,8 +223,6 @@ void function RefreshServerListing()
 		Hud_SetVisible(Hud_GetChild( file.panel, "ServerButton" + i ), true)
 	}
 
-	Hud_SetText(Hud_GetChild( file.panel, "Pages" ), "Page: 0/" + file.pages)
-
 	if(file.Servers.len() > 0) {
 		string playlistname = GetUIPlaylistName(file.Servers[0].Playlist)
 		SetSelectedServer(0, file.Servers[0].Name, file.Servers[0].Map, file.Servers[0].Playlist)
@@ -232,6 +233,11 @@ void function RefreshServerListing()
 		SetSelectedServer(-1, "", "", "")
 		SetSideBarElems("", "", "", $"")
 	}
+
+	//Set UI Labels
+	Hud_SetText( Hud_GetChild( file.panel, "PlayersCount"), "Players: " + totalplayers)
+	Hud_SetText( Hud_GetChild( file.panel, "ServersCount"), "Servers: " + serverCount)
+	Hud_SetText (Hud_GetChild( file.panel, "Pages" ), "Page: 0/" + file.pages)
 }
 
 void function ShowNoServersFound(bool show)

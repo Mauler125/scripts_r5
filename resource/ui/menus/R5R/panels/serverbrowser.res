@@ -2,508 +2,562 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 {
 	"DarkenBackground"
 	{
-		ControlName				Label
-		xpos					0
-		ypos					0
-		wide					%100
-		tall					%100
-		labelText				""
-		bgcolor_override		"0 0 0 0"
-		visible					1
-		paintbackground			1
+		"ControlName"			"Label"
+		"xpos"					"0"
+		"ypos"					"0"
+		"wide"					"%100"
+		"tall"					"%100"
+		"labelText"				""
+		"bgcolor_override"		"0 0 0 0"
+		"visible"				"1"
+		"paintbackground"		"1"
 	}
 
-	ServerBrowserBG
+	"ServerBrowserBG"
 	{
-		ControlName				ImagePanel
-		xpos					-235
-		ypos					0
-		tall					50
-		wide 					1395
-		fillColor		"30 30 30 200"
-        drawColor		"30 30 30 200"
-		wrap					1
-		visible					1
-		zpos					3
+		"ControlName"			"ImagePanel"
+		"xpos"					"-235"
+		"ypos"					"0"
+		"tall"					"50"
+		"wide" 					"1395"
+		"fillColor"				"30 30 30 200"
+        "drawColor"				"30 30 30 200"
+		"wrap"					"1"
+		"visible"				"1"
+		"zpos"					"3"
 
-		pin_to_sibling				DarkenBackground
-		pin_corner_to_sibling		TOP
-		pin_to_sibling_corner		TOP
+		"pin_to_sibling"		"DarkenBackground"
+		"pin_corner_to_sibling"	"TOP"
+		"pin_to_sibling_corner"	"TOP"
 	}
 
-	ServersBG
+	"ServersBG"
 	{
-		ControlName				ImagePanel
-		xpos					0
-		ypos					0
-		tall					760
-		wide 					1395
-		fillColor		"30 30 30 120"
-        drawColor		"30 30 30 120"
-		wrap					1
-		visible					1
-		zpos					0
+		"ControlName"			"ImagePanel"
+		"xpos"					"0"
+		"ypos"					"0"
+		"tall"					"760"
+		"wide" 					"1395"
+		"fillColor"				"30 30 30 120"
+        "drawColor"				"30 30 30 120"
+		"wrap"					"1"
+		"visible"				"1"
+		"zpos"					"0"
 
-		pin_to_sibling				ServerBrowserBG
-		pin_corner_to_sibling		TOP_LEFT
-		pin_to_sibling_corner		BOTTOM_LEFT
+		"pin_to_sibling"		"ServerBrowserBG"
+		"pin_corner_to_sibling"	"TOP_LEFT"
+		"pin_to_sibling_corner"	"BOTTOM_LEFT"
 	}
 
-	BottomLine
+	"ServerBrowserBGBottom"
 	{
-		ControlName				ImagePanel
-		xpos					0
-		ypos					0
-		tall					2
-		wide 					1395
-		fillColor		"255 255 255 200"
-        drawColor		"255 255 255 200"
-		wrap					1
-		visible					1
-		zpos					3
+		"ControlName"			"ImagePanel"
+		"xpos"					"0"
+		"ypos"					"765"
+		"tall"					"70"
+		"wide" 					"1185"
+		"fillColor"				"30 30 30 200"
+        "drawColor"				"30 30 30 200"
+		"wrap"					"1"
+		"visible"				"1"
+		"zpos"					"3"
 
-		pin_to_sibling				ServersBG
-		pin_corner_to_sibling		BOTTOM_LEFT
-		pin_to_sibling_corner		BOTTOM_LEFT
+		"pin_to_sibling"		"ServerBrowserBG"
+		"pin_corner_to_sibling"	"TOP"
+		"pin_to_sibling_corner"	"BOTTOM"
 	}
 
-	ServerBrowserBGBottom
+	"ServersCount"
 	{
-		ControlName				ImagePanel
-		xpos					0
-		ypos					780
-		tall					70
-		wide 					1185
-		fillColor		"30 30 30 200"
-        drawColor		"30 30 30 200"
-		wrap					1
-		visible					1
-		zpos					3
-
-		pin_to_sibling				ServerBrowserBG
-		pin_corner_to_sibling		TOP
-		pin_to_sibling_corner		BOTTOM
-	}
-
-	BtnServerListLeftArrowPanel
-	{
-		ControlName RuiPanel
-		wide 100
-		tall 70
-		xpos 5
-		ypos 0
-
-		rui "ui/control_options_description.rpak"
-
-		visible 1
-		zpos 0
-
-		pin_to_sibling			ServerBrowserBGBottom
-		pin_corner_to_sibling	RIGHT
-		pin_to_sibling_corner	LEFT
-	}
-
-	BtnServerListLeftArrow
-	{
-		ControlName RuiButton
-		InheritProperties RuiSmallButton
-		wide 100
-		tall 70
-		xpos 0
-		ypos 0
-		zpos 6
-
-		image "vgui/hud/white"
-		drawColor "255 255 255 128"
-
-		pin_to_sibling BtnServerListLeftArrowPanel
-		pin_corner_to_sibling CENTER
-		pin_to_sibling_corner CENTER
-	}
-
-	BtnServerListLeftArrowText
-	{
-		ControlName				Label
-		labelText				"<<<"
+		"ControlName"			"Label"
+		"labelText"				"Servers: 0"
 		"font"					"DefaultBold_41"
 		"allcaps"				"1"
-		auto_wide_tocontents	1
-		zpos 					3
-		fontHeight				25
-		xpos					0
-		ypos					0
+		"auto_wide_tocontents"	"1"
+		"zpos" 					"7"
+		"fontHeight"			"25"
+		"xpos"					"0"
+		"ypos"					"15"
 		"fgcolor_override"		"255 255 255 255"
 
-		pin_to_sibling BtnServerListLeftArrowPanel
-		pin_corner_to_sibling CENTER
-		pin_to_sibling_corner CENTER
+		"pin_to_sibling"		"ServerBrowserBGBottom"
+		"pin_corner_to_sibling"	"TOP_LEFT"
+		"pin_to_sibling_corner"	"BOTTOM_LEFT"
 	}
-
-	BtnServerListRightArrowPanel
+	
+	"PlayersCount"
 	{
-		ControlName RuiPanel
-		wide 100
-		tall 70
-		xpos 5
-		ypos 0
-
-		rui "ui/control_options_description.rpak"
-
-		visible 1
-		zpos 0
-
-		pin_to_sibling			ServerBrowserBGBottom
-		pin_corner_to_sibling	LEFT
-		pin_to_sibling_corner	RIGHT
-	}
-
-	BtnServerListRightArrow
-	{
-		ControlName RuiButton
-		InheritProperties RuiSmallButton
-		wide 100
-		tall 70
-		xpos 0
-		ypos 0
-		zpos 6
-
-		image "vgui/hud/white"
-		drawColor "255 255 255 128"
-
-		pin_to_sibling BtnServerListRightArrowPanel
-		pin_corner_to_sibling CENTER
-		pin_to_sibling_corner CENTER
-	}
-
-	BtnServerListRightArrowText
-	{
-		ControlName				Label
-		labelText				">>>"
+		"ControlName"			"Label"
+		"labelText"				"Players: 0"
 		"font"					"DefaultBold_41"
 		"allcaps"				"1"
-		auto_wide_tocontents	1
-		zpos 					3
-		fontHeight				25
-		xpos					0
-		ypos					0
+		"auto_wide_tocontents"	"1"
+		"zpos" 					"7"
+		"fontHeight"			"25"
+		"xpos"					"30"
+		"ypos"					"0"
 		"fgcolor_override"		"255 255 255 255"
 
-		pin_to_sibling BtnServerListRightArrowPanel
-		pin_corner_to_sibling CENTER
-		pin_to_sibling_corner CENTER
+		"pin_to_sibling"		"ServersCount"
+		"pin_corner_to_sibling"	"LEFT"
+		"pin_to_sibling_corner"	"RIGHT"
 	}
 
-	Pages
+	"Pages"
 	{
-		ControlName				Label
-		labelText				"Page: 0/0"
-		"font"						"DefaultBold_41"
-		"allcaps"					"1"
-		wide					200
-		zpos 					7
-		fontHeight				25
-		xpos					0
-		ypos					0
+		"ControlName"			"Label"
+		"labelText"				"Page: 0/0"
+		"font"					"DefaultBold_41"
+		"allcaps"				"1"
+		"wide"					"200"
+		"zpos" 					"7"
+		"fontHeight"			"25"
+		"xpos"					"0"
+		"ypos"					"0"
 		"fgcolor_override"		"255 255 255 255"
 
-		pin_to_sibling			ServerBrowserBGBottom
-		pin_corner_to_sibling	CENTER
-		pin_to_sibling_corner	CENTER
+		"pin_to_sibling"		"ServerBrowserBGBottom"
+		"pin_corner_to_sibling"	"CENTER"
+		"pin_to_sibling_corner"	"CENTER"
 	}
 
-	ServerNameLbl
+	"BtnServerListLeftArrowPanel"
 	{
-		ControlName				Label
-		labelText				"Server Name"
-		xpos					-15 // include n pixels for the combo button inset
-		ypos					-15
-		auto_wide_tocontents	1
-		zpos 					4
-		fontHeight				30
+		"ControlName" 			"RuiPanel"
+		"wide" 					"100"
+		"tall" 					"70"
+		"xpos" 					"5"
+		"ypos" 					"0"
 
-		pin_to_sibling				ServerBrowserBG
-		pin_corner_to_sibling		TOP_LEFT
-		pin_to_sibling_corner		TOP_LEFT
+		"rui" 					"ui/control_options_description.rpak"
+
+		"visible" 				"1"
+		"zpos" 					"0"
+
+		"pin_to_sibling"		"ServerBrowserBGBottom"
+		"pin_corner_to_sibling"	"RIGHT"
+		"pin_to_sibling_corner"	"LEFT"
 	}
 
-	ServerNameLine
+	"BtnServerListLeftArrow"
 	{
-		ControlName				ImagePanel
-		xpos					0
-		ypos					0
-		tall					760
-		wide 					2
-		fillColor		"255 255 255 200"
-        drawColor		"255 255 255 200"
-		wrap					1
-		visible					1
-		zpos					3
+		"ControlName" 			"RuiButton"
+		"InheritProperties" 	"RuiSmallButton"
+		"wide" 					"100"
+		"tall" 					"70"
+		"xpos" 					"0"
+		"ypos" 					"0"
+		"zpos" 					"6"
 
-		pin_to_sibling				ServerBrowserBG
-		pin_corner_to_sibling		TOP_LEFT
-		pin_to_sibling_corner		BOTTOM_LEFT
+		"image" 				"vgui/hud/white"
+		"drawColor" 			"255 255 255 128"
+
+		"pin_to_sibling" 		"BtnServerListLeftArrowPanel"
+		"pin_corner_to_sibling" "CENTER"
+		"pin_to_sibling_corner" "CENTER"
 	}
 
-	PlayerCountLbl
+	"BtnServerListLeftArrowText"
 	{
-		ControlName				Label
-		labelText				"Players"
-		"xpos"						"-670" // include n pixels for the combo button inset
-		"ypos"						"0"
-		"zpos"						"6"
-		textalignment			"center"
-		"wide"						"110"
-		zpos 					4
-		fontHeight				30
+		"ControlName"			"Label"
+		"labelText"				"<<<"
+		"font"					"DefaultBold_41"
+		"allcaps"				"1"
+		"auto_wide_tocontents"	"1"
+		"zpos" 					"3"
+		"fontHeight"			"25"
+		"xpos"					"0"
+		"ypos"					"0"
+		"fgcolor_override"		"255 255 255 255"
 
-		pin_to_sibling				ServerBrowserBG
-		pin_corner_to_sibling		LEFT
-		pin_to_sibling_corner		LEFT
+		"pin_to_sibling" 		"BtnServerListLeftArrowPanel"
+		"pin_corner_to_sibling" "CENTER"
+		"pin_to_sibling_corner" "CENTER"
 	}
 
-	PlayerCountLine
+	"BtnServerListRightArrowPanel"
 	{
-		ControlName				ImagePanel
-		xpos					-660
-		ypos					0
-		tall					760
-		wide 					2
-		fillColor		"255 255 255 200"
-        drawColor		"255 255 255 200"
-		wrap					1
-		visible					1
-		zpos					3
+		"ControlName" 			"RuiPanel"
+		"wide" 					"100"
+		"tall" 					"70"
+		"xpos" 					"5"
+		"ypos" 					"0"
 
-		pin_to_sibling				ServerBrowserBG
-		pin_corner_to_sibling		TOP_LEFT
-		pin_to_sibling_corner		BOTTOM_LEFT
+		"rui" 					"ui/control_options_description.rpak"
+
+		"visible" 				"1"
+		"zpos" 					"0"
+
+		"pin_to_sibling"		"ServerBrowserBGBottom"
+		"pin_corner_to_sibling"	"LEFT"
+		"pin_to_sibling_corner"	"RIGHT"
 	}
 
-	PlaylistLbl
+	"BtnServerListRightArrow"
 	{
-		ControlName				Label
-		labelText				"Playlist"
-		"xpos"						"-800" // include n pixels for the combo button inset
-		"ypos"						"0"
-		"zpos"						"6"
-		textalignment				"center"
-		"wide"						"230"
-		fontHeight				30
+		"ControlName" 			"RuiButton"
+		"InheritProperties" 	"RuiSmallButton"
+		"wide" 					"100"
+		"tall" 					"70"
+		"xpos" 					"0"
+		"ypos" 					"0"
+		"zpos" 					"6"
 
-		pin_to_sibling				ServerBrowserBG
-		pin_corner_to_sibling		LEFT
-		pin_to_sibling_corner		LEFT
+		"image" 				"vgui/hud/white"
+		"drawColor" 			"255 255 255 128"
+
+		"pin_to_sibling" 		"BtnServerListRightArrowPanel"
+		"pin_corner_to_sibling" "CENTER"
+		"pin_to_sibling_corner" "CENTER"
 	}
 
-	PlaylistLine
+	"BtnServerListRightArrowText"
 	{
-		ControlName				ImagePanel
-		xpos					-790
-		ypos					0
-		tall					760
-		wide 					2
-		fillColor		"255 255 255 200"
-        drawColor		"255 255 255 200"
-		wrap					1
-		visible					1
-		zpos					3
+		"ControlName"			"Label"
+		"labelText"				">>>"
+		"font"					"DefaultBold_41"
+		"allcaps"				"1"
+		"auto_wide_tocontents"	"1"
+		"zpos" 					"3"
+		"fontHeight"			"25"
+		"xpos"					"0"
+		"ypos"					"0"
+		"fgcolor_override"		"255 255 255 255"
 
-		pin_to_sibling				ServerBrowserBG
-		pin_corner_to_sibling		TOP_LEFT
-		pin_to_sibling_corner		BOTTOM_LEFT
+		"pin_to_sibling" 		"BtnServerListRightArrowPanel"
+		"pin_corner_to_sibling" "CENTER"
+		"pin_to_sibling_corner" "CENTER"
 	}
 
-	MapLbl
+	"ServerNameLbl"
 	{
-		ControlName					Label
-		labelText					"Map"
-		"xpos"						"-1050" // include n pixels for the combo button inset
-		"ypos"						"0"
-		"zpos"						"6"
-		textalignment				"center"
-		"wide"						"330"
-		fontHeight					30
+		"ControlName"			"Label"
+		"labelText"				"Server Name"
+		"xpos"					"-15"
+		"ypos"					"-15"
+		"auto_wide_tocontents"	"1"
+		"zpos" 					"4"
+		"fontHeight"			"30"
 
-		pin_to_sibling				ServerBrowserBG
-		pin_corner_to_sibling		LEFT
-		pin_to_sibling_corner		LEFT
+		"pin_to_sibling"		"ServerBrowserBG"
+		"pin_corner_to_sibling"	"TOP_LEFT"
+		"pin_to_sibling_corner"	"TOP_LEFT"
 	}
 
-	MapLine
+	"PlayerCountLbl"
 	{
-		ControlName				ImagePanel
-		xpos					-1040
-		ypos					0
-		tall					760
-		wide 					2
-		fillColor		"255 255 255 200"
-        drawColor		"255 255 255 200"
-		wrap					1
-		visible					1
-		zpos					3
+		"ControlName"			"Label"
+		"labelText"				"Players"
+		"xpos"					"-670"
+		"ypos"					"0"
+		"zpos"					"6"
+		"textalignment"			"center"
+		"wide"					"110"
+		"zpos" 					"4"
+		"fontHeight"			"30"
 
-		pin_to_sibling				ServerBrowserBG
-		pin_corner_to_sibling		TOP_LEFT
-		pin_to_sibling_corner		BOTTOM_LEFT
+		"pin_to_sibling"		"ServerBrowserBG"
+		"pin_corner_to_sibling"	"LEFT"
+		"pin_to_sibling_corner"	"LEFT"
 	}
 
-	RightLine
+	"PlaylistLbl"
 	{
-		ControlName				ImagePanel
-		xpos					0
-		ypos					0
-		tall					760
-		wide 					2
-		fillColor		"255 255 255 200"
-        drawColor		"255 255 255 200"
-		wrap					1
-		visible					1
-		zpos					3
+		"ControlName"			"Label"
+		"labelText"				"Playlist"
+		"xpos"					"-800"
+		"ypos"					"0"
+		"zpos"					"6"
+		"textalignment"			"center"
+		"wide"					"230"
+		"fontHeight"			"30"
 
-		pin_to_sibling				ServerBrowserBG
-		pin_corner_to_sibling		TOP_RIGHT
-		pin_to_sibling_corner		BOTTOM_RIGHT
+		"pin_to_sibling"		"ServerBrowserBG"
+		"pin_corner_to_sibling"	"LEFT"
+		"pin_to_sibling_corner"	"LEFT"
 	}
 
-	ServerMapImg
+	"MapLbl"
 	{
-		ControlName		RuiPanel
-		wide			450
-		tall            250
-		visible			1
-		rui           	"ui/custom_loadscreen_image.rpak"
-		ypos 			0
-		xpos			27
-		zpos 4
+		"ControlName"			"Label"
+		"labelText"				"Map"
+		"xpos"					"-1050"
+		"ypos"					"0"
+		"zpos"					"6"
+		"textalignment"			"center"
+		"wide"					"330"
+		"fontHeight"			"30"
 
-		pin_to_sibling				ServerBrowserBG
-		pin_corner_to_sibling		TOP_LEFT
-		pin_to_sibling_corner		TOP_RIGHT
+		"pin_to_sibling"		"ServerBrowserBG"
+		"pin_corner_to_sibling"	"LEFT"
+		"pin_to_sibling_corner"	"LEFT"
 	}
 
-	ServerInfoBG
+	"ServerNameLine"
 	{
-		ControlName				ImagePanel
-		xpos 0
-		ypos 0
-		tall					550
-		wide 					450
-		fillColor		"30 30 30 200"
-        drawColor		"30 30 30 200"
-		wrap					1
-		visible					1
-		zpos					3
-		pin_to_sibling				ServerMapImg
-		pin_corner_to_sibling		TOP_LEFT
-		pin_to_sibling_corner		BOTTOM_LEFT
+		"ControlName"			"ImagePanel"
+		"xpos"					"0"
+		"ypos"					"0"
+		"tall"					"760"
+		"wide" 					"2"
+		"fillColor"				"155 155 155 200"
+        "drawColor"				"155 155 155 200"
+		"wrap"					"1"
+		"visible"				"1"
+		"zpos"					"3"
+
+		"pin_to_sibling"		"ServerBrowserBG"
+		"pin_corner_to_sibling"	"TOP_LEFT"
+		"pin_to_sibling_corner"	"BOTTOM_LEFT"
 	}
 
-	ServerNameBG
+	"PlayerCountLine"
 	{
-		ControlName				ImagePanel
-		xpos 0
-		ypos -15
-		tall					30
-		wide 					450
-		fillColor		"30 30 30 200"
-        drawColor		"30 30 30 200"
-		wrap					1
-		visible					1
-		zpos					6
-		pin_to_sibling				ServerMapImg
-		pin_corner_to_sibling		TOP_LEFT
-		pin_to_sibling_corner		TOP_LEFT
+		"ControlName"			"ImagePanel"
+		"xpos"					"-660"
+		"ypos"					"0"
+		"tall"					"760"
+		"wide" 					"2"
+		"fillColor"				"155 155 155 200"
+        "drawColor"				"155 155 155 200"
+		"wrap"					"1"
+		"visible"				"1"
+		"zpos"					"3"
+
+		"pin_to_sibling"		"ServerBrowserBG"
+		"pin_corner_to_sibling"	"TOP_LEFT"
+		"pin_to_sibling_corner"	"BOTTOM_LEFT"
 	}
 
-	ServerNameInfoEdit
+	"PlaylistLine"
 	{
-		ControlName				Label
-		labelText				"Temp"
+		"ControlName"			"ImagePanel"
+		"xpos"					"-790"
+		"ypos"					"0"
+		"tall"					"760"
+		"wide" 					"2"
+		"fillColor"				"155 155 155 200"
+        "drawColor"				"155 155 155 200"
+		"wrap"					"1"
+		"visible"				"1"
+		"zpos"					"3"
+
+		"pin_to_sibling"		"ServerBrowserBG"
+		"pin_corner_to_sibling"	"TOP_LEFT"
+		"pin_to_sibling_corner"	"BOTTOM_LEFT"
+	}
+
+	"MapLine"
+	{
+		"ControlName"			"ImagePanel"
+		"xpos"					"-1040"
+		"ypos"					"0"
+		"tall"					"760"
+		"wide" 					"2"
+		"fillColor"				"155 155 155 200"
+        "drawColor"				"155 155 155 200"
+		"wrap"					"1"
+		"visible"				"1"
+		"zpos"					"3"
+
+		"pin_to_sibling"		"ServerBrowserBG"
+		"pin_corner_to_sibling"	"TOP_LEFT"
+		"pin_to_sibling_corner"	"BOTTOM_LEFT"
+	}
+
+	"RightLine"
+	{
+		"ControlName"			"ImagePanel"
+		"xpos"					"0"
+		"ypos"					"0"
+		"tall"					"760"
+		"wide" 					"2"
+		"fillColor"				"155 155 155 200"
+        "drawColor"				"155 155 155 200"
+		"wrap"					"1"
+		"visible"				"1"
+		"zpos"					"3"
+
+		"pin_to_sibling"		"ServerBrowserBG"
+		"pin_corner_to_sibling"	"TOP_RIGHT"
+		"pin_to_sibling_corner"	"BOTTOM_RIGHT"
+	}
+
+	"BottomLine"
+	{
+		"ControlName"			"ImagePanel"
+		"xpos"					"0"
+		"ypos"					"0"
+		"tall"					"2"
+		"wide" 					"1395"
+		"fillColor"				"155 155 155 200"
+        "drawColor"				"155 155 155 200"
+		"wrap"					"1"
+		"visible"				"1"
+		"zpos"					"3"
+
+		"pin_to_sibling"		"ServersBG"
+		"pin_corner_to_sibling"	"BOTTOM_LEFT"
+		"pin_to_sibling_corner"	"BOTTOM_LEFT"
+	}
+
+	"TopLine"
+	{
+		"ControlName"			"ImagePanel"
+		"xpos"					"0"
+		"ypos"					"0"
+		"tall"					"2"
+		"wide" 					"1395"
+		"fillColor"				"155 155 155 200"
+        "drawColor"				"155 155 155 200"
+		"wrap"					"1"
+		"visible"				"1"
+		"zpos"					"3"
+
+		"pin_to_sibling"		"ServersBG"
+		"pin_corner_to_sibling"	"TOP_LEFT"
+		"pin_to_sibling_corner"	"TOP_LEFT"
+	}
+
+	"ServerMapImg"
+	{
+		"ControlName"			"RuiPanel"
+		"wide"					"450"
+		"tall"            		"250"
+		"visible"				"1"
+		"rui"           		"ui/custom_loadscreen_image.rpak"
+		"ypos" 					"0"
+		"xpos"					"27"
+		"zpos" 					"4"
+
+		"pin_to_sibling"		"ServerBrowserBG"
+		"pin_corner_to_sibling"	"TOP_LEFT"
+		"pin_to_sibling_corner"	"TOP_RIGHT"
+	}
+
+	"ServerInfoBG"
+	{
+		"ControlName"			"ImagePanel"
+		"xpos" 					"0"
+		"ypos" 					"0"
+		"tall"					"560"
+		"wide" 					"450"
+		"fillColor"				"30 30 30 200"
+        "drawColor"				"30 30 30 200"
+		"wrap"					"1"
+		"visible"				"1"
+		"zpos"					"3"
+		"pin_to_sibling"		"ServerMapImg"
+		"pin_corner_to_sibling"	"TOP_LEFT"
+		"pin_to_sibling_corner"	"BOTTOM_LEFT"
+	}
+
+	"ServerNameBG"
+	{
+		"ControlName"			"ImagePanel"
+		"xpos" 					"0"
+		"ypos" 					"-15"
+		"tall"					"30"
+		"wide" 					"450"
+		"fillColor"				"30 30 30 200"
+        "drawColor"				"30 30 30 200"
+		"wrap"					"1"
+		"visible"				"1"
+		"zpos"					"6"
+		"pin_to_sibling"		"ServerMapImg"
+		"pin_corner_to_sibling"	"TOP_LEFT"
+		"pin_to_sibling_corner"	"TOP_LEFT"
+	}
+
+	"ServerNameInfoEdit"
+	{
+		"ControlName"			"Label"
+		"labelText"				""
 		"font"					"Default_27_Outline"
 		"allcaps"				"1"
-		wide					430
-		zpos 					7
-		fontHeight				20
-		xpos					-5 // include n pixels for the combo button inset
-		ypos					0
+		"wide"					"430"
+		"zpos" 					"7"
+		"fontHeight"			"20"
+		"xpos"					"-5"
+		"ypos"					"0"
 		fgcolor_override		"240 240 240 255"
-		bgcolor_override		"0 0 0 255"
+		"bgcolor_override"		"0 0 0 255"
 
-		pin_to_sibling				ServerNameBG
-		pin_corner_to_sibling		LEFT
-		pin_to_sibling_corner		LEFT
+		"pin_to_sibling"		"ServerNameBG"
+		"pin_corner_to_sibling"	"LEFT"
+		"pin_to_sibling_corner"	"LEFT"
 	}
 
-	PlaylistNameBG
+	"PlaylistNameBG"
 	{
-		ControlName				ImagePanel
-		xpos 0
-		ypos 0
-		tall					30
-		wide 					225
-		fillColor		"30 30 30 200"
-        drawColor		"30 30 30 200"
-		wrap					1
-		visible					1
-		zpos					6
-		pin_to_sibling				ServerMapImg
-		pin_corner_to_sibling		BOTTOM_RIGHT
-		pin_to_sibling_corner		BOTTOM_RIGHT
+		"ControlName"			"ImagePanel"
+		"xpos" 					"0"
+		"ypos" 					"0"
+		"tall"					"30"
+		"wide" 					"225"
+		"fillColor"				"30 30 30 200"
+        "drawColor"				"30 30 30 200"
+		"wrap"					"1"
+		"visible"				"1"
+		"zpos"					"6"
+		"pin_to_sibling"		"ServerMapImg"
+		"pin_corner_to_sibling"	"BOTTOM_RIGHT"
+		"pin_to_sibling_corner"	"BOTTOM_RIGHT"
 	}
 
-	PlaylistInfoEdit
+	"PlaylistInfoEdit"
 	{
-		ControlName				Label
-		labelText				"custom_tdm"
-		font					Default_27_Outline
+		"ControlName"			"Label"
+		"labelText"				""
+		"font"					"Default_27_Outline"
 		"allcaps"				"1"
-		wide					225
-		zpos 					7
-		fontHeight				25
-		xpos					5
-		ypos					0
-		textAlignment			"center"
-		fgcolor_override		"240 240 240 255"
-		bgcolor_override		"0 0 0 255"
+		"wide"					"225"
+		"zpos" 					"7"
+		"fontHeight"			"25"
+		"xpos"					"5"
+		"ypos"					"0"
+		"textAlignment"			"center"
+		"fgcolor_override"		"240 240 240 255"
+		"bgcolor_override"		"0 0 0 255"
 
-		pin_to_sibling				PlaylistNameBG
-		pin_corner_to_sibling		RIGHT
-		pin_to_sibling_corner		RIGHT
+		"pin_to_sibling"		"PlaylistNameBG"
+		"pin_corner_to_sibling"	"RIGHT"
+		"pin_to_sibling_corner"	"RIGHT"
 	}
 
-	ServerDesc
+	"ServerDesc"
 	{
-		ControlName				Label
-		labelText				"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen."
-		wide					390
-		tall					130
-		wrap					1
-		zpos 					7
-		fontHeight				25
-		xpos					-15
-		ypos					-15
+		"ControlName"			"Label"
+		"labelText"				""
+		"wide"					"390"
+		"tall"					"130"
+		"wrap"					"1"
+		"zpos" 					"7"
+		"fontHeight"			"25"
+		"xpos"					"-15"
+		"ypos"					"-15"
 		"textAlignment"			"north-west"
 		"fgcolor_override"		"255 255 255 255"
 
-		pin_to_sibling				ServerInfoBG
-		pin_corner_to_sibling		TOP_LEFT
-		pin_to_sibling_corner		TOP_LEFT
+		"pin_to_sibling"		"ServerInfoBG"
+		"pin_corner_to_sibling"	"TOP_LEFT"
+		"pin_to_sibling_corner"	"TOP_LEFT"
 	}
 
-	ConnectButton
+	"ConnectButton"
 	{
-		ControlName				RuiButton
-		rui                     "ui/settings_base_button.rpak"
-		wide 					450
-		tall 					100
-		xpos 					0
-		ypos					0
-		visible					1
-		zpos 5
+		"ControlName"			"RuiButton"
+		"rui"                   "ui/settings_base_button.rpak"
+		"wide" 					"450"
+		"tall" 					"75"
+		"xpos" 					"0"
+		"ypos"					"0"
+		"visible"				"1"
+		"zpos" 					"5"
 
-		pin_to_sibling			ServerInfoBG
-		pin_corner_to_sibling	TOP_LEFT
-		pin_to_sibling_corner	BOTTOM_LEFT
+		"pin_to_sibling"		"ServerInfoBG"
+		"pin_corner_to_sibling"	"TOP_LEFT"
+		"pin_to_sibling_corner"	"BOTTOM_LEFT"
 	}
 
 	"ServerButton0"
@@ -910,8 +964,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"ServerName0"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-15" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-15"
 		"ypos"						"0"
 		"zpos"						"0"
 		"wide"						"630"
@@ -927,8 +981,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"ServerName1"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-15" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-15"
 		"ypos"						"0"
 		"zpos"						"0"
 		"wide"						"630"
@@ -944,8 +998,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"ServerName2"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-15" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-15"
 		"ypos"						"0"
 		"zpos"						"0"
 		"wide"						"630"
@@ -961,8 +1015,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"ServerName3"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-15" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-15"
 		"ypos"						"0"
 		"zpos"						"0"
 		"wide"						"630"
@@ -978,8 +1032,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"ServerName4"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-15" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-15"
 		"ypos"						"0"
 		"zpos"						"0"
 		"wide"						"630"
@@ -995,8 +1049,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"ServerName5"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-15" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-15"
 		"ypos"						"0"
 		"zpos"						"0"
 		"wide"						"630"
@@ -1012,8 +1066,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"ServerName6"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-15" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-15"
 		"ypos"						"0"
 		"zpos"						"0"
 		"wide"						"630"
@@ -1029,8 +1083,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"ServerName7"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-15" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-15"
 		"ypos"						"0"
 		"zpos"						"0"
 		"wide"						"630"
@@ -1046,8 +1100,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"ServerName8"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-15" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-15"
 		"ypos"						"0"
 		"zpos"						"0"
 		"wide"						"630"
@@ -1063,8 +1117,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"ServerName9"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-15" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-15"
 		"ypos"						"0"
 		"zpos"						"0"
 		"wide"						"630"
@@ -1080,8 +1134,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"ServerName10"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-15" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-15"
 		"ypos"						"0"
 		"zpos"						"0"
 		"wide"						"630"
@@ -1097,8 +1151,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"ServerName11"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-15" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-15"
 		"ypos"						"0"
 		"zpos"						"0"
 		"wide"						"630"
@@ -1114,8 +1168,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"ServerName12"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-15" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-15"
 		"ypos"						"0"
 		"zpos"						"0"
 		"wide"						"630"
@@ -1131,8 +1185,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"ServerName13"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-15" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-15"
 		"ypos"						"0"
 		"zpos"						"0"
 		"wide"						"630"
@@ -1148,8 +1202,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"ServerName14"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-15" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-15"
 		"ypos"						"0"
 		"zpos"						"0"
 		"wide"						"630"
@@ -1165,8 +1219,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"ServerName15"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-15" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-15"
 		"ypos"						"0"
 		"zpos"						"0"
 		"wide"						"630"
@@ -1182,8 +1236,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"ServerName16"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-15" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-15"
 		"ypos"						"0"
 		"zpos"						"0"
 		"wide"						"630"
@@ -1199,8 +1253,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"ServerName17"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-15" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-15"
 		"ypos"						"0"
 		"zpos"						"0"
 		"wide"						"630"
@@ -1216,8 +1270,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"ServerName18"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-15" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-15"
 		"ypos"						"0"
 		"zpos"						"0"
 		"wide"						"630"
@@ -1233,8 +1287,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"ServerName19"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-15" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-15"
 		"ypos"						"0"
 		"zpos"						"0"
 		"wide"						"630"
@@ -1250,11 +1304,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"Playlist0"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-800" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-800"
 		"ypos"						"0"
 		"zpos"						"0"
-		textAlignment			"center"
+		"textAlignment"				"center"
 		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -1268,11 +1322,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"Playlist1"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-800" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-800"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -1286,11 +1340,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"Playlist2"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-800" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-800"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -1304,11 +1358,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"Playlist3"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-800" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-800"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -1322,11 +1376,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"Playlist4"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-800" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-800"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -1340,11 +1394,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"Playlist5"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-800" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-800"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -1358,11 +1412,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"Playlist6"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-800" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-800"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -1376,11 +1430,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"Playlist7"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-800" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-800"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -1394,11 +1448,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"Playlist8"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-800" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-800"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -1412,11 +1466,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"Playlist9"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-800" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-800"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -1430,11 +1484,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"Playlist10"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-800" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-800"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -1448,11 +1502,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"Playlist11"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-800" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-800"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -1466,11 +1520,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"Playlist12"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-800" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-800"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -1484,11 +1538,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"Playlist13"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-800" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-800"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -1502,11 +1556,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"Playlist14"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-800" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-800"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -1520,11 +1574,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"Playlist15"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-800" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-800"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -1538,11 +1592,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"Playlist16"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-800" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-800"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -1556,11 +1610,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"Playlist17"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-800" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-800"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -1574,11 +1628,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"Playlist18"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-800" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-800"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -1592,11 +1646,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"Playlist19"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-800" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-800"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -1610,11 +1664,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"PlayerCount0"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-670" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-670"
 		"ypos"						"0"
 		"zpos"						"0"
-		textAlignment			"center"
+		"textAlignment"				"center"
 		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -1628,11 +1682,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"PlayerCount1"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-670" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-670"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -1646,11 +1700,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"PlayerCount2"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-670" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-670"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -1664,11 +1718,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"PlayerCount3"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-670" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-670"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -1682,11 +1736,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"PlayerCount4"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-670" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-670"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -1700,11 +1754,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"PlayerCount5"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-670" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-670"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -1718,11 +1772,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"PlayerCount6"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-670" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-670"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -1736,11 +1790,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"PlayerCount7"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-670" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-670"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -1754,11 +1808,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"PlayerCount8"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-670" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-670"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -1772,11 +1826,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"PlayerCount9"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-670" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-670"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -1790,11 +1844,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"PlayerCount10"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-670" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-670"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -1808,11 +1862,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"PlayerCount11"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-670" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-670"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -1826,11 +1880,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"PlayerCount12"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-670" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-670"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -1844,11 +1898,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"PlayerCount13"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-670" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-670"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -1862,11 +1916,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"PlayerCount14"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-670" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-670"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -1880,11 +1934,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"PlayerCount15"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-670" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-670"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -1898,11 +1952,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"PlayerCount16"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-670" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-670"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -1916,11 +1970,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"PlayerCount17"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-670" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-670"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -1934,11 +1988,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"PlayerCount18"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-670" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-670"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -1952,11 +2006,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"PlayerCount19"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-670" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-670"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -1970,11 +2024,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"Map0"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-1050" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-1050"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"330"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -1988,11 +2042,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"Map1"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-1050" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-1050"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"330"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -2006,11 +2060,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"Map2"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-1050" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-1050"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"330"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -2024,11 +2078,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"Map3"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-1050" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-1050"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"330"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -2042,11 +2096,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"Map4"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-1050" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-1050"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"330"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -2060,11 +2114,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"Map5"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-1050" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-1050"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"330"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -2078,11 +2132,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"Map6"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-1050" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-1050"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"330"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -2096,11 +2150,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"Map7"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-1050" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-1050"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"330"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -2114,11 +2168,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"Map8"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-1050" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-1050"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"330"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -2132,11 +2186,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"Map9"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-1050" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-1050"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"330"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -2150,11 +2204,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"Map10"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-1050" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-1050"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"330"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -2168,11 +2222,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"Map11"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-1050" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-1050"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"330"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -2186,11 +2240,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"Map12"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-1050" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-1050"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"330"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -2204,11 +2258,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"Map13"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-1050" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-1050"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"330"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -2222,11 +2276,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"Map14"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-1050" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-1050"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"330"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -2240,11 +2294,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"Map15"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-1050" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-1050"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"330"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -2258,11 +2312,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"Map16"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-1050" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-1050"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"330"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -2276,11 +2330,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"Map17"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-1050" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-1050"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"330"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -2294,11 +2348,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"Map18"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-1050" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-1050"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"330"
 		"zpos" 						"4"
 		"fontHeight"				"30"
@@ -2312,11 +2366,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"Map19"
 	{
 		"ControlName"				"Label"
-		"labelText"					"Temp Text"
-		"xpos"						"-1050" // include n pixels for the combo button inset
+		"labelText"					""
+		"xpos"						"-1050"
 		"ypos"						"0"
 		"zpos"						"0"
-		textalignment			"center"
+		"textalignment"				"center"
 		"wide"						"330"
 		"zpos" 						"4"
 		"fontHeight"				"30"
