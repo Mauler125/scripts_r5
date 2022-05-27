@@ -2,6 +2,7 @@ global function InitR5RLobbyMenu
 global function GetUIPlaylistName
 global function GetUIMapName
 global function GetUIMapAsset
+global function GetTotalPlayersAllServers
 
 struct
 {
@@ -131,6 +132,7 @@ void function OnR5RLobby_Open()
 	//needed on both show and open
 	SetupLobby()
 
+	//Load Create Server maps and playlists
 	RefreshUIPlaylists()
 	RefreshUIMaps()
 }
@@ -195,6 +197,12 @@ asset function GetUIMapAsset(string map)
 	} catch(e2) {}
 
 	return mapasset
+}
+
+int function GetTotalPlayersAllServers()
+{
+	//Todo once added in detours
+	return 0
 }
 
 void function OnR5RLobby_Back()

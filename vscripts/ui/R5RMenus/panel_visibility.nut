@@ -19,6 +19,7 @@ void function InitR5RVisPanel( var panel )
 	file.panel = panel
 	file.menu = GetParentMenu( file.panel )
 
+	//Initial panel height
 	int height = 10
 
 	for( int i=0; i < visibility.len(); i++ ) {
@@ -36,9 +37,11 @@ void function InitR5RVisPanel( var panel )
 		//Add the button and map to a table
 		file.buttonvis[Hud_GetChild( file.panel, "VisBtn" + i )] <- visibility[i]
 
-		height = height + 45
+		//Add height
+		height += 45
 	}
 
+	//Set final panel height
 	Hud_SetHeight( Hud_GetChild( file.panel, "PanelBG" ), height )
 }
 

@@ -10,6 +10,7 @@ struct
 } file
 
 //Playlists to be removed from the ui
+//Todo: use visible playlist var
 array<string> removedplaylists = [
 	"survival_staging_baseline",
 	"survival_training",
@@ -53,6 +54,7 @@ void function RefreshUIPlaylists()
 	if(number_of_playlists > 18)
 		number_of_playlists = 18
 
+	//Inital playlist hight
 	int height = 10
 
 	for( int i=0; i < number_of_playlists; i++ ) {
@@ -60,7 +62,7 @@ void function RefreshUIPlaylists()
 		//Set playlist text
 		Hud_SetText( Hud_GetChild( file.panel, "PlaylistText" + i ), GetUIPlaylistName(playlists[i]))
 
-		//Set the map ui visibility to true
+		//Set the playlist ui visibility to true
 		Hud_SetVisible( Hud_GetChild( file.panel, "PlaylistText" + i ), true )
 		Hud_SetVisible( Hud_GetChild( file.panel, "PlaylistBtn" + i ), true )
 		Hud_SetVisible( Hud_GetChild( file.panel, "PlaylistPanel" + i ), true )
@@ -68,11 +70,11 @@ void function RefreshUIPlaylists()
 		//Add the Even handler for the button
 		Hud_AddEventHandler( Hud_GetChild( file.panel, "PlaylistBtn" + i ), UIE_CLICK, SelectServerPlaylist )
 
-		//Add the button and map to a table
+		//Add the button and playlist to a table
 		file.buttonplaylist[Hud_GetChild( file.panel, "PlaylistBtn" + i )] <- playlists[i]
 
 		//For getting panel height
-		height = height + 45
+		height += 45
 	}
 
 	//Set panels height

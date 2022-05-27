@@ -28,8 +28,7 @@ void function RefreshUIMaps()
 	array<string> availablemaps
 
 	//Setup available maps array
-	foreach( string map in allmaps)
-	{
+	foreach( string map in allmaps) {
 		//If is a lobby map dont add
 		if(!IsValidMap(map))
 			continue
@@ -46,6 +45,7 @@ void function RefreshUIMaps()
 	if(number_of_maps > 16)
 		number_of_maps = 16
 
+	//Intial row and width
 	int current_row_items = 0
 	int map_bg_width = 330
 
@@ -68,9 +68,8 @@ void function RefreshUIMaps()
 		file.buttonmap[Hud_GetChild( file.panel, "MapBtn" + i )] <- availablemaps[i]
 
 		//For calculating map selection background width
-		if(current_row_items > 3)
-		{
-			map_bg_width = map_bg_width + 325
+		if(current_row_items > 3) {
+			map_bg_width += 325
 			current_row_items = 0
 		}
 
