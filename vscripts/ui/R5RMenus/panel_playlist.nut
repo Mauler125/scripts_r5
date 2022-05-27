@@ -24,7 +24,7 @@ void function RefreshUIPlaylists()
 	//Setup available playlists array
 	foreach( string playlist in allplaylists)
 	{
-		//If playlist is removed playlist array then dont append
+		//Check playlist visibility
 		if(!GetPlaylistVarBool( playlist, "visible", false ))
 			continue
 
