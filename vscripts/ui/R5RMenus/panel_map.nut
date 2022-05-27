@@ -1,4 +1,5 @@
 global function InitR5RMapPanel
+global function RefreshUIMaps
 
 struct
 {
@@ -8,11 +9,20 @@ struct
 	table<var, string> buttonmap
 } file
 
+//Maps to be removed from the ui
+array<string> removedmaps = [
+	"mp_lobby",
+	"mp_npe"
+]
+
 void function InitR5RMapPanel( var panel )
 {
 	file.panel = panel
 	file.menu = GetParentMenu( file.panel )
+}
 
+void function RefreshUIMaps()
+{
 	//Get all available maps
 	array<string> allmaps = GetAvailableMaps()
 	array<string> availablemaps
@@ -80,7 +90,7 @@ void function InitR5RMapPanel( var panel )
 bool function IsValidMap(string map)
 {
 	//Dont show these maps in the map selection
-	if( map == "mp_lobby" || map == "mp_npe")
+	if( removedmaps.contains(map) )
 		return false
 
 	return true

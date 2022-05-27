@@ -127,6 +127,9 @@ void function OnR5RLobby_Open()
 {
 	//needed on both show and open
 	SetupLobby()
+
+	RefreshUIPlaylists()
+	RefreshUIMaps()
 }
 
 void function SetupLobby()
