@@ -160,6 +160,26 @@ void function RefreshServerListing()
 	// Reset pages
 	file.pages = 0
 
+	// If no servers then set no servers found ui and return
+	if(GetServerCount() == 0) {
+		// Show no servers found ui
+		ShowNoServersFound(true)
+
+		// Set selected server to none
+		SetSelectedServer(-1, "", "", "")
+
+		// Set sidebar elements to blank
+		SetSideBarElems("", "", "", $"")
+
+		// Set player, playercount, pages to none
+		Hud_SetText( Hud_GetChild( file.panel, "PlayersCount"), "Players: 0")
+		Hud_SetText( Hud_GetChild( file.panel, "ServersCount"), "Servers: 0")
+		Hud_SetText (Hud_GetChild( file.panel, "Pages" ), "Page: 0/0")
+
+		// Return as it dosnt need togo past this if no servers are found
+		return
+	}
+
 	// For getting total players on all server
 	int serverrow = 0
 
@@ -167,7 +187,7 @@ void function RefreshServerListing()
 	for( int i=0; i < GetServerCount(); i++ )
 	{
 		// Descption and player count will come at a later date
-		thread AddServer(i, GetServerName(i), GetServerPlaylist(i), GetServerMap(i), "Server description coming soon.", 32, 0)
+		AddServer(i, GetServerName(i), GetServerPlaylist(i), GetServerMap(i), "Server description coming soon.", 32, 0)
 
 		// If server is on final row add a new page
 		if(serverrow == SB_MAX_SERVER_PER_PAGE)
@@ -188,16 +208,9 @@ void function RefreshServerListing()
 		Hud_SetVisible(Hud_GetChild( file.panel, "ServerButton" + i ), true)
 	}
 
-	if(file.Servers.len() > 0) {
-		// Select first server in the list
-		SetSelectedServer(0, file.Servers[0].Name, file.Servers[0].Map, file.Servers[0].Playlist)
-		SetSideBarElems(file.Servers[0].Name, GetUIPlaylistName(file.Servers[0].Playlist), file.Servers[0].Desc, GetUIMapAsset(file.Servers[0].Map))
-	} else {
-		// Show no servers found ui
-		ShowNoServersFound(true)
-		SetSelectedServer(-1, "", "", "")
-		SetSideBarElems("", "", "", $"")
-	}
+	// Select first server in the list
+	SetSelectedServer(0, file.Servers[0].Name, file.Servers[0].Map, file.Servers[0].Playlist)
+	SetSideBarElems(file.Servers[0].Name, GetUIPlaylistName(file.Servers[0].Playlist), file.Servers[0].Desc, GetUIMapAsset(file.Servers[0].Map))
 
 	// Set UI Labels
 	Hud_SetText( Hud_GetChild( file.panel, "PlayersCount"), "Players: " + GetTotalPlayersAllServers())
@@ -207,7 +220,11 @@ void function RefreshServerListing()
 
 void function ShowNoServersFound(bool show)
 {
-	// Todo: Add No Servers Found UI
+	//Set no servers found ui based on bool
+	Hud_SetVisible(Hud_GetChild( file.panel, "PlayerCountLine" ), !show )
+	Hud_SetVisible(Hud_GetChild( file.panel, "PlaylistLine" ), !show )
+	Hud_SetVisible(Hud_GetChild( file.panel, "MapLine" ), !show )
+	Hud_SetVisible(Hud_GetChild( file.panel, "NoServersLbl" ), show )
 }
 
 void function NextPage(var button)

@@ -27,6 +27,9 @@ void function RefreshUIMaps()
 	array<string> allmaps = GetAvailableMaps()
 	array<string> availablemaps
 
+	//Maybe
+	//array<string> playlistmaps = GetPlaylistMaps( "PlaylistName playlistName" )
+
 	//Setup available maps array
 	foreach( string map in allmaps) {
 		//If is a lobby map dont add

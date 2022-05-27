@@ -49,6 +49,21 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"pin_to_sibling_corner"	"BOTTOM_LEFT"
 	}
 
+	"NoServersLbl"
+	{
+		"ControlName"			"Label"
+		"labelText"				"No Servers Found"
+		"xpos"					"0"
+		"ypos"					"-15"
+		"auto_wide_tocontents"	"1"
+		"zpos" 					"10"
+		"fontHeight"			"40"
+
+		"pin_to_sibling"		"ServersBG"
+		"pin_corner_to_sibling"	"CENTER"
+		"pin_to_sibling_corner"	"CENTER"
+	}
+
 	"ServerBrowserBGBottom"
 	{
 		"ControlName"			"ImagePanel"
