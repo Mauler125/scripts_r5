@@ -9,21 +9,6 @@ struct
 	table<var, string> buttonplaylist
 } file
 
-//Playlists to be removed from the ui
-//Todo: use visible playlist var
-array<string> removedplaylists = [
-	"survival_staging_baseline",
-	"survival_training",
-	"defaults",
-	"ranked",
-	"iron_crown",
-	"elite",
-	"armed_and_dangerous",
-	"wead",
-	"dev_default",
-	"menufall"
-]
-
 void function InitR5RPlaylistPanel( var panel )
 {
 	file.panel = panel
@@ -40,7 +25,7 @@ void function RefreshUIPlaylists()
 	foreach( string playlist in allplaylists)
 	{
 		//If playlist is removed playlist array then dont append
-		if(!IsValidPlaylist(playlist))
+		if(!GetPlaylistVarBool( playlist, "visible", false ))
 			continue
 
 		//Add playlist to the array
@@ -79,14 +64,6 @@ void function RefreshUIPlaylists()
 
 	//Set panels height
 	Hud_SetHeight( Hud_GetChild( file.panel, "PanelBG" ), height )
-}
-
-bool function IsValidPlaylist(string p)
-{
-	if(removedplaylists.contains(p))
-		return false
-
-	return true
 }
 
 void function SelectServerPlaylist( var button )
