@@ -49,7 +49,8 @@ void function InitR5RServerBrowserPanel( var panel )
 	Hud_AddEventHandler( Hud_GetChild( file.panel, "BtnServerListLeftArrow" ), UIE_CLICK, PrevPage )
 	//Setup Connect Button
 	Hud_AddEventHandler( Hud_GetChild( file.panel, "ConnectButton" ), UIE_CLICK, ConnectToServer )
-	RuiSetString( Hud_GetRui( Hud_GetChild( file.panel, "ConnectButton" ) ), "buttonText", "Connect")
+
+	Hud_AddEventHandler( Hud_GetChild( file.panel, "RefreshServers" ), UIE_CLICK, RefreshServersClick )
 
 	array<var> serverbuttons = GetElementsByClassname( file.menu, "ServBtn" )
 	foreach ( var elem in serverbuttons )
@@ -61,6 +62,12 @@ void function InitR5RServerBrowserPanel( var panel )
 	//Clear Server List Text
 	ResetServerLabels()
 
+	//Refresh Server Browser
+	thread RefreshServerListing()
+}
+
+void function RefreshServersClick(var button)
+{
 	//Refresh Server Browser
 	thread RefreshServerListing()
 }
@@ -98,45 +105,13 @@ void function SetSelectedServer(int id, string name, string map, string playlist
 	SelectedServerInfo.Playlist = playlist
 }
 
-string function GetUIPlaylistName(string playlist)
-{
-	string finalplaylistname = playlist
-
-	try{
-		//If playlist is in table use better playlistname
-		finalplaylistname = playlisttoname[playlist]
-	} catch(e1) {}
-
-	return finalplaylistname
-}
-
-string function GetUIMapName(string map)
-{
-	string mapname = map
-
-	try{
-		mapname = maptoname[map]
-	} catch(e2) {}
-
-	return mapname
-}
-
 void function SelectServer(var button)
 {
 	int buttonid = Hud_GetScriptID( button ).tointeger()
 	int finalid = buttonid + file.pageoffset
-	string playlistname = GetUIPlaylistName(file.Servers[finalid].Playlist)
 
 	SetSelectedServer(finalid, file.Servers[finalid].Name, file.Servers[finalid].Map, file.Servers[finalid].Playlist)
-
-	asset mapimg
-	try{
-		mapimg = maptoasset[file.Servers[finalid].Map]
-	} catch(e0) {
-		mapimg = $"rui/menu/maps/map_not_found"
-	}
-
-	SetSideBarElems(file.Servers[finalid].Name, playlistname, file.Servers[finalid].Desc, mapimg)
+	SetSideBarElems(file.Servers[finalid].Name, GetUIPlaylistName(file.Servers[finalid].Playlist), file.Servers[finalid].Desc, GetUIMapAsset(file.Servers[finalid].Map))
 }
 
 void function AddServer(int id, string name, string playlist, string map, string desc, int maxplayers, int currentplayers)
@@ -226,7 +201,7 @@ void function RefreshServerListing()
 	if(file.Servers.len() > 0) {
 		string playlistname = GetUIPlaylistName(file.Servers[0].Playlist)
 		SetSelectedServer(0, file.Servers[0].Name, file.Servers[0].Map, file.Servers[0].Playlist)
-		SetSideBarElems(file.Servers[0].Name, playlistname, file.Servers[0].Desc, maptoasset[file.Servers[0].Map])
+		SetSideBarElems(file.Servers[0].Name, playlistname, file.Servers[0].Desc, GetUIMapAsset(file.Servers[0].Map))
 	} else {
 		//Show no servers found ui
 		ShowNoServersFound(true)
@@ -237,7 +212,7 @@ void function RefreshServerListing()
 	//Set UI Labels
 	Hud_SetText( Hud_GetChild( file.panel, "PlayersCount"), "Players: " + totalplayers)
 	Hud_SetText( Hud_GetChild( file.panel, "ServersCount"), "Servers: " + serverCount)
-	Hud_SetText (Hud_GetChild( file.panel, "Pages" ), "Page: 0/" + file.pages)
+	Hud_SetText (Hud_GetChild( file.panel, "Pages" ), "Page: 1/" + (file.pages + 1))
 }
 
 void function ShowNoServersFound(bool show)
@@ -273,7 +248,7 @@ void function NextPage(var button)
 	if(endint > file.Servers.len())
 		endint = file.Servers.len()
 
-	Hud_SetText(Hud_GetChild( file.panel, "Pages" ), "Page: " + file.currentpage + "/" + file.pages)
+	Hud_SetText(Hud_GetChild( file.panel, "Pages" ), "Page: " + (file.currentpage + 1) + "/" + (file.pages + 1))
 
 	int id = 0
 	for( int i=startint; i < endint; i++ )
@@ -319,7 +294,7 @@ void function PrevPage(var button)
 	if(endint > file.Servers.len())
 		endint = file.Servers.len()
 
-	Hud_SetText(Hud_GetChild( file.panel, "Pages" ), "Page: " + file.currentpage + "/" + file.pages)
+	Hud_SetText(Hud_GetChild( file.panel, "Pages" ), "Page: " + (file.currentpage + 1) + "/" + (file.pages + 1))
 
 	int id = 0
 	for( int i=startint; i < endint; i++ )

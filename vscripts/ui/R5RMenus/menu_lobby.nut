@@ -1,4 +1,7 @@
 global function InitR5RLobbyMenu
+global function GetUIPlaylistName
+global function GetUIMapName
+global function GetUIMapAsset
 
 struct
 {
@@ -158,6 +161,40 @@ void function ShowSelectedPanel(var panel, var button)
 
 	//Show selected panel
 	Hud_SetVisible( panel, true )
+}
+
+string function GetUIPlaylistName(string playlist)
+{
+	string finalplaylistname = playlist
+
+	try{
+		//If playlist is in table use better playlistname
+		finalplaylistname = playlisttoname[playlist]
+	} catch(e1) {}
+
+	return finalplaylistname
+}
+
+string function GetUIMapName(string map)
+{
+	string mapname = map
+
+	try{
+		mapname = maptoname[map]
+	} catch(e2) {}
+
+	return mapname
+}
+
+asset function GetUIMapAsset(string map)
+{
+	asset mapasset = $"rui/menu/maps/map_not_found"
+
+	try{
+		mapasset = maptoasset[map]
+	} catch(e2) {}
+
+	return mapasset
 }
 
 void function OnR5RLobby_Back()

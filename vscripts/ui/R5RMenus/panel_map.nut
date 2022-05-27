@@ -50,16 +50,11 @@ void function RefreshUIMaps()
 	int map_bg_width = 330
 
 	for( int i=0; i < number_of_maps; i++ ) {
-		//Try catch was the best way i found for if the map isnt found in the table then it will just set the map name text ui
-		try {
-			//If map exists in table, set map name and map image
-			Hud_SetText( Hud_GetChild( file.panel, "MapText" + i ), maptoname[availablemaps[i]])
-			RuiSetImage( Hud_GetRui( Hud_GetChild( file.panel, "MapImg" + i ) ), "loadscreenImage", maptoasset[availablemaps[i]] )
-		} catch(e1) {
-			//if it dosnt exist, set map image not found
-			RuiSetImage( Hud_GetRui( Hud_GetChild( file.panel, "MapImg" + i ) ), "loadscreenImage", $"rui/menu/maps/map_not_found" )
-			Hud_SetText( Hud_GetChild( file.panel, "MapText" + i ), availablemaps[i])
-		}
+		//Set Map Text
+		Hud_SetText( Hud_GetChild( file.panel, "MapText" + i ), GetUIMapName(availablemaps[i]))
+
+		//Set Map Asset
+		RuiSetImage( Hud_GetRui( Hud_GetChild( file.panel, "MapImg" + i ) ), "loadscreenImage", GetUIMapAsset(availablemaps[i]) )
 
 		//Set the map ui visibility to true
 		Hud_SetVisible( Hud_GetChild( file.panel, "MapText" + i ), true )

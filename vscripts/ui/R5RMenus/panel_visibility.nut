@@ -22,6 +22,7 @@ void function InitR5RVisPanel( var panel )
 	int height = 10
 
 	for( int i=0; i < visibility.len(); i++ ) {
+		//Set vis name
 		Hud_SetText( Hud_GetChild( file.panel, "VisText" + i ), vistoname[visibility[i]])
 
 		//Set the map ui visibility to true

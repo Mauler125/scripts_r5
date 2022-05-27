@@ -47,7 +47,7 @@ void function InitR5RCreateServerPanel( var panel )
 
 	//Set selected ui
 	Hud_SetText(Hud_GetChild( file.panel, "PlaylistInfoEdit" ), playlisttoname[NewServer.playlist])
-	RuiSetImage( Hud_GetRui( Hud_GetChild( file.panel, "ServerMapImg" ) ), "loadscreenImage", maptoasset[NewServer.map] )
+	RuiSetImage( Hud_GetRui( Hud_GetChild( file.panel, "ServerMapImg" ) ), "loadscreenImage", GetUIMapAsset( NewServer.map ) )
 	Hud_SetText(Hud_GetChild( file.panel, "VisInfoEdit" ), vistoname[NewServer.vis])
 	Hud_SetText( Hud_GetChild( file.panel, "BtnServerName" ), "A R5Reloaded Server" )
 }
@@ -69,17 +69,11 @@ void function SetSelectedServerMap( string map )
 	//set map
 	NewServer.map = map
 
-	//Get map asset
-	asset mapasset = $"rui/menu/maps/map_not_found"
-	try {
-		//if mapname is in tabel then get the correct asset from it
-		mapasset = maptoasset[map]
-	} catch(e1) { }
 	//Set the panel to not visible
 	Hud_SetVisible( file.panels[0], false )
 
 	//Set the new map image
-	RuiSetImage( Hud_GetRui( Hud_GetChild( file.panel, "ServerMapImg" ) ), "loadscreenImage", mapasset )
+	RuiSetImage( Hud_GetRui( Hud_GetChild( file.panel, "ServerMapImg" ) ), "loadscreenImage", GetUIMapAsset( NewServer.map ) )
 }
 
 void function SetSelectedServerPlaylist( string playlist )
@@ -87,18 +81,11 @@ void function SetSelectedServerPlaylist( string playlist )
 	//set playlist
 	NewServer.playlist = playlist
 
-	//Get playlist name
-	string playlistname = playlist
-	try {
-		//if mapname is in tabel then get the correct asset from it
-		playlistname = playlisttoname[playlist]
-	} catch(e1) { }
-
 	//Set the panel to not visible
 	Hud_SetVisible( file.panels[1], false )
 
 	//Set the new playlist text
-	Hud_SetText(Hud_GetChild( file.panel, "PlaylistInfoEdit" ), playlistname)
+	Hud_SetText(Hud_GetChild( file.panel, "PlaylistInfoEdit" ), GetUIPlaylistName( NewServer.playlist ) )
 }
 
 void function SetSelectedServerVis( int vis )
@@ -110,7 +97,7 @@ void function SetSelectedServerVis( int vis )
 	Hud_SetVisible( file.panels[2], false )
 
 	//Set the new visibility text
-	Hud_SetText(Hud_GetChild( file.panel, "VisInfoEdit" ), vistoname[vis])
+	Hud_SetText(Hud_GetChild( file.panel, "VisInfoEdit" ), vistoname[NewServer.vis])
 }
 
 void function ShowSelectedPanel(var panel)

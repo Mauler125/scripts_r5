@@ -67,6 +67,48 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"pin_to_sibling_corner"	"BOTTOM"
 	}
 
+	"RefreshServers"
+	{
+		"ControlName"				"RuiButton"
+		"style"						"RuiButton"
+		"wide"						"200"
+		"tall"						"50"
+		"xpos"						"0"
+		"ypos"						"0"
+		"visible"					"1"
+		"enabled"					"1"
+		"zpos" 						"2"
+        "rui"						"ui/tab_button.rpak"
+		"cursorVelocityModifier"  	"0.7"
+
+		ruiArgs
+		{
+			buttonText ""
+		}
+
+		"pin_to_sibling"			"ServerBrowserBGBottom"
+		"pin_corner_to_sibling"		"TOP_RIGHT"
+		"pin_to_sibling_corner"		"BOTTOM_RIGHT"
+	}
+
+	"RefreshServersText"
+	{
+		"ControlName"			"Label"
+		"labelText"				"Refresh Servers"
+		"font"					"DefaultBold_41"
+		"allcaps"				"1"
+		"auto_wide_tocontents"	"1"
+		"zpos" 					"0"
+		"fontHeight"			"25"
+		"xpos"					"0"
+		"ypos"					"0"
+		"fgcolor_override"		"255 255 255 255"
+
+		"pin_to_sibling"		"RefreshServers"
+		"pin_corner_to_sibling"	"CENTER"
+		"pin_to_sibling_corner"	"CENTER"
+	}
+
 	"ServersCount"
 	{
 		"ControlName"			"Label"
@@ -77,7 +119,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"zpos" 					"7"
 		"fontHeight"			"25"
 		"xpos"					"0"
-		"ypos"					"15"
+		"ypos"					"12"
 		"fgcolor_override"		"255 255 255 255"
 
 		"pin_to_sibling"		"ServerBrowserBGBottom"
@@ -440,7 +482,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"ControlName"			"ImagePanel"
 		"xpos" 					"0"
 		"ypos" 					"0"
-		"tall"					"560"
+		"tall"					"635"
 		"wide" 					"450"
 		"fillColor"				"30 30 30 200"
         "drawColor"				"30 30 30 200"
@@ -546,18 +588,44 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 
 	"ConnectButton"
 	{
-		"ControlName"			"RuiButton"
-		"rui"                   "ui/settings_base_button.rpak"
-		"wide" 					"450"
-		"tall" 					"75"
-		"xpos" 					"0"
-		"ypos"					"0"
-		"visible"				"1"
-		"zpos" 					"5"
+		"ControlName"				"RuiButton"
+		"style"						"RuiButton"
+		"wide"						"450"
+		"tall"						"70"
+		"xpos"						"0"
+		"ypos"						"0"
+		"visible"					"1"
+		"enabled"					"1"
+		"zpos" 						"15"
+        "rui"						"ui/tab_button.rpak"
+		"cursorVelocityModifier"  	"0.7"
+
+		ruiArgs
+		{
+			buttonText ""
+		}
 
 		"pin_to_sibling"		"ServerInfoBG"
-		"pin_corner_to_sibling"	"TOP_LEFT"
-		"pin_to_sibling_corner"	"BOTTOM_LEFT"
+		"pin_corner_to_sibling"	"BOTTOM_RIGHT"
+		"pin_to_sibling_corner"	"BOTTOM_RIGHT"
+	}
+
+	"ConnectButtonText"
+	{
+		"ControlName"			"Label"
+		"labelText"				"Connect"
+		"font"					"DefaultBold_41"
+		"allcaps"				"1"
+		"auto_wide_tocontents"	"1"
+		"zpos" 					"13"
+		"fontHeight"			"30"
+		"xpos"					"0"
+		"ypos"					"0"
+		"fgcolor_override"		"255 255 255 255"
+
+		"pin_to_sibling"		"ConnectButton"
+		"pin_corner_to_sibling"	"CENTER"
+		"pin_to_sibling_corner"	"CENTER"
 	}
 
 	"ServerButton0"

@@ -49,24 +49,16 @@ void function RefreshUIPlaylists()
 	int number_of_playlists = playlists.len()
 
 	//Currently supports upto 18 playlists
-	//Amos and I talked and will setup a page system when needed
+	//Amos and I talked and will setup a page system or somthing else when needed
 	if(number_of_playlists > 18)
 		number_of_playlists = 18
 
 	int height = 10
 
 	for( int i=0; i < number_of_playlists; i++ ) {
-		//Get playlist name
-		string playlistname
-		try{
-			//If playlist is in tabel then use the tables name
-			playlistname = playlisttoname[playlists[i]]
-		} catch(e0) {
-			//If not then use original name
-			playlistname = playlists[i]
-		}
+
 		//Set playlist text
-		Hud_SetText( Hud_GetChild( file.panel, "PlaylistText" + i ), playlistname)
+		Hud_SetText( Hud_GetChild( file.panel, "PlaylistText" + i ), GetUIPlaylistName(playlists[i]))
 
 		//Set the map ui visibility to true
 		Hud_SetVisible( Hud_GetChild( file.panel, "PlaylistText" + i ), true )
