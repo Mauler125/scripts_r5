@@ -45,10 +45,10 @@ void function LaunchLobby()
 	file.isworking = true
 
 	//Hide status panel
-	RuiSetBool( Hud_GetRui( Hud_GetChild( file.panel, "StatusDetails" ) ), "isVisible", false )
+	//RuiSetBool( Hud_GetRui( Hud_GetChild( file.panel, "StatusDetails" ) ), "isVisible", false )
 
 	//Show spinner
-	RuiSetBool( Hud_GetRui( Hud_GetChild( file.panel, "Status" ) ), "showSpinner", true )
+	//RuiSetBool( Hud_GetRui( Hud_GetChild( file.panel, "Status" ) ), "showSpinner", true )
 
 	//Create lobby server
 	CreateServer("Lobby", "mp_lobby", "menufall", eServerVisibility.OFFLINE)

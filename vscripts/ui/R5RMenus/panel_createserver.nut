@@ -78,10 +78,13 @@ bool function CheckPlaylistAndMapCompatibility()
 
 void function StartServer()
 {
-	ShutdownLobby()
+	//Shutdown the lobby vm
+	ShutdownHostGame()
 
+	//wait for lobby vm to be actually shut down
 	wait 0.2
-	//Start new server with selected options
+
+	//Create new server with selected settings
 	CreateServer(NewServer.name, NewServer.map, NewServer.playlist, NewServer.vis)
 }
 

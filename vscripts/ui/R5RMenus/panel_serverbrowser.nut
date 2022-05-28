@@ -319,7 +319,7 @@ void function SetSelectedServer(int id, string name, string map, string playlist
 void function StartServerConnection()
 {
 	//Shutdown the lobby vm
-	ShutdownLobby()
+	ShutdownHostGame()
 
 	//wait for lobby vm to be actually shut down
 	wait 0.2
