@@ -19,9 +19,6 @@ void function InitR5RMainMenuPanel( var panel )
 
 	//Setup button event handlers
 	Hud_AddEventHandler( Hud_GetChild( panel, "LaunchButton" ), UIE_CLICK, LaunchButton_OnActivate )
-
-	//Setup rui
-	SetupRUI()
 }
 
 void function OnMainMenuPanel_Show( var panel )
