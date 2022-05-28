@@ -23,22 +23,8 @@ void function InitR5RMapPanel( var panel )
 
 void function RefreshUIMaps()
 {
-	//Get all available maps
-	array<string> allmaps = GetAvailableMaps()
-	array<string> availablemaps
-
-	//Maybe
-	//array<string> playlistmaps = GetPlaylistMaps( "PlaylistName playlistName" )
-
-	//Setup available maps array
-	foreach( string map in allmaps) {
-		//If is a lobby map dont add
-		if(!IsValidMap(map))
-			continue
-
-		//Add map to the array
-		availablemaps.append(map)
-	}
+	//Get maps array
+	array<string> availablemaps = GetMaps()
 
 	//Get number of maps
 	int number_of_maps = availablemaps.len()
@@ -64,6 +50,7 @@ void function RefreshUIMaps()
 		Hud_SetVisible( Hud_GetChild( file.panel, "MapImg" + i ), true )
 		Hud_SetVisible( Hud_GetChild( file.panel, "MapBtn" + i ), true )
 
+		//If button already has a evenhandler remove it
 		var button = Hud_GetChild( file.panel, "MapBtn" + i )
 		if ( button in file.buttonmap )
 		{
@@ -89,6 +76,25 @@ void function RefreshUIMaps()
 	//Set the map selection background width
 	Hud_SetWidth( Hud_GetChild( file.panel, "PanelBG" ), map_bg_width )
 	Hud_SetWidth( Hud_GetChild( file.panel, "PanelTopBG" ), map_bg_width )
+}
+
+array<string> function GetMaps()
+{
+	//Get all available maps
+	array<string> allmaps = GetAvailableMaps()
+	array<string> availablemaps
+
+	//Setup available maps array
+	foreach( string map in allmaps) {
+		//If is a lobby map dont add
+		if(!IsValidMap(map))
+			continue
+
+		//Add map to the array
+		availablemaps.append(map)
+	}
+
+	return availablemaps
 }
 
 bool function IsValidMap(string map)

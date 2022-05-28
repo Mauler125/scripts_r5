@@ -17,21 +17,10 @@ void function InitR5RPlaylistPanel( var panel )
 
 void function RefreshUIPlaylists()
 {
-	//Get number of playlists
-	array<string> allplaylists = GetAvailablePlaylists()
-	array<string> playlists
+	//Get Playlists Array
+	array<string> playlists = GetPlaylists()
 
-	//Setup available playlists array
-	foreach( string playlist in allplaylists)
-	{
-		//Check playlist visibility
-		if(!GetPlaylistVarBool( playlist, "visible", false ))
-			continue
-
-		//Add playlist to the array
-		playlists.append(playlist)
-	}
-
+	//Get Number Of Playlists
 	int number_of_playlists = playlists.len()
 
 	//Currently supports upto 18 playlists
@@ -52,6 +41,7 @@ void function RefreshUIPlaylists()
 		Hud_SetVisible( Hud_GetChild( file.panel, "PlaylistBtn" + i ), true )
 		Hud_SetVisible( Hud_GetChild( file.panel, "PlaylistPanel" + i ), true )
 
+		//If button already has a evenhandler remove it
 		var button = Hud_GetChild( file.panel, "PlaylistBtn" + i )
 		if ( button in file.buttonplaylist ) {
 			Hud_RemoveEventHandler( button, UIE_CLICK, SelectServerPlaylist )
@@ -70,6 +60,25 @@ void function RefreshUIPlaylists()
 
 	//Set panels height
 	Hud_SetHeight( Hud_GetChild( file.panel, "PanelBG" ), height )
+}
+
+array<string> function GetPlaylists()
+{
+	array<string> allplaylists = GetAvailablePlaylists()
+	array<string> playlists
+
+	//Setup available playlists array
+	foreach( string playlist in allplaylists)
+	{
+		//Check playlist visibility
+		if(!GetPlaylistVarBool( playlist, "visible", false ))
+			continue
+
+		//Add playlist to the array
+		playlists.append(playlist)
+	}
+
+	return playlists
 }
 
 void function SelectServerPlaylist( var button )

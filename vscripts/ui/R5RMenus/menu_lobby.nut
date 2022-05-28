@@ -2,7 +2,6 @@ global function InitR5RLobbyMenu
 global function GetUIPlaylistName
 global function GetUIMapName
 global function GetUIMapAsset
-global function GetTotalPlayersAllServers
 
 struct
 {
@@ -23,7 +22,7 @@ global enum eServerVisibility
 	PUBLIC
 }
 
-//Map name to asset
+//Map to asset
 global table<string, asset> maptoasset = {
 	[ "mp_rr_canyonlands_staging" ] = $"rui/menu/maps/mp_rr_canyonlands_staging",
 	[ "mp_rr_aqueduct" ] = $"rui/menu/maps/mp_rr_aqueduct",
@@ -35,7 +34,7 @@ global table<string, asset> maptoasset = {
 	[ "mp_rr_desertlands_64k_x_64k_nx" ] = $"rui/menu/maps/mp_rr_desertlands_64k_x_64k_nx"
 }
 
-//Map name to readable name
+//Map to readable name
 global table<string, string> maptoname = {
 	[ "mp_rr_canyonlands_staging" ] = "Firing Range",
 	[ "mp_rr_aqueduct" ] = "Overflow",
@@ -49,11 +48,11 @@ global table<string, string> maptoname = {
 
 //Playlist to readable name
 global table<string, string> playlisttoname = {
-	[ "survival_staging_baseline" ] = "survival_staging_baseline",
-	[ "sutvival_training" ] = "Training",
+	[ "survival_staging_baseline" ] = "Survival Staging Baseline",
+	[ "sutvival_training" ] = "Survival Training",
 	[ "survival_firingrange" ] = "Firing Range",
 	[ "survival" ] = "Survival",
-	[ "defaults" ] = "defaults",
+	[ "defaults" ] = "Defaults",
 	[ "ranked" ] = "Ranked",
 	[ "FallLTM" ] = "ShadowFall",
 	[ "duos" ] = "Duos",
@@ -66,10 +65,10 @@ global table<string, string> playlisttoname = {
 	[ "tdm_gg" ] = "Gun Game",
 	[ "tdm_gg_double" ] = "Team Gun Game",
 	[ "survival_dev" ] = "Survival Dev",
-	[ "dev_default" ] = "dev_default"
+	[ "dev_default" ] = "Dev Default"
 }
 
-//Vis int to readable name
+//Vis to readable name
 global table<int, string> vistoname = {
 	[ eServerVisibility.OFFLINE ] = "Offline",
 	[ eServerVisibility.HIDDEN ] = "Hidden",
@@ -135,7 +134,7 @@ void function OnR5RLobby_Open()
 	//Load Create Server maps and playlists
 	RefreshUIPlaylists()
 	RefreshUIMaps()
-	
+
 	//Refresh Server Browser
 	RefreshServerListing()
 }
@@ -200,12 +199,6 @@ asset function GetUIMapAsset(string map)
 	} catch(e2) {}
 
 	return mapasset
-}
-
-int function GetTotalPlayersAllServers()
-{
-	//Todo once added in detours
-	return 0
 }
 
 void function OnR5RLobby_Back()
