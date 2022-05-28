@@ -58,18 +58,12 @@ void function InitR5RServerBrowserPanel( var panel )
 		RuiSetString( Hud_GetRui( elem ), "buttonText", "")
 		Hud_AddEventHandler( elem, UIE_CLICK, SelectServer )
 	}
-
-	//Clear Server List Text
-	ResetServerLabels()
-
-	//Refresh Server Browser
-	thread RefreshServerListing()
 }
 
 void function RefreshServersClick(var button)
 {
 	//Refresh Server Browser
-	thread RefreshServerListing()
+	RefreshServerListing()
 }
 
 void function ConnectToServer(var button)
@@ -85,8 +79,14 @@ void function ConnectToServer(var button)
 
 void function StartServerConnection()
 {
-	//Currently crashes due to being in lobby, waiting on Amos to fix
-	//SetEncKeyAndConnect(SelectedServerInfo.ServerID)
+	//Shutdown the lobby vm
+	ShutdownLobby()
+
+	//wait for lobby vm to be actually shut down
+	wait 0.2
+
+	//Connect to server
+	SetEncKeyAndConnect(SelectedServerInfo.ServerID)
 }
 
 void function SetSideBarElems(string servername, string playlistname, string desc, asset map)
@@ -151,6 +151,9 @@ void function ResetServerLabels()
 
 void function RefreshServerListing()
 {
+	//Clear Server List Text
+	ResetServerLabels()
+
 	// Hide no servers found ui
 	ShowNoServersFound(false)
 
@@ -160,8 +163,10 @@ void function RefreshServerListing()
 	// Reset pages
 	file.pages = 0
 
+	int servercount = GetServerCount()
+
 	// If no servers then set no servers found ui and return
-	if(GetServerCount() == 0) {
+	if(servercount == 0) {
 		// Show no servers found ui
 		ShowNoServersFound(true)
 
@@ -184,8 +189,7 @@ void function RefreshServerListing()
 	int serverrow = 0
 
 	// Add each server to the array
-	for( int i=0; i < GetServerCount(); i++ )
-	{
+	for( int i=0; i < servercount; i++ ) {
 		// Descption and player count will come at a later date
 		AddServer(i, GetServerName(i), GetServerPlaylist(i), GetServerMap(i), "Server description coming soon.", 32, 0)
 
@@ -214,7 +218,7 @@ void function RefreshServerListing()
 
 	// Set UI Labels
 	Hud_SetText( Hud_GetChild( file.panel, "PlayersCount"), "Players: " + GetTotalPlayersAllServers())
-	Hud_SetText( Hud_GetChild( file.panel, "ServersCount"), "Servers: " + GetServerCount())
+	Hud_SetText( Hud_GetChild( file.panel, "ServersCount"), "Servers: " + servercount)
 	Hud_SetText (Hud_GetChild( file.panel, "Pages" ), "Page: 1/" + (file.pages + 1))
 }
 

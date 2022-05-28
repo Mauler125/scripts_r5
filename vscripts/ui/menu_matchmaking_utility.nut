@@ -21,6 +21,21 @@ void function LeaveMatch()
 
 	CancelMatchmaking()
 	ClientCommand( "LeaveMatch" )
+
+	//load new lobbyvm
+	//ty amos for the idea of loading it on leave match
+	thread LoadLobbyAfterLeave()
+}
+
+void function LoadLobbyAfterLeave()
+{
+	//wait until fully disconnected
+	wait 0.2
+	//Create lobby server
+	CreateServer("Lobby", "mp_lobby", "menufall", eServerVisibility.OFFLINE)
+
+	//Refresh Server Browser
+	RefreshServerListing()
 }
 
 void function LeaveParty()

@@ -64,6 +64,13 @@ void function RefreshUIMaps()
 		Hud_SetVisible( Hud_GetChild( file.panel, "MapImg" + i ), true )
 		Hud_SetVisible( Hud_GetChild( file.panel, "MapBtn" + i ), true )
 
+		var button = Hud_GetChild( file.panel, "MapBtn" + i )
+		if ( button in file.buttonmap )
+		{
+			Hud_RemoveEventHandler( button, UIE_CLICK, SelectServerMap )
+			delete file.buttonmap[button]
+		}
+
 		//Add the Even handler for the button
 		Hud_AddEventHandler( Hud_GetChild( file.panel, "MapBtn" + i ), UIE_CLICK, SelectServerMap )
 

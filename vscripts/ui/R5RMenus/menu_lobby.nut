@@ -135,6 +135,9 @@ void function OnR5RLobby_Open()
 	//Load Create Server maps and playlists
 	RefreshUIPlaylists()
 	RefreshUIMaps()
+	
+	//Refresh Server Browser
+	RefreshServerListing()
 }
 
 void function SetupLobby()

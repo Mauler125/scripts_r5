@@ -60,6 +60,27 @@ void function OpenSelectedPanel( var button )
 
 void function StartNewGame( var button )
 {
+	//if(!CheckPlaylistAndMapCompatibility())
+		//return
+
+	thread StartServer()
+}
+
+bool function CheckPlaylistAndMapCompatibility()
+{
+	array<string> playlistmaps = GetPlaylistMaps( NewServer.playlist )
+
+	if(!playlistmaps.contains(NewServer.map))
+		return false
+
+	return true
+}
+
+void function StartServer()
+{
+	ShutdownLobby()
+
+	wait 0.2
 	//Start new server with selected options
 	CreateServer(NewServer.name, NewServer.map, NewServer.playlist, NewServer.vis)
 }

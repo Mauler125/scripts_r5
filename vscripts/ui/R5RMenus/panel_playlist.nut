@@ -52,6 +52,12 @@ void function RefreshUIPlaylists()
 		Hud_SetVisible( Hud_GetChild( file.panel, "PlaylistBtn" + i ), true )
 		Hud_SetVisible( Hud_GetChild( file.panel, "PlaylistPanel" + i ), true )
 
+		var button = Hud_GetChild( file.panel, "PlaylistBtn" + i )
+		if ( button in file.buttonplaylist ) {
+			Hud_RemoveEventHandler( button, UIE_CLICK, SelectServerPlaylist )
+			delete file.buttonplaylist[button]
+		}
+
 		//Add the Even handler for the button
 		Hud_AddEventHandler( Hud_GetChild( file.panel, "PlaylistBtn" + i ), UIE_CLICK, SelectServerPlaylist )
 

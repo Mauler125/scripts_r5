@@ -50,8 +50,6 @@ void function LaunchLobby()
 	//Show spinner
 	RuiSetBool( Hud_GetRui( Hud_GetChild( file.panel, "Status" ) ), "showSpinner", true )
 
-	wait 1 //idk not needed but gives a feeling that its doing somthing
-
 	//Create lobby server
 	CreateServer("Lobby", "mp_lobby", "menufall", eServerVisibility.OFFLINE)
 }
