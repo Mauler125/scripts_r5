@@ -81,11 +81,19 @@ void function StartServer()
 	//Shutdown the lobby vm
 	ShutdownHostGame()
 
-	//wait for lobby vm to be actually shut down
-	wait 0.2
+	//Set the main menus blackscreen visibility to true
+	SetMainMenuBlackScreenVisible(true)
+
+	//wait for lobby vm to be actually shut down and back at the main menu
+	while(!AtMainMenu) {
+		WaitFrame()
+	}
 
 	//Create new server with selected settings
 	CreateServer(NewServer.name, NewServer.map, NewServer.playlist, NewServer.vis)
+
+	//No longer at main menu
+	AtMainMenu = false
 }
 
 void function SetSelectedServerMap( string map )

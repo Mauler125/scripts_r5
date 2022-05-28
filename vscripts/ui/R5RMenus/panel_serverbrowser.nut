@@ -321,9 +321,17 @@ void function StartServerConnection()
 	//Shutdown the lobby vm
 	ShutdownHostGame()
 
-	//wait for lobby vm to be actually shut down
-	wait 0.2
+	//Set the main menus blackscreen visibility to true
+	SetMainMenuBlackScreenVisible(true)
+
+	//wait for lobby vm to be actually shut down and back at the main menu
+	while(!AtMainMenu) {
+		WaitFrame()
+	}
 
 	//Connect to server
 	SetEncKeyAndConnect(SelectedServerInfo.ServerID)
+
+	//No longer at main menu
+	AtMainMenu = false
 }

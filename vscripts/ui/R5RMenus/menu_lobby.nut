@@ -137,6 +137,9 @@ void function OnR5RLobby_Open()
 
 	//Refresh Server Browser
 	RefreshServerListing()
+
+	//Set back to default for next time
+	AtMainMenu = false
 }
 
 void function SetupLobby()

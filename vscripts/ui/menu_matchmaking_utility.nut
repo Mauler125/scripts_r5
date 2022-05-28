@@ -29,13 +29,24 @@ void function LeaveMatch()
 
 void function LoadLobbyAfterLeave()
 {
+	//Set the main menus blackscreen visibility to true
+	SetMainMenuBlackScreenVisible(true)
+
+	ShutdownHostGame()
+
 	//wait until fully disconnected
-	wait 0.2
+	while(!AtMainMenu) {
+		WaitFrame()
+	}
+
 	//Create lobby server
 	CreateServer("Lobby", "mp_lobby", "menufall", eServerVisibility.OFFLINE)
 
 	//Refresh Server Browser
 	RefreshServerListing()
+
+	//No longer at main menu
+	AtMainMenu = false
 }
 
 void function LeaveParty()

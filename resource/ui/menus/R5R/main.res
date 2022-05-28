@@ -27,6 +27,17 @@ resource/ui/menus/main.menu
 			visible					0
 		}
 
+		FullBlackScreen
+		{
+			"ControlName"			"ImagePanel"
+			"tall"					"%100"
+			"wide" 					"%100"
+			"fillColor"				"0 0 0 255"
+			"drawColor"				"0 0 0 255"
+			"visible"				"0"
+			"zpos"					"30"
+		}
+
 		SafeArea
 		{
 			ControlName				Label

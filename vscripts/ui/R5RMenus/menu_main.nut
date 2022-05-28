@@ -1,4 +1,7 @@
 global function InitR5RMainMenu
+global function SetMainMenuBlackScreenVisible
+
+global bool AtMainMenu = false
 
 struct
 {
@@ -45,6 +48,8 @@ void function ActivatePanel( var panel )
 
 void function OnR5RSB_Show()
 {
+	thread SetAtMainMenu()
+
 	int width = int( Hud_GetHeight( file.titleArt ) * 1.77777778 )
 	Hud_SetWidth( file.titleArt, width )
 	Hud_SetWidth( file.subtitle, width )
@@ -52,6 +57,22 @@ void function OnR5RSB_Show()
 	ActivatePanel( GetPanel( "R5RMainMenuPanel" ) )
 
 	Chroma_MainMenu()
+}
+
+void function SetAtMainMenu()
+{
+	AtMainMenu = true
+
+	//Wait a extra 1.5 before showing the main menu
+	wait 1.5
+	
+	//Hide the fullscreen black panel
+	SetMainMenuBlackScreenVisible(false)
+}
+
+void function SetMainMenuBlackScreenVisible(bool show)
+{
+	Hud_SetVisible(Hud_GetChild( file.menu, "FullBlackScreen" ), show)
 }
 
 void function OnR5RSB_Close()
