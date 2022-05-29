@@ -12,6 +12,11 @@ global function Bleedout_GetBleedoutDamageInfo
 const asset FX_BLOODTRAIL = $"skit_blood_decal_LG"
 const float BLEEDOUT_MAX_USE_DIST2_MOD = 64 * 64
 
+//Revive shield assets
+const FX_DRONE_MEDIC_EYE = $"P_LL_med_drone_eye"
+const FX_DRONE_MEDIC_JET_CTR = $"P_LL_med_drone_jet_ctr_loop"
+const FX_DRONE_MEDIC_JET_LOOP = $"P_LL_med_drone_jet_loop"
+
 // r5 stuff
 global function Bleedout_SetBleedoutEffects
 global function Bleedout_IsPlayerGivingFirstAid
@@ -41,6 +46,8 @@ void function Bleedout_Init()
 	AddCallback_OnClientDisconnected( Bleedout_OnClientDisconnected )
 
 	PrecacheParticleSystem( FX_BLOODTRAIL )
+	PrecacheParticleSystem( $"P_drone_medic_shield_beam" )
+	PrecacheParticleSystem( $"P_drone_medic_shield" )
 }
 
 void function Bleedout_SetBleedoutEffects( entity target )
@@ -147,7 +154,8 @@ void function PlayerDying( entity player )
 	// 	ids.append( StatusEffect_AddEndless( player, eStatusEffect.bleedoutDOF, 1.0 ) )
 
 	file.isBleeding[ player ] = true
-
+	
+	player.SetUseDoomedAnims(true)
 	player.ForceCrouch()
 	player.SetOneHandedWeaponUsageOn()
 
@@ -196,6 +204,7 @@ void function PlayerDying( entity player )
 				player.SetPlayerNetTime( "bleedoutEndTime", 0.0 )
 
 				player.UnforceCrouch()
+				player.SetUseDoomedAnims(false)
 				player.SetOneHandedWeaponUsageOff()
 				//Remote_CallFunction_NonReplay( player, "ServerCallback_BLEEDOUT_PlayerRevivedDOF" )
 
@@ -322,6 +331,46 @@ void function EnablePlayerSelfRes( entity player )
 	}
 }
 
+void function PlayDocAnims(entity droneMedic, entity medicWall)
+{
+	droneMedic.EndSignal( "OnDestroy" )
+	
+	int fxID_VENT   = droneMedic.LookupAttachment( "VENT_BOT" )
+	int fxID_EYE    = droneMedic.LookupAttachment( "EYEGLOW" )
+	int fxID_RF     = droneMedic.LookupAttachment( "VENT_RF" )
+	int fxID_LF     = droneMedic.LookupAttachment( "VENT_LF" )
+	int fxID_RR     = droneMedic.LookupAttachment( "VENT_RR" )
+	int fxID_LR     = droneMedic.LookupAttachment( "VENT_LR" )
+
+	//drone medic beam fx, still not 100% accurate
+	entity owner = droneMedic.GetOwner()
+	entity beamfx = StartParticleEffectOnEntity_ReturnEntity( droneMedic, GetParticleSystemIndex( $"P_drone_medic_shield_beam"), FX_PATTACH_POINT_FOLLOW, fxID_EYE)
+	
+	beamfx.DisableHibernation()
+	
+	// EffectSetControlPointVector( beamfx, 0, droneMedic.GetOrigin()) //beam start point
+	EffectSetControlPointVector( beamfx, 1, owner.GetOrigin() + <0,0,45> + owner.GetForwardVector()*70 + owner.GetRightVector()*30) //beam endpoint
+	
+	StartParticleEffectOnEntity_ReturnEntity( droneMedic, GetParticleSystemIndex( FX_DRONE_MEDIC_EYE ), FX_PATTACH_POINT_FOLLOW, fxID_EYE )
+	StartParticleEffectOnEntity_ReturnEntity( droneMedic, GetParticleSystemIndex( FX_DRONE_MEDIC_JET_CTR ), FX_PATTACH_POINT_FOLLOW, fxID_VENT )
+	StartParticleEffectOnEntity_ReturnEntity( droneMedic, GetParticleSystemIndex( FX_DRONE_MEDIC_JET_CTR ), FX_PATTACH_POINT_FOLLOW, fxID_VENT )
+	StartParticleEffectOnEntity_ReturnEntity( droneMedic, GetParticleSystemIndex( FX_DRONE_MEDIC_JET_LOOP ), FX_PATTACH_POINT_FOLLOW, fxID_RF )
+	StartParticleEffectOnEntity_ReturnEntity( droneMedic, GetParticleSystemIndex( FX_DRONE_MEDIC_JET_LOOP ), FX_PATTACH_POINT_FOLLOW, fxID_LF )
+	StartParticleEffectOnEntity_ReturnEntity( droneMedic, GetParticleSystemIndex( FX_DRONE_MEDIC_JET_LOOP ), FX_PATTACH_POINT_FOLLOW, fxID_RR )
+	StartParticleEffectOnEntity_ReturnEntity( droneMedic, GetParticleSystemIndex( FX_DRONE_MEDIC_JET_LOOP ), FX_PATTACH_POINT_FOLLOW, fxID_LR )
+	
+	// Anim
+	float animTime = droneMedic.GetSequenceDuration( "lifeline_drone_revive" )
+	PlayAnim( droneMedic, "lifeline_drone_revive" )
+
+	wait animTime - 0.2
+
+	if( IsValid( beamfx ) )
+		beamfx.Destroy()
+	
+	wait 0.2
+}
+
 void function PlayerAttemptRes( entity playerHealer, entity playerToRes )
 {
 	Assert( IsNewThread(), "Must be threaded off." )
@@ -346,17 +395,43 @@ void function PlayerAttemptRes( entity playerHealer, entity playerToRes )
 
 	ItemFlavor character = LoadoutSlot_WaitForItemFlavor( ToEHI( playerHealer ), characterSlot ) // this sometimes waits forever
 	string characterRef = ItemFlavor_GetHumanReadableRef( character )
-
+	entity medicWall
+	entity docdrone
+	
 	switch( characterRef )
 	{
 		case "character_lifeline":
 			healerAnimation = "mp_pt_light_revive_quick_healthy"
 			toResAnimation = "Pilot_doomed_revive_quick_injured"
-				break
+			
+			vector angles = AnglesCompose( playerHealer.GetAngles(), <0,180,0> )
+			medicWall = CreatePropDynamic( $"mdl/fx/medic_shield_wall.rmdl", playerHealer.GetOrigin() + <0,0,0> + playerHealer.GetForwardVector()*20 + playerHealer.GetRightVector()*30 , angles, SOLID_VPHYSICS )
+			medicWall.kv.contents = (CONTENTS_WINDOW)
+			medicWall.kv.rendercolor = TEAM_COLOR_FRIENDLY
+			medicWall.kv.modelscale = 1
+			medicWall.kv.CollisionGroup = TRACE_COLLISION_GROUP_BLOCK_WEAPONS_AND_PHYSICS
+			medicWall.SetPassThroughFlags( PTF_ADDS_MODS | PTF_NO_DMG_ON_PASS_THROUGH )
+			medicWall.SetBlocksRadiusDamage( true )
+			medicWall.SetTakeDamageType( DAMAGE_YES)
+			medicWall.SetDamageNotifications( true )
+			medicWall.SetMaxHealth( 350 )
+			medicWall.SetHealth( 350 )
+			
+			EmitSoundOnEntity(medicWall, "Lifeline_ReviveShield_Sustain_3P")
+			
+			docdrone = CreatePropDynamic( $"mdl/props/lifeline_drone/lifeline_drone.rmdl", medicWall.GetOrigin() + <0,0,0>, angles, SOLID_VPHYSICS )
+			docdrone.SetOwner(playerHealer)
+			thread PlayDocAnims(docdrone, medicWall) 
+				
+			SetVisibleEntitiesInConeQueriableEnabled( medicWall, true )			
+			SetTeam( medicWall, TEAM_BOTH )
+			medicWall.SetPassThroughThickness( 0 )
+			medicWall.SetPassThroughDirection( -0.30 )	
+			break
 		case "character_wattson":
 			healerAnimation = "Pilot_doomed_revive_shock_healthy"
 			toResAnimation = "Pilot_doomed_revive_shock_injured"
-				break
+			break
 		default:
 			healerAnimation = "Pilot_doomed_revive_healthy"
 			toResAnimation = "Pilot_doomed_revive_injured"
@@ -366,7 +441,7 @@ void function PlayerAttemptRes( entity playerHealer, entity playerToRes )
 	if ( selfRes )
 		healerAnimation = "mp_pt_" + toResRigWeight + "_self_revive_crouch"
 
-	float firstAidTime = playerToRes.GetSequenceDuration( toResAnimation ) // playerHealer == playerToRes ? Bleedout_GetFirstAidTimeSelf( playerHealer ) : Bleedout_GetFirstAidTime( playerHealer )
+	float firstAidTime = playerHealer.GetSequenceDuration( healerAnimation )
 	float firstAidHealPercent = Bleedout_GetFirstAidHealPercent( playerHealer )
 
 	float endTime = Time() + firstAidTime
@@ -386,18 +461,23 @@ void function PlayerAttemptRes( entity playerHealer, entity playerToRes )
 	playerToRes.SetPlayerNetTime( "reviveEndTime", Time() + firstAidTime )
 
 	OnThreadEnd(
-	function() : ( playerHealer, playerToRes, attemptID )
+	function() : ( playerHealer, playerToRes, attemptID, medicWall, characterRef, docdrone )
 		{
 			playerToRes.SetPlayerNetEnt( "revivePlayerHealer", null )
 			playerToRes.SetPlayerNetTime( "reviveEndTime", 0.0 )
 
 			if ( IsValid( playerHealer ) )
 			{
+				switch( characterRef )
+				{
+				case "character_lifeline":
+					medicWall.Destroy()
+					docdrone.Destroy()
+				}
 				file.IsGivingFirstAidTo[ playerHealer ] = null
 				DestroyPlayAnimationEntityBlocker( playerHealer )
 				playerHealer.Anim_Stop()
-				playerHealer.ClearParent()
-				playerHealer.SnapEyesToFeet()
+				playerHealer.ClearParent()				
 				ClearPlayerAnimViewEntity( playerHealer )
 				DeployAndEnableWeapons( playerHealer )
 				playerHealer.MovementEnable()
@@ -429,7 +509,7 @@ void function PlayerAttemptRes( entity playerHealer, entity playerToRes )
 			}
 		}
 	)
-
+	
 	CreatePlayAnimationEntityBlocker( playerHealer, false )
 	CreatePlayAnimationEntityBlocker( playerToRes, false )
 
@@ -438,22 +518,34 @@ void function PlayerAttemptRes( entity playerHealer, entity playerToRes )
 	reviverSequence.attachment = "ref"
 	reviverSequence.thirdPersonAnim = healerAnimation
 	reviverSequence.firstPersonAnim = ""
-	reviverSequence.useAnimatedRefAttachment = true
+	reviverSequence.useAnimatedRefAttachment = false
 	reviverSequence.thirdPersonCameraAttachments = ["VDU"]
 	reviverSequence.thirdPersonCameraVisibilityChecks = true
+	reviverSequence.playerPushable = true
+	reviverSequence.snapPlayerFeetToEyes = false
 	
+	FirstPersonSequenceStruct toResSequence
+	toResSequence.blendTime = 0.25
+	toResSequence.attachment = "ref"
+	toResSequence.thirdPersonAnim = toResAnimation
+	toResSequence.firstPersonAnim = ""
+	toResSequence.useAnimatedRefAttachment = true
+	toResSequence.thirdPersonCameraAttachments = ["VDU"]
+	toResSequence.thirdPersonCameraVisibilityChecks = true
+	toResSequence.noParent = false
+
 	if ( selfRes )
 	{
 		reviverSequence.noParent = true
 		reviverSequence.useAnimatedRefAttachment = false
 	}
-
-	thread FirstPersonSequence( reviverSequence, playerHealer, playerToRes )
-
+	
+	thread FirstPersonSequence( reviverSequence, playerHealer )
+	
 	if ( !selfRes )
 	{
 		PlayBattleChatterLineToSpeakerAndTeam( playerHealer, "bc_revivingPlayer" )
-		thread PlayAnim( playerToRes, toResAnimation, playerToRes )
+		thread FirstPersonSequence( toResSequence, playerToRes, playerHealer )
 	}
 
 	waitthread TrackContinuousUse( playerHealer, playerToRes, firstAidTime, true )
@@ -476,10 +568,10 @@ void function PlayerAttemptRes( entity playerHealer, entity playerToRes )
 		file.Callback_OnPlayerGotFirstAid( playerToRes, playerHealer )
 
 	if ( selfRes )
-    {
+	{
 		playerToRes.SetPlayerNetBool( "usedSelfRevive", true )
-        Inventory_SetPlayerEquipment(playerToRes, "incapshield_pickup_lv3", "incapshield")
-    }
+		Inventory_SetPlayerEquipment(playerToRes, "incapshield_pickup_lv3", "incapshield")
+	}
 	else
 	{
 		if ( GetCurrentPlaylistVarBool( "thank_for_revive_enabled", true ) )
@@ -567,9 +659,9 @@ bool function IsPlayerSelfHealing( entity player )
 	return file.IsGettingFirstAidFrom[ player ] == player
 }
 
-//////////////
-//Utilities
-//////////////
+///////////////
+// Utilities //
+///////////////
 void function TrackContinuousUse( entity player, entity useTarget, float useTime, bool doRequireUseButtonHeld )
 {
 	player.EndSignal( "OnDeath" )
