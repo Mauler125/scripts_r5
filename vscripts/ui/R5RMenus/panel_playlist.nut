@@ -28,9 +28,6 @@ void function RefreshUIPlaylists()
 	if(number_of_playlists > 18)
 		number_of_playlists = 18
 
-	//Inital playlist hight
-	int height = 10
-
 	for( int i=0; i < number_of_playlists; i++ ) {
 
 		//Set playlist text
@@ -53,22 +50,15 @@ void function RefreshUIPlaylists()
 
 		//Add the button and playlist to a table
 		file.buttonplaylist[Hud_GetChild( file.panel, "PlaylistBtn" + i )] <- playlists[i]
-
-		//For getting panel height
-		height += 45
 	}
-
-	//Set panels height
-	Hud_SetHeight( Hud_GetChild( file.panel, "PanelBG" ), height )
 }
 
 array<string> function GetPlaylists()
 {
-	array<string> allplaylists = GetAvailablePlaylists()
 	array<string> playlists
 
 	//Setup available playlists array
-	foreach( string playlist in allplaylists)
+	foreach( string playlist in GetAvailablePlaylists())
 	{
 		//Check playlist visibility
 		if(!GetPlaylistVarBool( playlist, "visible", false ))
@@ -83,6 +73,6 @@ array<string> function GetPlaylists()
 
 void function SelectServerPlaylist( var button )
 {
-	//printf("Debug Playlist Selected: " + file.buttonplaylist[button])
+	//Set selected server playlist
 	SetSelectedServerPlaylist(file.buttonplaylist[button])
 }

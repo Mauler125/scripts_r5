@@ -21,7 +21,7 @@
 		"ypos"					"0"
 		"zpos"					"0"
 		"wide"					"490"
-		"tall"					"935"
+		"tall"					"145"
 		"labelText"				""
 		"bgcolor_override"		"50 50 50 100"
 		"visible"				"1"

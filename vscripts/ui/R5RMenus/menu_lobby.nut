@@ -144,9 +144,12 @@ void function OnR5RLobby_Open()
 
 void function SetupLobby()
 {
+	//Setup Lobby Stuff
 	ClientCommand( "ViewingMainLobbyPage" )
 	UI_SetPresentationType( ePresentationType.PLAY )
 	thread TryRunDialogFlowThread()
+
+	//Set home tabs playername ui
 	SetUIPlayerName()
 }
 
@@ -172,23 +175,20 @@ void function ShowSelectedPanel(var panel, var button)
 
 string function GetUIPlaylistName(string playlist)
 {
-	string finalplaylistname = playlist
+	string playlistname = playlist
 
-	try{
-		//If playlist is in table use better playlistname
-		finalplaylistname = playlisttoname[playlist]
-	} catch(e1) {}
+	if(playlist in playlisttoname)
+		playlistname = playlisttoname[playlist]
 
-	return finalplaylistname
+	return playlistname
 }
 
 string function GetUIMapName(string map)
 {
 	string mapname = map
 
-	try{
+	if(map in maptoname)
 		mapname = maptoname[map]
-	} catch(e2) {}
 
 	return mapname
 }
@@ -197,9 +197,8 @@ asset function GetUIMapAsset(string map)
 {
 	asset mapasset = $"rui/menu/maps/map_not_found"
 
-	try{
+	if(map in maptoasset)
 		mapasset = maptoasset[map]
-	} catch(e2) {}
 
 	return mapasset
 }

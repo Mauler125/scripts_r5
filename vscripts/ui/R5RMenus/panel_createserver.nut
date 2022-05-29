@@ -15,10 +15,10 @@ struct
 
 global struct ServerStruct
 {
-	string name = "R5Reloaded Server"
-	string map = "mp_rr_aqueduct"
-	string playlist = "custom_tdm"
-	int vis = eServerVisibility.OFFLINE
+	string name
+	string map
+	string playlist
+	int vis
 }
 
 global ServerStruct ServerSettings
@@ -42,7 +42,7 @@ void function InitR5RCreateServerPanel( var panel )
 	file.panels.append(Hud_GetChild(file.panel, "R5RVisPanel"))
 
 	//Setup Default Server Config
-	ServerSettings.name = "R5Reloaded Server"
+	ServerSettings.name = "A R5Reloaded Server"
 	ServerSettings.map = "mp_rr_aqueduct"
 	ServerSettings.playlist = "custom_tdm"
 	ServerSettings.vis = eServerVisibility.OFFLINE
@@ -62,20 +62,8 @@ void function OpenSelectedPanel( var button )
 
 void function StartNewGame( var button )
 {
-	//if(!CheckPlaylistAndMapCompatibility())
-		//return
-
+	//Start thread for starting the server
 	thread StartServer()
-}
-
-bool function CheckPlaylistAndMapCompatibility()
-{
-	array<string> playlistmaps = GetPlaylistMaps( ServerSettings.playlist )
-
-	if(!playlistmaps.contains(ServerSettings.map))
-		return false
-
-	return true
 }
 
 void function StartServer()
