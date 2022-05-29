@@ -23,8 +23,11 @@ void function InitR5RMapPanel( var panel )
 
 void function RefreshUIMaps()
 {
+	ResetMapsUI()
+
 	//Get maps array
-	array<string> availablemaps = GetMaps()
+	//array<string> availablemaps = GetMaps()
+	array<string> availablemaps = GetPlaylistMaps(ServerSettings.playlist)
 
 	//Get number of maps
 	int number_of_maps = availablemaps.len()
@@ -37,7 +40,8 @@ void function RefreshUIMaps()
 	//Intial row and width
 	int current_row_items = 0
 	int map_bg_width = 330
-
+	int map_bg_height = 5
+	
 	for( int i=0; i < number_of_maps; i++ ) {
 		//Set Map Text
 		Hud_SetText( Hud_GetChild( file.panel, "MapText" + i ), GetUIMapName(availablemaps[i]))
@@ -70,12 +74,27 @@ void function RefreshUIMaps()
 			current_row_items = 0
 		}
 
+		if(map_bg_height < 745)
+			map_bg_height += 185
+
 		current_row_items++
 	}
 
 	//Set the map selection background width
 	Hud_SetWidth( Hud_GetChild( file.panel, "PanelBG" ), map_bg_width )
+	Hud_SetHeight( Hud_GetChild( file.panel, "PanelBG" ), map_bg_height )
 	Hud_SetWidth( Hud_GetChild( file.panel, "PanelTopBG" ), map_bg_width )
+}
+
+void function ResetMapsUI()
+{
+	for( int i=0; i < 16; i++ ) {
+		Hud_SetText( Hud_GetChild( file.panel, "MapText" + i ), "")
+		RuiSetImage( Hud_GetRui( Hud_GetChild( file.panel, "MapImg" + i ) ), "loadscreenImage", $"" )
+		Hud_SetVisible( Hud_GetChild( file.panel, "MapText" + i ), false )
+		Hud_SetVisible( Hud_GetChild( file.panel, "MapImg" + i ), false )
+		Hud_SetVisible( Hud_GetChild( file.panel, "MapBtn" + i ), false )
+	}
 }
 
 array<string> function GetMaps()

@@ -13,13 +13,15 @@ struct
 	array<var> panels
 } file
 
-struct
+global struct ServerStruct
 {
-	string name
-	string map
-	string playlist
-	int vis
-} NewServer
+	string name = "R5Reloaded Server"
+	string map = "mp_rr_aqueduct"
+	string playlist = "custom_tdm"
+	int vis = eServerVisibility.OFFLINE
+}
+
+global ServerStruct ServerSettings
 
 void function InitR5RCreateServerPanel( var panel )
 {
@@ -40,15 +42,15 @@ void function InitR5RCreateServerPanel( var panel )
 	file.panels.append(Hud_GetChild(file.panel, "R5RVisPanel"))
 
 	//Setup Default Server Config
-	NewServer.name = "R5Reloaded Server"
-	NewServer.map = "mp_rr_aqueduct"
-	NewServer.playlist = "custom_tdm"
-	NewServer.vis = eServerVisibility.OFFLINE
+	ServerSettings.name = "R5Reloaded Server"
+	ServerSettings.map = "mp_rr_aqueduct"
+	ServerSettings.playlist = "custom_tdm"
+	ServerSettings.vis = eServerVisibility.OFFLINE
 
-	//Set selected ui
-	Hud_SetText(Hud_GetChild( file.panel, "PlaylistInfoEdit" ), playlisttoname[NewServer.playlist])
-	RuiSetImage( Hud_GetRui( Hud_GetChild( file.panel, "ServerMapImg" ) ), "loadscreenImage", GetUIMapAsset( NewServer.map ) )
-	Hud_SetText(Hud_GetChild( file.panel, "VisInfoEdit" ), vistoname[NewServer.vis])
+	//Setup Default Server Config
+	Hud_SetText(Hud_GetChild( file.panel, "PlaylistInfoEdit" ), playlisttoname[ServerSettings.playlist])
+	RuiSetImage( Hud_GetRui( Hud_GetChild( file.panel, "ServerMapImg" ) ), "loadscreenImage", GetUIMapAsset( ServerSettings.map ) )
+	Hud_SetText(Hud_GetChild( file.panel, "VisInfoEdit" ), vistoname[ServerSettings.vis])
 	Hud_SetText( Hud_GetChild( file.panel, "BtnServerName" ), "A R5Reloaded Server" )
 }
 
@@ -68,9 +70,9 @@ void function StartNewGame( var button )
 
 bool function CheckPlaylistAndMapCompatibility()
 {
-	array<string> playlistmaps = GetPlaylistMaps( NewServer.playlist )
+	array<string> playlistmaps = GetPlaylistMaps( ServerSettings.playlist )
 
-	if(!playlistmaps.contains(NewServer.map))
+	if(!playlistmaps.contains(ServerSettings.map))
 		return false
 
 	return true
@@ -90,7 +92,7 @@ void function StartServer()
 	}
 
 	//Create new server with selected settings
-	CreateServer(NewServer.name, NewServer.map, NewServer.playlist, NewServer.vis)
+	CreateServer(ServerSettings.name, ServerSettings.map, ServerSettings.playlist, ServerSettings.vis)
 
 	//No longer at main menu
 	AtMainMenu = false
@@ -99,37 +101,47 @@ void function StartServer()
 void function SetSelectedServerMap( string map )
 {
 	//set map
-	NewServer.map = map
+	ServerSettings.map = map
 
 	//Set the panel to not visible
 	Hud_SetVisible( file.panels[0], false )
 
 	//Set the new map image
-	RuiSetImage( Hud_GetRui( Hud_GetChild( file.panel, "ServerMapImg" ) ), "loadscreenImage", GetUIMapAsset( NewServer.map ) )
+	RuiSetImage( Hud_GetRui( Hud_GetChild( file.panel, "ServerMapImg" ) ), "loadscreenImage", GetUIMapAsset( ServerSettings.map ) )
 }
 
 void function SetSelectedServerPlaylist( string playlist )
 {
 	//set playlist
-	NewServer.playlist = playlist
+	ServerSettings.playlist = playlist
 
 	//Set the panel to not visible
 	Hud_SetVisible( file.panels[1], false )
 
 	//Set the new playlist text
-	Hud_SetText(Hud_GetChild( file.panel, "PlaylistInfoEdit" ), GetUIPlaylistName( NewServer.playlist ) )
+	Hud_SetText(Hud_GetChild( file.panel, "PlaylistInfoEdit" ), GetUIPlaylistName( ServerSettings.playlist ) )
+
+	//Get the maps of the new playlist
+	array<string> playlistmaps = GetPlaylistMaps(ServerSettings.playlist)
+
+	//Check to see if the current map is allowed on the new selected playlist
+	if(!playlistmaps.contains(ServerSettings.map))
+		SetSelectedServerMap(playlistmaps[0]) //if not then set it to a map that is
+
+	//Refresh Maps
+	RefreshUIMaps()
 }
 
 void function SetSelectedServerVis( int vis )
 {
 	//set visibility
-	NewServer.vis = vis
+	ServerSettings.vis = vis
 
 	//Set the panel to not visible
 	Hud_SetVisible( file.panels[2], false )
 
 	//Set the new visibility text
-	Hud_SetText(Hud_GetChild( file.panel, "VisInfoEdit" ), vistoname[NewServer.vis])
+	Hud_SetText(Hud_GetChild( file.panel, "VisInfoEdit" ), vistoname[ServerSettings.vis])
 }
 
 void function ShowSelectedPanel(var panel)
@@ -154,5 +166,5 @@ void function HideAllCreateServerPanels()
 void function UpdateServerName( var button )
 {
     //Update the servername when the text is changed
-    NewServer.name = Hud_GetUTF8Text( Hud_GetChild( file.panel, "BtnServerName" ) )
+    ServerSettings.name = Hud_GetUTF8Text( Hud_GetChild( file.panel, "BtnServerName" ) )
 }
