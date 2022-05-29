@@ -154,5 +154,5 @@ void function HideAllCreateServerPanels()
 void function UpdateServerName( var button )
 {
     //Update the servername when the text is changed
-    NewServer.name = Hud_GetUTF8Text( Hud_GetChild( file.menu, "BtnServerName" ) )
+    NewServer.name = Hud_GetUTF8Text( Hud_GetChild( file.panel, "BtnServerName" ) )
 }
