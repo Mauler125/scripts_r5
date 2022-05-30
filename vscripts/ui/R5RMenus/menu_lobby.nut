@@ -145,7 +145,6 @@ void function OnR5RLobby_Open()
 void function SetupLobby()
 {
 	//Setup Lobby Stuff
-	ClientCommand( "ViewingMainLobbyPage" )
 	UI_SetPresentationType( ePresentationType.PLAY )
 	thread TryRunDialogFlowThread()
 
