@@ -128,8 +128,6 @@
 		"zpos" 					"6"
 		"visible" 				"0"
 
-		"image" 				"vgui/hud/white"
-		"drawColor" 			"255 255 255 128"
 
 		"pin_to_sibling" 		"VisPanel0"
 		"pin_corner_to_sibling" "CENTER"
@@ -147,8 +145,6 @@
 		"zpos" 					"6"
 		"visible" 				"0"
 
-		"image" 				"vgui/hud/white"
-		"drawColor" 			"255 255 255 128"
 
 		"pin_to_sibling" 		"VisPanel1"
 		"pin_corner_to_sibling" "CENTER"
@@ -166,8 +162,6 @@
 		"zpos" 					"6"
 		"visible" 				"0"
 
-		"image" 				"vgui/hud/white"
-		"drawColor" 			"255 255 255 128"
 
 		"pin_to_sibling" 		"VisPanel2"
 		"pin_corner_to_sibling" "CENTER"

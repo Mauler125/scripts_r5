@@ -131,8 +131,6 @@ scripts/resource/ui/menus/R5R/panels/createserver.res
 		ypos 0
 		zpos 6
 
-		image "vgui/hud/white"
-		drawColor "255 255 255 128"
 
 		pin_to_sibling StartGamePanel
 		pin_corner_to_sibling CENTER
@@ -187,8 +185,6 @@ scripts/resource/ui/menus/R5R/panels/createserver.res
 		classname			"createserverbuttons"
 		"scriptID"					"1"
 
-		image "vgui/hud/white"
-		drawColor "255 255 255 128"
 
 		pin_to_sibling PlaylistPanel
 		pin_corner_to_sibling CENTER
@@ -243,8 +239,6 @@ scripts/resource/ui/menus/R5R/panels/createserver.res
 		classname			"createserverbuttons"
 		"scriptID"					"2"
 
-		image "vgui/hud/white"
-		drawColor "255 255 255 128"
 
 		pin_to_sibling VisPanel
 		pin_corner_to_sibling CENTER
@@ -299,8 +293,6 @@ scripts/resource/ui/menus/R5R/panels/createserver.res
 		classname			"createserverbuttons"
 		"scriptID"					"0"
 
-		image "vgui/hud/white"
-		drawColor "255 255 255 128"
 
 		pin_to_sibling MapPanel
 		pin_corner_to_sibling CENTER

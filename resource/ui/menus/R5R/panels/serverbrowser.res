@@ -20,7 +20,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"ypos"					"0"
 		"tall"					"50"
 		"wide" 					"1395"
-		"fillColor"				"30 30 30 200"
+		"fillColor"				"34 34 34 200"
         "drawColor"				"30 30 30 200"
 		"wrap"					"1"
 		"visible"				"1"
@@ -206,8 +206,6 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"ypos" 					"0"
 		"zpos" 					"6"
 
-		"image" 				"vgui/hud/white"
-		"drawColor" 			"255 255 255 128"
 
 		"pin_to_sibling" 		"BtnServerListLeftArrowPanel"
 		"pin_corner_to_sibling" "CENTER"
@@ -260,8 +258,6 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"ypos" 					"0"
 		"zpos" 					"6"
 
-		"image" 				"vgui/hud/white"
-		"drawColor" 			"255 255 255 128"
 
 		"pin_to_sibling" 		"BtnServerListRightArrowPanel"
 		"pin_corner_to_sibling" "CENTER"
@@ -497,7 +493,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"ControlName"			"ImagePanel"
 		"xpos" 					"0"
 		"ypos" 					"0"
-		"tall"					"635"
+		"tall"					"560"
 		"wide" 					"450"
 		"fillColor"				"30 30 30 200"
         "drawColor"				"30 30 30 200"
@@ -601,28 +597,36 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"pin_to_sibling_corner"	"TOP_LEFT"
 	}
 
-	"ConnectButton"
+	"ConnectPanel"
 	{
-		"ControlName"				"RuiButton"
-		"style"						"RuiButton"
-		"wide"						"450"
-		"tall"						"70"
-		"xpos"						"0"
-		"ypos"						"0"
-		"visible"					"1"
-		"enabled"					"1"
-		"zpos" 						"15"
-        "rui"						"ui/tab_button.rpak"
-		"cursorVelocityModifier"  	"0.7"
-
-		ruiArgs
-		{
-			buttonText ""
-		}
+		"ControlName" 			"RuiPanel"
+		"wide" 					"450"
+		"tall" 					"70"
+		"xpos" 					"0"
+		"ypos" 					"5"
+		"zpos" 					"0"
+		"rui" 					"ui/control_options_description.rpak"
+		"visible" 				"1"
 
 		"pin_to_sibling"		"ServerInfoBG"
-		"pin_corner_to_sibling"	"BOTTOM_RIGHT"
-		"pin_to_sibling_corner"	"BOTTOM_RIGHT"
+		"pin_corner_to_sibling"	"TOP_LEFT"
+		"pin_to_sibling_corner"	"BOTTOM_LEFT"
+	}
+
+	"ConnectButton"
+	{
+		"ControlName" 			"RuiButton"
+		"InheritProperties" 	"RuiSmallButton"
+		"wide" 					"450"
+		"tall" 					"70"
+		"xpos" 					"0"
+		"ypos" 					"0"
+		"zpos" 					"6"
+		"visible" 				"1"
+
+		"pin_to_sibling"		"ConnectPanel"
+		"pin_corner_to_sibling"	"CENTER"
+		"pin_to_sibling_corner"	"CENTER"
 	}
 
 	"ConnectButtonText"
@@ -638,7 +642,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"ypos"					"0"
 		"fgcolor_override"		"255 255 255 255"
 
-		"pin_to_sibling"		"ConnectButton"
+		"pin_to_sibling"		"ConnectPanel"
 		"pin_corner_to_sibling"	"CENTER"
 		"pin_to_sibling_corner"	"CENTER"
 	}

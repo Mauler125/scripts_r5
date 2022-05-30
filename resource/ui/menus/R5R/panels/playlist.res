@@ -400,9 +400,6 @@
 		"zpos" 					"6"
 		"visible" 				"0"
 
-		"image" 				"vgui/hud/white"
-		"drawColor" 			"255 255 255 128"
-
 		"pin_to_sibling" 		"PlaylistPanel0"
 		"pin_corner_to_sibling" "CENTER"
 		"pin_to_sibling_corner" "CENTER"
@@ -419,8 +416,6 @@
 		"zpos" 					"6"
 		"visible" 				"0"
 
-		"image" 				"vgui/hud/white"
-		"drawColor" 			"255 255 255 128"
 
 		"pin_to_sibling" 		"PlaylistPanel1"
 		"pin_corner_to_sibling" "CENTER"
@@ -438,8 +433,6 @@
 		"zpos" 					"6"
 		"visible" 				"0"
 
-		"image" 				"vgui/hud/white"
-		"drawColor" 			"255 255 255 128"
 
 		"pin_to_sibling" 		"PlaylistPanel2"
 		"pin_corner_to_sibling" "CENTER"
@@ -457,8 +450,6 @@
 		"zpos" 					"6"
 		"visible" 				"0"
 
-		"image" 				"vgui/hud/white"
-		"drawColor" 			"255 255 255 128"
 
 		"pin_to_sibling" 		"PlaylistPanel3"
 		"pin_corner_to_sibling" "CENTER"
@@ -476,8 +467,6 @@
 		"zpos" 					"6"
 		"visible" 				"0"
 
-		"image" 				"vgui/hud/white"
-		"drawColor" 			"255 255 255 128"
 
 		"pin_to_sibling" 		"PlaylistPanel4"
 		"pin_corner_to_sibling" "CENTER"
@@ -495,8 +484,6 @@
 		"zpos" 					"6"
 		"visible" 				"0"
 
-		"image" 				"vgui/hud/white"
-		"drawColor" 			"255 255 255 128"
 
 		"pin_to_sibling" 		"PlaylistPanel5"
 		"pin_corner_to_sibling" "CENTER"
@@ -514,8 +501,6 @@
 		"zpos" 					"6"
 		"visible" 				"0"
 
-		"image" 				"vgui/hud/white"
-		"drawColor" 			"255 255 255 128"
 
 		"pin_to_sibling" 		"PlaylistPanel6"
 		"pin_corner_to_sibling" "CENTER"
@@ -533,8 +518,6 @@
 		"zpos" 					"6"
 		"visible" 				"0"
 
-		"image" 				"vgui/hud/white"
-		"drawColor" 			"255 255 255 128"
 
 		"pin_to_sibling" 		"PlaylistPanel7"
 		"pin_corner_to_sibling" "CENTER"
@@ -552,8 +535,6 @@
 		"zpos" 					"6"
 		"visible" 				"0"
 
-		"image" 				"vgui/hud/white"
-		"drawColor" 			"255 255 255 128"
 
 		"pin_to_sibling" 		"PlaylistPanel8"
 		"pin_corner_to_sibling" "CENTER"
@@ -571,8 +552,6 @@
 		"zpos" 					"6"
 		"visible" 				"0"
 
-		"image" 				"vgui/hud/white"
-		"drawColor" 			"255 255 255 128"
 
 		"pin_to_sibling" 		"PlaylistPanel9"
 		"pin_corner_to_sibling" "CENTER"
@@ -590,8 +569,6 @@
 		"zpos" 					"6"
 		"visible" 				"0"
 
-		"image" 				"vgui/hud/white"
-		"drawColor" 			"255 255 255 128"
 
 		"pin_to_sibling" 		"PlaylistPanel10"
 		"pin_corner_to_sibling" "CENTER"
@@ -609,8 +586,6 @@
 		"zpos" 					"6"
 		"visible" 				"0"
 
-		"image" 				"vgui/hud/white"
-		"drawColor" 			"255 255 255 128"
 
 		"pin_to_sibling" 		"PlaylistPanel11"
 		"pin_corner_to_sibling" "CENTER"
@@ -628,8 +603,6 @@
 		"zpos" 					"6"
 		"visible" 				"0"
 
-		"image" 				"vgui/hud/white"
-		"drawColor" 			"255 255 255 128"
 
 		"pin_to_sibling" 		"PlaylistPanel12"
 		"pin_corner_to_sibling" "CENTER"
@@ -647,8 +620,6 @@
 		"zpos" 					"6"
 		"visible" 				"0"
 
-		"image" 				"vgui/hud/white"
-		"drawColor" 			"255 255 255 128"
 
 		"pin_to_sibling" 		"PlaylistPanel13"
 		"pin_corner_to_sibling" "CENTER"
@@ -666,8 +637,6 @@
 		"zpos" 					"6"
 		"visible" 				"0"
 
-		"image" 				"vgui/hud/white"
-		"drawColor" 			"255 255 255 128"
 
 		"pin_to_sibling" 		"PlaylistPanel14"
 		"pin_corner_to_sibling" "CENTER"
@@ -685,8 +654,6 @@
 		"zpos" 					"6"
 		"visible" 				"0"
 
-		"image" 				"vgui/hud/white"
-		"drawColor" 			"255 255 255 128"
 
 		"pin_to_sibling" 		"PlaylistPanel15"
 		"pin_corner_to_sibling" "CENTER"
@@ -704,8 +671,6 @@
 		"zpos" 					"6"
 		"visible" 				"0"
 
-		"image" 				"vgui/hud/white"
-		"drawColor" 			"255 255 255 128"
 
 		"pin_to_sibling" 		"PlaylistPanel16"
 		"pin_corner_to_sibling" "CENTER"
@@ -723,8 +688,6 @@
 		"zpos" 					"6"
 		"visible" 				"0"
 
-		"image" 				"vgui/hud/white"
-		"drawColor" 			"255 255 255 128"
 
 		"pin_to_sibling" 		"PlaylistPanel17"
 		"pin_corner_to_sibling" "CENTER"
@@ -742,8 +705,6 @@
 		"zpos" 					"6"
 		"visible" 				"0"
 
-		"image" 				"vgui/hud/white"
-		"drawColor" 			"255 255 255 128"
 
 		"pin_to_sibling" 		"PlaylistPanel18"
 		"pin_corner_to_sibling" "CENTER"
@@ -761,8 +722,6 @@
 		"zpos" 					"6"
 		"visible" 				"0"
 
-		"image" 				"vgui/hud/white"
-		"drawColor" 			"255 255 255 128"
 
 		"pin_to_sibling" 		"PlaylistPanel19"
 		"pin_corner_to_sibling" "CENTER"
