@@ -56,6 +56,7 @@ void function InitR5RCreateServerPanel( var panel )
 
 void function OpenSelectedPanel( var button )
 {
+	//Show panel depending on script id
 	int scriptid = Hud_GetScriptID( button ).tointeger()
 	ShowSelectedPanel( file.panels[scriptid] )
 }

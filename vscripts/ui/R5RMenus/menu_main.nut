@@ -61,6 +61,7 @@ void function OnR5RSB_Show()
 
 void function SetAtMainMenu()
 {
+	//You are at the main menu
 	AtMainMenu = true
 
 	//Wait a extra 1.5 before showing the main menu
@@ -72,6 +73,7 @@ void function SetAtMainMenu()
 
 void function SetMainMenuBlackScreenVisible(bool show)
 {
+	//Hide/show full black screen
 	Hud_SetVisible(Hud_GetChild( file.menu, "FullBlackScreen" ), show)
 }
 

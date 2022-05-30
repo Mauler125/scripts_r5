@@ -55,8 +55,7 @@ void function InitR5RServerBrowserPanel( var panel )
 	//Clear buttontext
 	//No need to remove them as they are hidden if not in use
 	array<var> serverbuttons = GetElementsByClassname( file.menu, "ServBtn" )
-	foreach ( var elem in serverbuttons )
-	{
+	foreach ( var elem in serverbuttons ) {
 		RuiSetString( Hud_GetRui( elem ), "buttonText", "")
 		Hud_AddEventHandler( elem, UIE_CLICK, SelectServer )
 	}

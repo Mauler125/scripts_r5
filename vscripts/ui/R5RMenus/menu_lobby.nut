@@ -109,20 +109,24 @@ void function InitR5RLobbyMenu( var newMenuArg )
 
 void function OpenSelectedPanel(var button)
 {
+	//Get the script id, and show the panel acording to that id
 	int scriptid = Hud_GetScriptID( button ).tointeger()
 	ShowSelectedPanel( file.panels[scriptid], button )
 
+	//If create server button is pressed, hide all panels for that panel
 	if(scriptid == 1)
 		HideAllCreateServerPanels()
 }
 
 void function SettingsPressed(var button)
 {
+	//Open Settings Menu
 	AdvanceMenu( GetMenu( "MiscMenu" ) )
 }
 
 void function QuitPressed(var button)
 {
+	//Open confirm exit diologe
 	OpenConfirmExitToDesktopDialog()
 }
 
@@ -160,8 +164,7 @@ void function ShowSelectedPanel(var panel, var button)
 	}
 
 	//Unselect all buttons
-	foreach ( btn in file.buttons )
-	{
+	foreach ( btn in file.buttons ) {
 		RuiSetBool( Hud_GetRui( btn ) ,"isSelected", false )
 	}
 
@@ -174,31 +177,40 @@ void function ShowSelectedPanel(var panel, var button)
 
 string function GetUIPlaylistName(string playlist)
 {
+	//Set default playlist string
 	string playlistname = playlist
 
+	//If playlist in the table set it to the readable name
 	if(playlist in playlisttoname)
 		playlistname = playlisttoname[playlist]
 
+	//return the playlist name
 	return playlistname
 }
 
 string function GetUIMapName(string map)
 {
+	//Set default map string
 	string mapname = map
 
+	//If map in the table set it to the readable name
 	if(map in maptoname)
 		mapname = maptoname[map]
 
+	//return the map name
 	return mapname
 }
 
 asset function GetUIMapAsset(string map)
 {
+	//Set default map asset
 	asset mapasset = $"rui/menu/maps/map_not_found"
 
+	//If map in the table set it to the correct map asset
 	if(map in maptoasset)
 		mapasset = maptoasset[map]
 
+	//return the map asset
 	return mapasset
 }
 
