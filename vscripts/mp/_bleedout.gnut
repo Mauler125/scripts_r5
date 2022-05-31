@@ -412,10 +412,10 @@ void function PlayerAttemptRes( entity playerHealer, entity playerToRes )
 			medicWall.kv.CollisionGroup = TRACE_COLLISION_GROUP_BLOCK_WEAPONS_AND_PHYSICS
 			medicWall.SetPassThroughFlags( PTF_ADDS_MODS | PTF_NO_DMG_ON_PASS_THROUGH )
 			medicWall.SetBlocksRadiusDamage( true )
-			medicWall.SetTakeDamageType( DAMAGE_YES)
+			medicWall.SetTakeDamageType( DAMAGE_NO)
 			medicWall.SetDamageNotifications( true )
-			medicWall.SetMaxHealth( 350 )
-			medicWall.SetHealth( 350 )
+			//medicWall.SetMaxHealth( 350 )
+			//medicWall.SetHealth( 350 )
 			
 			EmitSoundOnEntity(medicWall, "Lifeline_ReviveShield_Sustain_3P")
 			
