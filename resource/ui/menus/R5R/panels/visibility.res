@@ -18,7 +18,7 @@
 	{
 		"ControlName"			"Label"
 		"xpos"					"0"
-		"ypos"					"0"
+		"ypos"					"-300"
 		"zpos"					"0"
 		"wide"					"490"
 		"tall"					"145"
@@ -41,7 +41,7 @@
 		"wide"					"490"
 		"tall"					"40"
 		"labelText"				""
-		"bgcolor_override"		"30 30 30 150"
+		"bgcolor_override"		"195 29 38 200"
 		"visible"				"1"
 		"paintbackground"		"1"
 

@@ -13,6 +13,50 @@ scripts/resource/ui/menus/R5R/panels/createserver.res
 		paintbackground			1
 	}
 
+	"CreateServerBG"
+	{
+		ControlName				ImagePanel
+		ypos 			-670
+		xpos			-20
+		wide			490
+		tall            300
+		fillColor		"30 30 30 100"
+        drawColor		"30 30 30 100"
+		visible					1
+		zpos					0
+		pin_to_sibling				DarkenBackground
+		pin_corner_to_sibling		BOTTOM_LEFT
+		pin_to_sibling_corner		BOTTOM_LEFT
+	}
+
+	"CreateServerBGTopLine"
+	{
+		ControlName				ImagePanel
+		wide			490
+		tall            3
+		fillColor		"195 29 38 200"
+        drawColor		"195 29 38 200"
+		visible					1
+		zpos					0
+		pin_to_sibling				CreateServerBG
+		pin_corner_to_sibling		TOP
+		pin_to_sibling_corner		BOTTOM
+	}
+
+	"CreateServerBGBottomLine"
+	{
+		ControlName				ImagePanel
+		wide			490
+		tall            3
+		fillColor		"195 29 38 200"
+        drawColor		"195 29 38 200"
+		visible					1
+		zpos					0
+		pin_to_sibling				CreateServerBG
+		pin_corner_to_sibling		BOTTOM
+		pin_to_sibling_corner		TOP
+	}
+
 	ServerMapImg
 	{
 		ControlName		RuiPanel
@@ -27,6 +71,34 @@ scripts/resource/ui/menus/R5R/panels/createserver.res
 		pin_to_sibling				DarkenBackground
 		pin_corner_to_sibling		BOTTOM_LEFT
 		pin_to_sibling_corner		BOTTOM_LEFT
+	}
+
+	"ServerMapImgTopLine"
+	{
+		ControlName				ImagePanel
+		wide			480
+		tall            3
+		fillColor		"195 29 38 200"
+        drawColor		"195 29 38 200"
+		visible					1
+		zpos					0
+		pin_to_sibling				ServerMapImg
+		pin_corner_to_sibling		TOP
+		pin_to_sibling_corner		BOTTOM
+	}
+
+	"ServerMapImgBottomLine"
+	{
+		ControlName				ImagePanel
+		wide			480
+		tall            3
+		fillColor		"195 29 38 200"
+        drawColor		"195 29 38 200"
+		visible					1
+		zpos					0
+		pin_to_sibling				ServerMapImg
+		pin_corner_to_sibling		BOTTOM
+		pin_to_sibling_corner		TOP
 	}
 
 	PlaylistNameBG
@@ -109,7 +181,7 @@ scripts/resource/ui/menus/R5R/panels/createserver.res
 		wide 480
 		tall 50
 		xpos 0
-		ypos 15
+		ypos 50
 
 		rui "ui/control_options_description.rpak"
 
@@ -161,7 +233,7 @@ scripts/resource/ui/menus/R5R/panels/createserver.res
 		wide 480
 		tall 50
 		xpos 0
-		ypos 15
+		ypos 5
 
 		rui "ui/control_options_description.rpak"
 
@@ -215,7 +287,7 @@ scripts/resource/ui/menus/R5R/panels/createserver.res
 		wide 480
 		tall 50
 		xpos 0
-		ypos 15
+		ypos 5
 
 		rui "ui/control_options_description.rpak"
 
@@ -269,7 +341,7 @@ scripts/resource/ui/menus/R5R/panels/createserver.res
 		wide 480
 		tall 50
 		xpos 0
-		ypos 15
+		ypos 5
 
 		rui "ui/control_options_description.rpak"
 
@@ -324,7 +396,7 @@ scripts/resource/ui/menus/R5R/panels/createserver.res
 		wide					480
 		tall					50
 		xpos					0
-		ypos					15
+		ypos					5
 		allowRightClickMenu		0
 		allowSpecialCharacters	0
 		unicode					0

@@ -47,15 +47,55 @@
 			"pin_to_sibling_corner"		"TOP"
 		}
 
-		Logo
+		"Logo"
         {
-            ControlName				RuiPanel
-			InheritProperties       Logo
+            "ControlName"				"RuiPanel"
+			"InheritProperties"       	"Logo"
 
-            pin_to_sibling			MainButtonsFrame
-            pin_corner_to_sibling	TOP_LEFT
-            pin_to_sibling_corner	TOP_LEFT
+            "pin_to_sibling"			"MainButtonsFrame"
+            "pin_corner_to_sibling"		"TOP_LEFT"
+            "pin_to_sibling_corner"		"TOP_LEFT"
         }
+
+		"WelcomeBack"
+		{
+			"ControlName"			"Label"
+			"xpos"                  "-10"
+			"ypos"					"-15"
+			"wide"					"300"
+			"tall"					"30"
+			"visible"				"1"
+			"fontHeight"			"30"
+			"labelText"				"Welcome back"
+			"font"					"DefaultBold_41"
+			"allcaps"				"0"
+			"fgcolor_override"		"255 255 255 255"
+			"textAlignment"			"east"
+
+			"pin_to_sibling"		"MainButtonsFrame"
+			"pin_corner_to_sibling"	"RIGHT"
+			"pin_to_sibling_corner"	"RIGHT"
+		}
+
+		"PlayerName"
+		{
+			"ControlName"			"Label"
+			"xpos"                  "0"
+			"ypos"					"0"
+			"wide"					"300"
+			"tall"					"30"
+			"visible"				"1"
+			"fontHeight"			"30"
+			"labelText"				"PlayerName"
+			"font"					"DefaultBold_41"
+			"allcaps"				"0"
+			"fgcolor_override"		"255 100 100 255"
+			"textAlignment"			"east"
+
+			"pin_to_sibling"		"WelcomeBack"
+			"pin_corner_to_sibling"	"TOP"
+			"pin_to_sibling_corner"	"BOTTOM"
+		}
 
 		"R5Reloaded"
 		{
@@ -82,7 +122,7 @@
 			"InheritProperties"			"TabButtonSettings"
 			"classname" 				"TopButtons"
 			"zpos"						"3"
-			"xpos"                    	"-900"
+			"xpos"                    	"-1200"
 			"scriptID"					"0"
 
 			ruiArgs

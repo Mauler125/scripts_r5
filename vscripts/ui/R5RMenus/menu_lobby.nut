@@ -149,8 +149,11 @@ void function SetupLobby()
 	UI_SetPresentationType( ePresentationType.PLAY )
 	thread TryRunDialogFlowThread()
 
-	//Set home tabs playername ui
-	SetUIPlayerName()
+	//Set playername
+	Hud_SetText(Hud_GetChild( file.menu, "PlayerName" ), GetPlayerName())
+
+	//Set Version
+	SetUIVersion()
 }
 
 void function ShowSelectedPanel(var panel, var button)
