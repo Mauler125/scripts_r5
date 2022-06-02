@@ -139,9 +139,6 @@ void function OnR5RLobby_Open()
 	RefreshUIPlaylists()
 	RefreshUIMaps()
 
-	//Refresh Server Browser
-	RefreshServerListing()
-
 	//Set back to default for next time
 	AtMainMenu = false
 }

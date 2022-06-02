@@ -13,23 +13,7 @@
 		"visible"				"1"
 		"paintbackground"		"1"
 	}
-
-    "HomeBackground"
-	{
-        "ControlName"			"ImagePanel"
-		"wide"					"f0"
-		"tall"					"f0"
-		"visible"				"1"
-        "scaleImage"			"1"
-		"zpos"					"0"
-        "fillColor"				"30 30 30 0"
-        "drawColor"				"30 30 30 0"
-
-		"pin_to_sibling"		"DarkenBackground"
-		"pin_corner_to_sibling"	"TOP"
-		"pin_to_sibling_corner"	"TOP"
-	}
-
+	
 	"HomeBackground"
 	{
         "ControlName"			"ImagePanel"
@@ -37,8 +21,8 @@
 		"tall"					"870"
 		"visible"				"1"
         "scaleImage"			"1"
-		"xpos"					"-45"
-		"ypos"					"-20"
+		"xpos"					"-75"
+		"ypos"					"-30"
 		"zpos"					"0"
         "fillColor"				"30 30 30 200"
         "drawColor"				"30 30 30 200"
@@ -56,14 +40,14 @@
 		"visible"				"1"
         "scaleImage"			"1"
 		"xpos"					"-45"
-		"ypos"					"-20"
+		"ypos"					"-180"
 		"zpos"					"0"
         "fillColor"				"30 30 30 200"
         "drawColor"				"30 30 30 200"
 
 		"pin_to_sibling"		"DarkenBackground"
-		"pin_corner_to_sibling"	"TOP_RIGHT"
-		"pin_to_sibling_corner"	"TOP_RIGHT"
+		"pin_corner_to_sibling"	"BOTTOM_RIGHT"
+		"pin_to_sibling_corner"	"BOTTOM_RIGHT"
 	}
 
 	"WelcomeBack"
