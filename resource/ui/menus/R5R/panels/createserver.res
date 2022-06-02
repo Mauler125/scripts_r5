@@ -351,38 +351,20 @@ scripts/resource/ui/menus/R5R/panels/createserver.res
 	CreateServerTxT
 	{
 		ControlName				Label
-		labelText				"Create Server"
+		labelText				"Server Name:"
 		"font"					"DefaultBold_41"
 		"allcaps"				"1"
-		tall					40
+		tall					20
 		auto_wide_tocontents	1
 		zpos 					3
-		fontHeight				45
+		fontHeight				20
 		xpos					0
-		ypos					15
+		ypos					2
 		"fgcolor_override"		"255 255 255 255"
 
 		pin_to_sibling BtnServerName
-		pin_corner_to_sibling	BOTTOM
-		pin_to_sibling_corner	TOP
-	}
-
-	Line
-	{
-		ControlName				ImagePanel
-		xpos					0
-		ypos					0
-		tall					2
-		wide 					400
-		fillColor		"255 255 255 200"
-        drawColor		"255 255 255 200"
-		wrap					1
-		visible					1
-		zpos					3
-
-		pin_to_sibling				CreateServerTxT
-		pin_corner_to_sibling		TOP
-		pin_to_sibling_corner		BOTTOM
+		pin_corner_to_sibling	BOTTOM_LEFT
+		pin_to_sibling_corner	TOP_LEFT
 	}
 
 	"R5RPlaylistPanel"

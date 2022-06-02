@@ -17,7 +17,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	{
 		"ControlName"			"ImagePanel"
 		"xpos"					"-235"
-		"ypos"					"0"
+		"ypos"					"-40"
 		"tall"					"50"
 		"wide" 					"1395"
 		"fillColor"				"34 34 34 200"
