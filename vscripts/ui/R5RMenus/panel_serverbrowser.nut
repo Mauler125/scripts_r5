@@ -18,6 +18,8 @@ struct
 	int pAmount
 	int pCurrent
 	int pOffset
+	int pStart
+	int pEnd
 } m_vPages
 
 //Struct for selected server
@@ -163,23 +165,14 @@ void function NextPage(var button)
 	if(m_vPages.pCurrent > m_vPages.pAmount)
 		m_vPages.pCurrent = m_vPages.pAmount
 
-	// "startint" = starting server id
-	int startint
-	// "endint" = ending server id
-	int endint
-	if(m_vPages.pCurrent == 0){
-		startint = 0
-		endint = SB_MAX_SERVER_PER_PAGE
-		m_vPages.pOffset = 0
-	} else {
-		startint = m_vPages.pCurrent * SB_MAX_SERVER_PER_PAGE
-		endint = startint + SB_MAX_SERVER_PER_PAGE
-		m_vPages.pOffset = m_vPages.pCurrent * SB_MAX_SERVER_PER_PAGE
-	}
+	//Set Start ID / End ID / and ID Offset
+	m_vPages.pStart = m_vPages.pCurrent * SB_MAX_SERVER_PER_PAGE
+	m_vPages.pEnd = m_vPages.pStart + SB_MAX_SERVER_PER_PAGE
+	m_vPages.pOffset = m_vPages.pCurrent * SB_MAX_SERVER_PER_PAGE
 
-	// Check if endint is greater then actual amount of servers
-	if(endint > m_vServerList.len())
-		endint = m_vServerList.len()
+	// Check if m_vPages.pEnd is greater then actual amount of servers
+	if(m_vPages.pEnd > m_vServerList.len())
+		m_vPages.pEnd = m_vServerList.len()
 
 	// Set current page ui
 	Hud_SetText(Hud_GetChild( file.panel, "Pages" ), "Page: " + (m_vPages.pCurrent + 1) + "/" + (m_vPages.pAmount + 1))
@@ -187,7 +180,7 @@ void function NextPage(var button)
 	// "id" is diffrent from "i" and is used for setting UI elements
 	// "i" is used for server id
 	int id = 0
-	for( int i=startint; i < endint; i++ ) {
+	for( int i=m_vPages.pStart; i < m_vPages.pEnd; i++ ) {
 		Hud_SetText( Hud_GetChild( file.panel, "ServerName" + id ), m_vServerList[i].svServerName)
 		Hud_SetText( Hud_GetChild( file.panel, "Playlist" + id ), GetUIPlaylistName(m_vServerList[i].svPlaylist))
 		Hud_SetText( Hud_GetChild( file.panel, "Map" + id ), GetUIMapName(m_vServerList[i].svMapName))
@@ -214,23 +207,14 @@ void function PrevPage(var button)
 	if(m_vPages.pCurrent < 0)
 		m_vPages.pCurrent = 0
 
-	// "startint" = starting server id
-	int startint
-	// "endint" = ending server id
-	int endint
-	if(m_vPages.pCurrent == 0) {
-		startint = 0
-		endint = SB_MAX_SERVER_PER_PAGE
-		m_vPages.pOffset = 0
-	} else {
-		startint = m_vPages.pCurrent * SB_MAX_SERVER_PER_PAGE
-		endint = startint + SB_MAX_SERVER_PER_PAGE
-		m_vPages.pOffset = m_vPages.pCurrent * SB_MAX_SERVER_PER_PAGE
-	}
+	//Set Start ID / End ID / and ID Offset
+	m_vPages.pStart = m_vPages.pCurrent * SB_MAX_SERVER_PER_PAGE
+	m_vPages.pEnd = m_vPages.pStart + SB_MAX_SERVER_PER_PAGE
+	m_vPages.pOffset = m_vPages.pCurrent * SB_MAX_SERVER_PER_PAGE
 
-	// Check if endint is greater then actual amount of servers
-	if(endint > m_vServerList.len())
-		endint = m_vServerList.len()
+	// Check if m_vPages.pEnd is greater then actual amount of servers
+	if(m_vPages.pEnd > m_vServerList.len())
+		m_vPages.pEnd = m_vServerList.len()
 
 	// Set current page ui
 	Hud_SetText(Hud_GetChild( file.panel, "Pages" ), "Page: " + (m_vPages.pCurrent + 1) + "/" + (m_vPages.pAmount + 1))
@@ -238,7 +222,7 @@ void function PrevPage(var button)
 	// "id" is diffrent from "i" and is used for setting UI elements
 	// "i" is used for server id
 	int id = 0
-	for( int i=startint; i < endint; i++ ) {
+	for( int i=m_vPages.pStart; i < m_vPages.pEnd; i++ ) {
 		Hud_SetText( Hud_GetChild( file.panel, "ServerName" + id ), m_vServerList[i].svServerName)
 		Hud_SetText( Hud_GetChild( file.panel, "Playlist" + id ), GetUIPlaylistName(m_vServerList[i].svPlaylist))
 		Hud_SetText( Hud_GetChild( file.panel, "Map" + id ), GetUIMapName(m_vServerList[i].svMapName))
@@ -248,40 +232,58 @@ void function PrevPage(var button)
 	}
 }
 
-array<ServerListing> function GetServerArray(int servercount)
+array<ServerListing> function GetServerArray(int svServerCount)
 {
-	array<ServerListing> Servers
+	//Create array for servers to be returned
+	array<ServerListing> ServerList
 
-	int serverrow = 0
+	//No servers so just return
+	if(svServerCount == 0)
+		return ServerList
+
+	//Set on first row
+	int m_vCurrentRow = 0
+
+	//Reset all players count
 	m_vAllPlayers = 0
 
+	for( int e=0; e < 40; e++ ) {
 	// Add each server to the array
-	for( int i=0; i < servercount; i++ ) {
-		//Setup new server
-		ServerListing new
-		new.svServerID = i
-		new.svServerName = GetServerName(i)
-		new.svPlaylist = GetServerPlaylist(i)
-		new.svMapName = GetServerMap(i)
-		new.svDescription = "Server description coming soon."
-		new.svMaxPlayers = 32
-		new.svCurrentPlayers = 0
-		//Add new server to array
-		Servers.append(new)
+	for( int i=0; i < svServerCount; i++ ) {
+		//Add Server to array
+		AddServerToArray(i, GetServerName(i), GetServerPlaylist(i), GetServerMap(i), "Server description coming soon.", 32, 0, ServerList)
 
 		// If server is on final row add a new page
-		if(serverrow == SB_MAX_SERVER_PER_PAGE)
-		{
+		if(m_vCurrentRow == SB_MAX_SERVER_PER_PAGE) {
 			m_vPages.pAmount++
-			serverrow = 0
+			m_vCurrentRow = 0
 		}
-		serverrow++
+		m_vCurrentRow++
 
 		// Add servers player count to all player count
 		m_vAllPlayers += 0
 	}
 
-	return Servers
+	}
+
+	//Return Server Listing
+	return ServerList
+}
+
+void function AddServerToArray(int id, string name, string playlist, string map, string desc, int max, int current, array<ServerListing> ServerList)
+{
+	//Setup new server
+	ServerListing Server
+	Server.svServerID = id
+	Server.svServerName = name
+	Server.svPlaylist = playlist
+	Server.svMapName = map
+	Server.svDescription = desc
+	Server.svMaxPlayers = max
+	Server.svCurrentPlayers = current
+
+	//Add new server to array
+	ServerList.append(Server)
 }
 
 void function ShowNoServersFound(bool show)

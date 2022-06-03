@@ -70,7 +70,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"xpos"					"0"
 		"ypos"					"765"
 		"tall"					"70"
-		"wide" 					"1185"
+		"wide" 					"1395"
 		"fillColor"				"30 30 30 200"
         "drawColor"				"30 30 30 200"
 		"wrap"					"1"
@@ -178,108 +178,44 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"pin_to_sibling_corner"	"CENTER"
 	}
 
-	"BtnServerListLeftArrowPanel"
-	{
-		"ControlName" 			"RuiPanel"
-		"wide" 					"100"
-		"tall" 					"70"
-		"xpos" 					"5"
-		"ypos" 					"0"
-
-		"rui" 					"ui/control_options_description.rpak"
-
-		"visible" 				"1"
-		"zpos" 					"0"
-
-		"pin_to_sibling"		"ServerBrowserBGBottom"
-		"pin_corner_to_sibling"	"RIGHT"
-		"pin_to_sibling_corner"	"LEFT"
-	}
-
 	"BtnServerListLeftArrow"
 	{
 		"ControlName" 			"RuiButton"
-		"InheritProperties" 	"RuiSmallButton"
-		"wide" 					"100"
+		"rui"					"ui/tab_button.rpak"
+		"wide" 					"200"
 		"tall" 					"70"
 		"xpos" 					"0"
 		"ypos" 					"0"
 		"zpos" 					"6"
 
-
-		"pin_to_sibling" 		"BtnServerListLeftArrowPanel"
-		"pin_corner_to_sibling" "CENTER"
-		"pin_to_sibling_corner" "CENTER"
-	}
-
-	"BtnServerListLeftArrowText"
-	{
-		"ControlName"			"Label"
-		"labelText"				"<<<"
-		"font"					"DefaultBold_41"
-		"allcaps"				"1"
-		"auto_wide_tocontents"	"1"
-		"zpos" 					"3"
-		"fontHeight"			"25"
-		"xpos"					"0"
-		"ypos"					"0"
-		"fgcolor_override"		"255 255 255 255"
-
-		"pin_to_sibling" 		"BtnServerListLeftArrowPanel"
-		"pin_corner_to_sibling" "CENTER"
-		"pin_to_sibling_corner" "CENTER"
-	}
-
-	"BtnServerListRightArrowPanel"
-	{
-		"ControlName" 			"RuiPanel"
-		"wide" 					"100"
-		"tall" 					"70"
-		"xpos" 					"5"
-		"ypos" 					"0"
-
-		"rui" 					"ui/control_options_description.rpak"
-
-		"visible" 				"1"
-		"zpos" 					"0"
+		ruiArgs
+		{
+			buttonText "<<<"
+		}
 
 		"pin_to_sibling"		"ServerBrowserBGBottom"
 		"pin_corner_to_sibling"	"LEFT"
-		"pin_to_sibling_corner"	"RIGHT"
+		"pin_to_sibling_corner"	"LEFT"
 	}
 
 	"BtnServerListRightArrow"
 	{
 		"ControlName" 			"RuiButton"
-		"InheritProperties" 	"RuiSmallButton"
-		"wide" 					"100"
+		"rui"					"ui/tab_button.rpak"
+		"wide" 					"200"
 		"tall" 					"70"
 		"xpos" 					"0"
 		"ypos" 					"0"
 		"zpos" 					"6"
 
+		ruiArgs
+		{
+			buttonText ">>>"
+		}
 
-		"pin_to_sibling" 		"BtnServerListRightArrowPanel"
-		"pin_corner_to_sibling" "CENTER"
-		"pin_to_sibling_corner" "CENTER"
-	}
-
-	"BtnServerListRightArrowText"
-	{
-		"ControlName"			"Label"
-		"labelText"				">>>"
-		"font"					"DefaultBold_41"
-		"allcaps"				"1"
-		"auto_wide_tocontents"	"1"
-		"zpos" 					"3"
-		"fontHeight"			"25"
-		"xpos"					"0"
-		"ypos"					"0"
-		"fgcolor_override"		"255 255 255 255"
-
-		"pin_to_sibling" 		"BtnServerListRightArrowPanel"
-		"pin_corner_to_sibling" "CENTER"
-		"pin_to_sibling_corner" "CENTER"
+		"pin_to_sibling"		"ServerBrowserBGBottom"
+		"pin_corner_to_sibling"	"RIGHT"
+		"pin_to_sibling_corner"	"RIGHT"
 	}
 
 	"ServerNameLbl"
@@ -493,7 +429,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"ControlName"			"ImagePanel"
 		"xpos" 					"0"
 		"ypos" 					"0"
-		"tall"					"560"
+		"tall"					"635"
 		"wide" 					"450"
 		"fillColor"				"30 30 30 200"
         "drawColor"				"30 30 30 200"
@@ -597,26 +533,10 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"pin_to_sibling_corner"	"TOP_LEFT"
 	}
 
-	"ConnectPanel"
-	{
-		"ControlName" 			"RuiPanel"
-		"wide" 					"450"
-		"tall" 					"70"
-		"xpos" 					"0"
-		"ypos" 					"5"
-		"zpos" 					"0"
-		"rui" 					"ui/control_options_description.rpak"
-		"visible" 				"1"
-
-		"pin_to_sibling"		"ServerInfoBG"
-		"pin_corner_to_sibling"	"TOP_LEFT"
-		"pin_to_sibling_corner"	"BOTTOM_LEFT"
-	}
-
 	"ConnectButton"
 	{
 		"ControlName" 			"RuiButton"
-		"InheritProperties" 	"RuiSmallButton"
+		"rui"					"ui/tab_button.rpak"
 		"wide" 					"450"
 		"tall" 					"70"
 		"xpos" 					"0"
@@ -624,27 +544,14 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"zpos" 					"6"
 		"visible" 				"1"
 
-		"pin_to_sibling"		"ConnectPanel"
-		"pin_corner_to_sibling"	"CENTER"
-		"pin_to_sibling_corner"	"CENTER"
-	}
+		ruiArgs
+		{
+			buttonText "Connect"
+		}
 
-	"ConnectButtonText"
-	{
-		"ControlName"			"Label"
-		"labelText"				"Connect"
-		"font"					"DefaultBold_41"
-		"allcaps"				"1"
-		"auto_wide_tocontents"	"1"
-		"zpos" 					"13"
-		"fontHeight"			"30"
-		"xpos"					"0"
-		"ypos"					"0"
-		"fgcolor_override"		"255 255 255 255"
-
-		"pin_to_sibling"		"ConnectPanel"
-		"pin_corner_to_sibling"	"CENTER"
-		"pin_to_sibling_corner"	"CENTER"
+		"pin_to_sibling"		"ServerInfoBG"
+		"pin_corner_to_sibling"	"BOTTOM"
+		"pin_to_sibling_corner"	"BOTTOM"
 	}
 
 	"ServerButton0"
@@ -1028,26 +935,6 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"pin_to_sibling_corner"		"BOTTOM_LEFT"
 	}
 
-	"ServerButton19"
-	{
-		"ControlName"				"RuiButton"
-		"classname"					"ServBtn"
-		"wide"						"1395"
-		"tall"						"40"
-		"visible"					"1"
-		"enabled"					"1"
-		"style"						"RuiButton"
-        "rui"						"ui/tab_button.rpak"
-		"labelText"					""
-		"cursorVelocityModifier"  	"0.7"
-		"zpos"						"1"
-		"scriptID"					"19"
-
-		"pin_to_sibling"			"ServerButton18"
-		"pin_corner_to_sibling"		"TOP_LEFT"
-		"pin_to_sibling_corner"		"BOTTOM_LEFT"
-	}
-
 	"ServerName0"
 	{
 		"ControlName"				"Label"
@@ -1367,23 +1254,6 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton18"
-		"pin_corner_to_sibling"		"LEFT"
-		"pin_to_sibling_corner"		"LEFT"
-	}
-
-	"ServerName19"
-	{
-		"ControlName"				"Label"
-		"labelText"					""
-		"xpos"						"-15"
-		"ypos"						"0"
-		"zpos"						"0"
-		"wide"						"630"
-		"zpos" 						"4"
-		"fontHeight"				"30"
-		"classname"					"ServerLabels"
-
-		"pin_to_sibling"			"ServerButton19"
 		"pin_corner_to_sibling"		"LEFT"
 		"pin_to_sibling_corner"		"LEFT"
 	}
@@ -1730,24 +1600,6 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"pin_to_sibling_corner"		"LEFT"
 	}
 
-	"Playlist19"
-	{
-		"ControlName"				"Label"
-		"labelText"					""
-		"xpos"						"-800"
-		"ypos"						"0"
-		"zpos"						"0"
-		"textalignment"				"center"
-		"wide"						"230"
-		"zpos" 						"4"
-		"fontHeight"				"30"
-		"classname"					"ServerLabels"
-
-		"pin_to_sibling"			"ServerButton19"
-		"pin_corner_to_sibling"		"LEFT"
-		"pin_to_sibling_corner"		"LEFT"
-	}
-
 	"PlayerCount0"
 	{
 		"ControlName"				"Label"
@@ -2090,24 +1942,6 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"pin_to_sibling_corner"		"LEFT"
 	}
 
-	"PlayerCount19"
-	{
-		"ControlName"				"Label"
-		"labelText"					""
-		"xpos"						"-670"
-		"ypos"						"0"
-		"zpos"						"0"
-		"textalignment"				"center"
-		"wide"						"110"
-		"zpos" 						"4"
-		"fontHeight"				"30"
-		"classname"					"ServerLabels"
-
-		"pin_to_sibling"			"ServerButton19"
-		"pin_corner_to_sibling"		"LEFT"
-		"pin_to_sibling_corner"		"LEFT"
-	}
-
 	"Map0"
 	{
 		"ControlName"				"Label"
@@ -2446,24 +2280,6 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton18"
-		"pin_corner_to_sibling"		"LEFT"
-		"pin_to_sibling_corner"		"LEFT"
-	}
-
-	"Map19"
-	{
-		"ControlName"				"Label"
-		"labelText"					""
-		"xpos"						"-1050"
-		"ypos"						"0"
-		"zpos"						"0"
-		"textalignment"				"center"
-		"wide"						"330"
-		"zpos" 						"4"
-		"fontHeight"				"30"
-		"classname"					"ServerLabels"
-
-		"pin_to_sibling"			"ServerButton19"
 		"pin_corner_to_sibling"		"LEFT"
 		"pin_to_sibling_corner"		"LEFT"
 	}
