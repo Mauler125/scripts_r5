@@ -16,10 +16,10 @@ scripts/resource/ui/menus/R5R/panels/createserver.res
 	"CreateServerBG"
 	{
 		ControlName				ImagePanel
-		ypos 			-670
+		ypos 			-642
 		xpos			-20
 		wide			490
-		tall            300
+		tall            350
 		fillColor		"30 30 30 100"
         drawColor		"30 30 30 100"
 		visible					1
@@ -64,7 +64,7 @@ scripts/resource/ui/menus/R5R/panels/createserver.res
 		tall            270
 		visible			1
 		rui           	"ui/custom_loadscreen_image.rpak"
-		ypos 			-355
+		ypos 			-215
 		xpos			-25
 		zpos 4
 
@@ -181,7 +181,7 @@ scripts/resource/ui/menus/R5R/panels/createserver.res
 		wide 480
 		tall 50
 		xpos 0
-		ypos 50
+		ypos 165
 
 		rui "ui/control_options_description.rpak"
 
@@ -287,7 +287,7 @@ scripts/resource/ui/menus/R5R/panels/createserver.res
 		wide 480
 		tall 50
 		xpos 0
-		ypos 5
+		ypos 50
 
 		rui "ui/control_options_description.rpak"
 

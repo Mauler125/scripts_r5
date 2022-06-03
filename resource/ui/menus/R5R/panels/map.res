@@ -18,7 +18,7 @@
 	{
 		"ControlName"			"Label"
 		"xpos"					"0"
-		"ypos"					"0"
+		"ypos"					"50"
 		"zpos"					"0"
 		"wide"					"1305"
 		"tall"					"745"

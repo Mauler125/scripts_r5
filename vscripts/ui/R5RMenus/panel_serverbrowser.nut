@@ -246,8 +246,6 @@ array<ServerListing> function GetServerArray(int svServerCount)
 
 	//Reset all players count
 	m_vAllPlayers = 0
-
-	for( int e=0; e < 40; e++ ) {
 	// Add each server to the array
 	for( int i=0; i < svServerCount; i++ ) {
 		//Add Server to array
@@ -262,8 +260,6 @@ array<ServerListing> function GetServerArray(int svServerCount)
 
 		// Add servers player count to all player count
 		m_vAllPlayers += 0
-	}
-
 	}
 
 	//Return Server Listing
