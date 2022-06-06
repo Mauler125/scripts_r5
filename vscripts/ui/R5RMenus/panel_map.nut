@@ -6,7 +6,7 @@ struct
 	var menu
 	var panel
 
-	table<var, string> buttonmap
+	table<var, string> map_button_table
 } file
 
 void function InitR5RMapPanel( var panel )
@@ -46,16 +46,16 @@ void function RefreshUIMaps()
 
 		//If button already has a evenhandler remove it
 		var button = Hud_GetChild( file.panel, "MapBtn" + i )
-		if ( button in file.buttonmap ) {
+		if ( button in file.map_button_table ) {
 			Hud_RemoveEventHandler( button, UIE_CLICK, SelectServerMap )
-			delete file.buttonmap[button]
+			delete file.map_button_table[button]
 		}
 
 		//Add the Even handler for the button
 		Hud_AddEventHandler( Hud_GetChild( file.panel, "MapBtn" + i ), UIE_CLICK, SelectServerMap )
 
 		//Add the button and map to a table
-		file.buttonmap[Hud_GetChild( file.panel, "MapBtn" + i )] <- availablemaps[i]
+		file.map_button_table[Hud_GetChild( file.panel, "MapBtn" + i )] <- availablemaps[i]
 	}
 }
 
@@ -74,5 +74,5 @@ void function ResetMapsUI()
 void function SelectServerMap( var button )
 {
 	//Set selected server map
-	SetSelectedServerMap(file.buttonmap[button])
+	SetSelectedServerMap(file.map_button_table[button])
 }

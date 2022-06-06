@@ -72,6 +72,16 @@ void function InitR5RServerBrowserPanel( var panel )
 		RuiSetString( Hud_GetRui( elem ), "buttonText", "")
 		Hud_AddEventHandler( elem, UIE_CLICK, SelectServer )
 	}
+
+	//Reset Server Panel
+	ShowNoServersFound(false)
+	SetSelectedServer(-1, "", "", "", "")
+	ResetServerLabels()
+
+	// Set servercount, playercount, pages to none
+	Hud_SetText( Hud_GetChild( file.panel, "PlayersCount"), "Players: 0")
+	Hud_SetText( Hud_GetChild( file.panel, "ServersCount"), "Servers: 0")
+	Hud_SetText (Hud_GetChild( file.panel, "Pages" ), "Page: 0/0")
 }
 
 void function RefreshServersClick(var button)

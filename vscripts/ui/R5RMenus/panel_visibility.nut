@@ -5,7 +5,7 @@ struct
 	var menu
 	var panel
 
-	table<var, int> buttonvis
+	table<var, int> vis_button_table
 } file
 
 array<int> visibility = [
@@ -32,12 +32,12 @@ void function InitR5RVisPanel( var panel )
 		Hud_AddEventHandler( Hud_GetChild( file.panel, "VisBtn" + i ), UIE_CLICK, SelectServerVis )
 
 		//Add the button and map to a table
-		file.buttonvis[Hud_GetChild( file.panel, "VisBtn" + i )] <- visibility[i]
+		file.vis_button_table[Hud_GetChild( file.panel, "VisBtn" + i )] <- visibility[i]
 	}
 }
 
 void function SelectServerVis( var button )
 {
 	//Set selected server vis
-	SetSelectedServerVis(file.buttonvis[button])
+	SetSelectedServerVis(file.vis_button_table[button])
 }

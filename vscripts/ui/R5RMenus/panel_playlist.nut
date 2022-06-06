@@ -6,7 +6,7 @@ struct
 	var menu
 	var panel
 
-	table<var, string> buttonplaylist
+	table<var, string> playlist_button_table
 } file
 
 void function InitR5RPlaylistPanel( var panel )
@@ -40,16 +40,16 @@ void function RefreshUIPlaylists()
 
 		//If button already has a evenhandler remove it
 		var button = Hud_GetChild( file.panel, "PlaylistBtn" + i )
-		if ( button in file.buttonplaylist ) {
+		if ( button in file.playlist_button_table ) {
 			Hud_RemoveEventHandler( button, UIE_CLICK, SelectServerPlaylist )
-			delete file.buttonplaylist[button]
+			delete file.playlist_button_table[button]
 		}
 
 		//Add the Even handler for the button
 		Hud_AddEventHandler( Hud_GetChild( file.panel, "PlaylistBtn" + i ), UIE_CLICK, SelectServerPlaylist )
 
 		//Add the button and playlist to a table
-		file.buttonplaylist[Hud_GetChild( file.panel, "PlaylistBtn" + i )] <- playlists[i]
+		file.playlist_button_table[Hud_GetChild( file.panel, "PlaylistBtn" + i )] <- playlists[i]
 	}
 }
 
@@ -74,5 +74,5 @@ array<string> function GetPlaylists()
 void function SelectServerPlaylist( var button )
 {
 	//Set selected server playlist
-	SetSelectedServerPlaylist(file.buttonplaylist[button])
+	SetSelectedServerPlaylist(file.playlist_button_table[button])
 }
