@@ -21,23 +21,23 @@ void function RefreshUIMaps()
 	ResetMapsUI()
 
 	//Get maps array
-	array<string> availablemaps = GetPlaylistMaps(ServerSettings.playlist)
+	array<string> m_vMaps = GetPlaylistMaps(ServerSettings.svPlaylist)
 
 	//Get number of maps
-	int number_of_maps = availablemaps.len()
+	int m_vMaps_count = m_vMaps.len()
 
 	//Currently supports upto 16 maps
 	//Amos and I talked and will setup a page system for maps when needed
-	//Also note that all maps wont always be showed depending on the playlist
-	if(number_of_maps > 16)
-		number_of_maps = 16
+	//Also note that all maps wont always be shown depending on the playlist selected
+	if(m_vMaps_count > 16)
+		m_vMaps_count = 16
 	
-	for( int i=0; i < number_of_maps; i++ ) {
+	for( int i=0; i < m_vMaps_count; i++ ) {
 		//Set Map Text
-		Hud_SetText( Hud_GetChild( file.panel, "MapText" + i ), GetUIMapName(availablemaps[i]))
+		Hud_SetText( Hud_GetChild( file.panel, "MapText" + i ), GetUIMapName(m_vMaps[i]))
 
 		//Set Map Asset
-		RuiSetImage( Hud_GetRui( Hud_GetChild( file.panel, "MapImg" + i ) ), "loadscreenImage", GetUIMapAsset(availablemaps[i]) )
+		RuiSetImage( Hud_GetRui( Hud_GetChild( file.panel, "MapImg" + i ) ), "loadscreenImage", GetUIMapAsset(m_vMaps[i]) )
 
 		//Set the map ui visibility to true
 		Hud_SetVisible( Hud_GetChild( file.panel, "MapText" + i ), true )
@@ -55,7 +55,7 @@ void function RefreshUIMaps()
 		Hud_AddEventHandler( Hud_GetChild( file.panel, "MapBtn" + i ), UIE_CLICK, SelectServerMap )
 
 		//Add the button and map to a table
-		file.map_button_table[Hud_GetChild( file.panel, "MapBtn" + i )] <- availablemaps[i]
+		file.map_button_table[Hud_GetChild( file.panel, "MapBtn" + i )] <- m_vMaps[i]
 	}
 }
 
