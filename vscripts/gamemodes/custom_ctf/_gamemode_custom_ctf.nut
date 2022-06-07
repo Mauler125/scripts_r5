@@ -91,6 +91,8 @@ void function _CustomCTF_Init()
     AddClientCommandCallback("GetTimeFromServer", ClientCommand_GetCorrectTimeFromServer)
     // Used for telling the server the player wants to drop the flag
     AddClientCommandCallback("DropFlag", ClientCommand_DropFlag)
+    // All chat via console
+    AddClientCommandCallback("say", ClientCommand_Say)
 
     // TestingCommands
     // AddClientCommandCallback("imc", ClientCommand_IMC)
@@ -154,6 +156,36 @@ bool function ClientCommand_DropFlag(entity player, array<string> args)
         return false
 
     CheckPlayerForFlag(player)
+
+    return true
+}
+
+bool function ClientCommand_Say(entity player, array<string> args)
+{
+    if( !IsValid( player ) )
+        return false
+    
+    string sendMessage
+
+    foreach(arg in args)
+    {
+        sendMessage += " " + arg
+    }
+
+    sendMessage = player.GetPlayerName() + ":" + sendMessage
+
+    foreach( p in GetPlayerArray() )
+    {
+        if( !IsValid( p ) )
+            continue
+
+        for ( int i = 0; i < sendMessage.len(); i++ )
+        {
+            Remote_CallFunction_NonReplay( p, "ServerCallback_CTF_BuildClientMessage", sendMessage[i] )
+        }
+
+        Remote_CallFunction_NonReplay( p, "ServerCallback_CTF_PrintClientMessage" )
+    }
 
     return true
 }
@@ -467,35 +499,25 @@ void function StartRound()
             // Only do voting for maps with multi locations
             if ( file.locationSettings.len() >= NUMBER_OF_MAP_SLOTS )
             {
-                if( file.locationSettings.len() > NUMBER_OF_MAP_SLOTS ) // if the map has more then NUMBER_OF_MAP_SLOTS locations then randomize the loactions up for vote
+                for( int i = 0; i < NUMBER_OF_MAP_SLOTS; ++i )
                 {
-
-                    for( int i = 0; i < NUMBER_OF_MAP_SLOTS; ++i )
+                    while( true )
                     {
-                        while( true )
-                        {
-                            // Get a random location id from the available locations
-                            int randomId = RandomIntRange(0, file.locationSettings.len())
+                        // Get a random location id from the available locations
+                        int randomId = RandomIntRange(0, file.locationSettings.len())
 
-                            // If the map already isnt picked for voting then append it to the array, otherwise keep looping till it finds one that isnt picked yet
-                            if( !CTF.mapIds.contains( randomId ) )
-                            {
-                                CTF.mapIds.append( randomId )
-                                break
-                            }
+                        // If the map already isnt picked for voting then append it to the array, otherwise keep looping till it finds one that isnt picked yet
+                        if( !CTF.mapIds.contains( randomId ) )
+                        {
+                            CTF.mapIds.append( randomId )
+                            break
                         }
                     }
-                }
-                else if ( file.locationSettings.len() == NUMBER_OF_MAP_SLOTS ) // if the map has exactly 4 maps, remove the guess work for randomizing the maps as it would cause a rare crash
-                {
-                    CTF.mapIds.append( 0 )
-                    CTF.mapIds.append( 1 )
-                    CTF.mapIds.append( 2 )
-                    CTF.mapIds.append( 3 )
                 }
 
                 // Set voting to be allowed
                 CTF.votingtime = true
+                ServerTimer.roundover = true
 
                 // for each player, open the vote menu and set it to the winning team screen
                 foreach( player in GetPlayerArray() )
@@ -506,8 +528,6 @@ void function StartRound()
                     Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetVoteMenuOpen", true, TeamWon)
                     Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetScreen", eCTFScreen.WinnerScreen, TeamWon, eCTFScreen.NotUsed, eCTFScreen.NotUsed)
                 }
-
-                ServerTimer.roundover = true
 
                 // Wait for timing
                 wait 8
@@ -527,6 +547,9 @@ void function StartRound()
 
                 CTF.votestied = false
                 bool anyVotes = false
+
+                // Make voting not allowed
+                CTF.votingtime = false
 
                 // See if there was any votes in the first place
                 foreach( int votes in CTF.mapVotes )
@@ -617,7 +640,7 @@ void function StartRound()
                     }
                 }
 
-                // Just a wait for timing
+                //wait for timing
                 wait 5
 
                 // Close the votemenu for each player
@@ -667,9 +690,6 @@ void function StartRound()
                     Remote_CallFunction_Replay(player, "ServerCallback_CTF_SetVoteMenuOpen", false, TeamWon)
                 }
             }
-
-            // Make voting not allowed
-            CTF.votingtime = false
 
             // Clear players the voted for next voting
             CTF.votedPlayers.clear()

@@ -29,6 +29,8 @@ global function ServerCallback_CTF_SetVoteMenuOpen
 global function ServerCallback_CTF_UpdateVotingMaps
 global function ServerCallback_CTF_UpdateMapVotesClient
 global function ServerCallback_CTF_SetScreen
+global function ServerCallback_CTF_BuildClientMessage
+global function ServerCallback_CTF_PrintClientMessage
 
 //Ui callbacks
 global function UI_To_Client_VoteForMap
@@ -102,6 +104,9 @@ array<var> overHeadRuis
 
 PakHandle &CTFRpak
 
+string client_messageString = ""
+string oldmessages = ""
+
 void function Cl_CustomCTF_Init()
 {
     AddClientCallback_OnResolutionChanged( GetTimeFromServer )
@@ -114,6 +119,29 @@ void function Release()
 {
     if ( CTFRpak.isAvailable )
 		ReleasePakFile( CTFRpak )
+}
+
+void function ServerCallback_CTF_PrintClientMessage()
+{
+    if(oldmessages == "")
+	    oldmessages += client_messageString
+    else
+        oldmessages = client_messageString + "\n" + oldmessages
+
+    var chat = HudElement( "IngameTextChat" )
+    var chatTextEntry = Hud_GetChild( chat, "ChatInputLine" )
+    var chatHistory = Hud_GetChild( chat, "HudChatHistory")
+    Hud_SetText( chatHistory, oldmessages )
+
+    UpdateChatHUDVisibility()
+
+    client_messageString = ""
+}
+
+void function ServerCallback_CTF_BuildClientMessage( ... )
+{
+	for ( int i = 0; i < vargc; i++ )
+		client_messageString += format("%c", vargv[i] )
 }
 
 void function ServerCallback_CTF_HideCustomUI()

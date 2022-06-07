@@ -153,6 +153,8 @@ void function RemoteFunctions_Init_Begin()
 			Remote_RegisterClientFunction( "ServerCallback_CTF_UpdatePlayerStats", "int", 0, 255)
 			Remote_RegisterClientFunction( "ServerCallback_CTF_CheckUpdatePlayerLegend")
 			Remote_RegisterClientFunction( "ServerCallback_CTF_HideCustomUI" )
+			Remote_RegisterUntypedFunction_deprecated( "ServerCallback_CTF_PrintClientMessage" )
+			Remote_RegisterUntypedFunction_deprecated( "ServerCallback_CTF_BuildClientMessage" )
 			//CTF: Vote Menu
 			Remote_RegisterClientFunction("ServerCallback_CTF_SetScreen", "int", 0, 255, "int", 0, 255, "int", 0, 255, "int", 0, 255)
 			Remote_RegisterClientFunction("ServerCallback_CTF_SetVoteMenuOpen", "bool", "int", 0, 255)
