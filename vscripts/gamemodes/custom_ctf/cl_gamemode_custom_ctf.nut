@@ -98,6 +98,9 @@ bool hasvoted = false;
 bool isvoting = false;
 bool roundover = false
 
+bool hidechat = false;
+int hidechatcountdown = 0;
+
 array<var> teamicons
 array<entity> cleanupEnts
 array<var> overHeadRuis
@@ -126,7 +129,7 @@ void function SendChat(var button)
 
     printf(CHAT_TEXT)
 
-	if(CHAT_TEXT != "")
+	if(CHAT_TEXT != "" && !IsChatOverflow(CHAT_TEXT.len()))
 	{
 		string text = "say " + CHAT_TEXT
 		GetLocalClientPlayer().ClientCommand(text)
@@ -135,19 +138,45 @@ void function SendChat(var button)
 
 void function SetChatSize()
 {
-    UISize screenSize   = GetScreenSize()
-	float resMultiplier = screenSize.height / 1080.0
-	int width           = 630
-	int height          = 275
-
     var chat = HudElement( "IngameTextChat" )
-	Hud_SetHeight( chat, height )
+	Hud_SetHeight( chat, 300 )
+    Hud_SetWidth( chat, 800 )
+}
+
+bool function IsChatOverflow(int len)
+{
+	if(len > 126 - (int(GetLocalClientPlayer().GetPlayerName().len() * 2.5) + 1))
+		return true
+	return false
+}
+
+void function HideChatAfterDelay()
+{
+    if(hidechat) {
+        hidechatcountdown = 10
+        return
+    }
+
+    hidechatcountdown = 10
+    hidechat = true
+
+    while(hidechatcountdown > 0)
+    {
+        hidechatcountdown--
+        wait 1
+    }
+
+    var chatHistory = Hud_GetChild( HudElement( "IngameTextChat" ), "HudChatHistory")
+    Hud_SetText( chatHistory, "" )
+    hidechat = false
 }
 
 void function ServerCallback_CTF_PrintClientMessage()
 {
+    //Easier to just set the size every client message
     SetChatSize()
 
+    //If old message array > 7 then remove the first message
     if(savedmessages.len() > 7)
         savedmessages.remove(0)
 
@@ -158,8 +187,8 @@ void function ServerCallback_CTF_PrintClientMessage()
 
     string finishedtext = ""
 
-    foreach(string message in savedmessages)
-    {
+    //Add each old message to the finished string
+    foreach(string message in savedmessages) {
         finishedtext += message
     }
 
@@ -167,6 +196,8 @@ void function ServerCallback_CTF_PrintClientMessage()
     Hud_SetText( chatHistory, finishedtext )
 
     client_messageString = ""
+
+    thread HideChatAfterDelay()
 }
 
 void function ServerCallback_CTF_BuildClientMessage( ... )
