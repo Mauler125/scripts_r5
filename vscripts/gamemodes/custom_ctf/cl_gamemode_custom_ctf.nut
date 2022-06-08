@@ -112,13 +112,8 @@ void function Cl_CustomCTF_Init()
     AddClientCallback_OnResolutionChanged( GetTimeFromServer )
     RegisterConCommandTriggeredCallback( "+use_alt", OnInspectKeyPressed )
 
+    //Pak is released when vm is destroyed
     CTFRpak = RequestPakFile( $"common_ctf" )
-}
-
-void function Release()
-{
-    if ( CTFRpak.isAvailable )
-		ReleasePakFile( CTFRpak )
 }
 
 void function ServerCallback_CTF_PrintClientMessage()
@@ -126,16 +121,10 @@ void function ServerCallback_CTF_PrintClientMessage()
     if(oldmessages == "")
 	    oldmessages += client_messageString
     else
-        oldmessages = client_messageString + "\n" + oldmessages
+        oldmessages += "\n" + client_messageString
 
-    var chat = HudElement( "IngameTextChat" )
-    var chatTextEntry = Hud_GetChild( chat, "ChatInputLine" )
-    var chatHistory = Hud_GetChild( chat, "HudChatHistory")
+    var chatHistory = Hud_GetChild( HudElement( "IngameTextChat" ), "HudChatHistory")
     Hud_SetText( chatHistory, oldmessages )
-
-    UpdateChatHUDVisibility()
-
-    client_messageString = ""
 }
 
 void function ServerCallback_CTF_BuildClientMessage( ... )
