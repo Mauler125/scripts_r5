@@ -106,9 +106,12 @@ PakHandle &CTFRpak
 
 string client_messageString = ""
 string oldmessages = ""
+array<string> savedmessages
 
 void function Cl_CustomCTF_Init()
 {
+    RegisterButtonPressedCallback(KEY_ENTER, SendChat);
+
     AddClientCallback_OnResolutionChanged( GetTimeFromServer )
     RegisterConCommandTriggeredCallback( "+use_alt", OnInspectKeyPressed )
 
@@ -116,15 +119,54 @@ void function Cl_CustomCTF_Init()
     CTFRpak = RequestPakFile( $"common_ctf" )
 }
 
+void function SendChat(var button)
+{
+	var chat = HudElement( "IngameTextChat" )
+	var chatTextEntry = Hud_GetChild( Hud_GetChild( chat, "ChatInputLine" ), "ChatInputTextEntry" )
+
+    printf(CHAT_TEXT)
+
+	if(CHAT_TEXT != "")
+	{
+		string text = "say " + CHAT_TEXT
+		GetLocalClientPlayer().ClientCommand(text)
+	}	
+}
+
+void function SetChatSize()
+{
+    UISize screenSize   = GetScreenSize()
+	float resMultiplier = screenSize.height / 1080.0
+	int width           = 630
+	int height          = 275
+
+    var chat = HudElement( "IngameTextChat" )
+	Hud_SetHeight( chat, height )
+}
+
 void function ServerCallback_CTF_PrintClientMessage()
 {
-    if(oldmessages == "")
-	    oldmessages += client_messageString
+    SetChatSize()
+
+    if(savedmessages.len() > 7)
+        savedmessages.remove(0)
+
+    if(savedmessages.len() > 0)
+        savedmessages.append("\n" + client_messageString)
     else
-        oldmessages += "\n" + client_messageString
+        savedmessages.append(client_messageString)
+
+    string finishedtext = ""
+
+    foreach(string message in savedmessages)
+    {
+        finishedtext += message
+    }
 
     var chatHistory = Hud_GetChild( HudElement( "IngameTextChat" ), "HudChatHistory")
-    Hud_SetText( chatHistory, oldmessages )
+    Hud_SetText( chatHistory, finishedtext )
+
+    client_messageString = ""
 }
 
 void function ServerCallback_CTF_BuildClientMessage( ... )
