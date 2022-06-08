@@ -113,7 +113,8 @@ array<string> savedmessages
 
 void function Cl_CustomCTF_Init()
 {
-    RegisterButtonPressedCallback(KEY_ENTER, SendChat);
+    if(GLOBAL_CHAT_ENABLED)
+        RegisterButtonPressedCallback(KEY_ENTER, SendChat);
 
     AddClientCallback_OnResolutionChanged( GetTimeFromServer )
     RegisterConCommandTriggeredCallback( "+use_alt", OnInspectKeyPressed )

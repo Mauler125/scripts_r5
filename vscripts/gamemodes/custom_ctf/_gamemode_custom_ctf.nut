@@ -93,7 +93,8 @@ void function _CustomCTF_Init()
     // Used for telling the server the player wants to drop the flag
     AddClientCommandCallback("DropFlag", ClientCommand_DropFlag)
     // All chat via console
-    AddClientCommandCallback("say", ClientCommand_Say)
+    if(GLOBAL_CHAT_ENABLED)
+        AddClientCommandCallback("say", ClientCommand_Say)
 
     // TestingCommands
     // AddClientCommandCallback("imc", ClientCommand_IMC)

@@ -20,6 +20,7 @@ global bool USE_LEGEND_ABILITYS
 global int CTF_RESPAWN_TIMER
 global bool TAKE_WEAPONS_FROM_FLAG_CARRIER
 global bool GIVE_FLAG_CARRIER_SPEED_BOOST
+global bool GLOBAL_CHAT_ENABLED
 
 // Custom Messages IDS
 global enum eCTFMessage
@@ -165,6 +166,7 @@ void function Sh_CustomCTF_Init()
     CTF_RESPAWN_TIMER = GetCurrentPlaylistVarInt( "respawn_timer", 10 )
     TAKE_WEAPONS_FROM_FLAG_CARRIER = GetCurrentPlaylistVarBool( "take_weapons_from_flag_carrier", false )
     GIVE_FLAG_CARRIER_SPEED_BOOST = GetCurrentPlaylistVarBool( "give_flag_carrier_speed_boost", false )
+    GLOBAL_CHAT_ENABLED = GetCurrentPlaylistVarBool( "global_chat_enabled", false )
 
     // Round time
     int mins_to_seconds = floor( GetCurrentPlaylistVarInt( "round_time", 25 ) * 60 ).tointeger()
