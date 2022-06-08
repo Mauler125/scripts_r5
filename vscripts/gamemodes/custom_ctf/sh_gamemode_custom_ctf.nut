@@ -1,7 +1,7 @@
 // Credits
 // AyeZee#6969 -- ctf gamemode and ui
 // sal#3261 -- base custom_tdm mode to work off
-// Retículo Endoplasmático#5955 -- giving me the ctf sound names
+// CaféDeColombiaFPS -- ctf sounds, custom ring implementation
 // everyone else -- advice
 
 global function Sh_CustomCTF_Init
@@ -86,7 +86,7 @@ global struct LocPairCTF
 global struct LocationSettingsCTF
 {
     string name
-    array<LocPairCTF> bubblespots
+    array<LocPairCTF> ringspots
     vector imcflagspawn
     vector milflagspawn
     array<LocPairCTF> imcspawns
@@ -119,7 +119,7 @@ struct {
     array<LocationSettingsCTF> locationSettings
     array<CTFClasses> ctfclasses
     var scoreRui
-
+	int colorCorrection
 } file;
 
 CTFClasses function NewCTFClass(string name, string primary, array<string> primaryattachments, string secondary, array<string> secondaryattachments, string tactical, string ult)
@@ -151,6 +151,12 @@ void function Shared_RegisterCTFClass(CTFClasses ctfclass)
 
 void function Sh_CustomCTF_Init()
 {
+	//CTF Custom Deathfield
+	#if CLIENT
+	AddCreatePilotCockpitCallback( CTFCustomDeathfield )
+	file.colorCorrection = ColorCorrection_Register( "materials/correction/outside_ring.raw_hdr" )
+	#endif		
+	
     // Set Playlist Vars
     CTF_SCORE_GOAL_TO_WIN = GetCurrentPlaylistVarInt( "max_score", 5 )
     CTF_ROUNDTIME = GetCurrentPlaylistVarInt( "round_time", 1500 )
@@ -188,7 +194,7 @@ void function Sh_CustomCTF_Init()
             Shared_RegisterLocation(
                 NewCTFLocationSettings(
                     "Firing Range",
-                    [ // BubbleSpots
+                    [ // ringspots
                         NewCTFLocPair(<33560, -8992, -29126>, <0, 90, 0>),
                         NewCTFLocPair(<34525, -7996, -28242>, <0, 100, 0>),
                         NewCTFLocPair(<33507, -3754, -29165>, <0, -90, 0>),
@@ -220,7 +226,7 @@ void function Sh_CustomCTF_Init()
             Shared_RegisterLocation(
                 NewCTFLocationSettings(
                     "Overflow",
-                    [ // bubblespots
+                    [ // ringspots
                         NewCTFLocPair(<4859, -4097, 351>, <0, 0, 0>),
                         NewCTFLocPair(<-3436, -4097, 351>, <0, 0, 0>)
                     ],
@@ -249,7 +255,7 @@ void function Sh_CustomCTF_Init()
             Shared_RegisterLocation(
                 NewCTFLocationSettings(
                     "Ash's Redemption",
-                    [ // bubblespots
+                    [ // ringspots
                         NewCTFLocPair(<-22104, 6009, -26929>, <0, 0, 0>),
                         NewCTFLocPair(<-21372, 3709, -26955>, <-5, 55, 0>),
                         NewCTFLocPair(<-19356, 6397, -26861>, <-4, -166, 0>),
@@ -282,7 +288,7 @@ void function Sh_CustomCTF_Init()
             Shared_RegisterLocation(
                 NewCTFLocationSettings(
                     "Artillery",
-                    [ // bubblespots
+                    [ // ringspots
                         NewCTFLocPair(<9614, 30792, 4868>, <0, 90, 0>),
                         NewCTFLocPair(<6379, 30792, 4868>, <0, 18, 0>),
                         NewCTFLocPair(<3603, 30792, 4868>, <0, 180, 0>),
@@ -311,7 +317,7 @@ void function Sh_CustomCTF_Init()
             Shared_RegisterLocation(
                 NewCTFLocationSettings(
                     "Airbase",
-                    [ // bubblespots
+                    [ // ringspots
                         NewCTFLocPair(<-25775, 1599, 2583>, <0, 90, 0>),
                         NewCTFLocPair(<-24845,-5112,2571>, <0, 18, 0>),
                         NewCTFLocPair(<-28370, -2238, 2550>, <0, 180, 0>)
@@ -339,7 +345,7 @@ void function Sh_CustomCTF_Init()
             Shared_RegisterLocation(
                 NewCTFLocationSettings(
                     "Relay",
-                    [ // bubblespots
+                    [ // ringspots
                         NewCTFLocPair(<29625, 25371, 4216>, <0, 90, 0>),
                         NewCTFLocPair(<22958, 22128, 3914>, <0, 18, 0>),
                         NewCTFLocPair(<26825, 30767, 4790>, <0, 180, 0>)
@@ -367,7 +373,7 @@ void function Sh_CustomCTF_Init()
             Shared_RegisterLocation(
                 NewCTFLocationSettings(
                     "Wetlands",
-                    [ // bubblespots
+                    [ // ringspots
                         NewCTFLocPair(<29585, 16597, 4641>, <0, 90, 0>),
                         NewCTFLocPair(<19983, 14582, 4670>, <0, 18, 0>),
                         NewCTFLocPair(<25244, 16658, 3871>, <0, 180, 0>)
@@ -395,7 +401,7 @@ void function Sh_CustomCTF_Init()
             Shared_RegisterLocation(
                 NewCTFLocationSettings(
                     "Repulsor",
-                    [ // bubblespots
+                    [ // ringspots
                         NewCTFLocPair(<20269, -14999, 4824>, <0, 90, 0>),
                         NewCTFLocPair(<29000, -15195, 4726>, <0, 18, 0>),
                         NewCTFLocPair(<24417, -15196, 5203>, <0, 180, 0>)
@@ -423,7 +429,7 @@ void function Sh_CustomCTF_Init()
             Shared_RegisterLocation(
                 NewCTFLocationSettings(
                     "Skull Town",
-                    [ // bubblespots
+                    [ // ringspots
                         NewCTFLocPair(<-12391, -19413, 3166>, <0, 90, 0>),
                         NewCTFLocPair(<-6706, -13383, 3174>, <0, 18, 0>),
                         NewCTFLocPair(<-9746, -16127, 4062>, <0, 180, 0>)
@@ -451,7 +457,7 @@ void function Sh_CustomCTF_Init()
             Shared_RegisterLocation(
                 NewCTFLocationSettings(
                     "Tunnel",
-                    [ // bubblespots
+                    [ // ringspots
                         NewCTFLocPair(<770, 30495, 4835>, <0, 0, 0>),
                         NewCTFLocPair(<-3298, 27005, 4835>, <0, 0, 0>)
                     ],
@@ -478,7 +484,7 @@ void function Sh_CustomCTF_Init()
             Shared_RegisterLocation(
                 NewCTFLocationSettings(
                     "Watch Tower",
-                    [ // bubblespots
+                    [ // ringspots
                         NewCTFLocPair(<-1542, 19654, 4380>, <0, 0, 0>),
                         NewCTFLocPair(<2336, 23735, 4188>, <0, 0, 0>)
                     ],
@@ -509,7 +515,7 @@ void function Sh_CustomCTF_Init()
             Shared_RegisterLocation(
                 NewCTFLocationSettings(
                     "Overlook",
-                    [ // bubblespots
+                    [ // ringspots
                         NewCTFLocPair(<26893, 13646, -3199>, <0, 40, 0>),
                         NewCTFLocPair(<30989, 8510, -3329>, <0, 90, 0>),
                         NewCTFLocPair(<32922, 9423, -3329>, <0, 90, 0>)
@@ -537,7 +543,7 @@ void function Sh_CustomCTF_Init()
             Shared_RegisterLocation(
                 NewCTFLocationSettings(
                     "Refinery",
-                    [ // bubblespots
+                    [ // ringspots
                         NewCTFLocPair(<22630, 21512, -4516>, <0, 40, 0>),
                         NewCTFLocPair(<19147, 30973, -4602>, <0, 90, 0>)
                     ],
@@ -564,7 +570,7 @@ void function Sh_CustomCTF_Init()
             Shared_RegisterLocation(
                 NewCTFLocationSettings(
                     "Capitol City",
-                    [ // bubblespots
+                    [ // ringspots
                         NewCTFLocPair(<1750, 5158, -3334>, <0, 40, 0>),
                         NewCTFLocPair(<11690, 6300, -4065>, <0, 90, 0>)
                     ],
@@ -591,7 +597,7 @@ void function Sh_CustomCTF_Init()
             Shared_RegisterLocation(
                 NewCTFLocationSettings(
                     "Sorting Factory",
-                    [ // bubblespots
+                    [ // ringspots
                         NewCTFLocPair(<1874, -25365, -3385>, <0, 40, 0>),
                         NewCTFLocPair(<10684, -18468, -3584>, <0, 90, 0>)
                     ],
@@ -634,11 +640,11 @@ LocPairCTF function NewCTFLocPair(vector origin, vector angles)
     return locPair
 }
 
-LocationSettingsCTF function NewCTFLocationSettings(string name, array < LocPairCTF > bubblespots, vector imcflagspawn, vector milflagspawn, array < LocPairCTF > imcspawns, array < LocPairCTF > milspawns, LocPairCTF deathcam, LocPairCTF victorypos, int undermap)
+LocationSettingsCTF function NewCTFLocationSettings(string name, array < LocPairCTF > ringspots, vector imcflagspawn, vector milflagspawn, array < LocPairCTF > imcspawns, array < LocPairCTF > milspawns, LocPairCTF deathcam, LocPairCTF victorypos, int undermap)
 {
     LocationSettingsCTF locationSettings
     locationSettings.name = name
-    locationSettings.bubblespots = bubblespots
+    locationSettings.ringspots = ringspots
     locationSettings.imcflagspawn = imcflagspawn
     locationSettings.milflagspawn = milflagspawn
     locationSettings.imcspawns = imcspawns
@@ -702,3 +708,94 @@ CTFPlaylistWeapons function Equipment_GetClass_Weapon(string input)
 
     return weapon
 }
+
+#if CLIENT
+void function CTFCustomDeathfield( entity cockpit, entity player )
+{
+	thread CTFCustomDeathfield_Internal( cockpit, player )
+}
+
+void function CTFCustomDeathfield_Internal( entity cockpit, entity player )
+{
+	player.EndSignal( "OnDestroy" )
+	cockpit.EndSignal( "OnDestroy" )
+
+	bool wasShowingDeathFieldFx = false
+	int screenFx
+
+	OnThreadEnd(
+		function() : ( screenFx, player )
+		{
+			ColorCorrection_SetWeight( file.colorCorrection, 0.0 )
+			Chroma_EnteredRing()
+
+			if ( EffectDoesExist( screenFx ) )
+			{
+				EffectStop( screenFx, true, true )
+			}
+		}
+	)
+
+	ColorCorrection_SetExclusive( file.colorCorrection, true )
+
+	while ( 1 )
+	{
+		bool shouldShowDeathFieldFx = CTFShouldShowDeathFieldEffects( player )
+
+		if ( wasShowingDeathFieldFx != shouldShowDeathFieldFx )
+		{
+			if ( shouldShowDeathFieldFx )
+			{
+
+				if ( !EffectDoesExist( screenFx ) )
+				{
+					screenFx = StartParticleEffectOnEntity( cockpit, GetParticleSystemIndex( $"P_ring_FP_hit_01" ), FX_PATTACH_ABSORIGIN_FOLLOW, -1 )
+					EffectSetIsWithCockpit( screenFx, true )
+				}
+
+				ColorCorrection_SetWeight( file.colorCorrection, 1.0 )
+
+				Chroma_LeftRing()
+			}
+			else
+			{
+
+				if ( EffectDoesExist( screenFx ) )
+				{
+					EffectStop( screenFx, true, true )
+				}
+
+				ColorCorrection_SetWeight( file.colorCorrection, 0.0 )
+
+				Chroma_EnteredRing()
+			}
+			wasShowingDeathFieldFx = shouldShowDeathFieldFx
+		}
+
+		WaitFrame()
+	}
+}
+
+bool function CTFShouldShowDeathFieldEffects( entity player )
+{
+	bool shouldShow = true
+
+	if ( !IsAlive( player ) )
+		shouldShow = false
+
+	if ( player.ContextAction_IsInVehicle() )
+	{
+		if ( DeathField_PointDistanceFromFrontier( player.EyePosition() ) >= 0 )
+			shouldShow = false
+	}
+	else
+	{
+		if ( DeathField_PointDistanceFromFrontier( player.GetOrigin() ) >= 0 )
+			shouldShow = false
+	}
+	if ( IsViewingSquadSummary() || IsViewingDeathRecap() )
+		shouldShow = false
+
+	return shouldShow
+}
+#endif

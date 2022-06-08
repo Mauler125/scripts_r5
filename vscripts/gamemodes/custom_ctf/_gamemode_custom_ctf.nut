@@ -2,7 +2,7 @@
 // AyeZee#6969 -- ctf gamemode and ui
 // Rexx and IcePixelx -- Help with code improvments
 // sal#3261 -- base custom_tdm mode to work off
-// Retículo Endoplasmático#5955 -- giving me the ctf sound names
+// CaféDeColombiaFPS -- ctf sounds, custom ring implementation
 // everyone else -- advice
 
 // TODO: Fix VoteMenu Stats
@@ -10,7 +10,6 @@
 global function _CustomCTF_Init
 global function _CTFRegisterLocation
 global function _CTFRegisterCTFClass
-
 
 enum eCTFState
 {
@@ -24,7 +23,7 @@ struct {
     array<LocationSettingsCTF> locationSettings
     array<entity> playerSpawnedProps
     array<CTFClasses> ctfclasses
-    entity bubbleBoundary
+    entity ringBoundary
 } file;
 
 struct CTFPoint
@@ -53,8 +52,8 @@ struct
     // Base
     int IMCPoints = 0
     int MILITIAPoints = 0
-    vector bubbleCenter
-    float bubbleRadius
+    vector ringCenter
+    float ringRadius
     float roundstarttime
 
     // Voting
@@ -64,6 +63,7 @@ struct
     array<int> mapVotes
     array<int> mapIds
     int mappicked = 0
+    entity ringfx
 } CTF;
 
 struct
@@ -75,6 +75,7 @@ struct
 
 void function _CustomCTF_Init()
 {
+	PrecacheParticleSystem($"P_survival_radius_CP_1x100")
     PrecacheModel($"mdl/props/pathfinder_zipline/pathfinder_zipline.rmdl")
 
     AddCallback_OnClientConnected( void function(entity player) { thread _OnPlayerConnected(player) } )
@@ -400,8 +401,8 @@ void function StartRound()
     // spawn CTF flags based on location
     SpawnCTFPoints()
 
-    // create the bubble based on location
-    file.bubbleBoundary = CreateBubbleBoundary(file.selectedLocation)
+    // create the ring based on location
+    file.ringBoundary = CreateRingBoundary(file.selectedLocation)
 
     foreach(player in GetPlayerArray())
     {
@@ -421,6 +422,8 @@ void function StartRound()
         TpPlayerToSpawnPoint(player)
         GiveBackWeapons(player)
     }
+
+    EffectSetControlPointVector( CTF.ringfx, 1, <CTF.ringRadius, 0, 0> )
 
     float endTime = Time() + CTF_ROUNDTIME
     while( Time() <= endTime )
@@ -474,8 +477,8 @@ void function StartRound()
 
             int TeamWon = 69;
 
-            // Destory bubble
-            file.bubbleBoundary.Destroy()
+            // Destory ring
+            file.ringBoundary.Destroy()
 
             // See what team has more points to decide on the winner
             if (CTF.IMCPoints > CTF.MILITIAPoints)
@@ -1448,7 +1451,7 @@ void function PlayerDiedWithFlag(entity victim, int team, CTFPoint teamflagpoint
     // Check for if the flag ends up under the map
     if( teamflagpoint.pole.GetOrigin().z > file.selectedLocation.undermap )
     {
-        if( Distance( teamflagpoint.pole.GetOrigin(), CTF.bubbleCenter ) > CTF.bubbleRadius )
+        if( Distance( teamflagpoint.pole.GetOrigin(), CTF.ringCenter ) > CTF.ringRadius )
         {
             teamflagpoint.flagatbase = true
             teamflagpoint.pole.SetOrigin(OriginToGround( teamflagpoint.spawn ))
@@ -1544,7 +1547,7 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
                     return
 
                 // Open respawn menu
-                Remote_CallFunction_NonReplay(victim, "ServerCallback_CTF_OpenCTFRespawnMenu", CTF.bubbleCenter, CTF.IMCPoints, CTF.MILITIAPoints, attacker, victim.p.CTFClassID)
+                Remote_CallFunction_NonReplay(victim, "ServerCallback_CTF_OpenCTFRespawnMenu", CTF.ringCenter, CTF.IMCPoints, CTF.MILITIAPoints, attacker, victim.p.CTFClassID)
 
                 // Wait Respawn Timer
                 wait CTF_RESPAWN_TIMER
@@ -1625,67 +1628,142 @@ void function _HandleRespawn(entity player, bool forceGive = false)
     player.SetActiveWeaponBySlot(eActiveInventorySlot.mainHand, WEAPON_INVENTORY_SLOT_PRIMARY_0)
 }
 
-// Purpose: Create The BubbleBoundary
-entity function CreateBubbleBoundary(LocationSettingsCTF location)
+// Purpose: Create The RingBoundary
+entity function CreateRingBoundary(LocationSettingsCTF location)
 {
-    array<LocPairCTF> spawns = location.bubblespots
+    array<LocPairCTF> spawns = location.ringspots
 
-    vector bubbleCenter
+    vector ringCenter
     foreach( spawn in spawns )
     {
-        bubbleCenter += spawn.origin
+        ringCenter += spawn.origin
     }
 
-    bubbleCenter /= spawns.len()
+    ringCenter /= spawns.len()
 
-    float bubbleRadius = 0
+    float ringRadius = 0
 
     foreach( LocPairCTF spawn in spawns )
     {
-        if( Distance( spawn.origin, bubbleCenter ) > bubbleRadius )
-            bubbleRadius = Distance(spawn.origin, bubbleCenter)
+        if( Distance( spawn.origin, ringCenter ) > ringRadius )
+            ringRadius = Distance(spawn.origin, ringCenter)
     }
 
-    bubbleRadius += GetCurrentPlaylistVarFloat("bubble_radius_padding", 800)
+    ringRadius += GetCurrentPlaylistVarFloat("ring_radius_padding", 800)
 
-    CTF.bubbleCenter = bubbleCenter
-    CTF.bubbleRadius = bubbleRadius
+    CTF.ringCenter = ringCenter
+    CTF.ringRadius = ringRadius
 
-    entity bubbleShield = CreateEntity( "prop_dynamic" )
-    bubbleShield.SetValueForModelKey( BUBBLE_BUNKER_SHIELD_COLLISION_MODEL )
-    bubbleShield.SetOrigin(bubbleCenter)
-    bubbleShield.SetModelScale(bubbleRadius / 235)
-    bubbleShield.kv.CollisionGroup = 0
-    bubbleShield.kv.rendercolor = "150 150 150"
-    DispatchSpawn( bubbleShield )
+	//We watch the ring fx with this entity in the threads
+	entity circle = CreateEntity( "prop_script" )
+	circle.SetValueForModelKey( $"mdl/dev/empty_model.rmdl" )
+	circle.kv.fadedist = -1
+	circle.kv.renderamt = 255
+	circle.kv.rendercolor = "255, 255, 255"
+	circle.kv.solid = 0
+	circle.SetOrigin( CTF.ringCenter )
+	circle.SetAngles( <0, 0, 0> )
+	circle.NotSolid()
+	circle.DisableHibernation()
+    circle.Minimap_SetObjectScale( CTF.ringRadius / SURVIVAL_MINIMAP_RING_SCALE )
+    circle.Minimap_SetAlignUpright( true )
+    circle.Minimap_SetZOrder( 2 )
+    circle.Minimap_SetClampToEdge( true )
+    circle.Minimap_SetCustomState( eMinimapObject_prop_script.OBJECTIVE_AREA )
+	SetTargetName( circle, "hotZone" )
+	DispatchSpawn(circle)
 
-    thread MonitorBubbleBoundary(bubbleShield, bubbleCenter, bubbleRadius)
-
-    return bubbleShield
-}
-
-
-void function MonitorBubbleBoundary(entity bubbleShield, vector bubbleCenter, float bubbleRadius)
-{
-    while( IsValid( bubbleShield ) )
+    foreach ( player in GetPlayerArray() )
     {
-
-        foreach(player in GetPlayerArray_Alive())
-        {
-            if( !IsValid( player ) )
-                continue
-
-            if( Distance( player.GetOrigin(), bubbleCenter ) > bubbleRadius )
-            {
-                Remote_CallFunction_Replay( player, "ServerCallback_PlayerTookDamage", 0, 0, 0, 0, DF_BYPASS_SHIELD | DF_DOOMED_HEALTH_LOSS, eDamageSourceId.deathField, null )
-                player.TakeDamage( int( CTF_GetOOBDamagePercent() / 100 * float( player.GetMaxHealth() ) ), null, null, { scriptType = DF_BYPASS_SHIELD | DF_DOOMED_HEALTH_LOSS, damageSourceId = eDamageSourceId.deathField } )
-            }
-        }
-        wait 1
+        circle.Minimap_AlwaysShow( 0, player )
     }
+	
+	SetDeathFieldParams( CTF.ringCenter, CTF.ringRadius, CTF.ringRadius, 90000, 99999 ) // This function from the API allows client to read ringRadius from server so we can use visual effects in shared function. Colombia
 
+    if(IsValid(CTF.ringfx))
+        CTF.ringfx.Destroy()
+
+	//Actual deathfield fx
+	CTF.ringfx = StartParticleEffectOnEntity_ReturnEntity(circle, GetParticleSystemIndex( $"P_survival_radius_CP_1x100" ), FX_PATTACH_ABSORIGIN_FOLLOW, -1 )
+	CTF.ringfx.SetParent(circle)
+
+    StatsHook_SetSafeZone( CTF.ringCenter, CTF.ringRadius )
+	
+	//Audio thread for ring
+	foreach(sPlayer in GetPlayerArray())
+		thread CTFAudioThread(circle, sPlayer, CTF.ringRadius)
+	
+	//Damage thread for ring
+	thread CTFRingDamage(circle, CTF.ringRadius)
+	
+    return circle
 }
 
+void function CTFAudioThread(entity circle, entity player, float radius)
+{
+	WaitFrame()
+	entity audio
+	string soundToPlay = "Survival_Circle_Edge_Large"
+	OnThreadEnd(
+		function() : ( soundToPlay, audio)
+		{
+			
+			if(IsValid(audio)) audio.Destroy()
+		}
+	)
+	audio = CreateScriptMover()
+	audio.SetOrigin( circle.GetOrigin() )
+	audio.SetAngles( <0, 0, 0> )
+	EmitSoundOnEntity( audio, soundToPlay )
+	
+	while(IsValid(circle)){
+			vector fwdToPlayer   = Normalize( <player.GetOrigin().x, player.GetOrigin().y, 0> - <circle.GetOrigin().x, circle.GetOrigin().y, 0> )
+			vector circleEdgePos = circle.GetOrigin() + (fwdToPlayer * radius)
+			circleEdgePos.z = player.EyePosition().z
+			if ( fabs( circleEdgePos.x ) < 61000 && fabs( circleEdgePos.y ) < 61000 && fabs( circleEdgePos.z ) < 61000 )
+			{
+				audio.SetOrigin( circleEdgePos )
+			}
+		WaitFrame()
+	}
+	
+	StopSoundOnEntity(audio, soundToPlay)
+}
+
+void function CTFRingDamage( entity circle, float currentRadius)
+{
+	WaitFrame()
+	const float DAMAGE_CHECK_STEP_TIME = 1.5
+
+	while ( IsValid(circle) )
+	{
+		foreach ( dummy in GetNPCArray() )
+		{
+			if ( dummy.IsPhaseShifted() )
+				continue
+
+			float playerDist = Distance2D( dummy.GetOrigin(), circle.GetOrigin() )
+			if ( playerDist > currentRadius )
+			{
+				dummy.TakeDamage( int( CTF_GetOOBDamagePercent() / 100 * float( dummy.GetMaxHealth() ) ), null, null, { scriptType = DF_BYPASS_SHIELD | DF_DOOMED_HEALTH_LOSS, damageSourceId = eDamageSourceId.deathField } )
+			}
+		}
+		
+		foreach ( player in GetPlayerArray_Alive() )
+		{
+			if ( player.IsPhaseShifted() )
+				continue
+
+			float playerDist = Distance2D( player.GetOrigin(), circle.GetOrigin() )
+			if ( playerDist > currentRadius )
+			{
+				Remote_CallFunction_Replay( player, "ServerCallback_PlayerTookDamage", 0, 0, 0, 0, DF_BYPASS_SHIELD | DF_DOOMED_HEALTH_LOSS, eDamageSourceId.deathField, null )
+				player.TakeDamage( int( CTF_GetOOBDamagePercent() / 100 * float( player.GetMaxHealth() ) ), null, null, { scriptType = DF_BYPASS_SHIELD | DF_DOOMED_HEALTH_LOSS, damageSourceId = eDamageSourceId.deathField } )
+			}
+		}
+		wait DAMAGE_CHECK_STEP_TIME
+	}
+}
 
 void function PlayerRestoreHP(entity player, float health, float shields)
 {
