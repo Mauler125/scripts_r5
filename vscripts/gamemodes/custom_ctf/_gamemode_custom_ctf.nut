@@ -1670,8 +1670,9 @@ entity function CreateRingBoundary(LocationSettingsCTF location)
     circle.Minimap_SetZOrder( 2 )
     circle.Minimap_SetClampToEdge( true )
     circle.Minimap_SetCustomState( eMinimapObject_prop_script.OBJECTIVE_AREA )
-	SetTargetName( circle, "hotZone" )
+	SetTargetName( circle, "deathField" )
 	DispatchSpawn(circle)
+    
 
     foreach ( player in GetPlayerArray() )
     {
@@ -1703,7 +1704,7 @@ void function CTFAudioThread(entity circle, entity player, float radius)
 {
 	WaitFrame()
 	entity audio
-	string soundToPlay = "Survival_Circle_Edge_Large"
+	string soundToPlay = "Survival_Circle_Edge_Small"
 	OnThreadEnd(
 		function() : ( soundToPlay, audio)
 		{
