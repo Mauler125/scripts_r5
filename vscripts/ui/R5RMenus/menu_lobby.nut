@@ -141,6 +141,16 @@ void function OnR5RLobby_Open()
 
 	//Set back to default for next time
 	AtMainMenu = false
+
+	//Set SelectedLegend
+	SetPlaylistLegend()
+}
+
+void function SetPlaylistLegend()
+{
+	string charactername = GetCurrentPlaylistVarString( "set_legend", "character_wraith" )
+	ItemFlavor character = GetItemFlavorByHumanReadableRef( charactername )
+	RequestSetItemFlavorLoadoutSlot( LocalClientEHI(), Loadout_CharacterClass(), character )
 }
 
 void function SetupLobby()
