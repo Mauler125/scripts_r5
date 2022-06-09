@@ -21,7 +21,6 @@ struct {
     int ctfState = eCTFState.IN_PROGRESS
     LocationSettingsCTF& selectedLocation
     array<LocationSettingsCTF> locationSettings
-    array<entity> playerSpawnedProps
     array<CTFClasses> ctfclasses
     entity ringBoundary
 } file;
@@ -96,11 +95,6 @@ void function _CustomCTF_Init()
     if(GLOBAL_CHAT_ENABLED)
         AddClientCommandCallback("say", ClientCommand_Say)
 
-    // TestingCommands
-    // AddClientCommandCallback("imc", ClientCommand_IMC)
-    // AddClientCommandCallback("mil", ClientCommand_MIL)
-    // AddClientCommandCallback("hideall", ClientCommand_HideAll)
-
     thread RUNCTF()
 }
 
@@ -121,36 +115,6 @@ void function _CTFRegisterCTFClass(CTFClasses ctfclass)
 //             Client Commands             //
 //                                         //
 /////////////////////////////////////////////
-
-bool function ClientCommand_HideAll(entity player, array<string> args)
-{
-    if( !IsValid( player ) )
-        return false
-
-    Remote_CallFunction_Replay(player, "ServerCallback_CTF_HideCustomUI")
-
-    return true
-}
-
-bool function ClientCommand_IMC(entity player, array<string> args)
-{
-    if( !IsValid( player ) )
-        return false
-
-    SetTeam(player, TEAM_IMC)
-
-    return true
-}
-
-bool function ClientCommand_MIL(entity player, array<string> args)
-{
-    if( !IsValid( player ) )
-        return false
-
-    SetTeam(player, TEAM_MILITIA)
-
-    return true
-}
 
 bool function ClientCommand_DropFlag(entity player, array<string> args)
 {
@@ -261,45 +225,6 @@ bool function ClientCommand_SetPlayerClass(entity player, array<string> args)
 }
 // End of client commands
 
-LocPairCTF function _GetVotingLocation()
-{
-    switch( GetMapName() )
-    {
-        case "mp_rr_canyonlands_staging":
-            return NewCTFLocPair(<26794, -6241, -27479>, <0, 0, 0>)
-        case "mp_rr_aqueduct":
-            return NewCTFLocPair(<706, -4381, 492>, <0, 0, 0>)
-        case "mp_rr_ashs_redemption":
-            return NewCTFLocPair(<-20917, 5852, -26741>, <0, -90, 0>)
-        case "mp_rr_canyonlands_64k_x_64k":
-        case "mp_rr_canyonlands_mu1":
-        case "mp_rr_canyonlands_mu1_night":
-            return NewCTFLocPair(<-6252, -16500, 3296>, <0, 0, 0>)
-        case "mp_rr_desertlands_64k_x_64k":
-        case "mp_rr_desertlands_64k_x_64k_nx":
-            return NewCTFLocPair(<1763, 5463, -3145>, <5, -95, 0>)
-        default:
-            Assert(false, "No voting location for the map!")
-    }
-    unreachable
-}
-
-void function _OnPropDynamicSpawned(entity prop)
-{
-    file.playerSpawnedProps.append(prop)
-}
-
-void function DestroyPlayerProps()
-{
-    foreach( prop in file.playerSpawnedProps )
-    {
-        if( IsValid( prop ) )
-            prop.Destroy()
-    }
-
-    file.playerSpawnedProps.clear()
-}
-
 void function ResetMapVotes()
 {
     CTF.mapVotes.clear()
@@ -309,7 +234,6 @@ void function ResetMapVotes()
 void function RUNCTF()
 {
     WaitForGameState(eGameState.Playing)
-    AddSpawnCallback("prop_dynamic", _OnPropDynamicSpawned)
 
     for( ; ; )
     {
@@ -322,7 +246,6 @@ void function RUNCTF()
 // purpose: handle map voting phase
 void function VotingPhase()
 {
-    DestroyPlayerProps();
     SetGameState(eGameState.MapVoting)
 
     // Reset scores
@@ -1809,11 +1732,6 @@ void function TpPlayerToSpawnPoint(entity player)
     switch( GetGameState() )
     {
     case eGameState.WaitingForPlayers:
-        LocPairCTF loc = _GetVotingLocation()
-
-        player.SetOrigin(loc.origin)
-        player.SetAngles(loc.angles)
-
         break
     case eGameState.Playing:
         int ri = RandomIntRange( 0, 4 )

@@ -117,7 +117,7 @@ void function Cl_CustomCTF_Init()
         RegisterButtonPressedCallback(KEY_ENTER, SendChat);
 
     AddClientCallback_OnResolutionChanged( GetTimeFromServer )
-    RegisterConCommandTriggeredCallback( "+use_alt", OnInspectKeyPressed )
+    RegisterConCommandTriggeredCallback( "+use_alt", SendDropFlagToServer )
 
     //Pak is released when vm is destroyed
     CTFRpak = RequestPakFile( $"common_ctf" )
@@ -127,8 +127,6 @@ void function SendChat(var button)
 {
 	var chat = HudElement( "IngameTextChat" )
 	var chatTextEntry = Hud_GetChild( Hud_GetChild( chat, "ChatInputLine" ), "ChatInputTextEntry" )
-
-    printf(CHAT_TEXT)
 
 	if(CHAT_TEXT != "" && !IsChatOverflow(CHAT_TEXT.len()))
 	{
@@ -212,7 +210,7 @@ void function ServerCallback_CTF_HideCustomUI()
     ShowScoreRUI(false)
 }
 
-void function OnInspectKeyPressed( entity localPlayer )
+void function SendDropFlagToServer( entity localPlayer )
 {
 	GetLocalClientPlayer().ClientCommand("DropFlag")
 }
@@ -1204,65 +1202,45 @@ void function ShowCTFVictorySequence()
 			ItemFlavor characterSkin = LoadoutSlot_GetItemFlavor( data.eHandle, Loadout_CharacterSkin( character ) )
 
 			vector pos = GetVictorySquadFormationPosition( file.victorySequencePosition, file.victorySequenceAngles, i )
-
-			//
 			entity characterNode = CreateScriptRef( pos, characterAngles )
 			characterNode.SetParent( platformModel, "", true )
+
 			entity characterModel = CreateClientSidePropDynamic( pos, characterAngles, defaultModel )
 			SetForceDrawWhileParented( characterModel, true )
 			characterModel.MakeSafeForUIScriptHack()
 			CharacterSkin_Apply( characterModel, characterSkin )
+
 			cleanupEnts.append( characterModel )
 
-			//
 			foreach( func in s_callbacks_OnVictoryCharacterModelSpawned )
 				func( characterModel, character, data.eHandle )
 
-			//
 			characterModel.SetParent( characterNode, "", false )
 			string victoryAnim = "ACT_MP_MENU_LOBBY_SELECT_IDLE"
 			characterModel.Anim_Play( victoryAnim )
 			characterModel.Anim_EnableUseAnimatedRefAttachmentInsteadOfRootMotion()
 
-			//
 			float duration = characterModel.GetSequenceDuration( victoryAnim )
 			float initialTime = RandomFloatRange( 0, duration )
 			characterModel.Anim_SetInitialTime( initialTime )
 
-			//
 			entity overheadNameEnt = CreateClientSidePropDynamic( pos + (AnglesToUp( file.victorySequenceAngles ) * 78), <0, 0, 0>, $"mdl/dev/empty_model.rmdl" )
-            //entity overheadCapturesEnt = CreateClientSidePropDynamic(pos + (AnglesToUp(file.victorySequenceAngles) * 78) + < 0, 0, 15>, < 0, 0, 0 > , $"mdl/dev/empty_model.rmdl")
-            //entity overheadKillsEnt = CreateClientSidePropDynamic( pos + (AnglesToUp( file.victorySequenceAngles ) * 78) + < 0, 0, 30>, <0, 0, 0>, $"mdl/dev/empty_model.rmdl" )
-
 			overheadNameEnt.Hide()
-            //overheadCapturesEnt.Hide()
-            //overheadKillsEnt.Hide()
 
 			var overheadRuiName = RuiCreate( $"ui/winning_squad_member_overhead_name.rpak", clGlobal.topoFullScreen, RUI_DRAW_HUD, 0 )
-            //var overheadRuiCaptures = RuiCreate( $"ui/winning_squad_member_overhead_name.rpak", clGlobal.topoFullScreen, RUI_DRAW_HUD, 0 )
-            //var overheadRuiKills = RuiCreate( $"ui/winning_squad_member_overhead_name.rpak", clGlobal.topoFullScreen, RUI_DRAW_HUD, 0 )
-
 			RuiSetString(overheadRuiName, "playerName", playerName)
 			RuiTrackFloat3(overheadRuiName, "position", overheadNameEnt, RUI_TRACK_ABSORIGIN_FOLLOW)
-            //RuiSetString(overheadRuiCaptures, "playerName", "Captures: " + GetEHIScriptStruct( data.eHandle ).CTFCaptures)
-			//RuiTrackFloat3(overheadRuiCaptures, "position", overheadCapturesEnt, RUI_TRACK_ABSORIGIN_FOLLOW)
-            //RuiSetString(overheadRuiKills, "playerName", "Kills: " + GetEHIScriptStruct( data.eHandle ).CTFKills)
-			//RuiTrackFloat3( overheadRuiKills, "position", overheadKillsEnt, RUI_TRACK_ABSORIGIN_FOLLOW )
 
 			overHeadRuis.append( overheadRuiName )
-            //overHeadRuis.append( overheadRuiCaptures )
-            //overHeadRuis.append( overheadRuiKills )
 
 			playersOnPodium++
 		}
 
-		//
 		string dialogueApexChampion
         if (file.teamwon == TEAM_IMC || file.teamwon == TEAM_MILITIA)
         {
             if (player.GetTeam() == file.teamwon)
             {
-                //
                 if ( playersOnPodium > 1 )
                     dialogueApexChampion = "diag_ap_aiNotify_winnerFound_07"
                 else
