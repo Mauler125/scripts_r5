@@ -110,7 +110,7 @@ void function Canyonlands_MapInit_Common()
 	SupplyShip_Init()
 
 	#if SERVER
-        InitWaterLeviathans()
+		InitWaterLeviathans()
 		LootTicks_Init()
 
 		FlagSet( "DisableDropships" )
@@ -304,6 +304,9 @@ void function FindHoverTankEndNodes()
 
 void function SpawnHoverTanks()
 {
+	if( !GetCurrentPlaylistVarBool( "bad_hover_tank_enabled", false ) )
+		return
+
 	// Spawn hover tanks at level load, even though they don't fly in yet, so they exist when loot is spawned.
 	if ( file.numHoverTanksIntro == 0 && file.numHoverTanksMid == 0 )
 		return
@@ -435,7 +438,6 @@ void function HoverTankAdjustSpeed( HoverTank hoverTank )
 
 	while ( Time() < decelEndTime )
 	{
-
 		float speed = GraphCapped( Time(), startSlowTime, decelEndTime, startSpeed, endSpeed )
 		HoverTankSetCustomFlySpeed( hoverTank, speed )
 		WaitFrame()
