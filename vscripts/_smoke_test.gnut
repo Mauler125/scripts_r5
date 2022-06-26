@@ -4,5 +4,5 @@ global function SmokeTest_Init
 
 void function SmokeTest_Init()
 {
-    
+
 }

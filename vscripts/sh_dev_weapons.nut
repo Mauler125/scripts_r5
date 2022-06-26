@@ -15,7 +15,7 @@ void function ShDevWeapons_Init()
 		PrecacheWeapon( "mp_weapon_defender_sustained" )
 
 		PrecacheWeapon( "melee_shadowsquad_hands" )
-		PrecacheWeapon( "mp_weapon_shadow_squad_hands_primary" )	
+		PrecacheWeapon( "mp_weapon_shadow_squad_hands_primary" )
 	#endif
 
 }
@@ -25,26 +25,26 @@ void function ShDevWeapons_Init()
 
 void function DEV_ToggleAkimboWeapon(entity player)
 {
-    if(!IsValid(player))
-        return
+	if(!IsValid(player))
+		return
 
-    entity weapon = player.GetActiveWeapon( eActiveInventorySlot.mainHand )
+	entity weapon = player.GetActiveWeapon( eActiveInventorySlot.mainHand )
 
-    if(!IsValid(weapon))
-        return
+	if(!IsValid(weapon))
+		return
 
 	if(player.GetNormalWeapon( GetDualPrimarySlotForWeapon( weapon ) ))
-        TakeMatchingAkimboWeapon(weapon)
-    else
-        GiveMatchingAkimboWeapon(weapon, weapon.GetMods())
+		TakeMatchingAkimboWeapon(weapon)
+	else
+		GiveMatchingAkimboWeapon(weapon, weapon.GetMods())
 }
 
 void function DEV_ToggleAkimboWeaponAlt(entity player)
 {
-    if(!IsValid(player))
-        return
+	if(!IsValid(player))
+		return
 
-    array<entity> weapons = player.GetMainWeapons()
+	array<entity> weapons = player.GetMainWeapons()
 
 	if(weapons.len() < 2)
 		return
@@ -54,6 +54,7 @@ void function DEV_ToggleAkimboWeaponAlt(entity player)
 
 	if(otherWeapon.GetWeaponClassName().find("melee") > 0)
 		return
+
 	if(currentWeapon.GetWeaponClassName().find("melee") > 0)
 		return
 
@@ -61,7 +62,7 @@ void function DEV_ToggleAkimboWeaponAlt(entity player)
 
 	if(player.GetNormalWeapon( GetDualPrimarySlotForWeapon( currentWeapon ) ))
 		player.TakeNormalWeaponByIndex( dualslot )
-    else
+		else
 		player.GiveWeapon( otherWeapon.GetWeaponClassName(), dualslot, otherWeapon.GetMods() )
 }
 
@@ -77,5 +78,4 @@ int function GetDualPrimarySlotForWeapon( entity weapon )
 
 	return dualslot
 }
-
 #endif

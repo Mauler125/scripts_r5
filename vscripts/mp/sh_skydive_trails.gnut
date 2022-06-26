@@ -115,10 +115,6 @@ void function RegisterSkydiveTrails()
 			trailFX.controlPoint = GetSettingsBlockVector( smokeColorFXBlock, "controlPoint" )
 			trailFX.attachType = 7 //
 
-			#if(false)
-
-#endif
-
 			smokeColorFX.append( trailFX )
 		}
 
@@ -134,10 +130,6 @@ void function RegisterSkydiveTrails()
 			trailFX.useSkyDiveSmokeColorForTeam = !GetSettingsBlockBool( friendlyJumpJetFXBlock, "useCustomControlPoint" )
 			trailFX.controlPoint = GetSettingsBlockVector( friendlyJumpJetFXBlock, "controlPoint" )
 			trailFX.attachType = 7 //
-
-			#if(false)
-
-#endif
 
 			friendlyJumpJetFX.append( trailFX )
 		}
@@ -155,10 +147,6 @@ void function RegisterSkydiveTrails()
 			trailFX.controlPoint = GetSettingsBlockVector( enemyJumpJetFXBlock, "controlPoint" )
 			trailFX.attachType = 7 //
 
-			#if(false)
-
-#endif
-
 			enemyJumpJet.append( trailFX )
 		}
 
@@ -174,10 +162,6 @@ void function RegisterSkydiveTrails()
 			trailFX.useSkyDiveSmokeColorForTeam = !GetSettingsBlockBool( jumpJetLandFxBlock, "useCustomControlPoint" )
 			trailFX.controlPoint = GetSettingsBlockVector( jumpJetLandFxBlock, "controlPoint" )
 			trailFX.attachType = 7 //
-
-			#if(false)
-
-#endif
 
 			jumpJetLandFX.append( trailFX )
 		}
@@ -290,5 +274,4 @@ SkyDiveTrailPackage function SkydiveTrail_GetPackageForIndex( int skydiveTrailIn
 {
 	Assert(  skydiveTrailIndex in fileLevel.skyDiveTrailPackageIndexTable )
 	return fileLevel.skyDiveTrailPackageIndexTable[ skydiveTrailIndex ]
-
 }

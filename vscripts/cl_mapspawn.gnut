@@ -231,26 +231,26 @@ void function UpdateFullscreenTopology( var topo, bool isHud, bool canBeCircular
 
 void function CreateHUDRuiTopologies()
 {
-    clGlobal.topoFullScreen = CreateFullscreenTopology( false )
-    clGlobal.topoFullscreenHud = CreateFullscreenTopology( true, true )
-    clGlobal.topoFullscreenHudPermanent = CreateFullscreenTopology( true, true )
-    clGlobal.topoFullscreenFullMap = CreateFullscreenTopology( true )
-    clGlobal.topFullscreenTargetInfo = CreateFullscreenTopology( true )
+	clGlobal.topoFullScreen = CreateFullscreenTopology( false )
+	clGlobal.topoFullscreenHud = CreateFullscreenTopology( true, true )
+	clGlobal.topoFullscreenHudPermanent = CreateFullscreenTopology( true, true )
+	clGlobal.topoFullscreenFullMap = CreateFullscreenTopology( true )
+	clGlobal.topFullscreenTargetInfo = CreateFullscreenTopology( true )
 
-    RuiTopology_ShareWithCode( clGlobal.topFullscreenTargetInfo, RUI_CODE_TOPO_TARGET_INFO_HUD )
+	RuiTopology_ShareWithCode( clGlobal.topFullscreenTargetInfo, RUI_CODE_TOPO_TARGET_INFO_HUD )
 
-    // titans:
-    {
-        clGlobal.topoTitanCockpitHud = RuiTopology_CreateSphere( <-120, 0, -TITAN_COCKPIT_TOPO_RADIUS * deg_sin( TITAN_COCKPIT_ROTATION_ANGLE )>, <0, -1, 0>, <deg_sin( TITAN_COCKPIT_ROTATION_ANGLE ), 0, -deg_cos( TITAN_COCKPIT_ROTATION_ANGLE )>, TITAN_COCKPIT_TOPO_RADIUS, TITAN_COCKPIT_RUI_SCREEN_WIDTH, TITAN_COCKPIT_RUI_SCREEN_WIDTH / 1.7665, TITAN_COCKPIT_RUI_SUBDIV )
-        clGlobal.topoTitanCockpitLowerHud = RuiTopology_CreatePlane( <0, 0, 0>, <0, -TITAN_COCKPIT_LOWER_RUI_SCREEN_SQUARE_SIZE, 0>, <0, 0, -TITAN_COCKPIT_LOWER_RUI_SCREEN_SQUARE_SIZE * TITAN_COCKPIT_LOWER_RUI_SCREEN_HEIGHT_SCALE>, true )
-        clGlobal.topoTitanCockpitInstrument1 = RuiTopology_CreatePlane( <0, 0, 0>, <0, -1, 0>, <0, 0, -1>, true )
-    }
+	// titans:
+	{
+		clGlobal.topoTitanCockpitHud = RuiTopology_CreateSphere( <-120, 0, -TITAN_COCKPIT_TOPO_RADIUS * deg_sin( TITAN_COCKPIT_ROTATION_ANGLE )>, <0, -1, 0>, <deg_sin( TITAN_COCKPIT_ROTATION_ANGLE ), 0, -deg_cos( TITAN_COCKPIT_ROTATION_ANGLE )>, TITAN_COCKPIT_TOPO_RADIUS, TITAN_COCKPIT_RUI_SCREEN_WIDTH, TITAN_COCKPIT_RUI_SCREEN_WIDTH / 1.7665, TITAN_COCKPIT_RUI_SUBDIV )
+		clGlobal.topoTitanCockpitLowerHud = RuiTopology_CreatePlane( <0, 0, 0>, <0, -TITAN_COCKPIT_LOWER_RUI_SCREEN_SQUARE_SIZE, 0>, <0, 0, -TITAN_COCKPIT_LOWER_RUI_SCREEN_SQUARE_SIZE * TITAN_COCKPIT_LOWER_RUI_SCREEN_HEIGHT_SCALE>, true )
+		clGlobal.topoTitanCockpitInstrument1 = RuiTopology_CreatePlane( <0, 0, 0>, <0, -1, 0>, <0, 0, -1>, true )
+	}
 
-    UpdateFullscreenTopology( clGlobal.topoFullScreen, false )
-    UpdateFullscreenTopology( clGlobal.topoFullscreenHud, true, true )
-    UpdateFullscreenTopology( clGlobal.topoFullscreenHudPermanent, true, true )
-    UpdateFullscreenTopology( clGlobal.topoFullscreenFullMap, true )
-    UpdateFullscreenTopology( clGlobal.topFullscreenTargetInfo, true )
+	UpdateFullscreenTopology( clGlobal.topoFullScreen, false )
+	UpdateFullscreenTopology( clGlobal.topoFullscreenHud, true, true )
+	UpdateFullscreenTopology( clGlobal.topoFullscreenHudPermanent, true, true )
+	UpdateFullscreenTopology( clGlobal.topoFullscreenFullMap, true )
+	UpdateFullscreenTopology( clGlobal.topFullscreenTargetInfo, true )
 }
 
 

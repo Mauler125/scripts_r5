@@ -724,9 +724,9 @@ float function YawDifference( float yaw1, float yaw2 )
 	float diff = fabs( yaw1 - yaw2 )
 
 	if ( diff > 180 )
-	    return 360 - diff
+		return 360 - diff
 	else
-	    return diff
+		return diff
 
 	unreachable
 }
@@ -1060,95 +1060,95 @@ enum eAttach
 
 void function LoadDiamond()
 {
-    printl( " " )
+	printl( " " )
 	printl( "----------------------------" )
-    printl( " " )
+	printl( " " )
 
-    // Draw a diamond of a random size and phase (of the moon) so it is easy to separate sections of logs.
-    int random_spread = RandomIntRange( 4, 7 )
-    float random_fullness = RandomFloat( 2.0 )
-    bool functionref( int, int ) compare_func
-    string msg
+	// Draw a diamond of a random size and phase (of the moon) so it is easy to separate sections of logs.
+	int random_spread = RandomIntRange( 4, 7 )
+	float random_fullness = RandomFloat( 2.0 )
+	bool functionref( int, int ) compare_func
+	string msg
 
-    if ( RandomFloat( 1.0 ) > 0.5 )
-    {
-	    compare_func = bool function( int a, int b )
-	    {
-		    return a <= b
-	    }
-    }
-    else
-    {
-	    compare_func = bool function( int a, int b )
-	    {
-		    return a >= b
-	    }
-    }
+	if ( RandomFloat( 1.0 ) > 0.5 )
+	{
+		compare_func = bool function( int a, int b )
+		{
+			return a <= b
+		}
+	}
+	else
+	{
+		compare_func = bool function( int a, int b )
+		{
+			return a >= b
+		}
+	}
 
-    for ( int i = 0; i <= random_spread - 2; i++ )
-    {
-	    msg = ""
+	for ( int i = 0; i <= random_spread - 2; i++ )
+	{
+		msg = ""
 
-	    for ( int p = 0; p <= random_spread - i; p++ )
-	    {
-		    msg = msg + " "
-	    }
+		for ( int p = 0; p <= random_spread - i; p++ )
+		{
+			msg = msg + " "
+		}
 
-	    for ( int p = 0; p <= i * 2; p++ )
-	    {
-		    if ( p == i * 2 || p == 0 )
-		    {
-			    msg = msg + "*"
-		    }
-		    else
-		    {
-			    int an_int = int( i * random_fullness )
+		for ( int p = 0; p <= i * 2; p++ )
+		{
+			if ( p == i * 2 || p == 0 )
+			{
+				msg = msg + "*"
+			}
+			else
+			{
+				int an_int = int( i * random_fullness )
 
-			    if ( compare_func( p, an_int ) )
-				    msg = msg + "*"
-			    else
-				    msg = msg + " "
-		    }
-	    }
+				if ( compare_func( p, an_int ) )
+					msg = msg + "*"
+				else
+					msg = msg + " "
+			}
+		}
 
-	    printl( msg )
-    }
+			printl( msg )
+		}
 
-    for ( int i = random_spread - 1; i >= 0; i-- )
-    {
-	    msg = ""
+		for ( int i = random_spread - 1; i >= 0; i-- )
+		{
+			msg = ""
 
-	    for ( int p = 0; p <= random_spread - i; p++ )
-	    {
-		    msg = msg + " "
-	    }
+			for ( int p = 0; p <= random_spread - i; p++ )
+			{
+				msg = msg + " "
+			}
 
 
-	    for ( int p = 0; p <= i * 2; p++ )
-	    {
-		    if ( p == i * 2 || p == 0 )
-		    {
-			    msg = msg + "*"
-		    }
-		    else
-		    {
-			    if ( compare_func( p, int( i * random_fullness ) ) )
-			    {
-				    msg = msg + "*"
-			    }
-			    else
-			    {
-				    msg = msg + " "
-			    }
-		    }
-	    }
+			for ( int p = 0; p <= i * 2; p++ )
+			{
+				if ( p == i * 2 || p == 0 )
+				{
+					msg = msg + "*"
+				}
+				else
+				{
+					if ( compare_func( p, int( i * random_fullness ) ) )
+					{
+						msg = msg + "*"
+					}
+					else
+					{
+						msg = msg + " "
+					}
+				}
+			}
 
-	    printl( msg )
-    }
+			printl( msg )
+		}
 
-    printl( " " )
+	printl( " " )
 	printl( "----------------------------" )
-    printl( " " )
+	printl( " " )
 }
 
 // this will clear all dropped weapons in the map
@@ -3707,8 +3707,8 @@ void function PushEntWithDamageInfo( entity ent, var damageInfo, float forceMult
 	int source = DamageInfo_GetDamageSourceIdentifier( damageInfo )
 	switch ( source )
 	{
- 		case eDamageSourceId.mp_titanweapon_vortex_shield:
-  		case eDamageSourceId.mp_titanweapon_vortex_shield_ion:
+		case eDamageSourceId.mp_titanweapon_vortex_shield:
+		case eDamageSourceId.mp_titanweapon_vortex_shield_ion:
 			return
 	}
 
@@ -4591,12 +4591,12 @@ array<entity> function GetAllPlayersOfLockstepIndex( int index )
 table< int, array<entity> > function GetAllPlayersSortedByTeam()
 {
 	table< int, array<entity> > groupedPlayers
-	
+
 	foreach ( player in GetPlayerArray() )
 	{
 		if ( !( player.GetTeam() in groupedPlayers ) )
 			groupedPlayers[player.GetTeam()] <- []
-		
+
 		groupedPlayers[player.GetTeam()].append( player )
 	}
 
@@ -4695,7 +4695,7 @@ entity function CreatePropDynamic_NoDispatchSpawn( asset model, vector ornull or
 		if ( angles )
 			prop_dynamic.SetAngles( expect vector( angles ) )
 	}
-	
+
 	return prop_dynamic
 }
 
@@ -4747,7 +4747,7 @@ entity function CreatePropDeathBox_NoDispatchSpawn( asset model, vector ornull o
 		if ( angles )
 			prop_death_box.SetAngles( expect vector( angles ) )
 	}
-	
+
 	return prop_death_box
 }
 

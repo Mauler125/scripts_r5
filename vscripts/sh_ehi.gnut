@@ -108,11 +108,11 @@ FileStruct_LifetimeLevel& fileLevel
 
 
 
-/////////////////////////
-/////////////////////////
-//// Initialiszation ////
-/////////////////////////
-/////////////////////////
+////////////////////////
+////////////////////////
+//// Initialization ////
+////////////////////////
+////////////////////////
 #if SERVER || CLIENT || UI
 void function ShEHI_LevelInit_Begin()
 {
@@ -373,35 +373,35 @@ int function EHI_GetTeamMemberIndex( EHI ent )
 }
 #endif
 
-#if SERVER || CLIENT || UI 
+#if SERVER || CLIENT || UI
 int function EHI_GetRankScore( EHI ent )
 {
 	#if SERVER
 		Assert( IsValid( ent ) )
 		return GetPlayerRankScoreFromEHI( ent )
 
-#elseif CLIENT || UI 
+#elseif CLIENT || UI
 		Assert( ent != EHI_null )
 		return GetEHIScriptStruct( ent ).rankScore
 	#endif
 }
 #endif
 
-#if SERVER || CLIENT || UI 
+#if SERVER || CLIENT || UI
 int function EHI_GetRankedLadderPos( EHI ent )
 {
 	#if SERVER
 		Assert( IsValid( ent ) )
 		return GetPlayerLadderPosFromEHI( ent )
 
-#elseif CLIENT || UI 
+#elseif CLIENT || UI
 		Assert( ent != EHI_null )
 		return GetEHIScriptStruct( ent ).rankedLadderPosition
 	#endif
 }
 #endif
 
-#if SERVER || CLIENT || UI 
+#if SERVER || CLIENT || UI
 array<EHI> function GetPlayerEHIArrayOfTeam( int team )
 {
 	#if SERVER

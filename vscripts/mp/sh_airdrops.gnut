@@ -52,7 +52,7 @@ void function Sh_Airdrops_Init()
 	#elseif SERVER
         AddSpawnCallback( "prop_dynamic", OnAirdropCreated )
     #endif
-    
+
 }
 
 #if SERVER
@@ -73,20 +73,20 @@ void function AirdropSpawnThink()
                 if(data.dropCircle == curStage)
                 {
                     printt("Matched a stage!")
-                    
+
                     //Wait for ring to start shrinking
                     while(!SURVIVAL_GetDeathFieldShrinking())
                         WaitFrame()
-                        
+
                     //Got data for this stage so let's start to spawn the airdrops
                     int numAirdropsInData = data.dropCount
-                    
+
                     //Must wait for preWait to expire before running spawns
                     wait data.preWait
-                    
+
                     //Play the announcement
                     AddSurvivalCommentaryEvent(eSurvivalEventType.CARE_PACKAGE_DROPPING)
-                    
+
                     for(int i = 0; i < numAirdropsInData; i++)
                     {
                         printt("Spawned an airdrop! (", i, ") This dropcircle is ", data.dropCircle, " and there are ", numAirdropsInData, " this round.")
@@ -133,7 +133,7 @@ void function OnAirdropUse( entity dropPod, entity player, int useInputFlags )
 
 		#endif
 	}
-    
+
     dropPod.Signal( "OpenDroppod" )
 }
 

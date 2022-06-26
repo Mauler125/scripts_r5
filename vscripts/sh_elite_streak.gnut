@@ -58,23 +58,6 @@ void function ShEliteStreak_RegisterNetworkFunctions()
 }
 #endif
 
-
-#if SERVER
-#endif
-#if SERVER
-#endif
-#if SERVER
-#endif
-#if SERVER
-#endif
-#if SERVER
-#endif
-#if SERVER
-#endif
-#if SERVER
-#endif
-
-
 #if CLIENT
 void function ServerCallback_UpdateEliteBadge( int streak, bool hasAccess )
 {

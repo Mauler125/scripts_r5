@@ -73,7 +73,7 @@ struct
 void function BleedoutShared_Init()
 {
 	PrecacheWeapon( "mp_weapon_incap_shield" )
-	
+
 	//DEFAULT BLEEDOUT (Index 0)
 	BleedoutData defData
 	defData.bleedoutTime = GetCurrentPlaylistVarFloat( "survival_bleedout_time_1", BLEEDOUT_TIME_LV1 )
