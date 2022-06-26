@@ -41,13 +41,13 @@ global function ClientCodeCallback_UIScriptResetComplete
 
 void function ClientCodeCallbacks_Init()
 {
-    RegisterSignal( "HardpointStateChanged" )
-    RegisterSignal( "PlayerAlive" )
-    RegisterSignal( "PlayerDying" )
-    RegisterSignal( "PlayerDead" )
-    RegisterSignal( "PlayerDiscardBody" )
-    RegisterSignal( "KillReplayStarted" )
-    RegisterSignal( "KillReplayEnded" )
+	RegisterSignal( "HardpointStateChanged" )
+	RegisterSignal( "PlayerAlive" )
+	RegisterSignal( "PlayerDying" )
+	RegisterSignal( "PlayerDead" )
+	RegisterSignal( "PlayerDiscardBody" )
+	RegisterSignal( "KillReplayStarted" )
+	RegisterSignal( "KillReplayEnded" )
 }
 
 void function ClientCodeCallback_OnLinkedButtonPairPressed( int binding )
