@@ -22,7 +22,7 @@ WeaponData
 	"fast_swap_to"									"1"
 	"dev_menu_type"									"offhand" // fire_mode isn't readable from script
 
-    "does_not_interrupt_cloak"						"1"
+	"does_not_interrupt_cloak"						"1"
 	"offhand_interupts_weapon_anims"				"0"
 
 	"OnClientAnimEvent"								"OnClientAnimEvent_ability_crypto_drone"
@@ -35,7 +35,7 @@ WeaponData
 
 	// Menu Stats
 
-    "trophy_system_ignore"                          "1"
+	"trophy_system_ignore"                          "1"
 
 	// Models
 	"viewmodel"										"mdl/weapons/crypto_drone/ptpov_crypto_drone_held.rmdl"
@@ -92,7 +92,7 @@ WeaponData
 	"show_grenade_indicator"						"0"
 
 	// Behavior
-    "zoom_effects"                                  "0"
+	"zoom_effects"                                  "0"
 	"fire_rate"   									"10.0"
 	"fire_duration"									"0.0"
 	"deploy_time" 									"0.15"
@@ -142,42 +142,42 @@ WeaponData
 	"ammo_no_remove_from_clip"						"0"
 	"regen_ammo_refill_rate"						"10"
 	"regen_ammo_refill_start_delay"					"0.0"
-    "ammo_no_remove_from_stockpile"					"0"
+	"ammo_no_remove_from_stockpile"					"0"
 
 	// Rumble
 	"rumble"  										"3"
 
 	"clip_bodygroup"						"projectile"
-    "clip_bodygroup_index_shown"			"0"
-    "clip_bodygroup_index_hidden"			"1"
-    "clip_bodygroup_show_for_milestone_0"	"1"
-    "clip_bodygroup_show_for_milestone_1"	"0"
-    "clip_bodygroup_show_for_milestone_2"	"1"
-    "clip_bodygroup_show_for_milestone_3"	"1"
+	"clip_bodygroup_index_shown"			"0"
+	"clip_bodygroup_index_hidden"			"1"
+	"clip_bodygroup_show_for_milestone_0"	"1"
+	"clip_bodygroup_show_for_milestone_1"	"0"
+	"clip_bodygroup_show_for_milestone_2"	"1"
+	"clip_bodygroup_show_for_milestone_3"	"1"
 
 	// WeaponED Unhandled Key/Values and custom script Key/Values
 	"fire_anim_rate"  								"1"
 
 	Mods
 	{
-        survival_finite_ordnance
-        {
+		survival_finite_ordnance
+		{
 
-        }
+		}
 
-	    survival_armor_cooldown_mod
-	    {
-	        "regen_ammo_refill_rate"    "*1.25"
-	    }
-	    crypto_has_camera
-	    {
-	    	//should change activity modifier but for testing purposes view model swap
+		survival_armor_cooldown_mod
+		{
+			"regen_ammo_refill_rate"    "*1.25"
+		}
+		crypto_has_camera
+		{
+			//should change activity modifier but for testing purposes view model swap
 			"viewmodel"										"mdl/weapons/crypto_puzzle_remote/ptpov_crypto_puzzle_remote.rmdl"
 			//"playermodel" 								"mdl/weapons/crypto_puzzle_remote/w_crypto_puzzle_remote"  //uncomment when assets are ready
 			"toss_pullout_time"								"0.4"
 			"toss_time"										"0.9"
 			"toss_overhead_time"							"0.9"
-	    }
+		}
 	}
 
 	active_crosshair_count				"2"
@@ -195,8 +195,8 @@ WeaponData
 			isReloading					weapon_is_reloading
 			teamColor					crosshair_team_color
 			isAmped						weapon_is_amped
-		    crosshairMovementX          crosshair_movement_x
-		    crosshairMovementY          crosshair_movement_y
+			crosshairMovementX          crosshair_movement_x
+			crosshairMovementY          crosshair_movement_y
 		}
 
 		Crosshair_1
@@ -215,9 +215,9 @@ WeaponData
 			"ui"						"ui/crosshair_tactical"
 			Args
 			{
-			    regenRate               "eWeaponVar.regen_ammo_refill_rate"
-			    ammoFrac                "progress_weapon_clip_ammo_frac"
-			    dryfireTime             "weapon_latest_dryfire_time"
+				regenRate               "eWeaponVar.regen_ammo_refill_rate"
+				ammoFrac                "progress_weapon_clip_ammo_frac"
+				dryfireTime             "weapon_latest_dryfire_time"
 			}
 		}
 	}

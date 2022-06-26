@@ -320,7 +320,7 @@ int function WeaponSkin_GetSortOrdinal( ItemFlavor flavor )
 	return fileLevel.cosmeticFlavorSortOrdinalMap[flavor]
 }
 
-#if R5DEV && CLIENT 
+#if R5DEV && CLIENT
 void function DEV_SetCharmForCurrentWeapon( asset charmModel, string attachmentName )
 {
 	entity player = GetLocalClientPlayer()

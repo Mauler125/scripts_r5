@@ -30,7 +30,7 @@ WeaponData
 	dof_zoom_focusArea_top							0.08
 	dof_zoom_focusArea_bottom						-0.026
 
-    "projectile_launch_speed"						"21000"
+	"projectile_launch_speed"						"21000"
 
 	// Models
 	"viewmodel"   									"mdl/weapons/r97/ptpov_r97.rmdl"
@@ -82,7 +82,7 @@ WeaponData
 		// Damage - When Used by Players
 		"damage_near_value"   							"12"
 		"damage_far_value"								"12"
-   	 	"damage_very_far_value"							"12"
+		"damage_very_far_value"							"12"
 		"damage_near_value_titanarmor"					"12"
 		"damage_far_value_titanarmor" 					"12"
 		"damage_very_far_value_titanarmor" 				"12"
@@ -112,7 +112,7 @@ WeaponData
 		"damage_very_far_value_titanarmor" 				"28"
 		"damage_rodeo" 									"110"
 
-   	 	"damage_very_far_value"							"<KEEP_DEFAULT>"
+		"damage_very_far_value"							"<KEEP_DEFAULT>"
 
 		// Damage - When Used by NPCs
 		"npc_damage_near_value_titanarmor"				"<KEEP_DEFAULT>"
@@ -156,18 +156,18 @@ WeaponData
 	// View Kick
 	"viewkick_pattern"                              "r97_2"
 
-    "viewkick_spring"                               "r97_vkp"
-    "viewkick_spring_hot"                           "r97_vkp_hot"
+	"viewkick_spring"                               "r97_vkp"
+	"viewkick_spring_hot"                           "r97_vkp_hot"
 
 	"viewkick_spring_heatpershot"					"1.0"
-    "viewkick_spring_cooldown_holdtime"             "0.1"
-    "viewkick_spring_cooldown_fadetime"             "0.05"
+	"viewkick_spring_cooldown_holdtime"             "0.1"
+	"viewkick_spring_cooldown_fadetime"             "0.05"
 
-    "viewmodel_spring_jolt"                          "autofire_viewmodel_jolt"
-    "viewmodel_jolt_scale"                           "1.0"
-    "viewmodel_jolt_backwardPerShot"                 "-0.275"
-    "viewmodel_jolt_roll"                            "0 2.5 0.0"
-    "viewmodel_jolt_side"                            "0 0.0525 0"
+	"viewmodel_spring_jolt"                          "autofire_viewmodel_jolt"
+	"viewmodel_jolt_scale"                           "1.0"
+	"viewmodel_jolt_backwardPerShot"                 "-0.275"
+	"viewmodel_jolt_roll"                            "0 2.5 0.0"
+	"viewmodel_jolt_side"                            "0 0.0525 0"
 
 	"viewkick_pitch_base" 							"1.0"
 	"viewkick_pitch_random"   						"1.0"
@@ -208,74 +208,74 @@ WeaponData
 	"viewkick_scale_yaw_valueLerpStart"   			"0"
 	"viewkick_scale_yaw_valueLerpEnd" 				"50"
 	"viewkick_scale_valueDecayDelay"  				"0.11"
-    "viewkick_scale_valueDecayRate"   				"50"
+	"viewkick_scale_valueDecayRate"   				"50"
 
 	"viewmodel_shake_forward"						"0.0"
 	"viewmodel_shake_up"							"0.0"
 	"viewmodel_shake_right"							"0.0"
 
 	"spread_stand_hip"								"1.0"
-    "spread_stand_hip_run"							"1.5"
-    "spread_stand_hip_sprint"                       "2.5"
-    "spread_crouch_hip"   							"0.8"
-    "spread_air_hip"  								"3.5"
+	"spread_stand_hip_run"							"1.5"
+	"spread_stand_hip_sprint"                       "2.5"
+	"spread_crouch_hip"   							"0.8"
+	"spread_air_hip"  								"3.5"
 
-    "spread_kick_on_fire_stand_hip"   				"0.18"
-    "spread_kick_on_fire_crouch_hip"  				"0.18"
-    "spread_kick_on_fire_air_hip" 					"0.18"
+	"spread_kick_on_fire_stand_hip"   				"0.18"
+	"spread_kick_on_fire_crouch_hip"  				"0.18"
+	"spread_kick_on_fire_air_hip" 					"0.18"
 
-    "spread_max_kick_stand_hip"   					"2.0"
-    "spread_max_kick_crouch_hip"  					"1.5"
-    "spread_max_kick_air_hip" 						"3.0"
+	"spread_max_kick_stand_hip"   					"2.0"
+	"spread_max_kick_crouch_hip"  					"1.5"
+	"spread_max_kick_air_hip" 						"3.0"
 
 	//setting to "0" so it's tunable in Bakery
 	"sprintcycle_time"								"0"
 	"deployfirst_time"								"1.0"
 
-    "clip_bodygroup"						"clip"
-    "clip_bodygroup_index_shown"			"0"
-    "clip_bodygroup_index_hidden"			"1"
-    "clip_bodygroup_show_for_milestone_0"	"1"
-    "clip_bodygroup_show_for_milestone_1"	"0"
-    "clip_bodygroup_show_for_milestone_2"	"1"
-    "clip_bodygroup_show_for_milestone_3"	"1"
+	"clip_bodygroup"						"clip"
+	"clip_bodygroup_index_shown"			"0"
+	"clip_bodygroup_index_hidden"			"1"
+	"clip_bodygroup_show_for_milestone_0"	"1"
+	"clip_bodygroup_show_for_milestone_1"	"0"
+	"clip_bodygroup_show_for_milestone_2"	"1"
+	"clip_bodygroup_show_for_milestone_3"	"1"
 
 	Mods
 	{
 		survival_finite_ammo
-        {
-            "ammo_default_total"					"0"
-            "ammo_stockpile_max"					"36"
-            "ammo_no_remove_from_stockpile"			"0"
+		{
+			"ammo_default_total"					"0"
+			"ammo_stockpile_max"					"36"
+			"ammo_no_remove_from_stockpile"			"0"
 
-            "low_ammo_fraction" 					"0.3"
+			"low_ammo_fraction" 					"0.3"
 
-	   		"uses_ammo_pool"						"1"
-        }
+			"uses_ammo_pool"						"1"
+		}
 
-        optic_cq_hcog_classic
-        {
-        	"bodygroup2_set" 						"0"
+		optic_cq_hcog_classic
+		{
+			"bodygroup2_set" 						"0"
 			"ui2_enable" 							"0"
-        }
+		}
 
-        optic_cq_hcog_bruiser
-        {
-        	"bodygroup2_set" 						"0"
+		optic_cq_hcog_bruiser
+		{
+			"bodygroup2_set" 						"0"
 			"ui2_enable" 							"0"
-        }
+		}
 
-        optic_cq_holosight
-        {
-        	"bodygroup2_set" 						"0"
+		optic_cq_holosight
+		{
+			"bodygroup2_set" 						"0"
 			"ui2_enable" 							"0"
-        }
+		}
 
-        optic_cq_holosight_variable
-        {
-        	"bodygroup2_set" 						"0"
+		optic_cq_holosight_variable
+		{
+			"bodygroup2_set" 						"0"
 			"ui2_enable" 							"0"
-        }
+		}
 
 		optic_cq_threat
 		{
@@ -283,23 +283,9 @@ WeaponData
 			"ui2_enable" 							"0"
 		}
 
-                           
-                         
-         
-                                      
-                                   
-         
-
-                                 
-         
-                                      
-                                   
-         
-      
-
 		barrel_stabilizer_l4_flash_hider
-        {
-        	"fx_muzzle_flash_view"					"wpn_muzzleflash_smg_sup_FP"
+		{
+			"fx_muzzle_flash_view"					"wpn_muzzleflash_smg_sup_FP"
 			"fx_muzzle_flash_world"					"wpn_muzzleflash_smg_sup"
 		}
 
@@ -321,16 +307,7 @@ WeaponData
 			"viewmodel"   									"mdl/weapons/r97/ptpov_r97_legendary_01.rmdl"
 			"playermodel" 									"mdl/weapons/r97/w_r97_legendary_01.rmdl"
 		}
-
-               
-                                                                                                     
-                    
-         
-                                                                                          
-         
-      
 	}
-
 
 	"ui1_enable"		"1"
 	"ui1_draw_cloaked"	"1"
@@ -373,8 +350,8 @@ WeaponData
 			isReloading					weapon_is_reloading
 			teamColor					crosshair_team_color
 			isAmped						weapon_is_amped
-		    crosshairMovementX          crosshair_movement_x
-		    crosshairMovementY          crosshair_movement_y
+			crosshairMovementX          crosshair_movement_x
+			crosshairMovementY          crosshair_movement_y
 		}
 
 		Crosshair_1

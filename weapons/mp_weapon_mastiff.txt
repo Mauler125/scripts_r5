@@ -44,9 +44,9 @@ WeaponData
 	"vortex_absorb_sound"							"Vortex_Shield_AbsorbBulletSmall"
 	"vortex_absorb_sound_1P_VS_3P"					"Vortex_Shield_AbsorbBulletSmall_1P_VS_3P"
 
-    "projectiles_per_shot"                          "8"
+	"projectiles_per_shot"                          "8"
 
-    "projectile_launch_speed"                       "12000"
+	"projectile_launch_speed"                       "12000"
 	"projectile_adjust_to_gun_barrel"				"1"
 
 	"projectile_trail_effect_0" 					"P_mastiff_proj"
@@ -93,8 +93,8 @@ WeaponData
 	"low_ammo_fraction" 							"0.25"
 
 	// Damage - When used by players
-    "damage_near_distance"							"450"
-    "damage_far_distance" 							"850"
+	"damage_near_distance"							"450"
+	"damage_far_distance" 							"850"
 
 	"damage_near_value"   							"18"
 	"damage_far_value"								"18"
@@ -104,28 +104,28 @@ WeaponData
 	"damage_headshot_scale"							"2.0"
 	"damage_leg_scale"                              "1.0"
 
-    // NPC
-    "proficiency_poor_spreadscale"					"7.0"
-    "proficiency_average_spreadscale" 				"5.0"
-    "proficiency_good_spreadscale"					"4.5"
-    "proficiency_very_good_spreadscale"   			"3.7"
+	// NPC
+	"proficiency_poor_spreadscale"					"7.0"
+	"proficiency_average_spreadscale" 				"5.0"
+	"proficiency_good_spreadscale"					"4.5"
+	"proficiency_very_good_spreadscale"   			"3.7"
 
-    "npc_min_burst"									"1"
-    "npc_max_burst"									"1"
-    "npc_rest_time_between_bursts_min"				"1.0"
-    "npc_rest_time_between_bursts_max"				"1.5"
+	"npc_min_burst"									"1"
+	"npc_max_burst"									"1"
+	"npc_rest_time_between_bursts_min"				"1.0"
+	"npc_rest_time_between_bursts_max"				"1.5"
 
-    // Damage - When Used by NPCs
-    "npc_damage_near_value"   						"6"
-    "npc_damage_far_value"							"2"
-    "npc_damage_near_value_titanarmor"				"35"
-    "npc_damage_far_value_titanarmor" 				"15"
+	// Damage - When Used by NPCs
+	"npc_damage_near_value"   						"6"
+	"npc_damage_far_value"							"2"
+	"npc_damage_near_value_titanarmor"				"35"
+	"npc_damage_far_value_titanarmor" 				"15"
 
-    "npc_max_range"   								"3000"
-    "npc_max_engage_range"							"800"
-    "npc_max_engage_range_heavy_armor"				"2000"
-    "npc_min_engage_range"							"0"
-    "npc_min_engage_range_heavy_armor"				"500"
+	"npc_max_range"   								"3000"
+	"npc_max_engage_range"							"800"
+	"npc_max_engage_range_heavy_armor"				"2000"
+	"npc_min_engage_range"							"0"
+	"npc_min_engage_range_heavy_armor"				"500"
 
 	"npc_miss_fast_player"							"0"
 
@@ -221,44 +221,28 @@ WeaponData
 	"bodygroup1_name"	                    "mastiff_sight"
 	"bodygroup1_set"	                    "1"
 
-    "clip_bodygroup"						"w1128_magazine"
-    "clip_bodygroup_index_shown"			"0"
-    "clip_bodygroup_index_hidden"			"1"
-    "clip_bodygroup_show_for_milestone_0"	"0"
-    "clip_bodygroup_show_for_milestone_1"	"0"
-    "clip_bodygroup_show_for_milestone_2"	"0"
-    "clip_bodygroup_show_for_milestone_3"	"0"
-
-               
-         
-  
-                              
-                              
-  
-      
+	"clip_bodygroup"						"w1128_magazine"
+	"clip_bodygroup_index_shown"			"0"
+	"clip_bodygroup_index_hidden"			"1"
+	"clip_bodygroup_show_for_milestone_0"	"0"
+	"clip_bodygroup_show_for_milestone_1"	"0"
+	"clip_bodygroup_show_for_milestone_2"	"0"
+	"clip_bodygroup_show_for_milestone_3"	"0"
 
 	Mods
 	{
-	    crate
-	    {
-	    }
+		crate
+		{
+		}
 
-        survival_finite_ammo
-        {
-            "ammo_no_remove_from_stockpile"		"0"
-	   		"uses_ammo_pool"					"0"
-        }
-
-               
-                                                                                                           
-                    
-         
-                                                                                          
-         
-      
+		survival_finite_ammo
+		{
+			"ammo_no_remove_from_stockpile"		"0"
+			"uses_ammo_pool"					"0"
+		}
 	}
 
-		// UI
+	// UI
 	"ui1_enable"		"1"
 	"ui1_draw_cloaked"	"1"
 	UiData1
@@ -298,8 +282,8 @@ WeaponData
 			isReloading					weapon_is_reloading
 			teamColor					crosshair_team_color
 			isAmped						weapon_is_amped
-		    crosshairMovementX          crosshair_movement_x
-		    crosshairMovementY          crosshair_movement_y
+			crosshairMovementX          crosshair_movement_x
+			crosshairMovementY          crosshair_movement_y
 		}
 
 		Crosshair_1

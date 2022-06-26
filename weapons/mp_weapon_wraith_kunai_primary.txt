@@ -1,5 +1,6 @@
 #base "mp_weapon_melee_survival.txt"
 
+// hello
 WeaponData
 {
 	// General
@@ -10,7 +11,7 @@ WeaponData
 
 	"weapon_type_flags"								"WPT_MELEE"
 	
-    // UI/HUD
+	// UI/HUD
 	"menu_icon"										"rui/menu/dpad_comms/emoji/fist"
 	"hud_icon"										"rui/menu/dpad_comms/emoji/fist"
 

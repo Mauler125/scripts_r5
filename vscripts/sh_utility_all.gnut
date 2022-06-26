@@ -109,7 +109,7 @@ void function ShUtilityAll_Init()
 	RegisterSignal( "CancelTimeout" )
 
 	//
-	#if(!UI)
+	#if !UI
 		PrecacheModel( $"mdl/fx/fire_cylinder_sm1.rmdl" )
 		PrecacheModel( $"mdl/fx/r301_leg07_fire_horns.rmdl" )
 		PrecacheModel( $"mdl/fx/r301_leg07_fire_body.rmdl" )

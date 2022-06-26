@@ -3,24 +3,16 @@ global function ShEliteStreak_Init
 global function IsEliteGame
 #endif
 
-
-#if SERVER
-#endif
-
-
 #if CLIENT
 global function ShEliteStreak_RegisterNetworkFunctions
 global function ServerCallback_UpdateEliteBadge
 #endif
 
-
 #if CLIENT && R5DEV
 global function TestEliteStreak
 #endif
 
-
 global const int ELITE_SQUADS_REQUIRED = 5
-
 
 #if CLIENT
 void function ShEliteStreak_Init()
@@ -31,24 +23,14 @@ void function ShEliteStreak_Init()
 	if ( IsLobby() )
 		return
 
-	#if SERVER
-
-
-
-#endif
-
 	if ( !IsEliteGame() )
 		return
-
-	#if SERVER
-    #endif
 
 	#if CLIENT
 	AddCallback_OnScoreboardCreated( OnScoreboardCreated )
 	#endif
 }
 #endif
-
 
 #if CLIENT
 void function ShEliteStreak_RegisterNetworkFunctions()
@@ -64,7 +46,6 @@ void function ServerCallback_UpdateEliteBadge( int streak, bool hasAccess )
 	UpdateEliteBadge( streak, hasAccess )
 }
 #endif
-
 
 #if CLIENT
 void function OnSquadsRemainingCountChanged( entity player, int old, int new, bool actuallyChanged )
@@ -89,7 +70,6 @@ void function OnCurrentEliteStreakChanged( entity player, int old, int new, bool
 	UpdateEliteBadge( new, bool( player.GetPersistentVar( "hasEliteAccess" ) ), actuallyChanged && GetGameState() == eGameState.Playing )
 }
 #endif
-
 
 #if CLIENT
 void function OnScoreboardCreated()
@@ -170,9 +150,4 @@ bool function IsEliteGame()
 {
 	return (GetCurrentPlaylistVarBool( "elite_enabled", false ) && GetCurrentPlaylistVarBool( "is_elite_game", false ))
 }
-#endif
-
-#if SERVER
-#endif
-#if SERVER
 #endif

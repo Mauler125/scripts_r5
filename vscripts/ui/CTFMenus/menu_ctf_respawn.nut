@@ -72,12 +72,12 @@ void function InitCTFRespawnMenu( var newMenuArg )
 	var menu = GetMenu( "CTFRespawnMenu" )
 	file.menu = menu
 
-    AddMenuEventHandler( menu, eUIEvent.MENU_SHOW, OnR5RSB_Show )
+	AddMenuEventHandler( menu, eUIEvent.MENU_SHOW, OnR5RSB_Show )
 	AddMenuEventHandler( menu, eUIEvent.MENU_OPEN, OnR5RSB_Open )
 	AddMenuEventHandler( menu, eUIEvent.MENU_CLOSE, OnR5RSB_Close )
 	AddMenuEventHandler( menu, eUIEvent.MENU_NAVIGATE_BACK, OnR5RSB_NavigateBack )
 
-    var SelectLegend = Hud_GetChild( menu, "SelectLegend" )
+	var SelectLegend = Hud_GetChild( menu, "SelectLegend" )
 	RuiSetImage( Hud_GetRui( SelectLegend ), "iconImage", $"rui/menu/common/last_squad" )
 	RuiSetInt( Hud_GetRui( SelectLegend ), "lootTier", 4 )
 	AddEventHandlerToButton( menu, "SelectLegend", UIE_CLICK, ChangeLegend )
@@ -85,12 +85,12 @@ void function InitCTFRespawnMenu( var newMenuArg )
 
 void function ChangeLegend(var button)
 {
-    RunClientScript("OpenCharacterSelectNewMenu", true)
+	RunClientScript("OpenCharacterSelectNewMenu", true)
 }
 
 void function OnR5RSB_Show()
 {
-    //
+	//
 }
 
 void function OnR5RSB_Open()
@@ -106,5 +106,5 @@ void function OnR5RSB_Close()
 
 void function OnR5RSB_NavigateBack()
 {
-    //
+	//
 }

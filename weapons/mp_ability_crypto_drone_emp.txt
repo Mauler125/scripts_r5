@@ -11,8 +11,8 @@ WeaponData
 	"menu_icon"										"rui/hud/ultimate_icons/ultimate_crypto"
 	"hud_icon"										"rui/hud/ultimate_icons/ultimate_crypto"
 
-    "readymessage"                                  "BUG IT"
-    "readyhint"                                     "BUG IT"
+	"readymessage"                                  "BUG IT"
+	"readyhint"                                     "BUG IT"
 
 	"weapon_type_flags"								"WPT_ULTIMATE"
 	"weaponClass" 									"human"
@@ -36,7 +36,7 @@ WeaponData
 	"ammo_stockpile_max"							"0"
 	"ammo_drains_to_empty_on_fire"					"0"
 	"ammo_no_remove_from_clip"						"0"
-    "ammo_no_remove_from_stockpile"					"0"
+	"ammo_no_remove_from_stockpile"					"0"
 
 	"offhand_switch_force_draw"						"1"
 
@@ -82,9 +82,9 @@ WeaponData
 
 	Mods
 	{
-	    survival_armor_cooldown_mod
-        {
-            "regen_ammo_refill_rate"    "*1.25"
-        }
+		survival_armor_cooldown_mod
+		{
+			"regen_ammo_refill_rate"    "*1.25"
+		}
 	}
 }

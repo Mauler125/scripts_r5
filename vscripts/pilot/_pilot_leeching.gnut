@@ -13,13 +13,13 @@ global function IsBeingLeeched
 const float SPECTRE_LEECH_SURROUNDING_RANGE = 384.0
 
 #if MP
-const int GLOBAL_LEECH_LIMIT 		= 100  // per team
-const int MAX_LEECHABLE 			= 100  // per player
-const bool PROPAGATE_ON_LEECH 		= true
+const int GLOBAL_LEECH_LIMIT = 100  // per team
+const int MAX_LEECHABLE = 100  // per player
+const bool PROPAGATE_ON_LEECH = true
 #elseif SP
-const int GLOBAL_LEECH_LIMIT 		= 8
-const int MAX_LEECHABLE 			= 4
-const bool PROPAGATE_ON_LEECH 		= false
+const int GLOBAL_LEECH_LIMIT = 8
+const int MAX_LEECHABLE = 4
+const bool PROPAGATE_ON_LEECH = false
 #endif
 
 void function PlayerLeeching_Init()

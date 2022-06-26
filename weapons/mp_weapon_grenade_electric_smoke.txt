@@ -26,9 +26,9 @@ WeaponData
 	// Menu Stats
 
 	// Models
-//	"viewmodel"										"mdl/weapons/grenades/ptpov_smoke_grenade.rmdl"
-//	"playermodel"									"mdl/weapons/grenades/smoke_grenade.rmdl"
-//	"projectilemodel"								"mdl/weapons/grenades/smoke_grenade_projectile.rmdl"
+	// "viewmodel"										"mdl/weapons/grenades/ptpov_smoke_grenade.rmdl"
+	// "playermodel"									"mdl/weapons/grenades/smoke_grenade.rmdl"
+	// "projectilemodel"								"mdl/weapons/grenades/smoke_grenade_projectile.rmdl"
 
 	"viewmodel"										"mdl/weapons/grenades/ptpov_gibraltar_beacon.rmdl"
 	"playermodel"									"mdl/weapons/grenades/w_gibraltar_beacon.rmdl"
@@ -270,9 +270,9 @@ WeaponData
 			"ui"						"ui/crosshair_ordnance"
 			Args
 			{
-			    regenRate               "eWeaponVar.regen_ammo_refill_rate"
-			    ammoFrac                "progress_weapon_clip_ammo_frac"
-			    dryfireTime             "weapon_latest_dryfire_time"
+				regenRate               "eWeaponVar.regen_ammo_refill_rate"
+				ammoFrac                "progress_weapon_clip_ammo_frac"
+				dryfireTime             "weapon_latest_dryfire_time"
 			}
 		}
 	}

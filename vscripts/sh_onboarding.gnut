@@ -105,7 +105,7 @@ void function SV_CL_Onboarding_Init()
 	╚════██║██╔══╝  ██║▄▄ ██║██║   ██║██╔══╝  ██║╚██╗██║██║     ██╔══╝  ╚════██║
 	███████║███████╗╚██████╔╝╚██████╔╝███████╗██║ ╚████║╚██████╗███████╗███████║
 	╚══════╝╚══════╝ ╚══▀▀═╝  ╚═════╝ ╚══════╝╚═╝  ╚═══╝ ╚═════╝╚══════╝╚══════╝
-	
+
 	This part describes the onboarding sequences: threaded functions which control the onboarding.
 */
 
@@ -130,7 +130,7 @@ void function Sequence_WaitingForPlayers()
 
 		int connectedPlayerCount = GetPlayerArray().len()
 
-		if ( shouldNotWaitForever 
+		if ( shouldNotWaitForever
 			&& timeSpentWaitingForPlayers >= maximumTimeToSpendToWaitForPlayers
 			&& connectedPlayerCount > 0
 			)
@@ -152,7 +152,7 @@ void function Sequence_WaitingForPlayers()
 
 void function Sequence_PickLoadout()
 {
-	if ( !Survival_CharacterSelectEnabled() ) 
+	if ( !Survival_CharacterSelectEnabled() )
 	{
 		foreach ( player in GetPlayerArray() )
 		{
@@ -163,7 +163,7 @@ void function Sequence_PickLoadout()
 			CharacterSelect_TryAssignCharacterCandidatesToPlayer( player, [] ) // No candidates to force it to pick a random legend.
 		}
 
-		thread Sequence_Prematch() 
+		thread Sequence_Prematch()
 		return
 	}
 
@@ -214,7 +214,7 @@ void function Sequence_PickLoadout()
 			if ( player.GetPlayerNetBool( "hasLockedInCharacter" ) )
 				CharacterSelect_AssignCharacter( player, selectedCharacter )
 			else
-				CharacterSelect_TryAssignCharacterCandidatesToPlayer( player, [ 
+				CharacterSelect_TryAssignCharacterCandidatesToPlayer( player, [
 					player.GetPlayerNetInt( "characterSelectFocusIndex" ), // Last focused character
 					ItemFlavor_GetGUID( selectedCharacter ) // Currently selected loadout character
 				] )
@@ -273,16 +273,16 @@ void function UpdateSequencedTimePoints( float referenceTime, int gameStateOverr
 			break
 		case eGameState.PickLoadout:
 			float timeBeforeCharacterSelection = CharSelect_GetIntroCountdownDuration() + CharSelect_GetPickingDelayBeforeAll()
-		
+
 			float timeToSelectAllCharacters = CharSelect_GetPickingDelayOnFirst()
 			for ( int pickIndex = 0; pickIndex < MAX_TEAM_PLAYERS; pickIndex++ )
 				timeToSelectAllCharacters += Survival_GetCharacterSelectDuration( pickIndex ) + CharSelect_GetPickingDelayAfterEachLock()
-		
+
 			float timeAfterCharacterSelection = CharSelect_GetPickingDelayAfterAll() + CharSelect_GetOutroTransitionDuration()
 
 			float timeBeforeChampionPresentation = CharSelect_PlayerSquadIntroEnabled() ? CharSelect_GetOutroSquadPresentDuration() : 0.0
 			float timeAfterChampionPresentation = CharSelect_ChampionSquadIntroEnabled() ? CharSelect_GetOutroChampionPresentDuration() : 0.0
-				
+
 			SetGlobalNetTime( "squadPresentationStartTime", referenceTime + timeBeforeCharacterSelection + timeToSelectAllCharacters + timeAfterCharacterSelection )
 			SetGlobalNetTime( "championSquadPresentationStartTime", referenceTime + timeBeforeCharacterSelection + timeToSelectAllCharacters + timeAfterCharacterSelection + timeBeforeChampionPresentation )
 			SetGlobalNetTime( "pickLoadoutGamestateEndTime", referenceTime + timeBeforeCharacterSelection + timeToSelectAllCharacters + timeAfterCharacterSelection + timeBeforeChampionPresentation + timeAfterChampionPresentation )
@@ -365,7 +365,7 @@ void function GiveLoadoutRelatedWeapons( entity player )
 void function DecideRespawnPlayer( entity player, bool giveLoadoutWeapons = true )
 {
 	if ( !IsValid( player ) ) return;
-	
+
 	if ( IsAlive( player ) )
 	 	TakeLoadoutRelatedWeapons( player )
 
@@ -405,12 +405,12 @@ void function DecideRespawnPlayer( entity player, bool giveLoadoutWeapons = true
 
 #if SERVER
 /*
-	███████╗██████╗ ███████╗ ██████╗████████╗ █████╗ ████████╗██╗███╗   ██╗ ██████╗ 
-	██╔════╝██╔══██╗██╔════╝██╔════╝╚══██╔══╝██╔══██╗╚══██╔══╝██║████╗  ██║██╔════╝ 
+	███████╗██████╗ ███████╗ ██████╗████████╗ █████╗ ████████╗██╗███╗   ██╗ ██████╗
+	██╔════╝██╔══██╗██╔════╝██╔════╝╚══██╔══╝██╔══██╗╚══██╔══╝██║████╗  ██║██╔════╝
 	███████╗██████╔╝█████╗  ██║        ██║   ███████║   ██║   ██║██╔██╗ ██║██║  ███╗
 	╚════██║██╔═══╝ ██╔══╝  ██║        ██║   ██╔══██║   ██║   ██║██║╚██╗██║██║   ██║
 	███████║██║     ███████╗╚██████╗   ██║   ██║  ██║   ██║   ██║██║ ╚████║╚██████╔╝
-	╚══════╝╚═╝     ╚══════╝ ╚═════╝   ╚═╝   ╚═╝  ╚═╝   ╚═╝   ╚═╝╚═╝  ╚═══╝ ╚═════╝ 
+	╚══════╝╚═╝     ╚══════╝ ╚═════╝   ╚═╝   ╚═╝  ╚═╝   ╚═╝   ╚═╝╚═╝  ╚═══╝ ╚═════╝
 
 	This part describes the spectator functions.
 */
@@ -421,7 +421,7 @@ void function PlayerStartSpectating( entity player, entity attacker )
 	clientTeam.fastremovebyvalue( player )
 
 	bool isAloneOrSquadEliminated = clientTeam.len() == 0
-	
+
 	entity specTarget = null
 
 	if ( Spectator_GetReplayIsEnabled() )
@@ -429,7 +429,7 @@ void function PlayerStartSpectating( entity player, entity attacker )
 		if ( attacker == player ) return;
 		if ( attacker == null ) return;
 		if ( !IsValid( attacker ) || !IsAlive( attacker ) ) return;
-		
+
 		specTarget = attacker;
 	}
 	else if ( isAloneOrSquadEliminated )
@@ -452,7 +452,7 @@ void function PlayerStartSpectating( entity player, entity attacker )
 	// player.StartObservingPlayerInFirstPerson( specTarget )
 
 	player.SetSpecReplayDelay( Spectator_GetReplayDelay() )
-	
+
 	player.StartObserverMode( OBS_MODE_IN_EYE )
 	player.SetObserverTarget( specTarget )
 }
@@ -460,7 +460,7 @@ void function PlayerStartSpectating( entity player, entity attacker )
 void function PlayerStopSpectating( entity player )
 {
 	player.SetPlayerNetInt( "spectatorTargetCount", 0 )
-	
+
 	player.SetSpecReplayDelay( 0 )
 }
 #endif
@@ -496,7 +496,7 @@ void function OnClientConnected( entity player )
 	SetGlobalNetInt( "connectedPlayerCount", connectedPlayerCount )
 
 	int minPlayers = GetCurrentPlaylistVarInt( "min_players", 1 )
-	
+
 	if ( connectedPlayerCount >= minPlayers && !Flag( "MinPlayersReached" ) )
 		FlagSet( "MinPlayersReached" )
 	// Min players logic end
@@ -532,7 +532,7 @@ void function OnCharacterClassChanged( EHI playerEHI, ItemFlavor flavor )
 		return
 
 	entity player = FromEHI( playerEHI )
-	if ( IsAlive( player ) ) {	
+	if ( IsAlive( player ) ) {
 		CharacterSelect_AssignCharacter( player, flavor, false )
 		DecideRespawnPlayer( player )
 	}
@@ -602,8 +602,8 @@ float function CharSelect_GetOutroChampionPresentDuration()		{ return GetCurrent
 float function CharSelect_GetOutroTransitionDuration()			{ return GetCurrentPlaylistVarFloat( "charselect_outro_transition_duration", 3.0 ) }
 
 // Spectator
-bool function Spectator_GetReplayIsEnabled()                   { return GetCurrentPlaylistVarBool( "replay_enabled", false ) } 
-float function Spectator_GetReplayDelay()                      { return GetCurrentPlaylistVarFloat( "replay_delay", 1 ) } 
+bool function Spectator_GetReplayIsEnabled()                   { return GetCurrentPlaylistVarBool( "replay_enabled", false ) }
+float function Spectator_GetReplayDelay()                      { return GetCurrentPlaylistVarFloat( "replay_delay", 1 ) }
 
 // Custom logic
 float function Survival_GetCharacterSelectDuration( int pickIndex )
