@@ -16,6 +16,7 @@ struct
 global struct ServerStruct
 {
 	string svServerName
+	string svServerDesc
 	string svMapName
 	string svPlaylist
 	int svVisibility
@@ -31,6 +32,8 @@ void function InitR5RCreateServerPanel( var panel )
 	//Setup Button EventHandlers
 	Hud_AddEventHandler( Hud_GetChild( file.panel, "BtnStartGame" ), UIE_CLICK, StartNewGame )
 	AddButtonEventHandler( Hud_GetChild( file.panel, "BtnServerName"), UIE_CHANGE, UpdateServerName )
+	AddButtonEventHandler( Hud_GetChild( file.panel, "BtnServerDesc"), UIE_CHANGE, UpdateServerDesc )
+	
 	array<var> buttons = GetElementsByClassname( file.menu, "createserverbuttons" )
 	foreach ( var elem in buttons ) {
 		Hud_AddEventHandler( elem, UIE_CLICK, OpenSelectedPanel )
@@ -43,6 +46,7 @@ void function InitR5RCreateServerPanel( var panel )
 
 	//Setup Default Server Config
 	ServerSettings.svServerName = "A R5Reloaded Server"
+	ServerSettings.svServerDesc = "This is a R5Reloaded Server"
 	ServerSettings.svMapName = "mp_rr_aqueduct"
 	ServerSettings.svPlaylist = "custom_tdm"
 	ServerSettings.svVisibility = eServerVisibility.OFFLINE
@@ -51,7 +55,8 @@ void function InitR5RCreateServerPanel( var panel )
 	Hud_SetText(Hud_GetChild( file.panel, "PlaylistInfoEdit" ), playlisttoname[ServerSettings.svPlaylist])
 	RuiSetImage( Hud_GetRui( Hud_GetChild( file.panel, "ServerMapImg" ) ), "loadscreenImage", GetUIMapAsset( ServerSettings.svMapName ) )
 	Hud_SetText(Hud_GetChild( file.panel, "VisInfoEdit" ), vistoname[ServerSettings.svVisibility])
-	Hud_SetText( Hud_GetChild( file.panel, "BtnServerName" ), "A R5Reloaded Server" )
+	Hud_SetText( Hud_GetChild( file.panel, "BtnServerName" ), ServerSettings.svServerName )
+	Hud_SetText( Hud_GetChild( file.panel, "BtnServerDesc" ), ServerSettings.svServerDesc )
 }
 
 void function OpenSelectedPanel( var button )
@@ -80,7 +85,7 @@ void function StartServer()
 	}
 
 	//Create new server with selected settings
-	CreateServer(ServerSettings.svServerName, ServerSettings.svMapName, ServerSettings.svPlaylist, ServerSettings.svVisibility)
+	CreateServer(ServerSettings.svServerName, ServerSettings.svServerDesc, ServerSettings.svMapName, ServerSettings.svPlaylist, ServerSettings.svVisibility)
 
 	//No longer at main menu
 	AtMainMenu = false
@@ -163,4 +168,10 @@ void function UpdateServerName( var button )
 {
     //Update the servername when the text is changed
     ServerSettings.svServerName = Hud_GetUTF8Text( Hud_GetChild( file.panel, "BtnServerName" ) )
+}
+
+void function UpdateServerDesc( var button )
+{
+    //Update the servername when the text is changed
+    ServerSettings.svServerDesc = Hud_GetUTF8Text( Hud_GetChild( file.panel, "BtnServerDesc" ) )
 }

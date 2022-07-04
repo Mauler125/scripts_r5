@@ -16,10 +16,10 @@ scripts/resource/ui/menus/R5R/panels/createserver.res
 	"CreateServerBG"
 	{
 		ControlName				ImagePanel
-		ypos 			-642
+		ypos 			-569
 		xpos			-20
 		wide			490
-		tall            350
+		tall            425
 		fillColor		"30 30 30 100"
         drawColor		"30 30 30 100"
 		visible					1
@@ -181,7 +181,7 @@ scripts/resource/ui/menus/R5R/panels/createserver.res
 		wide 480
 		tall 50
 		xpos 0
-		ypos 165
+		ypos 93
 
 		rui "ui/control_options_description.rpak"
 
@@ -396,7 +396,7 @@ scripts/resource/ui/menus/R5R/panels/createserver.res
 		wide					480
 		tall					50
 		xpos					0
-		ypos					5
+		ypos					25
 		allowRightClickMenu		0
 		allowSpecialCharacters	0
 		unicode					0
@@ -415,7 +415,7 @@ scripts/resource/ui/menus/R5R/panels/createserver.res
 		ruiMinFontHeight        16
 		bgcolor_override		"30 30 30 200"
 
-		pin_to_sibling MapPanel
+		pin_to_sibling BtnServerDesc
 		pin_corner_to_sibling	BOTTOM
 		pin_to_sibling_corner	TOP
 	}
@@ -435,6 +435,56 @@ scripts/resource/ui/menus/R5R/panels/createserver.res
 		"fgcolor_override"		"255 255 255 255"
 
 		pin_to_sibling BtnServerName
+		pin_corner_to_sibling	BOTTOM_LEFT
+		pin_to_sibling_corner	TOP_LEFT
+	}
+
+	BtnServerDesc
+	{
+		ControlName				TextEntry
+		zpos					100 // This works around input weirdness when the control is constructed by code instead of VGUI blackbox.
+		wide					480
+		tall					50
+		xpos					0
+		ypos					5
+		allowRightClickMenu		0
+		allowSpecialCharacters	0
+		unicode					0
+
+		keyboardTitle			"Enter Server Description"
+		keyboardDescription		"Enter Server Description"
+
+		visible					1
+		enabled					1
+		textHidden				0
+		editable				1
+		maxchars				100
+		textAlignment			"center"
+		ruiFont                 TitleRegularFont
+		ruiFontHeight           22
+		ruiMinFontHeight        16
+		bgcolor_override		"30 30 30 200"
+
+		pin_to_sibling MapPanel
+		pin_corner_to_sibling	BOTTOM
+		pin_to_sibling_corner	TOP
+	}
+
+	DescServerTxT
+	{
+		ControlName				Label
+		labelText				"Description:"
+		"font"					"DefaultBold_41"
+		"allcaps"				"1"
+		tall					20
+		auto_wide_tocontents	1
+		zpos 					3
+		fontHeight				20
+		xpos					0
+		ypos					2
+		"fgcolor_override"		"255 255 255 255"
+
+		pin_to_sibling BtnServerDesc
 		pin_corner_to_sibling	BOTTOM_LEFT
 		pin_to_sibling_corner	TOP_LEFT
 	}
