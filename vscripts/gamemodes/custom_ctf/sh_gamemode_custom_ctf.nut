@@ -13,8 +13,11 @@ global function CTF_GetOOBDamagePercent
 
 global int CTF_SCORE_GOAL_TO_WIN
 global int CTF_ROUNDTIME
+
+//Dont change these as the ui isnt built for it atm
 global const int NUMBER_OF_MAP_SLOTS = 4
 global const int NUMBER_OF_CLASS_SLOTS = 6
+
 global bool GIVE_ALT_AFTER_CAPTURE
 global bool USE_LEGEND_ABILITYS
 global int CTF_RESPAWN_TIMER
@@ -186,7 +189,6 @@ void function Sh_CustomCTF_Init()
             )
         )
     }
-
 
     // dtbl pls
     // Map locations, flag spawns, team spawns, deathcam, victory pos, and undermap Z
@@ -622,7 +624,6 @@ void function Sh_CustomCTF_Init()
                     -4808 // Undermap Z
                 )
             )
-
 
         default:
             Assert(false, "No CTF locations found for map!")

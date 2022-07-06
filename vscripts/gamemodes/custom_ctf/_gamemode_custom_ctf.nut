@@ -5,8 +5,6 @@
 // CaféDeColombiaFPS -- ctf sounds, custom ring implementation
 // everyone else -- advice
 
-// TODO: Fix VoteMenu Stats
-
 global function _CustomCTF_Init
 global function _CTFRegisterLocation
 global function _CTFRegisterCTFClass
