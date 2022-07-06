@@ -40,7 +40,7 @@
 			"wide"						"%100"
 			"tall"						"%100"
 			"labelText"					""
-			"bgcolor_override"			"0 0 0 200"
+			"bgcolor_override"			"0 0 0 100"
 			"visible"					"0"
 			"paintbackground"			"1"
 		}

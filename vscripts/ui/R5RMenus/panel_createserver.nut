@@ -69,8 +69,8 @@ void function InitR5RCreateServerPanel( var panel )
 	file.panels.append(Hud_GetChild(file.menu, "R5RDescPanel"))
 
 	//Setup Default Server Config
-	ServerSettings.svServerName = "A R5Reloaded Server"
-	ServerSettings.svServerDesc = "This is a R5Reloaded Server"
+	ServerSettings.svServerName = "My custom server"
+	ServerSettings.svServerDesc = "A R5Reloaded server"
 	ServerSettings.svMapName = "mp_rr_aqueduct"
 	ServerSettings.svPlaylist = "custom_tdm"
 	ServerSettings.svVisibility = eServerVisibility.OFFLINE
@@ -82,6 +82,8 @@ void function InitR5RCreateServerPanel( var panel )
 	Hud_SetText(Hud_GetChild( file.panel, "PlaylistInfoEdit" ), playlisttoname[ServerSettings.svPlaylist])
 	RuiSetImage( Hud_GetRui( Hud_GetChild( file.panel, "ServerMapImg" ) ), "loadscreenImage", GetUIMapAsset( ServerSettings.svMapName ) )
 	Hud_SetText(Hud_GetChild( file.panel, "VisInfoEdit" ), vistoname[ServerSettings.svVisibility])
+
+	Hud_SetText(Hud_GetChild( file.panel, "MapServerNameInfoEdit" ), ServerSettings.svServerName)
 }
 
 void function OpenSelectedPanel( var button )
@@ -203,6 +205,8 @@ void function UpdateServerName( var button )
 
 	Hud_SetVisible( file.namepanel, false )
 	Hud_SetVisible( Hud_GetChild(file.menu, "FadeBackground"), false )
+
+	Hud_SetText(Hud_GetChild( file.panel, "MapServerNameInfoEdit" ), ServerSettings.svServerName)
 }
 
 void function TempSaveNameChanges( var button )
