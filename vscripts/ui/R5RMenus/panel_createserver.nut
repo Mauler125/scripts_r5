@@ -1,4 +1,6 @@
 global function InitR5RCreateServerPanel
+global function InitR5RNamePanel
+global function InitR5RDescPanel
 
 global function SetSelectedServerMap
 global function SetSelectedServerPlaylist
@@ -9,6 +11,12 @@ struct
 {
 	var menu
 	var panel
+
+	string tempservername
+	string tempserverdesc
+
+	var namepanel
+	var descpanel
 
 	array<var> panels
 } file
@@ -24,6 +32,22 @@ global struct ServerStruct
 
 global ServerStruct ServerSettings
 
+void function InitR5RNamePanel( var panel )
+{
+	file.namepanel = panel
+
+	AddButtonEventHandler( Hud_GetChild( panel, "BtnSaveName"), UIE_CLICK, UpdateServerName )
+	AddButtonEventHandler( Hud_GetChild( panel, "BtnServerName"), UIE_CHANGE, TempSaveNameChanges )
+}
+
+void function InitR5RDescPanel( var panel )
+{
+	file.descpanel = panel
+
+	AddButtonEventHandler( Hud_GetChild( panel, "BtnSaveDesc"), UIE_CLICK, UpdateServerDesc )
+	AddButtonEventHandler( Hud_GetChild( panel, "BtnServerDesc"), UIE_CHANGE, TempSaveDescChanges )
+}
+
 void function InitR5RCreateServerPanel( var panel )
 {
 	file.panel = panel
@@ -31,8 +55,6 @@ void function InitR5RCreateServerPanel( var panel )
 
 	//Setup Button EventHandlers
 	Hud_AddEventHandler( Hud_GetChild( file.panel, "BtnStartGame" ), UIE_CLICK, StartNewGame )
-	AddButtonEventHandler( Hud_GetChild( file.panel, "BtnServerName"), UIE_CHANGE, UpdateServerName )
-	AddButtonEventHandler( Hud_GetChild( file.panel, "BtnServerDesc"), UIE_CHANGE, UpdateServerDesc )
 	
 	array<var> buttons = GetElementsByClassname( file.menu, "createserverbuttons" )
 	foreach ( var elem in buttons ) {
@@ -43,6 +65,8 @@ void function InitR5RCreateServerPanel( var panel )
 	file.panels.append(Hud_GetChild(file.panel, "R5RMapPanel"))
 	file.panels.append(Hud_GetChild(file.panel, "R5RPlaylistPanel"))
 	file.panels.append(Hud_GetChild(file.panel, "R5RVisPanel"))
+	file.panels.append(Hud_GetChild(file.menu, "R5RNamePanel"))
+	file.panels.append(Hud_GetChild(file.menu, "R5RDescPanel"))
 
 	//Setup Default Server Config
 	ServerSettings.svServerName = "A R5Reloaded Server"
@@ -51,18 +75,27 @@ void function InitR5RCreateServerPanel( var panel )
 	ServerSettings.svPlaylist = "custom_tdm"
 	ServerSettings.svVisibility = eServerVisibility.OFFLINE
 
+	file.tempservername = ServerSettings.svServerName
+	file.tempserverdesc = ServerSettings.svServerDesc
+
 	//Setup Default Server Config
 	Hud_SetText(Hud_GetChild( file.panel, "PlaylistInfoEdit" ), playlisttoname[ServerSettings.svPlaylist])
 	RuiSetImage( Hud_GetRui( Hud_GetChild( file.panel, "ServerMapImg" ) ), "loadscreenImage", GetUIMapAsset( ServerSettings.svMapName ) )
 	Hud_SetText(Hud_GetChild( file.panel, "VisInfoEdit" ), vistoname[ServerSettings.svVisibility])
-	Hud_SetText( Hud_GetChild( file.panel, "BtnServerName" ), ServerSettings.svServerName )
-	Hud_SetText( Hud_GetChild( file.panel, "BtnServerDesc" ), ServerSettings.svServerDesc )
 }
 
 void function OpenSelectedPanel( var button )
 {
 	//Show panel depending on script id
 	ShowSelectedPanel( file.panels[Hud_GetScriptID( button ).tointeger()] )
+
+	if(Hud_GetScriptID( button ).tointeger() == 3 || Hud_GetScriptID( button ).tointeger() == 4)
+	{
+		Hud_SetVisible( Hud_GetChild(file.menu, "FadeBackground"), true )
+
+		Hud_SetText( Hud_GetChild( file.namepanel, "BtnServerName" ), ServerSettings.svServerName )
+		Hud_SetText( Hud_GetChild( file.descpanel, "BtnServerDesc" ), ServerSettings.svServerDesc )
+	}
 }
 
 void function StartNewGame( var button )
@@ -166,12 +199,26 @@ void function HideAllCreateServerPanels()
 
 void function UpdateServerName( var button )
 {
-    //Update the servername when the text is changed
-    ServerSettings.svServerName = Hud_GetUTF8Text( Hud_GetChild( file.panel, "BtnServerName" ) )
+    ServerSettings.svServerName = file.tempservername
+
+	Hud_SetVisible( file.namepanel, false )
+	Hud_SetVisible( Hud_GetChild(file.menu, "FadeBackground"), false )
+}
+
+void function TempSaveNameChanges( var button )
+{
+	file.tempservername = Hud_GetUTF8Text( Hud_GetChild( file.namepanel, "BtnServerName" ) )
 }
 
 void function UpdateServerDesc( var button )
 {
-    //Update the servername when the text is changed
-    ServerSettings.svServerDesc = Hud_GetUTF8Text( Hud_GetChild( file.panel, "BtnServerDesc" ) )
+    ServerSettings.svServerDesc = file.tempserverdesc
+
+	Hud_SetVisible( file.descpanel, false )
+	Hud_SetVisible( Hud_GetChild(file.menu, "FadeBackground"), false )
+}
+
+void function TempSaveDescChanges( var button )
+{
+	file.tempserverdesc = Hud_GetUTF8Text( Hud_GetChild( file.descpanel, "BtnServerDesc" ) )
 }

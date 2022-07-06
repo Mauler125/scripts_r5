@@ -1518,6 +1518,8 @@ void function InitMenus()
 
 	var r5rlobbymenu = AddMenu( "R5RLobbyMenu", $"scripts/resource/ui/menus/R5R/lobbymenu.res", InitR5RLobbyMenu )
 	AddPanel( r5rlobbymenu, "R5RHomePanel", InitR5RHomePanel )
+	AddPanel( r5rlobbymenu, "R5RNamePanel", InitR5RNamePanel )
+	AddPanel( r5rlobbymenu, "R5RDescPanel", InitR5RDescPanel )
 	var createserverpanel = AddPanel( r5rlobbymenu, "R5RCreateServerPanel", InitR5RCreateServerPanel )
 	AddPanel( r5rlobbymenu, "R5RServerBrowserPanel", InitR5RServerBrowserPanel )
 	AddPanel( createserverpanel, "R5RPlaylistPanel", InitR5RPlaylistPanel )
