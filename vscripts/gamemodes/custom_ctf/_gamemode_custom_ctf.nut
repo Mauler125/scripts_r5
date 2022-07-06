@@ -1641,7 +1641,10 @@ void function CTFAudioThread(entity circle, entity player, float radius)
 	audio.SetAngles( <0, 0, 0> )
 	EmitSoundOnEntity( audio, soundToPlay )
 	
-	while(IsValid(circle) && IsValid(player)){
+	while(IsValid(circle)){
+            if( !IsValid( player ) )
+                continue
+
 			vector fwdToPlayer   = Normalize( <player.GetOrigin().x, player.GetOrigin().y, 0> - <circle.GetOrigin().x, circle.GetOrigin().y, 0> )
 			vector circleEdgePos = circle.GetOrigin() + (fwdToPlayer * radius)
 			circleEdgePos.z = player.EyePosition().z
