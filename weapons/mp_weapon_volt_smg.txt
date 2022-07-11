@@ -34,12 +34,12 @@ WeaponData
 	"critical_hit_damage_scale"						"2"
 
 	// Callbacks
-    //"OnWeaponActivate"                              "OnWeaponActivate_weapon_volt_smg"
-   // "OnWeaponDeactivate"                            "OnWeaponDeactivate_weapon_volt_smg"
+	//"OnWeaponActivate"                              "OnWeaponActivate_weapon_volt_smg"
+	// "OnWeaponDeactivate"                            "OnWeaponDeactivate_weapon_volt_smg"
 
 	// Menu
 	"menu_category"                                 "smg"
-   	"menu_anim_class"                               "medium"
+	"menu_anim_class"                               "medium"
 	"stat_damage" 									"35"
 	"stat_range"  									"40"
 	"stat_accuracy"   								"90"
@@ -52,43 +52,43 @@ WeaponData
 
 	"chroma_color"									".6 1 .7"
 
-    "projectilemodel" 								"mdl/dev/empty_model.rmdl"
-    "projectile_trail_effect_0_1p" 					"P_tracer_projectile_smg_blue"
-    "projectile_trail_effect_0_3p" 					"P_tracer_projectile_smg_blue"
+	"projectilemodel" 								"mdl/dev/empty_model.rmdl"
+	"projectile_trail_effect_0_1p" 					"P_tracer_projectile_smg_blue"
+	"projectile_trail_effect_0_3p" 					"P_tracer_projectile_smg_blue"
 
-    "projectile_do_predict_impact_effects"			"1"
+	"projectile_do_predict_impact_effects"			"1"
 
-    // Bolt info
-    "bolt_hitsize"									"0.0"
-    //"bolt_hitsize_grow1_time"						"0.005"
-    //"bolt_hitsize_grow1_size"						"0.2"
-    //"bolt_hitsize_grow2_time"						"0.07"
-    //"bolt_hitsize_grow2_size"						"0.2"
-    //"bolt_hitsize_growfinal_lerptime"				"0.1"
-    //"bolt_hitsize_growfinal_size"					"0.1"
+	// Bolt info
+	"bolt_hitsize"									"0.0"
+	//"bolt_hitsize_grow1_time"						"0.005"
+	//"bolt_hitsize_grow1_size"						"0.2"
+	//"bolt_hitsize_grow2_time"						"0.07"
+	//"bolt_hitsize_grow2_size"						"0.2"
+	//"bolt_hitsize_growfinal_lerptime"				"0.1"
+	//"bolt_hitsize_growfinal_size"					"0.1"
 
-    "bolt_gravity_enabled"							"1"
-    "projectile_gravity_scale"						"0.8"
-    "projectile_drag_coefficient"                   "0.0"
-    "bolt_zero_distance"                            "1378.0"    //35m
+	"bolt_gravity_enabled"							"1"
+	"projectile_gravity_scale"						"0.8"
+	"projectile_drag_coefficient"                   "0.0"
+	"bolt_zero_distance"                            "1378.0"    //35m
 
-    "bolt_bounce_frac"								"0.000"
-    "projectile_damages_owner"						"0"
-    "projectile_ricochet_max_count"					"0"
+	"bolt_bounce_frac"								"0.000"
+	"projectile_damages_owner"						"0"
+	"projectile_ricochet_max_count"					"0"
 
-    "pass_through_depth"							"0"
-    "pass_through_damage_preserved_scale"			"1"
+	"pass_through_depth"							"0"
+	"pass_through_damage_preserved_scale"			"1"
 
-    "projectile_launch_speed"						"23500"
+	"projectile_launch_speed"						"23500"
 
-    "tracer_effect"   								"P_wpn_tracer_pulse"
-    "impact_effect_table" 							"pulse_bullet"
-    "vortex_impact_effect"							"P_impact_xo_shield_cp"
-    "vortex_absorb_effect"							"wpn_vortex_projectile_rifle_FP"
-    "vortex_absorb_effect_third_person"				"wpn_vortex_projectile_rifle"
-    "vortex_absorb_sound"							"Vortex_Shield_AbsorbBulletSmall"
-    "vortex_absorb_sound_1P_VS_3P"					"Vortex_Shield_AbsorbBulletSmall_1P_VS_3P"
-    "projectile_adjust_to_gun_barrel"				"1"
+	"tracer_effect"   								"P_wpn_tracer_pulse"
+	"impact_effect_table" 							"pulse_bullet"
+	"vortex_impact_effect"							"P_impact_xo_shield_cp"
+	"vortex_absorb_effect"							"wpn_vortex_projectile_rifle_FP"
+	"vortex_absorb_effect_third_person"				"wpn_vortex_projectile_rifle"
+	"vortex_absorb_sound"							"Vortex_Shield_AbsorbBulletSmall"
+	"vortex_absorb_sound_1P_VS_3P"					"Vortex_Shield_AbsorbBulletSmall_1P_VS_3P"
+	"projectile_adjust_to_gun_barrel"				"1"
 
 	"sound_dryfire"									"hemlok_dryfire"
 	"sound_pickup"									"wpn_pickup_SMG_1P"
@@ -106,27 +106,27 @@ WeaponData
 
 	"looping_sounds"								"1"
 
-    "fire_sound_1_player_1p"						"weapon_hemloksmg_secondshot_1p"
-    "fire_sound_1_player_3p"						"weapon_hemloksmg_secondshot_3p"
-    "fire_sound_1_npc"								"weapon_hemloksmg_secondshot_3p"
+	"fire_sound_1_player_1p"						"weapon_hemloksmg_secondshot_1p"
+	"fire_sound_1_player_3p"						"weapon_hemloksmg_secondshot_3p"
+	"fire_sound_1_npc"								"weapon_hemloksmg_secondshot_3p"
 
 	"fire_sound_2_player_1p" 						""
 	"fire_sound_2_player_3p" 						""
 
-    "burst_or_looping_fire_sound_start_1p"			"Weapon_HemlokSMG_Fire_First_1P"
-    "burst_or_looping_fire_sound_middle_1p"			"Weapon_HemlokSMG_Fire_Loop_1P"
-    "burst_or_looping_fire_sound_end_1p"			"Weapon_HemlokSMG_Fire_Last_1P"
+	"burst_or_looping_fire_sound_start_1p"			"Weapon_HemlokSMG_Fire_First_1P"
+	"burst_or_looping_fire_sound_middle_1p"			"Weapon_HemlokSMG_Fire_Loop_1P"
+	"burst_or_looping_fire_sound_end_1p"			"Weapon_HemlokSMG_Fire_Last_1P"
 
-    "burst_or_looping_fire_sound_start_3p"			""
-    "burst_or_looping_fire_sound_middle_3p"			"Weapon_HemlokSMG_Fire_Loop_3P"
-    "burst_or_looping_fire_sound_end_3p"			"Weapon_HemlokSMG_Fire_Last_3P"
+	"burst_or_looping_fire_sound_start_3p"			""
+	"burst_or_looping_fire_sound_middle_3p"			"Weapon_HemlokSMG_Fire_Loop_3P"
+	"burst_or_looping_fire_sound_end_3p"			"Weapon_HemlokSMG_Fire_Last_3P"
 
-    "burst_or_looping_fire_sound_start_npc"			""
-    "burst_or_looping_fire_sound_middle_npc"		"Weapon_HemlokSMG_Fire_Loop_3P"
-    "burst_or_looping_fire_sound_end_npc"			"Weapon_HemlokSMG_Fire_Last_3P"
+	"burst_or_looping_fire_sound_start_npc"			""
+	"burst_or_looping_fire_sound_middle_npc"		"Weapon_HemlokSMG_Fire_Loop_3P"
+	"burst_or_looping_fire_sound_end_npc"			"Weapon_HemlokSMG_Fire_Last_3P"
 
 	"low_ammo_sound_name_1"							"R97_LowAmmo_Shot1"
-    "low_ammo_fraction" 							"0.3"
+	"low_ammo_fraction" 							"0.3"
 
 	// Network
 	//"net_optimize"		                            "1"
@@ -139,34 +139,34 @@ WeaponData
 
 	"red_crosshair_range" 							"0"
 
-    "ammo_min_to_fire"								"1"
+	"ammo_min_to_fire"								"1"
 
-    "ammo_default_total"							"969"
-    "ammo_stockpile_max"							"969"
-    "ammo_no_remove_from_stockpile"					"1"
-    "uses_ammo_pool"								"0"
+	"ammo_default_total"							"969"
+	"ammo_stockpile_max"							"969"
+	"ammo_no_remove_from_stockpile"					"1"
+	"uses_ammo_pool"								"0"
 
-    "damage_near_distance"							"800"
-    "damage_far_distance" 							"1500"
-    "damage_very_far_distance"						"3500"
+	"damage_near_distance"							"800"
+	"damage_far_distance" 							"1500"
+	"damage_very_far_distance"						"3500"
 
-    "damage_near_value"   					        "15"
-    "damage_far_value"						        "15"
-    "damage_very_far_value"					        "15"
-    "damage_near_value_titanarmor"			        "15"
-    "damage_far_value_titanarmor" 			        "15"
-    "damage_very_far_value_titanarmor" 		        "15"
+	"damage_near_value"   					        "15"
+	"damage_far_value"						        "15"
+	"damage_very_far_value"					        "15"
+	"damage_near_value_titanarmor"			        "15"
+	"damage_far_value_titanarmor" 			        "15"
+	"damage_very_far_value_titanarmor" 		        "15"
 
-    // View Drift
+	// View Drift
 
-    "viewdrift_ads_stand_scale_pitch" 				"0.7"
-    "viewdrift_ads_stand_scale_yaw"   				"0.75"
-    "viewdrift_ads_crouch_scale_pitch"  			"0.55"
-    "viewdrift_ads_crouch_scale_yaw"				"0.6"
-    "viewdrift_ads_air_scale_pitch"   				"1"
-    "viewdrift_ads_air_scale_yaw" 					"1.05"
-    "viewdrift_ads_speed_pitch"   					"0.65"
-    "viewdrift_ads_speed_yaw" 						"0.75"
+	"viewdrift_ads_stand_scale_pitch" 				"0.7"
+	"viewdrift_ads_stand_scale_yaw"   				"0.75"
+	"viewdrift_ads_crouch_scale_pitch"  			"0.55"
+	"viewdrift_ads_crouch_scale_yaw"				"0.6"
+	"viewdrift_ads_air_scale_pitch"   				"1"
+	"viewdrift_ads_air_scale_yaw" 					"1.05"
+	"viewdrift_ads_speed_pitch"   					"0.65"
+	"viewdrift_ads_speed_yaw" 						"0.75"
 
 	// NPC
 	"proficiency_poor_spreadscale"					"5.0"
@@ -192,7 +192,7 @@ WeaponData
 	"dof_nearDepthEnd"								"0.0"
 
 	// Behavior
-    "fire_rate"                                     "12"
+	"fire_rate"                                     "12"
 	"fire_mode"   									"automatic"
 
 
@@ -249,8 +249,8 @@ WeaponData
 	"spread_kick_on_fire_air_ads" 					"0.0"
 
 	"spread_max_kick_stand_hip"   					"2.0"
-    "spread_max_kick_crouch_hip"  					"1.5"
-    "spread_max_kick_air_hip" 						"3.0"
+	"spread_max_kick_crouch_hip"  					"1.5"
+	"spread_max_kick_air_hip" 						"3.0"
 
 	"spread_max_kick_stand_ads"   					"0.0"
 	"spread_max_kick_crouch_ads"  					"0.0"
@@ -262,10 +262,10 @@ WeaponData
 	"viewkick_pattern"                              "volt_2"
 
 	"viewkick_spring" 								"volt_vkp"
-    "viewkick_spring_hot"                           "volt_vkp_hot"
-    "viewkick_spring_heatpershot"                   "1.0"
-    "viewkick_spring_cooldown_holdtime"             "0.086"
-    "viewkick_spring_cooldown_fadetime"             "0.1"
+	"viewkick_spring_hot"                           "volt_vkp_hot"
+	"viewkick_spring_heatpershot"                   "1.0"
+	"viewkick_spring_cooldown_holdtime"             "0.086"
+	"viewkick_spring_cooldown_fadetime"             "0.1"
 
 	"viewkick_pitch_base" 							"1.0"
 	"viewkick_pitch_random"   						"1.0"
@@ -332,16 +332,16 @@ WeaponData
 	//"bob_yaw_zoomed" 								"-.002"
 	//"bob_roll_zoomed"								".002"
 
-    // Sway
-    "sway_min_yaw_zoomed"							"-0.025"  //"-0.03"
-    "sway_max_yaw_zoomed"							"0.025"  //"0.03"
-    "sway_min_pitch_zoomed"  						"-0.01"  //"-0.015"
-    "sway_max_pitch_zoomed"  						"0.02"  //"0.025"
+	// Sway
+	"sway_min_yaw_zoomed"							"-0.025"  //"-0.03"
+	"sway_max_yaw_zoomed"							"0.025"  //"0.03"
+	"sway_min_pitch_zoomed"  						"-0.01"  //"-0.015"
+	"sway_max_pitch_zoomed"  						"0.02"  //"0.025"
 
 	// Rumble
 	"fire_rumble"									"rumble_smg"
 
-    //setting to "0" so it's tunable in Bakery
+	//setting to "0" so it's tunable in Bakery
 	"sprintcycle_time"								"0.0" //"0.55"
 
 
@@ -349,83 +349,56 @@ WeaponData
 	"bodygroup1_name"	"sight_front"
 	"bodygroup1_set"	"1"
 
-    "clip_bodygroup"						"clip"
-    "clip_bodygroup_index_shown"			"0"
-    "clip_bodygroup_index_hidden"			"1"
-    "clip_bodygroup_show_for_milestone_0"	"1"
-    "clip_bodygroup_show_for_milestone_1"	"0"
-    "clip_bodygroup_show_for_milestone_2"	"1"
-    "clip_bodygroup_show_for_milestone_3"	"1"
+	"clip_bodygroup"						"clip"
+	"clip_bodygroup_index_shown"			"0"
+	"clip_bodygroup_index_hidden"			"1"
+	"clip_bodygroup_show_for_milestone_0"	"1"
+	"clip_bodygroup_show_for_milestone_1"	"0"
+	"clip_bodygroup_show_for_milestone_2"	"1"
+	"clip_bodygroup_show_for_milestone_3"	"1"
 
 	//"anim_alt_idleAttack" "2"
 
 	"viewmodel_ads_rui_bottomleft_attachment"	"RUI_BL_CROSSHAIR_VOLT"
 	"viewmodel_ads_centerpoint_attachment"      "ADS_CENTER_SIGHT_VOLT"
 
-                      
-                                                  
-                                                   
-                                                  
-                                                   
-                                                                                 
-
-      
-
-
 	Mods
 	{
-	    gold        {}
-	    whiteset    {}
-        blueset     {}
-        purpleset   {}
+		gold        {}
+		whiteset    {}
+		blueset     {}
+		purpleset   {}
 
-                      
-                            
-         
-         
-      
-        barrel_stabilizer_l4_flash_hider
-        {
-            "fx_muzzle_flash_view"                "P_mflash_pulse_LMG_sup_FP"
-            "fx_muzzle_flash_world"                "P_mflash_pulse_LMG_sup"
-        }
+		barrel_stabilizer_l4_flash_hider
+		{
+			"fx_muzzle_flash_view"                "P_mflash_pulse_LMG_sup_FP"
+			"fx_muzzle_flash_world"                "P_mflash_pulse_LMG_sup"
+		}
 
-        optic_cq_hcog_classic
-        {
+		optic_cq_hcog_classic
+		{
 			"ui1_enable" 							"0"
-        }
+		}
 
-        optic_cq_hcog_bruiser
-        {
+		optic_cq_hcog_bruiser
+		{
 			"ui1_enable" 							"0"
-        }
+		}
 
-        optic_cq_holosight
-        {
+		optic_cq_holosight
+		{
 			"ui1_enable" 							"0"
-        }
+		}
 
-        optic_cq_holosight_variable
-        {
+		optic_cq_holosight_variable
+		{
 			"ui1_enable" 							"0"
-        }
+		}
 
 		optic_cq_threat
 		{
 			"ui1_enable" 							"0"
 		}
-
-                           
-                   
-   
-                          
-   
-
-                           
-   
-                          
-   
-      
 
 		energy_mag_l1
 		{
@@ -441,12 +414,11 @@ WeaponData
 		{
 			"ammo_clip_size"   							"26"
 		}
-                     
-        energy_mag_l4
-        {
-            "ammo_clip_size"   		        	        "26"
-        }
-      
+
+		energy_mag_l4
+		{
+			"ammo_clip_size"   		        	        "26"
+		}
 	}
 
 	"ui1_enable"		"1"
@@ -490,8 +462,8 @@ WeaponData
 			isReloading					weapon_is_reloading
 			teamColor					crosshair_team_color
 			isAmped						weapon_is_amped
-		    crosshairMovementX          crosshair_movement_x
-		    crosshairMovementY          crosshair_movement_y
+			crosshairMovementX          crosshair_movement_x
+			crosshairMovementY          crosshair_movement_y
 		}
 
 		Crosshair_1

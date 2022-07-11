@@ -10,7 +10,7 @@
 	"shortprintname"                           "#WPN_SNIPER_SHORT"
 	"description"                              "#WPN_SNIPER_DESC"
 	"longdesc"                                 "#WPN_SNIPER_LONGDESC"
-	
+
 	"weapon_type_flags"								"WPT_PRIMARY"
 
 	// UI - HUD
@@ -51,10 +51,10 @@
 	"ads_fov_zoomfrac_start"                   "0.6"
 	"ads_fov_zoomfrac_end"                     "0.85"
 	"viewmodel_offset_zoom_frac_start"         "0.1"
-    "viewmodel_offset_zoom_frac_end"           "0.85"
+	"viewmodel_offset_zoom_frac_end"           "0.85"
 
-    zoomed_convar_sensitivity_index             4
-    zoomed_convar_toggle_sensitivity_index      6
+	zoomed_convar_sensitivity_index             4
+	zoomed_convar_toggle_sensitivity_index      6
 
 	// Behavior- Aim Assist
 	"aimassist_disable_hipfire"                "1"
@@ -81,7 +81,7 @@
 	"pass_through_depth"                       "64"
 	"pass_through_damage_preserved_scale"      "0.8"
 
-    "damage_headshot_scale"                    "2.05"
+	"damage_headshot_scale"                    "2.05"
 	"damage_leg_scale"                         "0.8"
 
 
@@ -94,12 +94,12 @@
 	// Projectile
 	"projectile_launch_speed"                  "29500"
 
-    "bolt_hitsize_grow1_time"				    "0.133"  //~100m
-    "bolt_hitsize_grow1_size"				    "0.33"
-    "bolt_hitsize_grow2_time"				    "0.267"  //~200m
-    "bolt_hitsize_grow2_size"				    "1.25"
-    "bolt_hitsize_growfinal_lerptime"		    "0.400"  //~300m
-    "bolt_hitsize_growfinal_size"               "2.0"
+	"bolt_hitsize_grow1_time"				    "0.133"  //~100m
+	"bolt_hitsize_grow1_size"				    "0.33"
+	"bolt_hitsize_grow2_time"				    "0.267"  //~200m
+	"bolt_hitsize_grow2_size"				    "1.25"
+	"bolt_hitsize_growfinal_lerptime"		    "0.400"  //~300m
+	"bolt_hitsize_growfinal_size"               "2.0"
 
 
 	// Ammo
@@ -192,21 +192,6 @@
 	"sound_zoom_in"                            "Weapon_Rangemaster_Kraber_ADS_In"
 	"sound_zoom_out"                           "Weapon_Rangemaster_Kraber_ADS_Out"
 
-               
-            
-  
-                              
-                              
-
-                                                  
-                                                  
-                                                  
-                                                  
-                                                  
-                                                  
-  
-      
-
 	// NPC
 	//
 	"npc_min_burst"                            "1"
@@ -242,7 +227,7 @@
 	// FX - Projectile
 	"projectilemodel"                          "mdl/weapons/bullets/projectile_20mm.rmdl"
 
-    "mod_activity_modifier"	                   "default"
+	"mod_activity_modifier"	                   "default"
 
 	// Bodygroups
 	//
@@ -266,9 +251,9 @@
 
 	"Mods"
 	{
-	    crate
-	    {
-	    }
+		crate
+		{
+		}
 
 		"survival_finite_ammo"
 		{
@@ -278,37 +263,29 @@
 			"low_ammo_fraction"                 "0.25"
 		}
 
-        // HACK must define "script_optic_toggle_name" for this to work
+		// HACK must define "script_optic_toggle_name" for this to work
 		"optic_toggle"
 		{
 		}
 
-               
-                                                                                                     
-              
-         
-                                                                                          
-         
-      
-
 		"optic_ranged_aog_variable"
 		{
-		    //"mod_activity_modifier"	    "default"
-		    "anim_alt_idleAttack"       "3"
+			//"mod_activity_modifier"	    "default"
+			"anim_alt_idleAttack"       "3"
 
-		    "bodygroup6_set"    "0"
-		    "ui1_enable"        "1"
-		    "ui7_enable"        "0"
+			"bodygroup6_set"    "0"
+			"ui1_enable"        "1"
+			"ui7_enable"        "0"
 
-		    "bodygroup_ads_scope_set"       "0"
+			"bodygroup_ads_scope_set"       "0"
 
-		    "zoom_time_in"							"0.43"
-	        "zoom_time_out"   						"0.37"
+			"zoom_time_in"							"0.43"
+			"zoom_time_out"   						"0.37"
 
-            "ads_fov_zoomfrac_start"                "0.2"
-            "ads_fov_zoomfrac_end"                  "0.8"
-            "viewmodel_offset_zoom_frac_start"      "0.2"
-            "viewmodel_offset_zoom_frac_end"        "0.8"
+			"ads_fov_zoomfrac_start"                "0.2"
+			"ads_fov_zoomfrac_end"                  "0.8"
+			"viewmodel_offset_zoom_frac_start"      "0.2"
+			"viewmodel_offset_zoom_frac_end"        "0.8"
 		}
 	}
 

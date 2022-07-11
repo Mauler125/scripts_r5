@@ -27,7 +27,7 @@ WeaponData
 	"stat_accuracy"   								"80"
 	"stat_rof"										"80"
 
-    "projectile_launch_speed"						"27500"
+	"projectile_launch_speed"						"27500"
 
 	// Models
 	"viewmodel"   									"mdl/weapons/m1a1_hemlok/ptpov_hemlok.rmdl"
@@ -70,15 +70,15 @@ WeaponData
 
 
 	"viewmodel_offset_hip"                          "0 0 0"
-    "viewmodel_offset_ads"							"0 0.3 0"
+	"viewmodel_offset_ads"							"0 0.3 0"
 
-    "sway_min_pitch_zoomed"  						"-0.034"
-    "sway_max_pitch_zoomed"  						"0.034"
+	"sway_min_pitch_zoomed"  						"-0.034"
+	"sway_max_pitch_zoomed"  						"0.034"
 
-    "sway_min_yaw_zoomed"							"-0.026"
-    "sway_max_yaw_zoomed"							"0.026"
+	"sway_min_yaw_zoomed"							"-0.026"
+	"sway_max_yaw_zoomed"							"0.026"
 
-    // Viewmodel - Depth of Field
+	// Viewmodel - Depth of Field
 	"dof_zoom_nearDepthStart"						"2.75"
 	"dof_zoom_nearDepthEnd"							"8.2"
 	"dof_nearDepthStart"							"0.0"
@@ -92,29 +92,29 @@ WeaponData
 	"ammo_min_to_fire"								"1"
 	"ammo_clip_random_loss_on_npc_drop_chunksize"	"3"
 
-    "ammo_default_total"							"180"
-    "ammo_stockpile_max"							"180"
-    "ammo_no_remove_from_stockpile"					"1"
+	"ammo_default_total"							"180"
+	"ammo_stockpile_max"							"180"
+	"ammo_no_remove_from_stockpile"					"1"
 
-    // Damage - When Used by Players
-    "damage_near_value"   							"22"
-    "damage_far_value"								"22"
-    "damage_very_far_value"							"22"
-    "damage_near_value_titanarmor"					"22"
-    "damage_far_value_titanarmor" 					"22"
-    "damage_very_far_value_titanarmor" 				"22"
+	// Damage - When Used by Players
+	"damage_near_value"   							"22"
+	"damage_far_value"								"22"
+	"damage_very_far_value"							"22"
+	"damage_near_value_titanarmor"					"22"
+	"damage_far_value_titanarmor" 					"22"
+	"damage_very_far_value_titanarmor" 				"22"
 
-    "damage_rodeo" 									"170"
+	"damage_rodeo" 									"170"
 
-    // Damage - When Used by NPCs
-    "npc_damage_near_value"   						"13"
-    "npc_damage_far_value"							"10"
-    "npc_damage_near_value_titanarmor"				"0"
-    "npc_damage_far_value_titanarmor" 				"0"
+	// Damage - When Used by NPCs
+	"npc_damage_near_value"   						"13"
+	"npc_damage_far_value"							"10"
+	"npc_damage_near_value_titanarmor"				"0"
+	"npc_damage_far_value_titanarmor" 				"0"
 
-    "npc_max_range"   								"2500"
-    "npc_max_engage_range"							"2000"
-    "npc_max_engage_range_heavy_armor"				"2500"
+	"npc_max_range"   								"2500"
+	"npc_max_engage_range"							"2000"
+	"npc_max_engage_range_heavy_armor"				"2500"
 
 	// NPC
 	"proficiency_poor_spreadscale"					"5.0"
@@ -162,17 +162,17 @@ WeaponData
 	"viewkick_pattern"                              "hemlok_2"
 
 	"viewkick_spring" 								"hemlok_vkp"
-    "viewkick_spring_hot"                           "hemlok_vkp_hot"
+	"viewkick_spring_hot"                           "hemlok_vkp_hot"
 
-    "viewkick_spring_heatpershot"                   "1.0"
-    "viewkick_spring_cooldown_holdtime"             "0.07"
-    "viewkick_spring_cooldown_fadetime"             "0.3"
+	"viewkick_spring_heatpershot"                   "1.0"
+	"viewkick_spring_cooldown_holdtime"             "0.07"
+	"viewkick_spring_cooldown_fadetime"             "0.3"
 
-    "viewmodel_spring_jolt"                          "autofire_viewmodel_jolt"
-    "viewmodel_jolt_scale"                           "1.0"
-    "viewmodel_jolt_backwardPerShot"                 "-0.3"
-    "viewmodel_jolt_roll"                            "0 4.5 0.0"
-    "viewmodel_jolt_side"                            "0 0.05 0"
+	"viewmodel_spring_jolt"                          "autofire_viewmodel_jolt"
+	"viewmodel_jolt_scale"                           "1.0"
+	"viewmodel_jolt_backwardPerShot"                 "-0.3"
+	"viewmodel_jolt_roll"                            "0 4.5 0.0"
+	"viewmodel_jolt_side"                            "0 0.05 0"
 
 	"viewkick_pitch_base" 							"1.0"
 	"viewkick_pitch_random"   						"1.0"
@@ -185,10 +185,10 @@ WeaponData
 	"viewkick_yaw_hardScale"  						"0.33"
 
 	"viewkick_roll_base"  							"-0.8"
-    "viewkick_roll_randomMin" 						"-0.8"
-    "viewkick_roll_randomMax" 						"1.6"
-    "viewkick_roll_softScale" 						"0.9"
-    "viewkick_roll_hardScale" 						"0.5"
+	"viewkick_roll_randomMin" 						"-0.8"
+	"viewkick_roll_randomMax" 						"1.6"
+	"viewkick_roll_softScale" 						"0.9"
+	"viewkick_roll_hardScale" 						"0.5"
 
 	"viewkick_hipfire_weaponFraction" 				"0.2"
 	"viewkick_hipfire_weaponFraction_vmScale" 		"0.8"
@@ -207,7 +207,7 @@ WeaponData
 	"viewkick_scale_yaw_valueLerpStart"   			"3"
 	"viewkick_scale_yaw_valueLerpEnd" 				"4"
 	"viewkick_scale_valueDecayDelay"  				"0.31" // for burstfire, match to burst delay + fire rate (0.24 + 0.07)
-    "viewkick_scale_valueDecayRate"   				"35"
+	"viewkick_scale_valueDecayRate"   				"35"
 
 	"viewkick_air_scale_ads"						"2.0"
 
@@ -223,18 +223,18 @@ WeaponData
 
 	// Hipfire Spread
 	"spread_stand_hip"								"2.0"
-    "spread_stand_hip_run"							"2.5"
-    "spread_stand_hip_sprint"                       "3.0"
-    "spread_crouch_hip"   							"1.5"
-    "spread_air_hip"  								"4.0"
+	"spread_stand_hip_run"							"2.5"
+	"spread_stand_hip_sprint"                       "3.0"
+	"spread_crouch_hip"   							"1.5"
+	"spread_air_hip"  								"4.0"
 
-    "spread_kick_on_fire_stand_hip"   				"0.25"
-    "spread_kick_on_fire_crouch_hip"  				"0.25"
-    "spread_kick_on_fire_air_hip" 					"0.25"
+	"spread_kick_on_fire_stand_hip"   				"0.25"
+	"spread_kick_on_fire_crouch_hip"  				"0.25"
+	"spread_kick_on_fire_air_hip" 					"0.25"
 
-    "spread_max_kick_stand_hip"   					"2.5"
-    "spread_max_kick_crouch_hip"  					"2.0"
-    "spread_max_kick_air_hip" 						"3.5"
+	"spread_max_kick_stand_hip"   					"2.5"
+	"spread_max_kick_crouch_hip"  					"2.0"
+	"spread_max_kick_air_hip" 						"3.5"
 
 	//setting to "0" so it's tunable in Bakery
 	"sprintcycle_time"								"0"
@@ -243,51 +243,51 @@ WeaponData
 
 	// Bodygroups:
 
-    "clip_bodygroup"						"clip"
-    "clip_bodygroup_index_shown"			"0"
-    "clip_bodygroup_index_hidden"			"1"
-    "clip_bodygroup_show_for_milestone_0"	"1"
-    "clip_bodygroup_show_for_milestone_1"	"1"
-    "clip_bodygroup_show_for_milestone_2"	"0"
-    "clip_bodygroup_show_for_milestone_3"	"0"
-    "clip_bodygroup_show_for_milestone_4"	"0"
+	"clip_bodygroup"						"clip"
+	"clip_bodygroup_index_shown"			"0"
+	"clip_bodygroup_index_hidden"			"1"
+	"clip_bodygroup_show_for_milestone_0"	"1"
+	"clip_bodygroup_show_for_milestone_1"	"1"
+	"clip_bodygroup_show_for_milestone_2"	"0"
+	"clip_bodygroup_show_for_milestone_3"	"0"
+	"clip_bodygroup_show_for_milestone_4"	"0"
 
 	Mods
 	{
 		survival_finite_ammo
-        {
-            "ammo_default_total"							"0"
-            "ammo_stockpile_max"							"36"
-            "ammo_no_remove_from_stockpile"					"0"
+		{
+			"ammo_default_total"							"0"
+			"ammo_stockpile_max"							"36"
+			"ammo_no_remove_from_stockpile"					"0"
 
-            "low_ammo_fraction" 							"0.3"
-	   		"uses_ammo_pool"								"1"
-        }
+			"low_ammo_fraction" 							"0.3"
+			"uses_ammo_pool"								"1"
+		}
 
-        // single shot
+		// single shot
 		altfire
 		{
 			"mod_activity_modifier"							"fire_select"
 
 			"is_semi_auto"									"1"
 
-        	"fire_rate"   									"5.6"
+			"fire_rate"   									"5.6"
 			"burst_fire_count"								"0"
 			"burst_fire_delay"								"0"
 
 			"viewkick_scale_valueDecayDelay"  				"0.15"
-            "viewkick_scale_valueDecayRate"   				"35"
+			"viewkick_scale_valueDecayRate"   				"35"
 
-            // EVAL- for now just use burst pattern
-            //"viewkick_pattern"                              ""
+			// EVAL- for now just use burst pattern
+			//"viewkick_pattern"                              ""
 
 			//"viewkick_pitch_base" 							"-0.95"
-            //"viewkick_pitch_random"   						"0.1"
-            //"viewkick_pitch_softScale"						"0.6"
-            //"viewkick_pitch_hardScale"						"0.4"
+			//"viewkick_pitch_random"   						"0.1"
+			//"viewkick_pitch_softScale"						"0.6"
+			//"viewkick_pitch_hardScale"						"0.4"
 
-            //"viewkick_yaw_base"   							"0.05"
-            //"viewkick_yaw_random" 							"0.05"
+			//"viewkick_yaw_base"   							"0.05"
+			//"viewkick_yaw_random" 							"0.05"
 
 			"fire_sound_1_player_1p"						"Weapon_bulletCasings.Bounce"
 			"fire_sound_1_player_3p"						"Weapon_bulletCasings.Bounce"
@@ -315,7 +315,6 @@ WeaponData
 			"low_ammo_sound_name_3"							"Hemlok_LowAmmo_Shot2"
 			"low_ammo_sound_name_4"							"Hemlok_LowAmmo_Shot3"
 			"low_ammo_sound_name_5"							"Hemlok_LowAmmo_Shot3"
-
 		}
 
 		barrel_stabilizer_l4_flash_hider
@@ -350,18 +349,10 @@ WeaponData
 		npc_rifleman
 		{
 			"projectile_launch_speed"			"2500"
-	    	"bolt_gravity_enabled"							"0"
-    		//"projectile_gravity_scale"						"1.3"
-    		//"bolt_zero_distance"                            "1968.5" // 50m
+			"bolt_gravity_enabled"							"0"
+			//"projectile_gravity_scale"						"1.3"
+			//"bolt_zero_distance"                            "1968.5" // 50m
 		}
-
-               
-                                                                                                     
-                    
-         
-                                                                                          
-         
-      
 	}
 
 	"ui1_enable"		"1"

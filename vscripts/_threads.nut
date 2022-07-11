@@ -34,7 +34,6 @@ global function __serialize_state
 global function __evalBreakpoint
 #endif
 
-
 bool function IsTable( var variable ) {
 	return (type( variable ) == "table")
 }

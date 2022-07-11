@@ -16,13 +16,11 @@ struct LootCeremonyLightData
 	bool   castsShadows = false
 }
 
-
 struct LootCeremonyLightingRigData
 {
 	string                    lightingRigAnimSeq
 	LootCeremonyLightData&[4] lightDataList
 }
-
 
 table<int, LootCeremonyLightingRigData> LOOT_TYPE_LIGHTING_RIG_DATA
 void function Init_LOOT_TYPE_LIGHTING_RIG_DATA()

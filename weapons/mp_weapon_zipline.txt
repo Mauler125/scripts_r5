@@ -31,30 +31,30 @@ WeaponData
 	"OnWeaponReadyToFire"                           "OnWeaponReadyToFire_weapon_zipline"
 	"OnWeaponRaise"									"OnWeaponRaise_weapon_zipline"
 
-    "grenade_arc_indicator_effect"					""
-    "grenade_arc_impact_indicator_effect"			""
-    "grenade_arc_indicator_show_from_hip"			"1"
+	"grenade_arc_indicator_effect"					""
+	"grenade_arc_impact_indicator_effect"			""
+	"grenade_arc_indicator_show_from_hip"			"1"
 	"grenade_arc_indicator_bounce_count"			"1"
 
 	"zipline_indicator_arc_blocked_effect"			""
-    "zipline_indicator_line_effect"					"P_wpn_zipline_previs"
-    "zipline_indicator_impact_ground_effect"		""
-    "zipline_indicator_impact_wall_effect"			""
-    "zipline_indicator_impact_blocked_effect"		""
-    "zipline_station_model_ground"					"mdl/props/pathfinder_zipline/pathfinder_zipline.rmdl"
-    "zipline_station_model_wall"					"mdl/props/pathfinder_zipline/pathfinder_zipline.rmdl"
-    "zipline_station_model_ledge"					"mdl/props/pathfinder_zipline/pathfinder_zipline.rmdl"
-    "zipline_station_attachment_ground"				"ATTACH_TOP_ROPE"
-    "zipline_station_attachment_wall"				"ATTACH_TOP_ROPE"
-    "zipline_station_attachment_ledge"				"ATTACH_TOP_ROPE"
-    "zipline_station_animation_begin"				"prop_pathfinder_zipline_release"
+	"zipline_indicator_line_effect"					"P_wpn_zipline_previs"
+	"zipline_indicator_impact_ground_effect"		""
+	"zipline_indicator_impact_wall_effect"			""
+	"zipline_indicator_impact_blocked_effect"		""
+	"zipline_station_model_ground"					"mdl/props/pathfinder_zipline/pathfinder_zipline.rmdl"
+	"zipline_station_model_wall"					"mdl/props/pathfinder_zipline/pathfinder_zipline.rmdl"
+	"zipline_station_model_ledge"					"mdl/props/pathfinder_zipline/pathfinder_zipline.rmdl"
+	"zipline_station_attachment_ground"				"ATTACH_TOP_ROPE"
+	"zipline_station_attachment_wall"				"ATTACH_TOP_ROPE"
+	"zipline_station_attachment_ledge"				"ATTACH_TOP_ROPE"
+	"zipline_station_animation_begin"				"prop_pathfinder_zipline_release"
 	"zipline_station_animation_ground"				"prop_pathfinder_zipline_expand_up"
-    "zipline_station_animation_wall"				"prop_pathfinder_zipline_expand_side"
-    "zipline_station_animation_ledge"				"prop_pathfinder_zipline_expand_sideup"
-    "zipline_grenade"								"1"
-    "zipline_grenade_auto_detach_distance"			"100"
-    "zipline_grenade_snap_distance"					"250"
-    "zipline_grenade_snap_angle"					"10"
+	"zipline_station_animation_wall"				"prop_pathfinder_zipline_expand_side"
+	"zipline_station_animation_ledge"				"prop_pathfinder_zipline_expand_sideup"
+	"zipline_grenade"								"1"
+	"zipline_grenade_auto_detach_distance"			"100"
+	"zipline_grenade_snap_distance"					"250"
+	"zipline_grenade_snap_angle"					"10"
 
 	"projectile_launch_speed"						"2600"
 	"projectile_first_person_offset_fraction"		"2"
@@ -136,15 +136,15 @@ WeaponData
 
 	// Ammo
 	"ammo_clip_size"								"120"
-    "ammo_default_total"							"0"
-    "ammo_display"									"count"
-    "ammo_min_to_fire"								"120"
-    "ammo_per_shot"									"120"
-    "ammo_stockpile_max"							"0"
-    "regen_ammo_refill_rate"						"1"
-    "regen_ammo_refill_start_delay"					"0.1"
-    "ammo_no_remove_from_stockpile"					"0"
-    "fire_duration"									"0.5"
+	"ammo_default_total"							"0"
+	"ammo_display"									"count"
+	"ammo_min_to_fire"								"120"
+	"ammo_per_shot"									"120"
+	"ammo_stockpile_max"							"0"
+	"regen_ammo_refill_rate"						"1"
+	"regen_ammo_refill_start_delay"					"0.1"
+	"ammo_no_remove_from_stockpile"					"0"
+	"fire_duration"									"0.5"
 
 	// Behavior
 	//"fire_rate"   									"5"
@@ -308,14 +308,14 @@ WeaponData
 
 	Mods
 	{
-	    survival_armor_cooldown_mod
-        {
-            "regen_ammo_refill_rate"    "*1.25"
-        }
+		survival_armor_cooldown_mod
+		{
+			"regen_ammo_refill_rate"    "*1.25"
+		}
 
-        survival_finite_ordnance
-        {
+		survival_finite_ordnance
+		{
 
-        }
+		}
 	}
 }

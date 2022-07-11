@@ -81,7 +81,7 @@ void function DashPlayer(entity player, float chargeTime)
 	{
 		player.SetOrigin(originalPos)
 	}
-	
+
 	// wait chargeTime
 	// player.ClearParent()
 	// player.SetPredictionEnabled( true )

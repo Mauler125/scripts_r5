@@ -22,8 +22,8 @@ WeaponData
 	"aimassist_disable_hipfire"						"1"
 	"aimassist_disable_ads"							"1"
 
-    "OnWeaponAttemptOffhandSwitch"					"OnWeaponAttemptOffhandSwitch_Never"
-    "OnProjectileCollision"							"OnProjectileCollision_WeaponCreepingBombardmentWeapon"
+	"OnWeaponAttemptOffhandSwitch"					"OnWeaponAttemptOffhandSwitch_Never"
+	"OnProjectileCollision"							"OnProjectileCollision_WeaponCreepingBombardmentWeapon"
 
 	SP_BASE
 	{
@@ -32,7 +32,7 @@ WeaponData
 
 	MP_BASE
 	{
-        "enable_highlight_networking_on_creation"		"<KEEP_DEFAULT>"
+		"enable_highlight_networking_on_creation"		"<KEEP_DEFAULT>"
 	}
 
 	// Models
@@ -49,7 +49,7 @@ WeaponData
 	"vortex_absorb_sound_1p_vs_3p"					"Vortex_Shield_AbsorbRocket_1P_VS_3P"
 	"vortex_drain"									"0.0"
 	"projectile_adjust_to_gun_barrel"				"0"
-    "grenade_orient_to_velocity"					"1"
+	"grenade_orient_to_velocity"					"1"
 	"critical_hit"									"0"
 
 	// Sound

@@ -140,16 +140,16 @@ struct
 	array< entity >                          deathBoxFlyerNodes
 	table< entity, DeathBoxFlyerDataStruct > deathBoxFlyerToDataStructTable //
 	table< entity, CagedFlyerDataStruct >    cagedFlyerToDataStructTable //
-	
+
 	array<FlyerAnim> flyerPickupAnimations
 	array< entity > flyerWithCorpseNodes
-	
+
 	int devFlyerCountReal = 0
 	int devFlyerCountCheap = 0
 	int devFlyerCountStatic = 0
-	
+
 	int flyerCheapMixCount = 0
-	
+
 	int fliersToSpawn = 0
 
 	#if(DEV)
@@ -265,10 +265,10 @@ void function ShFlyers_Init()
 		// only works with RunDropshipDropoff( ... ) in _goblin_dropship.nut
 		level.nextDropshipAttackedByFlyers <- false
 	#endif
-	
+
 	#if(CLIENT)
 		AddCreateCallback( "script_mover", FlyerCreationCallback )
-		
+
 		if ( EvilFlyersEnabled() )
 		{
 			#if(true)

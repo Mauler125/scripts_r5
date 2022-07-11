@@ -1,4 +1,3 @@
-
 /////////////
 /////////////
 //// HEH ////
@@ -10,17 +9,12 @@ global typedef EncodedEHandle int
 global const EncodedEHandle EncodedEHandle_null = 0
 
 #if SERVER
-
 global typedef EHI entity
 global const EHI EHI_null = null
-
 #elseif CLIENT || UI
-
 global typedef EHI EncodedEHandle
 global const EHI EHI_null = EncodedEHandle_null
-
 #endif
-
 
 #if SERVER || CLIENT || UI
 global struct EHIScriptStruct

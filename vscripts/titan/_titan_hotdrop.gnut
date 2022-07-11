@@ -662,8 +662,8 @@ bool function TitanTestDropPoint( vector start, FlightPath flightPath )
 			//printt( "surface " + reresult.surfaceName )
 			//DebugDrawLine( newstart, reresult.endPos, 155, 0, 0, true, ANALYSIS_PREVIEW_TIME )
 			//DrawArrow( reresult.endPos, Vector(0,0,0), ANALYSIS_PREVIEW_TIME, 15 )
-            //
-//			//DrawArrow( start, Vector(0,0,0), ANALYSIS_PREVIEW_TIME, 15 )
+			//
+			//DrawArrow( start, Vector(0,0,0), ANALYSIS_PREVIEW_TIME, 15 )
 			//DebugDrawLine( start, result.endPos, 255, 0, 0, true, ANALYSIS_PREVIEW_TIME )
 			//printt( "length " + Length( start - result.endPos ) )
 		}
@@ -682,8 +682,8 @@ bool function TitanTestDropPoint( vector start, FlightPath flightPath )
 			return true
 		}
 
-//		if ( draw )
-//			DebugDrawLine( orgs[i-1] + Vector(10,10,10), orgs[i]+ Vector(10,10,10), 255, 255, 0, true, ANALYSIS_PREVIEW_TIME )
+		// if ( draw )
+		//	DebugDrawLine( orgs[i-1] + Vector(10,10,10), orgs[i]+ Vector(10,10,10), 255, 255, 0, true, ANALYSIS_PREVIEW_TIME )
 
 		// some fudge factor
 		if ( Distance( result.endPos, end ) > 16 )

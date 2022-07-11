@@ -46,7 +46,7 @@ const float TITAN_HEALTH_HISTORY_FALLOFF_END = 4.0
 
 struct
 {
-  float earn_meter_titan_multiplier
+	float earn_meter_titan_multiplier
 } file
 
 void function TitanHealth_Init()
@@ -462,10 +462,10 @@ bool function HandleKillshot( entity ent, var damageInfo, TitanDamage titanDamag
 		{
 			// handle auto eject here
 			if ( ent.IsPlayer() && PlayerHasAutoEject( ent ) )
-		    {
-			    int health = ent.GetHealth()
-			    DamageInfo_SetDamage( damageInfo, health - 1 )
-			    thread HandleAutoEject( ent, titanSoul )
+			{
+				int health = ent.GetHealth()
+				DamageInfo_SetDamage( damageInfo, health - 1 )
+				thread HandleAutoEject( ent, titanSoul )
 				return false
 			}
 		}
@@ -480,12 +480,12 @@ bool function HandleKillshot( entity ent, var damageInfo, TitanDamage titanDamag
 			Soul_SetLastAttackInfo( titanSoul, damageInfo )
 		}
 		else if ( ent.IsPlayer() && PlayerHasAutoEject( ent ) ) //Handle auto eject for when the frame in which Titan became doomed was not valid for ejecting, e.g. melee
-		 {
+		{
 			int health = ent.GetHealth()
 			DamageInfo_SetDamage( damageInfo, health - 1 )
 			thread HandleAutoEject( ent, titanSoul )
 			return false
-		 }
+		}
 
 		// protect players who eject early
 		// if ( ent.IsPlayer() && IsEjectProtected( ent, damageInfo ) )

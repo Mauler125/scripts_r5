@@ -323,9 +323,9 @@ void function PlayIntroQuipThread( entity emitter, EHI playerEHI, entity excepti
 void function PlayKillQuipThread( entity emitter, EHI playerEHI, entity exceptionPlayer = null, float delay = 0.0 )
 {
 	EndSignal( emitter, "OnDestroy" )
-	
+
 	wait delay
-	
+
 	#if CLIENT
 		Timeout timeout = BeginTimeout( 4.0 )
 		EndSignal( timeout, "Timeout" )

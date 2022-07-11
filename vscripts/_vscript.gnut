@@ -59,43 +59,43 @@ void function __DumpScope( int depth, var Table )
 		}
 	}
 
-    foreach(key, value in Table)
-    {
+	foreach(key, value in Table)
+	{
 		indent(depth);
 		print( key );
-        switch (type(value))
-        {
-            case "table":
-				print("(TABLE)\n");
-				indent(depth);
-                print("{\n");
-                __DumpScope( depth + 1, value);
-				indent(depth);
-                print("}");
-                break;
-            case "array":
-				print("(ARRAY)\n");
-				indent(depth);
-                print("[\n")
-                __DumpScope( depth + 1, value);
-				indent(depth);
-                print("]");
-                break;
-            case "string":
-                print(" = \"");
-                print(value);
-                print("\"");
-                break;
-            default:
-                print(" = ");
-                print(value);
-                break;
-        }
-        print("\n");
+		switch (type(value))
+		{
+		case "table":
+			print("(TABLE)\n");
+			indent(depth);
+			print("{\n");
+			__DumpScope( depth + 1, value);
+			indent(depth);
+			print("}");
+			break;
+		case "array":
+			print("(ARRAY)\n");
+			indent(depth);
+			print("[\n")
+			__DumpScope( depth + 1, value);
+			indent(depth);
+			print("]");
+			break;
+		case "string":
+			print(" = \"");
+			print(value);
+			print("\"");
+			break;
+		default:
+			print(" = ");
+			print(value);
+			break;
+		}
+		print("\n");
 	}
 }
 
-// mmmm i am going to dump several functions here because i do not know where they should go
+// grx stub functions
 
 GRXUserInfo function GRX_GetUserInfo( entity player )
 {
@@ -108,7 +108,7 @@ bool function GRX_HasItem( ... )
 	return false
 }
 
-int function GRX_GetPackCount( entity player, int grxIndex ) 
+int function GRX_GetPackCount( entity player, int grxIndex )
 {
 	return 0
 }
@@ -126,7 +126,7 @@ void function GRX_GiveSequenceReward( entity player, int queryScriptId, int quer
 // r5 stuff
 void function MobilityExperiments_Init()
 {
-	
+
 }
 
 void function PushEnt ( entity target, vector scale )

@@ -5010,8 +5010,8 @@ array<entity> function GetFriendlySquadArrayForPlayer_AliveConnected( entity pla
 	{
 		if ( !IsAlive( player ) )
 			return []
-		#if SERVER
-		
+#if SERVER
+
 		// if (teamsWithPlayersAlive.len() == 0)
 		// {
 		// 	teamsWithPlayersAlive.append( team )
@@ -5024,7 +5024,7 @@ array<entity> function GetFriendlySquadArrayForPlayer_AliveConnected( entity pla
 		// 		teamFound = true
 		// }
 
-	#endif
+#endif
 		return [player]
 	}
 

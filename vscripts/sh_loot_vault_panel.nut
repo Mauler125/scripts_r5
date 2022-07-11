@@ -82,7 +82,7 @@ void function VaultPanelSpawned( entity panel )
 	newPanel.panel = panel
 
 	#if SERVER
-	
+
 	#endif // SERVER
 
 	file.vaultControlPanels.append( newPanel )
@@ -102,7 +102,7 @@ void function VaultDoorSpawned( entity door )
 	door.UnsetUsable()
 
 	#endif // SERVER
-	
+
 	SetObjectCanBeMeleed( door, false )
 	door.SetTakeDamageType( DAMAGE_NO )
 
@@ -116,7 +116,7 @@ const float PANEL_TO_DOOR_RADIUS = 150.0
 void function EntitiesDidLoad()
 {
 	foreach( panelData in file.vaultControlPanels )
-	{		
+	{
 		vector panelPos = panelData.panel.GetOrigin()
 
 		foreach ( door in file.vaultDoors )
@@ -212,12 +212,12 @@ bool function LootVaultPanel_CanUseFunction( entity playerUser, entity panel )
 
 const float VAULT_PANEL_USE_TIME = 3.0
 void function OnVaultPanelUse( entity panel, entity playerUser, int useInputFlags )
-{	
+{
 	if ( !(useInputFlags & USE_INPUT_LONG) )
 		return
 
 	// TODO: Fix vault key
-	
+
 //	if ( !playerUser.GetPlayerNetBool( "hasDataKnife" ) )
 	if ( !VaultPanel_HasPlayerDataKnife(playerUser) )
 			return
@@ -255,7 +255,7 @@ void function VaultPanelUseSuccess( entity panel, entity player, ExtendedUseSett
 		printf( "LootVaultPanelDebug: Player likely dropped the vault key while opening" )
 		return
 	}
-	
+
 	LootVaultPanelData panelData = GetVaultPanelDataFromEntity( panel )
 
 	printf( "LootVaultPanelDebug: Panel Use Success" )
@@ -268,12 +268,12 @@ void function VaultPanelUseSuccess( entity panel, entity player, ExtendedUseSett
 	{
 		door.Dissolve( ENTITY_DISSOLVE_CORE, <0,0,0>, 1000 )
 	}
-	
+
 	panel.SetSkin(0)
 	panel.Dissolve( ENTITY_DISSOLVE_CORE, <0,0,0>, 1000 )
 
 	PlayBattleChatterLineToSpeakerAndTeam( player, "bc_vaultOpened" )
-	
+
 	SURVIVAL_RemoveFromPlayerInventory( player, "data_knife", 1 )
 
 	#endif
@@ -441,14 +441,14 @@ bool function IsValidLootVaultDoorEnt( entity ent )
 void function SetVaultPanelUsable( entity panel )
 {
 	#if SERVER
-	
+
 	panel.SetSkin(1) // red
-	
+
 	panel.SetUsable()
 	panel.SetUsableByGroup( "pilot" )
 	panel.AddUsableValue( VAULTPANEL_MAX_VIEW_ANGLE_TO_AXIS )
 	panel.SetUsableValue( USABLE_BY_ALL | USABLE_CUSTOM_HINTS )
-	
+
 	#endif // SERVER
 
 	SetCallback_CanUseEntityCallback( panel, LootVaultPanel_CanUseFunction )
@@ -522,7 +522,7 @@ bool function HACK_IsVaultDoor( entity ent )
 
 	if ( !IsDoor( ent ) )
 		return false
-	
+
 	if ( ent.GetSkin() == 1 )
 		return true
 

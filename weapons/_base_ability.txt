@@ -8,8 +8,8 @@ WeaponData
 		}
 
 		survival_ammo_regen_staging
-        {
-            regen_ammo_refill_rate "*5.0"
-        }
+		{
+			regen_ammo_refill_rate "*5.0"
+		}
 	}
 }

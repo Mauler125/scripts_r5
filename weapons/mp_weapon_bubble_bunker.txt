@@ -22,9 +22,9 @@ WeaponData
 	"fast_swap_to"									"1"
 	"dev_menu_type"									"offhand" // fire_mode isn't readable from script
 
-    "does_not_interrupt_cloak"							"1"
-    "allow_gibraltar_shield"                        "0"
-    "trophy_system_ignore"                          "1"
+	"does_not_interrupt_cloak"							"1"
+	"allow_gibraltar_shield"                        "0"
+	"trophy_system_ignore"                          "1"
 
 	"OnWeaponAttemptOffhandSwitch"					"OnWeaponAttemptOffhandSwitch_WeaponBubbleBunker"
 	"OnWeaponTossPrep"								"OnWeaponTossPrep_WeaponBubbleBunker"
@@ -34,7 +34,7 @@ WeaponData
 	"projectile_ignores_vortex"						"fall_vortex"
 
 
-    "zoom_effects"                                  "0"
+	"zoom_effects"                                  "0"
 	// Menu Stats
 
 	// Models
@@ -178,32 +178,32 @@ WeaponData
 	// NPC
 
 	"clip_bodygroup"						"projectile"
-    "clip_bodygroup_index_shown"			"0"
-    "clip_bodygroup_index_hidden"			"1"
-    "clip_bodygroup_show_for_milestone_0"	"1"
-    "clip_bodygroup_show_for_milestone_1"	"0"
-    "clip_bodygroup_show_for_milestone_2"	"1"
-    "clip_bodygroup_show_for_milestone_3"	"1"
+	"clip_bodygroup_index_shown"			"0"
+	"clip_bodygroup_index_hidden"			"1"
+	"clip_bodygroup_show_for_milestone_0"	"1"
+	"clip_bodygroup_show_for_milestone_1"	"0"
+	"clip_bodygroup_show_for_milestone_2"	"1"
+	"clip_bodygroup_show_for_milestone_3"	"1"
 
 	// WeaponED Unhandled Key/Values and custom script Key/Values
 	"fire_anim_rate"  								"1"
 
 	Mods
 	{
-	    survival_armor_cooldown_mod
-        {
-            "regen_ammo_refill_rate"    "*1.25"
-        }
+		survival_armor_cooldown_mod
+		{
+		    "regen_ammo_refill_rate"    "*1.25"
+		}
 
-	    burn_card_weapon_mod
-        {
+		burn_card_weapon_mod
+		{
 
-        }
+		}
 
-        survival_finite_ordnance
-        {
+		survival_finite_ordnance
+		{
 
-        }
+		}
 	}
 
 	active_crosshair_count				"2"
@@ -221,8 +221,8 @@ WeaponData
 			isReloading					weapon_is_reloading
 			teamColor					crosshair_team_color
 			isAmped						weapon_is_amped
-		    crosshairMovementX          crosshair_movement_x
-		    crosshairMovementY          crosshair_movement_y
+			crosshairMovementX          crosshair_movement_x
+			crosshairMovementY          crosshair_movement_y
 		}
 
 		Crosshair_1
@@ -241,9 +241,9 @@ WeaponData
 			"ui"						"ui/crosshair_tactical"
 			Args
 			{
-			    regenRate               "eWeaponVar.regen_ammo_refill_rate"
-			    ammoFrac                "progress_weapon_clip_ammo_frac"
-			    dryfireTime             "weapon_latest_dryfire_time"
+				regenRate               "eWeaponVar.regen_ammo_refill_rate"
+				ammoFrac                "progress_weapon_clip_ammo_frac"
+				dryfireTime             "weapon_latest_dryfire_time"
 			}
 		}
 	}

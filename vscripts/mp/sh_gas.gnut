@@ -209,7 +209,7 @@ void function OnEntSpawned( entity ent )
 	ent.e.gasEnterTime = -1.0
 	ent.e.gasLastExpoTime = -1.0
 	ent.e.gasLastDamageTime = -1.0
-			
+
 	Highlight_SetCausticThreatHighlight( ent, "caustic_gas_threat" )
 }
 
@@ -666,7 +666,7 @@ void function CreateGasExposureRadius( SmokescreenStruct smokescreen )
 	}
 
 	while ( Time() <= endTime )
-	{		
+	{
 		center = GetFXCenterFromSmokescreen( smokescreen )
 
 		bool doDamage = (Time() - lastDamageTime >= damageTickRate) || lastDamageTime == Time()
@@ -808,7 +808,7 @@ void function CreateGasExposureRadius( SmokescreenStruct smokescreen )
 
 				smokeFXs.clear()
 			}
-			
+
 			// TODO: Somehow adding more gas emitters will do +1 dmg per instance, no clue how to fix yet
 
 			RadiusDamage
@@ -825,7 +825,7 @@ void function CreateGasExposureRadius( SmokescreenStruct smokescreen )
 				0.0,												// explosionForce
 				smokescreen.damageFlags,							// scriptDamageFlags
 				eDamageSourceId.damagedef_gas_exposure 				// scriptDamageSourceIdentifier
-			)			
+			)
 
 			//DO GAS RADIUS DAMAGE HERE EVERY TICK TIME.
 			if ( doDamage )

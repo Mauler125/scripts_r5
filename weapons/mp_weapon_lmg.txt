@@ -55,7 +55,7 @@ WeaponData
 	"OnWeaponActivate"								"OnWeaponActivate_weapon_basic_bolt"
 	"OnClientAnimEvent"								"OnClientAnimEvent_weapon_basic_bolt"
 
-		// Bolt info
+	// Bolt info
 	"bolt_hitsize"									"0.0"
 	//"bolt_hitsize_grow1_time"						"0.005"
 	//"bolt_hitsize_grow1_size"						"0.1"
@@ -133,12 +133,12 @@ WeaponData
 	"ammo_clip_size"   								"35"
 	"ammo_clip_random_loss_on_npc_drop"				"0.6"
 
-   "titanarmor_critical_hit_required"              "1"
+	"titanarmor_critical_hit_required"              "1"
 	"critical_hit"									"1"
 
-    "damage_shield_scale"                           "1"
+	"damage_shield_scale"                           "1"
 
-    "damage_headshot_scale"							"2.0"
+	"damage_headshot_scale"							"2.0"
 	"damage_leg_scale"                              "0.75"
 
 
@@ -250,7 +250,7 @@ WeaponData
 	"deployfirst_time"								"1.45"
 
 	"deploy_time" 								    "0.7"
-    "holster_time"								    "0.65"
+	"holster_time"								    "0.65"
 	"raise_time"  								    "0.55"
 	"lower_time"  								    "0.5"
 
@@ -280,18 +280,18 @@ WeaponData
 
 	// Hipfire Spread
 	"spread_stand_hip"								"2.0"
-    "spread_stand_hip_run"							"2.5"
-    "spread_stand_hip_sprint"                       "3.5"
-    "spread_crouch_hip"   							"1.75"
-    "spread_air_hip"  								"5.0"
+	"spread_stand_hip_run"							"2.5"
+	"spread_stand_hip_sprint"                       "3.5"
+	"spread_crouch_hip"   							"1.75"
+	"spread_air_hip"  								"5.0"
 
-    "spread_kick_on_fire_stand_hip"   				"0.25"
-    "spread_kick_on_fire_crouch_hip"  				"0.25"
-    "spread_kick_on_fire_air_hip" 					"0.25"
+	"spread_kick_on_fire_stand_hip"   				"0.25"
+	"spread_kick_on_fire_crouch_hip"  				"0.25"
+	"spread_kick_on_fire_air_hip" 					"0.25"
 
-    "spread_max_kick_stand_hip"   					"3.0"
-    "spread_max_kick_crouch_hip"  					"2.0"
-    "spread_max_kick_air_hip" 						"4.0"
+	"spread_max_kick_stand_hip"   					"3.0"
+	"spread_max_kick_crouch_hip"  					"2.0"
+	"spread_max_kick_air_hip" 						"4.0"
 
 	"spread_stand_ads"  							"0.0"
 	"spread_crouch_ads"  							"0.0"
@@ -313,18 +313,18 @@ WeaponData
 	// View Kick
 	"viewkick_pattern"                              "lmg_2"
 
-    "viewkick_spring" 								"lmg_vkp"
-    "viewkick_spring_hot"                           "lmg_vkp_hot"
+	"viewkick_spring" 								"lmg_vkp"
+	"viewkick_spring_hot"                           "lmg_vkp_hot"
 
-    "viewkick_spring_heatpershot"                   "1.0"
-    "viewkick_spring_cooldown_holdtime"             "0.12"
-    "viewkick_spring_cooldown_fadetime"             "0.05"
+	"viewkick_spring_heatpershot"                   "1.0"
+	"viewkick_spring_cooldown_holdtime"             "0.12"
+	"viewkick_spring_cooldown_fadetime"             "0.05"
 
-    "viewmodel_spring_jolt"                          "autofire_viewmodel_jolt"
-    "viewmodel_jolt_scale"                           "1.0"
-    "viewmodel_jolt_backwardPerShot"                 "-0.5"
-    "viewmodel_jolt_roll"                            "0 3.4 0.0"
-    "viewmodel_jolt_side"                            "0 0.038 0"
+	"viewmodel_spring_jolt"                          "autofire_viewmodel_jolt"
+	"viewmodel_jolt_scale"                           "1.0"
+	"viewmodel_jolt_backwardPerShot"                 "-0.5"
+	"viewmodel_jolt_roll"                            "0 3.4 0.0"
+	"viewmodel_jolt_side"                            "0 0.038 0"
 
 	"viewkick_pitch_base" 							"1.0"
 	"viewkick_pitch_random"   						"1.0"
@@ -338,10 +338,10 @@ WeaponData
 	"viewkick_yaw_hardScale"  						"0.3"
 
 	"viewkick_roll_base"  							"-1.6"
-    "viewkick_roll_randomMin" 						"-0.35"
-    "viewkick_roll_randomMax" 						"0.35"
-    "viewkick_roll_softScale" 						"0.8"
-    "viewkick_roll_hardScale" 						"0.3"
+	"viewkick_roll_randomMin" 						"-0.35"
+	"viewkick_roll_randomMax" 						"0.35"
+	"viewkick_roll_softScale" 						"0.8"
+	"viewkick_roll_hardScale" 						"0.3"
 
 	"viewkick_hipfire_weaponFraction" 				"0.2"
 	"viewkick_hipfire_weaponFraction_vmScale" 		"1.0"
@@ -360,7 +360,7 @@ WeaponData
 	"viewkick_scale_yaw_valueLerpStart"   			"2"
 	"viewkick_scale_yaw_valueLerpEnd" 				"11"
 	"viewkick_scale_valueDecayDelay"  				"0.15"
-    "viewkick_scale_valueDecayRate"   				"80"
+	"viewkick_scale_valueDecayRate"   				"80"
 
 	"viewkick_duck_scale"							"0.9"
 
@@ -482,43 +482,42 @@ WeaponData
 	"anim_alt_idleAttack"	"0"
 
 	"clip_bodygroup"						"clip"
-    "clip_bodygroup_index_shown"			"0"
-    "clip_bodygroup_index_hidden"			"1"
-    "clip_bodygroup_show_for_milestone_0"	"1"
-    "clip_bodygroup_show_for_milestone_1"	"0"
-    "clip_bodygroup_show_for_milestone_2"	"1"
-    "clip_bodygroup_show_for_milestone_3"	"1"
+	"clip_bodygroup_index_shown"			"0"
+	"clip_bodygroup_index_hidden"			"1"
+	"clip_bodygroup_show_for_milestone_0"	"1"
+	"clip_bodygroup_show_for_milestone_1"	"0"
+	"clip_bodygroup_show_for_milestone_2"	"1"
+	"clip_bodygroup_show_for_milestone_3"	"1"
 
-    "low_ammo_fraction" 							"0.3"
+	"low_ammo_fraction" 							"0.3"
 
 	Mods
 	{
-	    vkp
-	    {
-            "spread_stand_hip"								"2.0"
-            "spread_stand_hip_run"							"2.5"
-            "spread_stand_hip_sprint"                       "3.5"
-            "spread_crouch_hip"   							"1.75"
-            "spread_air_hip"  								"5.0"
+		vkp
+		{
+			"spread_stand_hip"								"2.0"
+			"spread_stand_hip_run"							"2.5"
+			"spread_stand_hip_sprint"                       "3.5"
+			"spread_crouch_hip"   							"1.75"
+			"spread_air_hip"  								"5.0"
 
-            "spread_kick_on_fire_stand_hip"   				"0.25"
-            "spread_kick_on_fire_crouch_hip"  				"0.25"
-            "spread_kick_on_fire_air_hip" 					"0.25"
+			"spread_kick_on_fire_stand_hip"   				"0.25"
+			"spread_kick_on_fire_crouch_hip"  				"0.25"
+			"spread_kick_on_fire_air_hip" 					"0.25"
 
-            "spread_max_kick_stand_hip"   					"3.0"
-            "spread_max_kick_crouch_hip"  					"2.0"
-            "spread_max_kick_air_hip" 						"4.0"
-	    }
+			"spread_max_kick_stand_hip"   					"3.0"
+			"spread_max_kick_crouch_hip"  					"2.0"
+			"spread_max_kick_air_hip" 						"4.0"
+		}
 
 		survival_finite_ammo
-        {
-            "ammo_default_total"							"0"
-            "ammo_stockpile_max"							"84"
-            "ammo_no_remove_from_stockpile"					"0"
+		{
+			"ammo_default_total"							"0"
+			"ammo_stockpile_max"							"84"
+			"ammo_no_remove_from_stockpile"					"0"
 
-	   		"uses_ammo_pool"								"1"
-        }
-
+			"uses_ammo_pool"								"1"
+		}
 
 		optic_cq_hcog_classic
 		{
@@ -550,7 +549,6 @@ WeaponData
 			"ui2_enable"		"0"
 		}
 
-
 		highcal_mag_l1
 		{
 			"ammo_clip_size"   							"40"
@@ -575,7 +573,7 @@ WeaponData
 			"fire_rate"   								"30.0"
 
 			"projectile_launch_speed"						"3500"
-	    	"bolt_gravity_enabled"							"0"
+			"bolt_gravity_enabled"							"0"
 
 			"ammo_no_remove_from_clip"						"1"
 			"ammo_no_remove_from_stockpile"					"1"
@@ -604,16 +602,7 @@ WeaponData
 			"npc_min_range"   								"0"
 			"npc_max_range"   								"5000"
 		}
-
-               
-                                                                                                     
-                    
-         
-                                                                                          
-         
-      
 	}
-
 
 	"ui1_enable"		"1"
 	"ui1_draw_cloaked"	"1"
@@ -655,8 +644,8 @@ WeaponData
 			isReloading					weapon_is_reloading
 			teamColor					crosshair_team_color
 			isAmped						weapon_is_amped
-		    crosshairMovementX          crosshair_movement_x
-		    crosshairMovementY          crosshair_movement_y
+			crosshairMovementX          crosshair_movement_x
+			crosshairMovementY          crosshair_movement_y
 		}
 
 		Crosshair_1

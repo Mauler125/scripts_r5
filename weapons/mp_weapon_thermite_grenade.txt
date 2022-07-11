@@ -15,16 +15,16 @@ WeaponData
 	"weaponType"									"anti_titan"
 	"is_toss_weapon"								"1"
 	"menu_category"									"ordnance"
-    "activitymodifier"								"ordnance"
-    "hide_when_holstered"							"1"
+	"activitymodifier"								"ordnance"
+	"hide_when_holstered"							"1"
 
 	"minimap_reveal_distance"						"32000"
 	"leveled_pickup"								"1"
 	"dev_menu_type"									"offhand" // fire_mode isn't readable from script
 
-    "does_not_interrupt_cloak"						"1"
-    "ads_dof_disable"								"1"
-    "allow_gibraltar_shield"                        "0"
+	"does_not_interrupt_cloak"						"1"
+	"ads_dof_disable"								"1"
+	"allow_gibraltar_shield"                        "0"
 
 	"OnWeaponTossReleaseAnimEvent"					"Grenade_OnWeaponTossReleaseAnimEvent"
 	"OnWeaponTossPrep"								"Grenade_OnWeaponTossPrep"
@@ -51,12 +51,12 @@ WeaponData
 	"projectile_adjust_to_gun_barrel"				"0"
 	"projectile_adjust_to_hand"						"1"
 
-    "grenade_arc_indicator_show_from_hip"			"0"
+	"grenade_arc_indicator_show_from_hip"			"0"
 	"grenade_arc_indicator_bounce_count"			"1"
 	"grenade_arc_indicator_effect"					"P_arc_orange_bounce"
 	"grenade_arc_indicator_effect_first"			"P_arc_orange"
-    "grenade_arc_impact_indicator_effect"			"P_arc_orange_end"
-    //"grenade_arc_impact_indicator_effect"			"P_grenade_arc_proto_horiz"
+	"grenade_arc_impact_indicator_effect"			"P_arc_orange_end"
+	//"grenade_arc_impact_indicator_effect"			"P_grenade_arc_proto_horiz"
 
 	"offhand_default_inventory_slot"				"0"
 
@@ -190,7 +190,7 @@ WeaponData
 	"cooldown_type"									"ammo_instant"
 	"max_cook_time"									"4.5"
 	"grenade_fuse_time"								"0"
-    "start_fuse_on_launch"                          "0"
+	"start_fuse_on_launch"                          "0"
 	"grenade_ignition_time"                         "6.0"
 	"fire_rate"										"0.68"
 	"deployfirst_time"                              "1.7"
@@ -371,24 +371,24 @@ WeaponData
 			grenade_arc_indicator_bounce_count				"0"
 		}
 
-        survival_finite_ordnance
-        {
-            "ammo_clip_size"								"100"
-            "ammo_default_total"							"0"
-            "ammo_display"									"count"
-            "ammo_min_to_fire"								"1"
-            "ammo_per_shot"									"1"
-            "ammo_stockpile_max"							"0"
-            "regen_ammo_refill_rate"						"0"
-            "regen_ammo_refill_start_delay"					"0.0"
-            "ammo_no_remove_from_stockpile"					"1"
-        }
+		survival_finite_ordnance
+		{
+			"ammo_clip_size"								"100"
+			"ammo_default_total"							"0"
+			"ammo_display"									"count"
+			"ammo_min_to_fire"								"1"
+			"ammo_per_shot"									"1"
+			"ammo_stockpile_max"							"0"
+			"regen_ammo_refill_rate"						"0"
+			"regen_ammo_refill_start_delay"					"0.0"
+			"ammo_no_remove_from_stockpile"					"1"
+		}
 
-        vertical_firestar_disabled
-        {
-		  	"grenade_arc_indicator_effect"					"P_grenade_arc_proto"
-        	"grenade_arc_impact_indicator_effect"			"P_grenade_arc_proto_vert"
-        }
+		vertical_firestar_disabled
+		{
+			"grenade_arc_indicator_effect"					"P_grenade_arc_proto"
+			"grenade_arc_impact_indicator_effect"			"P_grenade_arc_proto_vert"
+		}
 	}
 
 	active_crosshair_count				"1"

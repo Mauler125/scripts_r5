@@ -9,17 +9,17 @@
 //////////////////////
 global const array<asset> CHARACTER_ASSETS =
 [
-	$"settings/itemflav/character/bangalore.rpak",  //
-	$"settings/itemflav/character/bloodhound.rpak", //
-	$"settings/itemflav/character/caustic.rpak",    //
-	$"settings/itemflav/character/gibraltar.rpak",  //
-	$"settings/itemflav/character/lifeline.rpak",   //
-	$"settings/itemflav/character/mirage.rpak",     //
-	$"settings/itemflav/character/octane.rpak",     //
-	$"settings/itemflav/character/pathfinder.rpak", //
-	$"settings/itemflav/character/wraith.rpak",     //
-	$"settings/itemflav/character/wattson.rpak",    //
-	$"settings/itemflav/character/crypto.rpak",     //
+	$"settings/itemflav/character/bangalore.rpak",  // character_bangalore
+	$"settings/itemflav/character/bloodhound.rpak", // character_bloodhound
+	$"settings/itemflav/character/caustic.rpak",    // character_caustic
+	$"settings/itemflav/character/gibraltar.rpak",  // character_gibraltar
+	$"settings/itemflav/character/lifeline.rpak",   // character_lifeline
+	$"settings/itemflav/character/mirage.rpak",     // character_mirage
+	$"settings/itemflav/character/octane.rpak",     // character_octane
+	$"settings/itemflav/character/pathfinder.rpak", // character_pathfinder
+	$"settings/itemflav/character/wraith.rpak",     // character_wraith
+	$"settings/itemflav/character/wattson.rpak",    // character_wattson
+	$"settings/itemflav/character/crypto.rpak",     // character_crypto
 ]
 
 global const array<asset> CAL_EVENT_ASSET_LIST =

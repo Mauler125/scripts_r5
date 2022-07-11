@@ -71,8 +71,7 @@ global function IsRankedGame
 global function Ranked_IsPlayerAbandoning
 #endif
 
-#if SERVER
-#endif
+
 
 #if CLIENT && R5DEV 
 global function Ranked_ForceClientError

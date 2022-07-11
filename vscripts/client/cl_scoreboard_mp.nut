@@ -381,7 +381,6 @@ void function ShowScoreboardMP()
 
 	file.scoreboard.Show()
 
-	//WHY THE FUCK DID THIS BREAK THE SCOREBOARD - AyeZeeBB
 	ScoreboardFadeIn()
 
 	int maxPlayerDisplaySlots = GetNumPlayersToDisplayAsATeam()

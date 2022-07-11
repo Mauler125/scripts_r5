@@ -1819,7 +1819,7 @@ void function Waypoints_DestroyPingsForSkydiveEnding( entity player )
 		{
 			player.p.pings.locations.fastremovebyvalue( deadPing )
 			player.p.pings.loots.fastremovebyvalue( deadPing )
-			
+
 			deadPing.Destroy()
 		}
 	}
@@ -1850,7 +1850,7 @@ float function GetDefaultTimeoutForPingType( entity player, int pingType )
 		case ePingType.SELF_REVIVE:
 		case ePingType.LOCATION_TRAINING:
 		case ePingType.RESPAWN_BANNER: // has its own destroy threat with a callback
-		return 99999.0
+			return 99999.0
 
 		case ePingType.RESPAWN_CARD:
 			return 1.0

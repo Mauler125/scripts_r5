@@ -137,7 +137,7 @@ global struct LoadoutEntry
 	// stuff for item flavor loadout slots only
 	ItemFlavor&                                         defaultItemFlavor // optional, any valid item flavor or an error if none found
 	ItemFlavor&                                         favoriteItemFlavor //
-	
+
 	array<ItemFlavor>                                   validItemFlavorList = []
 	array<ItemFlavor>                                   validItemFlavorList_CopyForRandomizing
 	ItemFlavorLoadoutEntry_IsItemFlavorUnlockedFuncType isItemFlavorUnlocked = null // optional, default = unlocked
@@ -524,7 +524,7 @@ bool function LoadoutSlot_IsReady( EHI playerEHI, LoadoutEntry entry )
 	//		return false
 	//#endif
 
-	#if CLIENT || UI 
+	#if CLIENT || UI
 		if ( !IsLoadoutSlotCurrentlyAccessible( playerEHI, entry ) )
 			return false
 	#endif
@@ -538,7 +538,7 @@ ItemFlavor function LoadoutSlot_GetItemFlavor( EHI playerEHI, LoadoutEntry entry
 	Assert( entry.type == eLoadoutEntryType.ITEM_FLAVOR )
 
 	int slotContentsIndex = SLOT_CONTENTS_SENTINEL_NOTREADY
-#if CLIENT || UI 
+#if CLIENT || UI
 	if ( IsLoadoutSlotCurrentlyAccessible( playerEHI, entry ) )
 #endif
 	{
@@ -1391,7 +1391,7 @@ void function RefreshLoadoutSlotInternal( EHI playerEHI, LoadoutEntry entry, tab
 			return
 		refreshedSlotsSet[entry] <- true
 	}
-	#if CLIENT || UI 
+	#if CLIENT || UI
 		LocalClientEHI() // this will assert that the local player is valid, and also send it to the UI
 	#endif
 
@@ -1690,7 +1690,7 @@ bool function IsLoadoutSlotCurrentlyAccessible( EHI playerEHI, LoadoutEntry entr
 {
 	#if SERVER
 		return IsLoadoutSlotActive( playerEHI, entry, entryToNotCheck )
-	#elseif CLIENT || UI 
+	#elseif CLIENT || UI
 		if ( playerEHI == LocalClientEHI() )
 		{
 			if ( entry.networkTo != eLoadoutNetworking.SERVER_ONLY )
@@ -1879,7 +1879,7 @@ bool function ValidateAndFixLoadoutSlot( EHI playerEHI, LoadoutEntry entry, bool
 #endif
 
 
-#if SERVER || CLIENT || UI 
+#if SERVER || CLIENT || UI
 array<string> ornull function GetLoadoutSlotForceResetTo( LoadoutEntry entry )
 {
 	//

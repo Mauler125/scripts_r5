@@ -693,7 +693,7 @@ void function OnClientConnected( entity player )
 
 	ValidateDataTable( player, "datatable/survival_loot.rpak" )
 	ValidateDataTable( player, "datatable/survival_weapon_mods.rpak" )
-    ValidateDataTable( player, "datatable/survival_loot_groups_new.rpak" )
+		ValidateDataTable( player, "datatable/survival_loot_groups_new.rpak" )
 }
 
 void function OnPlayerRespawned( entity player )
@@ -714,19 +714,17 @@ bool function SURVIVAL_AltUseSwapsWeapon()
 	return DOES_ALT_USE_SWAP_WEAPON
 }
 
-//#if SERVER
+// #if SERVER
 array<entity> function SURVIVAL_Loot_GetAllLoot()
 {
 	return file.allLoot
 }
-//#endif
+// #endif
 
 bool function CanPlayerLoot( entity player )
 {
-	#if(true)
-		if ( IsPlayerShadowSquad( player ) )
-			return false
-	#endif
+	if ( IsPlayerShadowSquad( player ) )
+		return false
 
 	return true
 }

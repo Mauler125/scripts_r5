@@ -458,7 +458,7 @@ void function LootCreepDeathSetup( entity creep, array<string> lootToSpawn )
 
 			thread CreateAirShake( deathOrigin, 2, 50, 1 )
 			int attach_id = creep.LookupAttachment( "CHESTFOCUS" )
-  		vector effectOrigin = creep.GetAttachmentOrigin( attach_id )
+			vector effectOrigin = creep.GetAttachmentOrigin( attach_id )
 			vector effectAngles = creep.GetAttachmentAngles( attach_id )
 			StartParticleEffectOnEntity( creep, GetParticleSystemIndex( deathFx ), FX_PATTACH_POINT_FOLLOW, attach_id )
 			creep.Hide()
@@ -545,7 +545,6 @@ void function OnRespawnDropshipCreated( entity dropship )
 	thread SpawnDropshipZombies( dropship )
 }
 #endif //#if SERVER
-
 
 #if SERVER
 void function SpawnDropshipZombies( entity dropship  )

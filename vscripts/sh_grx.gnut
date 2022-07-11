@@ -30,7 +30,7 @@ global function GRX_PurchaseItem
 global function GRXPack_IsExpectedToContainSingleItemWithCurrency
 global function GRXPack_GetTickModel
 global function GRXPack_GetTickModelSkin
-#if CLIENT || UI && R5DEV 
+#if CLIENT || UI && R5DEV
 global function GetItemFlavorByGRXRef
 #endif
 #endif
@@ -552,7 +552,7 @@ ItemFlavor function GetItemFlavorByGRXIndex( int index )
 #endif
 
 
-#if CLIENT || UI && R5DEV 
+#if CLIENT || UI && R5DEV
 ItemFlavor function GetItemFlavorByGRXRef( string grxRef )
 {
 	//
@@ -2814,7 +2814,7 @@ void function CodeCallback_GRXPackOpened( entity player, array<int> balanceDiffs
 }
 #endif
 
-#if SERVER || CLIENT || UI 
+#if SERVER || CLIENT || UI
 bool function GRX_IsOfferRestricted( entity player = null )
 {
 #if CLIENT
@@ -2841,7 +2841,7 @@ bool function GRX_IsOfferRestricted( entity player = null )
 #endif
 
 
-#if SERVER || CLIENT || UI 
+#if SERVER || CLIENT || UI
 bool function GRX_IsItemCoveredByOfferRestrictions( ItemFlavor flav )
 {
 	//

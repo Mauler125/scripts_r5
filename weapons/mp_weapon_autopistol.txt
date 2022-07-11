@@ -64,46 +64,46 @@ WeaponData
 	"low_ammo_sound_name_1"							"RE45Auto_LowAmmo_Shot1"
 
 	"ammo_clip_size"   								"16"
-    "ammo_default_total"							"200"
-    "ammo_stockpile_max"							"200"
-    "ammo_no_remove_from_stockpile"					"1"
-    "ammo_min_to_fire"								"1"
+	"ammo_default_total"							"200"
+	"ammo_stockpile_max"							"200"
+	"ammo_no_remove_from_stockpile"					"1"
+	"ammo_min_to_fire"								"1"
 
-    "projectile_launch_speed"						"19500"
+	"projectile_launch_speed"						"19500"
 
 	"damage_type" 									"bullet"
 
-    // Damage - When Used by Players
-    "damage_near_value"   							"11"
-    "damage_far_value"								"11"
-    "damage_very_far_value"							"11"
-    "damage_near_value_titanarmor"					"11"
-    "damage_far_value_titanarmor" 					"11"
-    "damage_very_far_value_titanarmor" 				"11"
-    "damage_rodeo" 									"110"
+	// Damage - When Used by Players
+	"damage_near_value"   							"11"
+	"damage_far_value"								"11"
+	"damage_very_far_value"							"11"
+	"damage_near_value_titanarmor"					"11"
+	"damage_far_value_titanarmor" 					"11"
+	"damage_very_far_value_titanarmor" 				"11"
+	"damage_rodeo" 									"110"
 
-    "damage_unshielded_scale"              			"1.0"
+	"damage_unshielded_scale"              			"1.0"
 
-    // Damage - When Used by NPCs
-    "npc_damage_near_value"   						"10"
-    "npc_damage_far_value"							"7"
-    "npc_damage_near_value_titanarmor"				"<KEEP_DEFAULT>"
-    "npc_damage_far_value_titanarmor" 				"<KEEP_DEFAULT>"
-    "npc_damage_near_distance"						"<KEEP_DEFAULT>"
-    "npc_damage_far_distance" 						"<KEEP_DEFAULT>"
+	// Damage - When Used by NPCs
+	"npc_damage_near_value"   						"10"
+	"npc_damage_far_value"							"7"
+	"npc_damage_near_value_titanarmor"				"<KEEP_DEFAULT>"
+	"npc_damage_far_value_titanarmor" 				"<KEEP_DEFAULT>"
+	"npc_damage_near_distance"						"<KEEP_DEFAULT>"
+	"npc_damage_far_distance" 						"<KEEP_DEFAULT>"
 
-    // NPC
-    "npc_min_engage_range"							"0"
-    "npc_max_engage_range"							"1400"
-    "npc_min_engage_range_heavy_armor"				"500"
-    "npc_max_engage_range_heavy_armor"				"3000"
-    "npc_min_range"   								"0"
-    "npc_max_range"   								"8000"
+	// NPC
+	"npc_min_engage_range"							"0"
+	"npc_max_engage_range"							"1400"
+	"npc_min_engage_range_heavy_armor"				"500"
+	"npc_max_engage_range_heavy_armor"				"3000"
+	"npc_min_range"   								"0"
+	"npc_max_range"   								"8000"
 
-    "npc_min_burst"   								"5"
-    "npc_max_burst"   								"7"
-    "npc_rest_time_between_bursts_min"				"0.2"
-    "npc_rest_time_between_bursts_max"				"0.3"
+	"npc_min_burst"   								"5"
+	"npc_max_burst"   								"7"
+	"npc_rest_time_between_bursts_min"				"0.2"
+	"npc_rest_time_between_bursts_max"				"0.3"
 
 	"proficiency_poor_spreadscale"					"3.33333"
 	"proficiency_average_spreadscale" 				"3.33333"
@@ -135,34 +135,34 @@ WeaponData
 	// View Kick
 	"viewkick_pattern"                              "autopistol_2"
 
-    "viewkick_spring"                               "autopistol_vkp"
-    "viewkick_spring_hot"                           "autopistol_vkp_hot"
+	"viewkick_spring"                               "autopistol_vkp"
+	"viewkick_spring_hot"                           "autopistol_vkp_hot"
 
 	"viewkick_spring_heatpershot"					"1.0"
-    "viewkick_spring_cooldown_holdtime"             "0.08"
-    "viewkick_spring_cooldown_fadetime"             "0.05"
+	"viewkick_spring_cooldown_holdtime"             "0.08"
+	"viewkick_spring_cooldown_fadetime"             "0.05"
 
-    "viewmodel_spring_jolt"                          "autofire_viewmodel_jolt"
-    "viewmodel_jolt_scale"                           "1.0"
-    "viewmodel_jolt_backwardPerShot"                 "-0.075"
-    "viewmodel_jolt_roll"                            "0 2.0 0.0"
-    "viewmodel_jolt_side"                            "0 0.04 0"
+	"viewmodel_spring_jolt"                          "autofire_viewmodel_jolt"
+	"viewmodel_jolt_scale"                           "1.0"
+	"viewmodel_jolt_backwardPerShot"                 "-0.075"
+	"viewmodel_jolt_roll"                            "0 2.0 0.0"
+	"viewmodel_jolt_side"                            "0 0.04 0"
 
 	"viewkick_pitch_base" 							"1.0"
 	"viewkick_pitch_random"   						"1.0"
 	"viewkick_pitch_softScale"						"1.8"
-    "viewkick_pitch_hardScale"						"0.2"
+	"viewkick_pitch_hardScale"						"0.2"
 
 	"viewkick_yaw_base"   							"1.0"
 	"viewkick_yaw_random" 							"1.0"
 	"viewkick_yaw_random_innerexclude" 				"0.05"
 	"viewkick_yaw_softScale"  						"1.8"
-    "viewkick_yaw_hardScale"						"0.2"
+	"viewkick_yaw_hardScale"						"0.2"
 
 	"viewkick_roll_base"  							"0.8"
-    "viewkick_roll_randomMin" 						"-0.2"
-    "viewkick_roll_randomMax" 						"0.2"
-    "viewkick_roll_softScale" 						"0.7"
+	"viewkick_roll_randomMin" 						"-0.2"
+	"viewkick_roll_randomMax" 						"0.2"
+	"viewkick_roll_softScale" 						"0.7"
 	"viewkick_roll_hardScale" 						"0.4"
 
 	"viewkick_hipfire_weaponFraction" 				"0.15"
@@ -187,22 +187,22 @@ WeaponData
 	"viewkick_scale_yaw_valueLerpStart"   			"1"
 	"viewkick_scale_yaw_valueLerpEnd" 				"6"
 	"viewkick_scale_valueDecayDelay"  				"0.1"
-    "viewkick_scale_valueDecayRate"   				"40"
+	"viewkick_scale_valueDecayRate"   				"40"
 
-    // Hipfire Spread
-    "spread_stand_hip"								"1.5"
-    "spread_stand_hip_run"							"1.8"
-    "spread_stand_hip_sprint"                       "2.5"
-    "spread_crouch_hip"   							"0.8"
-    "spread_air_hip"  								"3.5"
+	// Hipfire Spread
+	"spread_stand_hip"								"1.5"
+	"spread_stand_hip_run"							"1.8"
+	"spread_stand_hip_sprint"                       "2.5"
+	"spread_crouch_hip"   							"0.8"
+	"spread_air_hip"  								"3.5"
 
-    "spread_kick_on_fire_stand_hip"   				"0.3"
-    "spread_kick_on_fire_crouch_hip"  				"0.3"
-    "spread_kick_on_fire_air_hip" 					"0.3"
+	"spread_kick_on_fire_stand_hip"   				"0.3"
+	"spread_kick_on_fire_crouch_hip"  				"0.3"
+	"spread_kick_on_fire_air_hip" 					"0.3"
 
-    "spread_max_kick_stand_hip"   					"2.0"
-    "spread_max_kick_crouch_hip"  					"1.5"
-    "spread_max_kick_air_hip" 						"3.0"
+	"spread_max_kick_stand_hip"   					"2.0"
+	"spread_max_kick_crouch_hip"  					"1.5"
+	"spread_max_kick_air_hip" 						"3.0"
 
 	// Rumble
 	"fire_rumble"									"rumble_pistol"
@@ -215,37 +215,37 @@ WeaponData
 	// Bodygroups:
 
 	"clip_bodygroup"						"clip"
-    "clip_bodygroup_index_shown"			"0"
-    "clip_bodygroup_index_hidden"			"1"
-    "clip_bodygroup_show_for_milestone_0"	"1"
-    "clip_bodygroup_show_for_milestone_1"	"1"
-    "clip_bodygroup_show_for_milestone_2"	"1"
-    "clip_bodygroup_show_for_milestone_3"	"1"
+	"clip_bodygroup_index_shown"			"0"
+	"clip_bodygroup_index_hidden"			"1"
+	"clip_bodygroup_show_for_milestone_0"	"1"
+	"clip_bodygroup_show_for_milestone_1"	"1"
+	"clip_bodygroup_show_for_milestone_2"	"1"
+	"clip_bodygroup_show_for_milestone_3"	"1"
 
 	Mods
 	{
-	    gold
-	    {
-	    }
+		gold
+		{
+		}
 
 		survival_finite_ammo
-        {
-            "ammo_default_total"							"0"
-            "ammo_stockpile_max"							"20"
-            "ammo_no_remove_from_stockpile"					"0"
+		{
+			"ammo_default_total"							"0"
+			"ammo_stockpile_max"							"20"
+			"ammo_no_remove_from_stockpile"					"0"
 
-            "low_ammo_fraction" 							"0.3"
+			"low_ammo_fraction" 							"0.3"
 
-	   		"uses_ammo_pool"								"1"
-        }
+			"uses_ammo_pool"								"1"
+		}
 
-        hopup_shield_breaker
-        {
-            "damage_shield_scale"      			"1.6"
-            "projectile_trail_effect_0"			"P_tracer_proj_smg_shield_breaker"
-            "impact_effect_table"				"shield_breaker_bullet"
+		hopup_shield_breaker
+		{
+			"damage_shield_scale"      			"1.6"
+			"projectile_trail_effect_0"			"P_tracer_proj_smg_shield_breaker"
+			"impact_effect_table"				"shield_breaker_bullet"
 
-        	"burst_or_looping_fire_sound_start_1p"			"Weapon_RE45Auto_FirstShot_1P"
+			"burst_or_looping_fire_sound_start_1p"			"Weapon_RE45Auto_FirstShot_1P"
 			"burst_or_looping_fire_sound_middle_1p"			"Weapon_RE45Auto_FireLoop_ShieldBreaker_1P"
 			"burst_or_looping_fire_sound_end_1p"			"Weapon_RE45Auto_LoopEnd_ShieldBreaker_1P"
 
@@ -256,24 +256,24 @@ WeaponData
 			"burst_or_looping_fire_sound_start_npc"			""
 			"burst_or_looping_fire_sound_middle_npc"		"Weapon_RE45Auto_Loop_3P_NPC_A"
 			"burst_or_looping_fire_sound_end_npc"			""
-        }
+		}
 
-        optic_cq_threat
-        {
-            "viewmodel_offset_ads"                  "0 15 0"
+		optic_cq_threat
+		{
+			"viewmodel_offset_ads"                  "0 15 0"
 
-            "dof_zoom_nearDepthStart"               "0.5"
-            "dof_zoom_nearDepthEnd"                 "10.0"
-        }
+			"dof_zoom_nearDepthStart"               "0.5"
+			"dof_zoom_nearDepthEnd"                 "10.0"
+		}
 
-        bullets_mag_l1
-        {
-        	"ammo_clip_size"   					"19"
-        }
-        bullets_mag_l2
-        {
-        	"ammo_clip_size"   					"22"
-        }
+		bullets_mag_l1
+		{
+			"ammo_clip_size"   					"19"
+		}
+		bullets_mag_l2
+		{
+			"ammo_clip_size"   					"22"
+		}
 		bullets_mag_l3
 		{
 			"ammo_clip_size"   					"25"
@@ -320,8 +320,8 @@ WeaponData
 			isReloading					weapon_is_reloading
 			teamColor					crosshair_team_color
 			isAmped						weapon_is_amped
-		    crosshairMovementX          crosshair_movement_x
-		    crosshairMovementY          crosshair_movement_y
+			crosshairMovementX          crosshair_movement_x
+			crosshairMovementY          crosshair_movement_y
 		}
 
 		Crosshair_1
