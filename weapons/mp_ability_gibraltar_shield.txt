@@ -58,7 +58,7 @@ WeaponData
 	"shared_energy_cost"							"0"
 	"shared_energy_charge_cost"						"0"
 
-    "charge_effect_attachment"						"muzzle_flash"
+	"charge_effect_attachment"						"muzzle_flash"
 	"charge_effect_1p"								"P_gun_shield_gibraltar_FP"
 
 	// Ammo
@@ -67,7 +67,7 @@ WeaponData
 	"ammo_default_total"							"4500"
 
 	// Charge settings
-    "cooldown_type"                                 "vortex_drain"
+	"cooldown_type"                                 "vortex_drain"
 	"charge_time" 									"-1.0"
 	"charge_cooldown_time"							"0.0"
 	"charge_cooldown_delay"   						"0.0"
@@ -94,39 +94,39 @@ WeaponData
 	// Spread
 	"ammo_suck_behavior"							"offhand_weapons"
 
-    "spread_stand_hip"								"8"
-    "spread_stand_hip_run"							"8"
-    "spread_stand_hip_sprint"                       "8"
-    "spread_crouch_hip"   							"8"
-    "spread_air_hip"  								"8"
+	"spread_stand_hip"								"8"
+	"spread_stand_hip_run"							"8"
+	"spread_stand_hip_sprint"                       "8"
+	"spread_crouch_hip"   							"8"
+	"spread_air_hip"  								"8"
 
-    "spread_moving_increase_rate" 					"3"
-    "spread_moving_decay_rate" 						"10.5"
+	"spread_moving_increase_rate" 					"3"
+	"spread_moving_decay_rate" 						"10.5"
 
-    "spread_kick_on_fire_stand_hip"   				"0.4"
-    "spread_kick_on_fire_crouch_hip"  				"0.4"
-    "spread_kick_on_fire_air_hip" 					"0.4"
+	"spread_kick_on_fire_stand_hip"   				"0.4"
+	"spread_kick_on_fire_crouch_hip"  				"0.4"
+	"spread_kick_on_fire_air_hip" 					"0.4"
 
-    "spread_max_kick_stand_hip"   					"9"
-    "spread_max_kick_crouch_hip"  					"9"
-    "spread_max_kick_air_hip" 						"9"
+	"spread_max_kick_stand_hip"   					"9"
+	"spread_max_kick_crouch_hip"  					"9"
+	"spread_max_kick_air_hip" 						"9"
 
-    "spread_decay_delay"  							"0.25"
-    "spread_decay_rate"   							"10"
+	"spread_decay_delay"  							"0.25"
+	"spread_decay_rate"   							"10"
 
-    "spread_stand_ads"								"8"
-    "spread_crouch_ads"   							"8"
-    "spread_air_ads"  								"8"
+	"spread_stand_ads"								"8"
+	"spread_crouch_ads"   							"8"
+	"spread_air_ads"  								"8"
 
-    "spread_kick_on_fire_stand_ads"   				"0.4"
-    "spread_kick_on_fire_crouch_ads"  				"0.4"
-    "spread_kick_on_fire_air_ads" 					"0.4"
+	"spread_kick_on_fire_stand_ads"   				"0.4"
+	"spread_kick_on_fire_crouch_ads"  				"0.4"
+	"spread_kick_on_fire_air_ads" 					"0.4"
 
-    "spread_max_kick_stand_ads"   					"9"
-    "spread_max_kick_crouch_ads"  					"9"
-    "spread_max_kick_air_ads" 						"9"
+	"spread_max_kick_stand_ads"   					"9"
+	"spread_max_kick_crouch_ads"  					"9"
+	"spread_max_kick_air_ads" 						"9"
 
-    "spread_wallhanging"  							"0.0"
+	"spread_wallhanging"  							"0.0"
 
 
 	// View Kick
@@ -286,10 +286,10 @@ WeaponData
 
 	Mods
 	{
-	    disabled
-	    {
-	        "offhand_activates_on_zoom"						"0"
-	    }
+		disabled
+		{
+			"offhand_activates_on_zoom"						"0"
+		}
 	}
 
 	"ui1_enable"		"1"

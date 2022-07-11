@@ -76,7 +76,7 @@ WeaponData
 	{
 		data_knife
 		{
-            "viewmodel"   									"mdl/weapons/data_knife/ptpov_data_knife.rmdl"
+			"viewmodel"   									"mdl/weapons/data_knife/ptpov_data_knife.rmdl"
 			"melee_attack_animtime"							"1"
 			"damage_flags"									"DF_BULLET"
 

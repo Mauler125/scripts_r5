@@ -34,27 +34,16 @@ global const asset FIRINGRANGE_QUARRY_BLOCK_ASSET = $"mdl/rocks/thunderdome_quar
 global int firingrange_infinite_ammo = 0
 #endif
 
-#if(false)
-
-
-
-
-
-
-
-//
-#endif //
-
-#if(CLIENT)
+#if CLIENT
 global function SCB_BroadcastFriendlyFireChange
-#endif //
+#endif // CLIENT
 
 struct RackGroup
 {
 	entity point = null
 	string ammoType = ""
 	array<entity> racks = []
-} 
+}
 
 struct {
 	table<string, array<LootData> > weaponsPerAmmoType
@@ -93,7 +82,7 @@ void function FiringRangeGameMode_Init()
 	PrecacheModel( FIRINGRANGE_FLICK_TARGET_ASSET )
 	PrecacheParticleSystem( FIRINGRANGE_FLICK_TARGET_PARTICLE_HIT )
 	PrecacheParticleSystem( FIRINGRANGE_ITEM_RESPAWN_PARTICLE )
-	
+
 	#if SERVER
 		AddCallback_EntitiesDidLoad( OnEntitiesDidLoad )
 		AddCallback_OnClientConnected( WaitForPlayerSpawn )
@@ -144,7 +133,7 @@ void function OnEntitiesDidLoad()
 	// Init
 	array<entity> lootbins = GetEntArrayByScriptName("staging_loot_bin")
 	array<entity> movers = GetEntArrayByScriptName("script_mover_lightweight")
-	
+
 	foreach(entity lootbin in lootbins)
 		lootbin.Destroy()
 
@@ -221,7 +210,7 @@ void function OnPlayerRespawned(entity player)
 		GetSlotForWeapon(player, weapon) == WEAPON_INVENTORY_SLOT_PRIMARY_1)
 			return
 	}
-	
+
 	entity primary = player.GiveWeapon("mp_weapon_vinson", WEAPON_INVENTORY_SLOT_PRIMARY_0, ["highcal_mag_l3", "optic_cq_hcog_classic", "stock_tactical_l3"])
 	entity secondary = player.GiveWeapon("mp_weapon_semipistol", WEAPON_INVENTORY_SLOT_PRIMARY_1, ["bullets_mag_l3","optic_cq_threat"])
 	player.SetActiveWeaponByName( eActiveInventorySlot.mainHand, "mp_weapon_vinson" )
@@ -231,7 +220,7 @@ void function OnPlayerRespawned(entity player)
 
 	foreach(string ammo in ["highcal","bullet"])
 	{
-		entity loot = SpawnGenericLoot( ammo, player.GetOrigin(), player.GetAngles(), 
+		entity loot = SpawnGenericLoot( ammo, player.GetOrigin(), player.GetAngles(),
 			60-SURVIVAL_CountItemsInInventory( player, ammo ) )
 
 		if(!Survival_PickupItem(loot, player))
@@ -310,7 +299,7 @@ void function FillEquipmentTable()
 	file.equipmentsPerIndex.append(SURVIVAL_Loot_GetByType( eLootType.ARMOR ))
 	file.equipmentsPerIndex.append(SURVIVAL_Loot_GetByType( eLootType.HELMET ))
 	file.equipmentsPerIndex.append(SURVIVAL_Loot_GetByType( eLootType.INCAPSHIELD ))
-	file.equipmentsPerIndex.append(SURVIVAL_Loot_GetByType( eLootType.BACKPACK ))		
+	file.equipmentsPerIndex.append(SURVIVAL_Loot_GetByType( eLootType.BACKPACK ))
 }
 
 // Append all items
@@ -356,9 +345,9 @@ void function SpawnOrdnance()
 		vector up = rack.GetUpVector()
 
 		vector firstPos = rack.GetOrigin() + (rght*rackGroup.racks.len()*FIRINGRANGE_RACK_OFFSET)/2 + rack.GetRightVector()*cornerOffset
-		
-		int col = 0 
-		int row = 0 
+
+		int col = 0
+		int row = 0
 		for(int i = 0; i<file.ordnance.len(); i++)
 		{
 			// Double it
@@ -375,7 +364,7 @@ void function SpawnOrdnance()
 
 				entity loot = SpawnGenericLoot(item.ref, pos, <0,90,0>, 1)
 				thread OnPickupGenericThread(loot, item.ref)
-				
+
 				col++
 			}
 		}
@@ -430,9 +419,9 @@ void function SpawnItems()
 		vector fwd = rack.GetForwardVector()
 
 		vector firstPos = rack.GetOrigin() + fwd*otherSideOffset + rght*cornerOffset
-		
-		int col = 0 
-		int row = 0 
+
+		int col = 0
+		int row = 0
 		for(int i = 0; i<file.items.len(); i++)
 		{
 			if(col >= FIRINGRANGE_ITEMS_MAX_COLUMNS)
@@ -446,7 +435,7 @@ void function SpawnItems()
 
 			entity loot = SpawnGenericLoot(item.ref, pos, <0,90,0>, 1)
 			thread OnPickupGenericThread(loot, item.ref)
-			
+
 			col++
 		}
 	}
@@ -466,7 +455,7 @@ void function SpawnEquipments()
 		vector fwd = rack.GetForwardVector()
 
 		vector firstPos = rack.GetOrigin() + fwd*otherSideOffset - rght*cornerOffset
-		
+
 		for(int i = 0; i<file.equipmentsPerIndex.len(); i++)
 		{
 			array<LootData> group = file.equipmentsPerIndex[i]
@@ -525,7 +514,7 @@ void function CreateRackGroups()
 {
 	int ammoIndex = 0
 	foreach ( string ammoType, array<LootData> arr in file.weaponsPerAmmoType)
-	{ 
+	{
 		if(ammoIndex >= file.rackSpawns.len() )
 			break
 
@@ -607,12 +596,12 @@ void function PlayTrainingTargetReaction(entity ent, var damageInfo)
 		(
 			ent,
 			DamageInfo_GetHitBox( damageInfo ),
-			DamageInfo_GetDamagePosition( damageInfo ), 
+			DamageInfo_GetDamagePosition( damageInfo ),
 			DamageInfo_GetCustomDamageType( damageInfo ),
 			DamageInfo_GetDamage( damageInfo ),
-			DamageInfo_GetDamageFlags( damageInfo ), 
+			DamageInfo_GetDamageFlags( damageInfo ),
 			DamageInfo_GetHitGroup( damageInfo ),
-			DamageInfo_GetWeapon( damageInfo ), 
+			DamageInfo_GetWeapon( damageInfo ),
 			DamageInfo_GetDistFromAttackOrigin( damageInfo )
 		)
 	}
@@ -625,20 +614,20 @@ void function MoveTrainingTargetAround(entity ent)
 	while(IsValid(ent))
 	{
 		vector next
-		
+
 		int tries = 0
 		while(Distance(ent.GetOrigin(),next) < 30 || Distance(ent.GetOrigin(),next) > dist*0.7)
 		{
 			if(tries>20)
 				break
 
-			next = o.GetOrigin() + 
-				RandomFloatRange(-dist,dist)*o.GetUpVector()*0.75*file.training_mov.y + 
+			next = o.GetOrigin() +
+				RandomFloatRange(-dist,dist)*o.GetUpVector()*0.75*file.training_mov.y +
 				RandomFloatRange(-dist,dist)*o.GetRightVector()*file.training_mov.x;
 
 			tries++
 		}
-		
+
 		float t = Distance(ent.GetOrigin(),next) / (file.trackingTraining_speedRand ? RandomFloatRange(260,450) : file.trackingTraining_speed)
 		ent.NonPhysicsMoveTo(next, t, 0, 0 )
 		wait t
@@ -646,18 +635,18 @@ void function MoveTrainingTargetAround(entity ent)
 }
 
 void function OnTrainingTargetDamagedNothing(entity ent, var damageInfo)
-{	
+{
 	PlayTrainingTargetReaction(ent, damageInfo)
 }
 
 void function OnTrainingTargetDamagedReposition(entity ent, var damageInfo)
-{	
+{
 	StartParticleEffectInWorld( GetParticleSystemIndex( FIRINGRANGE_FLICK_TARGET_PARTICLE_HIT ), ent.GetOrigin(), ent.GetAngles() )
 	PlayTrainingTargetReaction(ent, damageInfo)
 
 	entity root = ent.GetParent()
-	vector newPos = root.GetOrigin() + 
-					RandomFloatRange(-file.flickTraining_dist,file.flickTraining_dist)*root.GetUpVector()*0.5*file.training_mov.y + 
+	vector newPos = root.GetOrigin() +
+					RandomFloatRange(-file.flickTraining_dist,file.flickTraining_dist)*root.GetUpVector()*0.5*file.training_mov.y +
 					RandomFloatRange(-file.flickTraining_dist,file.flickTraining_dist)*root.GetRightVector()*file.training_mov.x;
 
 	ent.SetOrigin(newPos)
@@ -749,7 +738,7 @@ void function SpawnTargets()
 		// Skip if they're moving targets, they're useless
 		if(t.GetLinkEntArray().len() > 0)
 			continue
-			
+
 		SpawnTarget(t.GetOrigin(), t.GetAngles() )
 	}
 	SpawnTarget(<35819.4961, -6457.02588, -26410.3125>, <0,180,0> )
@@ -767,7 +756,7 @@ void function SpawnMapProps()
 	// TELEPORTERS
 	{
 		entity upper = CreateFRButton(<31016.6934, -8667.74414, -29239.7441>, <0,180,0>, "%&use% GO TO UPPER LEVEL")
-		AddCallback_OnUseEntity( upper, void function(entity panel, entity user, int input) 
+		AddCallback_OnUseEntity( upper, void function(entity panel, entity user, int input)
 		{
 			EmitSoundOnEntityOnlyToPlayer( user, user, FIRINGRANGE_BUTTON_SOUND )
 			TeleportFRPlayer(user,<30437.8281, -9880.22852, -25972.6387>,<0,0,0>)
@@ -802,7 +791,7 @@ void function SpawnMapProps()
 	// BUTTONS
 	{
 		entity charger = CreateFRButton(<30575.1016, -4631.76025, -29112.3125>, <0,0,0>, "%&use% CHARGE ABILITIES")
-		AddCallback_OnUseEntity( charger, void function(entity panel, entity user, int input) 
+		AddCallback_OnUseEntity( charger, void function(entity panel, entity user, int input)
 		{
 			EmitSoundOnEntityOnlyToPlayer( user, user, FIRINGRANGE_BUTTON_SOUND )
 			user.GetOffhandWeapon( OFFHAND_INVENTORY )
@@ -812,18 +801,18 @@ void function SpawnMapProps()
 		})
 
 		entity third = CreateFRButton(<35757.1289, -7238.68506, -28342.2422>, <0,270,0>, "%&use% TOGGLE THIRDPERSON")
-		AddCallback_OnUseEntity( third, void function(entity panel, entity user, int input) 
+		AddCallback_OnUseEntity( third, void function(entity panel, entity user, int input)
 		{
 			EmitSoundOnEntityOnlyToPlayer( user, user, FIRINGRANGE_BUTTON_SOUND )
-			
+
 			if ( user.IsThirdPersonShoulderModeOn() )
-				user.SetThirdPersonShoulderModeOff() 	
+				user.SetThirdPersonShoulderModeOff()
 			else
-				user.SetThirdPersonShoulderModeOn()	
+				user.SetThirdPersonShoulderModeOn()
 		})
 
 		entity ammo = CreateFRButton(<31457.6055, -4903.65918, -29222.959>, <0,-45,0>, GetInfiniteAmmoText(firingrange_infinite_ammo))
-		AddCallback_OnUseEntity( ammo, void function(entity panel, entity user, int input) 
+		AddCallback_OnUseEntity( ammo, void function(entity panel, entity user, int input)
 		{
 			EmitSoundOnEntityOnlyToPlayer( user, user, FIRINGRANGE_BUTTON_SOUND )
 
@@ -839,7 +828,7 @@ void function SpawnMapProps()
 		})
 
 		entity target = CreateFRButton(<31446.1016, -7281.54932, -29235.9824>, <0,270,0>, GetTrainingTargetMovementText(file.training_mov))
-		AddCallback_OnUseEntity( target, void function(entity panel, entity user, int input) 
+		AddCallback_OnUseEntity( target, void function(entity panel, entity user, int input)
 		{
 			EmitSoundOnEntityOnlyToPlayer( user, user, FIRINGRANGE_BUTTON_SOUND )
 			if(file.training_mov == <1,1,0>)
@@ -848,13 +837,13 @@ void function SpawnMapProps()
 				file.training_mov = <0,1,0>
 			else
 				file.training_mov = <1,1,0>
-			
+
 			string prompt = GetTrainingTargetMovementText(file.training_mov)
 			panel.SetUsePrompts(prompt,prompt)
 		})
 
 		entity speed = CreateFRButton(<31672.3145, -8201.04395, -29235.9824>, <0,270,0>, "%&use% Speed: ("+file.trackingTraining_speed+")")
-		AddCallback_OnUseEntity( speed, void function(entity panel, entity user, int input) 
+		AddCallback_OnUseEntity( speed, void function(entity panel, entity user, int input)
 		{
 			EmitSoundOnEntityOnlyToPlayer( user, user, FIRINGRANGE_BUTTON_SOUND )
 			if(file.trackingTraining_speed == -1)
@@ -873,7 +862,7 @@ void function SpawnMapProps()
 				file.trackingTraining_speedRand = true
 				file.trackingTraining_speed = -1
 			}
-			
+
 			string prompt = "%&use% Speed: ("+(file.trackingTraining_speedRand ? "RAND" : string(file.trackingTraining_speed))+")"
 			panel.SetUsePrompts(prompt,prompt)
 		})
@@ -897,17 +886,17 @@ void function SpawnMapProps()
 		for(int i = 0; i<4; i++){
 		CreateFRProp( FIRINGRANGE_256x128_ASSET, corner+<1024+i*16,640,16>, <0,90,0>, true, 1000)
 		CreateFRProp( FIRINGRANGE_256x128_ASSET, corner+<512+i*16,640,-32>, <0,90,0>, true, 1000)}
-		
-		
+
+
 	}
 
 	// UPPER DOORS
 	{
 		// Walls
-		entity dbdoorWall = 
+		entity dbdoorWall =
 		CreateFRProp( FIRINGRANGE_128x128_ASSET, file.doorDouble_pos + <-128,-8,64>, <90,90,0>, true)
 		CreateFRProp( FIRINGRANGE_128x128_ASSET, dbdoorWall.GetOrigin()+<256,0,0>, <90,90,0>, true)
-		dbdoorWall = 
+		dbdoorWall =
 		CreateFRProp( FIRINGRANGE_128x128_ASSET, file.doorSingle_pos + <-124,8,64>, <90,270,0>, true)
 		CreateFRProp( FIRINGRANGE_128x128_ASSET, dbdoorWall.GetOrigin()+<192,0,0>, <90,270,0>, true)
 	}
@@ -935,11 +924,11 @@ void function SpawnMapProps()
 			for(int i = 0; i<2; i++)for(int j = 0; j<2; j++)
 				CreateFRProp( FIRINGRANGE_QUARRY_BLOCK_ASSET, <32970, -6891+yO*i, -28780+zO*j>, <0,90,0>, true, 8000)
 			for(int i = 0; i<2; i++)for(int j = 0; j<2; j++)
-				CreateFRProp( FIRINGRANGE_QUARRY_BLOCK_ASSET, <32970, -5812+yO*i, -28780+zO*j>, <0,90,0>, true, 8000)	
+				CreateFRProp( FIRINGRANGE_QUARRY_BLOCK_ASSET, <32970, -5812+yO*i, -28780+zO*j>, <0,90,0>, true, 8000)
 			for(int i = 0; i<2; i++)for(int j = 0; j<2; j++)
 				CreateFRProp( FIRINGRANGE_QUARRY_BLOCK_ASSET, <32970, -4695+yO*i, -28780+zO*j>, <0,90,0>, true, 8000)
 		}
-		
+
 		{
 			float zO = 90
 			/*SMALL LEFT LEFT*/
@@ -1024,7 +1013,7 @@ entity function CreateFRButton(vector pos, vector ang, string prompt)
 void function SpawnDoors_Init()
 {
 	entity button = CreateFRButton(file.doorResetButton_pos, file.doorResetButton_ang, "%&use% RESPAWN DOORS")
-	AddCallback_OnUseEntity( button, void function(entity panel, entity user, int input) 
+	AddCallback_OnUseEntity( button, void function(entity panel, entity user, int input)
 	{
 		EmitSoundOnEntityOnlyToPlayer( user, user, FIRINGRANGE_BUTTON_SOUND )
 		SpawnDoors()

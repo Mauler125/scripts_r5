@@ -267,7 +267,7 @@ vector function TrackingVision_GetOffsetForPOI( int poiEventID )
 			return < 0, 0, 8.0 >
 
 		default:
-			Assert( 0, "Point of intrest event ID is not registered in eTrackingVisionNetworkedPOITypes" )
+			Assert( 0, "Point of interest event ID is not registered in eTrackingVisionNetworkedPOITypes" )
 			break
 	}
 	unreachable

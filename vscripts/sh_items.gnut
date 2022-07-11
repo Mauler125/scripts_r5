@@ -95,7 +95,7 @@ global function DEV_DescItemFlavor
 #if CLIENT
 global function ServerToClient_ItemFlavorConsistencyCheckFailed
 #endif
-#if ASSERTING && UI 
+#if ASSERTING && UI
 global function ClientToUI_ItemFlavorConsistencyCheckFailed
 #endif
 
@@ -421,7 +421,7 @@ void function ServerToClient_ItemFlavorConsistencyCheckFailed( bool isUI, int se
 }
 #endif
 
-#if ASSERTING && UI 
+#if ASSERTING && UI
 void function ClientToUI_ItemFlavorConsistencyCheckFailed( int serverHash )
 {
 	//
@@ -792,7 +792,7 @@ asset function ItemFlavor_GetIcon( ItemFlavor flavor )
 #endif
 
 
-#if CLIENT || UI 
+#if CLIENT || UI
 bool function ItemFlavor_HasSourceTag( ItemFlavor flavor )
 {
 	Assert( IsItemFlavorStructValid( flavor, eValidation.ASSERT ) )
@@ -1271,7 +1271,7 @@ ItemFlavor ornull function RegisterItemFlavorFromSettingsAsset( asset settingsAs
 }
 
 
-#if SERVER || CLIENT || UI 
+#if SERVER || CLIENT || UI
 bool function IsItemFlavorBagValid( ItemFlavorBag bag, bool allowEmpty, int assertBehavior = eValidation.DONT_ASSERT )
 {
 	if ( bag.flavors.len() == 0 )
@@ -1306,7 +1306,7 @@ bool function IsItemFlavorBagValid( ItemFlavorBag bag, bool allowEmpty, int asse
 	return true
 }
 #endif
-#if SERVER || CLIENT || UI 
+#if SERVER || CLIENT || UI
 ItemFlavorBag function MakeItemFlavorBag( table<ItemFlavor, int> contents )
 {
 	ItemFlavorBag result
@@ -1321,7 +1321,7 @@ ItemFlavorBag function MakeItemFlavorBag( table<ItemFlavor, int> contents )
 #endif
 
 
-#if SERVER || CLIENT || UI 
+#if SERVER || CLIENT || UI
 void function ItemFlavorBag_ClearZeroQuantityFlavors( ItemFlavorBag bag )
 {
 	for ( int itemIdx = bag.flavors.len() - 1; itemIdx >= 0; itemIdx-- )
@@ -1336,7 +1336,7 @@ void function ItemFlavorBag_ClearZeroQuantityFlavors( ItemFlavorBag bag )
 #endif
 
 
-#if SERVER || CLIENT || UI 
+#if SERVER || CLIENT || UI
 ItemFlavor function ItemFlavorBag_GetSingleOutputItemFlavor_Assert( ItemFlavorBag bag )
 {
 	Assert( bag.flavors.len() == 1 )
@@ -1559,7 +1559,7 @@ bool function PlayerHasEntitlement( entity player, int entitlement )
 	#if SERVER
 	return player.HasEntitlement( entitlement ) ? true : false
 	#endif
-	#if UI || CLIENT 
+	#if UI || CLIENT
 		return LocalPlayerHasEntitlement( entitlement ) ? true : false
 	#endif
 }
@@ -1603,7 +1603,7 @@ ItemFlavor ornull function GetItemFlavorAssociatedCharacterOrWeapon( ItemFlavor 
 }
 
 //End Unlock Funcs
-#if CLIENT || UI 
+#if CLIENT || UI
 //
 bool function TEMP_IsItemFlavorEquippable( ItemFlavor item )
 {

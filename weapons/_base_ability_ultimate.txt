@@ -6,9 +6,9 @@ WeaponData
 
 	Mods
 	{
-	    ultimates_charge_over_time_disabled
-	    {
-	    	"regen_ammo_refill_rate"		"0"
-	    }
+		ultimates_charge_over_time_disabled
+		{
+			"regen_ammo_refill_rate"		"0"
+		}
 	}
 }

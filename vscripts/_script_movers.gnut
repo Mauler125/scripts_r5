@@ -145,16 +145,17 @@ void function ScriptedDoorInit( entity door )
 	array validModels = [ // TODO: Fix
 		$"models/door/door_imc_interior_03_128_animated.mdl",
 		$"models/door/pod_door_Hangar_IMC_01_animated.mdl",
-        $"models/door/door_512x512x16_elevatorstyle01_animated.mdl",
+		$"models/door/door_512x512x16_elevatorstyle01_animated.mdl",
 		$"models/door/door_256x256x8_elevatorstyle01_animated.mdl",
-        $"models/door/door_128x104x8_rolldownstyle01_animated.mdl",
-        $"models/door/door_256x256x8_rolldownstyle01_animated.mdl",
-        $"models/door/door_256_02_beacon_metal_door_animated.mdl",
+		$"models/door/door_128x104x8_rolldownstyle01_animated.mdl",
+		$"models/door/door_256x256x8_rolldownstyle01_animated.mdl",
+		$"models/door/door_256_02_beacon_metal_door_animated.mdl",
 		$"models/door/door_beacon_core_animated.mdl",
-        $"models/door/door_128x104x8_elevatorstyle01_animated.mdl"
-        $"models/door/door_marvin_animated.mdl"
+		$"models/door/door_128x104x8_elevatorstyle01_animated.mdl"
+		$"models/door/door_marvin_animated.mdl"
 	]
-	Assert( validModels.contains( door.GetModelName() ), "Door model at " + door.GetOrigin() + " is invalid: " + door.GetModelName() )
+	// asserts don't even work, but this will always be invalid since the array contains legacy r2 model paths
+	// Assert( validModels.contains( door.GetModelName() ), "Door model at " + door.GetOrigin() + " is invalid: " + door.GetModelName() )
 	#endif
 
 	EndSignal( door, "OnDestroy" )
@@ -827,9 +828,9 @@ void function MoverThink( entity mover, array<entity> nodes = [] )
 	array<entity> pathNodes
 
 	if( nodes.len() != 0 )
-    pathNodes = nodes
+		pathNodes = nodes
 	else
-	 	pathNodes = GetNextMoverPathNodes( mover )
+		pathNodes = GetNextMoverPathNodes( mover )
 
 	// Go down the path gathering the nodes and init any flags
 	foreach( entity node in pathNodes )

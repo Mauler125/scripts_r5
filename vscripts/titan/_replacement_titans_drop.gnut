@@ -300,12 +300,12 @@ vector ornull function GetReplacementTrace( vector startPos, vector viewVector )
 	}
 
 	vector ornull clampedEndPos = NavMesh_ClampPointForHullWithExtents( endPos, HULL_TITAN, <160.0, 160.0, 80.0> )
-	
+
 	if ( !clampedEndPos )
 		return null
-	
+
 	expect vector( clampedEndPos )
-	
+
 	vector dir = clampedEndPos - startPos
 	if ( DotProduct2D( dir, viewVector ) < 0 )
 		return null

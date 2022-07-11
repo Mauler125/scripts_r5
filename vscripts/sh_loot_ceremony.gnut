@@ -60,7 +60,7 @@ global function SetChallengeRewardPresentationModeActive
 global function GetNextLootBox
 #endif
 
-#if CLIENT || UI 
+#if CLIENT || UI
 global function TEMP_GetVoidwalkerBundle
 #endif
 
@@ -2951,7 +2951,7 @@ void function UIToClient_RewardEquipToWheelOnClickWithIndex( int index )
 #endif
 
 
-#if CLIENT || UI 
+#if CLIENT || UI
 array<LoadoutEntry> function EquipButton_GetItemLoadoutEntries( ItemFlavor item, bool statTrackerFindExistingEntry = false )
 {
 	int itemType = ItemFlavor_GetType( item )
@@ -3036,7 +3036,7 @@ array<LoadoutEntry> function EquipButton_GetItemLoadoutEntries( ItemFlavor item,
 #endif
 
 
-#if CLIENT || UI 
+#if CLIENT || UI
 LoadoutEntry function PopulateInspectMenuDetails_GetStatTrackerLoadoutEntry( ItemFlavor item, bool findExistingEntry )
 {
 	ItemFlavor character = GladiatorCardStatTracker_GetCharacterFlavor( item )
@@ -5285,8 +5285,8 @@ ItemFlavor ornull function GetNextLootBox()
 #endif
 
 
-#if CLIENT || UI 
-//Voidwalker Event Bundle
+#if CLIENT || UI
+// Voidwalker Event Bundle
 ItemFlavor function TEMP_GetVoidwalkerBundle()
 {
 	return GetItemFlavorByAsset( $"settings/itemflav/pack/cosmetic_event_season02_event02_wraith.rpak" )

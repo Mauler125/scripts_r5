@@ -8,7 +8,7 @@ WeaponData
 	"description" 									"MELEE_SKIN_SHADOWSQUAD_HANDS_NAME"
 	"longdesc"										"MELEE_SKIN_SHADOWSQUAD_HANDS_NAME"
 
-    // UI/HUD
+	// UI/HUD
 	"menu_icon"										"rui/menu/dpad_comms/emoji/fist"
 	"hud_icon"										"rui/menu/dpad_comms/emoji/fist"
 

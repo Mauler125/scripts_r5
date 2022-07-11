@@ -21,7 +21,6 @@ function Wallrun_AddPlayer( player )
 	player.playerClassData[level.pilotClass] <- {}
 }
 
-
 function Wallrun_EnforceWeaponDefaults( player )
 {
 	if ( player.playerClassData[ level.pilotClass ].primaryWeapon )

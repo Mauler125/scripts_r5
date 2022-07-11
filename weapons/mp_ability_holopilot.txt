@@ -19,12 +19,12 @@ WeaponData
 	"offhand_default_inventory_slot"				"1"
 	"offhand_keep_primary_in_hand"					"0"
 	"offhand_holster_primary"						"1"
-    "hide_holstered_sidearm_when_active"			"1"
+	"hide_holstered_sidearm_when_active"			"1"
 	"OnWeaponPrimaryAttack"							"OnWeaponPrimaryAttack_holopilot"
 	"OnWeaponChargeLevelIncreased"					"OnWeaponChargeLevelIncreased_holopilot"
 	"OnWeaponRegenEnd"                              "OnWeaponRegenEndGeneric"
 	"activitymodifier"								"mp_ability_holopilot"
-    "zoom_effects"                                  "0"
+	"zoom_effects"                                  "0"
 
 	"play_offhand_charging_anim"  					"0"
 	"play_offhand_start_end_anim"					"0"
@@ -114,7 +114,7 @@ WeaponData
 	"charge_cooldown_time"							"0.0"
 	"charge_cooldown_delay"   						"0.0"
 	"charge_is_triggered_by_ADS"					"0"
-    "charge_end_forces_fire"  						"1"
+	"charge_end_forces_fire"  						"1"
 	"charge_remain_full_when_fired"                 "0"
 
 	"charge_sound_1p"								""
@@ -128,10 +128,10 @@ WeaponData
 
 	Mods
 	{
-	    survival_armor_cooldown_mod
-        {
-            "regen_ammo_refill_rate"    "*1.25"
-        }
+		survival_armor_cooldown_mod
+		{
+			"regen_ammo_refill_rate"    "*1.25"
+		}
 
 		pas_power_cell
 		{
@@ -142,6 +142,7 @@ WeaponData
 		{
 			"regen_ammo_refill_rate"   									"*10"
 		}
+
 		amped_tacticals
 		{
 			"ammo_clip_size"   								"300"
@@ -149,10 +150,10 @@ WeaponData
 			"ammo_stockpile_max"							"300"
 			"regen_ammo_refill_rate"						"12"
 		}
-        survival_finite_ordnance
-        {
-
-        }
+		
+		survival_finite_ordnance
+		{
+		}
 	}
 
 	"ordnance_crosshair_always_on_start_index"	"0"
@@ -162,7 +163,7 @@ WeaponData
 		DefaultArgs
 		{
 			crosshairMovementX          crosshair_movement_x
-		    crosshairMovementY          crosshair_movement_y
+			crosshairMovementY          crosshair_movement_y
 		}
 
 		Crosshair_2
@@ -170,9 +171,9 @@ WeaponData
 			"ui"						"ui/crosshair_tactical"
 			Args
 			{
-			    regenRate               "eWeaponVar.regen_ammo_refill_rate"
-			    ammoFrac                "progress_weapon_clip_ammo_frac"
-			    dryfireTime             "weapon_latest_dryfire_time"
+				regenRate               "eWeaponVar.regen_ammo_refill_rate"
+				ammoFrac                "progress_weapon_clip_ammo_frac"
+				dryfireTime             "weapon_latest_dryfire_time"
 			}
 		}
 	}

@@ -15,43 +15,9 @@ void function Entitlements_LevelInit()
 	AddCallback_OnItemFlavorRegistered( eItemType.weapon_skin, UnlockFuncRegisterForTwitch )
 	AddCallback_OnItemFlavorRegistered( eItemType.gladiator_card_frame, UnlockFuncRegisterForTwitch )
 
-	#if SERVER
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#if SERVER
 #endif
 }
-
 
 #if SERVER || CLIENT || UI
 void function UnlockFuncRegisterForTwitch( ItemFlavor flavor )

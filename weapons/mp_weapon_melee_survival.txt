@@ -10,7 +10,7 @@ WeaponData
 
 	"weapon_type_flags"								"WPT_MELEE"
 	
-    // UI/HUD
+	// UI/HUD
 	"menu_icon"										"rui/menu/dpad_comms/emoji/fist"
 	"hud_icon"										"rui/menu/dpad_comms/emoji/fist"
 
@@ -30,17 +30,17 @@ WeaponData
 	"ammo_default_total"							"0"
 	"ammo_stockpile_max"							"0"
 
-    "ads_dof_disable"	                            "1"
-    "dof_nearDepthStart"							"-0.5"
+	"ads_dof_disable"	                            "1"
+	"dof_nearDepthStart"							"-0.5"
 	"dof_nearDepthEnd"							    "5.05"
-    "zoom_fov"										"70"
-    "zoom_effects"                                  "0"
+	"zoom_fov"										"70"
+	"zoom_effects"                                  "0"
 
 	"move_speed_modifier"							"1.15"
 
-    // Menu
-    "menu_category"                                 "special"
-    "menu_anim_class"                               "medium"
+	// Menu
+	"menu_category"                                 "special"
+	"menu_anim_class"                               "medium"
 
 	// Models
 	"viewmodel"   									"mdl/weapons/empty_handed/ptpov_emptyhand.rmdl"

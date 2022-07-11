@@ -6,5 +6,5 @@ global function PassiveAdrenaline_Init
 
 void function PassiveAdrenaline_Init()
 {
-    
+
 }

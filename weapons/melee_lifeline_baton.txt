@@ -19,9 +19,8 @@ WeaponData
 	"playermodel" 									"mdl/weapons/empty_handed/w_empty_handed_human.rmdl"
 
 	//"OnWeaponActivate"							"OnWeaponActivate_melee_lifeline_baton"
-    //"OnWeaponDeactivate"						"OnWeaponDeactivate_melee_lifeline_baton"
+	//"OnWeaponDeactivate"						"OnWeaponDeactivate_melee_lifeline_baton"
 
-    // FX
+	// FX
 	"impact_effect_table"							"melee_human"
 }
-

@@ -17,7 +17,7 @@ global function ImagePakLoad_OnLevelShutdown
 global function UIScriptResetCallback_ImagePakLoad
 #endif
 
-#if CLIENT || UI 
+#if CLIENT || UI
 global enum ePakType
 {
 	DEFAULT,
@@ -28,7 +28,7 @@ global enum ePakType
 }
 #endif
 
-#if CLIENT || UI 
+#if CLIENT || UI
 enum eImagePakLoadStatus
 {
 	LOAD_REQUESTED,
@@ -56,7 +56,7 @@ struct
 	array<sImagePakLoadRequest> deferredPakLoadReqs
 #endif
 
-#if CLIENT || UI 
+#if CLIENT || UI
 	table<string, int> pakLoadStatuses
 #endif
 } file
@@ -79,7 +79,7 @@ void function ImagePakLoad_OnLevelShutdown()
 }
 #endif
 
-#if CLIENT || UI 
+#if CLIENT || UI
 asset function GetDownloadedImageAssetFromString( string rpakName, string imageName, int dlType )
 {
 	asset image = $""
@@ -97,7 +97,7 @@ asset function GetDownloadedImageAssetFromString( string rpakName, string imageN
 }
 #endif
 
-#if CLIENT || UI 
+#if CLIENT || UI
 asset function GetDownloadedImageAsset( string rpakName, string imageName, int dlType, var imageElem = null )
 {
 	asset image = $""
@@ -246,7 +246,7 @@ void function ClientCodeCallback_OnRpakDownloadFailed( string rpakName )
 }
 #endif
 
-#if CLIENT || UI 
+#if CLIENT || UI
 void function SetLoadingStateOnImage( string rpakName, int pakType, var imageElem, bool isLoading )
 {
 	if( imageElem )

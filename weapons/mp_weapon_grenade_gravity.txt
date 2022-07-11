@@ -14,9 +14,9 @@ WeaponData
 	"offhand_toss"									"1"
 	"minimap_reveal_distance"						"32000"
 	"menu_category"									"ordnance"								
-    "does_not_interrupt_cloak"						"1"
-    "ads_dof_disable"								"1"
-    "allow_gibraltar_shield"                        "0"
+	"does_not_interrupt_cloak"						"1"
+	"ads_dof_disable"								"1"
+	"allow_gibraltar_shield"                        "0"
 	"dev_menu_type"									"ordnance" // fire_mode isn't readable from scrip
 
 
@@ -363,9 +363,9 @@ WeaponData
 			"ui"						"ui/crosshair_ordnance"
 			Args
 			{
-			    regenRate               "eWeaponVar.regen_ammo_refill_rate"
-			    ammoFrac                "progress_weapon_clip_ammo_frac"
-			    dryfireTime             "weapon_latest_dryfire_time"
+				regenRate               "eWeaponVar.regen_ammo_refill_rate"
+				ammoFrac                "progress_weapon_clip_ammo_frac"
+				dryfireTime             "weapon_latest_dryfire_time"
 			}
 		}
 	}

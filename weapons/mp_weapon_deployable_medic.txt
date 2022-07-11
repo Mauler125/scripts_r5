@@ -28,8 +28,8 @@ WeaponData
 	"OnWeaponAttemptOffhandSwitch"					"OnWeaponAttemptOffhandSwitch_weapon_deployable_medic"
 	"OnWeaponTossPrep"								"OnWeaponTossPrep_weapon_deployable_medic"
 	"OnWeaponTossReleaseAnimEvent"					"OnWeaponTossReleaseAnimEvent_weapon_deployable_medic"
-//	"OnProjectileCollision"							"OnProjectileCollision_weapon_deployable"
-    "OnWeaponRegenEnd"                              "OnWeaponRegenEndGeneric"
+	// "OnProjectileCollision"							"OnProjectileCollision_weapon_deployable"
+	"OnWeaponRegenEnd"                              "OnWeaponRegenEndGeneric"
 	"projectile_ignores_vortex"						"fall_vortex"
 
 	// Behavior - Zoom/ADS

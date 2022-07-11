@@ -16,34 +16,14 @@ global function PerformQuip
 global function CharacterQuip_ShortenTextForCommsMenu
 #endif
 
-#if(false)
-
-#endif
-
-#if CLIENT || UI 
+#if CLIENT || UI
 global function CreateNestedRuiForQuip
-
-#if(false)
-
-#endif
-
-#endif
-
-#if(false)
-
-
-
-
 #endif
 
 global function CharacterQuip_GetCharacterFlavor
 global function CharacterQuip_GetAliasSubName
 global function Loadout_CharacterQuip
 global function ItemFlavor_CanEquipToWheel
-
-#if(false)
-
-#endif
 
 global const int MAX_QUIPS_EQUIPPED = 8
 
@@ -65,13 +45,6 @@ void function ShQuips_Init()
 
 #if SERVER
 	AddClientCommandCallback( "BroadcastQuip", ClientCommand_BroadcastQuip )
-#endif
-
-#if(false)
-
-
-
-
 #endif
 }
 
@@ -126,13 +99,13 @@ void function PerformQuip( entity player, int index )
 	// act.hasUrgentFar = false
 
 	// CommsOptions opt
-	// opt.isFirstPerson = 
+	// opt.isFirstPerson =
 	// opt.isFar = false
 	// opt.isUrgent = false
 	// opt.pauseQueue = player.GetTeam() == GetLocalViewPlayer().GetTeam()
 
 	// PlaySoundForCommsAction( player, fixAndReplaceMe, opt )
-	
+
 	// this is temp until stuff is reworked
 	string audio = GetBattleChatterAlias1P3P( player, CharacterQuip_GetAliasSubName( quip ), ( player == GetLocalViewPlayer() ) )
 	EmitSoundOnEntity( player, audio )
@@ -161,40 +134,16 @@ bool function CharacterQuip_IsTheEmpty( ItemFlavor flavor )
 	return ( GetGlobalSettingsBool( ItemFlavor_GetAsset( flavor ), "isTheEmpty" ) )
 }
 
-#if(false)
-
-
-
-
-
-
-#endif
-
-#if(false)
-
-
-
-
-
-
-#endif
-
 void function AssertEmoteIsValid( ItemFlavor flavor )
 {
 	array<int> allowedList = [
 		eItemType.gladiator_card_kill_quip,
 		eItemType.gladiator_card_intro_quip,
-	#if(false)
-
-#endif
-	#if(false)
-
-#endif
 	]
 
 	Assert( allowedList.contains( ItemFlavor_GetType( flavor ) ) )
 }
-#endif
+#endif // SERVER || CLIENT || UI
 
 #if SERVER
 array<ItemFlavor> function GetAllValidQuipsForPlayer( entity player )
@@ -238,73 +187,7 @@ bool function ClientCommand_BroadcastQuip( entity player, array<string> args )
 
 	return true
 }
-#endif
-
-#if(false)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#endif
+#endif // SERVER
 
 bool function ItemFlavor_CanEquipToWheel( ItemFlavor item )
 {
@@ -345,12 +228,7 @@ var function CreateNestedRuiForQuip( var baseRui, string argName, EHI ehi, ItemF
 	int type = ItemFlavor_GetType( quip )
 	switch ( type )
 	{
-#if(false)
-
-
-
-
-
+#if false
 #endif
 	}
 
@@ -363,67 +241,7 @@ var function CreateNestedRuiForQuip( var baseRui, string argName, EHI ehi, ItemF
 
 	return nestedRui
 }
-
-#if(false)
-
-
-
-
-
-
-
-
-
-//
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #endif
-
-#endif
-
-
-#if(false)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#endif
-
 
 ItemFlavor ornull function CharacterQuip_GetCharacterFlavor( ItemFlavor item )
 {

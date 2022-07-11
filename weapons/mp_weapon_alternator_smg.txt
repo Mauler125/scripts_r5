@@ -26,7 +26,7 @@ WeaponData
 	"stat_accuracy"   								"50"
 	"stat_rof"										"60"
 
-    "projectile_launch_speed"						"19500"
+	"projectile_launch_speed"						"19500"
 
 	// Models
 	"viewmodel"   									"mdl/weapons/alternator_smg/ptpov_alternator_smg.rmdl"
@@ -94,46 +94,46 @@ WeaponData
 	// Ammo
 	"ammo_clip_size"   								"16"
 
-    "ammo_default_total"							"100"
-    "ammo_stockpile_max"							"100"
-    "ammo_no_remove_from_stockpile"					"1"
-    "ammo_min_to_fire"								"1"
+	"ammo_default_total"							"100"
+	"ammo_stockpile_max"							"100"
+	"ammo_no_remove_from_stockpile"					"1"
+	"ammo_min_to_fire"								"1"
 
 	"damage_type" 									"bullet"
 
-    // Damage - When Used by Players
-    "damage_near_value"   							"15"
-    "damage_far_value"								"15"
-    "damage_very_far_value"							"15"
-    "damage_near_value_titanarmor"					"15"
-    "damage_far_value_titanarmor" 					"15"
-    "damage_very_far_value_titanarmor" 				"15"
-    "damage_rodeo" 									"90"
+	// Damage - When Used by Players
+	"damage_near_value"   							"15"
+	"damage_far_value"								"15"
+	"damage_very_far_value"							"15"
+	"damage_near_value_titanarmor"					"15"
+	"damage_far_value_titanarmor" 					"15"
+	"damage_very_far_value_titanarmor" 				"15"
+	"damage_rodeo" 									"90"
 
-    "damage_unshielded_scale"              			"1.0"
+	"damage_unshielded_scale"              			"1.0"
 
-    // NPC settings
-    "proficiency_poor_spreadscale"					"5.0"
-    "proficiency_average_spreadscale" 				"3.5"
-    "proficiency_good_spreadscale"					"3.0"
-    "proficiency_very_good_spreadscale"   			"2.5"
-    "proficiency_perfect_spreadscale" 				"1.0"
+	// NPC settings
+	"proficiency_poor_spreadscale"					"5.0"
+	"proficiency_average_spreadscale" 				"3.5"
+	"proficiency_good_spreadscale"					"3.0"
+	"proficiency_very_good_spreadscale"   			"2.5"
+	"proficiency_perfect_spreadscale" 				"1.0"
 
-    "npc_min_engage_range"							"0"
-    "npc_max_engage_range"							"1100"
-    "npc_min_engage_range_heavy_armor"				"500"
-    "npc_max_engage_range_heavy_armor"				"2000"
+	"npc_min_engage_range"							"0"
+	"npc_max_engage_range"							"1100"
+	"npc_min_engage_range_heavy_armor"				"500"
+	"npc_max_engage_range_heavy_armor"				"2000"
 
-    "npc_min_burst"   								"2"
-    "npc_max_burst"   								"3"
-    "npc_rest_time_between_bursts_min"				"0.6"
-    "npc_rest_time_between_bursts_max"				"0.8"
+	"npc_min_burst"   								"2"
+	"npc_max_burst"   								"3"
+	"npc_rest_time_between_bursts_min"				"0.6"
+	"npc_rest_time_between_bursts_max"				"0.8"
 
-    "npc_max_range"   								"4000"
+	"npc_max_range"   								"4000"
 
-    // Damage - When Used by NPCs
-    "npc_damage_near_value"   						"13"
-    "npc_damage_far_value"							"7"
+	// Damage - When Used by NPCs
+	"npc_damage_near_value"   						"13"
+	"npc_damage_far_value"							"7"
 
 	"dof_zoom_nearDepthStart"						"3.5"
 	"dof_zoom_nearDepthEnd"							"5.2"
@@ -151,25 +151,25 @@ WeaponData
 	"reloadempty_time_late2"						"0.83"
 
 	// View Kick
-    "viewkick_pattern"                              "alternator_2"
+	"viewkick_pattern"                              "alternator_2"
 
-    "viewkick_spring"                               "alternator_vkp"
-    "viewkick_spring_hot"                           "alternator_vkp_hot"
+	"viewkick_spring"                               "alternator_vkp"
+	"viewkick_spring_hot"                           "alternator_vkp_hot"
 
 	"viewkick_spring_heatpershot"					"1.0"
 	"viewkick_spring_cooldown_holdtime"      		"0.1"
-    "viewkick_spring_cooldown_fadetime"             "0.05"
+	"viewkick_spring_cooldown_fadetime"             "0.05"
 
-    "viewmodel_spring_jolt"                          "autofire_viewmodel_jolt"
-    "viewmodel_jolt_scale"                           "1.0"
-    "viewmodel_jolt_backwardPerShot"                 "-0.2"
-    "viewmodel_jolt_roll"                            "0 2.0 0.0"
-    "viewmodel_jolt_side"                            "0 0.03 0"
+	"viewmodel_spring_jolt"                          "autofire_viewmodel_jolt"
+	"viewmodel_jolt_scale"                           "1.0"
+	"viewmodel_jolt_backwardPerShot"                 "-0.2"
+	"viewmodel_jolt_roll"                            "0 2.0 0.0"
+	"viewmodel_jolt_side"                            "0 0.03 0"
 
 	"viewkick_pitch_base" 							"1.0"
 	"viewkick_pitch_random"   						"1.0"
 	"viewkick_pitch_softScale"						"1.6"
-    "viewkick_pitch_hardScale"						"0.35"
+	"viewkick_pitch_hardScale"						"0.35"
 
 	"viewkick_yaw_base"   							"1.0"
 	"viewkick_yaw_random" 							"1.0"
@@ -178,8 +178,8 @@ WeaponData
 	"viewkick_yaw_hardScale"  						"0.2"
 
 	"viewkick_roll_base"  							"0.8"
-    "viewkick_roll_randomMin" 						"-0.2"
-    "viewkick_roll_randomMax" 						"0.2"
+	"viewkick_roll_randomMin" 						"-0.2"
+	"viewkick_roll_randomMax" 						"0.2"
 	"viewkick_roll_softScale" 						"0.7"
 	"viewkick_roll_hardScale" 						"0.3"
 
@@ -206,7 +206,7 @@ WeaponData
 	"viewkick_scale_yaw_valueLerpStart"   			"0"
 	"viewkick_scale_yaw_valueLerpEnd" 				"20"
 	"viewkick_scale_valueDecayDelay"  				"0.12"
-    "viewkick_scale_valueDecayRate"   				"45"
+	"viewkick_scale_valueDecayRate"   				"45"
 
 	"viewmodel_shake_forward"						"0.0"
 	"viewmodel_shake_up"							"0.0"
@@ -214,18 +214,18 @@ WeaponData
 
 	// Hipfire Spread
 	"spread_stand_hip"								"1.0"
-    "spread_stand_hip_run"							"1.5"
-    "spread_stand_hip_sprint"                       "2.5"
-    "spread_crouch_hip"   							"0.8"
-    "spread_air_hip"  								"3.5"
+	"spread_stand_hip_run"							"1.5"
+	"spread_stand_hip_sprint"                       "2.5"
+	"spread_crouch_hip"   							"0.8"
+	"spread_air_hip"  								"3.5"
 
-    "spread_kick_on_fire_stand_hip"   				"0.18"
-    "spread_kick_on_fire_crouch_hip"  				"0.18"
-    "spread_kick_on_fire_air_hip" 					"0.18"
+	"spread_kick_on_fire_stand_hip"   				"0.18"
+	"spread_kick_on_fire_crouch_hip"  				"0.18"
+	"spread_kick_on_fire_air_hip" 					"0.18"
 
-    "spread_max_kick_stand_hip"   					"2.0"
-    "spread_max_kick_crouch_hip"  					"1.5"
-    "spread_max_kick_air_hip" 						"3.0"
+	"spread_max_kick_stand_hip"   					"2.0"
+	"spread_max_kick_crouch_hip"  					"1.5"
+	"spread_max_kick_air_hip" 						"3.0"
 
 	//setting to "0" so it's tunable in Bakery
 	"sprintcycle_time"								"0"
@@ -233,88 +233,76 @@ WeaponData
 	"deployfirst_time"								"1.2"
 	"activitymodifier"								"pistol"
 
-    "clip_bodygroup"						"clip"
-    "clip_bodygroup_index_shown"			"0"
-    "clip_bodygroup_index_hidden"			"1"
-    "clip_bodygroup_show_for_milestone_0"	"1"
-    "clip_bodygroup_show_for_milestone_1"	"0"
-    "clip_bodygroup_show_for_milestone_2"	"1"
-    "clip_bodygroup_show_for_milestone_3"	"0"
+	"clip_bodygroup"						"clip"
+	"clip_bodygroup_index_shown"			"0"
+	"clip_bodygroup_index_hidden"			"1"
+	"clip_bodygroup_show_for_milestone_0"	"1"
+	"clip_bodygroup_show_for_milestone_1"	"0"
+	"clip_bodygroup_show_for_milestone_2"	"1"
+	"clip_bodygroup_show_for_milestone_3"	"0"
 
-    "viewmodel_offset_ads"				"0 0 0.02"  // HACK should not have to offset the default ADS anim alignment
+	"viewmodel_offset_ads"				"0 0 0.02"  // HACK should not have to offset the default ADS anim alignment
 
 	Mods
 	{
-	    gold
-	    {
-	    }
+		gold
+		{
+		}
 
 		survival_finite_ammo
-        {
-            "ammo_default_total"							"0"
-            "ammo_stockpile_max"							"24"
-            "ammo_no_remove_from_stockpile"					"0"
+		{
+			"ammo_default_total"							"0"
+			"ammo_stockpile_max"							"24"
+			"ammo_no_remove_from_stockpile"					"0"
 
-            "low_ammo_fraction" 							"0.3"
+			"low_ammo_fraction" 							"0.3"
 
-	   		"uses_ammo_pool"								"1"
-        }
+			"uses_ammo_pool"								"1"
+		}
 
-        hopup_shield_breaker
-        {
-            "damage_shield_scale"                       "1.55"
-            "projectile_trail_effect_0"                 "P_tracer_proj_smg_shield_breaker"
-            "impact_effect_table" 				        "shield_breaker_bullet"
+		hopup_shield_breaker
+		{
+		"damage_shield_scale"                       "1.55"
+		"projectile_trail_effect_0"                 "P_tracer_proj_smg_shield_breaker"
+		"impact_effect_table" 				        "shield_breaker_bullet"
 
-            "burst_or_looping_fire_sound_start_1p"		"Weapon_Alternator_FirstShot_1P"
-            "burst_or_looping_fire_sound_middle_1p"		"Weapon_Alternator_Loop_ShieldBreaker_1P"
-            "burst_or_looping_fire_sound_end_1p"		"Weapon_Alternator_LoopEnd_ShieldBreaker_1P"
+		"burst_or_looping_fire_sound_start_1p"		"Weapon_Alternator_FirstShot_1P"
+		"burst_or_looping_fire_sound_middle_1p"		"Weapon_Alternator_Loop_ShieldBreaker_1P"
+		"burst_or_looping_fire_sound_end_1p"		"Weapon_Alternator_LoopEnd_ShieldBreaker_1P"
 
-            "burst_or_looping_fire_sound_start_3p"		""
-            "burst_or_looping_fire_sound_middle_3p"		"Weapon_Alternator_Loop_ShieldBreaker_3P"
-            "burst_or_looping_fire_sound_end_3p"		"Weapon_Alternator_LoopEnd_ShieldBreaker_3P"
+		"burst_or_looping_fire_sound_start_3p"		""
+		"burst_or_looping_fire_sound_middle_3p"		"Weapon_Alternator_Loop_ShieldBreaker_3P"
+		"burst_or_looping_fire_sound_end_3p"		"Weapon_Alternator_LoopEnd_ShieldBreaker_3P"
 
-            "burst_or_looping_fire_sound_start_npc"		""
-            "burst_or_looping_fire_sound_middle_npc"	"Weapon_Alternator_Loop_3p_NPC_a"
-            "burst_or_looping_fire_sound_end_npc"		"Weapon_Alternator_LoopEnd_NPC"
-        }
+		"burst_or_looping_fire_sound_start_npc"		""
+		"burst_or_looping_fire_sound_middle_npc"	"Weapon_Alternator_Loop_3p_NPC_a"
+		"burst_or_looping_fire_sound_end_npc"		"Weapon_Alternator_LoopEnd_NPC"
+		}
 
-        optic_cq_hcog_classic
-        {
-        	"bodygroup1_set"			"1"
-        }
+		optic_cq_hcog_classic
+		{
+			"bodygroup1_set"			"1"
+		}
 
-        optic_cq_hcog_bruiser
-        {
-	        "bodygroup1_set"			"1"
-        }
+		optic_cq_hcog_bruiser
+		{
+		  "bodygroup1_set"			"1"
+		}
 
-        optic_cq_holosight
-        {
-        	"bodygroup1_set"			"1"
-        }
+		optic_cq_holosight
+		{
+			"bodygroup1_set"			"1"
+		}
 
-        optic_cq_holosight_variable
-        {
-        	"bodygroup1_set"			"1"
-        }
+		optic_cq_holosight_variable
+		{
+			"bodygroup1_set"			"1"
+		}
 
-        optic_cq_threat
-        {
-        	"bodygroup1_set"			"1"
-        }
-
-                           
-                         
-         
-                                     
-         
-
-                                 
-         
-                                  
-         
-      
+		optic_cq_threat
+		{
+			"bodygroup1_set"			"1"
+		}
 
 		bullets_mag_l1
 		{
@@ -329,7 +317,6 @@ WeaponData
 			//Extended Ammo
 			"ammo_clip_size"   						"26"
 		}
-
 
 		// NOTE: override barrel FX for both Alternator barrels
 		barrel_stabilizer_l1
@@ -346,7 +333,7 @@ WeaponData
 			"fx_muzzle_flash2_view"				"P_wpn_muzzleflash_alternator_FP_stab"
 		}
 
-        barrel_stabilizer_l2
+		barrel_stabilizer_l2
 		{
 			"viewkick_yaw_base" 				"*0.8"
 			"viewkick_yaw_random"   			"*0.75"
@@ -360,9 +347,9 @@ WeaponData
 			"fx_muzzle_flash2_view"				"P_wpn_muzzleflash_alternator_FP_stab"
 		}
 
-        barrel_stabilizer_l3
+		barrel_stabilizer_l3
 		{
-		    "viewkick_pitch_base" 				"*0.8"
+			"viewkick_pitch_base" 				"*0.8"
 			"viewkick_pitch_random"   			"*0.65"
 			"viewkick_yaw_base" 				"*0.75"
 			"viewkick_yaw_random"   			"*0.7"
@@ -377,13 +364,13 @@ WeaponData
 		}
 
 		barrel_stabilizer_l4_flash_hider
-        {
-            "viewkick_pitch_base" 				"*0.8"
+		{
+			"viewkick_pitch_base" 				"*0.8"
 			"viewkick_pitch_random"   			"*0.65"
 			"viewkick_yaw_base" 				"*0.75"
 			"viewkick_yaw_random"   			"*0.7"
 
-        	"fx_muzzle_flash_view"				"P_wpn_muzzleflash_alternator_sup_FP" //"P_wpn_muzzleflash_alternator_sup_FP"
+			"fx_muzzle_flash_view"				"P_wpn_muzzleflash_alternator_sup_FP" //"P_wpn_muzzleflash_alternator_sup_FP"
 			"fx_muzzle_flash_world"				"wpn_muzzleflash_smg_sup" //"P_wpn_muzzleflash_alternator_sup"
 			"fx_muzzle_flash_attach"			"muzzle_flash"
 
@@ -433,8 +420,8 @@ WeaponData
 			isReloading					weapon_is_reloading
 			teamColor					crosshair_team_color
 			isAmped						weapon_is_amped
-		    crosshairMovementX          crosshair_movement_x
-		    crosshairMovementY          crosshair_movement_y
+			crosshairMovementX          crosshair_movement_x
+			crosshairMovementY          crosshair_movement_y
 		}
 
 		Crosshair_1

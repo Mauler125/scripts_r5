@@ -158,10 +158,7 @@ WeaponData
 	// View Kick
 	"viewkick_spring" 								"pistol"
 
-
-
 	"red_crosshair_range" 							"0"
-
 
 	// Bob
 	"bob_cycle_time"  								"0.4"
@@ -238,14 +235,14 @@ WeaponData
 
 	Mods
 	{
-//		pas_ordnance_pack
-//		{
-//			"regen_ammo_refill_rate"   						"3++"
-//
-//			//Ordnance Beam
-//			"grenade_arc_indicator_bounce_count"			"1"
-//			"grenade_arc_indicator_effect"					"P_grenade_arc_proto_orange"
-//		}
+	// pas_ordnance_pack
+	// {
+	// 	"regen_ammo_refill_rate"   						"3++"
+	// 
+	// 	//Ordnance Beam
+	// 	"grenade_arc_indicator_bounce_count"			"1"
+	// 	"grenade_arc_indicator_effect"					"P_grenade_arc_proto_orange"
+	// }
 
 		bc_arc_refill
 		{
@@ -323,8 +320,8 @@ WeaponData
 			"ui"						"ui/crosshair_tactical"
 			Args
 			{
-			    ammoFrac                "progress_weapon_clip_ammo_frac"
-			    dryfireTime             "weapon_latest_dryfire_time"
+				ammoFrac                "progress_weapon_clip_ammo_frac"
+				dryfireTime             "weapon_latest_dryfire_time"
 			}
 		}
 	}

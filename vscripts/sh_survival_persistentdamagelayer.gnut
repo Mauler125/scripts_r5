@@ -33,20 +33,12 @@ void function Sh_PersistentDamageLayer_Init()
 	#endif
 }
 
-#if SERVER
-#endif
-#if SERVER
-#endif
-
 #if CLIENT
 void function Callback_OnPlayerTakeDeathFieldDamage( float damage, vector damageOrigin, int damageType, int damageSourceId, entity attacker )
 {
 	HandleThresholdNotifWarnings()
 }
 
-#endif
-
-#if SERVER
 #endif
 
 #if CLIENT

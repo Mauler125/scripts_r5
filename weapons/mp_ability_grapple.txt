@@ -82,20 +82,20 @@ WeaponData
 
 	MP_BASE
 	{
-	    "grapple_power_required"						"100"
-        "grapple_power_use_rate"						"0"
-        "grapple_maxLength"								"850"
-        "grapple_maxLengthVert"							"850"
-        "ammo_clip_size"								"150"
-        "ammo_default_total"							"0"
-        "ammo_display"									"count"
-        "ammo_min_to_fire"								"150"
-        "ammo_per_shot"									"150"
-        "ammo_stockpile_max"							"150"
-        "regen_ammo_refill_rate"						"10"
-        "regen_ammo_refill_start_delay"					"0.0"
-        "ammo_no_remove_from_stockpile"					"0"
-        "ammo_no_remove_from_clip"						"0"
+		"grapple_power_required"						"100"
+		"grapple_power_use_rate"						"0"
+		"grapple_maxLength"								"850"
+		"grapple_maxLengthVert"							"850"
+		"ammo_clip_size"								"150"
+		"ammo_default_total"							"0"
+		"ammo_display"									"count"
+		"ammo_min_to_fire"								"150"
+		"ammo_per_shot"									"150"
+		"ammo_stockpile_max"							"150"
+		"regen_ammo_refill_rate"						"10"
+		"regen_ammo_refill_start_delay"					"0.0"
+		"ammo_no_remove_from_stockpile"					"0"
+		"ammo_no_remove_from_clip"						"0"
 	}
 
 	SP_BASE
@@ -103,18 +103,18 @@ WeaponData
 		"grapple_power_required"						"0"
 		"grapple_power_use_rate"						"0"
 		"grapple_maxLength"								"1100"
-	    "grapple_maxLengthVert"							"1100"
+		"grapple_maxLengthVert"							"1100"
 
-	    "ammo_clip_size"								"<KEEP_DEFAULT>"
-        "ammo_default_total"							"<KEEP_DEFAULT>"
-        "ammo_display"									"<KEEP_DEFAULT>"
-        "ammo_min_to_fire"								"<KEEP_DEFAULT>"
-        "ammo_per_shot"									"<KEEP_DEFAULT>"
-        "ammo_stockpile_max"							"<KEEP_DEFAULT>"
-        "regen_ammo_refill_rate"						"<KEEP_DEFAULT>"
-        "regen_ammo_refill_start_delay"					"<KEEP_DEFAULT>"
-        "ammo_no_remove_from_stockpile"					"<KEEP_DEFAULT>"
-        "ammo_no_remove_from_clip"						"<KEEP_DEFAULT>"
+		"ammo_clip_size"								"<KEEP_DEFAULT>"
+		"ammo_default_total"							"<KEEP_DEFAULT>"
+		"ammo_display"									"<KEEP_DEFAULT>"
+		"ammo_min_to_fire"								"<KEEP_DEFAULT>"
+		"ammo_per_shot"									"<KEEP_DEFAULT>"
+		"ammo_stockpile_max"							"<KEEP_DEFAULT>"
+		"regen_ammo_refill_rate"						"<KEEP_DEFAULT>"
+		"regen_ammo_refill_start_delay"					"<KEEP_DEFAULT>"
+		"ammo_no_remove_from_stockpile"					"<KEEP_DEFAULT>"
+		"ammo_no_remove_from_clip"						"<KEEP_DEFAULT>"
 	}
 
 	active_crosshair_count				"2"
@@ -128,7 +128,7 @@ WeaponData
 		{
 			adsFrac 					player_zoomFrac
 			crosshairMovementX          crosshair_movement_x
-		    crosshairMovementY          crosshair_movement_y
+			crosshairMovementY          crosshair_movement_y
 			teamColor					crosshair_team_color
 		}
 
@@ -149,43 +149,47 @@ WeaponData
 			"ui"						"ui/crosshair_grapple"
 			Args
 			{
-			    ammoFrac                "progress_weapon_clip_ammo_frac"
-    			isGrappleInRange		"grapple_in_range"
+				ammoFrac                "progress_weapon_clip_ammo_frac"
+				isGrappleInRange		"grapple_in_range"
 				grappleInRangeTime		"grapple_in_range_time"
 				grappleOutOfRangeTime	"grapple_out_of_range_time"
-    			weaponIsDisabled		"weapon_is_disabled"
+				weaponIsDisabled		"weapon_is_disabled"
 			}
 		}
 	}
 
 	Mods
 	{
-	    survival_armor_cooldown_mod
-        {
-            "regen_ammo_refill_rate"    "*1.25"
-            "grapple_power_required"	"*0.8"		// Needs to be reciprocal of the refill rate multiplier - 1 / 1.25
-        }
+		survival_armor_cooldown_mod
+		{
+			"regen_ammo_refill_rate"    "*1.25"
+			"grapple_power_required"	"*0.8"		// Needs to be reciprocal of the refill rate multiplier - 1 / 1.25
+		}
 
 		spree_lvl1_grapple
 		{
 		}
+
 		spree_lvl2_grapple
 		{
 		}
+
 		spree_lvl3_grapple
 		{
 			"fire_rate"										"*2.25"
 		}
+
 		pas_power_cell
 		{
 			//this not used, actual setting in pilot_mp.set
 			"regen_ammo_refill_rate"	"*1.35"
 		}
-        looking_at_hover_tank
-        {
-            "grapple_maxLength"								"1800"
-            "grapple_maxLengthVert"							"1800"
-        }
+
+		looking_at_hover_tank
+		{
+		    "grapple_maxLength"								"1800"
+		    "grapple_maxLengthVert"							"1800"
+		}
 		pm0
 		{
 			"grapple_power_required"	"0"
@@ -238,9 +242,10 @@ WeaponData
 			"grapple_power_required"						"33"
 			"grapple_power_use_rate"						"33"
 		}
-        survival_finite_ordnance
-        {
+		
+		survival_finite_ordnance
+		{
 
-        }
+		}
 	}
 }

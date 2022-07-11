@@ -15,10 +15,10 @@ WeaponData
 	"weapon_type_flags"							"WPT_MELEE"
 	
 	// Models
-    "viewmodel"   								"mdl/weapons/data_knife/ptpov_data_knife.rmdl"
+	"viewmodel"   								"mdl/weapons/data_knife/ptpov_data_knife.rmdl"
 	"playermodel" 								"mdl/weapons/combat_knife/w_combat_knife.rmdl"
 
-    // FX
+	// FX
 	"impact_effect_table" 						"pulse_blade"
 	
 	"melee_attack_animtime"							"1"
@@ -49,7 +49,7 @@ WeaponData
 
 		ctf_knife
 		{
-            "viewmodel"   									"mdl/weapons/data_knife/ptpov_data_knife.rmdl"
+			"viewmodel"   									"mdl/weapons/data_knife/ptpov_data_knife.rmdl"
 			"melee_attack_animtime"							"1"
 			"damage_flags"									"DF_BULLET"
 			"melee_damage"									"75"

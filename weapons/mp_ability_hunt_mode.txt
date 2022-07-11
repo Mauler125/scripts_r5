@@ -32,7 +32,7 @@ WeaponData
 	"OnWeaponTossReleaseAnimEvent"					"OnWeaponPrimaryAttack_hunt_mode"
 	//"OnWeaponPrimaryAttack"						"OnWeaponPrimaryAttack_hunt_mode"
 	"OnWeaponDeactivate"							"OnWeaponDeactivate_hunt_mode"
-    "OnWeaponRegenEnd"                              "OnWeaponRegenEndGeneric"
+	"OnWeaponRegenEnd"                              "OnWeaponRegenEndGeneric"
 
 	// Models
 	"viewmodel"   									"mdl/weapons/empty_handed/ptpov_bloodhound_huntmode.rmdl"
@@ -87,15 +87,15 @@ WeaponData
 	MP_BASE
 	{
 		"ammo_clip_size"								"180"
-        "ammo_default_total"							"0"
-        "ammo_display"									"count"
-        "ammo_min_to_fire"								"180"
-        "ammo_per_shot"									"180"
-        "ammo_stockpile_max"							"0"
-        "regen_ammo_refill_rate"						"1"
-        "regen_ammo_refill_start_delay"					"0.0"
-        "fire_duration"									"35.0"
-        "ammo_no_remove_from_stockpile"					"0"
+		"ammo_default_total"							"0"
+		"ammo_display"									"count"
+		"ammo_min_to_fire"								"180"
+		"ammo_per_shot"									"180"
+		"ammo_stockpile_max"							"0"
+		"regen_ammo_refill_rate"						"1"
+		"regen_ammo_refill_start_delay"					"0.0"
+		"fire_duration"									"35.0"
+		"ammo_no_remove_from_stockpile"					"0"
 
 		"enable_highlight_networking_on_creation"		"<KEEP_DEFAULT>"
 	}
@@ -118,10 +118,10 @@ WeaponData
 
 	Mods
 	{
-        survival_armor_cooldown_mod
-        {
-            "regen_ammo_refill_rate"    "*1.25"
-        }
+		survival_armor_cooldown_mod
+		{
+			"regen_ammo_refill_rate"    "*1.25"
+		}
 
 		burn_card_weapon_mod
 		{
@@ -132,10 +132,10 @@ WeaponData
 			"regen_ammo_refill_rate"	"*1.35"
 		}
 
-        survival_finite_ordnance
-        {
+		survival_finite_ordnance
+		{
 
-        }
+		}
 	}
 
 	active_crosshair_count				"2"
@@ -148,7 +148,7 @@ WeaponData
 		DefaultArgs
 		{
 			crosshairMovementX          crosshair_movement_x
-		    crosshairMovementY          crosshair_movement_y
+			crosshairMovementY          crosshair_movement_y
 		}
 
 		Crosshair_1
@@ -169,9 +169,9 @@ WeaponData
 			"ui"						"ui/crosshair_tactical"
 			Args
 			{
-			    regenRate               "eWeaponVar.regen_ammo_refill_rate"
-			    ammoFrac                "progress_weapon_clip_ammo_frac"
-			    dryfireTime             "weapon_latest_dryfire_time"
+				regenRate               "eWeaponVar.regen_ammo_refill_rate"
+				ammoFrac                "progress_weapon_clip_ammo_frac"
+				dryfireTime             "weapon_latest_dryfire_time"
 			}
 		}
 	}

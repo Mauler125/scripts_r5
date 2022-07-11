@@ -23,8 +23,8 @@ WeaponData
 	"offhand_switch_force_draw"						"0"
 	"offhand_holster_primary"	                    "1"
 
-    "does_not_interrupt_cloak"						"1"
-    "trophy_system_ignore"                          "1"
+	"does_not_interrupt_cloak"						"1"
+	"trophy_system_ignore"                          "1"
 
 	"OnWeaponAttemptOffhandSwitch"					"OnWeaponAttemptOffhandSwitch_weapon_dirty_bomb"
 
@@ -38,14 +38,14 @@ WeaponData
 	"playermodel" 									"mdl/weapons/caustic_gas_tank/w_caustic_gas_tank.rmdl"
 	"projectilemodel" 								"mdl/weapons/caustic_gas_tank/w_caustic_gas_tank.rmdl"
 
-    "grenade_arc_indicator_show_from_hip"			"1"
-    "grenade_arc_indicator_bounce_count"			"1"
-    "grenade_arc_indicator_ignore_base_velocity"	"1"
+	"grenade_arc_indicator_show_from_hip"			"1"
+	"grenade_arc_indicator_bounce_count"			"1"
+	"grenade_arc_indicator_ignore_base_velocity"	"1"
 	"grenade_arc_indicator_effect"					"P_arc_green_bounce"
 	"grenade_arc_indicator_effect_first"			"P_arc_green"
 	"grenade_arc_impact_indicator_effect"			"P_arc_green_end"
 
-    "projectile_inherit_owner_velocity_scale"		"0.2"
+	"projectile_inherit_owner_velocity_scale"		"0.2"
 
 	"projectile_launch_speed"						"600"
 	"projectile_launch_pitch_offset"				"2"
@@ -126,7 +126,7 @@ WeaponData
 	"explosion_shake_amplitude"						"0"
 	"explosion_shake_frequency"						"0"
 	"explosion_shake_duration"						"0.0"
-    "zoom_effects"                                  "0"
+	"zoom_effects"                                  "0"
 
 	"show_grenade_indicator"						"0"
 
@@ -268,32 +268,32 @@ WeaponData
 	// NPC
 
 	"clip_bodygroup"						"projectile"
-    "clip_bodygroup_index_shown"			"0"
-    "clip_bodygroup_index_hidden"			"1"
-    "clip_bodygroup_show_for_milestone_0"	"1"
-    "clip_bodygroup_show_for_milestone_1"	"0"
-    "clip_bodygroup_show_for_milestone_2"	"1"
-    "clip_bodygroup_show_for_milestone_3"	"1"
+	"clip_bodygroup_index_shown"			"0"
+	"clip_bodygroup_index_hidden"			"1"
+	"clip_bodygroup_show_for_milestone_0"	"1"
+	"clip_bodygroup_show_for_milestone_1"	"0"
+	"clip_bodygroup_show_for_milestone_2"	"1"
+	"clip_bodygroup_show_for_milestone_3"	"1"
 
 	// WeaponED Unhandled Key/Values and custom script Key/Values
 	"fire_anim_rate"  								"1"
 
 	Mods
 	{
-	    survival_armor_cooldown_mod
-        {
-            "regen_ammo_refill_rate"    "*1.25"
-        }
+		survival_armor_cooldown_mod
+		{
+		    "regen_ammo_refill_rate"    "*1.25"
+		}
 
-	    burn_card_weapon_mod
-        {
+		burn_card_weapon_mod
+		{
 
-        }
+		}
 
-        survival_finite_ordnance
-        {
+		survival_finite_ordnance
+		{
 
-        }
+		}
 	}
 
 	active_crosshair_count				"0"
@@ -311,8 +311,8 @@ WeaponData
 			isReloading					weapon_is_reloading
 			teamColor					crosshair_team_color
 			isAmped						weapon_is_amped
-		    crosshairMovementX          crosshair_movement_x
-		    crosshairMovementY          crosshair_movement_y
+			crosshairMovementX          crosshair_movement_x
+			crosshairMovementY          crosshair_movement_y
 		}
 
 		Crosshair_1
@@ -331,8 +331,8 @@ WeaponData
 			"ui"						"ui/crosshair_tactical"
 			Args
 			{
-			    ammoFrac                "progress_weapon_clip_ammo_frac"
-			    dryfireTime             "weapon_latest_dryfire_time"
+				ammoFrac                "progress_weapon_clip_ammo_frac"
+				dryfireTime             "weapon_latest_dryfire_time"
 			}
 		}
 	}

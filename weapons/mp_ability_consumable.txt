@@ -12,7 +12,7 @@ WeaponData
 	"weapon_type_flags"								"WPT_CONSUMABLE"
 	"weaponClass" 									"human"
 	"fire_mode"   									"offhandHybrid"
-    "is_toss_weapon"                                "0"
+	"is_toss_weapon"                                "0"
 	"offhand_default_inventory_slot"				"2"
 	"offhand_interupts_weapon_anims"				"1"
 
@@ -20,22 +20,22 @@ WeaponData
 	"fast_swap_to"								    "1"
 	//"fast_swap_from"                                "1"
 
-    "OnWeaponActivate"                              "OnWeaponActivate_Consumable"
-    "OnWeaponDeactivate"                            "OnWeaponDeactivate_Consumable"
-    "OnWeaponRaise"                                 "OnWeaponRaise_Consumable"
+	"OnWeaponActivate"                              "OnWeaponActivate_Consumable"
+	"OnWeaponDeactivate"                            "OnWeaponDeactivate_Consumable"
+	"OnWeaponRaise"                                 "OnWeaponRaise_Consumable"
 	"OnWeaponAttemptOffhandSwitch"					"OnWeaponAttemptOffhandSwitch_Consumable"
 	"OnWeaponPrimaryAttack"							"OnWeaponPrimaryAttack_Consumable"
 	"OnWeaponChargeBegin" 							"OnWeaponChargeBegin_Consumable"
-    "OnWeaponChargeEnd" 							"OnWeaponChargeEnd_Consumable"
-    "OnWeaponOwnerChanged"                          "OnWeaponOwnerChanged_Consumable"
-//	"OnWeaponPrimaryAttackAnimEvent"				"OnWeaponPrimaryAttackAnimEvent_Consumable"
-    "OnCreateChargeEffect"                          "OnCreateChargeEffect_Consumable"
-    "OnCreateMuzzleFlashEffect"                     "OnCreateMuzzleFlashEffect_Consumable"
+	"OnWeaponChargeEnd" 							"OnWeaponChargeEnd_Consumable"
+	"OnWeaponOwnerChanged"                          "OnWeaponOwnerChanged_Consumable"
+	// "OnWeaponPrimaryAttackAnimEvent"				"OnWeaponPrimaryAttackAnimEvent_Consumable"
+	"OnCreateChargeEffect"                          "OnCreateChargeEffect_Consumable"
+	"OnCreateMuzzleFlashEffect"                     "OnCreateMuzzleFlashEffect_Consumable"
 
 	// Models
 	"viewmodel"										"mdl/weapons/shield_battery/ptpov_shield_battery_held.rmdl"
 	"playermodel"									"mdl/Weapons/shield_battery/w_shield_battery.rmdl"
-  	"leveled_pickup"								"1"
+	"leveled_pickup"								"1"
 	"dev_menu_type"									"offhand" // fire_mode isn't readable from script
 	"offhand_keep_primary_in_hand"					"0"
 
@@ -43,13 +43,13 @@ WeaponData
 
 	"ammo_suck_behavior"							"offhand_weapons"
 
-    // Charge settings
-    "charge_time" 									"3.0"
-    "charge_cooldown_time"							"1.0"
-    "charge_cooldown_delay"   						"0.0"
-    "charge_end_forces_fire"  						"1"
-    "charge_require_input"							"0"
-    "charge_remain_full_when_fired"					"1"
+	// Charge settings
+	"charge_time" 									"3.0"
+	"charge_cooldown_time"							"1.0"
+	"charge_cooldown_delay"   						"0.0"
+	"charge_end_forces_fire"  						"1"
+	"charge_require_input"							"0"
+	"charge_remain_full_when_fired"					"1"
 	"entity_color_from_charge"						"1"
 
 	// Damage
@@ -72,9 +72,9 @@ WeaponData
 	"fire_rate"   								    "100"
 	"fire_anim_rate"								"1.0"
 
-    "play_offhand_charging_anim"                    "1"
-    "play_offhand_fire_anim"                        "1"
-    "play_offhand_start_end_anim"                   "1"
+	"play_offhand_charging_anim"                    "1"
+	"play_offhand_fire_anim"                        "1"
+	"play_offhand_start_end_anim"                   "1"
 
 	//"deploy_time" 									"0.25"
 	//"lower_time"  									"0.25"
@@ -105,11 +105,11 @@ WeaponData
 	{
 		health_small
 		{
-            "viewmodel" 							"mdl/weapons/health_injector/ptpov_health_injector.rmdl"
-            "playermodel" 							"mdl/Weapons/health_injector/w_health_injector.rmdl"
-            "printname"                             "#SURVIVAL_PICKUP_HEALTH_SMALL"
-            "charge_time"                           "4.0"
-            "hud_icon"                              "rui/hud/loot/loot_stim_health_small"
+			"viewmodel" 							"mdl/weapons/health_injector/ptpov_health_injector.rmdl"
+			"playermodel" 							"mdl/Weapons/health_injector/w_health_injector.rmdl"
+			"printname"                             "#SURVIVAL_PICKUP_HEALTH_SMALL"
+			"charge_time"                           "4.0"
+			"hud_icon"                              "rui/hud/loot/loot_stim_health_small"
 			"activitymodifier"						"health_prop"
 
 			"charge_effect_attachment"				"muzzle_flash"
@@ -123,11 +123,11 @@ WeaponData
 
 		health_large
 		{
-            "viewmodel" 							"mdl/weapons/health_injector/ptpov_health_injector.rmdl"
-            "playermodel" 							"mdl/Weapons/health_injector/w_health_injector.rmdl"
-            "printname"                             "#SURVIVAL_PICKUP_HEALTH_LARGE"
-		    "charge_time"                           "7.0"
-		    "hud_icon"                              "rui/hud/loot/loot_stim_health_large"
+			"viewmodel" 							"mdl/weapons/health_injector/ptpov_health_injector.rmdl"
+			"playermodel" 							"mdl/Weapons/health_injector/w_health_injector.rmdl"
+			"printname"                             "#SURVIVAL_PICKUP_HEALTH_LARGE"
+			"charge_time"                           "7.0"
+			"hud_icon"                              "rui/hud/loot/loot_stim_health_large"
 			"activitymodifier"						"health_prop"
 
 			"charge_effect_attachment"				"muzzle_flash"
@@ -141,11 +141,11 @@ WeaponData
 
 		shield_small
 		{
-            "viewmodel" 							"mdl/weapons/shield_battery/ptpov_shield_battery_small_held.rmdl"
-            "playermodel" 							"mdl/Weapons/shield_battery/w_shield_battery_small.rmdl"
-            "printname"                             "#SURVIVAL_PICKUP_HEALTH_COMBO_SMALL"
-            "charge_time"                           "2.0"
-            "hud_icon"                              "rui/hud/loot/loot_stim_shield_small"
+			"viewmodel" 							"mdl/weapons/shield_battery/ptpov_shield_battery_small_held.rmdl"
+			"playermodel" 							"mdl/Weapons/shield_battery/w_shield_battery_small.rmdl"
+			"printname"                             "#SURVIVAL_PICKUP_HEALTH_COMBO_SMALL"
+			"charge_time"                           "2.0"
+			"hud_icon"                              "rui/hud/loot/loot_stim_shield_small"
 			"activitymodifier"						"shield_prop"
 
 			"charge_effect_1p"						"P_shield_battery_LRG_FP"
@@ -163,11 +163,11 @@ WeaponData
 
 		shield_large
 		{
-            "viewmodel" 							"mdl/weapons/shield_battery/ptpov_shield_battery_held.rmdl"
-            "playermodel" 							"mdl/Weapons/shield_battery/w_shield_battery.rmdl"
-            "printname"                             "#SURVIVAL_PICKUP_HEALTH_COMBO_LARGE"
-            "charge_time"                           "4.0"
-            "hud_icon"                              "rui/hud/loot/loot_stim_shield_large"
+			"viewmodel" 							"mdl/weapons/shield_battery/ptpov_shield_battery_held.rmdl"
+			"playermodel" 							"mdl/Weapons/shield_battery/w_shield_battery.rmdl"
+			"printname"                             "#SURVIVAL_PICKUP_HEALTH_COMBO_LARGE"
+			"charge_time"                           "4.0"
+			"hud_icon"                              "rui/hud/loot/loot_stim_shield_large"
 			"activitymodifier"						"shield_prop"
 
 			"charge_effect_1p"						"P_shield_battery_LRG_FP"
@@ -183,14 +183,14 @@ WeaponData
 			"fx_muzzle_flash_attach"				"muzzle_flash"
 		}
 
-        phoenix_kit
-        {
-            "viewmodel" 							"mdl/weapons/shield_battery/ptpov_shield_battery_held.rmdl"
-            "playermodel" 							"mdl/Weapons/shield_battery/w_shield_battery.rmdl"
-            "printname"                             "#SURVIVAL_PICKUP_HEALTH_COMBO_FULL"
-            "charge_time"                           "9.0"
-            "hud_icon"                              "rui/hud/loot/loot_stim_combo_full"
- 			"activitymodifier"						"shield_prop"
+		phoenix_kit
+		{
+			"viewmodel" 							"mdl/weapons/shield_battery/ptpov_shield_battery_held.rmdl"
+			"playermodel" 							"mdl/Weapons/shield_battery/w_shield_battery.rmdl"
+			"printname"                             "#SURVIVAL_PICKUP_HEALTH_COMBO_FULL"
+			"charge_time"                           "9.0"
+			"hud_icon"                              "rui/hud/loot/loot_stim_combo_full"
+			"activitymodifier"						"shield_prop"
 
 			"charge_effect_1p"						"P_shield_battery_LRG_FP"
 			"charge_effect_3p"						""
@@ -203,47 +203,47 @@ WeaponData
 			"fx_muzzle_flash_view"					"P_shield_battery_flash_FP"
 			"fx_muzzle_flash_world"					"P_shield_battery_flash"
 			"fx_muzzle_flash_attach"				"muzzle_flash"
-       }
+		}
 
-        ultimate_battery
-        {
-            "viewmodel" 							"mdl/weapons/ultimate_accelerant/ptpov_ultimate_accelerant_held.rmdl"
-            "playermodel" 							"mdl/Weapons/ultimate_accelerant/w_ultimate_accelerant.rmdl"
-            "printname"                             "#SURVIVAL_PICKUP_HEALTH_ULTIMATE"
-            "charge_time"                           "6.0"
-            "hud_icon"                              "rui/hud/loot/loot_health_ultimate"
+		ultimate_battery
+		{
+			"viewmodel" 							"mdl/weapons/ultimate_accelerant/ptpov_ultimate_accelerant_held.rmdl"
+			"playermodel" 							"mdl/Weapons/ultimate_accelerant/w_ultimate_accelerant.rmdl"
+			"printname"                             "#SURVIVAL_PICKUP_HEALTH_ULTIMATE"
+			"charge_time"                           "6.0"
+			"hud_icon"                              "rui/hud/loot/loot_health_ultimate"
  			"activitymodifier"						"ultimate_battery"
 
 			// Enalbe RUI
 			"ui1_enable"							"1"
-        }
+		}
 
-        ultimate_battery_supercharged_fx
-        {
-            "charge_effect_1p"						"P_watt_UA_charge"
-            "charge_effect_3p"						""
-            "charge_effect_attachment"				"muzzle_flash"
-        }
+		ultimate_battery_supercharged_fx
+		{
+			"charge_effect_1p"						"P_watt_UA_charge"
+			"charge_effect_3p"						""
+			"charge_effect_attachment"				"muzzle_flash"
+		}
 
-        // This should really be in Bakery or something. It's orphaned here and hidden knowledge to change it to get it to work.
-        // No better way to do it for now.
-        quick_heal
-        {
-            "charge_time"                           "*0.75"
-            "raise_time"                            "*0.75"
-            "holster_time"                          "*0.75"
-        }
-        fast_heal
-        {
-            "charge_time"                           "*0.5"
-            "raise_time"                            "*0.5"
-            "holster_time"                          "*0.5"
-        }
+		// This should really be in Bakery or something. It's orphaned here and hidden knowledge to change it to get it to work.
+		// No better way to do it for now.
+		quick_heal
+		{
+			"charge_time"                           "*0.75"
+			"raise_time"                            "*0.75"
+			"holster_time"                          "*0.75"
+		}
+		fast_heal
+		{
+			"charge_time"                           "*0.5"
+			"raise_time"                            "*0.5"
+			"holster_time"                          "*0.5"
+		}
 
-        consumable_no_weapon_interrupt
-        {
-        	"offhand_interupts_weapon_anims"		"0"
-        }
+		consumable_no_weapon_interrupt
+		{
+			"offhand_interupts_weapon_anims"		"0"
+		}
  	}
 
 	// Ultimate Battery Screen RUI
@@ -262,7 +262,7 @@ WeaponData
 		DefaultArgs
 		{
 			crosshairMovementX          crosshair_movement_x
-		    crosshairMovementY          crosshair_movement_y
+			crosshairMovementY          crosshair_movement_y
 		}
 
 //		  Moved this to be a script based rui so that we can do BLUR within it. ui consumable_progress in gamemode_survival.rui

@@ -23,21 +23,21 @@ WeaponData
 	"offhand_default_inventory_slot"				"1"
 	"offhand_keep_primary_in_hand"					"1"
 
-    "does_not_interrupt_cloak"						"1"
-    "instant_swap_to"								"0"
+	"does_not_interrupt_cloak"						"1"
+	"instant_swap_to"								"0"
 
-   	"play_offhand_charging_anim"  					"0"
+	"play_offhand_charging_anim"  					"0"
 	"play_offhand_start_end_anim"					"0"
 
-   	"charge_time" 									"0.01"
+	"charge_time" 									"0.01"
 	"charge_cooldown_time"							"0.0"
 	"charge_cooldown_delay"   						"0.0"
 	"charge_end_forces_fire"  						"1"
 	"charge_require_input"							"0"
 
 	"OnWeaponActivate"						        "OnWeaponActivate_ability_area_sonar_scan"
-    "OnWeaponPrimaryAttackAnimEvent"				"OnWeaponPrimaryAttackAnimEvent_ability_area_sonar_scan"
-    "OnWeaponRegenEnd"                              "OnWeaponRegenEndGeneric"
+	"OnWeaponPrimaryAttackAnimEvent"				"OnWeaponPrimaryAttackAnimEvent_ability_area_sonar_scan"
+	"OnWeaponRegenEnd"                              "OnWeaponRegenEndGeneric"
 
 	// Menu Stats
 
@@ -48,7 +48,7 @@ WeaponData
 	"playermodel"									"mdl/weapons/empty_handed/w_empty_handed_human.rmdl"
 	"projectilemodel"								"mdl/dev/empty_model.rmdl"
 
-    "zoom_effects"									"0"
+	"zoom_effects"									"0"
 
 	"critical_hit"									"0"
 
@@ -71,17 +71,17 @@ WeaponData
 	MP_BASE
 	{
 		"ammo_display"									"bar"
-        "ammo_stockpile_max"							"250"
-        "ammo_clip_size"   								"250"
-        "ammo_default_total"							"250"
-        "ammo_per_shot"									"250"
-        "ammo_min_to_fire"								"250"
+		"ammo_stockpile_max"							"250"
+		"ammo_clip_size"   								"250"
+		"ammo_default_total"							"250"
+		"ammo_per_shot"									"250"
+		"ammo_min_to_fire"								"250"
 
-        // Regen Ammo
-        "regen_ammo_refill_rate"						"7"
-        "regen_ammo_refill_start_delay"					"0.0"
+		// Regen Ammo
+		"regen_ammo_refill_rate"						"7"
+		"regen_ammo_refill_start_delay"					"0.0"
 
-        "enable_highlight_networking_on_creation"		"<KEEP_DEFAULT>"
+		"enable_highlight_networking_on_creation"		"<KEEP_DEFAULT>"
 
 	//Mods
 		"sound_weapon_ready"							"survival_ui_tactical_ready"
@@ -132,20 +132,20 @@ WeaponData
 
 	Mods
 	{
-	    survival_armor_cooldown_mod
-        {
-            "regen_ammo_refill_rate"    "*1.25"
-        }
+		survival_armor_cooldown_mod
+		{
+			"regen_ammo_refill_rate"    "*1.25"
+		}
 
 		burn_card_weapon_mod
 		{
 
 		}
 
-        survival_finite_ammo
-        {
+		survival_finite_ammo
+		{
 
-        }
+		}
 	}
 
 	active_crosshair_count				"2"
@@ -182,9 +182,9 @@ WeaponData
 			"ui"						"ui/crosshair_ordnance"
 			Args
 			{
-			    regenRate               "eWeaponVar.regen_ammo_refill_rate"
-			    ammoFrac                "progress_weapon_clip_ammo_frac"
-			    dryfireTime             "weapon_latest_dryfire_time"
+				regenRate               "eWeaponVar.regen_ammo_refill_rate"
+				ammoFrac                "progress_weapon_clip_ammo_frac"
+				dryfireTime             "weapon_latest_dryfire_time"
 			}
 		}
 	}

@@ -17,9 +17,9 @@ WeaponData
 	"offhand_default_inventory_slot"				"4"
 	"offhand_keep_primary_in_hand"					"0"
 	"offhand_holster_primary"						"1"
-    "hide_holstered_sidearm_when_active"			"1"
-    "zoom_effects"                                  "0"
-    "locks_weapon_change"							"1"
+	"hide_holstered_sidearm_when_active"			"1"
+	"zoom_effects"                                  "0"
+	"locks_weapon_change"							"1"
 
 	"OnWeaponChargeEnd"								"OnWeaponChargeEnd_ability_mirage_ultimate"
 	"OnWeaponChargeBegin"							"OnWeaponChargeBegin_ability_mirage_ultimate"
@@ -95,7 +95,7 @@ WeaponData
 	"charge_levels"									"3"
 	"charge_level_base"								"1"
 	"charge_end_forces_fire"						"1"
-    "charge_require_input"							"0"
+	"charge_require_input"							"0"
 
 	"charge_cooldown_time"							"1.0"
 	"charge_cooldown_delay"   						"0.0"
@@ -110,24 +110,24 @@ WeaponData
 	"charge_drain_sound_stop_when_empty"			"1"
 	"charge_drain_sound_seek_to_charge_fraction"	"1"
 
-    "charge_allow_melee"                            "0"
-    "charge_maintained_until_fired"					"1"
-    "charge_allow_midway_charge"					"0"
+	"charge_allow_melee"                            "0"
+	"charge_maintained_until_fired"					"1"
+	"charge_allow_midway_charge"					"0"
 
 	Mods
 	{
-	    survival_armor_cooldown_mod
-        {
-            "regen_ammo_refill_rate"    "*1.25"
-        }
-        survival_finite_ordnance
-        {
+		survival_armor_cooldown_mod
+		{
+			"regen_ammo_refill_rate"    "*1.25"
+		}
+		survival_finite_ordnance
+		{
 
-        }
-        ultimate_active_no_regen
-        {
-   			"regen_ammo_refill_rate"						"0"
-        }
+		}
+		ultimate_active_no_regen
+		{
+		"regen_ammo_refill_rate"						"0"
+		}
 	}
 
 	"ordnance_crosshair_always_on_start_index"	"0"
@@ -137,7 +137,7 @@ WeaponData
 		DefaultArgs
 		{
 			crosshairMovementX          crosshair_movement_x
-		    crosshairMovementY          crosshair_movement_y
+			crosshairMovementY          crosshair_movement_y
 		}
 
 		Crosshair_2
@@ -145,9 +145,9 @@ WeaponData
 			"ui"						"ui/crosshair_tactical"
 			Args
 			{
-			    regenRate               "eWeaponVar.regen_ammo_refill_rate"
-			    ammoFrac                "progress_weapon_clip_ammo_frac"
-			    dryfireTime             "weapon_latest_dryfire_time"
+				regenRate               "eWeaponVar.regen_ammo_refill_rate"
+				ammoFrac                "progress_weapon_clip_ammo_frac"
+				dryfireTime             "weapon_latest_dryfire_time"
 			}
 		}
 	}

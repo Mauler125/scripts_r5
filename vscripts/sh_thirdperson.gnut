@@ -1,10 +1,6 @@
-//
-
 #if SERVER || CLIENT
 global function Thirdperson_Init
 #endif
-
-
 
 #if SERVER || CLIENT
 void function Thirdperson_Init()
@@ -23,22 +19,17 @@ void function SetCameraMode( int mode )
 {
 	switch ( s_cameraMode )
 	{
-		case 0:	//
+		case 0: //
 			SetConVarFloat( "c_thirdpersonshoulderheight", 30.0 )
 			SetConVarFloat( "c_thirdpersonshoulderoffset", 20.0 )
 			SetConVarFloat( "c_thirdpersonshoulderaimdist", 100.0 )
 			break
-		case 1:		//
+		case 1: //
 			SetConVarFloat( "c_thirdpersonshoulderheight", 30.0 )
 			SetConVarFloat( "c_thirdpersonshoulderoffset", -20.0 )
 			SetConVarFloat( "c_thirdpersonshoulderaimdist", 100.0 )
 			break
 	}
-
-	//
-	//
-	//
-	//
 }
 
 void function Toggle3pCamera()

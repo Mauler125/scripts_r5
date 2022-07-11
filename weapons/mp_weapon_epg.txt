@@ -2,7 +2,7 @@ WeaponData
 {
 	// General
 	"printname"   									"EPG"
-    "shortprintname"                            	"EPG"
+	"shortprintname"								"EPG"
 	"description" 									"EPG"
 	"longdesc"										"EPG"
 
@@ -29,8 +29,8 @@ WeaponData
 	"damage_flags"									"DF_BULLET | DF_GIB"
 	
 	"OnClientAnimEvent"								"GlobalClientEventHandler"
-//	"OnWeaponPrimaryAttack"							"OnWeaponPrimaryAttack_GenericMissile_Player"
-//	"OnWeaponNpcPrimaryAttack"						"OnWeaponPrimaryAttack_GenericMissile_NPC"
+	// "OnWeaponPrimaryAttack"							"OnWeaponPrimaryAttack_GenericMissile_Player"
+	// "OnWeaponNpcPrimaryAttack"						"OnWeaponPrimaryAttack_GenericMissile_NPC"
 	"OnWeaponPrimaryAttack"							"OnWeaponPrimaryAttack_GenericBoltWithDrop_Player"
 	"OnWeaponNpcPrimaryAttack"						"OnWeaponPrimaryAttack_GenericBoltWithDrop_NPC"
 	"OnWeaponActivate"								"OnWeaponActivate_updateViewmodelAmmo"
@@ -99,50 +99,50 @@ WeaponData
 	"projectile_chasecamOffsetUp"					"10"
 	"projectile_killreplay_enabled"					"1"
 
-		"ammo_default_total"							"50"
-		"ammo_stockpile_max"							"50"
-		"ammo_clip_reload_max"							"50"
-		"ammo_no_remove_from_clip"                      "0"
-        "ammo_no_remove_from_stockpile"                 "1"
+	"ammo_default_total"							"50"
+	"ammo_stockpile_max"							"50"
+	"ammo_clip_reload_max"							"50"
+	"ammo_no_remove_from_clip"                      "0"
+	"ammo_no_remove_from_stockpile"                 "1"
 
-		"damage_near_value"   							"60"
-		"damage_far_value"								"60"
-		"damage_near_value_titanarmor"					"700"
-		"damage_far_value_titanarmor" 					"700"
-		"damage_rodeo" 									"60"
-		"damage_near_distance"							"60"
-		"damage_far_distance" 							"60"
+	"damage_near_value"   							"60"
+	"damage_far_value"								"60"
+	"damage_near_value_titanarmor"					"700"
+	"damage_far_value_titanarmor" 					"700"
+	"damage_rodeo" 									"60"
+	"damage_near_distance"							"60"
+	"damage_far_distance" 							"60"
 
-		"explosion_damage"								"40"
-		"explosion_damage_heavy_armor"					"700"
+	"explosion_damage"								"40"
+	"explosion_damage_heavy_armor"					"700"
 
-		"red_crosshair_range" 							"2000"
+	"red_crosshair_range" 							"2000"
 
-		// Damage - When Used by NPCs
-		"npc_damage_near_value"   						"99"
-		"npc_damage_far_value"							"99"
-		"npc_damage_near_value_titanarmor"				"100"
-		"npc_damage_far_value_titanarmor" 				"100"
-		"npc_damage_near_distance"						"2000"
-		"npc_damage_far_distance" 						"15000"
+	// Damage - When Used by NPCs
+	"npc_damage_near_value"   						"99"
+	"npc_damage_far_value"							"99"
+	"npc_damage_near_value_titanarmor"				"100"
+	"npc_damage_far_value_titanarmor" 				"100"
+	"npc_damage_near_distance"						"2000"
+	"npc_damage_far_distance" 						"15000"
 
 
-		// NPC
-		"npc_min_engage_range"							"500"
-		"npc_max_engage_range"							"4000"
-		"npc_min_engage_range_heavy_armor"				"500"
-		"npc_max_engage_range_heavy_armor"				"4000"
-		"npc_min_range"   								"0"
-		"npc_max_range"   								"8000"
+	// NPC
+	"npc_min_engage_range"							"500"
+	"npc_max_engage_range"							"4000"
+	"npc_min_engage_range_heavy_armor"				"500"
+	"npc_max_engage_range_heavy_armor"				"4000"
+	"npc_min_range"   								"0"
+	"npc_max_range"   								"8000"
 
-		"npc_min_burst"   								"1"
-		"npc_max_burst"   								"1"
-		"npc_rest_time_between_bursts_min"				"0.8"
-		"npc_rest_time_between_bursts_max"				"1.1"
+	"npc_min_burst"   								"1"
+	"npc_max_burst"   								"1"
+	"npc_rest_time_between_bursts_min"				"0.8"
+	"npc_rest_time_between_bursts_max"				"1.1"
 
-		//"enable_highlight_networking_on_creation"		"<KEEP_DEFAULT>"
+	//"enable_highlight_networking_on_creation"		"<KEEP_DEFAULT>"
 
-		"damage_heavyarmor_nontitan_scale"				"0.5"
+	"damage_heavyarmor_nontitan_scale"				"0.5"
 
 	"proficiency_poor_spreadscale"					"1.66667"
 	"proficiency_average_spreadscale" 				"1.66667"
@@ -404,52 +404,53 @@ WeaponData
 	"bodygroup6_name"	"proscreen"
 	"bodygroup6_set"	"0"
 
-    "clip_bodygroup"						"epg_magazine"
-    "clip_bodygroup_index_shown"			"0"
-    "clip_bodygroup_index_hidden"			"1"
-    "clip_bodygroup_show_for_milestone_0"	"1"
-    "clip_bodygroup_show_for_milestone_1"	"0"
+	"clip_bodygroup"						"epg_magazine"
+	"clip_bodygroup_index_shown"			"0"
+	"clip_bodygroup_index_hidden"			"1"
+	"clip_bodygroup_show_for_milestone_0"	"1"
+	"clip_bodygroup_show_for_milestone_1"	"0"
 
 	"bodygroup_ammo_index_count"			"7"
 
 	Mods
 	{
-        jump_kit
-        {
-       		"impulse_force"									"17500"
+		jump_kit
+		{
+			"impulse_force"									"17500"
 			"impulse_force_explosions"						"65000"
-        }
-        pro_screen
-        {
+		}
+
+		pro_screen
+		{
 			"ui8_enable"		"1"
-        	"bodygroup1_set"	"0"
-        	"bodygroup6_set"	"1"
-        }
-       	extended_ammo
+			"bodygroup1_set"	"0"
+			"bodygroup6_set"	"1"
+		}
+		extended_ammo
 		{
 			"ammo_stockpile_max"				"120"
 			"ammo_clip_size"   					"8"
 			"ammo_default_total"				"120"
 		}
-        delayed_shot
-        {
-            "projectile_flight_sound"                        "Weapon_Sidwinder_Projectile"
-		    "ignition_distance"                                "100"
-		    "pre_ignition_speed"                                "100"
-		    "pre_ignition_damage"                                "50"
-		    "pre_ignition_damage_titanarmor" "20"
-		    "pre_ignition_npc_damage" "80"
-		    "pre_ignition_npc_damage_titanarmor" "30"
-		    "pre_ignition_flight_sound"                        "Weapon_Sidwinder_Projectile"
-		    "pre_ignition_trail_effect"                        "weapon_40mm_projectile"
-		    "pre_ignition_impact_effect_table"                "exp_rocket_shoulder_large"
-		    "ignition_sound"                                "Weapon_Sidewinder_Fire_3P"
-		    "ignition_effect"                                "MissileAirBurst"
-        }
-        slammer
-        {
-        	"impulse_force"   								"35000"
-        }
+		delayed_shot
+		{
+			"projectile_flight_sound"                        "Weapon_Sidwinder_Projectile"
+			"ignition_distance"                                "100"
+			"pre_ignition_speed"                                "100"
+			"pre_ignition_damage"                                "50"
+			"pre_ignition_damage_titanarmor" "20"
+			"pre_ignition_npc_damage" "80"
+			"pre_ignition_npc_damage_titanarmor" "30"
+			"pre_ignition_flight_sound"                        "Weapon_Sidwinder_Projectile"
+			"pre_ignition_trail_effect"                        "weapon_40mm_projectile"
+			"pre_ignition_impact_effect_table"                "exp_rocket_shoulder_large"
+			"ignition_sound"                                "Weapon_Sidewinder_Fire_3P"
+			"ignition_effect"                                "MissileAirBurst"
+		}
+		slammer
+		{
+			"impulse_force"   								"35000"
+		}
 		pas_fast_ads
 		{
 			//Fast ADS
@@ -502,7 +503,7 @@ WeaponData
 		rocket_arena
 		{
 			"projectile_launch_speed"						"1750"
-       		"impulse_force"									"17500"
+			"impulse_force"									"17500"
 			"impulse_force_explosions"						"55000"
 
 			"damage_near_value"   							"35"
