@@ -28,8 +28,8 @@ global function GetUltimateWeaponState
 global enum eUltimateState
 {
 	CHARGING    // weapon is counting down
-	READY        // ready to be used - pulling out the grenade would still keep it in this state since it can be aborted.
-	ACTIVE        // weapon has been activated
+	READY       // ready to be used - pulling out the grenade would still keep it in this state since it can be aborted.
+	ACTIVE      // weapon has been activated
 }
 
 struct

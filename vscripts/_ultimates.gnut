@@ -10,21 +10,18 @@ global function Ultimates_OnPlayerRespawned
 global function SCB_OnUltimateReady
 #endif // CLIENT
 
-
 const string FUNCNAME_OnUltimateReady = "SCB_OnUltimateReady"
 void function Ultimates_RegisterNetworking()
 {
 	Remote_RegisterClientFunction( FUNCNAME_OnUltimateReady )
 }
 
-
 #if SERVER
-bool s_chargeFromDamageIsEnabled =			false
-float s_damageDeliveredToUltimateRatio =	0.0
-float s_damageTakenToUltimateRatio =		0.0
+bool s_chargeFromDamageIsEnabled = false
+float s_damageDeliveredToUltimateRatio = 0.0
+float s_damageTakenToUltimateRatio = 0.0
 
-bool s_chargeOverTimeIsEnabled =			true
-
+bool s_chargeOverTimeIsEnabled = true
 
 void function Ultimates_Init()
 {

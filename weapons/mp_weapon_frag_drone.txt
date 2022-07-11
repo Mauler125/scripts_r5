@@ -9,8 +9,8 @@ WeaponData
 	"menu_icon"										"rui/pilot_loadout/ordnance/tick"
 	"hud_icon"										"rui/pilot_loadout/ordnance/tick"
 
-    "readymessage"                                  "#HUD_BURNMETER_READY_TICKS"
-    "readyhint"                                     "#HUD_BURNMETER_READY_TICKS_HINT"
+	"readymessage"                                  "#HUD_BURNMETER_READY_TICKS"
+	"readyhint"                                     "#HUD_BURNMETER_READY_TICKS_HINT"
 
 	"weapon_type_flags"								"WPT_TACTICAL"
 	"weaponClass" 									"human"
@@ -21,8 +21,8 @@ WeaponData
 	"dev_menu_type"									"offhand" // fire_mode isn't readable from script
 	"offhand_default_inventory_slot"				"1"
 	
-    "does_not_interrupt_cloak"							"1"
-    "trophy_system_ignore"                          "0"
+	"does_not_interrupt_cloak"							"1"
+	"trophy_system_ignore"                          "0"
 
 	"OnWeaponTossReleaseAnimEvent"					"OnWeaponTossReleaseAnimEvent_weapon_frag_drone"
 	"OnWeaponTossPrep"								"Grenade_OnWeaponTossPrep"

@@ -24,7 +24,7 @@ WeaponData
 
 	"fire_in_real_world_while_phased"				"1"
 
-    "OnWeaponAttemptOffhandSwitch"					"OnWeaponAttemptOffhandSwitch_Never"
+	"OnWeaponAttemptOffhandSwitch"					"OnWeaponAttemptOffhandSwitch_Never"
 	"OnProjectileCollision"							"OnProjectileCollision_WeaponDefensiveBombardmentExplosion"
 
 
@@ -35,7 +35,7 @@ WeaponData
 
 	MP_BASE
 	{
-        "enable_highlight_networking_on_creation"		"<KEEP_DEFAULT>"
+		"enable_highlight_networking_on_creation"		"<KEEP_DEFAULT>"
 	}
 
 	// Models

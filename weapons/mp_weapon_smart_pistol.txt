@@ -83,7 +83,7 @@ WeaponData
 	// Ammo
 	"ammo_min_to_fire"								"1"
 
-   "titanarmor_critical_hit_required"              "1"
+	"titanarmor_critical_hit_required"              "1"
 	"critical_hit"									"1"
 
 	"is_smart_pistol"								"1"
@@ -383,13 +383,13 @@ WeaponData
 	"bodygroup6_name"	"proscreen"
 	"bodygroup6_set"	"0"
 
-    "clip_bodygroup"						"p2011sp_magazine"
-    "clip_bodygroup_index_shown"			"0"
-    "clip_bodygroup_index_hidden"			"1"
-    "clip_bodygroup_show_for_milestone_0"	"1"
-    "clip_bodygroup_show_for_milestone_1"	"0"
-    "clip_bodygroup_show_for_milestone_2"	"1"
-    "clip_bodygroup_show_for_milestone_3"	"1"
+	"clip_bodygroup"						"p2011sp_magazine"
+	"clip_bodygroup_index_shown"			"0"
+	"clip_bodygroup_index_hidden"			"1"
+	"clip_bodygroup_show_for_milestone_0"	"1"
+	"clip_bodygroup_show_for_milestone_1"	"0"
+	"clip_bodygroup_show_for_milestone_2"	"1"
+	"clip_bodygroup_show_for_milestone_3"	"1"
 
 	Mods
 	{

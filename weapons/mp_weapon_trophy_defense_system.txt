@@ -22,14 +22,14 @@ WeaponData
 	"minimap_reveal_distance"						"32000"
 	"dev_menu_type"									"offhand" // fire_mode isn't readable from script
 
-    "does_not_interrupt_cloak"						"1"
-    "offhand_interupts_weapon_anims"				"1"
+	"does_not_interrupt_cloak"						"1"
+	"offhand_interupts_weapon_anims"				"1"
 
 	"OnWeaponAttemptOffhandSwitch"					"OnWeaponAttemptOffhandSwitch_weapon_trophy_defense_system"
 	"OnWeaponPrimaryAttack"							"OnWeaponPrimaryAttack_weapon_trophy_defense_system"
-    "OnWeaponActivate"							    "OnWeaponActivate_weapon_trophy_defense_system"
-    "OnWeaponDeactivate"							"OnWeaponDeactivate_weapon_trophy_defense_system"
-    "OnWeaponRegenEnd"                              "OnWeaponRegenEndGeneric"
+	"OnWeaponActivate"							    "OnWeaponActivate_weapon_trophy_defense_system"
+	"OnWeaponDeactivate"							"OnWeaponDeactivate_weapon_trophy_defense_system"
+	"OnWeaponRegenEnd"                              "OnWeaponRegenEndGeneric"
 	"projectile_ignores_vortex"						"fall_vortex"
 
 	// Menu Stats
@@ -55,7 +55,7 @@ WeaponData
 	"projectile_adjust_to_gun_barrel"				"0"
 	"projectile_adjust_to_hand"						"1"
 	"grenade_arc_indicator_effect_first"			"P_grenade_arc_proto_first"
-    "grenade_arc_impact_indicator_effect"			"grenade_arc_impact_proto"
+	"grenade_arc_impact_indicator_effect"			"grenade_arc_impact_proto"
 
 	"grenade_disc_throw"							"1"
 	"projectile_gravity_scale"						"1"
@@ -136,7 +136,6 @@ WeaponData
 
 	"zoom_effects"									"0"
 
-
 	// Bob - Hip
 	"bob_cycle_time"                           "0.4"
 	"bob_max_speed"                            "150"
@@ -145,7 +144,6 @@ WeaponData
 	"bob_pitch"                                "0.75"
 	"bob_yaw"                                  "-1.7"
 	"bob_roll"                                 "1.2"
-
 
 	// Sway - General
 	"sway_rotate_attach"                       "SWAY_ROTATE"
@@ -202,27 +200,24 @@ WeaponData
 	"viewdrift_hipfire_speed_pitch"   				"0.6"
 	"viewdrift_hipfire_speed_yaw" 					"1.22"
 
-
-
-
 	MP_BASE
 	{
 		"ammo_clip_size"								"180"
-        "ammo_default_total"							"0"
-        "ammo_display"									"count"
-        "ammo_min_to_fire"								"180"
-        "ammo_per_shot"									"180"
-        "ammo_stockpile_max"							"6"
-        "regen_ammo_refill_rate"						"1"
-        "regen_ammo_refill_start_delay"					"0.0"
-        "ammo_no_remove_from_stockpile"					"0"
-        "fire_duration"                                 "0.5"
+		"ammo_default_total"							"0"
+		"ammo_display"									"count"
+		"ammo_min_to_fire"								"180"
+		"ammo_per_shot"									"180"
+		"ammo_stockpile_max"							"6"
+		"regen_ammo_refill_rate"						"1"
+		"regen_ammo_refill_start_delay"					"0.0"
+		"ammo_no_remove_from_stockpile"					"0"
+		"fire_duration"                                 "0.5"
 
 		"enable_highlight_networking_on_creation"		"<KEEP_DEFAULT>"
 
 		//Mods
-        "grenade_arc_indicator_bounce_count"			"1"
-        "grenade_arc_indicator_effect"					"P_grenade_arc_proto"
+		"grenade_arc_indicator_bounce_count"			"1"
+		"grenade_arc_indicator_effect"					"P_grenade_arc_proto"
 	}
 
 	SP_BASE
@@ -241,12 +236,11 @@ WeaponData
 		"enable_highlight_networking_on_creation"		"1"
 
 		//Mods
-        "grenade_arc_indicator_bounce_count"			"1"
-        "grenade_arc_indicator_effect"					"P_grenade_arc_proto"
+		"grenade_arc_indicator_bounce_count"			"1"
+		"grenade_arc_indicator_effect"					"P_grenade_arc_proto"
 	}
 
 	// Bob
-
 
 	// Rumble
 	"fire_rumble"									"rumble_grenadier"
@@ -256,41 +250,40 @@ WeaponData
 	// NPC
 
 	"clip_bodygroup"						"projectile"
-    "clip_bodygroup_index_shown"			"0"
-    "clip_bodygroup_index_hidden"			"1"
-    "clip_bodygroup_show_for_milestone_0"	"1"
-    "clip_bodygroup_show_for_milestone_1"	"0"
-    "clip_bodygroup_show_for_milestone_2"	"1"
-    "clip_bodygroup_show_for_milestone_3"	"1"
+	"clip_bodygroup_index_shown"			"0"
+	"clip_bodygroup_index_hidden"			"1"
+	"clip_bodygroup_show_for_milestone_0"	"1"
+	"clip_bodygroup_show_for_milestone_1"	"0"
+	"clip_bodygroup_show_for_milestone_2"	"1"
+	"clip_bodygroup_show_for_milestone_3"	"1"
 
 	// WeaponED Unhandled Key/Values and custom script Key/Values
 	"fire_anim_rate"  								"1"
 
 	Mods
 	{
-	    survival_armor_cooldown_mod
-        {
-            "regen_ammo_refill_rate"    "*1.25"
-        }
+		survival_armor_cooldown_mod
+		{
+			"regen_ammo_refill_rate"    "*1.25"
+		}
 
-	    burn_card_weapon_mod
-        {
+		burn_card_weapon_mod
+		{
 
-        }
+		}
 
-        survival_finite_ordnance
-        {
+		survival_finite_ordnance
+		{
 
-        }
+		}
 	}
 
 	RUI_CrosshairData
 	{
-
-        DefaultArgs
-        {
-            crosshairMovementX          crosshair_movement_x
-            crosshairMovementY          crosshair_movement_y
-        }
+		DefaultArgs
+		{
+			crosshairMovementX          crosshair_movement_x
+			crosshairMovementY          crosshair_movement_y
+		}
 	}
 }

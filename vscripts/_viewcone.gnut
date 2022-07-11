@@ -1,7 +1,7 @@
 
 global function Viewcone_Init
 
-	//DEFAULT: if you don't set one - defaults to this one
+// DEFAULT: if you don't set one - defaults to this one
 global function ViewConeRampFree
 
 //misc

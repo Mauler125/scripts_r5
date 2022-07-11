@@ -32,8 +32,8 @@ WeaponData
 	"viewmodel"   									"mdl/weapons/peacekeeper/ptpov_peacekeeper.rmdl"
 	"playermodel" 									"mdl/weapons/peacekeeper/w_peacekeeper.rmdl"
 
-    "OnWeaponActivate"                              "OnWeaponActivate_weapon_energy_shotgun"
-    "OnWeaponDeactivate"                            "OnWeaponDeactivate_weapon_energy_shotgun"
+	"OnWeaponActivate"                              "OnWeaponActivate_weapon_energy_shotgun"
+	"OnWeaponDeactivate"                            "OnWeaponDeactivate_weapon_energy_shotgun"
 	"OnWeaponPrimaryAttack"							"OnWeaponPrimaryAttack_weapon_energy_shotgun"
 	"OnWeaponNpcPrimaryAttack"						"OnWeaponNpcPrimaryAttack_weapon_energy_shotgun"
 	"OnWeaponChargeLevelIncreased"					"OnWeaponChargeLevelIncreased_weapon_energy_shotgun"
@@ -86,21 +86,21 @@ WeaponData
 	"low_ammo_sound_name_2"							"Peacekeeper_LowAmmo_Shot2"
 	"low_ammo_sound_name_3"							"Peacekeeper_LowAmmo_Shot3"
 
-    "sound_energy_charge_leveltick_1"               ""
-    "sound_energy_charge_leveltick_1_3p"            ""
+	"sound_energy_charge_leveltick_1"               ""
+	"sound_energy_charge_leveltick_1_3p"            ""
 	"sound_energy_charge_leveltick_2"               "weapon_peacekeeper_leveltick_1"
-    "sound_energy_charge_leveltick_2_3p"            "weapon_peacekeeper_leveltick_1_3p"
-    "sound_energy_charge_leveltick_3"               "weapon_peacekeeper_leveltick_2"
-    "sound_energy_charge_leveltick_3_3p"            "weapon_peacekeeper_leveltick_2_3p"
-    "sound_energy_charge_leveltick_final"           "weapon_peacekeeper_leveltick_final"
-    "sound_energy_charge_leveltick_final_3p"        "weapon_peacekeeper_leveltick_final_3p"
+	"sound_energy_charge_leveltick_2_3p"            "weapon_peacekeeper_leveltick_1_3p"
+	"sound_energy_charge_leveltick_3"               "weapon_peacekeeper_leveltick_2"
+	"sound_energy_charge_leveltick_3_3p"            "weapon_peacekeeper_leveltick_2_3p"
+	"sound_energy_charge_leveltick_final"           "weapon_peacekeeper_leveltick_final"
+	"sound_energy_charge_leveltick_final_3p"        "weapon_peacekeeper_leveltick_final_3p"
 
-    "sound_energy_charge_start"                     "weapon_peacekeeper_chargedshot_chargestart"
-    "sound_energy_charge_start_3p"                  "weapon_peacekeeper_chargedshot_chargestart_3p"
-    "sound_energy_charge_loop"                      "weapon_peacekeeper_chargedshot_loop"
-    "sound_energy_charge_loop_3p"                   "weapon_peacekeeper_chargedshot_loop_3p"
-    "sound_energy_charge_end"                       "weapon_peacekeeper_1p_chargedshot_chargeend"
-    "sound_energy_charge_end_3p"                    "weapon_peacekeeper_chargedshot_chargeend_3p"
+	"sound_energy_charge_start"                     "weapon_peacekeeper_chargedshot_chargestart"
+	"sound_energy_charge_start_3p"                  "weapon_peacekeeper_chargedshot_chargestart_3p"
+	"sound_energy_charge_loop"                      "weapon_peacekeeper_chargedshot_loop"
+	"sound_energy_charge_loop_3p"                   "weapon_peacekeeper_chargedshot_loop_3p"
+	"sound_energy_charge_end"                       "weapon_peacekeeper_1p_chargedshot_chargeend"
+	"sound_energy_charge_end_3p"                    "weapon_peacekeeper_chargedshot_chargeend_3p"
 
 	//"fx_shell_eject_view"							"wpn_shelleject_shotshell_FP"
 	//"fx_shell_eject_world"						"wpn_shelleject_shotshell"
@@ -120,23 +120,23 @@ WeaponData
 	dof_zoom_focusArea_top							0.070
 	dof_zoom_focusArea_bottom						-0.023
 
-    // Ammo
-    "ammo_default_total"							"100"
-    "ammo_stockpile_max"							"100"
-    "ammo_no_remove_from_stockpile"					"1"
-    "ammo_min_to_fire"								"1"
-    "ammo_clip_size"   								"6"
-    "ammo_per_shot"                                 "1"
+	// Ammo
+	"ammo_default_total"							"100"
+	"ammo_stockpile_max"							"100"
+	"ammo_no_remove_from_stockpile"					"1"
+	"ammo_min_to_fire"								"1"
+	"ammo_clip_size"   								"6"
+	"ammo_per_shot"                                 "1"
 
-    // Damage - When Used by Players
-    "damage_near_value"   							"10"
-    "damage_far_value"								"10"
+	// Damage - When Used by Players
+	"damage_near_value"   							"10"
+	"damage_far_value"								"10"
 
-    "damage_near_value_titanarmor"					"10"
-    "damage_far_value_titanarmor" 					"10"
-    "damage_rodeo" 									"550"
-    "damage_near_distance"							"100"
-    "damage_far_distance" 							"750"
+	"damage_near_value_titanarmor"					"10"
+	"damage_far_value_titanarmor" 					"10"
+	"damage_rodeo" 									"550"
+	"damage_near_distance"							"100"
+	"damage_far_distance" 							"750"
 
 	// NPC
 	"proficiency_poor_spreadscale"					"7.0"
@@ -260,43 +260,43 @@ WeaponData
 	"spread_max_kick_crouch_ads"  					"0.0"
 	"spread_max_kick_air_ads" 						"0.0"
 
-    "clip_bodygroup"						"peacekeeper_magazine"
-    "clip_bodygroup_index_shown"			"0"
-    "clip_bodygroup_index_hidden"			"1"
-    "clip_bodygroup_show_for_milestone_0"	"1"
-    "clip_bodygroup_show_for_milestone_1"	"0"
-    "clip_bodygroup_show_for_milestone_2"	"1"
-    "clip_bodygroup_show_for_milestone_3"	"1"
+	"clip_bodygroup"						"peacekeeper_magazine"
+	"clip_bodygroup_index_shown"			"0"
+	"clip_bodygroup_index_hidden"			"1"
+	"clip_bodygroup_show_for_milestone_0"	"1"
+	"clip_bodygroup_show_for_milestone_1"	"0"
+	"clip_bodygroup_show_for_milestone_2"	"1"
+	"clip_bodygroup_show_for_milestone_3"	"1"
 
 	// Custom int for hopup rui optic selection
 	"custom_int_0"							"0"
 
 	Mods
 	{
-	    gold
-	    {
-	    }
+		gold
+		{
+		}
 
 		survival_finite_ammo
-        {
-            "ammo_default_total"							"0"
-            "ammo_stockpile_max"							"18"
-            "ammo_no_remove_from_stockpile"					"0"
+		{
+			"ammo_default_total"							"0"
+			"ammo_stockpile_max"							"18"
+			"ammo_no_remove_from_stockpile"					"0"
 
-            "low_ammo_fraction" 							"0.3"
-	   		"uses_ammo_pool"								"1"
-        }
+			"low_ammo_fraction" 							"0.3"
+			"uses_ammo_pool"								"1"
+		}
 
-        hopup_energy_choke
-        {
+		hopup_energy_choke
+		{
 			"charge_time" 									"1.5"
 			"charge_levels"									"4"
 			"charge_level_base"								"1"
 
 			"charge_cooldown_time"							"1.5"
-	        "charge_cooldown_delay"   						"1.25"
+			"charge_cooldown_delay"   						"1.25"
 
-	        "headshot_distance" 							"11828"  // 300m
+			"headshot_distance" 							"11828"  // 300m
 
 			"rui_crosshair_index"							"1"
 
@@ -307,13 +307,13 @@ WeaponData
 			"ui24_enable"									"1"
 			"ui25_enable"									"1"
 			//"ui20_mesh_override"							"models/weapons/attachments/peacekeeper_rui_lower"
-        }
+		}
 
-        optic_cq_hcog_classic
-        {
-        	"bodygroup2_set"				"0"
+		optic_cq_hcog_classic
+		{
+			"bodygroup2_set"				"0"
 			"custom_int_0"					"1"
-        }
+		}
 
 		optic_cq_hcog_bruiser
 		{
@@ -360,37 +360,20 @@ WeaponData
 			"rechamber_time" 	"*0.84"
 		}
 
-                         
-                 
-   
-                       
-                            
-                                
-   
-      
-
 		npc_shotgunner
 		{
 			"projectiles_per_shot"	"6"
 		}
 
-               
-                                                                                                     
-                    
-         
-                                                                                          
-         
-      
-
-        //Legendary Ice Charge VFX - Skin 1
-        legendary_nrg_ice_reactive_charge
+		//Legendary Ice Charge VFX - Skin 1
+		legendary_nrg_ice_reactive_charge
 		{
 			"charge_effect_1p"								"P_nrg_ice_charge_FP"
 			"charge_effect_3p"								"P_nrg_ice_charge_3P"
 		}
 
 		//Legendary Crystal Charge VFX - Skin 2
-        legendary_nrg_crys_reactive_charge
+		legendary_nrg_crys_reactive_charge
 		{
 			"charge_effect_1p"								"P_nrg_crys_charge_FP"
 			"charge_effect_3p"								"P_nrg_crys_charge_3P"
@@ -526,8 +509,6 @@ WeaponData
 			centerOffset		weapon_ads_center_offset
 		}
 	}
-
-
 
 	active_crosshair_count				"1"
 	rui_crosshair_index					"0"

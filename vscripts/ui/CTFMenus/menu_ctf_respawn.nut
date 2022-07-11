@@ -273,5 +273,5 @@ void function Set_CTF_Class(string primary, string secondary, string tactical, s
 
 void function OnR5RSB_NavigateBack()
 {
-    //
+	//
 }

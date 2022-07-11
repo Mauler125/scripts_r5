@@ -3,7 +3,7 @@
 
 WeaponData
 {
-    MP_BASE
+	MP_BASE
 	{
 		"aimassist_adspull_weaponclass"					"broad"
 		"enable_highlight_networking_on_creation"		"<KEEP_DEFAULT>"
@@ -66,20 +66,20 @@ WeaponData
 
 	"damage_headshot_scale"							"1.5"
 	"damage_leg_scale"                              "0.8"
-    "damage_shield_scale"                           "1"
+	"damage_shield_scale"                           "1"
 
-    "red_crosshair_range" 							"0"
+	"red_crosshair_range" 							"0"
 
 	"critical_hit"									"1"
 	"critical_hit_damage_scale"						"1"
  	"titanarmor_critical_hit_required"              "1"
 
-    "projectilemodel" 								"mdl/dev/empty_model.rmdl"
-    "projectile_lifetime" 							"1.0"
+	"projectilemodel" 								"mdl/dev/empty_model.rmdl"
+	"projectile_lifetime" 							"1.0"
  	"projectile_inherit_owner_velocity_scale"		"0.0"
-    "projectile_drag_coefficient"                   "0.001"
+	"projectile_drag_coefficient"                   "0.001"
 
-    "projectile_launch_speed"						"16000"
+	"projectile_launch_speed"						"16000"
 
 	"bolt_gravity_enabled"							"1"
 	"projectile_gravity_scale" 						"1.0"
@@ -87,7 +87,7 @@ WeaponData
 
 	"bolt_hitsize"									"1.0"
 
-    // Bob
+	// Bob
 	"bob_cycle_time"  								"0.4"
 	"bob_vert_dist"   								"0.19"
 	"bob_horz_dist"   								"0.1"
@@ -199,64 +199,64 @@ WeaponData
 
 	Mods
 	{
-        optic_cq_hcog_classic
-	    {
-	        "zoom_time_in"                          "0.24"
-            "zoom_time_out"                         "0.22"
+		optic_cq_hcog_classic
+		{
+			"zoom_time_in"                          "0.24"
+			"zoom_time_out"                         "0.22"
 
-            "anim_alt_idleAttack"                   "1"
-            "ads_fov_zoomfrac_start"                "0"
-            "ads_fov_zoomfrac_end"                  "1"
-            "viewmodel_offset_zoom_frac_start"      "0"
-            "viewmodel_offset_zoom_frac_end"        "0.5"
-	    }
+			"anim_alt_idleAttack"                   "1"
+			"ads_fov_zoomfrac_start"                "0"
+			"ads_fov_zoomfrac_end"                  "1"
+			"viewmodel_offset_zoom_frac_start"      "0"
+			"viewmodel_offset_zoom_frac_end"        "0.5"
+		}
 
-        optic_cq_hcog_bruiser
-        {
-            "zoom_time_in"                          "0.24"
-            "zoom_time_out"                         "0.22"
+		optic_cq_hcog_bruiser
+		{
+			"zoom_time_in"                          "0.24"
+			"zoom_time_out"                         "0.22"
 
-	        "anim_alt_idleAttack"                   "1"
-            "ads_fov_zoomfrac_start"                "0.1"
-            "ads_fov_zoomfrac_end"                  "0.8"
-            "viewmodel_offset_zoom_frac_start"      "0.1"
-            "viewmodel_offset_zoom_frac_end"        "0.8"
-        }
+		  "anim_alt_idleAttack"                   "1"
+			"ads_fov_zoomfrac_start"                "0.1"
+			"ads_fov_zoomfrac_end"                  "0.8"
+			"viewmodel_offset_zoom_frac_start"      "0.1"
+			"viewmodel_offset_zoom_frac_end"        "0.8"
+		}
 
-        optic_cq_holosight
-        {
-            "zoom_time_in"                          "0.24"
-            "zoom_time_out"                         "0.22"
+		optic_cq_holosight
+		{
+			"zoom_time_in"                          "0.24"
+			"zoom_time_out"                         "0.22"
 
-	        "anim_alt_idleAttack"                   "1"
-            "ads_fov_zoomfrac_start"                "0.1"
-            "ads_fov_zoomfrac_end"                  "0.75"
-            "viewmodel_offset_zoom_frac_start"      "0"
-            "viewmodel_offset_zoom_frac_end"        "0.75"
-        }
+			"anim_alt_idleAttack"                   "1"
+			"ads_fov_zoomfrac_start"                "0.1"
+			"ads_fov_zoomfrac_end"                  "0.75"
+			"viewmodel_offset_zoom_frac_start"      "0"
+			"viewmodel_offset_zoom_frac_end"        "0.75"
+		}
 
-        optic_cq_holosight_variable
-        {
-            "zoom_time_in"                          "0.24"
-            "zoom_time_out"                         "0.22"
+		optic_cq_holosight_variable
+		{
+			"zoom_time_in"                          "0.24"
+			"zoom_time_out"                         "0.22"
+		
+		  "anim_alt_idleAttack"                   "1"
+			"ads_fov_zoomfrac_start"                "0.1"
+			"ads_fov_zoomfrac_end"                  "0.8"
+			"viewmodel_offset_zoom_frac_start"      "0.1"
+			"viewmodel_offset_zoom_frac_end"        "0.8"
+		}
 
-	        "anim_alt_idleAttack"                   "1"
-            "ads_fov_zoomfrac_start"                "0.1"
-            "ads_fov_zoomfrac_end"                  "0.8"
-            "viewmodel_offset_zoom_frac_start"      "0.1"
-            "viewmodel_offset_zoom_frac_end"        "0.8"
-        }
+			optic_cq_threat
+			{
+				"zoom_time_in"                          "0.24"
+				"zoom_time_out"                         "0.22"
 
-        optic_cq_threat
-        {
-            "zoom_time_in"                          "0.24"
-            "zoom_time_out"                         "0.22"
-
-	        "anim_alt_idleAttack"                   "1"
-            "ads_fov_zoomfrac_start"                "0.1"
-            "ads_fov_zoomfrac_end"                  "0.8"
-            "viewmodel_offset_zoom_frac_start"      "0.1"
-            "viewmodel_offset_zoom_frac_end"        "0.8"
-        }
+				"anim_alt_idleAttack"                   "1"
+				"ads_fov_zoomfrac_start"                "0.1"
+				"ads_fov_zoomfrac_end"                  "0.8"
+				"viewmodel_offset_zoom_frac_start"      "0.1"
+				"viewmodel_offset_zoom_frac_end"        "0.8"
+			}
     }
 }

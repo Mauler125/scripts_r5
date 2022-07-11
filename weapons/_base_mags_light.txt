@@ -11,7 +11,7 @@ WeaponData
 
 		bullets_mag_l2
 		{
-		    "reload_time"						"*0.95"
+			"reload_time"						"*0.95"
 			"reload_time_late1"					"*0.95"
 			"reload_time_late2"					"*0.95"
 			"reload_time_late3"					"*0.95"
@@ -29,7 +29,7 @@ WeaponData
 
 		bullets_mag_l3
 		{
-		    "reload_time"						"*0.9"
+			"reload_time"						"*0.9"
 			"reload_time_late1"					"*0.9"
 			"reload_time_late2"					"*0.9"
 			"reload_time_late3"					"*0.9"

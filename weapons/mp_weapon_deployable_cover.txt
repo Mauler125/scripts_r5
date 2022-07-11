@@ -22,7 +22,7 @@ WeaponData
 	"fast_swap_to"									"1"
 	"dev_menu_type"									"offhand" // fire_mode isn't readable from script
 
-    "does_not_interrupt_cloak"							"1"
+	"does_not_interrupt_cloak"							"1"
 
 	"OnWeaponAttemptOffhandSwitch"					"OnWeaponAttemptOffhandSwitch_weapon_deployable_cover"
 	"OnWeaponTossReleaseAnimEvent"					"OnWeaponTossReleaseAnimEvent_weapon_deployable_cover"
@@ -109,7 +109,6 @@ WeaponData
 	"toss_time"										"0.2"
 	"toss_overhead_time"							"0.2"
 
-
 	"grenade_bounce_vel_frac_shallow"				"0.5"
 	"grenade_bounce_vel_frac_sharp"					"0.3"
 	"grenade_bounce_vel_frac_along_normal"			"0.1"
@@ -168,12 +167,12 @@ WeaponData
 	// NPC
 
 	"clip_bodygroup"						"projectile"
-    "clip_bodygroup_index_shown"			"0"
-    "clip_bodygroup_index_hidden"			"1"
-    "clip_bodygroup_show_for_milestone_0"	"1"
-    "clip_bodygroup_show_for_milestone_1"	"0"
-    "clip_bodygroup_show_for_milestone_2"	"1"
-    "clip_bodygroup_show_for_milestone_3"	"1"
+	"clip_bodygroup_index_shown"			"0"
+	"clip_bodygroup_index_hidden"			"1"
+	"clip_bodygroup_show_for_milestone_0"	"1"
+	"clip_bodygroup_show_for_milestone_1"	"0"
+	"clip_bodygroup_show_for_milestone_2"	"1"
+	"clip_bodygroup_show_for_milestone_3"	"1"
 
 	// WeaponED Unhandled Key/Values and custom script Key/Values
 	"fire_anim_rate"  								"1"
@@ -211,8 +210,8 @@ WeaponData
 			isReloading					weapon_is_reloading
 			teamColor					crosshair_team_color
 			isAmped						weapon_is_amped
-		    crosshairMovementX          crosshair_movement_x
-		    crosshairMovementY          crosshair_movement_y
+			crosshairMovementX          crosshair_movement_x
+			crosshairMovementY          crosshair_movement_y
 		}
 
 		Crosshair_1
@@ -225,14 +224,13 @@ WeaponData
 			}
 		}
 
-
 		Crosshair_2
 		{
 			"ui"						"ui/crosshair_tactical"
 			Args
 			{
-			    ammoFrac                "progress_weapon_clip_ammo_frac"
-			    dryfireTime             "weapon_latest_dryfire_time"
+				ammoFrac                "progress_weapon_clip_ammo_frac"
+				dryfireTime             "weapon_latest_dryfire_time"
 			}
 		}
 	}

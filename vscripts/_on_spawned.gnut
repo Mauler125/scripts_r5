@@ -289,11 +289,11 @@ void function CodeCallback_OnSpawned( entity ent )
 
 	SetModelSkinFromLeveled( ent )
 
-    if ( IsLobby() )
-    {
+	if ( IsLobby() )
+	{
 		RunMySpawnFunctions( ent )
-        return
-    }
+		return
+	}
 
 	if ( ent.IsNPC() )
 	{

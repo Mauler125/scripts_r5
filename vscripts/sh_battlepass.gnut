@@ -44,15 +44,9 @@ global function BattlePassHasWeeklyChallenge
 global function GetBattlePassRecurringStarChallenge
 #endif
 
-
-#if SERVER
-#endif
-
 #if UI
 global function CanPlayerPurchaseBattlePass
-#endif
 
-#if UI
 global function GetBattlePassXPEventValueDisplay
 global function GetStringForBattlePassReward
 global function ShouldBattlePassTabBeEnabled
@@ -61,11 +55,6 @@ global function ShouldBattlePassTabBeEnabled
 #if R5DEV && CLIENT || UI
 global function DEV_BattlePass
 #endif
-
-#if SERVER
-
-#endif
-
 
 //////////////////////
 //////////////////////
@@ -114,11 +103,11 @@ global const asset BATTLEPASS_MODEL_APEX_COINS = $"mdl/menu/coin.rmdl"
 global const asset BATTLEPASS_MODEL_CRAFTING_METALS = $"mdl/currency/crafting/currency_crafting_epic.rmdl"
 global const float BATTLEPASS_XP_BOOST_AMOUNT = 0.1
 
-/////////////////////////
-/////////////////////////
-//// Initialiszation ////
-/////////////////////////
-/////////////////////////
+////////////////////////
+////////////////////////
+//// Initialization ////
+////////////////////////
+////////////////////////
 void function ShBattlePass_LevelInit()
 {
 	FileStruct_LifetimeLevel newFileLevel
@@ -863,8 +852,6 @@ string function GetBattlePassXPEventValueDisplay( entity player, int xpType )
 }
 #endif
 
-
-
 ///////////////////////
 ///////////////////////
 //// Dev functions ////
@@ -887,11 +874,6 @@ ItemFlavor function DEV_BattlePass( EHI playerEHI = EHI_null )
 }
 #endif
 
-
-#if SERVER
-#endif
-
-
 #if SERVER || CLIENT || UI
 int function GetPlayerBattlePassPurchasableLevels( EHI playerEHI, ItemFlavor pass )
 {
@@ -902,7 +884,6 @@ int function GetPlayerBattlePassPurchasableLevels( EHI playerEHI, ItemFlavor pas
 }
 #endif
 
-
 string function GetBattlePassDisplayLevel( int levelIndex, bool showBonus = false )
 {
 	if ( levelIndex > 99 && showBonus )
@@ -910,7 +891,6 @@ string function GetBattlePassDisplayLevel( int levelIndex, bool showBonus = fals
 
 	return string( levelIndex + 1 )
 }
-
 
 asset function GetBattlePassDisplayBadge( int levelIndex )
 {
@@ -972,20 +952,6 @@ string function GetStringForBattlePassReward( BattlePassReward reward )
 }
 #endif
 
-
-
-
-
-
-
-#if SERVER
-#endif
-
-
-#if SERVER
-#endif
-
-
 #if UI
 bool function CanPlayerPurchaseBattlePass( entity player, ItemFlavor activeBattlePass )
 {
@@ -1022,7 +988,6 @@ int function GetCurrentBattlePassWeek()
 }
 #endif
 
-
 #if SERVER || CLIENT || UI
 int function GetCurrentBattlePassWeekExpirationTime()
 {
@@ -1049,7 +1014,6 @@ int function GetCurrentBattlePassWeekExpirationTime()
 	return expireTime
 }
 #endif
-
 
 #if SERVER || CLIENT || UI
 ItemFlavor function GetBattlePassProgressBadge( ItemFlavor pass )

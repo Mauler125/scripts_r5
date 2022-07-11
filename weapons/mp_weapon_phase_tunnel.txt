@@ -9,7 +9,7 @@ WeaponData
 	"longdesc"										"#WPN_PHASE_TUNNEL_LONGDESC"
 
 	"menu_icon"										"rui/pilot_loadout/suit/light"
-    "hud_icon"										"rui/hud/ultimate_icons/ultimate_wraith"
+	"hud_icon"										"rui/hud/ultimate_icons/ultimate_wraith"
 
 	"weapon_type_flags"								"WPT_ULTIMATE"
 	"weaponClass" 									"human"
@@ -18,18 +18,18 @@ WeaponData
 	"offhand_default_inventory_slot"				"4"
 	"offhand_keep_primary_in_hand"					"0"
 	"offhand_holster_primary"						"1"
-    "hide_holstered_sidearm_when_active"			"1"
-    "offhand_interupts_weapon_anims"				"1"
-    "zoom_effects"                                  "0"
+	"hide_holstered_sidearm_when_active"			"1"
+	"offhand_interupts_weapon_anims"				"1"
+	"zoom_effects"                                  "0"
 
-    "OnWeaponAttemptOffhandSwitch"					"OnWeaponAttemptOffhandSwitch_weapon_phase_tunnel"
+	"OnWeaponAttemptOffhandSwitch"					"OnWeaponAttemptOffhandSwitch_weapon_phase_tunnel"
 	"OnWeaponPrimaryAttack"							"OnWeaponPrimaryAttack_ability_phase_tunnel"
 	"OnWeaponNpcPrimaryAttack"						"OnWeaponNPCPrimaryAttack_ability_phase_tunnel"
-    "OnWeaponChargeBegin"							"OnWeaponChargeBegin_weapon_phase_tunnel"
-    "OnWeaponChargeEnd"							    "OnWeaponChargeEnd_weapon_phase_tunnel"
+	"OnWeaponChargeBegin"							"OnWeaponChargeBegin_weapon_phase_tunnel"
+	"OnWeaponChargeEnd"							    "OnWeaponChargeEnd_weapon_phase_tunnel"
 	"OnWeaponActivate"							    "OnWeaponActivate_weapon_phase_tunnel"
-    "OnWeaponDeactivate"							"OnWeaponDeactivate_weapon_phase_tunnel"
-    "OnWeaponRegenEnd"                              "OnWeaponRegenEndGeneric"
+	"OnWeaponDeactivate"							"OnWeaponDeactivate_weapon_phase_tunnel"
+	"OnWeaponRegenEnd"                              "OnWeaponRegenEndGeneric"
 
 	"viewmodel"                                     "mdl/weapons/empty_handed/ptpov_wraith_phasetunnel.rmdl"
 	"playermodel"									"mdl/weapons/empty_handed/w_empty_handed_human.rmdl"
@@ -77,17 +77,17 @@ WeaponData
 	"regen_ammo_refill_rate"						"1"
 	"regen_ammo_refill_start_delay"					"1.0"
 
-    // Charge settings
-    "charge_time" 									"-1.0"
-    "charge_cooldown_time"							"1.0"
-    "charge_cooldown_delay"   						"0.0"
-    "charge_end_forces_fire"  						"1"
-    "charge_require_input"							"0"
-    "charge_remain_full_when_fired"					"0"
-    "charge_allow_melee"                            "0"
-    "charge_maintained_until_fired"					"1"
-    "charge_allow_midway_charge"					"0"
-    "charge_effect_show_during_drain"				"0"
+	// Charge settings
+	"charge_time" 									"-1.0"
+	"charge_cooldown_time"							"1.0"
+	"charge_cooldown_delay"   						"0.0"
+	"charge_end_forces_fire"  						"1"
+	"charge_require_input"							"0"
+	"charge_remain_full_when_fired"					"0"
+	"charge_allow_melee"                            "0"
+	"charge_maintained_until_fired"					"1"
+	"charge_allow_midway_charge"					"0"
+	"charge_effect_show_during_drain"				"0"
 
 	MP_BASE
 	{
@@ -259,9 +259,9 @@ WeaponData
 
 	Mods
 	{
-	    survival_armor_cooldown_mod
-	    {
-	        "regen_ammo_refill_rate"    "*1.25"
-	    }
+		survival_armor_cooldown_mod
+		{
+			"regen_ammo_refill_rate"    "*1.25"
+		}
 	}
 }

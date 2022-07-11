@@ -1,11 +1,11 @@
 
 WeaponData
 {
-    "allow_gibraltar_shield"                        "0"
+	"allow_gibraltar_shield"                        "0"
 	"flyoutEnabled"									"0"
 
-    "OnWeaponActivate"								"OnWeaponActivate_weapon_melee_primary"
-    "OnWeaponDeactivate"							"OnWeaponDeactivate_weapon_melee_primary"
+	"OnWeaponActivate"								"OnWeaponActivate_weapon_melee_primary"
+	"OnWeaponDeactivate"							"OnWeaponDeactivate_weapon_melee_primary"
 
 	"melee_angle"									"30"
 	"melee_attack_animtime"							"0"

@@ -15,17 +15,17 @@ WeaponData
 	"weaponClass" 									"human"
 	"fire_mode"   									"offhand"
 	"offhand_active_slot"                           "altHand"
-//	"offhand_active_slot"                           "mainHand"
+	// "offhand_active_slot"                           "mainHand"
 	"is_toss_weapon"								"1"
 	"minimap_reveal_distance"						"32000"
 	"leveled_pickup"								"1"
 	"dev_menu_type"									"offhand" // fire_mode isn't readable from script
 	"offhand_default_inventory_slot"				"1"
 
-    "does_not_interrupt_cloak"						"1"
-    "instant_swap_to"								"0"
+	"does_not_interrupt_cloak"						"1"
+	"instant_swap_to"								"0"
 
-    "OnWeaponActivate"                              "OnWeaponActivate_weapon_grenade_bangalore"
+	"OnWeaponActivate"                              "OnWeaponActivate_weapon_grenade_bangalore"
 	"OnWeaponTossReleaseAnimEvent"					"OnWeaponTossReleaseAnimEvent_weapon_grenade_bangalore"
 	"OnWeaponTossPrep"								"Grenade_OnWeaponTossPrep"
 	"OnWeaponDeactivate"							"Grenade_OnWeaponDeactivate"
@@ -38,13 +38,13 @@ WeaponData
 
 	// Models
 	"viewmodel"										"mdl/Weapons/bangalore_rocketpod/ptpov_bangalore_rocketpod.rmdl"
-//	"playermodel"									"mdl/weapons/empty_handed/w_empty_handed_human.rmdl"
+	// "playermodel"									"mdl/weapons/empty_handed/w_empty_handed_human.rmdl"
 	"projectilemodel"								"mdl/Weapons/grenades/w_bangalore_canister_gas_projectile.rmdl"
 
-    show_grenade_indicator                          0
-    grenade_show_indicator_to_owner                 0
+	show_grenade_indicator                          0
+	grenade_show_indicator_to_owner                 0
 
-    "zoom_effects"									"0"
+	"zoom_effects"									"0"
 
 	// Effects
 	"impact_effect_table" 							"none"
@@ -149,7 +149,7 @@ WeaponData
 	"cooldown_type"									"ammo_instant"
 	"max_cook_time"									"10000"
 	"grenade_fuse_time"								"0"
-    "start_fuse_on_launch"                          "0"
+	"start_fuse_on_launch"                          "0"
 	"grenade_ignition_time"                         "5.0"
 	"fire_rate"   									"2"
 	"deploy_time" 									"0.25"
@@ -255,10 +255,10 @@ WeaponData
 
 	Mods
 	{
-	    survival_armor_cooldown_mod
-        {
-            "regen_ammo_refill_rate"    "*1.25"
-        }
+		survival_armor_cooldown_mod
+		{
+			"regen_ammo_refill_rate"    "*1.25"
+		}
 
 		burn_mod_grenade_electric_smoke
 		{
@@ -311,10 +311,10 @@ WeaponData
 			grenade_arc_indicator_bounce_count				"0"
 		}
 
-        survival_finite_ordnance
-        {
+		survival_finite_ordnance
+		{
 
-        }
+		}
 	}
 
 	active_crosshair_count				"2"
@@ -351,9 +351,9 @@ WeaponData
 			"ui"						"ui/crosshair_ordnance"
 			Args
 			{
-			    regenRate               "eWeaponVar.regen_ammo_refill_rate"
-			    ammoFrac                "progress_weapon_clip_ammo_frac"
-			    dryfireTime             "weapon_latest_dryfire_time"
+				regenRate               "eWeaponVar.regen_ammo_refill_rate"
+				ammoFrac                "progress_weapon_clip_ammo_frac"
+				dryfireTime             "weapon_latest_dryfire_time"
 			}
 		}
 	}

@@ -74,7 +74,10 @@ global struct dropshipAnimData
 	bool hideProxy = true
 	void functionref( entity ) viewConeFunc
 	float yawAngle
-	string firstPersonJumpOutSound // Unfortunately first person anims play for everybody, not just the person who the anim is played upon, so script needs to play the sound as opposed to a qc entry
+
+	// Unfortunately first person anims play for everybody, not just the person who the anim is played upon,
+	// so script needs to play the sound as opposed to a qc entry
+	string firstPersonJumpOutSound
 }
 
 struct
@@ -416,7 +419,7 @@ void function RespawnPlayersInDropshipAtPoint( array<entity> players, vector ori
 	dropship.SetAngles( angles )
 	Attachment attachResult = dropship.Anim_GetAttachmentAtTime( "dropship_classic_mp_flyin", "ORIGIN", 0.0 )
 
-	int i=0
+	int i = 0
 	foreach ( player in players )
 	{
 		if ( IsValid( player ) )
@@ -603,22 +606,11 @@ string function RespawnDNA_TextOverride( entity ent )
 
 float function GetRespawnStationUseTime( entity ent )
 {
-	switch( ent.GetTargetName() )
-	{
-#if(false)
-
-
-#endif //
-
-#if(false)
-
-
-
-#endif //
-
-		default:
-			return RESPAWN_BEACON_RESPAWN_TIME
-	}
+	// switch( ent.GetTargetName() )
+	// {
+	// 	default:
+	// 		return RESPAWN_BEACON_RESPAWN_TIME
+	// }
 
 	return RESPAWN_BEACON_RESPAWN_TIME
 }
@@ -652,7 +644,7 @@ void function RespawnChamberOnUse( entity pickup, entity player, int pickupFlags
 		settings.exclusiveUse = true
 		settings.movementDisable = true
 		settings.holsterWeapon = true
-		#endif
+	#endif
 	settings.duration = GetRespawnStationUseTime( pickup )
 	settings.useInputFlag = IN_USE_LONG
 
@@ -789,7 +781,6 @@ void function DestroyItem( entity ent, entity playerUser )
 	ent.Dissolve( ENTITY_DISSOLVE_CORE, <0,0,0>, 500 )
 }
 #endif
-
 
 #if CLIENT
 void function ServerCallback_DisplayWaitingForRespawn( entity ent, float startTime, float endTime )
@@ -1036,9 +1027,12 @@ void function RespawnBeacon_PutPlayerInDropship( entity player, entity ship, int
 	AddCinematicFlag( player, CE_FLAG_EMBARK ) // DoF
 	player.SetPlayerNetInt( "respawnStatus", eRespawnStatus.WAITING_FOR_DROPPOD )
 
-	entity dummyEnt = CreatePropDynamic( $"mdl/humans/class/medium/pilot_medium_bloodhound.rmdl" ) // TODO: use generic model.  Can't use player settings here since they could be a spectator
+	// TODO: use generic model.  Can't use player settings here since they could be a spectator
+	entity dummyEnt = CreatePropDynamic( $"mdl/humans/class/medium/pilot_medium_bloodhound.rmdl" )
+
 	float idleTime = dummyEnt.GetSequenceDuration( animData.idleAnim )
 	float jumpTime = dummyEnt.GetSequenceDuration( animData.jumpAnim )
+
 	float totalTime = idleTime + jumpTime
 
 	Remote_CallFunction_NonReplay( player, "ServerCallback_RespawnPodStarted", Time() + totalTime )
@@ -1280,16 +1274,8 @@ bool function IsRespawnStationPingType( int pingType )
 	{
 		case ePingType.RESPAWN_STATION:
 			return true
-#if(false)
-
-
-
-#endif //
-#if(false)
-
-
-
-#endif //
+#if false
+#endif
 	}
 
 	return false
@@ -1418,19 +1404,10 @@ bool function IsRespawnStationEnt( entity ent )
 		case RESPAWN_CHAMBER_TARGETNAME:
 			return true
 
-#if(false)
+#if false
 // 3 lines
-#endif //
-
-#if(false)
-// 3 lines
-#endif //
+#endif
 	}
 
 	return false
 }
-
-#if(false)
-// 20 lines
-#endif
-

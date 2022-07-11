@@ -38,7 +38,7 @@
 	"OnWeaponPrimaryAttack"                         "OnWeaponPrimaryAttack_weapon_doubletake"
 	"OnWeaponNpcPrimaryAttack"                      "OnWeaponNpcPrimaryAttack_weapon_doubletake"
 	"OnWeaponChargeLevelIncreased"                  "OnWeaponChargeLevelIncreased_weapon_doubletake"
-    "OnWeaponChargeBegin" 						    "EnergyChargeWeapon_OnWeaponChargeBegin"
+	"OnWeaponChargeBegin" 						    "EnergyChargeWeapon_OnWeaponChargeBegin"
 	"OnWeaponChargeEnd" 						    "OnWeaponChargeEnd_weapon_doubletake"
 	"OnProjectileCollision"                         "OnProjectileCollision_weapon_doubletake"
 
@@ -60,9 +60,9 @@
 	// Behavior - ADS (tied to animation)
 	//
 	"ads_fov_zoomfrac_start"                "0.2"
-    "ads_fov_zoomfrac_end"                  "0.9"
-    "viewmodel_offset_zoom_frac_start"      "0.2"
-    "viewmodel_offset_zoom_frac_end"        "0.9"
+	"ads_fov_zoomfrac_end"                  "0.9"
+	"viewmodel_offset_zoom_frac_start"      "0.2"
+	"viewmodel_offset_zoom_frac_end"        "0.9"
 
 	// Damage
 	//
@@ -99,12 +99,12 @@
 
 	"bolt_hitsize"									"0.25"
 
-    "bolt_hitsize_grow1_time"				        "0.123"  //~100m
-    "bolt_hitsize_grow1_size"				        "0.33"
-    "bolt_hitsize_grow2_time"				        "0.246"  //~200m
-    "bolt_hitsize_grow2_size"				        "1.25"
-    "bolt_hitsize_growfinal_lerptime"		        "0.369"  //~300m
-    "bolt_hitsize_growfinal_size"                   "2.0"
+	"bolt_hitsize_grow1_time"				        "0.123"  //~100m
+	"bolt_hitsize_grow1_size"				        "0.33"
+	"bolt_hitsize_grow2_time"				        "0.246"  //~200m
+	"bolt_hitsize_grow2_size"				        "1.25"
+	"bolt_hitsize_growfinal_lerptime"		        "0.369"  //~300m
+	"bolt_hitsize_growfinal_size"                   "2.0"
 
 	// CUSTOM- choke spread fractions for each charge level
 	"projectile_spread_choke_frac_1" 				"1.0"
@@ -185,8 +185,8 @@
 	"spread_air_hip"                           "8"
 
 	"spread_stand_ads"						    "0"
-    "spread_crouch_ads"   					    "0"
-    "spread_air_ads"  						    "2.0"
+	"spread_crouch_ads"   					    "0"
+	"spread_air_ads"  						    "2.0"
 
 	"spread_kick_on_fire_stand_hip"            "1"
 	"spread_kick_on_fire_crouch_hip"           "1"
@@ -218,21 +218,21 @@
 	"sound_zoom_in"                                "weapon_rangemaster_tripletake_ads_in"
 	"sound_zoom_out"                               "weapon_rangemaster_tripletake_ads_out"
 
-    "sound_energy_charge_leveltick_1"               ""
-    "sound_energy_charge_leveltick_1_3p"            ""
+	"sound_energy_charge_leveltick_1"               ""
+	"sound_energy_charge_leveltick_1_3p"            ""
 	"sound_energy_charge_leveltick_2"               "weapon_doubletake_leveltick_1"
-    "sound_energy_charge_leveltick_2_3p"            "weapon_doubletake_leveltick_1_3p"
-    "sound_energy_charge_leveltick_3"               "weapon_doubletake_leveltick_2"
-    "sound_energy_charge_leveltick_3_3p"            "weapon_doubletake_leveltick_2_3p"
-    "sound_energy_charge_leveltick_final"           "weapon_doubletake_leveltick_final"
-    "sound_energy_charge_leveltick_final_3p"        "weapon_doubletake_leveltick_final_3p"
+	"sound_energy_charge_leveltick_2_3p"            "weapon_doubletake_leveltick_1_3p"
+	"sound_energy_charge_leveltick_3"               "weapon_doubletake_leveltick_2"
+	"sound_energy_charge_leveltick_3_3p"            "weapon_doubletake_leveltick_2_3p"
+	"sound_energy_charge_leveltick_final"           "weapon_doubletake_leveltick_final"
+	"sound_energy_charge_leveltick_final_3p"        "weapon_doubletake_leveltick_final_3p"
 
-    "sound_energy_charge_start"                     "weapon_doubletake_chargedshot_chargestart"
-    "sound_energy_charge_start_3p"                  "weapon_doubletake_chargedshot_chargestart_3p"
-    "sound_energy_charge_loop"                      "weapon_doubletake_chargedshot_loop"
-    "sound_energy_charge_loop_3p"                   "weapon_doubletake_chargedshot_loop_3p"
-    "sound_energy_charge_end"                       "weapon_doubletake_1p_chargedshot_chargeend"
-    "sound_energy_charge_end_3p"                    "weapon_doubletake_chargedshot_chargeend_3p"
+	"sound_energy_charge_start"                     "weapon_doubletake_chargedshot_chargestart"
+	"sound_energy_charge_start_3p"                  "weapon_doubletake_chargedshot_chargestart_3p"
+	"sound_energy_charge_loop"                      "weapon_doubletake_chargedshot_loop"
+	"sound_energy_charge_loop_3p"                   "weapon_doubletake_chargedshot_loop_3p"
+	"sound_energy_charge_end"                       "weapon_doubletake_1p_chargedshot_chargeend"
+	"sound_energy_charge_end_3p"                    "weapon_doubletake_chargedshot_chargeend_3p"
 
 	// NPC
 	//
@@ -308,19 +308,19 @@
 	// Custom int for hopup rui optic selection
 	"custom_int_0"							"0"
 
-    //for incendiary rounds
-    "burn_damage"                   "25"        //total damage per stack
-    "burn_time"                     "2.0"       //how long to deliver the damage
-    "burn_stacks_max"               "1"         //max active stacks per target
-    "burn_stack_debounce"           "0.2"       //wait this long before trying to apply another stack
-    "burn_tick_rate"                "0.8"       //how often we do a damage tick = (tick_rate / burn_time)
-    "sound_burn_damage_tick_1p" 	"flesh_thermiteburn_3p_vs_1p"
+	//for incendiary rounds
+	"burn_damage"                   "25"        //total damage per stack
+	"burn_time"                     "2.0"       //how long to deliver the damage
+	"burn_stacks_max"               "1"         //max active stacks per target
+	"burn_stack_debounce"           "0.2"       //wait this long before trying to apply another stack
+	"burn_tick_rate"                "0.8"       //how often we do a damage tick = (tick_rate / burn_time)
+	"sound_burn_damage_tick_1p" 	"flesh_thermiteburn_3p_vs_1p"
 
 	"Mods"
 	{
-	    gold
-	    {
-	    }
+		gold
+		{
+		}
 
 		"survival_finite_ammo"
 		{
@@ -333,12 +333,12 @@
 
 		"hopup_energy_choke"
 		{
-		    "charge_time" 					"1.1"
+			"charge_time" 					"1.1"
 			"charge_levels"					"4"
 			"charge_level_base"				"1"
 
 			"charge_cooldown_time"			"0.1"
-	        "charge_cooldown_delay"   		"0.1"
+			"charge_cooldown_delay"   		"0.1"
 
 			// Enable Hopup RUIs
 			"ui20_enable"					"1"
@@ -353,64 +353,57 @@
 			"ui29_enable"					"1"
 		}
 
-                         
-                         
-   
-                                                            
-   
-      
-
 		optic_cq_hcog_classic
-        {
+		{
 			"bodygroup3_set"	"1"
 
 			// Enable HCOG Classic Hopup RUI
 			"custom_int_0"		"1"
-        }
+		}
 
-        optic_cq_hcog_bruiser
-        {
+		optic_cq_hcog_bruiser
+		{
 			"bodygroup3_set"	"1"
 
 			// Enable HCOG Bruiser Hopup RUI
 			"custom_int_0"		"2"
-        }
+		}
 
-        optic_cq_holosight
-        {
+		optic_cq_holosight
+		{
 			"bodygroup3_set"	"1"
 
 			// Enable Holosight Hopup RUI
 			"custom_int_0"		"3"
-        }
+		}
 
-        optic_cq_holosight_variable
-        {
+		optic_cq_holosight_variable
+		{
 			"bodygroup3_set"	"1"
 
 			// Enable Holosight Hopup RUI
 			"custom_int_0"		"4"
-        }
+		}
 
-        optic_ranged_hcog
-        {
+		optic_ranged_hcog
+		{
 			"bodygroup3_set"	"1"
 
 			// Enable Ranged HCOG Hopup RUI
 			"custom_int_0"		"5"
-        }
+		}
 
-        optic_ranged_aog_variable
-        {
+		optic_ranged_aog_variable
+		{
 			"bodygroup3_set"	"1"
 
 			// Enable Ranged AOG Hopup RUI
 			"custom_int_0"		"6"
-        }
+		}
 
 		"optic_sniper"
 		{
-		    "viewkick_ads_weaponFraction"              "0.5"
+			"viewkick_ads_weaponFraction"              "0.5"
 			"viewkick_ads_weaponFraction_vmScale"      "0.5"
 
 			"bodygroup3_set"	"1"
@@ -438,7 +431,7 @@
 
 		"optic_sniper_threat"
 		{
-		    "viewkick_ads_weaponFraction"              "0.5"
+			"viewkick_ads_weaponFraction"              "0.5"
 			"viewkick_ads_weaponFraction_vmScale"      "0.5"
 
 			"bodygroup3_set"	"1"
@@ -452,7 +445,6 @@
 			"custom_int_0"		"9"
 		}
 
-                   
 		energy_mag_l1
 		{
 			"ammo_clip_size"   					"6"
@@ -467,15 +459,6 @@
 		{
 			"ammo_clip_size"   					"8"
 		}
-      
-
-               
-                                                                                                     
-                    
-         
-                                                                                          
-         
-      
 	}
 
 	// RUI
