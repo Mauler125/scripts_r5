@@ -99,61 +99,46 @@ void function DebugDrawSphere( vector origin, float radius, int r, int g, int b,
 	}
 }
 
-void function DebugDrawHemiSphere( vector origin, vector angles, float radius, int r, int g, int b, bool throughGeo, float time, int segments = 16 )
+void function DebugDrawHemiSphere( vector origin, vector angles, float radius, int r, int g, int b, bool throughGeo, float time, int segments = 8 )
 {
 	bool firstLoop = true
 
-	vector start1
-	vector start2
-	vector start3
-	vector start4
+	array<vector> start = [<0,0,0>, <0,0,0>, <0,0,0>, <0,0,0>]
+	array<vector> end = [<0,0,0>, <0,0,0>, <0,0,0>, <0,0,0>]
+	array<vector> forward = [<0,0,0>, <0,0,0>, <0,0,0>, <0,0,0>]
+	array<vector> composed = [<0,0,0>, <0,0,0>, <0,0,0>, <0,0,0>]
 
-	vector end1
-	vector end2
-	vector end3
-	vector end4
+	float degrees =  360.0 / float( segments * 2 )
 
-	vector angles1
-	vector angles2
-	vector angles3
-	vector angles4
-
-	vector forward1
-	vector forward2
-	vector forward3
-	vector forward4
-
-	float degrees =  360.0 / float( segments )
-
-	for ( int i = 0; i < (segments / 2 + 1); i++ )
+	for ( int i = 0; i < (segments + 1); i++ )
 	{
-		angles1 = AnglesCompose( angles, < -degrees * i, 0, 0> )
-		angles2 = AnglesCompose( angles, <0, degrees * i - 90, 0> )
-		angles3 = AnglesCompose( angles, < degrees * i + 180, 90, 0> )
-		angles4 = AnglesCompose( angles, <0, degrees * i + 90, 0> )
+		composed[0] = AnglesCompose( angles, < -degrees * i, 0, 0> )
+		composed[1] = AnglesCompose( angles, <0, degrees * i - 90, 0> )
+		composed[2] = AnglesCompose( angles, < degrees * i + 180, 90, 0> )
+		composed[3] = AnglesCompose( angles, <0, degrees * i + 90, 0> )
 
-		forward1 = AnglesToForward( angles1 )
-		forward2 = AnglesToForward( angles2 )
-		forward3 = AnglesToForward( angles3 )
-		forward4 = AnglesToForward( angles4 )
+		forward[0] = AnglesToForward( composed[0] )
+		forward[1] = AnglesToForward( composed[1] )
+		forward[2] = AnglesToForward( composed[2] )
+		forward[3] = AnglesToForward( composed[3] )
 
-		end1 = origin + ( forward1 * radius )
-		end2 = origin + ( forward2 * radius )
-		end3 = origin + ( forward3 * radius )
-		end4 = origin + ( forward4 * radius )
+		end[0] = origin + ( forward[0] * radius )
+		end[1] = origin + ( forward[1] * radius )
+		end[2] = origin + ( forward[2] * radius )
+		end[3] = origin + ( forward[3] * radius )
 
 		if ( !firstLoop )
 		{
-			DebugDrawLine( start1, end1, r, g, b, throughGeo, time )
-			DebugDrawLine( start2, end2, r, g, b, throughGeo, time )
-			DebugDrawLine( start3, end3, r, g, b, throughGeo, time )
-			DebugDrawLine( start4, end4, r, g, b, throughGeo, time )
+			DebugDrawLine( start[0], end[0], r, g, b, throughGeo, time )
+			DebugDrawLine( start[1], end[1], r, g, b, throughGeo, time )
+			DebugDrawLine( start[2], end[2], r, g, b, throughGeo, time )
+			DebugDrawLine( start[3], end[3], r, g, b, throughGeo, time )
 		}
 
-		start1 = end1
-		start2 = end2
-		start3 = end3
-		start4 = end4
+		start[0] = end[0]
+		start[1] = end[1]
+		start[2] = end[2]
+		start[3] = end[3]
 
 		firstLoop = false
 	}
