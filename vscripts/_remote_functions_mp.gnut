@@ -24,6 +24,8 @@ void function RemoteFunctions_Init_Begin()
 	Remote_RegisterClientFunction("ServerCallback_KillReplayHud_Activate")
 	Remote_RegisterClientFunction("ServerCallback_KillReplayHud_Deactivate")
 
+	Remote_RegisterClientFunction("ServerCallback_HideAndSeek_DoAnnouncement", "float", 0.0, 256.0, 32, "int", 0, 255)
+    Remote_RegisterClientFunction("ServerCallback_HideAndSeek_PlayerKilled")
 
 	RegisterSignal("OnChangedPlayerClass")
 	RegisterSignal("BleedOut_OnStartDying")

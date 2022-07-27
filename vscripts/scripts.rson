@@ -876,6 +876,9 @@ Scripts:
 
 	gamemodes/custom_ctf/sh_gamemode_custom_ctf.nut
 	gamemodes/custom_ctf/custom_ctf_settings.nut
+
+	gamemodes/custom_hideandseek/sh_gamemode_custom_hideandseek.nut
+	gamemodes/custom_hideandseek/custom_hideandseek_settings.nut
 ]
 
 When: "SERVER"
@@ -884,6 +887,8 @@ Scripts:
 	gamemodes/custom_tdm/_gamemode_custom_tdm.nut
 
 	gamemodes/custom_ctf/_gamemode_custom_ctf.nut
+
+	gamemodes/custom_hideandseek/_gamemode_custom_hideandseek.nut
 ]
 
 When: "CLIENT"
@@ -892,6 +897,8 @@ Scripts:
 	gamemodes/custom_tdm/cl_gamemode_custom_tdm.nut
 
 	gamemodes/custom_ctf/cl_gamemode_custom_ctf.nut
+
+	gamemodes/custom_hideandseek/cl_gamemode_custom_hideandseek.nut
 ]
 
 
