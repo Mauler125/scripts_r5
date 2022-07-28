@@ -293,14 +293,6 @@ void function CodeCallback_MapSpawn() // original script entry point
 		PrecacheWeapon( $"npc_weapon_lstar" )
 	}
 
-	if ( GetMapName() == "mp_rr_arena_composite" ) // Precache Some Extra Models for Drop-off Arenas Map
-	{
-		PrecacheModel( $"mdl/beacon/beacon_big_screen_02.rmdl" )
-		PrecacheModel( $"mdl/canyonlands/canyonlands_light_pole_01.rmdl" )
-		PrecacheModel( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl" )
-		PrecacheModel( $"mdl/ola/sewer_stair_railing_01.rmdl" )
-	}
-
 	printl( "Code Script: _mapspawn" )
 
 	SV_CL_Shared_Init()
