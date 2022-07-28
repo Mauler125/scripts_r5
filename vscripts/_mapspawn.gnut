@@ -223,6 +223,8 @@ void function CodeCallback_MapSpawn() // original script entry point
 	PrecacheModel( $"mdl/props/charm/charm_clown.rmdl" )
 	PrecacheModel( $"mdl/props/charm/charm_witch.rmdl" )
 
+	//Lobby Models
+
 	PrecacheModel( $"mdl/robots/drone_frag/drone_frag.rmdl" )
 	PrecacheModel( $"mdl/vehicle/droppod_fireteam/droppod_fireteam.rmdl" )
 	PrecacheModel( $"mdl/vehicle/droppod_loot/droppod_loot_LL_holo.rmdl" )
@@ -230,6 +232,8 @@ void function CodeCallback_MapSpawn() // original script entry point
 	PrecacheModel( $"mdl/menu/xp_badge.rmdl" )
 	PrecacheModel( $"mdl/menu/coin.rmdl" )
 	PrecacheModel( $"mdl/currency/crafting/currency_crafting_epic.rmdl" )
+
+	//Weapons
 
 	PrecacheWeapon( $"mp_weapon_melee_survival" )
 	PrecacheWeapon( $"mp_weapon_mdlspawner" )
@@ -273,7 +277,6 @@ void function CodeCallback_MapSpawn() // original script entry point
 	PrecacheWeapon( $"mp_weapon_rspn101" )
 	PrecacheWeapon( $"mp_weapon_defender" )
 	PrecacheWeapon( $"mp_weapon_jump_pad" )
-	//PrecacheWeapon( $"mp_weapon_smart_pistol" ) //TODO: Fix This
 	PrecacheWeapon( $"mp_weapon_grenade_creeping_bombardment" )
 	PrecacheWeapon( $"mp_weapon_grenade_defensive_bombardment" )
 	PrecacheWeapon( $"mp_weapon_grenade_sonar" )
@@ -288,6 +291,14 @@ void function CodeCallback_MapSpawn() // original script entry point
 		PrecacheWeapon( $"npc_weapon_energy_shotgun" )
 		PrecacheWeapon( $"npc_weapon_hemlok" )
 		PrecacheWeapon( $"npc_weapon_lstar" )
+	}
+
+	if ( GetMapName() == "mp_rr_arena_composite" ) // Precache Some Extra Models for Drop-off Arenas Map
+	{
+		PrecacheModel( $"mdl/beacon/beacon_big_screen_02.rmdl" )
+		PrecacheModel( $"mdl/canyonlands/canyonlands_light_pole_01.rmdl" )
+		PrecacheModel( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl" )
+		PrecacheModel( $"mdl/ola/sewer_stair_railing_01.rmdl" )
 	}
 
 	printl( "Code Script: _mapspawn" )
