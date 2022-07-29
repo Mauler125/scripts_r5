@@ -84,15 +84,15 @@ void function StartRound()
         if(file.hasState == eHASState.WINNER_DECIDED)
             break
         
-        if( Time() >= endTime ){
+        if( Time() >= endTime-1 ){
             foreach(player in GetPlayerArray()){
                 if(IsValid(player)){
                     Remote_CallFunction_NonReplay(player, "ServerCallback_HideAndSeek_DoAnnouncement", 5, eHASAnnounce.END_HIDDEN, HAS.HIDDENPlayers, HAS.SEEKERPlayers)
                     player.FreezeControlsOnServer()
                 }
             }
-            file.hasState = eHASState.WINNER_DECIDED
             wait 10
+            file.hasState = eHASState.WINNER_DECIDED
             break
         }
         WaitFrame()
