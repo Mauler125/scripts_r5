@@ -438,4 +438,18 @@ DamageDefs
         "obituary"					"#DEATH_LOOT_DRONE"
         "damage_flags"				"DF_EXPLOSION | DF_GIB"
     }
+	damagedef_falling_object_on_floppytown
+    {
+       	"damage" 					"200"
+       	"damage_heavy_armor"		"200"
+       	"inner_radius"				"600"
+       	"radius"					"600"
+       	"impulse_force"				"25000"
+		"death_protection"			"0"
+       	"explosion_flags"			"SF_ENVEXPLOSION_NO_DAMAGEOWNER | SF_ENVEXPLOSION_UPWARD_FORCE"
+
+       	"obituary"					"#DEATH_NUCLEAR_CORE"
+       	"damage_flags"				"DF_RAGDOLL | DF_EXPLOSION | DF_KNOCK_BACK| DF_ELECTRICAL"
+       	"impact_effect_table"		"exp_creeping_barrage_detonation"
+    }
 }
