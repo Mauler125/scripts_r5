@@ -1,7 +1,9 @@
 // Credits Time !
-// 𝕮𝖗𝖎𝖔𝖘𝕮𝖍𝖆𝖓 クリオスちゃん#0221 -- Main
+// 𝕮𝖗𝖎𝖔𝖘𝕮𝖍𝖆𝖓 クリオスちゃん#0221 -- Mode Main + Map Builder
+// Julefox#0050 -- Floppytown Map Builder
 // sal#3261 -- CUSTOM TDM Main
 // @Shrugtal -- CUSTOM TDM score ui
+// AyeZee#6969 -- Better understanding of how gamemodes work (CTF)
 
 global function Sh_CustomHideAndSeek_Init
 
@@ -16,6 +18,8 @@ global enum eHASAnnounce
 	HIDETOSEEK = 4
 	END_SEEKER = 5
 	END_HIDDEN = 6
+    NEW_SEEKER = 7
+    SEEKER_SEARCH = 8
 }
 
 global struct SpawnLoc
@@ -31,7 +35,6 @@ global struct LocationSettingsHAS
 }
 
 struct {
-    var PlayerList
 } file;
 
 void function Sh_CustomHideAndSeek_Init()

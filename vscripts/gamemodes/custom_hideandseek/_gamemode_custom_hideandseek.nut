@@ -1,3 +1,10 @@
+// Credits Time !
+// 𝕮𝖗𝖎𝖔𝖘𝕮𝖍𝖆𝖓 クリオスちゃん#0221 -- Mode Main + Map Builder
+// Julefox#0050 -- Floppytown Map Builder
+// sal#3261 -- CUSTOM TDM Main
+// @Shrugtal -- CUSTOM TDM score ui
+// AyeZee#6969 -- Better understanding of how gamemodes work (CTF)
+
 global function _CustomHideAndSeek_Init
 global function _HasRegisterLocation
 
@@ -13,11 +20,12 @@ struct {
     array<entity> playerSpawnedProps
 
     array<LocationSettingsHAS> locationSettings
-
-
-    int seeker_number
-    int hidden_number
 } file;
+
+struct {
+    int HIDDENPlayers = 0
+    int SEEKERPlayers = 0
+} HAS;
 
 void function _CustomHideAndSeek_Init()
 {
@@ -39,23 +47,24 @@ void function RunHAS()
 
 void function StartRound()
 {
+    wait 1
     SetGameState(eGameState.Playing)
 
     entity Seeker = GetPlayerArray().getrandom()
 
-    file.seeker_number = 1
-    file.hidden_number = GetPlayerArray().len() - 1
+    HAS.SEEKERPlayers = 1
+    HAS.HIDDENPlayers = GetPlayerArray().len() - 1
 
     foreach(player in GetPlayerArray())
     {
         if (IsValid( player ))
         {
             if(player != Seeker){
-                Remote_CallFunction_NonReplay(player, "ServerCallback_HideAndSeek_DoAnnouncement", 5, eHASAnnounce.ROUND_START_HIDDEN)
+                Remote_CallFunction_NonReplay(player, "ServerCallback_HideAndSeek_DoAnnouncement", 5, eHASAnnounce.ROUND_START_HIDDEN, HAS.HIDDENPlayers, HAS.SEEKERPlayers)
                 player.UnfreezeControlsOnServer()   
                 TpPlayerToSpawnPoint(player, 1)
             } else if (player == Seeker){
-                Remote_CallFunction_NonReplay(player, "ServerCallback_HideAndSeek_DoAnnouncement", 5, eHASAnnounce.ROUND_START_SEEKER)
+                Remote_CallFunction_NonReplay(player, "ServerCallback_HideAndSeek_DoAnnouncement", 5, eHASAnnounce.ROUND_START_SEEKER, HAS.HIDDENPlayers, HAS.SEEKERPlayers)
                 player.FreezeControlsOnServer()
                 TpPlayerToSpawnPoint(player, 0)
             }
@@ -63,18 +72,33 @@ void function StartRound()
         }
     }
     wait 15
-    Seeker.UnfreezeControlsOnServer()   
-    float endTime = Time() + GetCurrentPlaylistVarFloat("round_time", 120)
+    if(IsValid(Seeker)) Seeker.UnfreezeControlsOnServer()
+    foreach(player in GetPlayerArray()){
+        if(IsValid(player)){
+            Remote_CallFunction_NonReplay(player, "ServerCallback_HideAndSeek_DoAnnouncement", 5, eHASAnnounce.SEEKER_SEARCH, HAS.HIDDENPlayers, HAS.SEEKERPlayers)
+        }
+    }
+    float endTime = Time() + GetCurrentPlaylistVarFloat("round_time", 30)
     while( Time() <= endTime )
     {
         if(file.hasState == eHASState.WINNER_DECIDED)
-            foreach(player in GetPlayerArray()){
-                Remote_CallFunction_NonReplay(player, "ServerCallback_HideAndSeek_DoAnnouncement", 5, eHASAnnounce.END_HIDDEN)
-            }
             break
+        
+        if( Time() >= endTime ){
+            foreach(player in GetPlayerArray()){
+                if(IsValid(player)){
+                    Remote_CallFunction_NonReplay(player, "ServerCallback_HideAndSeek_DoAnnouncement", 5, eHASAnnounce.END_HIDDEN, HAS.HIDDENPlayers, HAS.SEEKERPlayers)
+                    player.FreezeControlsOnServer()
+                }
+            }
+            file.hasState = eHASState.WINNER_DECIDED
+            wait 10
+            break
+        }
         WaitFrame()
     }
     file.hasState = eHASState.IN_PROGRESS
+
 }
 
 void function _OnPlayerConnected(entity player)
@@ -83,19 +107,27 @@ void function _OnPlayerConnected(entity player)
     return
 
     if( !IsAlive( player ) )
-        _HandleRespawn( player , 1)
+        _HandleRespawn( player , 1, true)
     
     switch( GetGameState() )
     {
 
         case eGameState.WaitingForPlayers:
-            player.FreezeControlsOnServer()
+            //player.FreezeControlsOnServer()
             break
         case eGameState.Playing:
             player.UnfreezeControlsOnServer();
-            file.seeker_number = file.seeker_number + 1
-            Remote_CallFunction_NonReplay( player, "ServerCallback_HideAndSeek_DoAnnouncement", 5, eTDMAnnounce.ROUND_START_SEEKER )
-
+            HAS.SEEKERPlayers = HAS.SEEKERPlayers + 1
+            Remote_CallFunction_NonReplay( player, "ServerCallback_HideAndSeek_DoAnnouncement", 5, eHASAnnounce.ROUND_START_SEEKER, HAS.HIDDENPlayers, HAS.SEEKERPlayers )
+            foreach(otherplayer in GetPlayerArray())
+            {
+                if (IsValid( otherplayer ))
+                {
+                    if(otherplayer != player){
+                        Remote_CallFunction_NonReplay( player, "ServerCallback_HideAndSeek_DoAnnouncement", 5, eHASAnnounce.NEW_SEEKER, HAS.HIDDENPlayers, HAS.SEEKERPlayers )
+                    }
+                }
+            }
         break
     default: 
         break
@@ -115,34 +147,31 @@ void function _OnPlayerDied( entity victim, entity attacker, var damageInfo )
 
                 if( IsValid( victim ) )
                 {
-                    file.hidden_number = file.hidden_number - 1
-                    file.seeker_number = file.seeker_number + 1
-                    _HandleRespawn( victim, 0)
-                }
-            }
-            void functionref() attackerHandleFunc = void function() : (victim, attacker, damageInfo)  {
-                if( IsValid(attacker) && attacker.IsPlayer() && IsAlive( attacker ) && attacker != victim )
-                {
-                    int invscore = attacker.GetPlayerNetInt( "kills" )
-                    invscore++;
+                    HAS.HIDDENPlayers = HAS.HIDDENPlayers - 1
+                    HAS.SEEKERPlayers = HAS.SEEKERPlayers + 1
 
-                    attacker.SetPlayerNetInt( "kills", invscore )
-                }
-            }
+                    victim.p.storedWeapons = StoreWeapons(victim)
 
-            if(file.hidden_number <= 0){
-                foreach( entity player in GetPlayerArray() )
-                {
-                    Remote_CallFunction_NonReplay(player, "ServerCallback_HideAndSeek_DoAnnouncement", 5, eHASAnnounce.END_SEEKER)
+                    _HandleRespawn( victim, 0, false)
                 }
-                file.hasState = eHASState.WINNER_DECIDED
             }
 
             thread victimHandleFunc()
-            thread attackerHandleFunc()
+
+            if(HAS.HIDDENPlayers <= 0)
+            {
+                foreach( entity player in GetPlayerArray() )
+                {
+                    Remote_CallFunction_NonReplay(player, "ServerCallback_HideAndSeek_DoAnnouncement", 5, eHASAnnounce.END_SEEKER, HAS.HIDDENPlayers, HAS.SEEKERPlayers)
+                }
+                wait 10
+                file.hasState = eHASState.WINNER_DECIDED
+                break
+            }
+
             foreach( player in GetPlayerArray() )
             {
-                Remote_CallFunction_NonReplay( player, "ServerCallback_HideAndSeek_PlayerKilled" )
+                Remote_CallFunction_NonReplay( player, "ServerCallback_HideAndSeek_PlayerKilled", HAS.HIDDENPlayers, HAS.SEEKERPlayers)
             }
             break
         default:
@@ -174,15 +203,26 @@ void function _HasRegisterLocation(LocationSettingsHAS locationSettings)
 }
 
 
-void function _HandleRespawn(entity player, int team){
+void function _HandleRespawn(entity player, int team, bool join){
+    wait 1
     if(!IsValid(player))
         return
 
-    if(!IsAlive(player))
+    if( player.IsObserver() )
     {
+        player.StopObserverMode()
+        Remote_CallFunction_NonReplay(player, "ServerCallback_KillReplayHud_Deactivate")
+    }
+
+    if(!IsAlive(player) && join == false)
+    {
+        DecideRespawnPlayer(player, false)
+        GiveWeaponsFromStoredArray(player, player.p.storedWeapons)
+    } else if (!IsAlive(player) && join == true){
         DecideRespawnPlayer(player, true)
     }
     SetPlayerSettings(player, HIDEANDSEEK_PLAYER_SETTINGS)
+    player.UnfreezeControlsOnServer()
     PlayerRestoreHP(player, 100, 0)
     TpPlayerToSpawnPoint(player, team)
 }

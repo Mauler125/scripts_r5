@@ -3,6 +3,7 @@
 // Julefox#0050 -- Floppytown Map Builder
 // sal#3261 -- CUSTOM TDM Main
 // @Shrugtal -- CUSTOM TDM score ui
+// AyeZee#6969 -- Better understanding of how gamemodes work (CTF)
 
 global function Cl_CustomHideAndSeek_Init
 
@@ -15,9 +16,6 @@ global function Cl_RegisterLocationHAS
 struct {
     var PlayerList
     array<LocationSettingsHAS> locationSettings
-
-    int seeker_number
-    int hidden_number
 } file;
 
 void function Cl_CustomHideAndSeek_Init()
@@ -30,11 +28,11 @@ void function Cl_RegisterLocationHAS(LocationSettingsHAS locationSettings)
     file.locationSettings.append(locationSettings)
 }
 
-void function MakePlayerListRUI()
+void function MakePlayerListRUI(int Hidden, int Seeker)
 {
     if (file.PlayerList != null)
     {
-        RuiSetString( file.PlayerList, "messageText", "Hidden team: " + file.hidden_number + " || Seeker team: " + file.seeker_number)
+        RuiSetString( file.PlayerList, "messageText", "Hidden team: " + Hidden + " || Seeker team: " + Seeker)
         return
     }
     clGlobal.levelEnt.EndSignal( "ClosePlayerListRUI" )
@@ -44,7 +42,7 @@ void function MakePlayerListRUI()
     var rui = RuiCreate( $"ui/announcement_quick_right.rpak", screenAlignmentTopo, RUI_DRAW_HUD, RUI_SORT_SCREENFADE + 1 )
 
     RuiSetGameTime( rui, "startTime", Time() )
-    RuiSetString( rui, "messageText", "Hidden team: " + file.hidden_number + " || Seeker team: " + file.seeker_number )
+    RuiSetString( rui, "messageText", "Hidden team: " + Hidden + " || Seeker team: " + Seeker )
     RuiSetString( rui, "messageSubText", "Playlist created by CriosChan" )
     RuiSetFloat( rui, "duration", 9999999 )
     RuiSetFloat3( rui, "eventColor", SrgbToLinear( <128, 188, 255> ) )
@@ -62,7 +60,7 @@ void function MakePlayerListRUI()
     WaitForever()
 }
 
-void function ServerCallback_HideAndSeek_DoAnnouncement(float duration, int type)
+void function ServerCallback_HideAndSeek_DoAnnouncement(float duration, int type, int Hidden, int Seeker)
 {
     string message = ""
     string subtext = ""
@@ -70,14 +68,14 @@ void function ServerCallback_HideAndSeek_DoAnnouncement(float duration, int type
     {
         case eHASAnnounce.ROUND_START_SEEKER:
         {
-            thread MakePlayerListRUI();
+            thread MakePlayerListRUI(Hidden, Seeker);
             message = "You are a Seeker"
             subtext = "Wait 15 seconds before moving"
             break
         }
         case eHASAnnounce.ROUND_START_HIDDEN:
         {
-            thread MakePlayerListRUI();
+            thread MakePlayerListRUI(Hidden, Seeker);
             message = "You are part of the hidden team"
             subtext = "You have 15 seconds to hide"
             break
@@ -99,6 +97,17 @@ void function ServerCallback_HideAndSeek_DoAnnouncement(float duration, int type
                 message = "The hidden team won!"
             break
         }
+        case eHASAnnounce.NEW_SEEKER:
+        {
+            thread MakePlayerListRUI(Hidden, Seeker);
+                message = "New Seeker joined the game"
+            break
+        }
+        case eHASAnnounce.SEEKER_SEARCH:
+        {
+            message = "The seeker begins to search!"
+            break
+        }
     }
     AnnouncementData announcement = Announcement_Create( message )
     Announcement_SetSubText(announcement, subtext)
@@ -110,8 +119,8 @@ void function ServerCallback_HideAndSeek_DoAnnouncement(float duration, int type
     AnnouncementFromClass( GetLocalViewPlayer(), announcement)
 }
 
-void function ServerCallback_HideAndSeek_PlayerKilled()
+void function ServerCallback_HideAndSeek_PlayerKilled(int Hidden, int Seeker)
 {
-    if(file.PlayerList)
-        RuiSetString( file.PlayerList, "messageText", "Hidden team: " + file.hidden_number + " || Seeker team: " + file.seeker_number);
+    if(file.PlayerList != null)
+        RuiSetString( file.PlayerList, "messageText", "Hidden team: " + Hidden + " || Seeker team: " + Seeker);
 }
