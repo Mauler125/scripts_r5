@@ -290,18 +290,22 @@ void function Sequence_Playing()
 	thread Sequence_WinnerDetermined()
 }
 
-entity function CreateWallTrigger(vector origin, float radius = 30000 , bool killzone = false , bool debugdraw = false)
+entity function CreateWallTrigger( vector origin , float radius = 30000 , bool killzone = false , bool debugdraw = false)
 {
 	// Set up the trigger
     entity trigger = CreateEntity( "trigger_cylinder" )
 	trigger.SetRadius( radius )
-	trigger.SetAboveHeight( 350 )
-	trigger.SetBelowHeight( 10 )
+	trigger.SetAboveHeight( 2000 )
+	trigger.SetBelowHeight( 50 )
 	trigger.SetOrigin( origin )
-	trigger.SetEnterCallback( WallTriggerEnter )
+	trigger.SetEnterCallback(  WallTriggerEnter )
+	trigger.SetLeaveCallback(  WallTriggerLeave )
 
-    if(killzone) // hacky way of adding killzone option
-	    trigger.SetScriptName("WallTrigger_Killzone")
+    if (killzone) // hacky way of adding killzone option
+	{
+		trigger.SetScriptName("WallTrigger_Killzone")
+		trigger.SetAboveHeight( 350 )
+	}
 
 	if (debugdraw) // draw trigger bounds if needed
 	{
@@ -315,7 +319,7 @@ entity function CreateWallTrigger(vector origin, float radius = 30000 , bool kil
     return trigger
 }
 
-void function WallTriggerEnter(entity trigger, entity ent)
+void function WallTriggerEnter( entity trigger , entity ent )
 {
     if(IsValid(ent)) // ensure the entity is valid
 	{
@@ -325,15 +329,36 @@ void function WallTriggerEnter(entity trigger, entity ent)
 
 			if(trigger.GetScriptName() != "WallTrigger_Killzone") // check if its a killzone
 			{
-				// funky player throwing calculations
+				EntityOutOfBounds( trigger, ent, null, null )
+				ent.DisableWeapon()
+
+				StatusEffect_AddEndless( ent, eStatusEffect.hunt_mode_visuals, 100 )
+				StatusEffect_AddEndless( ent, eStatusEffect.minimap_jammed, 100 )
+				StatusEffect_AddEndless( ent, eStatusEffect.move_slow, 0.2 )
+
 				vector newdir
 				if(trigger.GetAngles() == <0,0,0>)
 				    newdir = -ent.GetAngles() / 2 + -<0,0,-100> * -1
 				else newdir = -ent.GetAngles() / 2 + -trigger.GetAngles() * -1
-
 				ent.SetVelocity(newdir * 15)
 
 			} else ent.TakeDamage(ent.GetMaxHealth() + 1, null, null, { damageSourceId=damagedef_suicide, scriptType=DF_BYPASS_SHIELD })
+		}
+	}
+}
+
+void function WallTriggerLeave( entity trigger , entity ent )
+{
+    if(IsValid(ent)) // ensure the entity is valid
+	{
+		if(ent.IsPlayer())
+		{
+			EntityBackInBounds( trigger, ent, null, null )
+			ent.EnableWeapon()
+
+			StatusEffect_StopAllOfType( ent, eStatusEffect.hunt_mode_visuals)
+			StatusEffect_StopAllOfType( ent, eStatusEffect.minimap_jammed)
+			StatusEffect_StopAllOfType( ent, eStatusEffect.move_slow)
 		}
 	}
 }
