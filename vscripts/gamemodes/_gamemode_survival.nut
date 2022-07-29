@@ -39,6 +39,9 @@ void function GamemodeSurvival_Init()
 		case "mp_rr_aqueduct":
 			CreateWallTrigger( <425, -1590, -1689> )
 			CreateWallTrigger( <774, -6394, 2067> )
+		case "mp_rr_arena_composite":
+			CreateWallTrigger( <5, 2587, -520> )
+			CreateWallTrigger( <5, 5379, 860> )
 		case "mp_rr_ashs_redemption":
 			CreateWallTrigger( <-20857, 5702, -25746> )
 		default:
@@ -303,6 +306,7 @@ void function WallTrigger(entity proxy, float speed = 1)
 							switch(GetMapName())
 								{
 									case "mp_rr_aqueduct":
+									case "mp_rr_arena_composite":
 										player.TakeDamage(player.GetMaxHealth() + 1, null, null, { damageSourceId=damagedef_suicide, scriptType=DF_BYPASS_SHIELD })
 									default:
 										vector target_origin = player.GetOrigin()
