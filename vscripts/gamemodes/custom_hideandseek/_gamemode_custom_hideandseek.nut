@@ -23,8 +23,8 @@ struct {
 } file;
 
 struct {
-    int HIDDENPlayers = 0
-    int SEEKERPlayers = 0
+    array<entity> HIDDENPlayers
+    array<entity> SEEKERPlayers
 } HAS;
 
 void function _CustomHideAndSeek_Init()
@@ -52,33 +52,45 @@ void function StartRound()
 
     entity Seeker = GetPlayerArray().getrandom()
 
-    HAS.SEEKERPlayers = 1
-    HAS.HIDDENPlayers = GetPlayerArray().len() - 1
+    HAS.HIDDENPlayers.clear()
+    HAS.SEEKERPlayers.clear()
 
     foreach(player in GetPlayerArray())
     {
         if (IsValid( player ))
         {
             if(player != Seeker){
-                Remote_CallFunction_NonReplay(player, "ServerCallback_HideAndSeek_DoAnnouncement", 5, eHASAnnounce.ROUND_START_HIDDEN, HAS.HIDDENPlayers, HAS.SEEKERPlayers)
+                HAS.HIDDENPlayers.push(player)
                 player.UnfreezeControlsOnServer()   
                 TpPlayerToSpawnPoint(player, 1)
             } else if (player == Seeker){
-                Remote_CallFunction_NonReplay(player, "ServerCallback_HideAndSeek_DoAnnouncement", 5, eHASAnnounce.ROUND_START_SEEKER, HAS.HIDDENPlayers, HAS.SEEKERPlayers)
+                HAS.SEEKERPlayers.push(player)
                 player.FreezeControlsOnServer()
                 TpPlayerToSpawnPoint(player, 0)
             }
             ClearInvincible(player)
         }
     }
+
+    foreach(player in GetPlayerArray())
+    {
+        if (IsValid(player))
+        {
+            if(player != Seeker){
+                Remote_CallFunction_NonReplay(player, "ServerCallback_HideAndSeek_DoAnnouncement", 5, eHASAnnounce.ROUND_START_HIDDEN, HAS.HIDDENPlayers.len(), HAS.SEEKERPlayers.len())
+            } else if (player == Seeker){
+                Remote_CallFunction_NonReplay(player, "ServerCallback_HideAndSeek_DoAnnouncement", 5, eHASAnnounce.ROUND_START_SEEKER, HAS.HIDDENPlayers.len(), HAS.SEEKERPlayers.len())
+            }
+        }
+    }
     wait 15
     if(IsValid(Seeker)) Seeker.UnfreezeControlsOnServer()
     foreach(player in GetPlayerArray()){
         if(IsValid(player)){
-            Remote_CallFunction_NonReplay(player, "ServerCallback_HideAndSeek_DoAnnouncement", 5, eHASAnnounce.SEEKER_SEARCH, HAS.HIDDENPlayers, HAS.SEEKERPlayers)
+            Remote_CallFunction_NonReplay(player, "ServerCallback_HideAndSeek_DoAnnouncement", 5, eHASAnnounce.SEEKER_SEARCH, HAS.HIDDENPlayers.len(), HAS.SEEKERPlayers.len())
         }
     }
-    float endTime = Time() + GetCurrentPlaylistVarFloat("round_time", 30)
+    float endTime = Time() + GetCurrentPlaylistVarFloat("round_time", 120)
     while( Time() <= endTime )
     {
         if(file.hasState == eHASState.WINNER_DECIDED)
@@ -87,7 +99,7 @@ void function StartRound()
         if( Time() >= endTime-1 ){
             foreach(player in GetPlayerArray()){
                 if(IsValid(player)){
-                    Remote_CallFunction_NonReplay(player, "ServerCallback_HideAndSeek_DoAnnouncement", 5, eHASAnnounce.END_HIDDEN, HAS.HIDDENPlayers, HAS.SEEKERPlayers)
+                    Remote_CallFunction_NonReplay(player, "ServerCallback_HideAndSeek_DoAnnouncement", 5, eHASAnnounce.END_HIDDEN, HAS.HIDDENPlayers.len(), HAS.SEEKERPlayers.len())
                     player.FreezeControlsOnServer()
                 }
             }
@@ -117,14 +129,14 @@ void function _OnPlayerConnected(entity player)
             break
         case eGameState.Playing:
             player.UnfreezeControlsOnServer();
-            HAS.SEEKERPlayers = HAS.SEEKERPlayers + 1
-            Remote_CallFunction_NonReplay( player, "ServerCallback_HideAndSeek_DoAnnouncement", 5, eHASAnnounce.ROUND_START_SEEKER, HAS.HIDDENPlayers, HAS.SEEKERPlayers )
+            HAS.SEEKERPlayers.push(player)
+            Remote_CallFunction_NonReplay( player, "ServerCallback_HideAndSeek_DoAnnouncement", 5, eHASAnnounce.ROUND_START_SEEKER, HAS.HIDDENPlayers.len(), HAS.SEEKERPlayers.len() )
             foreach(otherplayer in GetPlayerArray())
             {
                 if (IsValid( otherplayer ))
                 {
                     if(otherplayer != player){
-                        Remote_CallFunction_NonReplay( player, "ServerCallback_HideAndSeek_DoAnnouncement", 5, eHASAnnounce.NEW_SEEKER, HAS.HIDDENPlayers, HAS.SEEKERPlayers )
+                        Remote_CallFunction_NonReplay( player, "ServerCallback_HideAndSeek_DoAnnouncement", 5, eHASAnnounce.NEW_SEEKER, HAS.HIDDENPlayers.len(), HAS.SEEKERPlayers.len() )
                     }
                 }
             }
@@ -132,6 +144,16 @@ void function _OnPlayerConnected(entity player)
     default: 
         break
     }
+}
+
+bool function exist(array<entity> Array, entity player)
+{
+    foreach (index, item in Array)  {
+        if (item == player)  {
+            return true
+        }
+    }
+    return false
 }
 
 void function _OnPlayerDied( entity victim, entity attacker, var damageInfo ) 
@@ -147,8 +169,11 @@ void function _OnPlayerDied( entity victim, entity attacker, var damageInfo )
 
                 if( IsValid( victim ) )
                 {
-                    HAS.HIDDENPlayers = HAS.HIDDENPlayers - 1
-                    HAS.SEEKERPlayers = HAS.SEEKERPlayers + 1
+                    if(!exist(HAS.SEEKERPlayers, victim))
+                    {
+                        HAS.HIDDENPlayers.remove(HAS.HIDDENPlayers.find(victim))
+                        HAS.SEEKERPlayers.push(victim)
+                    }
 
                     victim.p.storedWeapons = StoreWeapons(victim)
 
@@ -158,11 +183,11 @@ void function _OnPlayerDied( entity victim, entity attacker, var damageInfo )
 
             thread victimHandleFunc()
 
-            if(HAS.HIDDENPlayers <= 0)
+            if(HAS.HIDDENPlayers.len() <= 0)
             {
                 foreach( entity player in GetPlayerArray() )
                 {
-                    Remote_CallFunction_NonReplay(player, "ServerCallback_HideAndSeek_DoAnnouncement", 5, eHASAnnounce.END_SEEKER, HAS.HIDDENPlayers, HAS.SEEKERPlayers)
+                    Remote_CallFunction_NonReplay(player, "ServerCallback_HideAndSeek_DoAnnouncement", 5, eHASAnnounce.END_SEEKER, HAS.HIDDENPlayers.len(), HAS.SEEKERPlayers.len())
                 }
                 wait 10
                 file.hasState = eHASState.WINNER_DECIDED
@@ -171,7 +196,7 @@ void function _OnPlayerDied( entity victim, entity attacker, var damageInfo )
 
             foreach( player in GetPlayerArray() )
             {
-                Remote_CallFunction_NonReplay( player, "ServerCallback_HideAndSeek_PlayerKilled", HAS.HIDDENPlayers, HAS.SEEKERPlayers)
+                Remote_CallFunction_NonReplay( player, "ServerCallback_HideAndSeek_PlayerKilled", HAS.HIDDENPlayers.len(), HAS.SEEKERPlayers.len())
             }
             break
         default:
