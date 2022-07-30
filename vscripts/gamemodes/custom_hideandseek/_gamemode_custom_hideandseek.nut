@@ -61,10 +61,14 @@ void function StartRound()
         {
             if(player != Seeker){
                 HAS.HIDDENPlayers.push(player)
+                ChangePlayerCharacter(eHASLegends.HIDDEN, player)
+                wait 1
                 player.UnfreezeControlsOnServer()   
                 TpPlayerToSpawnPoint(player, 1)
             } else if (player == Seeker){
                 HAS.SEEKERPlayers.push(player)
+                ChangePlayerCharacter(eHASLegends.SEEKER, player)
+                wait 1
                 player.FreezeControlsOnServer()
                 TpPlayerToSpawnPoint(player, 0)
             }
@@ -125,7 +129,6 @@ void function _OnPlayerConnected(entity player)
     {
 
         case eGameState.WaitingForPlayers:
-            //player.FreezeControlsOnServer()
             break
         case eGameState.Playing:
             player.UnfreezeControlsOnServer();
@@ -140,7 +143,7 @@ void function _OnPlayerConnected(entity player)
                     }
                 }
             }
-        break
+            break
     default: 
         break
     }
@@ -246,10 +249,46 @@ void function _HandleRespawn(entity player, int team, bool join){
     } else if (!IsAlive(player) && join == true){
         DecideRespawnPlayer(player, true)
     }
+
+    if(exist(HAS.SEEKERPlayers, player))
+    {
+        ChangePlayerCharacter(eHASLegends.SEEKER, player)
+    } else {
+        ChangePlayerCharacter(eHASLegends.HIDDEN, player)
+    }
+    wait 1
     SetPlayerSettings(player, HIDEANDSEEK_PLAYER_SETTINGS)
     player.UnfreezeControlsOnServer()
     PlayerRestoreHP(player, 100, 0)
     TpPlayerToSpawnPoint(player, team)
+}
+
+void function ChangePlayerCharacter(int name, entity player){
+    player.SetPlayerNetBool("hasLockedInCharacter", false)
+    
+    switch(name)
+    {
+        case eHASLegends.HIDDEN:
+        {
+            ItemFlavor item = GetItemFlavorByHumanReadableRef("character_lifeline")
+            printt("Trying to change to Lifeline")
+            ItemFlavor skin = LoadoutSlot_GetItemFlavor(ToEHI(player), Loadout_CharacterSkin(item))
+            CharacterSelect_AssignCharacter(player, item)
+
+            CharacterSkin_Apply(player, skin)
+            break
+        }
+        case eHASLegends.SEEKER:
+        {
+            ItemFlavor item = GetItemFlavorByHumanReadableRef("character_octane")
+            printt("Trying to change to Octane")
+            ItemFlavor skin = LoadoutSlot_GetItemFlavor(ToEHI(player), Loadout_CharacterSkin(item))
+            CharacterSelect_AssignCharacter(player, item)
+
+            CharacterSkin_Apply(player, skin)
+            break
+        }
+    }
 }
 
 void function TpPlayerToSpawnPoint(entity player, int team)

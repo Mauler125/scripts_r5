@@ -12,7 +12,6 @@ global function ServerCallback_HideAndSeek_PlayerKilled
 
 global function Cl_RegisterLocationHAS
 
-
 struct {
     var PlayerList
     array<LocationSettingsHAS> locationSettings

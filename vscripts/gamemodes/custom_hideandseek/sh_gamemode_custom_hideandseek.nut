@@ -22,6 +22,12 @@ global enum eHASAnnounce
     SEEKER_SEARCH = 8
 }
 
+global enum eHASLegends
+{
+    HIDDEN = 0
+    SEEKER = 1
+}
+
 global struct SpawnLoc
 {
     vector origin = <0, 0, 0>
