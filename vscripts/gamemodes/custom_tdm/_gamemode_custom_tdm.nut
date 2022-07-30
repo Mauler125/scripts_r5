@@ -15,7 +15,7 @@ struct {
 
     array<LocationSettings> locationSettings
 
-    
+
     array<string> whitelistedWeapons
 
     entity bubbleBoundary
@@ -80,7 +80,7 @@ bool function ClientCommand_GiveWeapon(entity player, array<string> args)
         entity secondary = player.GetNormalWeapon( WEAPON_INVENTORY_SLOT_PRIMARY_1 )
         entity tactical = player.GetOffhandWeapon( OFFHAND_TACTICAL )
         entity ultimate = player.GetOffhandWeapon( OFFHAND_ULTIMATE )
-        switch(args[0]) 
+        switch(args[0])
         {
             case "p":
             case "primary":
@@ -115,9 +115,9 @@ bool function ClientCommand_GiveWeapon(entity player, array<string> args)
             print(e2)
         }
     }
-    
+
     if( IsValid(weapon) && !weapon.IsWeaponOffhand() ) player.SetActiveWeaponBySlot(eActiveInventorySlot.mainHand, GetSlotForWeapon(player, weapon))
-    return true 
+    return true
 }
 
 // END CLIENT COMMANDS
@@ -154,12 +154,12 @@ void function VotingPhase()
 {
     DestroyPlayerProps();
     SetGameState(eGameState.MapVoting)
-    
+
     //Reset scores
     GameRules_SetTeamScore(TEAM_IMC, 0)
     GameRules_SetTeamScore(TEAM_MILITIA, 0)
-    
-    foreach( player in GetPlayerArray() ) 
+
+    foreach( player in GetPlayerArray() )
     {
         if( !IsValid( player ) )
             continue
@@ -187,17 +187,17 @@ void function VotingPhase()
     int choice = RandomIntRangeInclusive(0, file.locationSettings.len() - 1)
 
     file.selectedLocation = file.locationSettings[choice]
-    
+
     foreach(player in GetPlayerArray())
     {
         Remote_CallFunction_NonReplay(player, "ServerCallback_TDM_SetSelectedLocation", choice)
     }
 }
 
-void function StartRound() 
+void function StartRound()
 {
     SetGameState(eGameState.Playing)
-    
+
     foreach( player in GetPlayerArray() )
     {
         if( IsValid( player ) )
@@ -206,7 +206,7 @@ void function StartRound()
             AddCinematicFlag(player, CE_FLAG_HIDE_MAIN_HUD | CE_FLAG_INTRO)
             player.FreezeControlsOnServer()
         }
-        
+
     }
     wait 1
     foreach(player in GetPlayerArray())
@@ -214,17 +214,17 @@ void function StartRound()
         if( IsValid( player ) )
             Remote_CallFunction_NonReplay(player, "ServerCallback_TDM_DoLocationIntroCutscene")
     }
-    
+
     foreach(player in GetPlayerArray())
     {
         if( IsValid( player ) )
             Remote_CallFunction_NonReplay(player, "ServerCallback_TDM_DoAnnouncement", 4, eTDMAnnounce.MAP_FLYOVER)
     }
     wait Deathmatch_GetIntroCutsceneSpawnDuration() * Deathmatch_GetIntroCutsceneNumSpawns()
-    
+
 
     foreach(player in GetPlayerArray())
-    {   
+    {
         if( IsValid( player ) )
         {
             thread ScreenFadeFromBlack(player, 0.5, 0.5)
@@ -233,16 +233,16 @@ void function StartRound()
             Remote_CallFunction_NonReplay(player, "ServerCallback_TDM_DoAnnouncement", 5, eTDMAnnounce.ROUND_START)
             ClearInvincible(player)
             DeployAndEnableWeapons(player)
-            player.UnforceStand()  
-            player.UnfreezeControlsOnServer()   
+            player.UnforceStand()
+            player.UnfreezeControlsOnServer()
             TpPlayerToSpawnPoint(player)
 
             //AddPlayerMovementEventCallback(player, ePlayerMovementEvents.TOUCH_GROUND, _HandleRespawnOnLand)
         }
-        
+
     }
 
-    
+
     file.bubbleBoundary = CreateBubbleBoundary(file.selectedLocation)
 
     foreach(team, v in GetPlayerTeamCountTable())
@@ -329,7 +329,7 @@ void function _OnPlayerConnected(entity player)
     if( !IsAlive( player ) )
         _HandleRespawn( player )
 
-    
+
     switch( GetGameState() )
     {
 
@@ -341,26 +341,26 @@ void function _OnPlayerConnected(entity player)
         Remote_CallFunction_NonReplay( player, "ServerCallback_TDM_DoAnnouncement", 5, eTDMAnnounce.ROUND_START )
 
         break
-    default: 
+    default:
         break
     }
 }
 
 // purpose: internal function for handling player death
-void function _OnPlayerDied( entity victim, entity attacker, var damageInfo ) 
+void function _OnPlayerDied( entity victim, entity attacker, var damageInfo )
 {
     switch( GetGameState() )
     {
     case eGameState.Playing:
 
-        // What happens to victim 
+        // What happens to victim
         void functionref() victimHandleFunc = void function() : ( victim, attacker, damageInfo ) {
 
             if( !IsValid( victim ) )
                 return
-            
+
             victim.p.storedWeapons = StoreWeapons(victim)
-            
+
             float reservedTime = max(1, Deathmatch_GetRespawnDelay() - 1) // so we dont immediately go to killcam
             wait reservedTime
 
@@ -374,9 +374,9 @@ void function _OnPlayerDied( entity victim, entity attacker, var damageInfo )
                 victim.SetObserverTarget( attacker )
                 victim.SetSpecReplayDelay( Spectator_GetReplayDelay() )
                 victim.StartObserverMode( OBS_MODE_IN_EYE )
-                Remote_CallFunction_NonReplay( victim, "ServerCallback_KillReplayHud_Activate") 
+                Remote_CallFunction_NonReplay( victim, "ServerCallback_KillReplayHud_Activate")
             }
-            
+
             wait max(0, Deathmatch_GetRespawnDelay() - reservedTime)
 
             if( IsValid( victim ) )
@@ -384,7 +384,7 @@ void function _OnPlayerDied( entity victim, entity attacker, var damageInfo )
                 _HandleRespawn( victim )
             }
         }
-        
+
         // What happens to attacker
         void functionref() attackerHandleFunc = void function() : (victim, attacker, damageInfo)  {
             if( IsValid(attacker) && attacker.IsPlayer() && IsAlive( attacker ) && attacker != victim )
@@ -402,12 +402,12 @@ void function _OnPlayerDied( entity victim, entity attacker, var damageInfo )
 
                 if ( IsGunGameMode() )
                 {
-                    
+
                     int currentWeaponIndex = RandomInt( 21 )
                     array<GunGameWeapon> weapons = GetGunGameWeapons()
-    
+
                     GunGameWeapon weapon = weapons[ currentWeaponIndex ]
-    
+
                     entity primary = attacker.GetNormalWeapon( WEAPON_INVENTORY_SLOT_PRIMARY_0 )
                     entity secondary = attacker.GetNormalWeapon( WEAPON_INVENTORY_SLOT_PRIMARY_1 )
 
@@ -420,9 +420,9 @@ void function _OnPlayerDied( entity victim, entity attacker, var damageInfo )
                         if( IsValid( secondary ) )
                             attacker.TakeWeaponByEntNow( secondary )
                     }
-                    
+
                     attacker.GiveWeapon( weapon.weapon, WEAPON_INVENTORY_SLOT_PRIMARY_0, weapon.mods )
-                    
+
                     if ( GetCurrentPlaylistVarBool( "double_weapon", false ) )
                         attacker.GiveWeapon( weapon.weapon, WEAPON_INVENTORY_SLOT_PRIMARY_1, weapon.mods )
 
@@ -441,7 +441,7 @@ void function _OnPlayerDied( entity victim, entity attacker, var damageInfo )
                 PlayerRestoreHP(attacker, 100, Equipment_GetDefaultShieldHP())
             }
         }
-        
+
         thread victimHandleFunc()
         thread attackerHandleFunc()
         //Tell each player to update their Score RUI
@@ -492,7 +492,7 @@ void function _HandleRespawn(entity player, bool forceGive = false)
             }
             player.SetActiveWeaponBySlot(eActiveInventorySlot.mainHand, WEAPON_INVENTORY_SLOT_PRIMARY_0)
         }
-        else 
+        else
         {
             if( !player.p.storedWeapons.len() )
             {
@@ -503,13 +503,13 @@ void function _HandleRespawn(entity player, bool forceGive = false)
                 DecideRespawnPlayer(player, false)
                 GiveWeaponsFromStoredArray(player, player.p.storedWeapons)
             }
-            
+
         }
         if ( IsGunGameMode() )
             {
                 int currentWeaponIndex = RandomInt( 21 )
                 array<GunGameWeapon> weapons = GetGunGameWeapons()
-    
+
                 GunGameWeapon weapon = weapons[ currentWeaponIndex ]
                 player.GiveWeapon( weapon.weapon, WEAPON_INVENTORY_SLOT_PRIMARY_0, weapon.mods )
 
@@ -517,14 +517,14 @@ void function _HandleRespawn(entity player, bool forceGive = false)
                     player.GiveWeapon( weapon.weapon, WEAPON_INVENTORY_SLOT_PRIMARY_1, weapon.mods )}
             }
     }
-    
+
     if ( IsGunGameMode() )
         SetPlayerSettings(player, TDM_GG_PLAYER_SETTINGS)
     else
         SetPlayerSettings(player, TDM_PLAYER_SETTINGS)
-    
+
     PlayerRestoreHP(player, 100, Equipment_GetDefaultShieldHP())
-                
+
     TpPlayerToSpawnPoint(player)
     thread GrantSpawnImmunity(player, 3)
 }
@@ -533,13 +533,13 @@ void function _HandleRespawn(entity player, bool forceGive = false)
 entity function CreateBubbleBoundary(LocationSettings location)
 {
     array<LocPair> spawns = location.spawns
-    
+
     vector bubbleCenter
     foreach(spawn in spawns)
     {
         bubbleCenter += spawn.origin
     }
-    
+
     bubbleCenter /= spawns.len()
 
     float bubbleRadius = 0
@@ -549,7 +549,7 @@ entity function CreateBubbleBoundary(LocationSettings location)
         if(Distance(spawn.origin, bubbleCenter) > bubbleRadius)
         bubbleRadius = Distance(spawn.origin, bubbleCenter)
     }
-    
+
     bubbleRadius += GetCurrentPlaylistVarFloat("bubble_radius_padding", 800)
 
     entity bubbleShield = CreateEntity( "prop_dynamic" )
@@ -579,7 +579,7 @@ void function MonitorBubbleBoundary(entity bubbleShield, vector bubbleCenter, fl
             }
         }
         wait 1
-    } 
+    }
 }
 
 void function PlayerRestoreHP(entity player, float health, float shields)
@@ -662,13 +662,13 @@ vector function GetClosestEnemyToOrigin(vector origin, int ourTeam)
 
 void function TpPlayerToSpawnPoint(entity player)
 {
-    
+
     LocPair loc = _GetAppropriateSpawnLocation(player)
 
     player.SetOrigin(loc.origin)
     player.SetAngles(loc.angles)
 
-    
+
     PutEntityInSafeSpot( player, null, null, player.GetOrigin() + <0,0,128>, player.GetOrigin() )
 }
 

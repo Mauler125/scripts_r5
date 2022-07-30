@@ -57,7 +57,7 @@ void function SetupWeapons()
 	SetupDevCommand( "Rifle: Havoc", "give mp_weapon_energy_ar" )
 	SetupDevCommand( "Rifle: Hemlok", "give mp_weapon_hemlok" )
 	SetupDevCommand( "Rifle: R-301", "give mp_weapon_rspn101" )
-	
+
 
 	// SMGs
 	SetupDevCommand( "SMG: Alternator", "give mp_weapon_alternator_smg" )
