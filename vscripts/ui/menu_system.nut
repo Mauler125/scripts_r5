@@ -56,9 +56,6 @@ void function InitSystemPanelMain( var panel )
 	#endif
 	file.qaFooter = AddPanelFooterOption( panel, LEFT, BUTTON_X, true, "#X_BUTTON_QA", "QA", ToggleOptIn, ShouldDisplayOptInOptions )
 
-	#if CONSOLE_PROG
-		AddPanelFooterOption( panel, RIGHT, BUTTON_BACK, false, "#BUTTON_RETURN_TO_MAIN", "", ReturnToMain_OnActivate )
-	#endif
 	AddPanelFooterOption( panel, RIGHT, BUTTON_STICK_RIGHT, true, "#BUTTON_VIEW_CINEMATIC", "#VIEW_CINEMATIC", ViewCinematic, IsLobby )
 }
 
@@ -257,26 +254,6 @@ void function OpenSettingsMenu()
 {
 	AdvanceMenu( GetMenu( "MiscMenu" ) )
 }
-
-#if CONSOLE_PROG
-void function ReturnToMain_OnActivate( var button )
-{
-	ConfirmDialogData data
-	data.headerText = "#EXIT_TO_MAIN"
-	data.messageText = ""
-	data.resultCallback = OnReturnToMainMenu
-	//data.yesText = ["YES_RETURN_TO_TITLE_MENU", "#YES_RETURN_TO_TITLE_MENU"]
-
-	OpenConfirmDialogFromData( data )
-	AdvanceMenu( GetMenu( "ConfirmDialog" ) )
-}
-
-void function OnReturnToMainMenu( int result )
-{
-	if ( result == eDialogResult.YES )
-		ClientCommand( "disconnect" )
-}
-#endif
 
 
 void function ToggleOptIn( var button )

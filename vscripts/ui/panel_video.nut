@@ -25,8 +25,6 @@ void function InitVideoPanelForCode( var panel )
 {
 	#if PC_PROG
 		asset resFile = $"resource/ui/menus/panels/video.res"
-	#elseif CONSOLE_PROG
-		asset resFile = $"resource/ui/menus/panels/video_console.res"
 	#endif
 	file.videoPanel = CreateVideoOptionsPanel( panel, "ContentPanel", resFile )
 	Hud_SetPos( file.videoPanel, 0, 0 )
@@ -97,21 +95,6 @@ void function InitVideoPanel( var panel )
 		SetupSettingsButton( Hud_GetChild( file.videoPanel, "SwchEffectsDetail" ), "#MENU_EFFECT_DETAIL", "#ADVANCED_VIDEO_MENU_EFFECTS_DETAIL_DESC", $"rui/menu/settings/settings_video" )
 		SetupSettingsButton( Hud_GetChild( file.videoPanel, "SwchImpactMarks" ), "#MENU_IMPACT_MARKS", "#ADVANCED_VIDEO_MENU_IMPACT_MARKS_DESC", $"rui/menu/settings/settings_video" )
 		SetupSettingsButton( Hud_GetChild( file.videoPanel, "SwchRagdolls" ), "#MENU_RAGDOLLS", "#ADVANCED_VIDEO_MENU_RAGDOLLS_DESC", $"rui/menu/settings/settings_video" )
-	#elseif CONSOLE_PROG
-		button = Hud_GetChild( file.videoPanel, "BtnBrightness" )
-		SetupSettingsButton( button, "#BRIGHTNESS", "#CONSOLE_BRIGHTNESS_DESC", $"rui/menu/settings/settings_video" )
-		AddButtonEventHandler( button, UIE_CLICK, AdvanceMenuEventHandler( GetMenu( "GammaMenu" ) ) )
-
-		button = Hud_GetChild( file.videoPanel, "SldFOV" )
-		SetupSettingsSlider( button, "#FOV", "#ADVANCED_VIDEO_MENU_FOV_DESC", $"rui/menu/settings/settings_video" )
-		AddButtonEventHandler( button, UIE_CHANGE, FOV_Changed )
-		AddButtonEventHandler( Hud_GetChild( file.videoPanel, "TextEntrySldFOV" ), UIE_CHANGE, FOVTextEntry_Changed )
-		file.noApplyConfirmationRequired.append( button )
-
-		//SetupSettingsButton( Hud_GetChild( file.videoPanel, "SwchSprintCameraSmoothing" ), "#SMOOTH_SPRINT_CAMERA", "#OPTIONS_MENU_SMOOTH_SPRINT_CAMERA", $"rui/menu/settings/settings_video" )
-
-		button = SetupSettingsButton( Hud_GetChild( file.videoPanel, "SwchSprintCameraSmoothing" ), "#SPRINT_VIEW_SHAKE", "#OPTIONS_MENU_SPRINT_VIEW_SHAKE", $"rui/menu/settings/settings_video" )
-		AddButtonEventHandler( button, UIE_CHANGE, SprintViewShake_Changed )
 	#endif
 
 	ScrollPanel_InitPanel( panel )

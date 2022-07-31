@@ -35,15 +35,9 @@ void function InitLobbyMenu( var newMenuArg )
 
 	AddMenuVarChangeHandler( "isFullyConnected", UpdateFooterOptions )
 	AddMenuVarChangeHandler( "isPartyLeader", UpdateFooterOptions )
-	#if DURANGO_PROG
-		AddMenuVarChangeHandler( "DURANGO_canInviteFriends", UpdateFooterOptions )
-		AddMenuVarChangeHandler( "DURANGO_isJoinable", UpdateFooterOptions )
-	#elseif PS4_PROG
-		AddMenuVarChangeHandler( "PS4_canInviteFriends", UpdateFooterOptions )
-	#elseif PC_PROG
-		AddMenuVarChangeHandler( "ORIGIN_isEnabled", UpdateFooterOptions )
-		AddMenuVarChangeHandler( "ORIGIN_isJoinable", UpdateFooterOptions )
-	#endif
+	AddMenuVarChangeHandler( "ORIGIN_isEnabled", UpdateFooterOptions )
+	AddMenuVarChangeHandler( "ORIGIN_isJoinable", UpdateFooterOptions )
+
 
 	var postGameButton = Hud_GetChild( menu, "PostGameButton" )
 	file.postGameButton = postGameButton
@@ -407,34 +401,6 @@ void function OnLobbyMenu_NavigateBack()
 void function OnLobbyMenu_PostGameOrChat( var button )
 {
 	var savedMenu = GetActiveMenu()
-
-	#if CONSOLE_PROG
-		const float HOLD_FOR_CHAT_DELAY = 1.0
-		float startTime = Time()
-		while ( InputIsButtonDown( BUTTON_BACK ) || InputIsButtonDown( KEY_TAB ) && GetConVarInt( "hud_setting_accessibleChat" ) != 0 )
-		{
-			if ( Time() - startTime > HOLD_FOR_CHAT_DELAY )
-			{
-				if ( GetPartySize() > 1 )
-				{
-					printt( "starting message mode", Hud_IsEnabled( GetLobbyChatBox() ) )
-					Hud_StartMessageMode( GetLobbyChatBox() )
-				}
-				else
-				{
-					ConfirmDialogData dialogData
-					dialogData.headerText = "#ACCESSIBILITY_NO_CHAT_HEADER"
-					dialogData.messageText = "#ACCESSIBILITY_NO_CHAT_MESSAGE"
-					dialogData.contextImage = $"ui/menu/common/dialog_notice"
-
-					OpenOKDialogFromData( dialogData )
-				}
-				return
-			}
-
-			WaitFrame()
-		}
-	#endif
 
 	if ( IsPostGameMenuValid() && savedMenu == GetActiveMenu() )
 	{
