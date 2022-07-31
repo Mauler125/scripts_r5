@@ -193,7 +193,11 @@ void function UICodeCallback_ActivateMenus()
 	if ( IsConnected() )
 		return
 
-	var mainMenu = GetMenu( "MainMenu" )
+	//Old MainMenu
+	//var mainMenu = GetMenu( "MainMenu" )
+
+	//New R5RMainMenu
+	var mainMenu = GetMenu( "R5RMainMenu" )
 
 	printt( "UICodeCallback_ActivateMenus:", GetActiveMenu() && Hud_GetHudName( GetActiveMenu() ) != "" )
 	if ( uiGlobal.menuStack.len() == 0 )
@@ -221,7 +225,7 @@ void function UICodeCallback_ToggleInGameMenu()
 	if ( isLobby )
 	{
 		if ( activeMenu == null )
-			AdvanceMenu( GetMenu( "LobbyMenu" ) )
+			AdvanceMenu( GetMenu( "R5RLobbyMenu" ) )
 		else if ( activeMenu == GetMenu( "SystemMenu" ) )
 			CloseActiveMenu()
 		return
@@ -1047,7 +1051,7 @@ void function UpdateMenusOnConnectThread( string levelname )
 
 	if ( isLobby )
 	{
-		AdvanceMenu( GetMenu( "LobbyMenu" ) )
+		AdvanceMenu( GetMenu( "R5RLobbyMenu" ) )
 		UIMusicUpdate()
 
 		if ( IsFullyConnected() )
@@ -1151,9 +1155,6 @@ bool function TryDialogFlowPersistenceQuery( string persistenceVar )
 
 void function DialogFlow()
 {
-	if ( !IsPlayPanelCurrentlyTopLevel() )
-		return
-
 	bool persistenceAvailable   = IsPersistenceAvailable()
 	string earliestRankedPeriod = Ranked_EarliestRankedPeriodWithRewardsNotAcknowledged()
 
@@ -1510,6 +1511,21 @@ void function InitMenus()
 
 	AddMenu( "PlayVideoMenu", $"resource/ui/menus/play_video.menu", InitPlayVideoMenu )
 	AddMenu( "EliteIntroMenu", $"resource/ui/menus/elite_intro.menu", InitEliteIntroMenu )
+
+	//R5Reloaded UI
+	var r5rmainMenu = AddMenu( "R5RMainMenu", $"scripts/resource/ui/menus/R5R/main.res", InitR5RMainMenu, "#MAIN" )
+	AddPanel( r5rmainMenu, "R5RMainMenuPanel", InitR5RMainMenuPanel )
+
+	var r5rlobbymenu = AddMenu( "R5RLobbyMenu", $"scripts/resource/ui/menus/R5R/lobbymenu.res", InitR5RLobbyMenu )
+	AddPanel( r5rlobbymenu, "R5RHomePanel", InitR5RHomePanel )
+	AddPanel( r5rlobbymenu, "R5RNamePanel", InitR5RNamePanel )
+	AddPanel( r5rlobbymenu, "R5RDescPanel", InitR5RDescPanel )
+	var createserverpanel = AddPanel( r5rlobbymenu, "R5RCreateServerPanel", InitR5RCreateServerPanel )
+	AddPanel( r5rlobbymenu, "R5RServerBrowserPanel", InitR5RServerBrowserPanel )
+	AddPanel( createserverpanel, "R5RPlaylistPanel", InitR5RPlaylistPanel )
+	AddPanel( createserverpanel, "R5RMapPanel", InitR5RMapPanel )
+	AddPanel( createserverpanel, "R5RVisPanel", InitR5RVisPanel )
+	////////
 
 	//CTF UI
 	var controlmenu = AddMenu( "CTFRespawnMenu", $"scripts/resource/ui/menus/CTF/ctfrespawnmenu.menu", InitCTFRespawnMenu )
