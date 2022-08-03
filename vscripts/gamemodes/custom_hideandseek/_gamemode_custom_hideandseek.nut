@@ -131,7 +131,7 @@ void function _OnPlayerConnected(entity player)
     return
 
     if( !IsAlive( player ) )
-        _HandleRespawn( player , 1, true)
+        _HandleRespawn( player , 0, true)
     
     switch( GetGameState() )
     {
