@@ -107,6 +107,18 @@ void function ServerCallback_HideAndSeek_DoAnnouncement(float duration, int type
             message = "The seeker begins to search!"
             break
         }
+        case eHASAnnounce.SEEKER_DISCONNECTED:
+        {
+            message = "The seeker has just disconnected"
+            subtext = "A new Seeker has just been decided"
+            break
+        }
+        case eHASAnnounce.SEEKER_DISCONNECTED_WAITFORPLAYER:
+        {
+            message = "The seeker has just disconnected"
+            subtext = "Not having enough players you will have to wait..."
+            break
+        }
     }
     AnnouncementData announcement = Announcement_Create( message )
     Announcement_SetSubText(announcement, subtext)

@@ -20,6 +20,8 @@ global enum eHASAnnounce
 	END_HIDDEN = 6
     NEW_SEEKER = 7
     SEEKER_SEARCH = 8
+    SEEKER_DISCONNECTED = 9
+    SEEKER_DISCONNECTED_WAITFORPLAYER = 10
 }
 
 global enum eHASLegends

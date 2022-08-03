@@ -12,6 +12,7 @@ enum eHASState
 {
     IN_PROGRESS = 0
     WINNER_DECIDED = 1
+    SEEKER_CANT_MOVE = 2
 }
 
 struct {
@@ -30,6 +31,7 @@ struct {
 void function _CustomHideAndSeek_Init()
 {
     AddCallback_OnClientConnected(void function(entity player) {thread _OnPlayerConnected(player)})
+    AddCallback_OnPreClientDisconnected(void function(entity player) {thread _OnPlayerDisconnected(player)})
     AddCallback_OnPlayerKilled(void function(entity victim, entity attacker, var damageInfo) {thread _OnPlayerDied(victim, attacker, damageInfo)})
 
     thread RunHAS()
@@ -54,6 +56,8 @@ void function StartRound()
 
     HAS.HIDDENPlayers.clear()
     HAS.SEEKERPlayers.clear()
+
+    file.hasState = eHASState.SEEKER_CANT_MOVE
 
     foreach(player in GetPlayerArray())
     {
@@ -88,7 +92,10 @@ void function StartRound()
         }
     }
     wait 15
-    if(IsValid(Seeker)) Seeker.UnfreezeControlsOnServer()
+    foreach(seekers in HAS.SEEKERPlayers){
+        if(IsValid(seekers)) seekers.UnfreezeControlsOnServer()
+    }
+    
     foreach(player in GetPlayerArray()){
         if(IsValid(player)){
             Remote_CallFunction_NonReplay(player, "ServerCallback_HideAndSeek_DoAnnouncement", 5, eHASAnnounce.SEEKER_SEARCH, HAS.HIDDENPlayers.len(), HAS.SEEKERPlayers.len())
@@ -119,6 +126,7 @@ void function StartRound()
 
 void function _OnPlayerConnected(entity player)
 {
+    printt("Player Connected")
     if( !IsValid( player ) )
     return
 
@@ -131,9 +139,10 @@ void function _OnPlayerConnected(entity player)
         case eGameState.WaitingForPlayers:
             break
         case eGameState.Playing:
-            player.UnfreezeControlsOnServer();
+            player.UnfreezeControlsOnServer()
             HAS.SEEKERPlayers.push(player)
             Remote_CallFunction_NonReplay( player, "ServerCallback_HideAndSeek_DoAnnouncement", 5, eHASAnnounce.ROUND_START_SEEKER, HAS.HIDDENPlayers.len(), HAS.SEEKERPlayers.len() )
+            if(file.hasState == eHASState.SEEKER_CANT_MOVE) player.FreezeControlsOnServer()
             foreach(otherplayer in GetPlayerArray())
             {
                 if (IsValid( otherplayer ))
@@ -149,14 +158,67 @@ void function _OnPlayerConnected(entity player)
     }
 }
 
-bool function exist(array<entity> Array, entity player)
+void function _OnPlayerDisconnected(entity player)
 {
-    foreach (index, item in Array)  {
-        if (item == player)  {
-            return true
+    printt("Player Disconnected")
+
+    switch(GetGameState())
+    {
+        case eGameState.WaitingForPlayers:
+            break
+        case eGameState.Playing:
+        {
+            if(GetPlayerArray().len() < 2){
+                foreach(players in GetPlayerArray())
+                {
+                    Remote_CallFunction_NonReplay( players, "ServerCallback_HideAndSeek_DoAnnouncement", 5, eHASAnnounce.SEEKER_DISCONNECTED_WAITFORPLAYER, HAS.HIDDENPlayers.len(), HAS.SEEKERPlayers.len() )
+                    wait 3
+                    SetGameState(eGameState.WaitingForPlayers)
+                    file.hasState = eHASState.IN_PROGRESS
+                    break
+                }
+            }
+
+            if(HAS.SEEKERPlayers.contains(player))
+            {
+                HAS.SEEKERPlayers.remove(HAS.SEEKERPlayers.find(player))
+                if(HAS.SEEKERPlayers.len() == 0)
+                {
+                    if(HAS.HIDDENPlayers.len() > 1)
+                    {
+                        entity Seeker = HAS.HIDDENPlayers.getrandom()
+                        HAS.HIDDENPlayers.remove(HAS.HIDDENPlayers.find(player))
+                        
+                        HAS.SEEKERPlayers.push(Seeker)
+                        _HandleRespawn(Seeker, 0, false)
+                        if(file.hasState == eHASState.SEEKER_CANT_MOVE)
+                        {
+                            Seeker.FreezeControlsOnServer()
+                        }
+
+                        foreach(players in GetPlayerArray())
+                        {
+                            if(IsValid(players))
+                            {
+                                Remote_CallFunction_NonReplay( player, "ServerCallback_HideAndSeek_DoAnnouncement", 5, eHASAnnounce.SEEKER_DISCONNECTED, HAS.HIDDENPlayers.len(), HAS.SEEKERPlayers.len() )
+                            }
+                            break
+                        }
+                    }
+                } else {
+                    foreach(players in GetPlayerArray())
+                    {
+                        if(IsValid(players)){
+                            Remote_CallFunction_NonReplay( players, "ServerCallback_HideAndSeek_PlayerKilled", HAS.HIDDENPlayers.len(), HAS.SEEKERPlayers.len())
+                        }
+                        break
+                    }
+                }
+            }
         }
+        default: 
+            break
     }
-    return false
 }
 
 void function _OnPlayerDied( entity victim, entity attacker, var damageInfo ) 
@@ -172,7 +234,7 @@ void function _OnPlayerDied( entity victim, entity attacker, var damageInfo )
 
                 if( IsValid( victim ) )
                 {
-                    if(!exist(HAS.SEEKERPlayers, victim))
+                    if(!HAS.SEEKERPlayers.contains(victim))
                     {
                         HAS.HIDDENPlayers.remove(HAS.HIDDENPlayers.find(victim))
                         HAS.SEEKERPlayers.push(victim)
@@ -250,7 +312,7 @@ void function _HandleRespawn(entity player, int team, bool join){
         DecideRespawnPlayer(player, true)
     }
 
-    if(exist(HAS.SEEKERPlayers, player))
+    if(HAS.SEEKERPlayers.contains(player))
     {
         ChangePlayerCharacter(eHASLegends.SEEKER, player)
     } else {
@@ -266,9 +328,6 @@ void function _HandleRespawn(entity player, int team, bool join){
 void function ChangePlayerCharacter(int name, entity player){
     player.SetPlayerNetBool("hasLockedInCharacter", false)
 
-    player.TakeOffhandWeapon(OFFHAND_TACTICAL)
-    player.TakeOffhandWeapon(OFFHAND_ULTIMATE)
-    
     switch(name)
     {
         case eHASLegends.HIDDEN:
@@ -279,6 +338,10 @@ void function ChangePlayerCharacter(int name, entity player){
             CharacterSelect_AssignCharacter(player, item)
 
             CharacterSkin_Apply(player, skin)
+
+            player.TakeOffhandWeapon(OFFHAND_TACTICAL)
+            player.TakeOffhandWeapon(OFFHAND_ULTIMATE)
+    
             break
         }
         case eHASLegends.SEEKER:
@@ -289,6 +352,10 @@ void function ChangePlayerCharacter(int name, entity player){
             CharacterSelect_AssignCharacter(player, item)
 
             CharacterSkin_Apply(player, skin)
+
+            player.TakeOffhandWeapon(OFFHAND_TACTICAL)
+            player.TakeOffhandWeapon(OFFHAND_ULTIMATE)
+    
             break
         }
     }
