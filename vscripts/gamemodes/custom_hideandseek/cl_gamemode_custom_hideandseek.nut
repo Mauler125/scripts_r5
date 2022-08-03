@@ -113,9 +113,10 @@ void function ServerCallback_HideAndSeek_DoAnnouncement(float duration, int type
             subtext = "A new Seeker has just been decided"
             break
         }
-        case eHASAnnounce.SEEKER_DISCONNECTED_WAITFORPLAYER:
+        case eHASAnnounce.WAITFORPLAYER:
         {
-            message = "The seeker has just disconnected"
+            clGlobal.levelEnt.Signal( "ClosePlayerListRUI" )
+            message = "Someone has just logged off"
             subtext = "Not having enough players you will have to wait..."
             break
         }

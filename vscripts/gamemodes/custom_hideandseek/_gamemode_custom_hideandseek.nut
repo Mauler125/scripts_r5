@@ -31,7 +31,7 @@ struct {
 void function _CustomHideAndSeek_Init()
 {
     AddCallback_OnClientConnected(void function(entity player) {thread _OnPlayerConnected(player)})
-    AddCallback_OnPreClientDisconnected(void function(entity player) {thread _OnPlayerDisconnected(player)})
+    AddCallback_OnClientDisconnected(void function(entity player) {thread _OnPlayerDisconnected(player)})
     AddCallback_OnPlayerKilled(void function(entity victim, entity attacker, var damageInfo) {thread _OnPlayerDied(victim, attacker, damageInfo)})
 
     thread RunHAS()
@@ -49,6 +49,10 @@ void function RunHAS()
 
 void function StartRound()
 {
+    while(GetPlayerArray().len() < GetCurrentPlaylistVarFloat("min_players", 2))
+    {
+        wait 1
+    }
     wait 1
     SetGameState(eGameState.Playing)
 
@@ -91,37 +95,60 @@ void function StartRound()
             }
         }
     }
+    thread disconnectEvent()
     wait 15
-    foreach(seekers in HAS.SEEKERPlayers){
-        if(IsValid(seekers)) seekers.UnfreezeControlsOnServer()
-    }
-    
-    foreach(player in GetPlayerArray()){
-        if(IsValid(player)){
-            Remote_CallFunction_NonReplay(player, "ServerCallback_HideAndSeek_DoAnnouncement", 5, eHASAnnounce.SEEKER_SEARCH, HAS.HIDDENPlayers.len(), HAS.SEEKERPlayers.len())
+    if(file.hasState == eHASState.SEEKER_CANT_MOVE) {
+        foreach(seekers in HAS.SEEKERPlayers){
+            if(IsValid(seekers)) seekers.UnfreezeControlsOnServer()
         }
-    }
-    float endTime = Time() + GetCurrentPlaylistVarFloat("round_time", 120)
-    while( Time() <= endTime )
-    {
-        if(file.hasState == eHASState.WINNER_DECIDED)
-            break
         
-        if( Time() >= endTime-1 ){
-            foreach(player in GetPlayerArray()){
-                if(IsValid(player)){
-                    Remote_CallFunction_NonReplay(player, "ServerCallback_HideAndSeek_DoAnnouncement", 5, eHASAnnounce.END_HIDDEN, HAS.HIDDENPlayers.len(), HAS.SEEKERPlayers.len())
-                    player.FreezeControlsOnServer()
+        foreach(player in GetPlayerArray()){
+            if(IsValid(player)){
+                Remote_CallFunction_NonReplay(player, "ServerCallback_HideAndSeek_DoAnnouncement", 5, eHASAnnounce.SEEKER_SEARCH, HAS.HIDDENPlayers.len(), HAS.SEEKERPlayers.len())
+            }
+        }
+        float endTime = Time() + GetCurrentPlaylistVarFloat("round_time", 120)
+        while( Time() <= endTime )
+        {
+            if(file.hasState == eHASState.WINNER_DECIDED)
+                break
+            
+            if( Time() >= endTime-1 ){
+                foreach(player in GetPlayerArray()){
+                    if(IsValid(player)){
+                        Remote_CallFunction_NonReplay(player, "ServerCallback_HideAndSeek_DoAnnouncement", 5, eHASAnnounce.END_HIDDEN, HAS.HIDDENPlayers.len(), HAS.SEEKERPlayers.len())
+                        player.FreezeControlsOnServer()
+                    }
+                }
+                wait 10
+                file.hasState = eHASState.WINNER_DECIDED
+                break
+            }
+            WaitFrame()
+        }
+        file.hasState = eHASState.IN_PROGRESS
+    }
+
+}
+
+void function disconnectEvent()
+{
+    array<entity> players = GetPlayerArray()
+    while(GetGameState() == eGameState.Playing)
+    {
+        if(HAS.SEEKERPlayers.len() + HAS.HIDDENPlayers.len() > GetPlayerArray().len())
+        {
+            foreach(player in players)
+            {
+                if(!GetPlayerArray().contains(player))
+                {
+                    _OnPlayerDisconnected(player)
                 }
             }
-            wait 10
-            file.hasState = eHASState.WINNER_DECIDED
-            break
         }
-        WaitFrame()
+        players = GetPlayerArray()
+        wait 1
     }
-    file.hasState = eHASState.IN_PROGRESS
-
 }
 
 void function _OnPlayerConnected(entity player)
@@ -129,16 +156,16 @@ void function _OnPlayerConnected(entity player)
     printt("Player Connected")
     if( !IsValid( player ) )
     return
-
-    if( !IsAlive( player ) )
-        _HandleRespawn( player , 0, true)
     
     switch( GetGameState() )
     {
-
         case eGameState.WaitingForPlayers:
+            if( !IsAlive( player ) )
+                _HandleRespawn( player , 1, true)
             break
         case eGameState.Playing:
+            if( !IsAlive( player ) )
+                _HandleRespawn( player , 0, true)
             player.UnfreezeControlsOnServer()
             HAS.SEEKERPlayers.push(player)
             Remote_CallFunction_NonReplay( player, "ServerCallback_HideAndSeek_DoAnnouncement", 5, eHASAnnounce.ROUND_START_SEEKER, HAS.HIDDENPlayers.len(), HAS.SEEKERPlayers.len() )
@@ -171,12 +198,12 @@ void function _OnPlayerDisconnected(entity player)
             if(GetPlayerArray().len() < 2){
                 foreach(players in GetPlayerArray())
                 {
-                    Remote_CallFunction_NonReplay( players, "ServerCallback_HideAndSeek_DoAnnouncement", 5, eHASAnnounce.SEEKER_DISCONNECTED_WAITFORPLAYER, HAS.HIDDENPlayers.len(), HAS.SEEKERPlayers.len() )
-                    wait 3
+                    file.hasState = eHASState.WINNER_DECIDED
+                    Remote_CallFunction_NonReplay( players, "ServerCallback_HideAndSeek_DoAnnouncement", 5, eHASAnnounce.WAITFORPLAYER, HAS.HIDDENPlayers.len(), HAS.SEEKERPlayers.len() )
+                    wait 5
                     SetGameState(eGameState.WaitingForPlayers)
-                    file.hasState = eHASState.IN_PROGRESS
-                    break
                 }
+                break
             }
 
             if(HAS.SEEKERPlayers.contains(player))
