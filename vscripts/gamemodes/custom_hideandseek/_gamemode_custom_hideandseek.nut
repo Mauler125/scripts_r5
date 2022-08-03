@@ -265,6 +265,9 @@ void function _HandleRespawn(entity player, int team, bool join){
 
 void function ChangePlayerCharacter(int name, entity player){
     player.SetPlayerNetBool("hasLockedInCharacter", false)
+
+    player.TakeOffhandWeapon(OFFHAND_TACTICAL)
+    player.TakeOffhandWeapon(OFFHAND_ULTIMATE)
     
     switch(name)
     {
