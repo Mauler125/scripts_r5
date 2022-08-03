@@ -398,6 +398,13 @@ void function TpPlayerToSpawnPoint(entity player, int team)
             } else { //Hidden
                 loc = NewSpawnLoc(<502, 437, 2380>, < 15, 89, 0 >)
             }
+        case "mp_rr_desertlands_64k_x_64k_nx":
+        case "mp_rr_desertlands_64k_x_64k":
+            if(team == 0){ //Seeker
+                loc = NewSpawnLoc(<772, 85, 2846>, <12, 89, 0>)
+            } else { //Hidden
+                loc = NewSpawnLoc(<502, 437, 2380>, < 15, 89, 0 >)
+            }
         default:
              Assert(false, "No location for Hide and Seek in this map")
     }

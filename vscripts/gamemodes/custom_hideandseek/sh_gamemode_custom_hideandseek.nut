@@ -42,6 +42,8 @@ global struct LocationSettingsHAS
     array<SpawnLoc> spawns
 }
 
+const asset BUILDING_PLATFORM_LARGE        = $"mdl/desertlands/construction_bldg_platform_01.rmdl"
+
 struct {
 } file;
 
@@ -58,13 +60,38 @@ void function Sh_CustomHideAndSeek_Init()
                         NewSpawnLoc(<502, 437, 2380>, < 15, 89, 0 >)
                     ]
                 )
-            ) 
+            )
+        case "mp_rr_desertlands_64k_x_64k_nx":
+        case "mp_rr_desertlands_64k_x_64k":
+        {
+            NewLocationSpawn(
+                NewSpawn( //For seeker
+                    "Desertlands",
+                    [
+                        NewSpawnLoc(<772, 85, 2846>, <12, 89, 0>),
+                        NewSpawnLoc(<502, 437, 2380>, < 15, 89, 0 >)
+                    ]
+                )
+            )
+            CreateHASModel(BUILDING_PLATFORM_LARGE, <310, 9100, -4200>, <90,0,0>)
+            CreateHASModel(BUILDING_PLATFORM_LARGE, <310, 9100, -3200>, <90,0,0>)
+            CreateHASModel(BUILDING_PLATFORM_LARGE, <310, 9100, -2200>, <90,0,0>)
+        }
+
         default: // Yeah I know it's so sad that there are no other maps
             Assert(false, "No Hide and Seek locations found for this map!")
     }
 
     RegisterSignal( "ClosePlayerListRUI" )
 }
+
+entity function CreateHASModel( asset a, vector pos, vector ang)
+{
+    entity prop = CreatePropDynamic( a, pos, ang)
+
+    //FLOPPYTOWN_ENTITIES.append( prop )
+
+return prop }
 
 SpawnLoc function NewSpawnLoc(vector origin, vector angles)
 {
