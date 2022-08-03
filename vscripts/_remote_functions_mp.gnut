@@ -27,6 +27,9 @@ void function RemoteFunctions_Init_Begin()
 	Remote_RegisterClientFunction("ServerCallback_HideAndSeek_DoAnnouncement", "float", 0.0, 256.0, 32, "int", 0, 255, "int", 0, 255, "int", 0, 255)
     Remote_RegisterClientFunction("ServerCallback_HideAndSeek_PlayerKilled", "int", 0, 255, "int", 0, 255)
 
+	if (GetMapName() == "mp_rr_floppytown")
+		Remote_RegisterClientFunction("ServerCallback_Crane_DoAnnouncement")
+
 	RegisterSignal("OnChangedPlayerClass")
 	RegisterSignal("BleedOut_OnStartDying")
 

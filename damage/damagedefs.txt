@@ -438,7 +438,7 @@ DamageDefs
         "obituary"					"#DEATH_LOOT_DRONE"
         "damage_flags"				"DF_EXPLOSION | DF_GIB"
     }
-	damagedef_falling_object_on_floppytown
+	damagedef_falling_object_floppytown
     {
        	"damage" 					"200"
        	"damage_heavy_armor"		"200"
