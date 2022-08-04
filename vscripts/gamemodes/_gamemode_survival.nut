@@ -36,11 +36,26 @@ void function GamemodeSurvival_Init()
 
 	switch(GetMapName())
 	{
+		case "mp_rr_aqueduct_night":
 		case "mp_rr_aqueduct":
-			CreateWallTrigger( <425, -1590, -1689> )
-			CreateWallTrigger( <774, -6394, 2067> )
+		{
+			CreateWallTrigger( <425, -1590, -1689> , 30000 , true)
+			CreateWallTrigger( <774, -6394, 2067>  )
+			break
+		}
+		case "mp_rr_arena_composite":
+		{
+			CreateWallTrigger( <5, 2587, -520> , 30000 , true)
+			CreateWallTrigger( <0, 5600, -180> , 100 , false)
+			CreateWallTrigger( <0, 5600, -180> , 70 , true)
+			CreateWallTrigger( <5, 5379, 860>  )
+			break
+		}
 		case "mp_rr_ashs_redemption":
+		{
 			CreateWallTrigger( <-20857, 5702, -25746> )
+			break
+		}
 		default:
 			break
 	}
@@ -51,7 +66,7 @@ void function GamemodeSurvival_Init()
 	AddCallback_OnPlayerKilled( OnPlayerKilled )
 	AddCallback_OnClientConnected( OnClientConnected )
 
-	AddCallback_GameStateEnter( 
+	AddCallback_GameStateEnter(
 		eGameState.Playing,
 		void function()
 		{
@@ -91,7 +106,7 @@ void function RespawnPlayerInDropship( entity player )
 	player.SetAngles( dropship.GetAngles() )
 
 	player.UnfreezeControlsOnServer()
-	
+
 	player.ForceCrouch()
 	player.Hide()
 
@@ -133,16 +148,16 @@ void function Sequence_Playing()
 	{
 		vector pos = GetEnt( "info_player_start" ).GetOrigin()
 		pos.z += 5
-	
+
 		int i = 0
 		foreach ( player in GetPlayerArray() )
 		{
 			// circle
 			float r = float(i) / float(GetPlayerArray().len()) * 2 * PI
 			player.SetOrigin( pos + 500.0 * <sin( r ), cos( r ), 0.0> )
-	
+
 			DecideRespawnPlayer( player )
-	
+
 			i++
 		}
 
@@ -161,7 +176,7 @@ void function Sequence_Playing()
 		vector shipEnd = foundFlightPath[1]
 		vector shipAngles = foundFlightPath[2]
 		vector shipPathCenter = foundFlightPath[3]
-	
+
 		entity centerEnt = CreatePropScript_NoDispatchSpawn( $"mdl/dev/empty_model.rmdl", shipPathCenter, shipAngles )
 		centerEnt.Minimap_AlwaysShow( 0, null )
 		SetTargetName( centerEnt, "pathCenterEnt" )
@@ -203,8 +218,8 @@ void function Sequence_Playing()
 			if ( jumpMaster != null )
 			{
 				expect entity( jumpMaster )
-		
-				jumpMaster.SetPlayerNetBool( "isJumpmaster", true )			
+
+				jumpMaster.SetPlayerNetBool( "isJumpmaster", true )
 			}
 		}
 
@@ -277,53 +292,77 @@ void function Sequence_Playing()
 	thread Sequence_WinnerDetermined()
 }
 
-entity function CreateWallTrigger(vector pos, float box_radius = 30000 )
+entity function CreateWallTrigger( vector origin , float radius = 30000 , bool killzone = false , bool debugdraw = false)
 {
-    entity map_trigger = CreateEntity( "trigger_cylinder" )
-    map_trigger.SetRadius( box_radius );map_trigger.SetAboveHeight( 350 );map_trigger.SetBelowHeight( 10 );
-    map_trigger.SetOrigin( pos )
-    DispatchSpawn( map_trigger )
-    thread WallTrigger( map_trigger )
-    return map_trigger
+	// Set up the trigger
+    entity trigger = CreateEntity( "trigger_cylinder" )
+	trigger.SetRadius( radius )
+	trigger.SetAboveHeight( 2000 )
+	trigger.SetBelowHeight( 50 )
+	trigger.SetOrigin( origin )
+	trigger.SetEnterCallback(  WallTriggerEnter )
+	trigger.SetLeaveCallback(  WallTriggerLeave )
+
+    if (killzone) // hacky way of adding killzone option
+	{
+		trigger.SetScriptName("WallTrigger_Killzone")
+		trigger.SetAboveHeight( 350 )
+	}
+
+	if (debugdraw) // draw trigger bounds if needed
+	{
+		DebugDrawCylinder( trigger.GetOrigin() , < -90, 0, 0 >, radius, trigger.GetAboveHeight(), 0, 165, 255, true, 9999.9 )
+		DebugDrawCylinder( trigger.GetOrigin() , < -90, 0, 0 >, radius, -trigger.GetBelowHeight(), 255, 90, 0, true, 9999.9 )
+	}
+
+	// deploy the trigger
+    DispatchSpawn( trigger )
+
+    return trigger
 }
 
-void function WallTrigger(entity proxy, float speed = 1)
-{ bool active = true
-    while (active)
-    {
-        if(IsValid(proxy))
-        {
-            foreach(player in GetPlayerArray())
-            {
-                if (player.GetPhysics() != MOVETYPE_NOCLIP)//won't affect noclip player
-                {
-                    if(proxy.IsTouching(player))
-						{
-							player.Zipline_Stop()
-							switch(GetMapName())
-								{
-									case "mp_rr_aqueduct":
-										player.TakeDamage(player.GetMaxHealth() + 1, null, null, { damageSourceId=damagedef_suicide, scriptType=DF_BYPASS_SHIELD })
-									default:
-										vector target_origin = player.GetOrigin()
-										vector proxy_origin = proxy.GetOrigin()
-										vector target_angles = player.GetAngles()
-										vector proxy_angles = proxy.GetAngles()
-						
-										vector velocity = target_origin - proxy_origin
-										velocity = velocity * speed
-                    
-										vector angles = target_angles - proxy_angles
-                    
-										velocity = velocity + angles
-										player.SetVelocity(velocity)
-								}
-						}
-                }
-            }
-        } else {active = false ; break}
-        wait 0.01
-    } 
+void function WallTriggerEnter( entity trigger , entity ent )
+{
+    if(IsValid(ent)) // ensure the entity is valid
+	{
+		if(ent.IsPlayer() && ent.GetPhysics() != MOVETYPE_NOCLIP) // noclip players are not affected by the trigger
+		{
+			ent.Zipline_Stop()
+
+			if(trigger.GetScriptName() != "WallTrigger_Killzone") // check if its a killzone
+			{
+				EntityOutOfBounds( trigger, ent, null, null )
+				ent.DisableWeapon()
+
+				StatusEffect_AddEndless( ent, eStatusEffect.hunt_mode_visuals, 100 )
+				StatusEffect_AddEndless( ent, eStatusEffect.minimap_jammed, 100 )
+				StatusEffect_AddEndless( ent, eStatusEffect.move_slow, 0.2 )
+
+				vector newdir
+				if(trigger.GetAngles() == <0,0,0>)
+				    newdir = -ent.GetAngles() / 2 + -<0,0,-100> * -1
+				else newdir = -ent.GetAngles() / 2 + -trigger.GetAngles() * -1
+				ent.SetVelocity(newdir * 15)
+
+			} else ent.TakeDamage(ent.GetMaxHealth() + 1, null, null, { damageSourceId=damagedef_suicide, scriptType=DF_BYPASS_SHIELD })
+		}
+	}
+}
+
+void function WallTriggerLeave( entity trigger , entity ent )
+{
+    if(IsValid(ent)) // ensure the entity is valid
+	{
+		if(ent.IsPlayer())
+		{
+			EntityBackInBounds( trigger, ent, null, null )
+			ent.EnableWeapon()
+
+			StatusEffect_StopAllOfType( ent, eStatusEffect.hunt_mode_visuals)
+			StatusEffect_StopAllOfType( ent, eStatusEffect.minimap_jammed)
+			StatusEffect_StopAllOfType( ent, eStatusEffect.move_slow)
+		}
+	}
 }
 
 void function Sequence_WinnerDetermined()
@@ -358,9 +397,9 @@ void function Sequence_Epilogue()
 		{
 			GameSummarySquadData gameSummaryData = GameSummary_GetPlayerData( champion )
 
-			Remote_CallFunction_NonReplay( 
-				player, 
-				"ServerCallback_AddWinningSquadData", 
+			Remote_CallFunction_NonReplay(
+				player,
+				"ServerCallback_AddWinningSquadData",
 				i, // Champion index
 				champion.GetEncodedEHandle(), // Champion EEH
 				gameSummaryData.kills,
@@ -390,7 +429,7 @@ void function UpdateMatchSummaryPersistentVars( int team )
 		{
 			if ( i >= maxTrackedSquadMembers )
 				continue
-			
+
 			entity statMember = squadMembers[i]
 			GameSummarySquadData statSummaryData = GameSummary_GetPlayerData( statMember )
 
@@ -486,7 +525,7 @@ array<ConsumableInventoryItem> function GetAllDroppableItems( entity player )
 
 		// Add the weapon
 		ConsumableInventoryItem item
-		
+
 		item.type = data.index
 		item.count = weapon.GetWeaponPrimaryClipCount()
 
@@ -496,7 +535,7 @@ array<ConsumableInventoryItem> function GetAllDroppableItems( entity player )
 		{
 			if ( !SURVIVAL_Loot_IsRefValid( mod ) )
 				continue
-			
+
 			if ( data.baseMods.contains( mod ) )
 				continue
 
@@ -504,7 +543,7 @@ array<ConsumableInventoryItem> function GetAllDroppableItems( entity player )
 
 			// Add the attachment
 			ConsumableInventoryItem attachmentItem
-			
+
 			attachmentItem.type = attachmentData.index
 			attachmentItem.count = 1
 
@@ -735,26 +774,26 @@ vector function SURVIVAL_GetClosestValidCircleEndLocation( vector origin )
 void function SURVIVAL_CalculateAirdropPositions()
 {
     calculatedAirdropData.clear()
-    
+
     array<vector> previousAirdrops
-    
+
     array<DeathFieldStageData> deathFieldData = SURVIVAL_GetDeathFieldStages()
-    
+
     for ( int i = deathFieldData.len() - 1; i >= 0; i-- )
     {
         string airdropPlaylistData = GetCurrentPlaylistVarString( "airdrop_data_round_" + i, "" )
-        
+
         if (airdropPlaylistData.len() == 0) //if no airdrop data for this ring, continue to next
             continue;
-            
+
         //Split the PlaylistVar that we can parse it
         array<string> dataArr = split(airdropPlaylistData, ":" )
         if(dataArr.len() < 5)
             return;
-         
+
         //First part of the playlist string is the number of airdrops for this round.
         int numAirdropsForThisRound = dataArr[0].tointeger()
-        
+
         //Create our AirdropData entry now.
         AirdropData airdropData;
         airdropData.dropCircle = i
@@ -763,13 +802,13 @@ void function SURVIVAL_CalculateAirdropPositions()
 
         //Get the deathfield data.
         DeathFieldStageData data = deathFieldData[i]
-       
+
         vector center = data.endPos
         float radius = data.endRadius
         for (int j = 0; j < numAirdropsForThisRound; j++)
         {
             Point airdropPoint = FindRandomAirdropDropPoint(AIRDROP_ANGLE_DEVIATION, center, radius, previousAirdrops)
-            
+
             if(!VerifyAirdropPoint( airdropPoint.origin, airdropPoint.angles.y ))
             {
                 //force this to loop again if we didn't verify our airdropPoint
@@ -781,10 +820,10 @@ void function SURVIVAL_CalculateAirdropPositions()
                 printt("Added airdrop with origin ", airdropPoint.origin, " to the array")
                 airdropData.originArray.append(airdropPoint.origin)
                 airdropData.anglesArray.append(airdropPoint.angles)
-                
+
                 //Should impl contents here.
                 airdropData.contents.append([dataArr[2], dataArr[3], dataArr[4]])
-            }  
+            }
         }
         calculatedAirdropData.append(airdropData)
     }
@@ -798,7 +837,7 @@ void function SURVIVAL_AddLootBin( entity lootbin )
 
 void function SURVIVAL_AddLootGroupRemapping( string hovertank, string supplyship )
 {
-	
+
 }
 
 void function SURVIVAL_DebugLoot( string lootBinsLootInside, vector origin )
@@ -813,5 +852,5 @@ void function Survival_AddCallback_OnAirdropLaunched( void functionref( entity d
 
 void function Survival_CleanupPlayerPermanents( entity player )
 {
-	
+
 }

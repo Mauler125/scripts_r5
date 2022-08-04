@@ -4728,7 +4728,7 @@ void function SetEntityIsBurning( entity ent, bool isBurning )
 		ent.e.isBurning = isBurning
 	else if ( ent.IsPlayer() )
 		ent.p.isBurning = isBurning
-	else 
+	else
 		ent.ai.isBurning = isBurning
 }
 

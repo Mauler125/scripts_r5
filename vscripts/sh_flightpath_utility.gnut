@@ -1233,7 +1233,7 @@ Point function FindRandomAirdropDropPoint( float baseAngle, vector center, float
 				break
 			}
 		}
-        
+
 		TraceResults trace = TraceHull( <startPos.x, startPos.y, 10000>, <startPos.x, startPos.y, 512>, mins, maxs, null, TRACE_MASK_TITANSOLID, TRACE_COLLISION_GROUP_NONE )
 		if ( trace.fraction == 1 )
 			fail = true	// didn't find any ground
@@ -1246,22 +1246,20 @@ Point function FindRandomAirdropDropPoint( float baseAngle, vector center, float
 		}
 
 		vector groundPos = trace.endPos
-        //Can't use this because no navmesh
-		//airdropPoint = GetClosestAirdropPoint( groundPos )
-        
-        airdropPoint.origin = groundPos
-        airdropPoint.angles = trace.surfaceNormal
-        
+		airdropPoint = GetClosestAirdropPoint( groundPos )
+
 		float distToCenter = Distance2D( airdropPoint.origin, center )
 		if ( distToCenter > radius && !IsTestMap() )
 		{
+			printt( "airdrop distToCenter too great", airdropPoint.origin, center, distToCenter )
 			numTries++
 			WaitFrame()
 			continue
 		}
 
 		return airdropPoint
-    }
+	}
+
 	unreachable
 }
 
