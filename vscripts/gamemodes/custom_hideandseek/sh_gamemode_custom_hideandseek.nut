@@ -54,7 +54,7 @@ void function Sh_CustomHideAndSeek_Init()
     {
         case "mp_rr_floppytown":
             NewLocationSpawn(
-                NewSpawn( //For seeker
+                NewSpawn(
                     "Floppytown",
                     [
                         NewSpawnLoc(<772, 85, 2846>, <12, 89, 0>),
@@ -67,7 +67,7 @@ void function Sh_CustomHideAndSeek_Init()
         case "mp_rr_desertlands_64k_x_64k":
         {
             NewLocationSpawn(
-                NewSpawn( //For seeker
+                NewSpawn(
                     "Desertlands",
                     [
                         NewSpawnLoc(<2769, 10129, -3633>, <3, 103, 0>),
@@ -75,18 +75,17 @@ void function Sh_CustomHideAndSeek_Init()
                     ]
                 )
             )
-            //CreateHASModel(BUILDING_PLATFORM_LARGE, <310, 9100, -3200>, <90,0,0>)
-            //CreateHASModel(BUILDING_PLATFORM_LARGE, <310, 9100, -2200>, <90,0,0>)
             #if SERVER
                 generateHASWall("mp_rr_desertlands")
             #endif
+            break
         }
         case "mp_rr_canyonlands_mu1":
         case "mp_rr_canyonlands_mu1_night":
         case "mp_rr_canyonlands_64k_x_64k":
         {
             NewLocationSpawn(
-                NewSpawn( //For seeker
+                NewSpawn(
                     "Canyonlands",
                     [
                         NewSpawnLoc(<25202, -6028, 4742>, <0, 0, 0>),
@@ -97,6 +96,35 @@ void function Sh_CustomHideAndSeek_Init()
             #if SERVER
                 generateHASWall("mp_rr_canyonlands")
             #endif
+            break
+        }
+        case "mp_rr_aqueduct_night":
+        case "mp_rr_aqueduct":
+        {
+            NewLocationSpawn(
+                NewSpawn(
+                    "Aqueduct",
+                    [
+                        NewSpawnLoc(<713, -3283, 2163>, <0, -90, 0>),
+                        NewSpawnLoc(<715, -3788, 542>, < 0, -90, 0 >)
+                    ]
+                )
+            )
+            break
+        }
+        case "mp_rr_arena_composite":
+        {
+            NewLocationSpawn(
+                NewSpawn(
+                    "Composite",
+                    [
+                        NewSpawnLoc(<-957, 5111, 733>, <0, -45, 0>),
+                        NewSpawnLoc(<-723, 4892, 188>, < 0, -45, 0 >)
+                    ]
+                )
+            )
+            break
+            
         }
 
         default: // Yeah I know it's so sad that there are no other maps

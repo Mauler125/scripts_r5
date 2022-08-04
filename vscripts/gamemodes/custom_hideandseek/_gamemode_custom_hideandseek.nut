@@ -416,6 +416,20 @@ void function TpPlayerToSpawnPoint(entity player, int team)
                 loc = NewSpawnLoc(<25638, -6014, 4336>, < 0, 0, 0 >)
             }
             break
+        case "mp_rr_aqueduct_night":
+        case "mp_rr_aqueduct":
+            if(team == 0){ //Seeker
+                loc = NewSpawnLoc(<713, -3283, 2163>, <0, -90, 0>)
+            } else { //Hidden
+                loc = NewSpawnLoc(<715, -3788, 542>, < 0, -90, 0 >)
+            }
+            break
+        case "mp_rr_arena_composite":
+            if(team == 0){ //Seeker
+                loc = NewSpawnLoc(<-957, 5111, 733>, <0, -45, 0>)
+            } else { //Hidden
+                loc = NewSpawnLoc(<-723, 4892, 188>, < 0, -45, 0 >)
+            }
         default:
              Assert(false, "No location for Hide and Seek in this map")
     }
