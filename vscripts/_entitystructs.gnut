@@ -342,7 +342,7 @@ global struct ServerEntityStruct
 	string enemyHighlight = ""
 	string burnReward = ""
 	int fd_roundDeployed = -1
-	
+
 	// r5 stuff
 	EHIScriptStruct ehiss
 	bool isBusy = false
@@ -549,6 +549,8 @@ global struct ServerPlayerStruct
 
 	array<StoredWeapon> storedWeapons
 
+	int CTFClassID = 0
+
 	bool rodeoShouldAdjustJumpOffVelocity = false
 	float rodeoRequestBatteryHintLastShownTime = 0.0
 	float batteryLastTouchedNotificationTime = 0.0
@@ -600,7 +602,7 @@ global struct ServerPlayerStruct
 	int turretArrayId = -1
 
 	float hotStreakTime = 0.0
-	
+
 	// extra stuff for apex
 	int skydiveDecoysFired = 0
 	bool isInExtendedUse = false
@@ -659,7 +661,7 @@ global struct ServerPlayerStruct
 	int zoneNoTouchStack
 	int currentZoneId
 	entity DEV_lastDroppedSurvivalWeaponProp
-	
+
 	int squadRank
 
 	float respawnChanceExpiryTime
