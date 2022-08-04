@@ -796,6 +796,17 @@ Scripts:
 	ui/menu_loadscreen_preview.nut
 
 	ui/CTFMenus/menu_ctf_respawn.nut
+
+	//R5RUI
+	ui/R5RMenus/menu_main.nut
+	ui/R5RMenus/menu_lobby.nut
+	ui/R5RMenus/panel_home.nut
+	ui/R5RMenus/panel_createserver.nut
+	ui/R5RMenus/panel_serverbrowser.nut
+	ui/R5RMenus/panel_mainmenu.nut
+	ui/R5RMenus/panel_playlist.nut
+	ui/R5RMenus/panel_map.nut
+	ui/R5RMenus/panel_visibility.nut
 	ui/CTFMenus/menu_ctf_vote.nut
 ]
 

@@ -350,6 +350,15 @@ void function Init_ClientScripts( entity player )
 
 	DoF_SetNearDepthToDefault()
 	DoF_SetFarDepthToDefault()
+
+	if ( IsLobby() )
+	{
+		//will combined into 1 rpak once rexx fixes repack
+		PakHandle unusedHandle1 = RequestPakFile( "common_sdk" ) // Contains images for the R5RMenu
+		PakHandle unusedHandle2 = RequestPakFile( "common_sdk2" ) // Contains images for the R5RMenu
+		// (dw): The pak request is cleaned up when the lobby client VM is destroyed, so there is no need for script
+		// to keep the handle around.
+	}
 }
 
 

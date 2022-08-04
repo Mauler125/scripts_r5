@@ -914,7 +914,7 @@ void function RunDevCommand( DevCommand cmd, bool isARepeat )
 		if ( IsLobby() )
 		{
 			CloseAllMenus()
-			AdvanceMenu( GetMenu( "LobbyMenu" ) )
+			AdvanceMenu( GetMenu( "R5RLobbyMenu" ) )
 		}
 		else
 		{
