@@ -43,6 +43,7 @@ global struct LocationSettingsHAS
 }
 
 const asset BUILDING_PLATFORM_LARGE        = $"mdl/desertlands/construction_bldg_platform_01.rmdl"
+const asset WALL_CANYON        = $"mdl/levels_terrain/mp_rr_canyonlands/mil_base_south_runway_02.rmdl"
 
 struct {
 } file;
@@ -61,6 +62,7 @@ void function Sh_CustomHideAndSeek_Init()
                     ]
                 )
             )
+            break
         case "mp_rr_desertlands_64k_x_64k_nx":
         case "mp_rr_desertlands_64k_x_64k":
         {
@@ -68,14 +70,33 @@ void function Sh_CustomHideAndSeek_Init()
                 NewSpawn( //For seeker
                     "Desertlands",
                     [
-                        NewSpawnLoc(<772, 85, 2846>, <12, 89, 0>),
-                        NewSpawnLoc(<502, 437, 2380>, < 15, 89, 0 >)
+                        NewSpawnLoc(<2769, 10129, -3633>, <3, 103, 0>),
+                        NewSpawnLoc(<2731, 10405, -3996>, < -16, 115, 0 >)
                     ]
                 )
             )
-            CreateHASModel(BUILDING_PLATFORM_LARGE, <310, 9100, -4200>, <90,0,0>)
-            CreateHASModel(BUILDING_PLATFORM_LARGE, <310, 9100, -3200>, <90,0,0>)
-            CreateHASModel(BUILDING_PLATFORM_LARGE, <310, 9100, -2200>, <90,0,0>)
+            //CreateHASModel(BUILDING_PLATFORM_LARGE, <310, 9100, -3200>, <90,0,0>)
+            //CreateHASModel(BUILDING_PLATFORM_LARGE, <310, 9100, -2200>, <90,0,0>)
+            #if SERVER
+                generateHASWall("mp_rr_desertlands")
+            #endif
+        }
+        case "mp_rr_canyonlands_mu1":
+        case "mp_rr_canyonlands_mu1_night":
+        case "mp_rr_canyonlands_64k_x_64k":
+        {
+            NewLocationSpawn(
+                NewSpawn( //For seeker
+                    "Canyonlands",
+                    [
+                        NewSpawnLoc(<25202, -6028, 4742>, <0, 0, 0>),
+                        NewSpawnLoc(<25638, -6014, 4336>, < 0, 0, 0 >)
+                    ]
+                )
+            )
+            #if SERVER
+                generateHASWall("mp_rr_canyonlands")
+            #endif
         }
 
         default: // Yeah I know it's so sad that there are no other maps
@@ -85,11 +106,91 @@ void function Sh_CustomHideAndSeek_Init()
     RegisterSignal( "ClosePlayerListRUI" )
 }
 
+void function generateHASWall(string name)
+{
+    printt("WallGeneration")
+    switch(name)
+    {
+        case "mp_rr_desertlands":
+            generateWall(2, 14, <310, 9120, -4300>, "n", <0,0,0>, name)
+            generateWall(2, 11, <310, 9120-350, -4300>, "w", <0, 90, 0>, name)
+            generateWall(2, 14, <310 + 350*11, 9120-350, -4300>, "n", <0, 0, 180>, name)
+            generateWall(2, 11, <310 + 350, 9120+350*13, -4300>, "w", <0, -90, 0>, name)
+            break
+        case "mp_rr_canyonlands":
+            generateWall(3, 2, <28761, -8323, 2924>, "n", <0,0,180>, name)
+            generateWall(3, 2, <23600, -8250, 2924>, "w", <0,90,0>, name)
+            generateWall(3, 3, <23600, -3223, 2924>, "w", <0,-90,0>, name)
+            generateWall(3, 3, <23000, -8323, 2924>, "n", <0,0,0>, name)
+
+    }
+}
+
+void function generateWall(int width, int height, vector origin, string angle, vector angles, string name)
+{
+    switch(name)
+    {
+        case "mp_rr_desertlands":
+        {
+            switch(angle)
+            {
+                case "n":
+                    for(int i = 0; i <= height-1; i++)
+                    {
+                        for (int j = 0; j <= width-1; j++)
+                        {
+                            CreateHASModel(BUILDING_PLATFORM_LARGE, origin + <0, 350 * i, 1020*j>, <90,0,0> + angles)
+                        }
+                    }
+                    break
+                case "w":
+                    for(int i = 0; i <= height-1; i++)
+                    {
+                        for (int j = 0; j <= width-1; j++)
+                        {
+                            CreateHASModel(BUILDING_PLATFORM_LARGE, origin + <350 * i, 0, 1020*j>, <90,0,0> + angles)
+                        }
+                    }
+                    break
+            }
+            break
+        }
+        case "mp_rr_canyonlands":
+        {
+            switch(angle)
+            {
+                case "n":
+                    for(int i = 0; i <= height-1; i++)
+                    {
+                        for (int j = 0; j <= width-1; j++)
+                        {
+                            CreateHASModel(WALL_CANYON, origin + <1*i, 3000 * i, 1300*j>, <90,0,0> + angles)
+                        }
+                    }
+                    break
+                case "w":
+                    for(int i = 0; i <= height-1; i++)
+                    {
+                        for (int j = 0; j <= width-1; j++)
+                        {
+                            CreateHASModel(WALL_CANYON, origin + <3000 * i, 1*i, 1300*j>, <90,0,0> + angles)
+                        }
+                    }
+                    break
+            }
+            break
+        }
+    }
+    
+    
+}
+
 entity function CreateHASModel( asset a, vector pos, vector ang)
 {
-    entity prop = CreatePropDynamic( a, pos, ang)
-
-    //FLOPPYTOWN_ENTITIES.append( prop )
+    entity prop = CreatePropDynamic(a,pos,ang)
+    #if SERVER
+        prop = CreatePropDynamic(a,pos,ang, SOLID_VPHYSICS, 20000)
+    #endif
 
 return prop }
 
