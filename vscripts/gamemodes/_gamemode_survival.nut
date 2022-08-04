@@ -46,6 +46,8 @@ void function GamemodeSurvival_Init()
 		case "mp_rr_arena_composite":
 		{
 			CreateWallTrigger( <5, 2587, -520> , 30000 , true)
+			CreateWallTrigger( <0, 5600, -180> , 100 , false)
+			CreateWallTrigger( <0, 5600, -180> , 70 , true)
 			CreateWallTrigger( <5, 5379, 860>  )
 			break
 		}
