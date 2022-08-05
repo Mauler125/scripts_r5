@@ -34,32 +34,6 @@ void function GamemodeSurvival_Init()
 	Sh_ArenaDeathField_Init()
 	SurvivalShip_Init()
 
-	switch(GetMapName())
-	{
-		case "mp_rr_aqueduct_night":
-		case "mp_rr_aqueduct":
-		{
-			CreateWallTrigger( <425, -1590, -1689> , 30000 , true)
-			CreateWallTrigger( <774, -6394, 2067>  )
-			break
-		}
-		case "mp_rr_arena_composite":
-		{
-			CreateWallTrigger( <5, 2587, -520> , 30000 , true)
-			CreateWallTrigger( <0, 5600, -180> , 100 , false)
-			CreateWallTrigger( <0, 5600, -180> , 70 , true)
-			CreateWallTrigger( <5, 5379, 860>  )
-			break
-		}
-		case "mp_rr_ashs_redemption":
-		{
-			CreateWallTrigger( <-20857, 5702, -25746> )
-			break
-		}
-		default:
-			break
-	}
-
 	FlagInit( "SpawnInDropship", false )
 	FlagInit( "PlaneDrop_Respawn_SetUseCallback", false )
 
@@ -290,79 +264,6 @@ void function Sequence_Playing()
 	}
 
 	thread Sequence_WinnerDetermined()
-}
-
-entity function CreateWallTrigger( vector origin , float radius = 30000 , bool killzone = false , bool debugdraw = false)
-{
-	// Set up the trigger
-    entity trigger = CreateEntity( "trigger_cylinder" )
-	trigger.SetRadius( radius )
-	trigger.SetAboveHeight( 2000 )
-	trigger.SetBelowHeight( 50 )
-	trigger.SetOrigin( origin )
-	trigger.SetEnterCallback(  WallTriggerEnter )
-	trigger.SetLeaveCallback(  WallTriggerLeave )
-
-    if (killzone) // hacky way of adding killzone option
-	{
-		trigger.SetScriptName("WallTrigger_Killzone")
-		trigger.SetAboveHeight( 350 )
-	}
-
-	if (debugdraw) // draw trigger bounds if needed
-	{
-		DebugDrawCylinder( trigger.GetOrigin() , < -90, 0, 0 >, radius, trigger.GetAboveHeight(), 0, 165, 255, true, 9999.9 )
-		DebugDrawCylinder( trigger.GetOrigin() , < -90, 0, 0 >, radius, -trigger.GetBelowHeight(), 255, 90, 0, true, 9999.9 )
-	}
-
-	// deploy the trigger
-    DispatchSpawn( trigger )
-
-    return trigger
-}
-
-void function WallTriggerEnter( entity trigger , entity ent )
-{
-    if(IsValid(ent)) // ensure the entity is valid
-	{
-		if(ent.IsPlayer() && ent.GetPhysics() != MOVETYPE_NOCLIP) // noclip players are not affected by the trigger
-		{
-			ent.Zipline_Stop()
-
-			if(trigger.GetScriptName() != "WallTrigger_Killzone") // check if its a killzone
-			{
-				EntityOutOfBounds( trigger, ent, null, null )
-				ent.DisableWeapon()
-
-				StatusEffect_AddEndless( ent, eStatusEffect.hunt_mode_visuals, 100 )
-				StatusEffect_AddEndless( ent, eStatusEffect.minimap_jammed, 100 )
-				StatusEffect_AddEndless( ent, eStatusEffect.move_slow, 0.2 )
-
-				vector newdir
-				if(trigger.GetAngles() == <0,0,0>)
-				    newdir = -ent.GetAngles() / 2 + -<0,0,-100> * -1
-				else newdir = -ent.GetAngles() / 2 + -trigger.GetAngles() * -1
-				ent.SetVelocity(newdir * 15)
-
-			} else ent.TakeDamage(ent.GetMaxHealth() + 1, null, null, { damageSourceId=damagedef_suicide, scriptType=DF_BYPASS_SHIELD })
-		}
-	}
-}
-
-void function WallTriggerLeave( entity trigger , entity ent )
-{
-    if(IsValid(ent)) // ensure the entity is valid
-	{
-		if(ent.IsPlayer())
-		{
-			EntityBackInBounds( trigger, ent, null, null )
-			ent.EnableWeapon()
-
-			StatusEffect_StopAllOfType( ent, eStatusEffect.hunt_mode_visuals)
-			StatusEffect_StopAllOfType( ent, eStatusEffect.minimap_jammed)
-			StatusEffect_StopAllOfType( ent, eStatusEffect.move_slow)
-		}
-	}
 }
 
 void function Sequence_WinnerDetermined()
