@@ -34,7 +34,16 @@ void function _CustomHideAndSeek_Init()
     AddCallback_OnClientDisconnected(void function(entity player) {thread _OnPlayerDisconnected(player)})
     AddCallback_OnPlayerKilled(void function(entity victim, entity attacker, var damageInfo) {thread _OnPlayerDied(victim, attacker, damageInfo)})
 
+    AddClientCommandCallback("next_round", ClientCommand_NextRound)
+
     thread RunHAS()
+}
+
+bool function ClientCommand_NextRound(entity player, array<string> args)
+{
+    if( !IsServer() ) return false;
+    file.hasState = eHASState.WINNER_DECIDED
+    return true
 }
 
 void function RunHAS()
@@ -68,17 +77,21 @@ void function StartRound()
         if (IsValid( player ))
         {
             if(player != Seeker){
+                ScreenFadeToBlack(player, 1, 1)
                 HAS.HIDDENPlayers.push(player)
                 ChangePlayerCharacter(eHASLegends.HIDDEN, player)
                 wait 1
                 player.UnfreezeControlsOnServer()   
                 TpPlayerToSpawnPoint(player, 1)
+                ScreenFadeFromBlack(player, 1, 1)
             } else if (player == Seeker){
+                ScreenFadeToBlack(player, 1, 1)
                 HAS.SEEKERPlayers.push(player)
                 ChangePlayerCharacter(eHASLegends.SEEKER, player)
                 wait 1
                 player.FreezeControlsOnServer()
                 TpPlayerToSpawnPoint(player, 0)
+                ScreenFadeFromBlack(player, 1, 1)
             }
             ClearInvincible(player)
         }
@@ -92,14 +105,21 @@ void function StartRound()
                 Remote_CallFunction_NonReplay(player, "ServerCallback_HideAndSeek_DoAnnouncement", 5, eHASAnnounce.ROUND_START_HIDDEN, HAS.HIDDENPlayers.len(), HAS.SEEKERPlayers.len())
             } else if (player == Seeker){
                 Remote_CallFunction_NonReplay(player, "ServerCallback_HideAndSeek_DoAnnouncement", 5, eHASAnnounce.ROUND_START_SEEKER, HAS.HIDDENPlayers.len(), HAS.SEEKERPlayers.len())
+                wait 2
+                ScreenFadeToBlack(player, 1, 15)
             }
         }
     }
     thread disconnectEvent()
     wait 15
+
     if(file.hasState == eHASState.SEEKER_CANT_MOVE) {
         foreach(seekers in HAS.SEEKERPlayers){
-            if(IsValid(seekers)) seekers.UnfreezeControlsOnServer()
+            if(IsValid(seekers))
+            {
+                seekers.UnfreezeControlsOnServer()
+                ScreenFadeFromBlack(seekers, 1, 1)
+            }
         }
         
         foreach(player in GetPlayerArray()){
@@ -169,7 +189,10 @@ void function _OnPlayerConnected(entity player)
             player.UnfreezeControlsOnServer()
             HAS.SEEKERPlayers.push(player)
             Remote_CallFunction_NonReplay( player, "ServerCallback_HideAndSeek_DoAnnouncement", 5, eHASAnnounce.ROUND_START_SEEKER, HAS.HIDDENPlayers.len(), HAS.SEEKERPlayers.len() )
-            if(file.hasState == eHASState.SEEKER_CANT_MOVE) player.FreezeControlsOnServer()
+            if(file.hasState == eHASState.SEEKER_CANT_MOVE){
+                player.FreezeControlsOnServer()
+                ScreenFadeToBlack(player, 1, 15)
+            }
             foreach(otherplayer in GetPlayerArray())
             {
                 if (IsValid( otherplayer ))
@@ -268,8 +291,10 @@ void function _OnPlayerDied( entity victim, entity attacker, var damageInfo )
                     }
 
                     victim.p.storedWeapons = StoreWeapons(victim)
-
+                    ScreenFadeToBlack(victim, 1, 2)
                     _HandleRespawn( victim, 0, false)
+                    wait 1
+                    ScreenFadeFromBlack(victim, 1, 1)
                 }
             }
 
@@ -362,7 +387,7 @@ void function ChangePlayerCharacter(int name, entity player){
             ItemFlavor item = GetItemFlavorByHumanReadableRef("character_lifeline")
             printt("Trying to change to Lifeline")
             ItemFlavor skin = LoadoutSlot_GetItemFlavor(ToEHI(player), Loadout_CharacterSkin(item))
-            CharacterSelect_AssignCharacter(player, item)
+            CharacterSelect_AssignCharacter(player, item)            
 
             CharacterSkin_Apply(player, skin)
 
