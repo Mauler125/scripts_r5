@@ -303,7 +303,6 @@ void function CodeCallback_MapSpawn() // original script entry point
 
 var function CodeCallback_ClientCommand( entity player, array<string> args )
 {
-
 	if( !Dev_CommandLineHasParm( "-nodebugprints" ) )
 	{
 		printl( "############################" )
@@ -321,12 +320,13 @@ var function CodeCallback_ClientCommand( entity player, array<string> args )
 	//TODO: Track down Why VModEnable is being called from code?
 
 	//Assert( commandString in svGlobal.clientCommandCallbacks )
-	if(commandString in svGlobal.clientCommandCallbacksNew)
+	if (commandString in svGlobal.clientCommandCallbacksNew)
 	{
 		printt("CodeCallback_ClientCommand", commandString)
 		svGlobal.clientCommandCallbacksNew[ commandString ]( player, args )
 		return true
 	}
+
 	if ( commandString in svGlobal.clientCommandCallbacks  )
 	{
 		return svGlobal.clientCommandCallbacks[ commandString ]( player, args )
@@ -342,7 +342,7 @@ var function CodeCallback_ClientCommand( entity player, array<string> args )
 
 void function MapTriggers_Init()
 {
-	switch(GetMapName())
+	switch (GetMapName())
 	{
 		case "mp_rr_aqueduct_night":
 		case "mp_rr_aqueduct":
@@ -400,13 +400,13 @@ entity function CreateWallTrigger( vector origin , float radius = 30000 , bool k
 
 void function WallTriggerEnter( entity trigger , entity ent )
 {
-    if(IsValid(ent)) // ensure the entity is valid
+    if (IsValid(ent)) // ensure the entity is valid
 	{
-		if(ent.IsPlayer() && ent.GetPhysics() != MOVETYPE_NOCLIP) // noclip players are not affected by the trigger
+		if (ent.IsPlayer() && ent.GetPhysics() != MOVETYPE_NOCLIP) // noclip players are not affected by the trigger
 		{
 			ent.Zipline_Stop()
 
-			if(trigger.GetScriptName() != "WallTrigger_Killzone") // check if its a killzone
+			if (trigger.GetScriptName() != "WallTrigger_Killzone") // check if its a killzone
 			{
 				EntityOutOfBounds( trigger, ent, null, null )
 				ent.DisableWeapon()
@@ -416,21 +416,30 @@ void function WallTriggerEnter( entity trigger , entity ent )
 				StatusEffect_AddEndless( ent, eStatusEffect.move_slow, 0.2 )
 
 				vector newdir
-				if(trigger.GetAngles() == <0,0,0>)
-				    newdir = -ent.GetAngles() / 2 + -<0,0,-100> * -1
-				else newdir = -ent.GetAngles() / 2 + -trigger.GetAngles() * -1
-				ent.SetVelocity(newdir * 15)
+				if (trigger.GetAngles() == <0,0,0>)
+				{
+					newdir = -ent.GetAngles() / 2 + -<0,0,-100> * -1
+				}
+				else
+				{
+					newdir = -ent.GetAngles() / 2 + -trigger.GetAngles() * -1
+				}
 
-			} else ent.TakeDamage(ent.GetMaxHealth() + 1, null, null, { damageSourceId=damagedef_suicide, scriptType=DF_BYPASS_SHIELD })
+				ent.SetVelocity(newdir * 15)
+			} 
+			else 
+			{
+				ent.TakeDamage(ent.GetMaxHealth() + 1, null, null, { damageSourceId=damagedef_suicide, scriptType=DF_BYPASS_SHIELD })
+			}
 		}
 	}
 }
 
 void function WallTriggerLeave( entity trigger , entity ent )
 {
-    if(IsValid(ent)) // ensure the entity is valid
+    if (IsValid(ent)) // ensure the entity is valid
 	{
-		if(ent.IsPlayer())
+		if (ent.IsPlayer())
 		{
 			EntityBackInBounds( trigger, ent, null, null )
 			ent.EnableWeapon()
