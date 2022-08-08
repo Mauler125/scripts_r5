@@ -60,5 +60,6 @@ void function OpenErrorDialogThread( string errorMessage )
 	while ( GetActiveMenu() != GetMenu( "R5RMainMenu" ) )
 		WaitSignal( uiGlobal.signalDummy, "OpenErrorDialog", "ActiveMenuChanged" )
 
-	AdvanceMenu( file.menu )
+	if(!JoiningServer)
+		AdvanceMenu( file.menu )
 }
