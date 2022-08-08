@@ -883,6 +883,8 @@ void function ServerCallback_CTF_OpenCTFRespawnMenu(vector campos, int IMCscore,
     //Special Cases
     if(file.selectedLocation.name == "Tunnel")
         finalorg = file.selectedLocation.deathcam.origin
+    else if(file.selectedLocation.name == "Drop Off")
+        finalorg = file.selectedLocation.deathcam.origin
 
     deathcam.m.NonPhysicsMoveTo(finalorg, 0.60, 0, 0.30)
     deathcam.m.NonPhysicsRotateTo( file.selectedLocation.deathcam.angles, 0.60, 0, 0.30 )
