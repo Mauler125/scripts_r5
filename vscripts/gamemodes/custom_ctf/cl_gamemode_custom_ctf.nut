@@ -120,7 +120,7 @@ void function Cl_CustomCTF_Init()
     RegisterConCommandTriggeredCallback( "+use_alt", SendDropFlagToServer )
 
     //Pak is released when vm is destroyed
-    CTFRpak = RequestPakFile( $"ctf_mode" )
+    CTFRpak = RequestPakFile( "ctf_mode" )
 }
 
 void function SendChat(var button)
