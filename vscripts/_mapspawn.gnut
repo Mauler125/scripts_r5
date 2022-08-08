@@ -354,9 +354,9 @@ void function MapTriggers_Init()
 		case "mp_rr_arena_composite":
 		{
 			CreateWallTrigger( <5, 2587, -520> , 30000 , true)
-			CreateWallTrigger( <0, 5600, -190> , 85 , true)
-			CreateWallTrigger( <0, 5600, -240> , 120)
 			CreateWallTrigger( <5, 5379, 860>  )
+			//CreateWallTrigger( <0, 5600, -190> , 85 , true)
+			//CreateWallTrigger( <0, 5600, -240> , 120)
 			break
 		}
 		case "mp_rr_ashs_redemption":
