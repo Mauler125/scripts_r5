@@ -2,6 +2,7 @@ global function InitR5RMainMenu
 global function SetMainMenuBlackScreenVisible
 
 global bool AtMainMenu = false
+global bool JoiningServer = false
 
 struct
 {
