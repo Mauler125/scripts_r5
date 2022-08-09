@@ -1639,7 +1639,7 @@ void function CTFAudioThread(entity circle, entity player, float radius)
 	audio.SetAngles( <0, 0, 0> )
 	EmitSoundOnEntity( audio, soundToPlay )
 	
-	while(IsValid(circle)){
+	while(IsValid(circle) && IsValid( player )){
             if( !IsValid( player ) )
                 continue
 
