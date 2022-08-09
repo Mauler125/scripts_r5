@@ -336,6 +336,8 @@ void function SetSelectedServer(int id, string name, string map, string playlist
 
 void function StartServerConnection()
 {
+	JoiningServer = true
+
 	//Shutdown the lobby vm
 	ShutdownHostGame()
 
@@ -352,4 +354,5 @@ void function StartServerConnection()
 
 	//No longer at main menu
 	AtMainMenu = false
+	JoiningServer = false
 }
