@@ -349,6 +349,8 @@ void function StartServerConnection()
 		WaitFrame()
 	}
 
+	wait 0.5
+
 	//Connect to server
 	SetEncKeyAndConnect(m_vSelectedServer.svServerID)
 
