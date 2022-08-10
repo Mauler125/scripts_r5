@@ -255,6 +255,36 @@ void function Sh_CustomCTF_Init()
             )
             break
 
+        case "mp_rr_arena_composite":
+            Shared_RegisterLocation(
+                NewCTFLocationSettings(
+                    "Drop Off",
+                    [ // ringspots
+                        NewCTFLocPair(<4133, 660, 365>, <0, 0, 0>),
+                        NewCTFLocPair(<-4178, 617, 289>, <0, 0, 0>),
+                        NewCTFLocPair(<0, 6140, 76>, <0, 0, 0>)
+                    ],
+                    <3227, 1357, 204>, // imc flag spawn
+                    <-3227, 1357, 204>, // mil flag spawn
+                    [ // imc spawns
+                        NewCTFLocPair(<3287, 2126, 191>, <0, 134, 0>),
+                        NewCTFLocPair(<3828, 2408, 191>, <0, 170, 0>),
+                        NewCTFLocPair(<2173, 618, 226>, <0, 158, 0>),
+                        NewCTFLocPair(<2142, 1035, 231>, <0, 231, 0>)
+                    ],
+                    [ // mil spawns
+                        NewCTFLocPair(<-3259, 2192, 191>, <0, 47, 0>),
+                        NewCTFLocPair(<-3765, 2462, 191>, <0, 5, 0>),
+                        NewCTFLocPair(<-2178, 634, 225>, <0, 23, 0>),
+                        NewCTFLocPair(<-2179, 1020, 226>, <0, 0, 0>)
+                    ],
+                    NewCTFLocPair(<0, 6208, 3162>, <40,-90,0>), // deathcam angle and height
+                    NewCTFLocPair(<0, 512,184>, <0, 90, 0>), // Victory Pos
+                    -175 // Undermap Z
+                )
+            )
+            break
+
         case "mp_rr_ashs_redemption":
             Shared_RegisterLocation(
                 NewCTFLocationSettings(
