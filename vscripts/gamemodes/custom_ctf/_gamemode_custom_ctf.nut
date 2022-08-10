@@ -974,7 +974,10 @@ void function CaptureFlag(entity ent, int team, CTFPoint teamflagpoint)
 
 void function IMCPoint_Trigger( entity trigger, entity ent )
 {
-    if ( ent.IsPlayer() && IsValid( ent ) )
+    if(!IsValid(ent))
+        return
+
+    if ( ent.IsPlayer() )
     {
         if ( ent.GetTeam() != TEAM_IMC )
         {
@@ -999,7 +1002,10 @@ void function IMCPoint_Trigger( entity trigger, entity ent )
 
 void function MILITIA_Point_Trigger( entity trigger, entity ent )
 {
-    if( ent.IsPlayer() && IsValid( ent ) )
+    if(!IsValid(ent))
+        return
+        
+    if( ent.IsPlayer() )
     {
         if( ent.GetTeam() != TEAM_MILITIA )
         {
@@ -1137,7 +1143,10 @@ void function _OnPlayerDisconnected(entity player)
 
 void function MILITIA_PoleReturn_Trigger( entity trigger, entity ent )
 {
-    if ( ent.IsPlayer() && IsValid(ent) )
+    if(!IsValid(ent))
+        return
+
+    if ( ent.IsPlayer() )
     {
         // If is on team IMC pick back up
         if ( ent.GetTeam() == TEAM_IMC )
@@ -1191,7 +1200,10 @@ void function MILITIA_PoleReturn_Trigger( entity trigger, entity ent )
 
 void function IMC_PoleReturn_Trigger( entity trigger, entity ent)
 {
-    if ( ent.IsPlayer() && IsValid(ent) )
+    if(!IsValid(ent))
+        return
+
+    if ( ent.IsPlayer() )
     {
         // If is on team MILITIA pick back up
         if ( ent.GetTeam() == TEAM_MILITIA )
