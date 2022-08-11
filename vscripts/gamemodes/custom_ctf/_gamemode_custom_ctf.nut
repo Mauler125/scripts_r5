@@ -136,7 +136,13 @@ bool function ClientCommand_Say(entity player, array<string> args)
         sendMessage += " " + arg
     }
 
-    sendMessage = player.GetPlayerName() + ":" + sendMessage
+    string team;
+    if(player.GetTeam() == TEAM_IMC)
+        team = "IMC"
+    else
+        team = "MIL"
+
+    sendMessage = "[" + team + "] " + player.GetPlayerName() + ":" + sendMessage
 
     foreach( p in GetPlayerArray() )
     {
