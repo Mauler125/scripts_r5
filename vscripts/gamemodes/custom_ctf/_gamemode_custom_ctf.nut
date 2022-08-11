@@ -1151,7 +1151,9 @@ void function MILITIA_PoleReturn_Trigger( entity trigger, entity ent )
         // If is on team IMC pick back up
         if ( ent.GetTeam() == TEAM_IMC )
         {
-            MILITIAPoint.returntrigger.Destroy()
+            if(IsValid(MILITIAPoint.returntrigger))
+                MILITIAPoint.returntrigger.Destroy()
+
             MILITIAPoint.pole.SetParent(ent)
             MILITIAPoint.pole.SetOrigin(ent.GetOrigin())
             MILITIAPoint.pole.MakeInvisible()
@@ -1208,7 +1210,9 @@ void function IMC_PoleReturn_Trigger( entity trigger, entity ent)
         // If is on team MILITIA pick back up
         if ( ent.GetTeam() == TEAM_MILITIA )
         {
-            IMCPoint.returntrigger.Destroy()
+            if(IsValid(IMCPoint.returntrigger))
+                IMCPoint.returntrigger.Destroy()
+
             IMCPoint.pole.SetParent(ent)
             IMCPoint.pole.SetOrigin(ent.GetOrigin())
             IMCPoint.pole.MakeInvisible()
