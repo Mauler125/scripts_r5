@@ -311,6 +311,30 @@ void function StartServerRoundTimer()
     }
 }
 
+// purpose: Check IMC pole entity to make sure its not null or not valid and remakes it if it is.
+void function StartIMCFlagChecking()
+{
+    while(ServerTimer.roundover == false)
+    {
+        if(IMCPoint.pole == null || !IsValid(IMCPoint.pole))
+            ResetFlagOnDisconnect(0)
+
+        WaitFrame()
+    }
+}
+
+// purpose: Check MIL pole entity to make sure its not null or not valid and remakes it if it is.
+void function StartMILFlagChecking()
+{
+    while(ServerTimer.roundover == false)
+    {
+        if(MILITIAPoint.pole == null || !IsValid(MILITIAPoint.pole))
+            ResetFlagOnDisconnect(1)
+
+        WaitFrame()
+    }
+}
+
 // purpose: handle the start of a new round for players and props
 void function StartRound()
 {
@@ -328,6 +352,9 @@ void function StartRound()
 
     // spawn CTF flags based on location
     SpawnCTFPoints()
+
+    thread StartIMCFlagChecking()
+    thread StartMILFlagChecking()
 
     // create the ring based on location
     file.ringBoundary = CreateRingBoundary(file.selectedLocation)
@@ -361,6 +388,8 @@ void function StartRound()
 
         if( file.ctfState == eCTFState.WINNER_DECIDED )
         {
+            ServerTimer.roundover = true
+
             // for each player, if the player is holding the flag on round end. make them drop it so it dosnt cause a crash
             foreach(player in GetPlayerArray())
             {
@@ -448,7 +477,6 @@ void function StartRound()
 
                 // Set voting to be allowed
                 CTF.votingtime = true
-                ServerTimer.roundover = true
 
                 // for each player, open the vote menu and set it to the winning team screen
                 foreach( player in GetPlayerArray() )
@@ -1131,23 +1159,77 @@ void function _OnPlayerConnected(entity player)
 void function _OnPlayerDisconnected(entity player)
 {
     // Only if the flag is picked up
-    if ( IMCPoint.pickedup )
+    /*if ( IMCPoint.pickedup )
     {
-        // Only if the flag is held by said player
-        if ( IMCPoint.holdingplayer == player )
+        if( IMCPoint.holdingplayer == player )
         {
-            thread PlayerDiedWithFlag(player, TEAM_IMC, IMCPoint)
+            ResetFlagOnDisconnect(0)
         }
     }
 
     // Only if the flag is picked up
     if ( MILITIAPoint.pickedup )
     {
-        // Only if the flag is held by said player
-        if ( MILITIAPoint.holdingplayer == player )
+        if( MILITIAPoint.holdingplayer == player )
         {
-            thread PlayerDiedWithFlag(player, TEAM_MILITIA, MILITIAPoint)
+            ResetFlagOnDisconnect(1)
         }
+    }*/
+}
+
+void function ResetFlagOnDisconnect(int num)
+{
+    if(num == 0)
+    {
+        if( IsValid( IMCPoint.pole ) )
+            IMCPoint.pole.Destroy()
+
+        if( IsValid( IMCPoint.trailfx ) )
+            IMCPoint.trailfx.Destroy()
+
+        // Point 1
+        IMCPoint.pole = CreateEntity( "prop_dynamic" )
+        IMCPoint.pole.SetValueForModelKey( $"mdl/props/wattson_electric_fence/wattson_electric_fence.rmdl" )
+        IMCPoint.pole.SetOrigin(IMCPoint.spawn)
+        DispatchSpawn( IMCPoint.pole )
+
+        thread PlayAnim( IMCPoint.pole, "prop_fence_expand", IMCPoint.pole.GetOrigin(), IMCPoint.pole.GetAngles() )
+
+        CustomHighlight(IMCPoint.pole, 0, 0, 1)
+
+        IMCPoint.pickedup = false
+        IMCPoint.dropped = false
+        IMCPoint.flagatbase = true
+    }
+    else if(num == 1)
+    {
+        if( IsValid( MILITIAPoint.pole ) )
+            return
+
+        if( IsValid( MILITIAPoint.trailfx ) )
+            MILITIAPoint.trailfx.Destroy()
+
+        MILITIAPoint.spawn = OriginToGround( file.selectedLocation.milflagspawn )
+        MILITIAPoint.pole = CreateEntity( "prop_dynamic" )
+        MILITIAPoint.pole.SetValueForModelKey( $"mdl/props/wattson_electric_fence/wattson_electric_fence.rmdl" )
+        MILITIAPoint.pole.SetOrigin(MILITIAPoint.spawn)
+        DispatchSpawn( MILITIAPoint.pole )
+
+        thread PlayAnim( MILITIAPoint.pole, "prop_fence_expand", MILITIAPoint.pole.GetOrigin(), MILITIAPoint.pole.GetAngles() )
+
+        CustomHighlight(MILITIAPoint.pole, 0, 0, 1)
+
+        MILITIAPoint.pickedup = false
+        MILITIAPoint.dropped = false
+        MILITIAPoint.flagatbase = true
+    }
+
+    foreach( player in GetPlayerArray() )
+    {
+        if( !IsValid( player ) )
+            continue
+
+        Remote_CallFunction_Replay( player, "ServerCallback_CTF_AddPointIcon", IMCPoint.pole, MILITIAPoint.pole, player.GetTeam() )
     }
 }
 

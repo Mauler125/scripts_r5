@@ -322,6 +322,9 @@ void function ServerCallback_CTF_AddPointIcon(entity imcflag, entity milflag, in
 
 var function AddPointIconRUI(var rui, entity flag, string text, asset icon)
 {
+    if(!IsValid(flag))
+        return
+        
     bool pinToEdge = true
     asset ruiFile = $"ui/overhead_icon_generic.rpak"
 
