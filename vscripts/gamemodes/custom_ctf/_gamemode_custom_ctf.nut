@@ -1057,6 +1057,10 @@ void function GiveBackWeapons(entity player)
 
     wait 0.5
 
+    //Needed another check after the wait just incase they leave within that wait time
+    if( !IsValid( player ) )
+        return
+
     TakeAllWeapons(player)
 
     player.GiveWeapon(file.ctfclasses[player.p.CTFClassID].primary, WEAPON_INVENTORY_SLOT_PRIMARY_0, file.ctfclasses[player.p.CTFClassID].primaryattachments)
