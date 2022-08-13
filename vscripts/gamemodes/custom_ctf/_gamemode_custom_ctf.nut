@@ -1217,7 +1217,7 @@ void function ResetFlagOnDisconnect(int num)
 
         thread PlayAnim( MILITIAPoint.pole, "prop_fence_expand", MILITIAPoint.pole.GetOrigin(), MILITIAPoint.pole.GetAngles() )
 
-        CustomHighlight(MILITIAPoint.pole, 0, 0, 1)
+        CustomHighlight(MILITIAPoint.pole, 1, 0, 0)
 
         MILITIAPoint.pickedup = false
         MILITIAPoint.dropped = false
