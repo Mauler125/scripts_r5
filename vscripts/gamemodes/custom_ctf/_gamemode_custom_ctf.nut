@@ -341,6 +341,9 @@ void function StartRound()
     // set
     SetGameState(eGameState.Playing)
 
+    // create the ring based on location
+    file.ringBoundary = CreateRingBoundary(file.selectedLocation)
+
     CTF.roundstarttime = Time()
 
     ServerTimer.roundover = false
@@ -355,9 +358,6 @@ void function StartRound()
 
     thread StartIMCFlagChecking()
     thread StartMILFlagChecking()
-
-    // create the ring based on location
-    file.ringBoundary = CreateRingBoundary(file.selectedLocation)
 
     foreach(player in GetPlayerArray())
     {
