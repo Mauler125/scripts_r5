@@ -19,5 +19,5 @@ void function InitR5RHomePanel( var panel )
 void function SetUIVersion()
 {
 	//Set SDK version text
-	Hud_SetText( Hud_GetChild( file.panel, "VersionNumber" ), GetSDKVersion() )
+	Hud_SetText( Hud_GetChild( file.panel, "VersionNumber" ), "#BETA_BUILD_WATERMARK" )
 }
