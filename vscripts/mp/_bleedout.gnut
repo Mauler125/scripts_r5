@@ -112,7 +112,7 @@ void function Bleedout_StartPlayerBleedout( entity player, entity attacker )
 	player.SetPlayerNetInt( "bleedoutType", EquipmentSlot_GetEquipmentTier( player, "incapshield" ) )
 	player.SetHealth( 100 )
 
-	EmitSoundOnEntity( player, "flesh_bulletimpact_downedshot_3p_vs_3p" )
+	EmitSoundOnEntityExceptToPlayer( player, attacker, "flesh_bulletimpact_downedshot_3p_vs_3p" )
 
 	PlayBattleChatterLineToSpeakerAndTeam( player, "bc_imDown" )
 
