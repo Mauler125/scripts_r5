@@ -35,8 +35,7 @@ global table<string, asset> maptoasset = {
 	[ "mp_rr_canyonlands_mu1_night" ] = $"rui/menu/maps/mp_rr_canyonlands_mu1_night",
 	[ "mp_rr_desertlands_64k_x_64k" ] = $"rui/menu/maps/mp_rr_desertlands_64k_x_64k",
 	[ "mp_rr_desertlands_64k_x_64k_nx" ] = $"rui/menu/maps/mp_rr_desertlands_64k_x_64k_nx",
-	[ "mp_rr_arena_composite" ] = $"rui/menu/maps/mp_rr_arena_composite",
-	[ "mp_rr_arena_composite_night" ] = $"rui/menu/maps/mp_rr_arena_composite"
+	[ "mp_rr_arena_composite" ] = $"rui/menu/maps/mp_rr_arena_composite"
 }
 
 //Map to readable name
@@ -50,8 +49,7 @@ global table<string, string> maptoname = {
 	[ "mp_rr_canyonlands_mu1_night" ] = "Kings Canyon S2 After Dark",
 	[ "mp_rr_desertlands_64k_x_64k" ] = "Worlds Edge",
 	[ "mp_rr_desertlands_64k_x_64k_nx" ] = "Worlds Edge After Dark",
-	[ "mp_rr_arena_composite" ] = "Drop Off",
-	[ "mp_rr_arena_composite_night" ] = "Drop Off After Dark"
+	[ "mp_rr_arena_composite" ] = "Drop Off"
 }
 
 //Playlist to readable name
