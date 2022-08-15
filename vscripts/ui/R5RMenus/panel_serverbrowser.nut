@@ -82,6 +82,9 @@ void function InitR5RServerBrowserPanel( var panel )
 	Hud_SetText( Hud_GetChild( file.panel, "PlayersCount"), "Players: 0")
 	Hud_SetText( Hud_GetChild( file.panel, "ServersCount"), "Servers: 0")
 	Hud_SetText (Hud_GetChild( file.panel, "Pages" ), "  Page: 0/0  ")
+
+	Hud_SetText(Hud_GetChild( file.panel, "ServerCurrentPlaylist" ), "" )
+	Hud_SetText(Hud_GetChild( file.panel, "ServerCurrentMap" ), "" )
 }
 
 void function RefreshServersClick(var button)
@@ -328,7 +331,11 @@ void function SetSelectedServer(int id, string name, string map, string playlist
 	m_vSelectedServer.svDescription = desc
 
 	//Set selected server ui
+	Hud_SetText(Hud_GetChild( file.panel, "ServerCurrentPlaylist" ), "Current Playlist" )
+	Hud_SetText(Hud_GetChild( file.panel, "ServerCurrentMap" ), "Current Map" )
+
 	Hud_SetText(Hud_GetChild( file.panel, "ServerNameInfoEdit" ), name )
+	Hud_SetText(Hud_GetChild( file.panel, "ServerCurrentMapEdit" ), GetUIMapName(map) )
 	Hud_SetText(Hud_GetChild( file.panel, "PlaylistInfoEdit" ), GetUIPlaylistName(playlist) )
 	Hud_SetText(Hud_GetChild( file.panel, "ServerDesc" ), desc )
 	RuiSetImage( Hud_GetRui( Hud_GetChild( file.panel, "ServerMapImg" ) ), "loadscreenImage", GetUIMapAsset(map) )

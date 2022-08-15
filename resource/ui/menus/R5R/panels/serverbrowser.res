@@ -210,6 +210,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"allcaps"				"1"
 		"auto_wide_tocontents"	"1"
 		"zpos" 					"7"
+		"visible"				"0"
 		"fontHeight"			"25"
 		"xpos"					"30"
 		"ypos"					"0"
@@ -431,7 +432,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"ControlName"			"ImagePanel"
 		"xpos" 					"0"
 		"ypos" 					"0"
-		"tall"					"485"
+		"tall"					"470"
 		"wide" 					"450"
 		"fillColor"				"30 30 30 200"
         "drawColor"				"30 30 30 200"
@@ -443,57 +444,84 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"pin_to_sibling_corner"	"BOTTOM_LEFT"
 	}
 
-	"ServerNameBG"
-	{
-		"ControlName"			"ImagePanel"
-		"xpos" 					"0"
-		"ypos" 					"-15"
-		"tall"					"30"
-		"wide" 					"450"
-		"fillColor"				"30 30 30 200"
-        "drawColor"				"30 30 30 200"
-		"wrap"					"1"
-		"visible"				"1"
-		"zpos"					"6"
-		"pin_to_sibling"		"ServerMapImg"
-		"pin_corner_to_sibling"	"TOP_LEFT"
-		"pin_to_sibling_corner"	"TOP_LEFT"
-	}
-
 	"ServerNameInfoEdit"
 	{
 		"ControlName"			"Label"
 		"labelText"				""
 		"font"					"Default_27_Outline"
 		"allcaps"				"1"
-		"wide"					"430"
+		"wide"					"420"
 		"zpos" 					"7"
-		"fontHeight"			"20"
-		"xpos"					"-5"
-		"ypos"					"0"
+		"fontHeight"			"25"
+		"xpos"					"0"
+		"ypos"					"-5"
+		"textAlignment"			"center"
 		fgcolor_override		"240 240 240 255"
 		"bgcolor_override"		"0 0 0 255"
 
-		"pin_to_sibling"		"ServerNameBG"
-		"pin_corner_to_sibling"	"LEFT"
-		"pin_to_sibling_corner"	"LEFT"
+		"pin_to_sibling"		"ServerInfoBG"
+		"pin_corner_to_sibling"	"TOP"
+		"pin_to_sibling_corner"	"TOP"
 	}
 
-	"PlaylistNameBG"
+	"ServerCurrentMap"
 	{
-		"ControlName"			"ImagePanel"
-		"xpos" 					"0"
-		"ypos" 					"0"
-		"tall"					"30"
-		"wide" 					"225"
-		"fillColor"				"30 30 30 200"
-        "drawColor"				"30 30 30 200"
-		"wrap"					"1"
-		"visible"				"1"
-		"zpos"					"6"
-		"pin_to_sibling"		"ServerMapImg"
-		"pin_corner_to_sibling"	"BOTTOM_RIGHT"
-		"pin_to_sibling_corner"	"BOTTOM_RIGHT"
+		"ControlName"			"Label"
+		"labelText"				""
+		"font"					"Default_27_Outline"
+		"allcaps"				"1"
+		"wide"					"100"
+		"zpos" 					"7"
+		"fontHeight"			"20"
+		"xpos"					"-15"
+		"ypos"					"-35"
+		"textAlignment"			"left"
+		fgcolor_override		"240 240 240 255"
+		"bgcolor_override"		"0 0 0 255"
+
+		"pin_to_sibling"		"ServerInfoBG"
+		"pin_corner_to_sibling"	"TOP_LEFT"
+		"pin_to_sibling_corner"	"TOP_LEFT"
+	}
+
+	"ServerCurrentMapEdit"
+	{
+		"ControlName"			"Label"
+		"textAlignment"			"east"
+		"labelText"				""
+		"font"					"Default_27_Outline"
+		"allcaps"				"1"
+		"wide"					"270"
+		"zpos" 					"7"
+		"fontHeight"			"20"
+		"xpos"					"-15"
+		"ypos"					"-35"
+		fgcolor_override		"240 240 240 255"
+		"bgcolor_override"		"0 0 0 255"
+
+		"pin_to_sibling"		"ServerInfoBG"
+		"pin_corner_to_sibling"	"TOP_RIGHT"
+		"pin_to_sibling_corner"	"TOP_RIGHT"
+	}
+
+	"ServerCurrentPlaylist"
+	{
+		"ControlName"			"Label"
+		"labelText"				""
+		"font"					"Default_27_Outline"
+		"allcaps"				"1"
+		"wide"					"130"
+		"zpos" 					"7"
+		"fontHeight"			"20"
+		"xpos"					"-15"
+		"ypos"					"-65"
+		"textAlignment"			"left"
+		fgcolor_override		"240 240 240 255"
+		"bgcolor_override"		"0 0 0 255"
+
+		"pin_to_sibling"		"ServerInfoBG"
+		"pin_corner_to_sibling"	"TOP_LEFT"
+		"pin_to_sibling_corner"	"TOP_LEFT"
 	}
 
 	"PlaylistInfoEdit"
@@ -502,18 +530,18 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"labelText"				""
 		"font"					"Default_27_Outline"
 		"allcaps"				"1"
-		"wide"					"225"
+		"wide"					"270"
 		"zpos" 					"7"
-		"fontHeight"			"25"
-		"xpos"					"5"
-		"ypos"					"0"
-		"textAlignment"			"center"
+		"fontHeight"			"20"
+		"xpos"					"-15"
+		"ypos"					"-65"
+		"textAlignment"			"east"
 		"fgcolor_override"		"240 240 240 255"
 		"bgcolor_override"		"0 0 0 255"
 
-		"pin_to_sibling"		"PlaylistNameBG"
-		"pin_corner_to_sibling"	"RIGHT"
-		"pin_to_sibling_corner"	"RIGHT"
+		"pin_to_sibling"		"ServerInfoBG"
+		"pin_corner_to_sibling"	"TOP_RIGHT"
+		"pin_to_sibling_corner"	"TOP_RIGHT"
 	}
 
 	"ServerDesc"
@@ -526,7 +554,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"zpos" 					"7"
 		"fontHeight"			"25"
 		"xpos"					"-15"
-		"ypos"					"-15"
+		"ypos"					"-105"
 		"textAlignment"			"north-west"
 		"fgcolor_override"		"255 255 255 255"
 
@@ -535,25 +563,57 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"pin_to_sibling_corner"	"TOP_LEFT"
 	}
 
-	"ConnectButton"
+	"ConnectButtonBG"
 	{
-		"ControlName" 			"RuiButton"
-		"rui"					"ui/generic_item_button.rpak"
-		"wide" 					"450"
-		"tall" 					"70"
+		"ControlName"			"ImagePanel"
 		"xpos" 					"0"
-		"ypos" 					"5"
-		"zpos" 					"6"
-		"visible" 				"1"
-
-		ruiArgs
-		{
-			buttonText "Connect"
-		}
+		"ypos" 					"0"
+		"tall"					"90"
+		"wide" 					"450"
+		"fillColor"				"195 29 38 200"
+        "drawColor"				"195 29 38 200"
+		"visible"				"1"
+		"zpos"					"1"
 
 		"pin_to_sibling"		"ServerInfoBG"
 		"pin_corner_to_sibling"	"TOP"
 		"pin_to_sibling_corner"	"BOTTOM"
+	}
+
+	"ConnectButtonText"
+	{
+		"ControlName"			"Label"
+		"labelText"				"Connect"
+		"font"					"Default_27_Outline"
+		"allcaps"				"1"
+		"wide"					"130"
+		"zpos" 					"3"
+		"fontHeight"			"40"
+		"xpos"					"0"
+		"ypos"					"0"
+		"textAlignment"			"center"
+		fgcolor_override		"240 240 240 255"
+		"bgcolor_override"		"0 0 0 255"
+
+		"pin_to_sibling"		"ConnectButtonBG"
+		"pin_corner_to_sibling"	"CENTER"
+		"pin_to_sibling_corner"	"CENTER"
+	}
+
+	"ConnectButton"
+	{
+		ControlName RuiButton
+		InheritProperties RuiSmallButton
+		wide 450
+		tall 90
+		xpos 0
+		ypos 0
+		zpos 6
+
+
+		pin_to_sibling ConnectButtonBG
+		pin_corner_to_sibling CENTER
+		pin_to_sibling_corner CENTER
 	}
 
 	"ServerButton0"
