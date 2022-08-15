@@ -39,16 +39,16 @@ void function LaunchButton_OnActivate( var button )
 
 void function LaunchLobby()
 {
-	file.isworking = true
+	//file.isworking = true
 
 	//Hide status panel
-	RuiSetBool( Hud_GetRui( Hud_GetChild( file.panel, "StatusDetails" ) ), "isVisible", false )
+	//RuiSetBool( Hud_GetRui( Hud_GetChild( file.panel, "StatusDetails" ) ), "isVisible", false )
 
 	//Show spinner
-	RuiSetBool( Hud_GetRui( Hud_GetChild( file.panel, "Status" ) ), "showSpinner", true )
+	//RuiSetBool( Hud_GetRui( Hud_GetChild( file.panel, "Status" ) ), "showSpinner", true )
 
 	//Create lobby server
-	CreateServer("Lobby VM", "Lobby VM", "mp_lobby", "menufall", eServerVisibility.OFFLINE)
+	CreateServer("Lobby VM", "", "mp_lobby", "menufall", eServerVisibility.OFFLINE)
 }
 
 void function SetupRUI()

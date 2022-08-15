@@ -226,14 +226,16 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"ControlName"			"Label"
 		"labelText"				"Server Name"
 		"xpos"					"-15"
-		"ypos"					"-15"
-		"auto_wide_tocontents"	"1"
+		"ypos"					"0"
+		"zpos"					"6"
+		"textalignment"			"center"
+		"wide"					"115"
 		"zpos" 					"4"
 		"fontHeight"			"30"
 
 		"pin_to_sibling"		"ServerBrowserBG"
-		"pin_corner_to_sibling"	"TOP_LEFT"
-		"pin_to_sibling_corner"	"TOP_LEFT"
+		"pin_corner_to_sibling"	"LEFT"
+		"pin_to_sibling_corner"	"LEFT"
 	}
 
 	"PlayerCountLbl"
