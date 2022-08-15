@@ -81,7 +81,7 @@ void function InitR5RServerBrowserPanel( var panel )
 	// Set servercount, playercount, pages to none
 	Hud_SetText( Hud_GetChild( file.panel, "PlayersCount"), "Players: 0")
 	Hud_SetText( Hud_GetChild( file.panel, "ServersCount"), "Servers: 0")
-	Hud_SetText (Hud_GetChild( file.panel, "Pages" ), "Page: 0/0")
+	Hud_SetText (Hud_GetChild( file.panel, "Pages" ), "  Page: 0/0  ")
 }
 
 void function RefreshServersClick(var button)
@@ -130,7 +130,7 @@ void function RefreshServerListing()
 		// Set servercount, playercount, pages to none
 		Hud_SetText( Hud_GetChild( file.panel, "PlayersCount"), "Players: 0")
 		Hud_SetText( Hud_GetChild( file.panel, "ServersCount"), "Servers: 0")
-		Hud_SetText (Hud_GetChild( file.panel, "Pages" ), "Page: 0/0")
+		Hud_SetText (Hud_GetChild( file.panel, "Pages" ), "  Page: 0/0  ")
 
 		// Return as it dosnt need togo past this if no servers are found
 		return
@@ -155,7 +155,7 @@ void function RefreshServerListing()
 	// Set UI Labels
 	Hud_SetText( Hud_GetChild( file.panel, "PlayersCount"), "Players: " + m_vAllPlayers)
 	Hud_SetText( Hud_GetChild( file.panel, "ServersCount"), "Servers: " + svServerCount)
-	Hud_SetText (Hud_GetChild( file.panel, "Pages" ), "Page: 1/" + (m_vPages.pAmount + 1))
+	Hud_SetText (Hud_GetChild( file.panel, "Pages" ), "  Page: 1/" + (m_vPages.pAmount + 1) + "  ")
 }
 
 void function NextPage(var button)
@@ -185,7 +185,7 @@ void function NextPage(var button)
 		m_vPages.pEnd = m_vServerList.len()
 
 	// Set current page ui
-	Hud_SetText(Hud_GetChild( file.panel, "Pages" ), "Page: " + (m_vPages.pCurrent + 1) + "/" + (m_vPages.pAmount + 1))
+	Hud_SetText(Hud_GetChild( file.panel, "Pages" ), "  Page:" + (m_vPages.pCurrent + 1) + "/" + (m_vPages.pAmount + 1) + "  ")
 
 	// "id" is diffrent from "i" and is used for setting UI elements
 	// "i" is used for server id
@@ -227,7 +227,7 @@ void function PrevPage(var button)
 		m_vPages.pEnd = m_vServerList.len()
 
 	// Set current page ui
-	Hud_SetText(Hud_GetChild( file.panel, "Pages" ), "Page: " + (m_vPages.pCurrent + 1) + "/" + (m_vPages.pAmount + 1))
+	Hud_SetText(Hud_GetChild( file.panel, "Pages" ), "  Page:" + (m_vPages.pCurrent + 1) + "/" + (m_vPages.pAmount + 1) + "  ")
 
 	// "id" is diffrent from "i" and is used for setting UI elements
 	// "i" is used for server id

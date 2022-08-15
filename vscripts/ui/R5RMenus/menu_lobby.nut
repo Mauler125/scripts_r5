@@ -22,6 +22,8 @@ global enum eServerVisibility
 	PUBLIC
 }
 
+global int CurrentPresentationType = ePresentationType.PLAY
+
 //Map to asset
 global table<string, asset> maptoasset = {
 	[ "mp_rr_canyonlands_staging" ] = $"rui/menu/maps/mp_rr_canyonlands_staging",
@@ -118,6 +120,23 @@ void function OpenSelectedPanel(var button)
 	//Get the script id, and show the panel acording to that id
 	int scriptid = Hud_GetScriptID( button ).tointeger()
 	ShowSelectedPanel( file.panels[scriptid], button )
+
+	switch(scriptid)
+	{
+		case 0:
+			UI_SetPresentationType( ePresentationType.PLAY )
+			CurrentPresentationType = ePresentationType.PLAY
+			break;
+		case 1:
+			UI_SetPresentationType( ePresentationType.CHARACTER_SELECT )
+			CurrentPresentationType = ePresentationType.CHARACTER_SELECT
+			HideAllCreateServerPanels()
+			break;
+		case 2:
+			UI_SetPresentationType( ePresentationType.COLLECTION_EVENT )
+			CurrentPresentationType = ePresentationType.COLLECTION_EVENT
+			break;
+	}
 
 	//If create server button is pressed, hide all panels for that panel
 	if(scriptid == 1)
