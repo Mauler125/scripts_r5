@@ -155,13 +155,6 @@ void function QuitPressed(var button)
 
 void function OnR5RLobby_Open()
 {
-	array<ItemFlavor> selected = GetAllItemFlavorsOfType( eItemType.gladiator_card_badge )
-
-	foreach(ItemFlavor f in selected)
-	{
-		printt( ItemFlavor_GetHumanReadableRef( f ) )
-	}
-
 	//needed on both show and open
 	SetupLobby()
 
