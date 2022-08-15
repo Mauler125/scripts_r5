@@ -169,7 +169,7 @@ void function OnR5RLobby_Open()
 void function SetupLobby()
 {
 	//Setup Lobby Stuff
-	UI_SetPresentationType( ePresentationType.PLAY )
+	UI_SetPresentationType( CurrentPresentationType )
 	thread TryRunDialogFlowThread()
 
 	//Set playername
