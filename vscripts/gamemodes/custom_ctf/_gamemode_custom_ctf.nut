@@ -1363,7 +1363,7 @@ void function StartFlagReturn(entity player, int team, CTFPoint teamflagpoint)
     float endtime = Time() + 5
     Remote_CallFunction_Replay(player, "ServerCallback_CTF_RecaptureFlag", team, starttime, endtime, true)
 
-    while( Distance( player.GetOrigin(), teamflagpoint.pole.GetOrigin() ) < 150 && IsAlive( player ) && returnsuccess == false || playerpickedupflag || playerleftarea )
+    while( Distance( player.GetOrigin(), teamflagpoint.pole.GetOrigin() ) < 150 && IsAlive( player ) && returnsuccess == false || playerpickedupflag || playerleftarea || IsValid(teamflagpoint.pole))
     {
         if( Time() >= endtime )
         {
@@ -1388,7 +1388,9 @@ void function StartFlagReturn(entity player, int team, CTFPoint teamflagpoint)
         if(IsValid(player))
             Remote_CallFunction_Replay(player, "ServerCallback_CTF_RecaptureFlag", 0, 0, 0, false)
 
-        teamflagpoint.returntrigger.Destroy()
+        if(IsValid(teamflagpoint.returntrigger))
+            teamflagpoint.returntrigger.Destroy()
+
         return
     }
 
@@ -1406,15 +1408,23 @@ void function StartFlagReturn(entity player, int team, CTFPoint teamflagpoint)
 
     if( returnsuccess )
     {
-        teamflagpoint.pole.ClearParent()
+        if(IsValid(teamflagpoint.pole))
+            teamflagpoint.pole.ClearParent()
+
         teamflagpoint.dropped = false
         teamflagpoint.holdingplayer = null
         teamflagpoint.pickedup = false
         teamflagpoint.flagatbase = true
-        teamflagpoint.pole.SetOrigin(teamflagpoint.spawn)
-        teamflagpoint.returntrigger.Destroy()
 
-        thread PlayAnim( teamflagpoint.pole, "prop_fence_expand", teamflagpoint.pole.GetOrigin(), teamflagpoint.pole.GetAngles() )
+        if(IsValid(teamflagpoint.pole))
+            teamflagpoint.pole.SetOrigin(teamflagpoint.spawn)
+
+        if(IsValid(teamflagpoint.returntrigger))
+            teamflagpoint.returntrigger.Destroy()
+
+        if(IsValid(teamflagpoint.pole))
+            thread PlayAnim( teamflagpoint.pole, "prop_fence_expand", teamflagpoint.pole.GetOrigin(), teamflagpoint.pole.GetAngles() )
+
         try { teamflagpoint.returntrigger.SearchForNewTouchingEntity() } catch(stop) {}
 
         array<entity> enemyplayers = GetPlayerArrayOfTeam( enemyteam )
