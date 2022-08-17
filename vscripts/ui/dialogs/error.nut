@@ -51,6 +51,9 @@ void function ErrorDialog_OnNavigateBack()
 
 void function OpenErrorDialogThread( string errorMessage )
 {
+	if(JoiningServer)
+		return
+
 	bool isIdleDisconnect = errorMessage.find( Localize( "#DISCONNECT_IDLE" ) ) == 0
 
 	file.contextImage = isIdleDisconnect ? $"ui/menu/common/dialog_notice" : $"ui/menu/common/dialog_error"
@@ -60,6 +63,5 @@ void function OpenErrorDialogThread( string errorMessage )
 	while ( GetActiveMenu() != GetMenu( "R5RMainMenu" ) )
 		WaitSignal( uiGlobal.signalDummy, "OpenErrorDialog", "ActiveMenuChanged" )
 
-	if(!JoiningServer)
-		AdvanceMenu( file.menu )
+	AdvanceMenu( file.menu )
 }
