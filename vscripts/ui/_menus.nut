@@ -752,6 +752,9 @@ void function UICodeCallback_OnSpLogDisplayed()
 
 void function UICodeCallback_ErrorDialog( string errorDetails )
 {
+	if(JoiningServer)
+		return
+		
 	printt( "UICodeCallback_ErrorDialog: " + errorDetails )
 	thread OpenErrorDialogThread( errorDetails )
 }
