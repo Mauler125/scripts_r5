@@ -173,6 +173,9 @@ global SvGlobals svGlobal
 
 void function CodeCallback_MapSpawn() // original script entry point
 {
+	if( GetCurrentPlaylistVarInt( "cmdlineMapLoad", 0 ) == 1 && GetCurrentPlaylistVarInt( "reconnect_disabled" , 0 ) == 1 )
+		SetConVarInt( "sv_cheats", 1 )
+
 	ShWeapons_LevelInit()
 	//seterrorhandler(void function() {})
 	ScriptCompilerTest()
