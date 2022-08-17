@@ -1204,7 +1204,7 @@ void function ResetFlagOnDisconnect(int num)
     else if(num == 1)
     {
         if( IsValid( MILITIAPoint.pole ) )
-            return
+            MILITIAPoint.pole.Destroy()
 
         if( IsValid( MILITIAPoint.trailfx ) )
             MILITIAPoint.trailfx.Destroy()
@@ -1363,21 +1363,26 @@ void function StartFlagReturn(entity player, int team, CTFPoint teamflagpoint)
     float endtime = Time() + 5
     Remote_CallFunction_Replay(player, "ServerCallback_CTF_RecaptureFlag", team, starttime, endtime, true)
 
-    while( Distance( player.GetOrigin(), teamflagpoint.pole.GetOrigin() ) < 150 && IsAlive( player ) && returnsuccess == false || playerpickedupflag || playerleftarea || IsValid(teamflagpoint.pole))
+    try
     {
-        if( Time() >= endtime )
+        while( Distance( player.GetOrigin(), teamflagpoint.pole.GetOrigin() ) < 150 && IsAlive( player ) && returnsuccess == false || playerpickedupflag || playerleftarea )
         {
-            returnsuccess = true
-            teamflagpoint.isbeingreturned = false
+            if( Time() >= endtime )
+            {
+                returnsuccess = true
+                teamflagpoint.isbeingreturned = false
+            }
+
+            if( !teamflagpoint.dropped )
+                playerpickedupflag = true
+
+            if( Distance( player.GetOrigin(), teamflagpoint.pole.GetOrigin() ) > 150 )
+                playerleftarea = true
+
+            wait 0.01
         }
-
-        if( !teamflagpoint.dropped )
-            playerpickedupflag = true
-
-        if( Distance( player.GetOrigin(), teamflagpoint.pole.GetOrigin() ) > 150 )
-            playerleftarea = true
-
-        wait 0.01
+    } catch(e42) {
+        playerleftarea = true
     }
 
     if( playerpickedupflag )
