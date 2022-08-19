@@ -108,6 +108,8 @@ void function StartNewGame( var button )
 
 void function StartServer()
 {
+	JoiningServer = true
+
 	//Shutdown the lobby vm
 	ShutdownHostGame()
 
@@ -124,6 +126,7 @@ void function StartServer()
 
 	//No longer at main menu
 	AtMainMenu = false
+	JoiningServer = false
 }
 
 void function SetSelectedServerMap( string map )

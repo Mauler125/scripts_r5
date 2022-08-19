@@ -100,8 +100,8 @@ void function ConnectToServer(var button)
 		return
 
 	//Connect to server
-	thread StartServerConnection()
 	printf("Debug (Server ID: " + m_vSelectedServer.svServerID + " | Server Name: " + m_vSelectedServer.svServerName + " | Map: " + m_vSelectedServer.svMapName + " | Playlist: " + m_vSelectedServer.svPlaylist + ")")
+	SetEncKeyAndConnect(m_vSelectedServer.svServerID)
 }
 
 void function SelectServer(var button)
@@ -339,29 +339,4 @@ void function SetSelectedServer(int id, string name, string map, string playlist
 	Hud_SetText(Hud_GetChild( file.panel, "PlaylistInfoEdit" ), GetUIPlaylistName(playlist) )
 	Hud_SetText(Hud_GetChild( file.panel, "ServerDesc" ), desc )
 	RuiSetImage( Hud_GetRui( Hud_GetChild( file.panel, "ServerMapImg" ) ), "loadscreenImage", GetUIMapAsset(map) )
-}
-
-void function StartServerConnection()
-{
-	JoiningServer = true
-
-	//Shutdown the lobby vm
-	ShutdownHostGame()
-
-	//Set the main menus blackscreen visibility to true
-	SetMainMenuBlackScreenVisible(true)
-
-	//wait for lobby vm to be actually shut down and back at the main menu
-	while(!AtMainMenu) {
-		WaitFrame()
-	}
-
-	wait 0.5
-
-	//Connect to server
-	SetEncKeyAndConnect(m_vSelectedServer.svServerID)
-
-	//No longer at main menu
-	AtMainMenu = false
-	JoiningServer = false
 }
