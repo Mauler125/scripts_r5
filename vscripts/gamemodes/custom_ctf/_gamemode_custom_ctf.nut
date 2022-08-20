@@ -1715,7 +1715,7 @@ entity function CreateRingBoundary(LocationSettingsCTF location)
     circle.Minimap_SetZOrder( 2 )
     circle.Minimap_SetClampToEdge( true )
     circle.Minimap_SetCustomState( eMinimapObject_prop_script.OBJECTIVE_AREA )
-	SetTargetName( circle, "deathField" )
+	SetTargetName( circle, "hotZone" )
 	DispatchSpawn(circle)
     
 
@@ -1724,7 +1724,7 @@ entity function CreateRingBoundary(LocationSettingsCTF location)
         circle.Minimap_AlwaysShow( 0, player )
     }
 	
-	SetDeathFieldParams( CTF.ringCenter, CTF.ringRadius, CTF.ringRadius, 90000, 99999 ) // This function from the API allows client to read ringRadius from server so we can use visual effects in shared function. Colombia
+	SetDeathFieldParams( CTF.ringCenter, CTF.ringRadius, CTF.ringRadius, Time(), Time() + 999999 ) // This function from the API allows client to read ringRadius from server so we can use visual effects in shared function. Colombia
 
     if(IsValid(CTF.ringfx))
         CTF.ringfx.Destroy()
@@ -1733,7 +1733,7 @@ entity function CreateRingBoundary(LocationSettingsCTF location)
 	CTF.ringfx = StartParticleEffectOnEntity_ReturnEntity(circle, GetParticleSystemIndex( $"P_survival_radius_CP_1x100" ), FX_PATTACH_ABSORIGIN_FOLLOW, -1 )
 	CTF.ringfx.SetParent(circle)
 
-    StatsHook_SetSafeZone( CTF.ringCenter, CTF.ringRadius )
+    //StatsHook_SetSafeZone( CTF.ringCenter, CTF.ringRadius )
 	
 	//Audio thread for ring
 	foreach(sPlayer in GetPlayerArray())
