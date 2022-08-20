@@ -1724,7 +1724,7 @@ entity function CreateRingBoundary(LocationSettingsCTF location)
         circle.Minimap_AlwaysShow( 0, player )
     }
 	
-	SetDeathFieldParams( CTF.ringCenter, CTF.ringRadius, CTF.ringRadius, Time(), Time() + 999999 ) // This function from the API allows client to read ringRadius from server so we can use visual effects in shared function. Colombia
+	SetDeathFieldParams( CTF.ringCenter, CTF.ringRadius, CTF.ringRadius, Time(), Time() + 2137483647 ) // This function from the API allows client to read ringRadius from server so we can use visual effects in shared function. Colombia
 
     if(IsValid(CTF.ringfx))
         CTF.ringfx.Destroy()
