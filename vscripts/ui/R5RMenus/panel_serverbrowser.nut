@@ -100,7 +100,7 @@ void function ConnectToServer(var button)
 		return
 
 	//Connect to server
-	printf("Debug (Server ID: " + m_vSelectedServer.svServerID + " | Server Name: " + m_vSelectedServer.svServerName + " | Map: " + m_vSelectedServer.svMapName + " | Playlist: " + m_vSelectedServer.svPlaylist + ")")
+	printf("Connecting to server: (Server ID: " + m_vSelectedServer.svServerID + " | Server Name: " + m_vSelectedServer.svServerName + " | Map: " + m_vSelectedServer.svMapName + " | Playlist: " + m_vSelectedServer.svPlaylist + ")")
 	SetEncKeyAndConnect(m_vSelectedServer.svServerID)
 }
 
