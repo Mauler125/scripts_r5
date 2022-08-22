@@ -261,6 +261,9 @@ void function UpdatePlayerHealthAndSheild(entity attacker)
 	//Update health and sheild while they are watching the replay
     while(file.IsWatchingReplay)
     {
+		if(!IsValid(attacker))
+			continue
+			
 		RunUIScript("ReplayHud_UpdatePlayerHealthAndSheild", GetHealthFrac( attacker ), GetShieldHealthFrac( attacker ), armorTier)
 		WaitFrame()
     }
