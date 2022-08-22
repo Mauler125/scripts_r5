@@ -59,11 +59,11 @@ string function GetRefFromDamageSourceId( int damageSourceId )
 }
 
 void function ServerCallback_KillReplayHud_Activate() {	
-	KillReplayHud_Activate()
+	Custom_KillReplayHud_Activate() //KillReplayHud_Activate()
 }
 
 void function ServerCallback_KillReplayHud_Deactivate() {
-	KillReplayHud_Deactivate()
+	Custom_KillReplayHud_Deactivate() //KillReplayHud_Deactivate()
 }
 
 void function KillReplayHud_Activate()
@@ -71,37 +71,18 @@ void function KillReplayHud_Activate()
 	if ( IsReplayRoundWinning() )
 		return
 
-	file.IsWatchingReplay = true
-
-	entity observerTarget = GetLocalClientPlayer().GetObserverTarget()
-
-	if(!IsValid(observerTarget))
-		observerTarget = GetLocalClientPlayer()
-
-	//Causes a crash if player is observing themselfs
-	if(observerTarget != GetLocalClientPlayer())
-		thread UpdatePlayerHealthAndSheild(observerTarget)
-
-	ItemFlavor character = LoadoutSlot_WaitForItemFlavor( ToEHI( observerTarget ), Loadout_CharacterClass() )
-	asset image = CharacterClass_GetGalleryPortrait( character )
-	int armorTier = EquipmentSlot_GetEquipmentTier( observerTarget, "armor" )
-	string attackerName = observerTarget.GetPlayerName()
-
-	//Open Kill Replay Hud
-	RunUIScript("OpenKillReplayHud", image, attackerName, armorTier)
-
 	//printt( "KillReplayHud_Activate, replay not roundwinning" )
 
-	/*var rui = RuiCreate( $"ui/kill_replay_overlay.rpak", clGlobal.topoFullScreen, RUI_DRAW_HUD, 900 )
+	var rui = RuiCreate( $"ui/kill_replay_overlay.rpak", clGlobal.topoFullScreen, RUI_DRAW_HUD, 900 )
 	//var rui = CreateCockpitRui( $"ui/kill_replay_overlay.rpak", 0 )
 	file.killReplayOverlayRui = rui
 
 	RuiSetString( rui, "killReplayTitleText", "Kill Replay" )
 
-	AttackerDisplayNameStruct nameOfLastKiller = clGlobal.nameOfLastKiller*/
+	AttackerDisplayNameStruct nameOfLastKiller = clGlobal.nameOfLastKiller
 
-	//if ( nameOfLastKiller.attackerName != "" /*|| nameOfLastKiller.attackerPetName != ""*/ )
-	/*{
+	if ( nameOfLastKiller.attackerName != "" /*|| nameOfLastKiller.attackerPetName != ""*/ )
+	{
 		entity player = GetLocalClientPlayer()
 
 		string attackerName = nameOfLastKiller.attackerName
@@ -136,40 +117,24 @@ void function KillReplayHud_Activate()
 
 		RuiSetBool( file.killReplayOverlayRui, "showKillerInfo", false )
 		RuiSetFloat( file.killReplayOverlayRui, "killerHealthFrac", nameOfLastKiller.healthFrac )
-	}*/
+	}
 }
 
 
 void function KillReplayHud_Deactivate()
 {
-	file.IsWatchingReplay = false
-
 	if ( IsReplayRoundWinning() )
 		return
 
 	//printt( "FIX THIS PLEASE WHYKillReplayHud_Deactivate, replay not roundwinning" )
 
-	//RuiDestroy( file.killReplayOverlayRui )
+	RuiDestroy( file.killReplayOverlayRui )
 
 	entity player = GetLocalClientPlayer()
 
 	//player.cv.vignette.Hide()
 
-	RunUIScript("CloseKillReplayHud")
-
 	player.Signal( "DeactivateKillReplayHud" )
-}
-
-void function UpdatePlayerHealthAndSheild(entity attacker)
-{
-	int armorTier = EquipmentSlot_GetEquipmentTier( attacker, "armor" )
-
-    while(file.IsWatchingReplay)
-    {
-		RunUIScript("ReplayHud_UpdatePlayerHealthAndSheild", GetHealthFrac( attacker ), GetShieldHealthFrac( attacker ), armorTier)
-
-		WaitFrame()
-    }
 }
 
 void function RoundWinningKillReplayClientHud_Activate()
@@ -241,4 +206,62 @@ void function RoundWinningKillReplayClientHud_Deactivate() //Not doing screen fa
 
 		StopLocal1PDeathSound()
 	}
+}
+
+void function Custom_KillReplayHud_Activate()
+{
+	if ( IsReplayRoundWinning() )
+		return
+
+	//Set is watching replay
+	file.IsWatchingReplay = true
+
+	//Get the attackers entity
+	entity observerTarget = GetLocalClientPlayer().GetObserverTarget()
+
+	//Make sure the entity is valid
+	if(!IsValid(observerTarget))
+		observerTarget = GetLocalClientPlayer()
+
+	//Causes a crash if player is observing themselfs
+	if(observerTarget != GetLocalClientPlayer())
+		thread UpdatePlayerHealthAndSheild(observerTarget)
+
+	//Gets attackers legend image
+	ItemFlavor character = LoadoutSlot_WaitForItemFlavor( ToEHI( observerTarget ), Loadout_CharacterClass() )
+	asset image = CharacterClass_GetGalleryPortrait( character )
+	//Get armor tier
+	int armorTier = EquipmentSlot_GetEquipmentTier( observerTarget, "armor" )
+	//Get attacker name
+	string attackerName = observerTarget.GetPlayerName()
+
+	//Open Kill Replay Hud
+	RunUIScript("OpenKillReplayHud", image, attackerName, armorTier)
+}
+
+void function Custom_KillReplayHud_Deactivate()
+{
+	//Set is not watching replay
+	file.IsWatchingReplay = false
+
+	if ( IsReplayRoundWinning() )
+		return
+
+	//Close the replay menu
+	RunUIScript("CloseKillReplayHud")
+
+	GetLocalClientPlayer().Signal( "DeactivateKillReplayHud" )
+}
+
+void function UpdatePlayerHealthAndSheild(entity attacker)
+{
+	//Gets armor Tier
+	int armorTier = EquipmentSlot_GetEquipmentTier( attacker, "armor" )
+
+	//Update health and sheild while they are watching the replay
+    while(file.IsWatchingReplay)
+    {
+		RunUIScript("ReplayHud_UpdatePlayerHealthAndSheild", GetHealthFrac( attacker ), GetShieldHealthFrac( attacker ), armorTier)
+		WaitFrame()
+    }
 }

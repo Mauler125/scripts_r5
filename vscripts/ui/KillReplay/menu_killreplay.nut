@@ -43,10 +43,10 @@ void function InitKillReplayHud( var newMenuArg )
     file.basehealthwidth = Hud_GetWidth( Hud_GetChild( file.menu, "PlayerHealth" ) )
     file.basesheildwidth = Hud_GetWidth( Hud_GetChild( file.menu, "PlayerSheild1" ) )
 
-	//AddMenuEventHandler( menu, eUIEvent.MENU_NAVIGATE_BACK, OnR5RSB_NavigateBack )
+	AddMenuEventHandler( menu, eUIEvent.MENU_NAVIGATE_BACK, On_NavigateBack )
 }
 
-void function OnR5RSB_NavigateBack()
+void function On_NavigateBack()
 {
-	//
+	// Needs to be here so people cant close the menu
 }
