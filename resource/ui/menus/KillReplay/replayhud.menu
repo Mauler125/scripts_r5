@@ -1,0 +1,159 @@
+"scripts/resource/ui/menus/KillReplay/replayhud.menu"
+{
+	"menu"
+	{
+		"ControlName"						"Frame"
+		"xpos"								"0"
+		"ypos"								"0"
+		"zpos"								"3"
+		"wide"								"f0"
+		"tall"								"f0"
+		"autoResize"						"0"
+		"pinCorner"							"0"
+		"visible"							"1"
+		"enabled"							"1"
+		"tabPosition"						"0"
+		"PaintBackgroundType"				"0"
+		"infocus_bgcolor_override"			"0 0 0 0"
+		"outoffocus_bgcolor_override"		"0 0 0 0"
+		"modal"								"1"
+
+		"DarkenBackground"
+		{
+			"ControlName"			"Label"
+			"xpos"					"0"
+			"ypos"					"0"
+			"wide"					"f0"
+			"tall"					"f0"
+			"labelText"				""
+			"bgcolor_override"		"0 0 0 0"
+			"visible"				"1"
+			"paintbackground"		"1"
+		}
+
+		"TopBar"
+		{
+			"ControlName"			"Label"
+			"xpos"					"0"
+			"ypos"					"0"
+			"wide"					"%100"
+			"tall"					"100"
+			"labelText"				""
+			"bgcolor_override"		"0 0 0 150"
+			"visible"				"1"
+			"paintbackground"		"1"
+
+			"pin_to_sibling"			"DarkenBackground"
+			"pin_corner_to_sibling"		"TOP"
+			"pin_to_sibling_corner"		"TOP"
+		}
+
+		"TopBarLine"
+		{
+			"ControlName"			"Label"
+			"xpos"					"0"
+			"ypos"					"0"
+			"wide"					"%100"
+			"tall"					"2"
+			"labelText"				""
+			"bgcolor_override"		"255 255 255 100"
+			"visible"				"1"
+			"paintbackground"		"1"
+
+			"pin_to_sibling"			"TopBar"
+			"pin_corner_to_sibling"		"BOTTOM"
+			"pin_to_sibling_corner"		"BOTTOM"
+		}
+
+		"KillReplayText"
+		{
+			"ControlName"			"Label"
+			"labelText"				"Kill Replay"
+			"font"					"DefaultBold_41"
+			"allcaps"				"1"
+			"auto_wide_tocontents"	"1"
+			"tall"					"60"
+			"zpos" 					"10"
+			"fontHeight"			"50"
+			"xpos"					"0"
+			"ypos"					"0"
+			"fgcolor_override"		"255 255 255 255"
+
+			"pin_to_sibling"		"TopBar"
+			"pin_corner_to_sibling"	"CENTER"
+			"pin_to_sibling_corner"	"CENTER"
+		}
+
+		"BottomBar"
+		{
+			"ControlName"			"Label"
+			"xpos"					"0"
+			"ypos"					"0"
+			"wide"					"%100"
+			"tall"					"150"
+			"labelText"				""
+			"bgcolor_override"		"0 0 0 150"
+			"visible"				"1"
+			"paintbackground"		"1"
+
+			"pin_to_sibling"			"DarkenBackground"
+			"pin_corner_to_sibling"		"BOTTOM"
+			"pin_to_sibling_corner"		"BOTTOM"
+		}
+
+		"BottomBarLine"
+		{
+			"ControlName"			"Label"
+			"xpos"					"0"
+			"ypos"					"0"
+			"wide"					"%100"
+			"tall"					"2"
+			"labelText"				""
+			"bgcolor_override"		"255 255 255 100"
+			"visible"				"1"
+			"paintbackground"		"1"
+
+			"pin_to_sibling"			"BottomBar"
+			"pin_corner_to_sibling"		"TOP"
+			"pin_to_sibling_corner"		"TOP"
+		}
+
+		"KillReplayKilledBy"
+		{
+			"ControlName"			"Label"
+			"labelText"				"Killed By:"
+			"font"					"DefaultBold_41"
+			"allcaps"				"1"
+			"auto_wide_tocontents"	"1"
+			"tall"					"60"
+			"zpos" 					"10"
+			"fontHeight"			"30"
+			"xpos"					"-30"
+			"ypos"					"-30"
+			"fgcolor_override"		"255 255 255 255"
+
+			"pin_to_sibling"		"BottomBar"
+			"pin_corner_to_sibling"	"LEFT"
+			"pin_to_sibling_corner"	"LEFT"
+		}
+
+		"KillReplayPlayerName"
+		{
+			"ControlName"			"Label"
+			"labelText"				"Player Name Here"
+			"font"					"DefaultBold_41"
+			"allcaps"				"1"
+			"auto_wide_tocontents"	"1"
+			"tall"					"60"
+			"zpos" 					"10"
+			"fontHeight"			"30"
+			"xpos"					"5"
+			"ypos"					"0"
+			"fgcolor_override"		"255 100 100 255"
+
+			"pin_to_sibling"		"KillReplayKilledBy"
+			"pin_corner_to_sibling"	"LEFT"
+			"pin_to_sibling_corner"	"RIGHT"
+		}
+	}
+}

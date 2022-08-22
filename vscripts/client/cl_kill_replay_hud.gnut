@@ -70,18 +70,29 @@ void function KillReplayHud_Activate()
 	if ( IsReplayRoundWinning() )
 		return
 
+	entity player = GetLocalClientPlayer()
+	
+	entity observerTarget = player.GetObserverTarget()
+	string attackerName = observerTarget.GetPlayerName()
+
+	if(GetLocalClientPlayer().GetPlayerName() == attackerName )
+		attackerName = "Suicide"
+
+	//Open Kill Replay Hud
+	RunUIScript("OpenKillReplayHud", attackerName)
+
 	//printt( "KillReplayHud_Activate, replay not roundwinning" )
 
-	var rui = RuiCreate( $"ui/kill_replay_overlay.rpak", clGlobal.topoFullScreen, RUI_DRAW_HUD, 900 )
+	/*var rui = RuiCreate( $"ui/kill_replay_overlay.rpak", clGlobal.topoFullScreen, RUI_DRAW_HUD, 900 )
 	//var rui = CreateCockpitRui( $"ui/kill_replay_overlay.rpak", 0 )
 	file.killReplayOverlayRui = rui
 
 	RuiSetString( rui, "killReplayTitleText", "Kill Replay" )
 
-	AttackerDisplayNameStruct nameOfLastKiller = clGlobal.nameOfLastKiller
+	AttackerDisplayNameStruct nameOfLastKiller = clGlobal.nameOfLastKiller*/
 
-	if ( nameOfLastKiller.attackerName != "" /*|| nameOfLastKiller.attackerPetName != ""*/ )
-	{
+	//if ( nameOfLastKiller.attackerName != "" /*|| nameOfLastKiller.attackerPetName != ""*/ )
+	/*{
 		entity player = GetLocalClientPlayer()
 
 		string attackerName = nameOfLastKiller.attackerName
@@ -116,7 +127,7 @@ void function KillReplayHud_Activate()
 
 		RuiSetBool( file.killReplayOverlayRui, "showKillerInfo", false )
 		RuiSetFloat( file.killReplayOverlayRui, "killerHealthFrac", nameOfLastKiller.healthFrac )
-	}
+	}*/
 }
 
 
@@ -127,11 +138,13 @@ void function KillReplayHud_Deactivate()
 
 	//printt( "FIX THIS PLEASE WHYKillReplayHud_Deactivate, replay not roundwinning" )
 
-	RuiDestroy( file.killReplayOverlayRui )
+	//RuiDestroy( file.killReplayOverlayRui )
 
 	entity player = GetLocalClientPlayer()
 
 	//player.cv.vignette.Hide()
+
+	RunUIScript("CloseKillReplayHud")
 
 	player.Signal( "DeactivateKillReplayHud" )
 }
