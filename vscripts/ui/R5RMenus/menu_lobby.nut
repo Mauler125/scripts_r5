@@ -163,7 +163,7 @@ void function OnR5RLobby_Open()
 	RefreshUIMaps()
 
 	//Set back to default for next time
-	AtMainMenu = false
+	g_isAtMainMenu = false
 }
 
 void function SetupLobby()
