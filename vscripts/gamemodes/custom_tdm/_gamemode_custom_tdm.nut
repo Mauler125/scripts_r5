@@ -28,7 +28,6 @@ void function _CustomTDM_Init()
     AddCallback_OnPlayerKilled(void function(entity victim, entity attacker, var damageInfo) {thread _OnPlayerDied(victim, attacker, damageInfo)})
 
     AddClientCommandCallback("next_round", ClientCommand_NextRound)
-    AddClientCommandCallback("openui", ClientCommand_OpenUI)
 
     thread RunTDM()
 
@@ -52,12 +51,6 @@ bool function ClientCommand_NextRound(entity player, array<string> args)
 {
     if( !IsServer() ) return false;
     file.tdmState = eTDMState.WINNER_DECIDED
-    return true
-}
-
-bool function ClientCommand_OpenUI(entity player, array<string> args)
-{
-    Remote_CallFunction_NonReplay( player, "ServerCallback_KillReplayHud_Activate")
     return true
 }
 
