@@ -10,6 +10,7 @@ global function ServerCallback_KillReplayHud_Deactivate
 struct
 {
 	var killReplayOverlayRui
+	bool IsWatchingReplay = false
 } file
 
 void function ClKillReplayHud_Init()
@@ -70,16 +71,24 @@ void function KillReplayHud_Activate()
 	if ( IsReplayRoundWinning() )
 		return
 
-	entity player = GetLocalClientPlayer()
-	
-	entity observerTarget = player.GetObserverTarget()
+	file.IsWatchingReplay = true
+
+	entity observerTarget = GetLocalClientPlayer().GetObserverTarget()
+
+	if(!IsValid(observerTarget))
+		observerTarget = GetLocalClientPlayer()
+
+	//Causes a crash if player is observing themselfs
+	if(observerTarget != GetLocalClientPlayer())
+		thread UpdatePlayerHealthAndSheild(observerTarget)
+
+	ItemFlavor character = LoadoutSlot_WaitForItemFlavor( ToEHI( observerTarget ), Loadout_CharacterClass() )
+	asset image = CharacterClass_GetGalleryPortrait( character )
+	int armorTier = EquipmentSlot_GetEquipmentTier( observerTarget, "armor" )
 	string attackerName = observerTarget.GetPlayerName()
 
-	if(GetLocalClientPlayer().GetPlayerName() == attackerName )
-		attackerName = "Suicide"
-
 	//Open Kill Replay Hud
-	RunUIScript("OpenKillReplayHud", attackerName)
+	RunUIScript("OpenKillReplayHud", image, attackerName, armorTier)
 
 	//printt( "KillReplayHud_Activate, replay not roundwinning" )
 
@@ -133,6 +142,8 @@ void function KillReplayHud_Activate()
 
 void function KillReplayHud_Deactivate()
 {
+	file.IsWatchingReplay = false
+
 	if ( IsReplayRoundWinning() )
 		return
 
@@ -147,6 +158,18 @@ void function KillReplayHud_Deactivate()
 	RunUIScript("CloseKillReplayHud")
 
 	player.Signal( "DeactivateKillReplayHud" )
+}
+
+void function UpdatePlayerHealthAndSheild(entity attacker)
+{
+	int armorTier = EquipmentSlot_GetEquipmentTier( attacker, "armor" )
+
+    while(file.IsWatchingReplay)
+    {
+		RunUIScript("ReplayHud_UpdatePlayerHealthAndSheild", GetHealthFrac( attacker ), GetShieldHealthFrac( attacker ), armorTier)
+
+		WaitFrame()
+    }
 }
 
 void function RoundWinningKillReplayClientHud_Activate()

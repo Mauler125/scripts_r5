@@ -31,38 +31,91 @@
 			"paintbackground"		"1"
 		}
 
-		"TopBar"
+		"TopBar1"
 		{
 			"ControlName"			"Label"
-			"xpos"					"0"
-			"ypos"					"0"
-			"wide"					"%100"
-			"tall"					"100"
+			"xpos"					"-96"
+			"ypos"					"-100"
+			"wide"					"25"
+			"tall"					"10"
 			"labelText"				""
-			"bgcolor_override"		"0 0 0 150"
+			"bgcolor_override"		"200 200 200 220"
 			"visible"				"1"
 			"paintbackground"		"1"
 
 			"pin_to_sibling"			"DarkenBackground"
-			"pin_corner_to_sibling"		"TOP"
-			"pin_to_sibling_corner"		"TOP"
+			"pin_corner_to_sibling"		"TOP_LEFT"
+			"pin_to_sibling_corner"		"TOP_LEFT"
 		}
 
-		"TopBarLine"
+		"TopBar2"
 		{
 			"ControlName"			"Label"
-			"xpos"					"0"
+			"xpos"					"5"
 			"ypos"					"0"
-			"wide"					"%100"
-			"tall"					"2"
+			"wide"					"60"
+			"tall"					"10"
 			"labelText"				""
-			"bgcolor_override"		"255 255 255 100"
+			"bgcolor_override"		"200 200 200 220"
 			"visible"				"1"
 			"paintbackground"		"1"
 
-			"pin_to_sibling"			"TopBar"
-			"pin_corner_to_sibling"		"BOTTOM"
-			"pin_to_sibling_corner"		"BOTTOM"
+			"pin_to_sibling"			"TopBar1"
+			"pin_corner_to_sibling"		"TOP_LEFT"
+			"pin_to_sibling_corner"		"TOP_RIGHT"
+		}
+
+		"TopBar3"
+		{
+			"ControlName"			"Label"
+			"xpos"					"5"
+			"ypos"					"0"
+			"wide"					"100"
+			"tall"					"10"
+			"labelText"				""
+			"bgcolor_override"		"200 200 200 220"
+			"visible"				"1"
+			"paintbackground"		"1"
+
+			"pin_to_sibling"			"TopBar2"
+			"pin_corner_to_sibling"		"TOP_LEFT"
+			"pin_to_sibling_corner"		"TOP_RIGHT"
+		}
+
+		"TopBar4"
+		{
+			"ControlName"			"Label"
+			"xpos"					"5"
+			"ypos"					"0"
+			"wide"					"1528"
+			"tall"					"10"
+			"labelText"				""
+			"bgcolor_override"		"200 200 200 220"
+			"visible"				"1"
+			"paintbackground"		"1"
+
+			"pin_to_sibling"			"TopBar3"
+			"pin_corner_to_sibling"		"TOP_LEFT"
+			"pin_to_sibling_corner"		"TOP_RIGHT"
+		}
+
+		"KillReplayDot"
+		{
+			"ControlName"			"Label"
+			"labelText"				"•"
+			"font"					"DefaultBold_41"
+			"allcaps"				"1"
+			"auto_wide_tocontents"	"1"
+			"tall"					"60"
+			"zpos" 					"10"
+			"fontHeight"			"60"
+			"xpos"					"10"
+			"ypos"					"-3"
+			"fgcolor_override"		"255 100 100 255"
+
+			"pin_to_sibling"		"TopBar1"
+			"pin_corner_to_sibling"	"BOTTOM_LEFT"
+			"pin_to_sibling_corner"	"TOP_LEFT"
 		}
 
 		"KillReplayText"
@@ -75,22 +128,22 @@
 			"tall"					"60"
 			"zpos" 					"10"
 			"fontHeight"			"50"
-			"xpos"					"0"
+			"xpos"					"-25"
 			"ypos"					"0"
-			"fgcolor_override"		"255 255 255 255"
+			"fgcolor_override"		"255 100 100 255"
 
-			"pin_to_sibling"		"TopBar"
-			"pin_corner_to_sibling"	"CENTER"
-			"pin_to_sibling_corner"	"CENTER"
+			"pin_to_sibling"		"TopBar1"
+			"pin_corner_to_sibling"	"BOTTOM_LEFT"
+			"pin_to_sibling_corner"	"TOP_LEFT"
 		}
 
-		"BottomBar"
+		"PlayerCard"
 		{
 			"ControlName"			"Label"
 			"xpos"					"0"
-			"ypos"					"0"
-			"wide"					"%100"
-			"tall"					"150"
+			"ypos"					"-50"
+			"wide"					"500"
+			"tall"					"100"
 			"labelText"				""
 			"bgcolor_override"		"0 0 0 150"
 			"visible"				"1"
@@ -99,23 +152,6 @@
 			"pin_to_sibling"			"DarkenBackground"
 			"pin_corner_to_sibling"		"BOTTOM"
 			"pin_to_sibling_corner"		"BOTTOM"
-		}
-
-		"BottomBarLine"
-		{
-			"ControlName"			"Label"
-			"xpos"					"0"
-			"ypos"					"0"
-			"wide"					"%100"
-			"tall"					"2"
-			"labelText"				""
-			"bgcolor_override"		"255 255 255 100"
-			"visible"				"1"
-			"paintbackground"		"1"
-
-			"pin_to_sibling"			"BottomBar"
-			"pin_corner_to_sibling"		"TOP"
-			"pin_to_sibling_corner"		"TOP"
 		}
 
 		"KillReplayKilledBy"
@@ -128,13 +164,136 @@
 			"tall"					"60"
 			"zpos" 					"10"
 			"fontHeight"			"30"
-			"xpos"					"-30"
-			"ypos"					"-30"
+			"xpos"					"0"
+			"ypos"					"-10"
 			"fgcolor_override"		"255 255 255 255"
 
-			"pin_to_sibling"		"BottomBar"
-			"pin_corner_to_sibling"	"LEFT"
-			"pin_to_sibling_corner"	"LEFT"
+			"pin_to_sibling"		"PlayerCard"
+			"pin_corner_to_sibling"	"BOTTOM"
+			"pin_to_sibling_corner"	"TOP"
+		}
+
+		"PlayerImage"
+		{
+			"ControlName"				"RuiPanel"
+			"rui"						"ui/basic_image.rpak"
+			"wide"						"150"
+			"tall"						"100"
+			"xpos"						"0"
+			"ypos"						"0"
+			"visible"					"1"
+			"scaleImage"				"1"
+			"pin_to_sibling"			"PlayerCard"
+			"pin_corner_to_sibling"		"BOTTOM_LEFT"
+			"pin_to_sibling_corner"		"BOTTOM_LEFT"
+		}
+
+		"PlayerSheild0"
+		{
+			"ControlName"			"Label"
+			"xpos"					"-160"
+			"ypos"					"10"
+			"wide"					"0"
+			"tall"					"12"
+			"labelText"				""
+			"bgcolor_override"		"255 255 255 255"
+			"fgcolor_override"		"0 255 255 255"
+			"visible"				"0"
+			"paintbackground"		"1"
+
+			"pin_to_sibling"			"PlayerCard"
+			"pin_corner_to_sibling"		"LEFT"
+			"pin_to_sibling_corner"		"LEFT"
+		}
+
+		"PlayerSheild1"
+		{
+			"ControlName"			"Label"
+			"xpos"					"-160"
+			"ypos"					"10"
+			"wide"					"315"
+			"tall"					"12"
+			"labelText"				""
+			"bgcolor_override"		"255 255 255 150"
+			"fgcolor_override"		"0 255 255 255"
+			"visible"				"0"
+			"paintbackground"		"1"
+
+			"pin_to_sibling"			"PlayerCard"
+			"pin_corner_to_sibling"		"LEFT"
+			"pin_to_sibling_corner"		"LEFT"
+		}
+
+		"PlayerSheild2"
+		{
+			"ControlName"			"Label"
+			"xpos"					"-160"
+			"ypos"					"10"
+			"wide"					"315"
+			"tall"					"12"
+			"labelText"				""
+			"bgcolor_override"		"7 153 245 255"
+			"fgcolor_override"		"0 0 0 255"
+			"visible"				"0"
+			"paintbackground"		"1"
+
+			"pin_to_sibling"			"PlayerCard"
+			"pin_corner_to_sibling"		"LEFT"
+			"pin_to_sibling_corner"		"LEFT"
+		}
+
+		"PlayerSheild3"
+		{
+			"ControlName"			"Label"
+			"xpos"					"-160"
+			"ypos"					"10"
+			"wide"					"315"
+			"tall"					"12"
+			"labelText"				""
+			"bgcolor_override"		"158 43 255 255"
+			"fgcolor_override"		"0 0 0 255"
+			"visible"				"0"
+			"paintbackground"		"1"
+
+			"pin_to_sibling"			"PlayerCard"
+			"pin_corner_to_sibling"		"LEFT"
+			"pin_to_sibling_corner"		"LEFT"
+		}
+
+		"PlayerSheild4"
+		{
+			"ControlName"			"Label"
+			"xpos"					"-160"
+			"ypos"					"10"
+			"wide"					"315"
+			"tall"					"12"
+			"labelText"				""
+			"bgcolor_override"		"239 212 78 255"
+			"fgcolor_override"		"0 0 0 255"
+			"visible"				"0"
+			"paintbackground"		"1"
+
+			"pin_to_sibling"			"PlayerCard"
+			"pin_corner_to_sibling"		"LEFT"
+			"pin_to_sibling_corner"		"LEFT"
+		}
+
+		"PlayerHealth"
+		{
+			"ControlName"			"Label"
+			"xpos"					"0"
+			"ypos"					"5"
+			"wide"					"315"
+			"tall"					"12"
+			"labelText"				""
+			"bgcolor_override"		"255 255 255 200"
+			"fgcolor_override"		"0 0 0 255"
+			"visible"				"1"
+			"paintbackground"		"1"
+
+			"pin_to_sibling"			"PlayerSheild0"
+			"pin_corner_to_sibling"		"TOP_LEFT"
+			"pin_to_sibling_corner"		"BOTTOM_LEFT"
 		}
 
 		"KillReplayPlayerName"
@@ -144,16 +303,16 @@
 			"font"					"DefaultBold_41"
 			"allcaps"				"1"
 			"auto_wide_tocontents"	"1"
-			"tall"					"60"
+			"tall"					"25"
 			"zpos" 					"10"
-			"fontHeight"			"30"
-			"xpos"					"5"
-			"ypos"					"0"
-			"fgcolor_override"		"255 100 100 255"
+			"fontHeight"			"25"
+			"xpos"					"0"
+			"ypos"					"15"
+			"fgcolor_override"		"255 255 255 255"
 
-			"pin_to_sibling"		"KillReplayKilledBy"
-			"pin_corner_to_sibling"	"LEFT"
-			"pin_to_sibling_corner"	"RIGHT"
+			"pin_to_sibling"		"PlayerSheild0"
+			"pin_corner_to_sibling"	"BOTTOM_LEFT"
+			"pin_to_sibling_corner"	"TOP_LEFT"
 		}
 	}
 }
