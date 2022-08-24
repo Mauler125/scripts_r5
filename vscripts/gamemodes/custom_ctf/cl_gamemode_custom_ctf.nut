@@ -303,11 +303,13 @@ void function ServerCallback_CTF_ResetFlagIcons()
 
 void function ServerCallback_CTF_AddPointIcon(entity imcflag, entity milflag, int team)
 {
+    ClientCodeCallback_MinimapEntitySpawned(imcflag)
+    ClientCodeCallback_MinimapEntitySpawned(milflag)
     switch(team)
     {
         case TEAM_IMC:
             if(FlagRUI.IMCpointicon == null)
-            FlagRUI.IMCpointicon = AddPointIconRUI(FlagRUI.IMCpointicon, imcflag, "Defend", $"rui/gamemodes/capture_the_flag/imc_flag")
+                FlagRUI.IMCpointicon = AddPointIconRUI(FlagRUI.IMCpointicon, imcflag, "Defend", $"rui/gamemodes/capture_the_flag/imc_flag")
             if(FlagRUI.MILITIApointicon == null)
                 FlagRUI.MILITIApointicon = AddPointIconRUI(FlagRUI.MILITIApointicon, milflag, "Capture", $"rui/gamemodes/capture_the_flag/mil_flag")
             break
