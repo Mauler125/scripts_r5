@@ -112,8 +112,11 @@ void function SelectServer(var button)
 	SetSelectedServer(finalid, m_vServerList[finalid].svServerName, m_vServerList[finalid].svMapName, m_vServerList[finalid].svPlaylist, m_vServerList[finalid].svDescription)
 }
 
-void function RefreshServerListing()
+void function RefreshServerListing(bool refresh = true)
 {
+	if (refresh)
+		RefreshServerList()
+
 	//Clear Server List Text, Hide no servers found ui, Reset pages
 	ResetServerLabels()
 	ShowNoServersFound(false)
