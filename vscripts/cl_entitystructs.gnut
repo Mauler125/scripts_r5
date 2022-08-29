@@ -153,6 +153,8 @@ global struct ClientPlayerStruct
 
 	array<int> freefallContrailFXHandles
 	int freefallWindEffectHandle = -1
+	int killstreak = 0
+	bool isonkillstreak = false
 }
 
 
