@@ -267,8 +267,11 @@ void function ShowKillStreakObituary(entity attacker, entity victim, ObitEntityI
 	}
 
 	//Reset victim
-	victim.p.killstreak = 0
-	victim.p.isonkillstreak = false
+	if(victim.IsPlayer() && victimInfo.displayName != "")
+	{
+		victim.p.killstreak = 0
+		victim.p.isonkillstreak = false
+	}
 }
 
 
