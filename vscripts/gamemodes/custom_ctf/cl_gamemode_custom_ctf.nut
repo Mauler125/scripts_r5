@@ -240,27 +240,6 @@ void function ServerCallback_CTF_SetSelectedLocation(int sel)
     file.selectedLocation = file.locationSettings[sel]
 
     array<LocPairCTF> spawns = file.selectedLocation.ringspots
-
-    vector ringCenter
-    foreach( spawn in spawns )
-    {
-        ringCenter += spawn.origin
-    }
-
-    ringCenter /= spawns.len()
-
-    float ringRadius = 0
-
-    foreach( LocPairCTF spawn in spawns )
-    {
-        if( Distance( spawn.origin, ringCenter ) > ringRadius )
-            ringRadius = Distance(spawn.origin, ringCenter)
-    }
-
-    ringRadius += GetCurrentPlaylistVarFloat("ring_radius_padding", 800)
-
-    Minimap_SetDeathFieldRadius( ringRadius )
-	FullMap_SetDeathFieldRadius( ringRadius )
 }
 
 void function ServerCallback_CTF_RecaptureFlag(int team, float starttime, float endtime, bool start)

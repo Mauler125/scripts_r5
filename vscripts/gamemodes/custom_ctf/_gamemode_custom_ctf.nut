@@ -142,7 +142,7 @@ bool function ClientCommand_Say(entity player, array<string> args)
     else
         team = "MIL"
 
-    sendMessage = "[" + team + "] " + player.GetPlayerName() + ":" + sendMessage
+    sendMessage = team + " >> " + player.GetPlayerName() + ": " + sendMessage
 
     foreach( p in GetPlayerArray() )
     {
@@ -255,7 +255,7 @@ void function VotingPhase()
     // Reset scores
     CTF.MILITIAPoints = 0
     CTF.IMCPoints = 0
-
+    
     // Reset score RUI
     foreach( player in GetPlayerArray() )
     {
@@ -378,7 +378,7 @@ void function StartRound()
         GiveBackWeapons(player)
     }
 
-    EffectSetControlPointVector( CTF.ringfx, 1, <CTF.ringRadius, 0, 0> )
+    //EffectSetControlPointVector( CTF.ringfx, 1, <CTF.ringRadius, 0, 0> )
 
     float endTime = Time() + CTF_ROUNDTIME
     while( Time() <= endTime )
@@ -1680,6 +1680,41 @@ entity function CreateRingBoundary(LocationSettingsCTF location)
 {
     array<LocPairCTF> spawns = location.ringspots
 
+    vector bubbleCenter
+    foreach(spawn in spawns)
+    {
+        bubbleCenter += spawn.origin
+    }
+
+    bubbleCenter /= spawns.len()
+
+    float bubbleRadius = 0
+
+    foreach(LocPairCTF spawn in spawns)
+    {
+        if(Distance(spawn.origin, bubbleCenter) > bubbleRadius)
+        bubbleRadius = Distance(spawn.origin, bubbleCenter)
+    }
+
+    bubbleRadius += GetCurrentPlaylistVarFloat("ring_radius_padding", 800)
+
+    CTF.ringCenter = bubbleCenter
+    CTF.ringRadius = bubbleRadius
+
+    entity bubbleShield = CreateEntity( "prop_dynamic" )
+    bubbleShield.SetValueForModelKey( BUBBLE_BUNKER_SHIELD_COLLISION_MODEL )
+    bubbleShield.SetOrigin(bubbleCenter)
+    bubbleShield.SetModelScale(bubbleRadius / 235)
+    bubbleShield.kv.CollisionGroup = 0
+    bubbleShield.kv.rendercolor = "127 73 37"
+    DispatchSpawn( bubbleShield )
+
+    thread MonitorBubbleBoundary(bubbleShield, bubbleCenter, bubbleRadius)
+
+    return bubbleShield
+
+    /*array<LocPairCTF> spawns = location.ringspots
+
     vector ringCenter
     foreach( spawn in spawns )
     {
@@ -1744,7 +1779,24 @@ entity function CreateRingBoundary(LocationSettingsCTF location)
 	//Damage thread for ring
 	thread CTFRingDamage(circle, CTF.ringRadius)
 	
-    return circle
+    return circle*/
+}
+
+void function MonitorBubbleBoundary(entity bubbleShield, vector bubbleCenter, float bubbleRadius)
+{
+    while(IsValid(bubbleShield))
+    {
+        foreach(player in GetPlayerArray_Alive())
+        {
+            if(!IsValid(player)) continue
+            if(Distance(player.GetOrigin(), bubbleCenter) > bubbleRadius)
+            {
+                Remote_CallFunction_Replay( player, "ServerCallback_PlayerTookDamage", 0, 0, 0, 0, DF_BYPASS_SHIELD | DF_DOOMED_HEALTH_LOSS, eDamageSourceId.deathField, null )
+                player.TakeDamage( int( Deathmatch_GetOOBDamagePercent() / 100 * float( player.GetMaxHealth() ) ), null, null, { scriptType = DF_BYPASS_SHIELD | DF_DOOMED_HEALTH_LOSS, damageSourceId = eDamageSourceId.deathField } )
+            }
+        }
+        wait 1
+    }
 }
 
 void function CTFAudioThread(entity circle, entity player, float radius)
