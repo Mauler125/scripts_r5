@@ -379,20 +379,25 @@ void function OnPlayerDamaged( entity victim, var damageInfo )
 	if ( !( DamageInfo_GetCustomDamageType( damageInfo ) & DF_BYPASS_SHIELD ) )
 		currentHealth += victim.GetShieldHealth()
 
-	if ( currentHealth - damage <= 0 && PlayerRevivingEnabled() && !IsInstantDeath(damageInfo) )
-	{
-		entity attacker = DamageInfo_GetAttacker( damageInfo )
+	entity attacker = DamageInfo_GetAttacker( damageInfo )
 
+	vector damagePosition = DamageInfo_GetDamagePosition( damageInfo )
+	int damageType = DamageInfo_GetCustomDamageType( damageInfo )
+
+	StoreDamageHistoryAndUpdate( victim, Time() + 30, damage, damagePosition, damageType, sourceId, attacker )
+
+	if ( currentHealth - damage <= 0 && PlayerRevivingEnabled() && !IsInstantDeath( damageInfo ) )
+	{
 		// Supposed to be bleeding
-		Bleedout_StartPlayerBleedout( victim, DamageInfo_GetAttacker( damageInfo ) )
+		Bleedout_StartPlayerBleedout( victim, attacker )
 
 		// Add the cool splashy blood and big red crosshair hitmarker
 		DamageInfo_AddCustomDamageType( damageInfo, DF_KILLSHOT )
 
 		// Notify the player of the damage (even though it's *technically* canceled and we're hijacking the damage in order to not make an alive 100hp player instantly dead with a well placed kraber shot)
-		if (attacker.IsPlayer() && !IsWorldSpawn(attacker))
+		if (attacker.IsPlayer() && !IsWorldSpawn( attacker ))
         {
-            attacker.NotifyDidDamage( victim, DamageInfo_GetHitBox( damageInfo ), DamageInfo_GetDamagePosition( damageInfo ), DamageInfo_GetCustomDamageType( damageInfo ), DamageInfo_GetDamage( damageInfo ), DamageInfo_GetDamageFlags( damageInfo ), DamageInfo_GetHitGroup( damageInfo ), DamageInfo_GetWeapon( damageInfo ), DamageInfo_GetDistFromAttackOrigin( damageInfo ) )
+            attacker.NotifyDidDamage( victim, DamageInfo_GetHitBox( damageInfo ), damagePosition, damageType, damage, DamageInfo_GetDamageFlags( damageInfo ), DamageInfo_GetHitGroup( damageInfo ), DamageInfo_GetWeapon( damageInfo ), DamageInfo_GetDistFromAttackOrigin( damageInfo ) )
         }
 		// Cancel the damage
 		// Setting damage to 0 cancels all knockback, setting it to 1 doesn't
@@ -402,11 +407,15 @@ void function OnPlayerDamaged( entity victim, var damageInfo )
 		// Delete any shield health remaining
 		victim.SetShieldHealth( 0 )
 
-		// Run client callback
-		int scriptDamageType = DamageInfo_GetCustomDamageType( damageInfo )
+		if( GetGameState() >= eGameState.Playing && attacker.IsPlayer() && attacker != victim )
+		{
+			ScoreEvent event = GetScoreEvent( "Sur_DownedPilot" )
+
+			Remote_CallFunction_NonReplay( attacker, "ServerCallback_ScoreEvent", event.eventId, event.pointValue, event.displayType, victim.GetEncodedEHandle(), GetTotalDamageTakenByPlayer( victim, attacker ), 0 )
+		}
 
 		foreach ( cbPlayer in GetPlayerArray() )
-			Remote_CallFunction_Replay( cbPlayer, "ServerCallback_OnEnemyDowned", attacker, victim, scriptDamageType, sourceId )
+			Remote_CallFunction_Replay( cbPlayer, "ServerCallback_OnEnemyDowned", attacker, victim, damageType, sourceId )
 	}
 }
 
