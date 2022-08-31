@@ -227,6 +227,7 @@ void function Sh_CustomCTF_Init()
             break
 
         case "mp_rr_aqueduct":
+        case "mp_rr_aqueduct_night":
             Shared_RegisterLocation(
                 NewCTFLocationSettings(
                     "Overflow",

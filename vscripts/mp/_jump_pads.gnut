@@ -142,6 +142,9 @@ void function JumpPadAirborne( entity player ) {
 	if ( !IsPilot( player ) )
 		return
 
+	if( !IsValid(player) )
+		return
+
 	EmitSoundOnEntityExceptToPlayer( player, player, "JumpPad_LaunchPlayer_3p" )
 	EmitSoundOnEntityExceptToPlayer( player, player, "JumpPad_AirborneMvmt_3p" )
 
@@ -159,7 +162,7 @@ void function JumpPadAirborne( entity player ) {
 
 	wait 0.1
 
-	while( !player.IsOnGround() )
+	while( IsValid(player) && !player.IsOnGround() )
 	{
 		WaitFrame()
 	}

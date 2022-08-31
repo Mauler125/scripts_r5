@@ -240,27 +240,6 @@ void function ServerCallback_CTF_SetSelectedLocation(int sel)
     file.selectedLocation = file.locationSettings[sel]
 
     array<LocPairCTF> spawns = file.selectedLocation.ringspots
-
-    vector ringCenter
-    foreach( spawn in spawns )
-    {
-        ringCenter += spawn.origin
-    }
-
-    ringCenter /= spawns.len()
-
-    float ringRadius = 0
-
-    foreach( LocPairCTF spawn in spawns )
-    {
-        if( Distance( spawn.origin, ringCenter ) > ringRadius )
-            ringRadius = Distance(spawn.origin, ringCenter)
-    }
-
-    ringRadius += GetCurrentPlaylistVarFloat("ring_radius_padding", 800)
-
-    Minimap_SetDeathFieldRadius( ringRadius )
-	FullMap_SetDeathFieldRadius( ringRadius )
 }
 
 void function ServerCallback_CTF_RecaptureFlag(int team, float starttime, float endtime, bool start)
@@ -303,11 +282,13 @@ void function ServerCallback_CTF_ResetFlagIcons()
 
 void function ServerCallback_CTF_AddPointIcon(entity imcflag, entity milflag, int team)
 {
+    ClientCodeCallback_MinimapEntitySpawned(imcflag)
+    ClientCodeCallback_MinimapEntitySpawned(milflag)
     switch(team)
     {
         case TEAM_IMC:
             if(FlagRUI.IMCpointicon == null)
-            FlagRUI.IMCpointicon = AddPointIconRUI(FlagRUI.IMCpointicon, imcflag, "Defend", $"rui/gamemodes/capture_the_flag/imc_flag")
+                FlagRUI.IMCpointicon = AddPointIconRUI(FlagRUI.IMCpointicon, imcflag, "Defend", $"rui/gamemodes/capture_the_flag/imc_flag")
             if(FlagRUI.MILITIApointicon == null)
                 FlagRUI.MILITIApointicon = AddPointIconRUI(FlagRUI.MILITIApointicon, milflag, "Capture", $"rui/gamemodes/capture_the_flag/mil_flag")
             break
@@ -322,6 +303,9 @@ void function ServerCallback_CTF_AddPointIcon(entity imcflag, entity milflag, in
 
 var function AddPointIconRUI(var rui, entity flag, string text, asset icon)
 {
+    if(!IsValid(flag))
+        return
+        
     bool pinToEdge = true
     asset ruiFile = $"ui/overhead_icon_generic.rpak"
 

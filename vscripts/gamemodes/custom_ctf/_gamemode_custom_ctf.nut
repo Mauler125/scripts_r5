@@ -136,7 +136,13 @@ bool function ClientCommand_Say(entity player, array<string> args)
         sendMessage += " " + arg
     }
 
-    sendMessage = player.GetPlayerName() + ":" + sendMessage
+    string team;
+    if(player.GetTeam() == TEAM_IMC)
+        team = "IMC"
+    else
+        team = "MIL"
+
+    sendMessage = team + " >> " + player.GetPlayerName() + ": " + sendMessage
 
     foreach( p in GetPlayerArray() )
     {
@@ -249,7 +255,7 @@ void function VotingPhase()
     // Reset scores
     CTF.MILITIAPoints = 0
     CTF.IMCPoints = 0
-
+    
     // Reset score RUI
     foreach( player in GetPlayerArray() )
     {
@@ -305,11 +311,38 @@ void function StartServerRoundTimer()
     }
 }
 
+// purpose: Check IMC pole entity to make sure its not null or not valid and remakes it if it is.
+void function StartIMCFlagChecking()
+{
+    while(ServerTimer.roundover == false)
+    {
+        if(IMCPoint.pole == null || !IsValid(IMCPoint.pole))
+            ResetFlagOnDisconnect(0)
+
+        WaitFrame()
+    }
+}
+
+// purpose: Check MIL pole entity to make sure its not null or not valid and remakes it if it is.
+void function StartMILFlagChecking()
+{
+    while(ServerTimer.roundover == false)
+    {
+        if(MILITIAPoint.pole == null || !IsValid(MILITIAPoint.pole))
+            ResetFlagOnDisconnect(1)
+
+        WaitFrame()
+    }
+}
+
 // purpose: handle the start of a new round for players and props
 void function StartRound()
 {
     // set
     SetGameState(eGameState.Playing)
+
+    // create the ring based on location
+    file.ringBoundary = CreateRingBoundary(file.selectedLocation)
 
     CTF.roundstarttime = Time()
 
@@ -323,8 +356,8 @@ void function StartRound()
     // spawn CTF flags based on location
     SpawnCTFPoints()
 
-    // create the ring based on location
-    file.ringBoundary = CreateRingBoundary(file.selectedLocation)
+    thread StartIMCFlagChecking()
+    thread StartMILFlagChecking()
 
     foreach(player in GetPlayerArray())
     {
@@ -345,7 +378,7 @@ void function StartRound()
         GiveBackWeapons(player)
     }
 
-    EffectSetControlPointVector( CTF.ringfx, 1, <CTF.ringRadius, 0, 0> )
+    //EffectSetControlPointVector( CTF.ringfx, 1, <CTF.ringRadius, 0, 0> )
 
     float endTime = Time() + CTF_ROUNDTIME
     while( Time() <= endTime )
@@ -355,6 +388,8 @@ void function StartRound()
 
         if( file.ctfState == eCTFState.WINNER_DECIDED )
         {
+            ServerTimer.roundover = true
+
             // for each player, if the player is holding the flag on round end. make them drop it so it dosnt cause a crash
             foreach(player in GetPlayerArray())
             {
@@ -442,7 +477,6 @@ void function StartRound()
 
                 // Set voting to be allowed
                 CTF.votingtime = true
-                ServerTimer.roundover = true
 
                 // for each player, open the vote menu and set it to the winning team screen
                 foreach( player in GetPlayerArray() )
@@ -724,6 +758,7 @@ void function SpawnCTFPoints()
     IMCPoint.pole = CreateEntity( "prop_dynamic" )
     IMCPoint.pole.SetValueForModelKey( $"mdl/props/wattson_electric_fence/wattson_electric_fence.rmdl" )
     IMCPoint.pole.SetOrigin(IMCPoint.spawn)
+    SetTargetName( IMCPoint.pole, "ctf_flag_imc" )
     DispatchSpawn( IMCPoint.pole )
 
     thread PlayAnim( IMCPoint.pole, "prop_fence_expand", IMCPoint.pole.GetOrigin(), IMCPoint.pole.GetAngles() )
@@ -749,6 +784,7 @@ void function SpawnCTFPoints()
     MILITIAPoint.pole = CreateEntity( "prop_dynamic" )
     MILITIAPoint.pole.SetValueForModelKey( $"mdl/props/wattson_electric_fence/wattson_electric_fence.rmdl" )
     MILITIAPoint.pole.SetOrigin(MILITIAPoint.spawn)
+    SetTargetName( MILITIAPoint.pole, "ctf_flag_mil" )
     DispatchSpawn( MILITIAPoint.pole )
 
     thread PlayAnim( MILITIAPoint.pole, "prop_fence_expand", MILITIAPoint.pole.GetOrigin(), MILITIAPoint.pole.GetAngles() )
@@ -974,7 +1010,10 @@ void function CaptureFlag(entity ent, int team, CTFPoint teamflagpoint)
 
 void function IMCPoint_Trigger( entity trigger, entity ent )
 {
-    if ( ent.IsPlayer() && IsValid( ent ) )
+    if(!IsValid(ent))
+        return
+
+    if ( ent.IsPlayer() )
     {
         if ( ent.GetTeam() != TEAM_IMC )
         {
@@ -999,7 +1038,10 @@ void function IMCPoint_Trigger( entity trigger, entity ent )
 
 void function MILITIA_Point_Trigger( entity trigger, entity ent )
 {
-    if( ent.IsPlayer() && IsValid( ent ) )
+    if(!IsValid(ent))
+        return
+        
+    if( ent.IsPlayer() )
     {
         if( ent.GetTeam() != TEAM_MILITIA )
         {
@@ -1044,6 +1086,10 @@ void function GiveBackWeapons(entity player)
     Remote_CallFunction_NonReplay(player, "ServerCallback_CTF_CheckUpdatePlayerLegend")
 
     wait 0.5
+
+    //Needed another check after the wait just incase they leave within that wait time
+    if( !IsValid( player ) )
+        return
 
     TakeAllWeapons(player)
 
@@ -1115,34 +1161,93 @@ void function _OnPlayerConnected(entity player)
 void function _OnPlayerDisconnected(entity player)
 {
     // Only if the flag is picked up
-    if ( IMCPoint.pickedup )
+    /*if ( IMCPoint.pickedup )
     {
-        // Only if the flag is held by said player
-        if ( IMCPoint.holdingplayer == player )
+        if( IMCPoint.holdingplayer == player )
         {
-            thread PlayerDiedWithFlag(player, TEAM_IMC, IMCPoint)
+            ResetFlagOnDisconnect(0)
         }
     }
 
     // Only if the flag is picked up
     if ( MILITIAPoint.pickedup )
     {
-        // Only if the flag is held by said player
-        if ( MILITIAPoint.holdingplayer == player )
+        if( MILITIAPoint.holdingplayer == player )
         {
-            thread PlayerDiedWithFlag(player, TEAM_MILITIA, MILITIAPoint)
+            ResetFlagOnDisconnect(1)
         }
+    }*/
+}
+
+void function ResetFlagOnDisconnect(int num)
+{
+    if(num == 0)
+    {
+        if( IsValid( IMCPoint.pole ) )
+            IMCPoint.pole.Destroy()
+
+        if( IsValid( IMCPoint.trailfx ) )
+            IMCPoint.trailfx.Destroy()
+
+        // Point 1
+        IMCPoint.pole = CreateEntity( "prop_dynamic" )
+        IMCPoint.pole.SetValueForModelKey( $"mdl/props/wattson_electric_fence/wattson_electric_fence.rmdl" )
+        IMCPoint.pole.SetOrigin(IMCPoint.spawn)
+        DispatchSpawn( IMCPoint.pole )
+
+        thread PlayAnim( IMCPoint.pole, "prop_fence_expand", IMCPoint.pole.GetOrigin(), IMCPoint.pole.GetAngles() )
+
+        CustomHighlight(IMCPoint.pole, 0, 0, 1)
+
+        IMCPoint.pickedup = false
+        IMCPoint.dropped = false
+        IMCPoint.flagatbase = true
+    }
+    else if(num == 1)
+    {
+        if( IsValid( MILITIAPoint.pole ) )
+            MILITIAPoint.pole.Destroy()
+
+        if( IsValid( MILITIAPoint.trailfx ) )
+            MILITIAPoint.trailfx.Destroy()
+
+        MILITIAPoint.spawn = OriginToGround( file.selectedLocation.milflagspawn )
+        MILITIAPoint.pole = CreateEntity( "prop_dynamic" )
+        MILITIAPoint.pole.SetValueForModelKey( $"mdl/props/wattson_electric_fence/wattson_electric_fence.rmdl" )
+        MILITIAPoint.pole.SetOrigin(MILITIAPoint.spawn)
+        DispatchSpawn( MILITIAPoint.pole )
+
+        thread PlayAnim( MILITIAPoint.pole, "prop_fence_expand", MILITIAPoint.pole.GetOrigin(), MILITIAPoint.pole.GetAngles() )
+
+        CustomHighlight(MILITIAPoint.pole, 1, 0, 0)
+
+        MILITIAPoint.pickedup = false
+        MILITIAPoint.dropped = false
+        MILITIAPoint.flagatbase = true
+    }
+
+    foreach( player in GetPlayerArray() )
+    {
+        if( !IsValid( player ) )
+            continue
+
+        Remote_CallFunction_Replay( player, "ServerCallback_CTF_AddPointIcon", IMCPoint.pole, MILITIAPoint.pole, player.GetTeam() )
     }
 }
 
 void function MILITIA_PoleReturn_Trigger( entity trigger, entity ent )
 {
-    if ( ent.IsPlayer() && IsValid(ent) )
+    if(!IsValid(ent))
+        return
+
+    if ( ent.IsPlayer() )
     {
         // If is on team IMC pick back up
         if ( ent.GetTeam() == TEAM_IMC )
         {
-            MILITIAPoint.returntrigger.Destroy()
+            if(IsValid(MILITIAPoint.returntrigger))
+                MILITIAPoint.returntrigger.Destroy()
+
             MILITIAPoint.pole.SetParent(ent)
             MILITIAPoint.pole.SetOrigin(ent.GetOrigin())
             MILITIAPoint.pole.MakeInvisible()
@@ -1191,12 +1296,17 @@ void function MILITIA_PoleReturn_Trigger( entity trigger, entity ent )
 
 void function IMC_PoleReturn_Trigger( entity trigger, entity ent)
 {
-    if ( ent.IsPlayer() && IsValid(ent) )
+    if(!IsValid(ent))
+        return
+
+    if ( ent.IsPlayer() )
     {
         // If is on team MILITIA pick back up
         if ( ent.GetTeam() == TEAM_MILITIA )
         {
-            IMCPoint.returntrigger.Destroy()
+            if(IsValid(IMCPoint.returntrigger))
+                IMCPoint.returntrigger.Destroy()
+
             IMCPoint.pole.SetParent(ent)
             IMCPoint.pole.SetOrigin(ent.GetOrigin())
             IMCPoint.pole.MakeInvisible()
@@ -1255,21 +1365,26 @@ void function StartFlagReturn(entity player, int team, CTFPoint teamflagpoint)
     float endtime = Time() + 5
     Remote_CallFunction_Replay(player, "ServerCallback_CTF_RecaptureFlag", team, starttime, endtime, true)
 
-    while( Distance( player.GetOrigin(), teamflagpoint.pole.GetOrigin() ) < 150 && IsAlive( player ) && returnsuccess == false || playerpickedupflag || playerleftarea )
+    try
     {
-        if( Time() >= endtime )
+        while( Distance( player.GetOrigin(), teamflagpoint.pole.GetOrigin() ) < 150 && IsAlive( player ) && returnsuccess == false || playerpickedupflag || playerleftarea )
         {
-            returnsuccess = true
-            teamflagpoint.isbeingreturned = false
+            if( Time() >= endtime )
+            {
+                returnsuccess = true
+                teamflagpoint.isbeingreturned = false
+            }
+
+            if( !teamflagpoint.dropped )
+                playerpickedupflag = true
+
+            if( Distance( player.GetOrigin(), teamflagpoint.pole.GetOrigin() ) > 150 )
+                playerleftarea = true
+
+            wait 0.01
         }
-
-        if( !teamflagpoint.dropped )
-            playerpickedupflag = true
-
-        if( Distance( player.GetOrigin(), teamflagpoint.pole.GetOrigin() ) > 150 )
-            playerleftarea = true
-
-        wait 0.01
+    } catch(e42) {
+        playerleftarea = true
     }
 
     if( playerpickedupflag )
@@ -1280,7 +1395,9 @@ void function StartFlagReturn(entity player, int team, CTFPoint teamflagpoint)
         if(IsValid(player))
             Remote_CallFunction_Replay(player, "ServerCallback_CTF_RecaptureFlag", 0, 0, 0, false)
 
-        teamflagpoint.returntrigger.Destroy()
+        if(IsValid(teamflagpoint.returntrigger))
+            teamflagpoint.returntrigger.Destroy()
+
         return
     }
 
@@ -1298,15 +1415,23 @@ void function StartFlagReturn(entity player, int team, CTFPoint teamflagpoint)
 
     if( returnsuccess )
     {
-        teamflagpoint.pole.ClearParent()
+        if(IsValid(teamflagpoint.pole))
+            teamflagpoint.pole.ClearParent()
+
         teamflagpoint.dropped = false
         teamflagpoint.holdingplayer = null
         teamflagpoint.pickedup = false
         teamflagpoint.flagatbase = true
-        teamflagpoint.pole.SetOrigin(teamflagpoint.spawn)
-        teamflagpoint.returntrigger.Destroy()
 
-        thread PlayAnim( teamflagpoint.pole, "prop_fence_expand", teamflagpoint.pole.GetOrigin(), teamflagpoint.pole.GetAngles() )
+        if(IsValid(teamflagpoint.pole))
+            teamflagpoint.pole.SetOrigin(teamflagpoint.spawn)
+
+        if(IsValid(teamflagpoint.returntrigger))
+            teamflagpoint.returntrigger.Destroy()
+
+        if(IsValid(teamflagpoint.pole))
+            thread PlayAnim( teamflagpoint.pole, "prop_fence_expand", teamflagpoint.pole.GetOrigin(), teamflagpoint.pole.GetAngles() )
+
         try { teamflagpoint.returntrigger.SearchForNewTouchingEntity() } catch(stop) {}
 
         array<entity> enemyplayers = GetPlayerArrayOfTeam( enemyteam )
@@ -1555,6 +1680,41 @@ entity function CreateRingBoundary(LocationSettingsCTF location)
 {
     array<LocPairCTF> spawns = location.ringspots
 
+    vector bubbleCenter
+    foreach(spawn in spawns)
+    {
+        bubbleCenter += spawn.origin
+    }
+
+    bubbleCenter /= spawns.len()
+
+    float bubbleRadius = 0
+
+    foreach(LocPairCTF spawn in spawns)
+    {
+        if(Distance(spawn.origin, bubbleCenter) > bubbleRadius)
+        bubbleRadius = Distance(spawn.origin, bubbleCenter)
+    }
+
+    bubbleRadius += GetCurrentPlaylistVarFloat("ring_radius_padding", 800)
+
+    CTF.ringCenter = bubbleCenter
+    CTF.ringRadius = bubbleRadius
+
+    entity bubbleShield = CreateEntity( "prop_dynamic" )
+    bubbleShield.SetValueForModelKey( BUBBLE_BUNKER_SHIELD_COLLISION_MODEL )
+    bubbleShield.SetOrigin(bubbleCenter)
+    bubbleShield.SetModelScale(bubbleRadius / 235)
+    bubbleShield.kv.CollisionGroup = 0
+    bubbleShield.kv.rendercolor = "127 73 37"
+    DispatchSpawn( bubbleShield )
+
+    thread MonitorBubbleBoundary(bubbleShield, bubbleCenter, bubbleRadius)
+
+    return bubbleShield
+
+    /*array<LocPairCTF> spawns = location.ringspots
+
     vector ringCenter
     foreach( spawn in spawns )
     {
@@ -1592,7 +1752,7 @@ entity function CreateRingBoundary(LocationSettingsCTF location)
     circle.Minimap_SetZOrder( 2 )
     circle.Minimap_SetClampToEdge( true )
     circle.Minimap_SetCustomState( eMinimapObject_prop_script.OBJECTIVE_AREA )
-	SetTargetName( circle, "deathField" )
+	SetTargetName( circle, "safeZone" )
 	DispatchSpawn(circle)
     
 
@@ -1601,7 +1761,7 @@ entity function CreateRingBoundary(LocationSettingsCTF location)
         circle.Minimap_AlwaysShow( 0, player )
     }
 	
-	SetDeathFieldParams( CTF.ringCenter, CTF.ringRadius, CTF.ringRadius, 90000, 99999 ) // This function from the API allows client to read ringRadius from server so we can use visual effects in shared function. Colombia
+	SetDeathFieldParams( CTF.ringCenter, CTF.ringRadius, CTF.ringRadius, Time(), Time() + 2137483647 ) // This function from the API allows client to read ringRadius from server so we can use visual effects in shared function. Colombia
 
     if(IsValid(CTF.ringfx))
         CTF.ringfx.Destroy()
@@ -1610,7 +1770,7 @@ entity function CreateRingBoundary(LocationSettingsCTF location)
 	CTF.ringfx = StartParticleEffectOnEntity_ReturnEntity(circle, GetParticleSystemIndex( $"P_survival_radius_CP_1x100" ), FX_PATTACH_ABSORIGIN_FOLLOW, -1 )
 	CTF.ringfx.SetParent(circle)
 
-    StatsHook_SetSafeZone( CTF.ringCenter, CTF.ringRadius )
+    //StatsHook_SetSafeZone( CTF.ringCenter, CTF.ringRadius )
 	
 	//Audio thread for ring
 	foreach(sPlayer in GetPlayerArray())
@@ -1619,7 +1779,24 @@ entity function CreateRingBoundary(LocationSettingsCTF location)
 	//Damage thread for ring
 	thread CTFRingDamage(circle, CTF.ringRadius)
 	
-    return circle
+    return circle*/
+}
+
+void function MonitorBubbleBoundary(entity bubbleShield, vector bubbleCenter, float bubbleRadius)
+{
+    while(IsValid(bubbleShield))
+    {
+        foreach(player in GetPlayerArray_Alive())
+        {
+            if(!IsValid(player)) continue
+            if(Distance(player.GetOrigin(), bubbleCenter) > bubbleRadius)
+            {
+                Remote_CallFunction_Replay( player, "ServerCallback_PlayerTookDamage", 0, 0, 0, 0, DF_BYPASS_SHIELD | DF_DOOMED_HEALTH_LOSS, eDamageSourceId.deathField, null )
+                player.TakeDamage( int( Deathmatch_GetOOBDamagePercent() / 100 * float( player.GetMaxHealth() ) ), null, null, { scriptType = DF_BYPASS_SHIELD | DF_DOOMED_HEALTH_LOSS, damageSourceId = eDamageSourceId.deathField } )
+            }
+        }
+        wait 1
+    }
 }
 
 void function CTFAudioThread(entity circle, entity player, float radius)
@@ -1639,7 +1816,7 @@ void function CTFAudioThread(entity circle, entity player, float radius)
 	audio.SetAngles( <0, 0, 0> )
 	EmitSoundOnEntity( audio, soundToPlay )
 	
-	while(IsValid(circle)){
+	while(IsValid(circle) && IsValid( player )){
             if( !IsValid( player ) )
                 continue
 
