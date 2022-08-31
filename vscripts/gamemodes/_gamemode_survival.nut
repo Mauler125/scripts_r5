@@ -407,7 +407,7 @@ void function OnPlayerDamaged( entity victim, var damageInfo )
 		// Delete any shield health remaining
 		victim.SetShieldHealth( 0 )
 
-		if( GetGameState() >= eGameState.Playing && attacker.IsPlayer() )
+		if( GetGameState() >= eGameState.Playing && attacker.IsPlayer() && attacker != victim )
 		{
 			ScoreEvent event = GetScoreEvent( "Sur_DownedPilot" )
 
