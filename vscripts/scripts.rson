@@ -796,6 +796,7 @@ Scripts:
 	ui/menu_loadscreen_preview.nut
 
 	ui/CTFMenus/menu_ctf_respawn.nut
+	ui/KillReplay/menu_killreplay.nut
 
 	//R5RUI
 	ui/R5RMenus/menu_main.nut
