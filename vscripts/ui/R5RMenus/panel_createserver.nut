@@ -103,27 +103,7 @@ void function OpenSelectedPanel( var button )
 void function StartNewGame( var button )
 {
 	//Start thread for starting the server
-	thread StartServer()
-}
-
-void function StartServer()
-{
-	//Shutdown the lobby vm
-	ShutdownHostGame()
-
-	//Set the main menus blackscreen visibility to true
-	SetMainMenuBlackScreenVisible(true)
-
-	//wait for lobby vm to be actually shut down and back at the main menu
-	while(!AtMainMenu) {
-		WaitFrame()
-	}
-
-	//Create new server with selected settings
 	CreateServer(ServerSettings.svServerName, ServerSettings.svServerDesc, ServerSettings.svMapName, ServerSettings.svPlaylist, ServerSettings.svVisibility)
-
-	//No longer at main menu
-	AtMainMenu = false
 }
 
 void function SetSelectedServerMap( string map )
