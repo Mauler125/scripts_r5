@@ -235,7 +235,7 @@ void function Custom_KillReplayHud_Activate()
 		observerTarget = GetLocalClientPlayer()
 
 	//Causes issues when the observer is the local client
-	if(observerTarget != GetLocalClientPlayer())
+	if(observerTarget.IsPlayer() && observerTarget != GetLocalClientPlayer())
 	{
 		thread UpdatePlayerHealthAndSheild(observerTarget)
 
