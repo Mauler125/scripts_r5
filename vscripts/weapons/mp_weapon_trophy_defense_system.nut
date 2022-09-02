@@ -64,6 +64,7 @@ const vector TROPHY_BOUND_MINS = <-32,-32,0>
 const vector TROPHY_BOUND_MAXS = <32,32,72>
 const vector TROPHY_PLACEMENT_TRACE_OFFSET = <0,0,94>
 const float TROPHY_PLACEMENT_MAX_GROUND_DIST = 12.0
+const int statusEffect = eStatusEffect.placing_trophy_system
 
 // Intersection
 const vector TROPHY_INTERSECTION_BOUND_MINS = <-16,-16,0>
@@ -198,9 +199,7 @@ void function OnWeaponActivate_weapon_trophy_defense_system( entity weapon )
 			return
 	#endif
 
-	int statusEffect = eStatusEffect.placing_trophy_system
-	int fxId = StatusEffect_AddEndless( ownerPlayer, statusEffect, 1.0 )
-	printl("[pylon] add effect " + fxId)
+	StatusEffect_AddEndless( ownerPlayer, statusEffect, 1.0 )
 }
 
 void function OnWeaponDeactivate_weapon_trophy_defense_system( entity weapon )
@@ -212,9 +211,8 @@ void function OnWeaponDeactivate_weapon_trophy_defense_system( entity weapon )
 		if ( !InPrediction() ) //
 			return
 	#endif
-
-	bool val = StatusEffect_Stop( ownerPlayer, eStatusEffect.placing_trophy_system )
-	printl("[pylon] stop effect " + val)
+	
+	StatusEffect_StopAllOfType( ownerPlayer, statusEffect )
 }
 
 bool function OnWeaponAttemptOffhandSwitch_weapon_trophy_defense_system( entity weapon )
