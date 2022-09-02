@@ -597,7 +597,9 @@ void function Trophy_Anims( entity pylon ) {
 	//Pylon Start FX and sound
 	EmitSoundOnEntity(pylon, TROPHY_EXPAND_SOUND)
 	StartParticleEffectOnEntity( pylon, GetParticleSystemIndex( TROPHY_START_FX ), FX_PATTACH_ABSORIGIN_FOLLOW, 0 )
-	waitthread PlayAnim( pylon, EXPAND )
+	thread PlayAnim( pylon, EXPAND )
+	
+	wait 0.88
 
 	//Pylon Idle FX and sound
 	StartParticleEffectOnEntityWithPos( pylon, GetParticleSystemIndex( TROPHY_ELECTRICITY_FX ), FX_PATTACH_CUSTOMORIGIN_FOLLOW, -1, <0, 0, 60>, <0, 0, 0> )
