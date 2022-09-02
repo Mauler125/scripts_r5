@@ -139,22 +139,17 @@ struct{
 // Use for MU1/direct MU1 spinoffs (like night map)
 void function Canyonlands_MU1_CommonMapInit()
 {
-	//SetFlyersToSpawn( 8 )
+	Canyonlands_MapInit_Common()
+	MapZones_RegisterDataTable( $"datatable/map_zones/zones_mp_rr_canyonlands_mu1.rpak" )
 
-		Canyonlands_MapInit_Common()
-
-		MapZones_RegisterDataTable( $"datatable/map_zones/zones_mp_rr_canyonlands_mu1.rpak" )
-
-		AddCallback_EntitiesDidLoad( MU1_EntitiesDidLoad )
-
-		AddCallback_GameStateEnter( eGameState.Playing, Leviathan_OptimizeUpperBoneFollowersWhenAllPlayersHaveLanded )
-		AddSpawnCallback_ScriptName( "leviathan_staging", CreateClientSideLeviathanMarkers)
-		Survival_SetCallback_Leviathan_ConsiderLookAtEnt( Leviathan_ConsiderLookAtEnt_Callback )
+	AddCallback_EntitiesDidLoad( MU1_EntitiesDidLoad )
+	AddCallback_GameStateEnter( eGameState.Playing, Leviathan_OptimizeUpperBoneFollowersWhenAllPlayersHaveLanded )
+	AddSpawnCallback_ScriptName( "leviathan_staging", CreateClientSideLeviathanMarkers)
+	Survival_SetCallback_Leviathan_ConsiderLookAtEnt( Leviathan_ConsiderLookAtEnt_Callback )
 
 	InitOctaneTownTakeover()
 
-	//if ( RelayRockFixEnabled() )
-		//RegisterGeoFixAsset( RELAY_ROCK_FIX_MODEL )
+	thread InitWraithAudioLog()
 }
 
 void function MU1_EntitiesDidLoad()
@@ -174,6 +169,7 @@ void function InitOctaneTownTakeover()
 
 void function InitWraithAudioLog()
 {
+	wait 0.01
 	const string WRAITH_AUDIO_LOG_SCRIPTNAME = "wraith_audio_log_target"
 	if ( GetEntArrayByScriptName( WRAITH_AUDIO_LOG_SCRIPTNAME ).len() < 1 )
 		return
