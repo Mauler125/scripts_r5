@@ -150,6 +150,7 @@ void function Canyonlands_MU1_CommonMapInit()
 	InitOctaneTownTakeover()
 
 	thread InitWraithAudioLog()
+	thread PlaceOctaneTownTakeoverLoot()
 }
 
 void function MU1_EntitiesDidLoad()
@@ -211,6 +212,7 @@ void function WraithTTAudioLog_SetUsableAfterDelay( entity log, float delay )
 
 void function PlaceOctaneTownTakeoverLoot()
 {
+	wait 0.01
 	array<entity> itemSpawn = GetEntArrayByScriptName( "octane_tt_hanging_item_spawn" )
 	if ( itemSpawn.len() != 1 )
 		return
@@ -218,26 +220,26 @@ void function PlaceOctaneTownTakeoverLoot()
 	entity target  = itemSpawn[ 0 ]
 	string itemRef = SURVIVAL_GetWeightedItemFromGroup( "POI_OctaneTT" )
 
-	//entity spawnedItem = SpawnGenericLoot( itemRef, target.GetOrigin(), < -1, -1, -1 > )
-	//spawnedItem.RemoveUsableValue( USABLE_USE_VERTICAL_LINE )
-	//spawnedItem.RemoveUsableValue( USABLE_HORIZONTAL_FOV )
-	//spawnedItem.AddUsableValue( USABLE_USE_DISTANCE_OVERRIDE )
-	//spawnedItem.SetUsableDistanceOverride( 300.0 )
+	entity spawnedItem = SpawnGenericLoot( itemRef, target.GetOrigin(), < -1, -1, -1 >, 1 )
+	spawnedItem.RemoveUsableValue( USABLE_USE_VERTICAL_LINE )
+	spawnedItem.RemoveUsableValue( USABLE_HORIZONTAL_FOV )
+	spawnedItem.AddUsableValue( USABLE_USE_DISTANCE_OVERRIDE )
+	spawnedItem.SetUsableDistanceOverride( 300.0 )
 
-	//vector boundingSize = spawnedItem.GetBoundingMaxs() - spawnedItem.GetBoundingMins()
-	//float originOffset  = boundingSize.z * 0.8
-	//if ( boundingSize.x > boundingSize.z )
-	//{
-	//	vector angles = spawnedItem.GetAngles()
-	//	spawnedItem.SetAngles( < angles.x + 90, angles.y, angles.z > )
-	//	originOffset = boundingSize.x * 0.5
-	//}
+	vector boundingSize = spawnedItem.GetBoundingMaxs() - spawnedItem.GetBoundingMins()
+	float originOffset  = boundingSize.z * 0.8
+	if ( boundingSize.x > boundingSize.z )
+	{
+		vector angles = spawnedItem.GetAngles()
+		spawnedItem.SetAngles( < angles.x + 90, angles.y, angles.z > )
+		originOffset = boundingSize.x * 0.5
+	}
 
-	//vector targetToCenter = spawnedItem.GetCenter() - target.GetOrigin()
-	//spawnedItem.SetOrigin( target.GetOrigin() - < 0, 0, boundingSize.z * 0.5 > )
+	vector targetToCenter = spawnedItem.GetCenter() - target.GetOrigin()
+	spawnedItem.SetOrigin( target.GetOrigin() - < 0, 0, boundingSize.z * 0.5 > )
 
-	//int bgFxId = GetParticleSystemIndex( FX_OCTANE_TT_GUN_BG )
-	//StartParticleEffectOnEntityWithPos( spawnedItem, bgFxId, FX_PATTACH_ABSORIGIN_FOLLOW, -1, < -45, 0, 0 >, < 0, 0, 0 > )
+	int bgFxId = GetParticleSystemIndex( FX_OCTANE_TT_GUN_BG )
+	StartParticleEffectOnEntityWithPos( spawnedItem, bgFxId, FX_PATTACH_ABSORIGIN_FOLLOW, -1, < -45, 0, 0 >, < 0, 0, 0 > )
 }
 
 
