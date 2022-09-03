@@ -1554,6 +1554,7 @@ void function MapConVar_Init()
 // Create dynamic light entities which cannot be created through level entity files.
 void function DynamicLight_Init()
 {
+	float brightness = 0.0
 	vector angle = < 0, 0, 0 >
 	switch( GetMapName() )
 	{
@@ -1561,112 +1562,71 @@ void function DynamicLight_Init()
 			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			// ASH'S REDEMPTION
 			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			 float brightness_ash = 500.0
-			 entity dlight_ash_0 = CreateClientSideDynamicLight( <-19876, 3616, -26740>, angle, DLIGHT_RICH_BROWN, 1000 )
-			 dlight_ash_0.SetLightExponent( 0.5 )
-			 entity dlight_ash_1 = CreateClientSideDynamicLight( <-20903, 3768, -26740>, angle, DLIGHT_RICH_BROWN, 1000 )
-			 dlight_ash_1.SetLightExponent( 0.5 )
-			 entity dlight_ash_2 = CreateClientSideDynamicLight( <-19271, 6402, -27025>, angle, DLIGHT_RICH_BROWN, brightness_ash )
-			 dlight_ash_2.SetLightExponent( 0.5 )
-			 entity dlight_ash_3 = CreateClientSideDynamicLight( <-22710, 7344, -26585>, angle, DLIGHT_RICH_BROWN, brightness_ash )
-			 dlight_ash_3.SetLightExponent( 0.5 )
-			 entity dlight_ash_4 = CreateClientSideDynamicLight( <-22611, 6364, -26774>, angle, DLIGHT_RICH_BROWN, brightness_ash )
-			 dlight_ash_4.SetLightExponent( 0.5 )
-			 entity dlight_ash_5 = CreateClientSideDynamicLight( <-22611, 5638, -26774>, angle, DLIGHT_RICH_BROWN, brightness_ash )
-			 dlight_ash_5.SetLightExponent( 0.5 )
-			 entity dlight_ash_6 = CreateClientSideDynamicLight( <-22611, 4964, -26774>, angle, DLIGHT_RICH_BROWN, brightness_ash )
-			 dlight_ash_6.SetLightExponent( 0.5 )
-			 entity dlight_ash_7 = CreateClientSideDynamicLight( <-21695, 7478, -26784>, angle, DLIGHT_RICH_BROWN, brightness_ash )
-			 dlight_ash_7.SetLightExponent( 0.5 )
+			brightness = 500.0
+			CreateClientSideDynamicLight( <-19876, 3616, -26740>, angle, DLIGHT_RICH_BROWN, 1000 ).SetLightExponent( 0.5 )
+			CreateClientSideDynamicLight( <-20903, 3768, -26740>, angle, DLIGHT_RICH_BROWN, 1000 ).SetLightExponent( 0.5 )
+			CreateClientSideDynamicLight( <-19271, 6402, -27025>, angle, DLIGHT_RICH_BROWN, brightness ).SetLightExponent( 0.5 )
+			CreateClientSideDynamicLight( <-22710, 7344, -26585>, angle, DLIGHT_RICH_BROWN, brightness ).SetLightExponent( 0.5 )
+			CreateClientSideDynamicLight( <-22611, 6364, -26774>, angle, DLIGHT_RICH_BROWN, brightness ).SetLightExponent( 0.5 )
+			CreateClientSideDynamicLight( <-22611, 5638, -26774>, angle, DLIGHT_RICH_BROWN, brightness ).SetLightExponent( 0.5 )
+			CreateClientSideDynamicLight( <-22611, 4964, -26774>, angle, DLIGHT_RICH_BROWN, brightness ).SetLightExponent( 0.5 )
+			CreateClientSideDynamicLight( <-21695, 7478, -26784>, angle, DLIGHT_RICH_BROWN, brightness ).SetLightExponent( 0.5 )
 			break
 		case "mp_rr_desertlands_64k_x_64k_nx":
 			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			// SORTING FACTORY
 			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			float brightness_factory = 200.0
-			entity dlight_factory_0 = CreateClientSideDynamicLight( <2125.27832, -25132.957, -3624.03125>, angle, DLIGHT_LIGHTGREEN, brightness_factory )
-			dlight_factory_0.SetLightExponent( 2.1 )
-			entity dlight_factory_1 = CreateClientSideDynamicLight( <3437.62207, -25398.5957, -3375.89258>, angle, DLIGHT_LIGHTGREEN, brightness_factory )
-			dlight_factory_1.SetLightExponent( 5.1 )
+			brightness = 200.0
+			CreateClientSideDynamicLight( <2125.27832, -25132.957, -3624.03125>, angle, DLIGHT_LIGHTGREEN, brightness ).SetLightExponent( 2.1 )
+			CreateClientSideDynamicLight( <3437.62207, -25398.5957, -3375.89258>, angle, DLIGHT_LIGHTGREEN, brightness ).SetLightExponent( 5.1 )
 
 			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			// CAPITOL CITY
 			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			float brightness_capitol = 400.0
-			entity dlight_capitol_0 = CreateClientSideDynamicLight( <-17814.2168, 27767.7188, -3600.03125>, angle, DLIGHT_WHITE, brightness_capitol )
-			dlight_capitol_0.SetLightExponent( 3.1 )
-			entity dlight_capitol_1 = CreateClientSideDynamicLight( <-18276.6563, 27315.4727, -3600.03125>, angle, DLIGHT_WHITE, brightness_capitol )
-			dlight_capitol_1.SetLightExponent( 3.1 )
-			entity dlight_capitol_2 = CreateClientSideDynamicLight( <-18448.0449, 28353.8652, -3600.03125>, angle, DLIGHT_WHITE, brightness_capitol )
-			dlight_capitol_2.SetLightExponent( 3.1 )
-			entity dlight_capitol_3 = CreateClientSideDynamicLight( <-18849.7617, 27952.0508, -3600.03125>, angle, DLIGHT_WHITE, brightness_capitol )
-			dlight_capitol_3.SetLightExponent( 3.1 )
+			brightness = 400.0
+			CreateClientSideDynamicLight( <-17814.2168, 27767.7188, -3600.03125>, angle, DLIGHT_WHITE, brightness ).SetLightExponent( 3.1 )
+			CreateClientSideDynamicLight( <-18276.6563, 27315.4727, -3600.03125>, angle, DLIGHT_WHITE, brightness ).SetLightExponent( 3.1 )
+			CreateClientSideDynamicLight( <-18448.0449, 28353.8652, -3600.03125>, angle, DLIGHT_WHITE, brightness ).SetLightExponent( 3.1 )
+			CreateClientSideDynamicLight( <-18849.7617, 27952.0508, -3600.03125>, angle, DLIGHT_WHITE, brightness ).SetLightExponent( 3.1 )
 
 			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			// CAVE
 			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			float brightness_cave = 500.0
-			entity dlight_cave_0 = CreateClientSideDynamicLight( <24144.1719, -2856.27246, -3632.27686>, angle, DLIGHT_LIGHTGREEN, brightness_cave )
-			dlight_cave_0.SetLightExponent( 3.1 )
-			entity dlight_cave_1 = CreateClientSideDynamicLight( <24171.6172, -4098.93945, -3632.27686>, angle, DLIGHT_LIGHTGREEN, brightness_cave )
-			dlight_cave_1.SetLightExponent( 3.1 )
-			entity dlight_cave_2 = CreateClientSideDynamicLight( <24776.1191, -3461.90479, -3632.27686>, angle, DLIGHT_LIGHTGREEN, brightness_cave )
-			dlight_cave_2.SetLightExponent( 3.1 )
-			entity dlight_cave_3 = CreateClientSideDynamicLight( <23503.1992, -3488.50562, -3632.27686>, angle, DLIGHT_LIGHTGREEN, brightness_cave )
-			dlight_cave_3.SetLightExponent( 3.1 )
-			entity dlight_cave_4 = CreateClientSideDynamicLight( <22455.1348, -3155.06958, -3766.20874>, angle, DLIGHT_LIGHTGREEN, brightness_cave )
-			dlight_cave_4.SetLightExponent( 2.0 )
-			entity dlight_cave_5 = CreateClientSideDynamicLight( <22144.1387, -1939.85168, -3684.03125>, angle, DLIGHT_LIGHTGREEN, brightness_cave )
-			dlight_cave_5.SetLightExponent( 4.0 )
-			entity dlight_cave_6 = CreateClientSideDynamicLight( <25512.5273, -3464.59839, -3832.90186>, angle, DLIGHT_LIGHTGREEN, brightness_cave )
-			dlight_cave_6.SetLightExponent( 2.0 )
-			entity dlight_cave_7 = CreateClientSideDynamicLight( <26645.2266, -3660.01221, -3796.06226>, angle, DLIGHT_LIGHTGREEN, brightness_cave )
-			dlight_cave_7.SetLightExponent( 2.0 )
-			entity dlight_cave_8 = CreateClientSideDynamicLight( <26941.4102, -4625.42773, -3678.52051>, angle, DLIGHT_LIGHTGREEN, brightness_cave )
-			dlight_cave_8.SetLightExponent( 4.0 )
-			
+			brightness = 500.0
+			CreateClientSideDynamicLight( <24144.1719, -2856.27246, -3632.27686>, angle, DLIGHT_LIGHTGREEN, brightness ).SetLightExponent( 3.1 )
+			CreateClientSideDynamicLight( <24171.6172, -4098.93945, -3632.27686>, angle, DLIGHT_LIGHTGREEN, brightness ).SetLightExponent( 3.1 )
+			CreateClientSideDynamicLight( <24776.1191, -3461.90479, -3632.27686>, angle, DLIGHT_LIGHTGREEN, brightness ).SetLightExponent( 3.1 )
+			CreateClientSideDynamicLight( <23503.1992, -3488.50562, -3632.27686>, angle, DLIGHT_LIGHTGREEN, brightness ).SetLightExponent( 3.1 )
+			CreateClientSideDynamicLight( <22455.1348, -3155.06958, -3766.20874>, angle, DLIGHT_LIGHTGREEN, brightness ).SetLightExponent( 2.0 )
+			CreateClientSideDynamicLight( <22144.1387, -1939.85168, -3684.03125>, angle, DLIGHT_LIGHTGREEN, brightness ).SetLightExponent( 4.0 )
+			CreateClientSideDynamicLight( <25512.5273, -3464.59839, -3832.90186>, angle, DLIGHT_LIGHTGREEN, brightness ).SetLightExponent( 2.0 )
+			CreateClientSideDynamicLight( <26645.2266, -3660.01221, -3796.06226>, angle, DLIGHT_LIGHTGREEN, brightness ).SetLightExponent( 2.0 )
+			CreateClientSideDynamicLight( <26941.4102, -4625.42773, -3678.52051>, angle, DLIGHT_LIGHTGREEN, brightness ).SetLightExponent( 4.0 )
+
 			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			// TRAIN STATION
 			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			float brightness_station = 400.0
-			entity dlight_station_0_0 = CreateClientSideDynamicLight( <26753.6641, -26302.5781, -3863.97144>, angle, DLIGHT_LIGHTGREEN, brightness_station )
-			dlight_station_0_0.SetLightExponent( 1.1 )
-			entity dlight_station_0_1 = CreateClientSideDynamicLight( <26753.6641, -26302.5781, -3583.97144>, angle, DLIGHT_LIGHTGREEN, brightness_station )
-			dlight_station_0_1.SetLightExponent( 1.1 )
-			entity dlight_station_0_2 = CreateClientSideDynamicLight( <26350.6641, -26302.5781, -3863.97144>, angle, DLIGHT_LIGHTGREEN, brightness_station )
-			dlight_station_0_2.SetLightExponent( 1.1 )
-			entity dlight_station_0_3 = CreateClientSideDynamicLight( <27152.6641, -26302.5781, -3863.97144>, angle, DLIGHT_LIGHTGREEN, brightness_station )
-			dlight_station_0_3.SetLightExponent( 1.1 )
-			entity dlight_station_0_4 = CreateClientSideDynamicLight( <26753.6641, -26915.5781, -3583.97144>, angle, DLIGHT_LIGHTGREEN, brightness_station )
-			dlight_station_0_4.SetLightExponent( 1.1 )
-			entity dlight_station_0_5 = CreateClientSideDynamicLight( <26753.6641, -25691.5781, -3583.97144>, angle, DLIGHT_LIGHTGREEN, brightness_station )
-			dlight_station_0_5.SetLightExponent( 1.1 )
+			brightness = 400.0
+			CreateClientSideDynamicLight( <26753.6641, -26302.5781, -3863.97144>, angle, DLIGHT_LIGHTGREEN, brightness ).SetLightExponent( 1.1 )
+			CreateClientSideDynamicLight( <26753.6641, -26302.5781, -3583.97144>, angle, DLIGHT_LIGHTGREEN, brightness ).SetLightExponent( 1.1 )
+			CreateClientSideDynamicLight( <26350.6641, -26302.5781, -3863.97144>, angle, DLIGHT_LIGHTGREEN, brightness ).SetLightExponent( 1.1 )
+			CreateClientSideDynamicLight( <27152.6641, -26302.5781, -3863.97144>, angle, DLIGHT_LIGHTGREEN, brightness ).SetLightExponent( 1.1 )
+			CreateClientSideDynamicLight( <26753.6641, -26915.5781, -3583.97144>, angle, DLIGHT_LIGHTGREEN, brightness ).SetLightExponent( 1.1 )
+			CreateClientSideDynamicLight( <26753.6641, -25691.5781, -3583.97144>, angle, DLIGHT_LIGHTGREEN, brightness ).SetLightExponent( 1.1 )
 
-			entity dlight_station_1_0 = CreateClientSideDynamicLight( <11705.8262, 6297.34033, -4360.0459>, angle, DLIGHT_LIGHTGREEN, brightness_station )
-			dlight_station_1_0.SetLightExponent( 1.1 )
-			entity dlight_station_1_1 = CreateClientSideDynamicLight( <11705.8262, 6297.34033, -4090.0913>, angle, DLIGHT_LIGHTGREEN, brightness_station )
-			dlight_station_1_1.SetLightExponent( 1.1 )
-			entity dlight_station_1_2 = CreateClientSideDynamicLight( <12103.8262, 6297.34033, -4260.0459>, angle, DLIGHT_LIGHTGREEN, brightness_station )
-			dlight_station_1_2.SetLightExponent( 1.1 )
-			entity dlight_station_1_3 = CreateClientSideDynamicLight( <11303.8262, 6297.34033, -4260.0459>, angle, DLIGHT_LIGHTGREEN, brightness_station )
-			dlight_station_1_3.SetLightExponent( 1.1 )
-			entity dlight_station_1_4 = CreateClientSideDynamicLight( <11705.8262, 6903.34033, -4090.0913>, angle, DLIGHT_LIGHTGREEN, brightness_station )
-			dlight_station_1_4.SetLightExponent( 1.1 )
-			entity dlight_station_1_5 = CreateClientSideDynamicLight( <11705.8262, 5683.34033, -4090.0913>, angle, DLIGHT_LIGHTGREEN, brightness_station )
-			dlight_station_1_5.SetLightExponent( 1.1 )
+			CreateClientSideDynamicLight( <11705.8262, 6297.34033, -4360.0459>, angle, DLIGHT_LIGHTGREEN, brightness ).SetLightExponent( 1.1 )
+			CreateClientSideDynamicLight( <11705.8262, 6297.34033, -4090.0913>, angle, DLIGHT_LIGHTGREEN, brightness ).SetLightExponent( 1.1 )
+			CreateClientSideDynamicLight( <12103.8262, 6297.34033, -4260.0459>, angle, DLIGHT_LIGHTGREEN, brightness ).SetLightExponent( 1.1 )
+			CreateClientSideDynamicLight( <11303.8262, 6297.34033, -4260.0459>, angle, DLIGHT_LIGHTGREEN, brightness ).SetLightExponent( 1.1 )
+			CreateClientSideDynamicLight( <11705.8262, 6903.34033, -4090.0913>, angle, DLIGHT_LIGHTGREEN, brightness ).SetLightExponent( 1.1 )
+			CreateClientSideDynamicLight( <11705.8262, 5683.34033, -4090.0913>, angle, DLIGHT_LIGHTGREEN, brightness ).SetLightExponent( 1.1 )
 
-			entity dlight_station_2_0 = CreateClientSideDynamicLight( <-12960.0225, 32487.2109, -3887.99487>, angle, DLIGHT_LIGHTGREEN, brightness_station )
-			dlight_station_2_0.SetLightExponent( 1.1 )
-			entity dlight_station_2_1 = CreateClientSideDynamicLight( <-12960.0225, 32487.2109, -4187.99487>, angle, DLIGHT_LIGHTGREEN, brightness_station )
-			dlight_station_2_1.SetLightExponent( 1.1 )
-			entity dlight_station_2_2 = CreateClientSideDynamicLight( <-12960.0225, 32888.2109, -3887.99487>, angle, DLIGHT_LIGHTGREEN, brightness_station )
-			dlight_station_2_2.SetLightExponent( 1.1 )
-			entity dlight_station_2_3 = CreateClientSideDynamicLight( <-12960.0225, 32088.2109, -3887.99487>, angle, DLIGHT_LIGHTGREEN, brightness_station )
-			dlight_station_2_3.SetLightExponent( 1.1 )
-			entity dlight_station_2_4 = CreateClientSideDynamicLight( <-13566.6006, 32487.2109, -3887.99487>, angle, DLIGHT_LIGHTGREEN, brightness_station )
-			dlight_station_2_4.SetLightExponent( 1.1 )
-			entity dlight_station_2_5 = CreateClientSideDynamicLight( <-12352.8574, 32487.2109, -3887.99487>, angle, DLIGHT_LIGHTGREEN, brightness_station )
-			dlight_station_2_5.SetLightExponent( 1.1 )
+			CreateClientSideDynamicLight( <-12960.0225, 32487.2109, -3887.99487>, angle, DLIGHT_LIGHTGREEN, brightness ).SetLightExponent( 1.1 )
+			CreateClientSideDynamicLight( <-12960.0225, 32487.2109, -4187.99487>, angle, DLIGHT_LIGHTGREEN, brightness ).SetLightExponent( 1.1 )
+			CreateClientSideDynamicLight( <-12960.0225, 32888.2109, -3887.99487>, angle, DLIGHT_LIGHTGREEN, brightness ).SetLightExponent( 1.1 )
+			CreateClientSideDynamicLight( <-12960.0225, 32088.2109, -3887.99487>, angle, DLIGHT_LIGHTGREEN, brightness ).SetLightExponent( 1.1 )
+			CreateClientSideDynamicLight( <-13566.6006, 32487.2109, -3887.99487>, angle, DLIGHT_LIGHTGREEN, brightness ).SetLightExponent( 1.1 )
+			CreateClientSideDynamicLight( <-12352.8574, 32487.2109, -3887.99487>, angle, DLIGHT_LIGHTGREEN, brightness ).SetLightExponent( 1.1 )
 			break
 		default:
 			break
