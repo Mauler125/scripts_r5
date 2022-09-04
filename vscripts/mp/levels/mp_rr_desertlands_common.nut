@@ -56,7 +56,6 @@ void function Desertlands_MapInit_Common()
 	MapZones_RegisterDataTable( $"datatable/map_zones/zones_mp_rr_desertlands_64k_x_64k.rpak" )
 
 	FlagInit( "PlayConveyerStartFX", true )
-
 	SetVictorySequencePlatformModel( $"mdl/rocks/desertlands_victory_platform.rmdl", < 0, 0, -10 >, < 0, 0, 0 > )
 
 	#if SERVER
@@ -64,7 +63,8 @@ void function Desertlands_MapInit_Common()
 		InitLootDrones()
 		InitLootRollers()
 		//%endif
-
+		if ( GetMapName() == "mp_rr_desertlands_64k_x_64k_tt" )
+			thread MirageVoyageButton()
 		AddCallback_EntitiesDidLoad( EntitiesDidLoad )
 
 		SURVIVAL_SetPlaneHeight( 15250 )
@@ -103,7 +103,7 @@ void function EntitiesDidLoad()
 	InitLootDronePaths()
 
 	string currentPlaylist = GetCurrentPlaylistName()
-	// thread SpawnLootDrones( GetPlaylistVarInt( currentPlaylist, "loot_drones_spawn_count", NUM_LOOT_DRONES_TO_SPAWN ) )
+	thread SpawnLootDrones( GetPlaylistVarInt( currentPlaylist, "loot_drones_spawn_count", NUM_LOOT_DRONES_TO_SPAWN ) )
 
 	int keyCount = GetPlaylistVarInt( currentPlaylist, "loot_drones_vault_key_count", NUM_LOOT_DRONES_WITH_VAULT_KEYS )
 	//if ( keyCount > 0 )
@@ -491,5 +491,58 @@ void function FullmapPackage_Train( entity ent, var rui )
 	MinimapPackage_Train( ent, rui )
 	RuiSetFloat2( rui, "iconScale", <1.5,1.5,0.0> )
 	RuiSetFloat3( rui, "iconColor", <0.5,0.5,0.5> )
+}
+#endif
+
+#if SERVER
+void function MirageVoyageButton()
+{
+	entity musicbutton = CreateFRButton(<-24990.9, -4413.94, -2208.57>, <0,-123.675,0>, "Press %&use% To Party")
+	AddCallback_OnUseEntity( musicbutton, void function(entity panel, entity user, int input)
+		foreach ( player in GetPlayerArray() )
+		{
+			EmitSoundOnEntity( panel, "Music_TT_Mirage_PartyTrackButtonPress" )
+			thread SetButtonSettings( panel )
+		}
+	)
+	thread MiragePhone()
+}
+
+void function MiragePhone()
+{
+	entity MiragePhone = CreateFRButton(<-23554, -6324, -2929.17>, <40.962, -55.506, 17.1326>, "%&use% PLAY AUDIO LOG")
+	MiragePhone.SetModel( $"mdl/Weapons/ultimate_accelerant/w_ultimate_accelerant.rmdl" )
+	AddCallback_OnUseEntity( MiragePhone, void function(entity panel, entity user, int input)
+		foreach ( player in GetPlayerArray() )
+		{
+			EmitSoundOnEntity( panel, "diag_mp_mirage_tt_01_3p" )
+			thread SetPhoneSettings( panel )
+		}
+	)
+}
+
+void function SetButtonSettings( entity panel )
+{
+	EmitSoundOnEntity( panel, "Desertlands_Mirage_TT_PartySwitch_On" )
+	EmitSoundOnEntity( panel, "Desertlands_Mirage_TT_Firework_Streamer" )
+	EmitSoundOnEntity( panel, "Desertlands_Mirage_TT_Firework_SkyBurst" )
+	EmitSoundOnEntity( panel, "Desertlands_Mirage_TT_LootBall_Launcher" )
+	EmitSoundOnEntity( panel, "diag_mp_mirage_exp_partyBoatButton_3p" )
+	panel.UnsetUsable()
+	panel.SetSkin(1)
+	wait 21
+	EmitSoundOnEntity( panel, "Desertlands_Mirage_TT_PartySwitch_Off" )
+	StopSoundOnEntity( panel, "Desertlands_Mirage_TT_Firework_Streamer" )
+	StopSoundOnEntity( panel, "Desertlands_Mirage_TT_Firework_SkyBurst" )
+	wait 39
+	panel.SetUsable()
+	panel.SetSkin(2)
+}
+
+void function SetPhoneSettings( entity panel )
+{
+	panel.UnsetUsable()
+	wait 50
+	panel.SetUsable()
 }
 #endif
