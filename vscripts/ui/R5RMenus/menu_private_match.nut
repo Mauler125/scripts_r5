@@ -37,14 +37,6 @@ struct
     bool kick_open = false
 } file
 
-enum eServerUpdateSelection
-{
-	MAP,
-	PLAYLIST,
-	NAME,
-    VIS
-}
-
 struct PM_PlayerData
 {
     string name
@@ -76,7 +68,7 @@ void function InitR5RNamePanel( var panel )
 void function UpdateServerName( var button )
 {
     ServerSettings.svServerName = file.tempservername
-    RunClientScript("UICodeCallback_UpdateServerInfo", eServerUpdateSelection.NAME, file.tempservername)
+    RunClientScript("UICodeCallback_UpdateServerInfo", 0, file.tempservername)
 
     Hud_SetVisible( file.namepanel, false )
 	Hud_SetVisible( Hud_GetChild(file.menu, "FadeBackground"), false )
@@ -218,7 +210,7 @@ void function SetSelectedServerMap( string map )
 {
 	ServerSettings.svMapName = map
 
-    RunClientScript("UICodeCallback_UpdateServerInfo", eServerUpdateSelection.MAP, map)
+    RunClientScript("UICodeCallback_UpdateServerInfo", 1, map)
 	Hud_SetVisible( file.panels[0], false )
 
     file.maps_open = false
@@ -228,7 +220,7 @@ void function SetSelectedServerPlaylist( string playlist )
 {
 	ServerSettings.svPlaylist = playlist
 
-    RunClientScript("UICodeCallback_UpdateServerInfo", eServerUpdateSelection.PLAYLIST, playlist)
+    RunClientScript("UICodeCallback_UpdateServerInfo", 2, playlist)
 
     array<string> playlist_maps = GetPlaylistMaps(ServerSettings.svPlaylist)
 	//This should ever really be triggered but here just incase
@@ -252,7 +244,7 @@ void function SetSelectedServerVis( int vis )
 {
     ServerSettings.svVisibility = vis
 
-    RunClientScript("UICodeCallback_UpdateServerInfo", eServerUpdateSelection.VIS, vis.tostring())
+    RunClientScript("UICodeCallback_UpdateServerInfo", 3, vis.tostring())
 	Hud_SetVisible( file.panels[2], false )
 	Hud_SetVisible( Hud_GetChild(file.menu, "FadeBackground"), false )
 
@@ -403,19 +395,19 @@ void function UI_SetServerInfo( int type, string text )
 {
     switch( type )
     {
-        case eServerUpdateSelection.NAME:
+        case 0:
                 ServerSettings.svServerName = text
 	            Hud_SetText(Hud_GetChild( file.menu, "MapServerNameInfoEdit" ), text)
             break;
-        case eServerUpdateSelection.MAP:
+        case 1:
                 ServerSettings.svMapName = text
 	            RuiSetImage( Hud_GetRui( Hud_GetChild( file.menu, "ServerMapImg" ) ), "loadscreenImage", GetUIMapAsset( text ) )
             break;
-        case eServerUpdateSelection.PLAYLIST:
+        case 2:
                 ServerSettings.svPlaylist = text
 	            Hud_SetText(Hud_GetChild( file.menu, "PlaylistInfoEdit" ), GetUIPlaylistName( text ) )
             break;
-        case eServerUpdateSelection.VIS:
+        case 3:
                 ServerSettings.svVisibility = text.tointeger()
 	            Hud_SetText(Hud_GetChild( file.menu, "VisInfoEdit" ), vistoname[text])
             break;

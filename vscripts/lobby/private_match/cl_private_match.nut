@@ -3,22 +3,13 @@ global function Cl_PrivateMatch_Init
 global function ServerCallback_PrivateMatch_UpdateUI
 global function ServerCallback_PrivateMatch_SelectionUpdated
 
-global function ServerCallback_PrivateMatch_BuildClientName
-global function ServerCallback_PrivateMatch_BuildClientMap
-global function ServerCallback_PrivateMatch_BuildClientPlaylist
-global function ServerCallback_PrivateMatch_BuildClientVis
+global function ServerCallback_PrivateMatch_BuildClientString
 
 global function UICodeCallback_UpdateServerInfo
 global function UICodeCallback_KickOrBanPlayer
 global function UICallback_CheckForHost
 
-struct
-{
-    string currentmap = ""
-    string currentplaylist = ""
-    string currentname = ""
-    string currentvis = ""
-} tempStorage
+string tempstring = ""
 
 void function Cl_PrivateMatch_Init()
 {
@@ -27,7 +18,7 @@ void function Cl_PrivateMatch_Init()
 
 void function OnResolutionChanged_UpdateClientUI()
 {
-    GetLocalClientPlayer().ClientCommand("pm_updateclient")
+    GetLocalClientPlayer().ClientCommand("lobby_updateclient")
 }
 
 ////////////////////////////////////////////////
@@ -46,17 +37,17 @@ void function UICodeCallback_UpdateServerInfo(int type, string text)
 {
     switch (type)
     {
-        case eServerUpdateSelection.NAME:
-                GetLocalClientPlayer().ClientCommand("pm_name " + text)
+        case 0:
+                GetLocalClientPlayer().ClientCommand("lobby_updateserversetting 0 " + text)
             break;
-        case eServerUpdateSelection.MAP:
-                GetLocalClientPlayer().ClientCommand("pm_map " + text)
+        case 1:
+                GetLocalClientPlayer().ClientCommand("lobby_updateserversetting 1 " + text)
             break;
-        case eServerUpdateSelection.PLAYLIST:
-                GetLocalClientPlayer().ClientCommand("pm_playlist " + text)
+        case 2:
+                GetLocalClientPlayer().ClientCommand("lobby_updateserversetting 2 " + text)
             break;
-        case eServerUpdateSelection.VIS:
-                GetLocalClientPlayer().ClientCommand("pm_vis " + text)
+        case 3:
+                GetLocalClientPlayer().ClientCommand("lobby_updateserversetting 3 " + text)
             break;
     }
 }
@@ -66,10 +57,10 @@ void function UICodeCallback_KickOrBanPlayer(int type, string player)
     switch (type)
     {
         case 0:
-            GetLocalClientPlayer().ClientCommand("pm_kick " + player)
+            GetLocalClientPlayer().ClientCommand("lobby_kick " + player)
             break;
         case 1:
-            GetLocalClientPlayer().ClientCommand("pm_ban " + player)
+            GetLocalClientPlayer().ClientCommand("lobby_ban " + player)
             break;
     }
 }
@@ -109,45 +100,27 @@ void function ServerCallback_PrivateMatch_SelectionUpdated(int type)
 {
     switch( type )
     {
-        case eServerUpdateSelection.NAME:
-                RunUIScript("UI_SetServerInfo", eServerUpdateSelection.NAME, tempStorage.currentname)
-                tempStorage.currentname = ""
+        case 0:
+                RunUIScript("UI_SetServerInfo", 0, tempstring)
+                tempstring = ""
             break;
-        case eServerUpdateSelection.MAP:
-                RunUIScript("UI_SetServerInfo", eServerUpdateSelection.MAP, tempStorage.currentmap)
-                tempStorage.currentmap = ""
+        case 1:
+                RunUIScript("UI_SetServerInfo", 1, tempstring)
+                tempstring = ""
             break;
-        case eServerUpdateSelection.PLAYLIST:
-                RunUIScript("UI_SetServerInfo", eServerUpdateSelection.PLAYLIST, tempStorage.currentplaylist)
-                tempStorage.currentplaylist = ""
+        case 2:
+                RunUIScript("UI_SetServerInfo", 2, tempstring)
+                tempstring = ""
             break;
-        case eServerUpdateSelection.VIS:
-                RunUIScript("UI_SetServerInfo", eServerUpdateSelection.VIS, tempStorage.currentvis.tointeger())
-                tempStorage.currentvis = ""
+        case 3:
+                RunUIScript("UI_SetServerInfo", 3, tempstring.tointeger())
+                tempstring = ""
             break;
     }
 }
 
-void function ServerCallback_PrivateMatch_BuildClientName( ... )
+void function ServerCallback_PrivateMatch_BuildClientString( ... )
 {
 	for ( int i = 0; i < vargc; i++ )
-		tempStorage.currentname += format("%c", vargv[i] )
-}
-
-void function ServerCallback_PrivateMatch_BuildClientMap( ... )
-{
-	for ( int i = 0; i < vargc; i++ )
-		tempStorage.currentmap += format("%c", vargv[i] )
-}
-
-void function ServerCallback_PrivateMatch_BuildClientPlaylist( ... )
-{
-	for ( int i = 0; i < vargc; i++ )
-		tempStorage.currentplaylist += format("%c", vargv[i] )
-}
-
-void function ServerCallback_PrivateMatch_BuildClientVis( ... )
-{
-	for ( int i = 0; i < vargc; i++ )
-		tempStorage.currentvis += format("%c", vargv[i] )
+		tempstring += format("%c", vargv[i] )
 }

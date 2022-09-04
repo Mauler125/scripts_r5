@@ -2,32 +2,18 @@ global function _PrivateMatch_Init
 
 array<entity> playerarray
 
-struct
-{
-    string servername
-    string servermap
-    string serverplaylist
-    string servervis
-} PrivateMatchSettings;
+array<string> PrivateMatchSettings = ["A R5Reloaded Server", "mp_rr_canyonlands_mu1", "custom_tdm", "2"]
 
 void function _PrivateMatch_Init()
 {
     AddCallback_OnClientConnected( void function(entity player) { thread _OnPlayerConnected(player) } )
 
-    AddClientCommandCallback("pm_map", ClientCommand_ChangeMap)
-    AddClientCommandCallback("pm_name", ClientCommand_ChangeName)
-    AddClientCommandCallback("pm_playlist", ClientCommand_ChangePlaylist)
-    AddClientCommandCallback("pm_vis", ClientCommand_ChangeVis)
-    AddClientCommandCallback("pm_updateclient", ClientCommand_UpdateClient)
-    AddClientCommandCallback("pm_kick", ClientCommand_KickPlayer)
-    AddClientCommandCallback("pm_ban", ClientCommand_BanPlayer)
+    AddClientCommandCallback("lobby_updateserversetting", ClientCommand_ChangedServerSetting)
+    AddClientCommandCallback("lobby_updateclient", ClientCommand_UpdateClient)
+    AddClientCommandCallback("lobby_kick", ClientCommand_KickPlayer)
+    AddClientCommandCallback("lobby_ban", ClientCommand_BanPlayer)
 
-    PrivateMatchSettings.servername = "Some Server"
-    PrivateMatchSettings.servermap = "mp_rr_canyonlands_mu1"
-    PrivateMatchSettings.serverplaylist = "custom_tdm"
-    PrivateMatchSettings.servervis = "2"
-
-    thread StartOfPrivateMatch()
+    thread PlayerCheck()
 }
 
 /////////////////////////////////////////////
@@ -51,39 +37,12 @@ bool function ClientCommand_KickPlayer(entity player, array<string> args)
         return false
 
     string playertokick
-
     foreach(int i, arg in args)
     {
-        if(i == 0)
-            playertokick += arg  
-        else
-            playertokick += arg
-    }
-    bool playerisvalid = false
-    entity playertokickent = null
-
-    foreach( p in GetPlayerArray() )
-    {
-        if( !IsValid( p ) )
-            continue
-
-        if(p.GetPlayerName() == playertokick)
-        {
-            playerisvalid = true
-            playertokickent = p
-        }
+        playertokick += arg
     }
 
-    if(playerisvalid)
-    {
-        printl("Kicking " + playertokick)
-        ClientCommand(gp()[0], "sv_kick \"" + playertokick + "\"")
-    }
-    else
-    {
-        printl("Error: Couldnt kick " + playertokick)
-        return false
-    }
+    ClientCommand( gp()[0], "sv_kick \"" + playertokick + "\"" )
 
     return true
 }
@@ -103,30 +62,12 @@ bool function ClientCommand_BanPlayer(entity player, array<string> args)
         return false
 
     string playertoban
-
     foreach(int i, arg in args)
     {
-            playertoban += arg
+        playertoban += arg
     }
 
-    bool playerisvalid = false
-
-    foreach( p in GetPlayerArray() )
-    {
-        if( !IsValid( p ) )
-            continue
-
-        if(p.GetPlayerName() == playertoban)
-            playerisvalid = true
-    }
-
-    if(playerisvalid) {
-        printl("Banned " + playertoban)
-        ClientCommand(gp()[0], "sv_ban \"" + playertoban + "\"")
-    } else {
-        printl("Error: Couldnt ban " + playertoban)
-        return false
-    }
+    ClientCommand( gp()[0], "sv_ban \"" + playertoban + "\"" )
 
     return true
 }
@@ -141,7 +82,7 @@ bool function ClientCommand_UpdateClient(entity player, array<string> args)
     return true
 }
 
-bool function ClientCommand_ChangeMap(entity player, array<string> args)
+bool function ClientCommand_ChangedServerSetting(entity player, array<string> args)
 {
     if( !IsValid( player ) )
         return false
@@ -149,100 +90,43 @@ bool function ClientCommand_ChangeMap(entity player, array<string> args)
     if( gp()[0].GetPlayerName() != player.GetPlayerName())
         return false
 
-    if(args.len() < 1)
+    if(args.len() < 2)
         return false
 
-    string map = args[0]
+    int type = args[0].tointeger()
+    string text
 
-    PrivateMatchSettings.servermap = map;
+    if(type == 0) {
+        foreach(int i, arg in args) {
+            if(i == 0)
+                continue
 
-    foreach( p in GetPlayerArray() )
-    {
-        if( !IsValid( p ) )
-            continue
+            if(i == 1)
+                text += arg
+            else
+                text += " " + arg
+        }
+    }
+    else
+        text = args[1]
 
-        UpdateServerSettings(p)
+    switch( type ) {
+        case 0: //Name
+            PrivateMatchSettings[0] = text;
+            break;
+        case 1: //Map
+            PrivateMatchSettings[1] = text;
+            break;
+        case 2: //Playlist
+            PrivateMatchSettings[2] = text;
+            break;
+        case 3: //Vis
+            PrivateMatchSettings[3] = text;
+            break;
     }
 
-    return true
-}
-
-bool function ClientCommand_ChangeName(entity player, array<string> args)
-{
-    if( !IsValid( player ) )
-        return false
-
-    if( gp()[0].GetPlayerName() != player.GetPlayerName())
-        return false
-
-    if(args.len() < 1)
-        return false
-
-    string servername
-
-    foreach(int i, arg in args) {
-        if(i == 0)
-            servername += arg
-        else
-            servername += " " + arg
-    }
-
-    PrivateMatchSettings.servername = servername;
-
-    foreach( p in GetPlayerArray() )
-    {
-        if( !IsValid( p ) )
-            continue
-
-        UpdateServerSettings(p)
-    }
-
-    return true
-}
-
-bool function ClientCommand_ChangePlaylist(entity player, array<string> args)
-{
-    if( !IsValid( player ) )
-        return false
-
-    if( gp()[0].GetPlayerName() != player.GetPlayerName())
-        return false
-
-    if(args.len() < 1)
-        return false
-
-    string playlist = args[0]
-
-    PrivateMatchSettings.serverplaylist = playlist;
-
-    foreach( p in GetPlayerArray() )
-    {
-        if( !IsValid( p ) )
-            continue
-
-        UpdateServerSettings(p)
-    }
-
-    return true
-}
-
-bool function ClientCommand_ChangeVis(entity player, array<string> args)
-{
-    if( !IsValid( player ) )
-        return false
-
-    if( gp()[0].GetPlayerName() != player.GetPlayerName())
-        return false
-
-    if(args.len() < 1)
-        return false
-
-    string vis = args[0]
-
-    PrivateMatchSettings.servervis = vis;
-
-    foreach( p in GetPlayerArray() )
-    {
+    //Update all players
+    foreach( p in GetPlayerArray() ) {
         if( !IsValid( p ) )
             continue
 
@@ -257,11 +141,6 @@ bool function ClientCommand_ChangeVis(entity player, array<string> args)
 //            General Functions            //
 //                                         //
 /////////////////////////////////////////////
-
-void function StartOfPrivateMatch()
-{
-    thread PlayerCheck()
-}
 
 void function PlayerCheck()
 {
@@ -294,29 +173,13 @@ void function PlayerCheck()
 
 void function UpdateServerSettings(entity player)
 {
-    //Update Server Name
-    for ( int i = 0; i < PrivateMatchSettings.servername.len(); i++ ) {
-        Remote_CallFunction_NonReplay( player, "ServerCallback_PrivateMatch_BuildClientName", PrivateMatchSettings.servername[i] )
+    foreach(int type, string text in PrivateMatchSettings)
+    {
+        for ( int i = 0; i < text.len(); i++ ) {
+            Remote_CallFunction_NonReplay( player, "ServerCallback_PrivateMatch_BuildClientString", text[i] )
+        }
+        Remote_CallFunction_NonReplay( player, "ServerCallback_PrivateMatch_SelectionUpdated", type )
     }
-    Remote_CallFunction_NonReplay( player, "ServerCallback_PrivateMatch_SelectionUpdated", eServerUpdateSelection.NAME )
-
-    //Update Server Map
-    for ( int i = 0; i < PrivateMatchSettings.servermap.len(); i++ ) {
-        Remote_CallFunction_NonReplay( player, "ServerCallback_PrivateMatch_BuildClientMap", PrivateMatchSettings.servermap[i] )
-    }
-    Remote_CallFunction_NonReplay( player, "ServerCallback_PrivateMatch_SelectionUpdated", eServerUpdateSelection.MAP )
-
-    //Update Server Name
-    for ( int i = 0; i < PrivateMatchSettings.serverplaylist.len(); i++ ) {
-        Remote_CallFunction_NonReplay( player, "ServerCallback_PrivateMatch_BuildClientPlaylist", PrivateMatchSettings.serverplaylist[i] )
-    }
-    Remote_CallFunction_NonReplay( player, "ServerCallback_PrivateMatch_SelectionUpdated", eServerUpdateSelection.PLAYLIST )
-
-    //Update Server Vis
-    for ( int i = 0; i < PrivateMatchSettings.servervis.len(); i++ ) {
-        Remote_CallFunction_NonReplay( player, "ServerCallback_PrivateMatch_BuildClientVis", PrivateMatchSettings.servervis[i] )
-    }
-    Remote_CallFunction_NonReplay( player, "ServerCallback_PrivateMatch_SelectionUpdated", eServerUpdateSelection.VIS )
 }
 
 void function _OnPlayerConnected(entity player)
