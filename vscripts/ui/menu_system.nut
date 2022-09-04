@@ -167,30 +167,8 @@ void function UpdateSystemPanel( var panel )
 		SetButtonData( panel, index, file.nullButtonData[ panel ] )
 
 	int buttonIndex = 0
-	if(server_host_name == GetPlayerName() && !IsLobby())
-	{
-		UISize screenSize = GetScreenSize()
-		SetCursorPosition( <1920.0 * 0.5, 1080.0 * 0.5, 0> )
 
-		SetButtonData( panel, buttonIndex++, file.settingsButtonData[ panel ] )
-		{
-			if ( IsSurvivalTraining() || IsFiringRangeGameMode() )
-				SetButtonData( panel, buttonIndex++, file.lobbyReturnButtonData[ panel ] )
-			else
-				SetButtonData( panel, buttonIndex++, file.leaveMatchButtonData[ panel ] )
-		}
-
-		if ( IsFiringRangeGameMode() )
-		{
-			SetButtonData( panel, buttonIndex++, file.changeCharacterButtonData[ panel ] )
-
-			if ( (GetTeamSize( GetTeam() ) > 1) && FiringRangeHasFriendlyFire() )
-				SetButtonData( panel, buttonIndex++, file.friendlyFireButtonData[ panel ] )
-		}
-
-		SetButtonData( panel, buttonIndex++, file.endmatchButtonData[ panel ] )
-	}
-	else if ( IsConnected() && !IsLobby() )
+	if ( IsConnected() && !IsLobby() ) // Normal system menu
 	{
 		UISize screenSize = GetScreenSize()
 		SetCursorPosition( <1920.0 * 0.5, 1080.0 * 0.5, 0> )
@@ -211,8 +189,12 @@ void function UpdateSystemPanel( var panel )
 			if ( (GetTeamSize( GetTeam() ) > 1) && FiringRangeHasFriendlyFire() )
 				SetButtonData( panel, buttonIndex++, file.friendlyFireButtonData[ panel ] )
 		}
+
+		//If you used the private_match to host the server this will work, maybe there is a better way to find who is host in ui?
+		if(server_host_name == GetPlayerName())
+			SetButtonData( panel, buttonIndex++, file.endmatchButtonData[ panel ] )
 	}
-	else if(IsLobby() && GetCurrentPlaylistName() == "private_match")
+	else if(IsLobby() && GetCurrentPlaylistName() == "private_match") // Used for private match system menu
 	{
 		UISize screenSize = GetScreenSize()
 		SetCursorPosition( <1920.0 * 0.5, 1080.0 * 0.5, 0> )
@@ -222,7 +204,7 @@ void function UpdateSystemPanel( var panel )
 			SetButtonData( panel, buttonIndex++, file.lobbyReturnButtonData[ panel ] )
 		}
 	}
-	else
+	else // any other cases
 	{
 		if ( AmIPartyMember() || AmIPartyLeader() && GetPartySize() > 1 )
 			SetButtonData( panel, buttonIndex++, file.leavePartyData[ panel ] )
