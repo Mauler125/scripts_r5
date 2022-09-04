@@ -159,6 +159,8 @@ void function OnR5RLobby_Open()
 
 	//Set back to default for next time
 	g_isAtMainMenu = false
+
+	server_host_name = ""
 }
 
 void function SetupLobby()
