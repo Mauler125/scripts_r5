@@ -250,7 +250,7 @@ void function DesertlandsTrain_Init()
 
 	// Deleted Button: while we don't know about it
 	// TODO: Hook the button to stop and start the train instead
-	GetEntByScriptName( "train_stop_panel" ).Destroy()
+	//GetEntByScriptName( "train_stop_panel" ).Destroy()
 
 	// Parent loot bins
 	array<entity> lootBins = GetEntArrayByClass_Expensive( "prop_dynamic" )
