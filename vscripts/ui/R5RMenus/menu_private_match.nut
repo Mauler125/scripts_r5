@@ -285,6 +285,9 @@ void function OnR5RLobby_Open()
 		Hud_SetVisible(elem, false)
 	}
 
+    Hud_SetVisible(Hud_GetChild( file.menu, "HostSettingUpGamePanel" ), true)
+    Hud_SetVisible(Hud_GetChild( file.menu, "HostSettingUpGamePanelText" ), true)
+
     RunClientScript("ServerCallback_PrivateMatch_UpdateUI")
 
 	g_isAtMainMenu = false
@@ -333,6 +336,9 @@ void function EnableCreateMatchUI()
 	foreach ( var elem in buttons ) {
 		Hud_SetVisible(elem, true)
 	}
+
+    Hud_SetVisible(Hud_GetChild( file.menu, "HostSettingUpGamePanel" ), false)
+    Hud_SetVisible(Hud_GetChild( file.menu, "HostSettingUpGamePanelText" ), false)
 }
 
 void function AddPlayerToUIArray(string name)

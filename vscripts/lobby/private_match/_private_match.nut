@@ -1,8 +1,5 @@
 global function _PrivateMatch_Init
 
-entity host = null
-string hostname = ""
-
 array<entity> playerarray
 
 struct
@@ -10,7 +7,7 @@ struct
     string servername
     string servermap
     string serverplaylist
-    int servervis
+    string servervis
 } PrivateMatchSettings;
 
 void function _PrivateMatch_Init()
@@ -28,7 +25,7 @@ void function _PrivateMatch_Init()
     PrivateMatchSettings.servername = "Some Server"
     PrivateMatchSettings.servermap = "mp_rr_canyonlands_mu1"
     PrivateMatchSettings.serverplaylist = "custom_tdm"
-    PrivateMatchSettings.servervis = 2
+    PrivateMatchSettings.servervis = "2"
 
     thread StartOfPrivateMatch()
 }
@@ -183,9 +180,11 @@ bool function ClientCommand_ChangeName(entity player, array<string> args)
 
     string servername
 
-    foreach(arg in args)
-    {
-        servername += arg + " "
+    foreach(int i, arg in args) {
+        if(i == 0)
+            servername += arg
+        else
+            servername += " " + arg
     }
 
     PrivateMatchSettings.servername = servername;
@@ -238,7 +237,7 @@ bool function ClientCommand_ChangeVis(entity player, array<string> args)
     if(args.len() < 1)
         return false
 
-    int vis = args[0].tointeger()
+    string vis = args[0]
 
     PrivateMatchSettings.servervis = vis;
 
@@ -299,22 +298,25 @@ void function UpdateServerSettings(entity player)
     for ( int i = 0; i < PrivateMatchSettings.servername.len(); i++ ) {
         Remote_CallFunction_NonReplay( player, "ServerCallback_PrivateMatch_BuildClientName", PrivateMatchSettings.servername[i] )
     }
-    Remote_CallFunction_NonReplay( player, "ServerCallback_PrivateMatch_SelectionUpdated", eServerUpdateSelection.NAME, 254 )
+    Remote_CallFunction_NonReplay( player, "ServerCallback_PrivateMatch_SelectionUpdated", eServerUpdateSelection.NAME )
 
     //Update Server Map
     for ( int i = 0; i < PrivateMatchSettings.servermap.len(); i++ ) {
         Remote_CallFunction_NonReplay( player, "ServerCallback_PrivateMatch_BuildClientMap", PrivateMatchSettings.servermap[i] )
     }
-    Remote_CallFunction_NonReplay( player, "ServerCallback_PrivateMatch_SelectionUpdated", eServerUpdateSelection.MAP, 254 )
+    Remote_CallFunction_NonReplay( player, "ServerCallback_PrivateMatch_SelectionUpdated", eServerUpdateSelection.MAP )
 
     //Update Server Name
     for ( int i = 0; i < PrivateMatchSettings.serverplaylist.len(); i++ ) {
         Remote_CallFunction_NonReplay( player, "ServerCallback_PrivateMatch_BuildClientPlaylist", PrivateMatchSettings.serverplaylist[i] )
     }
-    Remote_CallFunction_NonReplay( player, "ServerCallback_PrivateMatch_SelectionUpdated", eServerUpdateSelection.PLAYLIST, 254 )
+    Remote_CallFunction_NonReplay( player, "ServerCallback_PrivateMatch_SelectionUpdated", eServerUpdateSelection.PLAYLIST )
 
-    //Update Server Name
-    Remote_CallFunction_NonReplay( player, "ServerCallback_PrivateMatch_SelectionUpdated", eServerUpdateSelection.VIS, PrivateMatchSettings.servervis )
+    //Update Server Vis
+    for ( int i = 0; i < PrivateMatchSettings.servervis.len(); i++ ) {
+        Remote_CallFunction_NonReplay( player, "ServerCallback_PrivateMatch_BuildClientVis", PrivateMatchSettings.servervis[i] )
+    }
+    Remote_CallFunction_NonReplay( player, "ServerCallback_PrivateMatch_SelectionUpdated", eServerUpdateSelection.VIS )
 }
 
 void function _OnPlayerConnected(entity player)

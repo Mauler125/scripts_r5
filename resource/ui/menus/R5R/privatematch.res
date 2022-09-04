@@ -155,6 +155,41 @@
 			pin_to_sibling_corner		TOP
 		}
 
+		HostSettingUpGamePanel
+		{
+			ControlName				ImagePanel
+			wide			680
+			tall            40
+			fillColor		"195 29 38 200"
+			drawColor		"195 29 38 200"
+			visible					1
+			zpos					0
+			xpos 0
+			ypos 10
+
+			pin_to_sibling			ServerMapImg
+			pin_corner_to_sibling	BOTTOM_LEFT
+			pin_to_sibling_corner	TOP_LEFT
+		}
+
+		HostSettingUpGamePanelText
+		{
+			ControlName				Label
+			labelText				"Host is currently setting up the match"
+			"font"					"DefaultBold_41"
+			"allcaps"				"1"
+			auto_wide_tocontents	1
+			zpos 					3
+			fontHeight				25
+			xpos					0
+			ypos					0
+			"fgcolor_override"		"255 255 255 255"
+
+			pin_to_sibling HostSettingUpGamePanel
+			pin_corner_to_sibling CENTER
+			pin_to_sibling_corner CENTER
+		}
+
 		StartGamePanel
 		{
 			ControlName RuiPanel

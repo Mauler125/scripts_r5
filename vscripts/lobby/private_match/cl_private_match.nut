@@ -2,17 +2,23 @@ global function Cl_PrivateMatch_Init
 
 global function ServerCallback_PrivateMatch_UpdateUI
 global function ServerCallback_PrivateMatch_SelectionUpdated
+
 global function ServerCallback_PrivateMatch_BuildClientName
 global function ServerCallback_PrivateMatch_BuildClientMap
 global function ServerCallback_PrivateMatch_BuildClientPlaylist
+global function ServerCallback_PrivateMatch_BuildClientVis
 
 global function UICodeCallback_UpdateServerInfo
 global function UICodeCallback_KickOrBanPlayer
 global function UICallback_CheckForHost
 
-string currentmap = ""
-string currentplaylist = ""
-string currentname = ""
+struct
+{
+    string currentmap = ""
+    string currentplaylist = ""
+    string currentname = ""
+    string currentvis = ""
+} tempStorage
 
 void function Cl_PrivateMatch_Init()
 {
@@ -42,15 +48,12 @@ void function UICodeCallback_UpdateServerInfo(int type, string text)
     {
         case eServerUpdateSelection.NAME:
                 GetLocalClientPlayer().ClientCommand("pm_name " + text)
-                currentname = ""
             break;
         case eServerUpdateSelection.MAP:
                 GetLocalClientPlayer().ClientCommand("pm_map " + text)
-                currentmap = ""
             break;
         case eServerUpdateSelection.PLAYLIST:
                 GetLocalClientPlayer().ClientCommand("pm_playlist " + text)
-                currentplaylist = ""
             break;
         case eServerUpdateSelection.VIS:
                 GetLocalClientPlayer().ClientCommand("pm_vis " + text)
@@ -102,24 +105,25 @@ void function ServerCallback_PrivateMatch_UpdateUI()
     RunUIScript( "UpdatePlayersList" )
 }
 
-void function ServerCallback_PrivateMatch_SelectionUpdated(int type, int vis)
+void function ServerCallback_PrivateMatch_SelectionUpdated(int type)
 {
     switch( type )
     {
         case eServerUpdateSelection.NAME:
-                RunUIScript("UI_SetServerInfo", eServerUpdateSelection.NAME, currentname)
-                currentname = ""
+                RunUIScript("UI_SetServerInfo", eServerUpdateSelection.NAME, tempStorage.currentname)
+                tempStorage.currentname = ""
             break;
         case eServerUpdateSelection.MAP:
-                RunUIScript("UI_SetServerInfo", eServerUpdateSelection.MAP, currentmap)
-                currentmap = ""
+                RunUIScript("UI_SetServerInfo", eServerUpdateSelection.MAP, tempStorage.currentmap)
+                tempStorage.currentmap = ""
             break;
         case eServerUpdateSelection.PLAYLIST:
-                RunUIScript("UI_SetServerInfo", eServerUpdateSelection.PLAYLIST, currentplaylist)
-                currentplaylist = ""
+                RunUIScript("UI_SetServerInfo", eServerUpdateSelection.PLAYLIST, tempStorage.currentplaylist)
+                tempStorage.currentplaylist = ""
             break;
         case eServerUpdateSelection.VIS:
-                RunUIScript("UI_SetServerInfo", eServerUpdateSelection.VIS, vis)
+                RunUIScript("UI_SetServerInfo", eServerUpdateSelection.VIS, tempStorage.currentvis.tointeger())
+                tempStorage.currentvis = ""
             break;
     }
 }
@@ -127,17 +131,23 @@ void function ServerCallback_PrivateMatch_SelectionUpdated(int type, int vis)
 void function ServerCallback_PrivateMatch_BuildClientName( ... )
 {
 	for ( int i = 0; i < vargc; i++ )
-		currentname += format("%c", vargv[i] )
+		tempStorage.currentname += format("%c", vargv[i] )
 }
 
 void function ServerCallback_PrivateMatch_BuildClientMap( ... )
 {
 	for ( int i = 0; i < vargc; i++ )
-		currentmap += format("%c", vargv[i] )
+		tempStorage.currentmap += format("%c", vargv[i] )
 }
 
 void function ServerCallback_PrivateMatch_BuildClientPlaylist( ... )
 {
 	for ( int i = 0; i < vargc; i++ )
-		currentplaylist += format("%c", vargv[i] )
+		tempStorage.currentplaylist += format("%c", vargv[i] )
+}
+
+void function ServerCallback_PrivateMatch_BuildClientVis( ... )
+{
+	for ( int i = 0; i < vargc; i++ )
+		tempStorage.currentvis += format("%c", vargv[i] )
 }

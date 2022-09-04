@@ -494,10 +494,12 @@ void function RemoteFunctions_Init_Begin()
 	if ( IsLobby() && GetCurrentPlaylistName() == "private_match")
 	{
 		Remote_RegisterClientFunction( "ServerCallback_PrivateMatch_UpdateUI")
-		Remote_RegisterClientFunction( "ServerCallback_PrivateMatch_SelectionUpdated", "int", 0, 255, "int", 0, 255)
+		Remote_RegisterClientFunction( "ServerCallback_PrivateMatch_SelectionUpdated", "int", 0, 255)
+
 		Remote_RegisterUntypedFunction_deprecated( "ServerCallback_PrivateMatch_BuildClientName" )
 		Remote_RegisterUntypedFunction_deprecated( "ServerCallback_PrivateMatch_BuildClientMap" )
 		Remote_RegisterUntypedFunction_deprecated( "ServerCallback_PrivateMatch_BuildClientPlaylist" )
+		Remote_RegisterUntypedFunction_deprecated( "ServerCallback_PrivateMatch_BuildClientVis" )
 	}
 
 	if ( !IsLobby() )
