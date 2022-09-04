@@ -51,14 +51,12 @@ void function InitSystemPanelMain( var panel )
 
 	AddPanelFooterOption( panel, LEFT, BUTTON_B, true, "#B_BUTTON_BACK", "#B_BUTTON_BACK" )
 	#if R5DEV
-	//Only add dev menu if its not the lobby
-	if(!IsLobby())
-	{
-		if ( Dev_CommandLineHasParm( "-showdevmenu" ) )
-			AddPanelFooterOption( panel, LEFT, BUTTON_Y, true, "#Y_BUTTON_DEV_MENU", "#DEV_MENU", OpenDevMenu )
-	}
+	if ( Dev_CommandLineHasParm( "-showdevmenu" ) )
+		AddPanelFooterOption( panel, LEFT, BUTTON_Y, true, "#Y_BUTTON_DEV_MENU", "#DEV_MENU", OpenDevMenu, ShouldShowDevMenu )
 	#endif
-	file.qaFooter = AddPanelFooterOption( panel, LEFT, BUTTON_X, true, "#X_BUTTON_QA", "QA", ToggleOptIn, ShouldDisplayOptInOptions )
+	
+	if ( Dev_CommandLineHasParm( "-showoptinmenu" ) )
+		file.qaFooter = AddPanelFooterOption( panel, LEFT, BUTTON_X, true, "#X_BUTTON_QA", "QA", ToggleOptIn, ShouldDisplayOptInOptions )
 
 	#if CONSOLE_PROG
 		AddPanelFooterOption( panel, RIGHT, BUTTON_BACK, false, "#BUTTON_RETURN_TO_MAIN", "", ReturnToMain_OnActivate )
@@ -328,6 +326,14 @@ void function UpdateOptInFooter()
 	}
 
 	UpdateFooterOptions()
+}
+
+bool function ShouldShowDevMenu()
+{
+	if(IsLobby())
+		return false
+	
+	return true
 }
 
 
