@@ -30,6 +30,7 @@ struct
 	table<var, ButtonData > changeCharacterButtonData
 	table<var, ButtonData > friendlyFireButtonData
 	table<var, ButtonData > thirdPersonButtonData
+	table<var, ButtonData > endmatchButtonData
 
 	InputDef& qaFooter
 } file
@@ -54,7 +55,7 @@ void function InitSystemPanelMain( var panel )
 	if ( Dev_CommandLineHasParm( "-showdevmenu" ) )
 		AddPanelFooterOption( panel, LEFT, BUTTON_Y, true, "#Y_BUTTON_DEV_MENU", "#DEV_MENU", OpenDevMenu, ShouldShowDevMenu )
 	#endif
-	
+
 	if ( Dev_CommandLineHasParm( "-showoptinmenu" ) )
 		file.qaFooter = AddPanelFooterOption( panel, LEFT, BUTTON_X, true, "#X_BUTTON_QA", "QA", ToggleOptIn, ShouldDisplayOptInOptions )
 
@@ -111,6 +112,7 @@ void function InitSystemPanel( var panel )
 	file.changeCharacterButtonData[ panel ] <- clone data
 	file.friendlyFireButtonData[ panel ] <- clone data
 	file.thirdPersonButtonData[ panel ] <- clone data
+	file.endmatchButtonData[ panel ] <- clone data
 
 	file.settingsButtonData[ panel ].label = "#SETTINGS"
 	file.settingsButtonData[ panel ].activateFunc = OpenSettingsMenu
@@ -139,6 +141,9 @@ void function InitSystemPanel( var panel )
 	file.thirdPersonButtonData[ panel ].label = "TOGGLE THIRD PERSON"
 	file.thirdPersonButtonData[ panel ].activateFunc = ToggleThirdPerson
 
+	file.endmatchButtonData[ panel ].label = "END GAME"
+	file.endmatchButtonData[ panel ].activateFunc = HostEndMatch
+
 	AddPanelEventHandler( panel, eUIEvent.PANEL_SHOW, SystemPanelShow )
 }
 
@@ -162,7 +167,30 @@ void function UpdateSystemPanel( var panel )
 		SetButtonData( panel, index, file.nullButtonData[ panel ] )
 
 	int buttonIndex = 0
-	if ( IsConnected() && !IsLobby() )
+	if(server_host_name == GetPlayerName() && !IsLobby())
+	{
+		UISize screenSize = GetScreenSize()
+		SetCursorPosition( <1920.0 * 0.5, 1080.0 * 0.5, 0> )
+
+		SetButtonData( panel, buttonIndex++, file.settingsButtonData[ panel ] )
+		{
+			if ( IsSurvivalTraining() || IsFiringRangeGameMode() )
+				SetButtonData( panel, buttonIndex++, file.lobbyReturnButtonData[ panel ] )
+			else
+				SetButtonData( panel, buttonIndex++, file.leaveMatchButtonData[ panel ] )
+		}
+
+		if ( IsFiringRangeGameMode() )
+		{
+			SetButtonData( panel, buttonIndex++, file.changeCharacterButtonData[ panel ] )
+
+			if ( (GetTeamSize( GetTeam() ) > 1) && FiringRangeHasFriendlyFire() )
+				SetButtonData( panel, buttonIndex++, file.friendlyFireButtonData[ panel ] )
+		}
+
+		SetButtonData( panel, buttonIndex++, file.endmatchButtonData[ panel ] )
+	}
+	else if ( IsConnected() && !IsLobby() )
 	{
 		UISize screenSize = GetScreenSize()
 		SetCursorPosition( <1920.0 * 0.5, 1080.0 * 0.5, 0> )
@@ -268,6 +296,11 @@ void function OpenSystemMenu()
 void function OpenSettingsMenu()
 {
 	AdvanceMenu( GetMenu( "MiscMenu" ) )
+}
+
+void function HostEndMatch()
+{
+	CreateServer( GetPlayerName() + " Private Match Lobby", "", "mp_lobby", "private_match", eServerVisibility.HIDDEN)
 }
 
 #if CONSOLE_PROG

@@ -31,7 +31,6 @@ struct
     string tempservername
     string tempserverdesc
     string tempplayertokick
-    string hostplayername
 
     bool maps_open = false
     bool playlists_open = false
@@ -58,6 +57,8 @@ global struct ServerStruct
 }
 
 global ServerStruct ServerSettings
+
+global string server_host_name = ""
 
 void function InitR5RNamePanel( var panel )
 {
@@ -342,7 +343,7 @@ void function ClearPlayerUIArray()
 
 void function UpdateHostName(string name)
 {
-    file.hostplayername = name
+    server_host_name = name
 }
 
 void function UpdatePlayersList()
@@ -375,7 +376,7 @@ void function UpdatePlayersList()
             }
 		})
 
-        if(file.hostplayername == GetPlayerName())
+        if(server_host_name == GetPlayerName())
         {
             Hud_AddEventHandler( button, UIE_DOUBLECLICK, clickHandler )
             WORKAROUND_PlayerButtonToClickHandlerMap[button] <- clickHandler
