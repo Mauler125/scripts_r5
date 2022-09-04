@@ -108,35 +108,36 @@ void function InitR5RKickPanel( var panel )
 {
 	file.kickpanel = panel
 
-	AddButtonEventHandler( Hud_GetChild( panel, "BtnKick"), UIE_CLICK, KickPlayer )
-    AddButtonEventHandler( Hud_GetChild( panel, "BtnBan"), UIE_CLICK, BanPlayer )
+	AddButtonEventHandler( Hud_GetChild( panel, "BtnKick"), UIE_CLICK, KickOrBanPlayer )
+    AddButtonEventHandler( Hud_GetChild( panel, "BtnBan"), UIE_CLICK, KickOrBanPlayer )
 	AddButtonEventHandler( Hud_GetChild( panel, "BtnCancel"), UIE_CLICK, DontKickOrBanPlayer )
 }
 
-void function KickPlayer(var button)
+void function KickOrBanPlayer(var button)
 {
-    RunClientScript("UICodeCallback_KickOrBanPlayer", 0, file.tempplayertokick)
-    file.tempplayertokick = ""
-    Hud_SetVisible( file.kickpanel, false )
-	Hud_SetVisible( Hud_GetChild(file.menu, "FadeBackground"), false )
-    file.kick_open = false
-}
+    switch (Hud_GetScriptID( button ).tointeger()) {
+        case 0: // Ban Player
+            RunClientScript("UICodeCallback_KickOrBanPlayer", 1, file.tempplayertokick)
+            break;
+        case 1: // Kick Player
+            RunClientScript("UICodeCallback_KickOrBanPlayer", 0, file.tempplayertokick)
+            break;
+    }
 
-void function BanPlayer(var button)
-{
-    RunClientScript("UICodeCallback_KickOrBanPlayer", 1, file.tempplayertokick)
-    file.tempplayertokick = ""
     Hud_SetVisible( file.kickpanel, false )
 	Hud_SetVisible( Hud_GetChild(file.menu, "FadeBackground"), false )
+
     file.kick_open = false
+    file.tempplayertokick = ""
 }
 
 void function DontKickOrBanPlayer(var button)
 {
-    file.tempplayertokick = ""
     Hud_SetVisible( file.kickpanel, false )
 	Hud_SetVisible( Hud_GetChild(file.menu, "FadeBackground"), false )
+
     file.kick_open = false
+    file.tempplayertokick = ""
 }
 
 void function InitR5RPrivateMatchMenu( var newMenuArg )
