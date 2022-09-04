@@ -672,13 +672,13 @@
 		PlayerList
 		{
 			ControlName				GridButtonListPanel
-			xpos                    0
+			xpos                    18
 			ypos                    2
 			columns                 1
 			rows                    18
 			buttonSpacing           6
 			scrollbarSpacing        6
-			scrollbarOnLeft         0
+			scrollbarOnLeft         1
 			visible					1
 			tabPosition             1
 			selectOnDpadNav         1
@@ -708,7 +708,7 @@
 			"ypos"						"-20"
 			"xpos"                      "-520"
 			"wide"						"490"
-			"tall"						"820"
+			"tall"						"550"
 			"visible"					"0"
 			"controlSettingsFile"		"scripts/resource/ui/menus/R5R/panels/playlist.res"
 			"proportionalToParent"    	"1"
@@ -725,7 +725,7 @@
 			"ypos"						"-20"
 			"xpos"                      "-520"
 			"wide"						"1305"
-			"tall"						"1005"
+			"tall"						"550"
 			"visible"					"0"
 			"controlSettingsFile"		"scripts/resource/ui/menus/R5R/panels/map.res"
 			"proportionalToParent"    	"1"

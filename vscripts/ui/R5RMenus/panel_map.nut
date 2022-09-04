@@ -5,6 +5,7 @@ struct
 {
 	var menu
 	var panel
+	var listPanel
 
 	table<var, string> map_button_table
 } file
@@ -13,61 +14,39 @@ void function InitR5RMapPanel( var panel )
 {
 	file.panel = panel
 	file.menu = GetParentMenu( file.panel )
+
+	file.listPanel = Hud_GetChild( panel, "MapList" )
 }
 
 void function RefreshUIMaps()
 {
-	//Reset all map ui
-	ResetMapsUI()
+	//GetUIMapAsset(m_vMaps[i])
 
-	//Get maps array
 	array<string> m_vMaps = GetPlaylistMaps(ServerSettings.svPlaylist)
 
-	//Get number of maps
 	int m_vMaps_count = m_vMaps.len()
 
-	//Currently supports upto 20 maps
-	//Amos and I talked and will setup a page system for maps when needed
-	//Also note that all maps wont always be shown depending on the playlist selected
-	if(m_vMaps_count > 20)
-		m_vMaps_count = 16
-	
-	for( int i=0; i < m_vMaps_count; i++ ) {
-		//Set Map Text
-		Hud_SetText( Hud_GetChild( file.panel, "MapText" + i ), GetUIMapName(m_vMaps[i]))
+	var scrollPanel = Hud_GetChild( file.listPanel, "ScrollPanel" )
 
-		//Set Map Asset
-		RuiSetImage( Hud_GetRui( Hud_GetChild( file.panel, "MapImg" + i ) ), "loadscreenImage", GetUIMapAsset(m_vMaps[i]) )
+	Hud_InitGridButtons( file.listPanel, m_vMaps_count )
 
-		//Set the map ui visibility to true
-		Hud_SetVisible( Hud_GetChild( file.panel, "MapText" + i ), true )
-		Hud_SetVisible( Hud_GetChild( file.panel, "MapImg" + i ), true )
-		Hud_SetVisible( Hud_GetChild( file.panel, "MapBtn" + i ), true )
+	foreach ( int id, string map in m_vMaps )
+	{
+		var button = Hud_GetChild( scrollPanel, "GridButton" + id )
+        var rui = Hud_GetRui( button )
+	    RuiSetString( rui, "buttonText", GetUIMapName(map) )
 
-		//If button already has a evenhandler remove it
-		var button = Hud_GetChild( file.panel, "MapBtn" + i )
+        //If button already has a evenhandler remove it
 		if ( button in file.map_button_table ) {
 			Hud_RemoveEventHandler( button, UIE_CLICK, SelectServerMap )
 			delete file.map_button_table[button]
 		}
 
 		//Add the Even handler for the button
-		Hud_AddEventHandler( Hud_GetChild( file.panel, "MapBtn" + i ), UIE_CLICK, SelectServerMap )
+		Hud_AddEventHandler( button, UIE_CLICK, SelectServerMap )
 
 		//Add the button and map to a table
-		file.map_button_table[Hud_GetChild( file.panel, "MapBtn" + i )] <- m_vMaps[i]
-	}
-}
-
-void function ResetMapsUI()
-{
-	//Reset all map ui
-	for( int i=0; i < 20; i++ ) {
-		Hud_SetText( Hud_GetChild( file.panel, "MapText" + i ), "")
-		RuiSetImage( Hud_GetRui( Hud_GetChild( file.panel, "MapImg" + i ) ), "loadscreenImage", $"" )
-		Hud_SetVisible( Hud_GetChild( file.panel, "MapText" + i ), false )
-		Hud_SetVisible( Hud_GetChild( file.panel, "MapImg" + i ), false )
-		Hud_SetVisible( Hud_GetChild( file.panel, "MapBtn" + i ), false )
+		file.map_button_table[button] <- map
 	}
 }
 

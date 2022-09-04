@@ -363,7 +363,6 @@ void function UpdateHostName(string name)
 void function UpdatePlayersList()
 {
     var scrollPanel = Hud_GetChild( file.listPanel, "ScrollPanel" )
-    
 
     Hud_InitGridButtons( file.listPanel, playerdata.len() )
     foreach ( int id, PM_PlayerData p in playerdata )

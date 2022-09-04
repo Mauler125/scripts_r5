@@ -20,7 +20,7 @@
 		"xpos"					"0"
 		"ypos"					"0"
 		"zpos"					"0"
-		"wide"					"490"
+		"wide"					"470"
 		"tall"					"40"
 		"labelText"				""
 		"bgcolor_override"		"195 29 38 220"
@@ -38,8 +38,8 @@
 		"xpos"					"0"
 		"ypos"					"0"
 		"zpos"					"0"
-		"wide"					"490"
-		"tall"					"145"
+		"wide"					"470"
+		"tall"					"155"
 		"labelText"				""
 		"bgcolor_override"		"50 50 50 200"
 		"visible"				"1"
@@ -69,160 +69,38 @@
 		"pin_to_sibling_corner" "CENTER"
 	}
 
-	"VisPanel0"
+	VisList
 	{
-		"ControlName" 			"RuiPanel"
-		"wide" 					"480"
-		"tall" 					"40"
-		"xpos" 					"-5"
-		"ypos" 					"-5"
-		"zpos" 					"0"
-		"rui" 					"ui/control_options_description.rpak"
-		"visible" 				"0"
+		ControlName				GridButtonListPanel
+		xpos                    0
+		ypos                    -2
+		columns                 1
+		rows                    3
+		buttonSpacing           2
+		scrollbarSpacing        6
+		scrollbarOnLeft         0
+		setUnusedScrollbarInvisible 0
+		visible					1
+		tabPosition             1
+		selectOnDpadNav         1
 
-		"pin_to_sibling"		"PanelBG"
-		"pin_corner_to_sibling"	"TOP_LEFT"
-		"pin_to_sibling_corner"	"TOP_LEFT"
-	}
+		ButtonSettings
+		{
+			rui                     "ui/generic_item_button.rpak"
+			clipRui                 1
+			wide					470
+			tall					50
+			cursorVelocityModifier  0.7
+			rightClickEvents		1
+			doubleClickEvents       1
+			sound_focus             "UI_Menu_Focus_Small"
+			sound_accept            ""
+			sound_deny              ""
+		}
 
-	"VisPanel1"
-	{
-		"ControlName" 			"RuiPanel"
-		"wide" 					"480"
-		"tall" 					"40"
-		"xpos" 					"0"
-		"ypos" 					"5"
-		"zpos" 					"0"
-		"rui" 					"ui/control_options_description.rpak"
-		"visible" 				"0"
-
-		"pin_to_sibling"		"VisPanel0"
-		"pin_corner_to_sibling"	"TOP_LEFT"
-		"pin_to_sibling_corner"	"BOTTOM_LEFT"
-	}
-
-	"VisPanel2"
-	{
-		"ControlName" 			"RuiPanel"
-		"wide" 					"480"
-		"tall" 					"40"
-		"xpos" 					"0"
-		"ypos" 					"5"
-		"zpos" 					"0"
-		"rui" 					"ui/control_options_description.rpak"
-		"visible" 				"0"
-
-		"pin_to_sibling"		"VisPanel1"
-		"pin_corner_to_sibling"	"TOP_LEFT"
-		"pin_to_sibling_corner"	"BOTTOM_LEFT"
-	}
-
-	"VisBtn0"
-	{
-		"ControlName" 			"RuiButton"
-		"InheritProperties" 	"RuiSmallButton"
-		"wide" 					"480"
-		"tall" 					"40"
-		"xpos" 					"0"
-		"ypos" 					"0"
-		"zpos" 					"6"
-		"visible" 				"0"
-
-
-		"pin_to_sibling" 		"VisPanel0"
-		"pin_corner_to_sibling" "CENTER"
-		"pin_to_sibling_corner" "CENTER"
-	}
-
-	"VisBtn1"
-	{
-		"ControlName" 			"RuiButton"
-		"InheritProperties" 	"RuiSmallButton"
-		"wide" 					"480"
-		"tall" 					"40"
-		"xpos" 					"0"
-		"ypos" 					"0"
-		"zpos" 					"6"
-		"visible" 				"0"
-
-
-		"pin_to_sibling" 		"VisPanel1"
-		"pin_corner_to_sibling" "CENTER"
-		"pin_to_sibling_corner" "CENTER"
-	}
-
-	"VisBtn2"
-	{
-		"ControlName" 			"RuiButton"
-		"InheritProperties" 	"RuiSmallButton"
-		"wide" 					"480"
-		"tall" 					"40"
-		"xpos" 					"0"
-		"ypos" 					"0"
-		"zpos" 					"6"
-		"visible" 				"0"
-
-
-		"pin_to_sibling" 		"VisPanel2"
-		"pin_corner_to_sibling" "CENTER"
-		"pin_to_sibling_corner" "CENTER"
-	}
-
-	"VisText0"
-	{
-		"ControlName"			"Label"
-		"labelText"				""
-		"font"					"DefaultBold_41"
-		"allcaps"				"1"
-		"auto_wide_tocontents"	"1"
-		"zpos" 					"3"
-		"fontHeight"			"25"
-		"xpos"					"0"
-		"ypos"					"0"
-		"fgcolor_override"		"255 255 255 255"
-		"visible" 				"0"
-
-		"pin_to_sibling" 		"VisPanel0"
-		"pin_corner_to_sibling" "CENTER"
-		"pin_to_sibling_corner" "CENTER"
-	}
-
-	"VisText1"
-	{
-		"ControlName"			"Label"
-		"labelText"				""
-		"font"					"DefaultBold_41"
-		"allcaps"				"1"
-		"auto_wide_tocontents"	"1"
-		"zpos" 					"3"
-		"fontHeight"			"25"
-		"xpos"					"0"
-		"ypos"					"0"
-		"fgcolor_override"		"255 255 255 255"
-		"visible" 				"0"
-
-		"pin_to_sibling" 		"VisPanel1"
-		"pin_corner_to_sibling" "CENTER"
-		"pin_to_sibling_corner" "CENTER"
-	}
-
-	"VisText2"
-	{
-		"ControlName"			"Label"
-		"labelText"				""
-		"font"					"DefaultBold_41"
-		"allcaps"				"1"
-		"auto_wide_tocontents"	"1"
-		"zpos" 					"3"
-		"fontHeight"			"25"
-		"xpos"					"0"
-		"ypos"					"0"
-		"fgcolor_override"		"255 255 255 255"
-		"visible" 				"0"
-
-		"pin_to_sibling" 		"VisPanel2"
-		"pin_corner_to_sibling" "CENTER"
-		"pin_to_sibling_corner" "CENTER"
+		pin_to_sibling				PanelBG
+		pin_corner_to_sibling		TOP_LEFT
+		pin_to_sibling_corner		TOP_LEFT
 	}
 }
 
