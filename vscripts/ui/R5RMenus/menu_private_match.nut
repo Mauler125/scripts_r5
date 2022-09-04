@@ -11,10 +11,7 @@ global function UpdatePlayersList
 global function AddPlayerToUIArray
 global function ClearPlayerUIArray
 global function EnableCreateMatchUI
-global function PM_SetMap
-global function PM_SetPlaylist
-global function PM_SetVis
-global function PM_SetName
+global function UI_SetServerInfo
 global function UpdateHostName
 
 struct
@@ -39,6 +36,14 @@ struct
     bool desc_open = false
     bool kick_open = false
 } file
+
+enum eServerUpdateSelection
+{
+	MAP,
+	PLAYLIST,
+	NAME,
+    VIS
+}
 
 struct PM_PlayerData
 {
@@ -71,10 +76,11 @@ void function InitR5RNamePanel( var panel )
 void function UpdateServerName( var button )
 {
     ServerSettings.svServerName = file.tempservername
-    RunClientScript("UICodeCallback_UpdateName", file.tempservername)
+    RunClientScript("UICodeCallback_UpdateServerInfo", eServerUpdateSelection.NAME, file.tempservername)
 
     Hud_SetVisible( file.namepanel, false )
 	Hud_SetVisible( Hud_GetChild(file.menu, "FadeBackground"), false )
+
     file.name_open = false
 }
 
@@ -97,6 +103,7 @@ void function UpdateServerDesc( var button )
 
 	Hud_SetVisible( file.descpanel, false )
 	Hud_SetVisible( Hud_GetChild(file.menu, "FadeBackground"), false )
+
     file.desc_open = false
 }
 
@@ -116,7 +123,7 @@ void function InitR5RKickPanel( var panel )
 
 void function KickPlayer(var button)
 {
-    RunClientScript("UICodeCallback_KickPlayer", file.tempplayertokick)
+    RunClientScript("UICodeCallback_KickOrBanPlayer", 0, file.tempplayertokick)
     file.tempplayertokick = ""
     Hud_SetVisible( file.kickpanel, false )
 	Hud_SetVisible( Hud_GetChild(file.menu, "FadeBackground"), false )
@@ -125,7 +132,7 @@ void function KickPlayer(var button)
 
 void function BanPlayer(var button)
 {
-    RunClientScript("UICodeCallback_BanPlayer", file.tempplayertokick)
+    RunClientScript("UICodeCallback_KickOrBanPlayer", 1, file.tempplayertokick)
     file.tempplayertokick = ""
     Hud_SetVisible( file.kickpanel, false )
 	Hud_SetVisible( Hud_GetChild(file.menu, "FadeBackground"), false )
@@ -170,6 +177,7 @@ void function InitR5RPrivateMatchMenu( var newMenuArg )
 
 void function OpenSelectedPanel( var button )
 {
+    //Refresh Maps
     RefreshUIMaps()
     RefreshUIPlaylists()
 
@@ -189,11 +197,13 @@ void function OpenSelectedPanel( var button )
             break;
         case 3:
                 file.name_open = true
+                Hud_SetVisible( Hud_GetChild(file.menu, "FadeBackground"), true )
+                Hud_SetText( Hud_GetChild( file.namepanel, "BtnServerName" ), ServerSettings.svServerName )
+            break;
         case 4:
                 file.desc_open = true
-            Hud_SetVisible( Hud_GetChild(file.menu, "FadeBackground"), true )
-		    Hud_SetText( Hud_GetChild( file.namepanel, "BtnServerName" ), ServerSettings.svServerName )
-		    Hud_SetText( Hud_GetChild( file.descpanel, "BtnServerDesc" ), ServerSettings.svServerDesc )
+                Hud_SetVisible( Hud_GetChild(file.menu, "FadeBackground"), true )
+                Hud_SetText( Hud_GetChild( file.descpanel, "BtnServerDesc" ), ServerSettings.svServerDesc )
             break;
         
     }
@@ -201,32 +211,27 @@ void function OpenSelectedPanel( var button )
 
 void function StartNewGame( var button )
 {
-	//Start thread for starting the server
 	CreateServer(ServerSettings.svServerName, ServerSettings.svServerDesc, ServerSettings.svMapName, ServerSettings.svPlaylist, ServerSettings.svVisibility)
 }
 
 void function SetSelectedServerMap( string map )
 {
 	ServerSettings.svMapName = map
-    RunClientScript("UICodeCallback_UpdateMap", map)
 
-    //Set the panel to not visible
+    RunClientScript("UICodeCallback_UpdateServerInfo", eServerUpdateSelection.MAP, map)
 	Hud_SetVisible( file.panels[0], false )
+
     file.maps_open = false
 }
 
 void function SetSelectedServerPlaylist( string playlist )
 {
 	ServerSettings.svPlaylist = playlist
-    RunClientScript("UICodeCallback_UpdatePlaylist", playlist)
+
+    RunClientScript("UICodeCallback_UpdateServerInfo", eServerUpdateSelection.PLAYLIST, playlist)
 
     array<string> playlist_maps = GetPlaylistMaps(ServerSettings.svPlaylist)
-
-    //Set the panel to not visible
-	Hud_SetVisible( file.panels[1], false )
-
 	//This should ever really be triggered but here just incase
-	//The way this would be triggered is if there are no maps in put in the selected playlist
 	if(playlist_maps.len() == 0) {
 		SetSelectedServerMap("mp_rr_canyonlands_64k_x_64k")
         RefreshUIMaps()
@@ -238,16 +243,19 @@ void function SetSelectedServerPlaylist( string playlist )
 		SetSelectedServerMap(playlist_maps[0])
 
     RefreshUIMaps()
+    Hud_SetVisible( file.panels[1], false )
+
     file.playlists_open = false
 }
 
 void function SetSelectedServerVis( int vis )
 {
     ServerSettings.svVisibility = vis
-    RunClientScript("UICodeCallback_UpdateVis", vis)
 
+    RunClientScript("UICodeCallback_UpdateServerInfo", eServerUpdateSelection.VIS, vis.tostring())
 	Hud_SetVisible( file.panels[2], false )
 	Hud_SetVisible( Hud_GetChild(file.menu, "FadeBackground"), false )
+
     file.vis_open = false
 }
 
@@ -279,7 +287,6 @@ void function OnR5RLobby_Open()
 
     RunClientScript("ServerCallback_PrivateMatch_UpdateUI")
 
-	//Set back to default for next time
 	g_isAtMainMenu = false
 }
 
@@ -294,6 +301,7 @@ void function OnR5RLobby_Back()
         Hud_SetVisible( file.descpanel, false )
         Hud_SetVisible( file.kickpanel, false )
         Hud_SetVisible( Hud_GetChild(file.menu, "FadeBackground"), false )
+
         file.maps_open = false
         file.playlists_open = false
         file.vis_open = false
@@ -386,29 +394,25 @@ void function UpdatePlayersList()
     RunClientScript("UICallback_CheckForHost")
 }
 
-void function PM_SetMap( string map )
+void function UI_SetServerInfo( int type, string text )
 {
-    ServerSettings.svMapName = map
-	RuiSetImage( Hud_GetRui( Hud_GetChild( file.menu, "ServerMapImg" ) ), "loadscreenImage", GetUIMapAsset( map ) )
-}
-
-void function PM_SetPlaylist( string playlist )
-{
-    ServerSettings.svPlaylist = playlist
-	//Set the new playlist text
-	Hud_SetText(Hud_GetChild( file.menu, "PlaylistInfoEdit" ), GetUIPlaylistName( playlist ) )
-}
-
-void function PM_SetVis( int vis )
-{
-    ServerSettings.svVisibility = vis
-    //Set the new visibility text
-	Hud_SetText(Hud_GetChild( file.menu, "VisInfoEdit" ), vistoname[vis])
-}
-
-void function PM_SetName( string name )
-{
-    ServerSettings.svServerName = name
-    //Set the new visibility text
-	Hud_SetText(Hud_GetChild( file.menu, "MapServerNameInfoEdit" ), name)
+    switch( type )
+    {
+        case eServerUpdateSelection.NAME:
+                ServerSettings.svServerName = text
+	            Hud_SetText(Hud_GetChild( file.menu, "MapServerNameInfoEdit" ), text)
+            break;
+        case eServerUpdateSelection.MAP:
+                ServerSettings.svMapName = text
+	            RuiSetImage( Hud_GetRui( Hud_GetChild( file.menu, "ServerMapImg" ) ), "loadscreenImage", GetUIMapAsset( text ) )
+            break;
+        case eServerUpdateSelection.PLAYLIST:
+                ServerSettings.svPlaylist = text
+	            Hud_SetText(Hud_GetChild( file.menu, "PlaylistInfoEdit" ), GetUIPlaylistName( text ) )
+            break;
+        case eServerUpdateSelection.VIS:
+                ServerSettings.svVisibility = text.tointeger()
+	            Hud_SetText(Hud_GetChild( file.menu, "VisInfoEdit" ), vistoname[text])
+            break;
+    }
 }

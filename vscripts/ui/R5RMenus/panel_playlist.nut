@@ -28,6 +28,11 @@ void function RefreshUIPlaylists()
 	if(m_vPlaylists_count > 18)
 		m_vPlaylists_count = 18
 
+	//This will keep spacing and height where its supposed to be across resolutions
+	int buttonHeight = Hud_GetHeight( Hud_GetChild( file.panel, "PlaylistBtn0" ) )
+	int panelSpacing = Hud_GetHeight( Hud_GetChild( file.panel, "PanelSpacing" ) )
+	int panelHeight = panelSpacing * 2
+
 	for( int i=0; i < m_vPlaylists_count; i++ ) {
 
 		//Set playlist text
@@ -50,7 +55,11 @@ void function RefreshUIPlaylists()
 
 		//Add the button and playlist to a table
 		file.playlist_button_table[Hud_GetChild( file.panel, "PlaylistBtn" + i )] <- m_vPlaylists[i]
+
+		panelHeight += buttonHeight + panelSpacing
 	}
+
+	Hud_SetHeight(Hud_GetChild( file.panel, "PanelBG" ), panelHeight)
 }
 
 array<string> function GetPlaylists()

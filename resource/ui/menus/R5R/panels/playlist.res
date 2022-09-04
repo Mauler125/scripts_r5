@@ -14,24 +14,6 @@
 		"paintbackground"		"1"
 	}
 
-	"PanelBG"
-	{
-		"ControlName"			"Label"
-		"xpos"					"0"
-		"ypos"					"0"
-		"zpos"					"0"
-		"wide"					"490"
-		"tall"					"745"
-		"labelText"				""
-		"bgcolor_override"		"50 50 50 200"
-		"visible"				"1"
-		"paintbackground"		"1"
-
-		"pin_to_sibling"		"DarkenBackground"
-		"pin_corner_to_sibling"	"LEFT"
-		"pin_to_sibling_corner"	"LEFT"
-	}
-
 	"PanelTopBG"
 	{
 		"ControlName"			"Label"
@@ -45,9 +27,41 @@
 		"visible"				"1"
 		"paintbackground"		"1"
 
-		"pin_to_sibling"		"PanelBG"
-		"pin_corner_to_sibling"	"BOTTOM"
-		"pin_to_sibling_corner"	"TOP"
+		"pin_to_sibling"		"DarkenBackground"
+		"pin_corner_to_sibling"	"TOP_LEFT"
+		"pin_to_sibling_corner"	"TOP_LEFT"
+	}
+
+	"PanelBG"
+	{
+		"ControlName"			"Label"
+		"xpos"					"0"
+		"ypos"					"0"
+		"zpos"					"0"
+		"wide"					"490"
+		"tall"					"745"
+		"labelText"				""
+		"bgcolor_override"		"50 50 50 200"
+		"visible"				"1"
+		"paintbackground"		"1"
+
+		"pin_to_sibling"		"PanelTopBG"
+		"pin_corner_to_sibling"	"TOP"
+		"pin_to_sibling_corner"	"BOTTOM"
+	}
+
+	"PanelSpacing"
+	{
+		"ControlName"			"Label"
+		"xpos"					"0"
+		"ypos"					"0"
+		"zpos"					"0"
+		"wide"					"490"
+		"tall"					"5"
+		"labelText"				""
+		"bgcolor_override"		"0 0 0 0"
+		"visible"				"0"
+		"paintbackground"		"1"
 	}
 
 	"PanelTopText"

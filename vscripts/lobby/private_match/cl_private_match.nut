@@ -6,13 +6,9 @@ global function ServerCallback_PrivateMatch_BuildClientName
 global function ServerCallback_PrivateMatch_BuildClientMap
 global function ServerCallback_PrivateMatch_BuildClientPlaylist
 
+global function UICodeCallback_UpdateServerInfo
+global function UICodeCallback_KickOrBanPlayer
 global function UICallback_CheckForHost
-global function UICodeCallback_UpdateName
-global function UICodeCallback_UpdateMap
-global function UICodeCallback_UpdatePlaylist
-global function UICodeCallback_UpdateVis
-global function UICodeCallback_KickPlayer
-global function UICodeCallback_BanPlayer
 
 string currentmap = ""
 string currentplaylist = ""
@@ -20,13 +16,19 @@ string currentname = ""
 
 void function Cl_PrivateMatch_Init()
 {
-    AddClientCallback_OnResolutionChanged( UpdateClientUI )
+    AddClientCallback_OnResolutionChanged( OnResolutionChanged_UpdateClientUI )
 }
 
-void function UpdateClientUI()
+void function OnResolutionChanged_UpdateClientUI()
 {
     GetLocalClientPlayer().ClientCommand("pm_updateclient")
 }
+
+////////////////////////////////////////////////
+//
+//    UI Call Backs
+//
+////////////////////////////////////////////////
 
 void function UICallback_CheckForHost()
 {
@@ -34,35 +36,46 @@ void function UICallback_CheckForHost()
         RunUIScript( "EnableCreateMatchUI" )
 }
 
-void function UICodeCallback_UpdateName(string name)
+void function UICodeCallback_UpdateServerInfo(int type, string text)
 {
-    GetLocalClientPlayer().ClientCommand("pm_name " + name)
+    switch (type)
+    {
+        case eServerUpdateSelection.NAME:
+                GetLocalClientPlayer().ClientCommand("pm_name " + text)
+                currentname = ""
+            break;
+        case eServerUpdateSelection.MAP:
+                GetLocalClientPlayer().ClientCommand("pm_map " + text)
+                currentmap = ""
+            break;
+        case eServerUpdateSelection.PLAYLIST:
+                GetLocalClientPlayer().ClientCommand("pm_playlist " + text)
+                currentplaylist = ""
+            break;
+        case eServerUpdateSelection.VIS:
+                GetLocalClientPlayer().ClientCommand("pm_vis " + text)
+            break;
+    }
 }
 
-void function UICodeCallback_UpdateMap(string map)
+void function UICodeCallback_KickOrBanPlayer(int type, string player)
 {
-    GetLocalClientPlayer().ClientCommand("pm_map " + map)
+    switch (type)
+    {
+        case 0:
+            GetLocalClientPlayer().ClientCommand("pm_kick " + player)
+            break;
+        case 1:
+            GetLocalClientPlayer().ClientCommand("pm_ban " + player)
+            break;
+    }
 }
 
-void function UICodeCallback_UpdatePlaylist(string playlist)
-{
-    GetLocalClientPlayer().ClientCommand("pm_playlist " + playlist)
-}
-
-void function UICodeCallback_UpdateVis(int vis)
-{
-    GetLocalClientPlayer().ClientCommand("pm_vis " + vis)
-}
-
-void function UICodeCallback_KickPlayer(string player)
-{
-    GetLocalClientPlayer().ClientCommand("pm_kick " + player)
-}
-
-void function UICodeCallback_BanPlayer(string player)
-{
-    GetLocalClientPlayer().ClientCommand("pm_ban " + player)
-}
+////////////////////////////////////////////////
+//
+//    Server Call Backs
+//
+////////////////////////////////////////////////
 
 void function ServerCallback_PrivateMatch_UpdateUI()
 {
@@ -89,24 +102,24 @@ void function ServerCallback_PrivateMatch_UpdateUI()
     RunUIScript( "UpdatePlayersList" )
 }
 
-void function ServerCallback_PrivateMatch_SelectionUpdated(int selection, int vis)
+void function ServerCallback_PrivateMatch_SelectionUpdated(int type, int vis)
 {
-    switch( selection )
+    switch( type )
     {
         case eServerUpdateSelection.NAME:
-                RunUIScript("PM_SetName", currentname)
+                RunUIScript("UI_SetServerInfo", eServerUpdateSelection.NAME, currentname)
                 currentname = ""
             break;
         case eServerUpdateSelection.MAP:
-                RunUIScript("PM_SetMap", currentmap)
+                RunUIScript("UI_SetServerInfo", eServerUpdateSelection.MAP, currentmap)
                 currentmap = ""
             break;
         case eServerUpdateSelection.PLAYLIST:
-                RunUIScript("PM_SetPlaylist", currentplaylist)
+                RunUIScript("UI_SetServerInfo", eServerUpdateSelection.PLAYLIST, currentplaylist)
                 currentplaylist = ""
             break;
         case eServerUpdateSelection.VIS:
-                RunUIScript("PM_SetVis", vis)
+                RunUIScript("UI_SetServerInfo", eServerUpdateSelection.VIS, vis)
             break;
     }
 }

@@ -14,6 +14,24 @@
 		"paintbackground"		"1"
 	}
 
+	"PanelTopBG"
+	{
+		"ControlName"			"Label"
+		"xpos"					"0"
+		"ypos"					"0"
+		"zpos"					"0"
+		"wide"					"1305"
+		"tall"					"40"
+		"labelText"				""
+		"bgcolor_override"		"195 29 38 220"
+		"visible"				"1"
+		"paintbackground"		"1"
+
+		"pin_to_sibling"		"DarkenBackground"
+		"pin_corner_to_sibling"	"TOP_LEFT"
+		"pin_to_sibling_corner"	"TOP_LEFT"
+	}
+
 	"PanelBG"
 	{
 		"ControlName"			"Label"
@@ -27,27 +45,9 @@
 		"visible"				"1"
 		"paintbackground"		"1"
 
-		"pin_to_sibling"		"DarkenBackground"
-		"pin_corner_to_sibling"	"LEFT"
-		"pin_to_sibling_corner"	"LEFT"
-	}
-
-	"PanelTopBG"
-	{
-		"ControlName"			"Label"
-		"xpos"					"1"
-		"ypos"					"0"
-		"zpos"					"0"
-		"wide"					"1305"
-		"tall"					"40"
-		"labelText"				""
-		"bgcolor_override"		"195 29 38 220"
-		"visible"				"1"
-		"paintbackground"		"1"
-
-		"pin_to_sibling"		"PanelBG"
-		"pin_corner_to_sibling"	"BOTTOM"
-		"pin_to_sibling_corner"	"TOP"
+		"pin_to_sibling"		"PanelTopBG"
+		"pin_corner_to_sibling"	"TOP"
+		"pin_to_sibling_corner"	"BOTTOM"
 	}
 
 	"PanelTopText"
