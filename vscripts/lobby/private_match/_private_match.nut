@@ -42,7 +42,7 @@ bool function ClientCommand_KickPlayer(entity player, array<string> args)
         playertokick += arg
     }
 
-    ClientCommand( gp()[0], "sv_kick \"" + playertokick + "\"" )
+    ServerCommand( "sv_kick \"" + playertokick + "\"" )
 
     return true
 }
@@ -67,7 +67,7 @@ bool function ClientCommand_BanPlayer(entity player, array<string> args)
         playertoban += arg
     }
 
-    ClientCommand( gp()[0], "sv_ban \"" + playertoban + "\"" )
+    ServerCommand( "sv_ban \"" + playertoban + "\"" )
 
     return true
 }
