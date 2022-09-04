@@ -131,7 +131,7 @@
 		xpos 0
 		ypos 0
 		zpos 72
-		scriptID 0
+		scriptID 1
 
 
 		pin_to_sibling BanPanel
@@ -184,7 +184,7 @@
 		xpos 0
 		ypos 0
 		zpos 72
-		scriptID 1
+		scriptID 0
 
 
 		pin_to_sibling KickPanel

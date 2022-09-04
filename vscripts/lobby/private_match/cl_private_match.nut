@@ -2,7 +2,6 @@ global function Cl_PrivateMatch_Init
 
 global function ServerCallback_PrivateMatch_UpdateUI
 global function ServerCallback_PrivateMatch_SelectionUpdated
-
 global function ServerCallback_PrivateMatch_BuildClientString
 
 global function UICodeCallback_UpdateServerInfo
@@ -35,21 +34,7 @@ void function UICallback_CheckForHost()
 
 void function UICodeCallback_UpdateServerInfo(int type, string text)
 {
-    switch (type)
-    {
-        case 0:
-                GetLocalClientPlayer().ClientCommand("lobby_updateserversetting 0 " + text)
-            break;
-        case 1:
-                GetLocalClientPlayer().ClientCommand("lobby_updateserversetting 1 " + text)
-            break;
-        case 2:
-                GetLocalClientPlayer().ClientCommand("lobby_updateserversetting 2 " + text)
-            break;
-        case 3:
-                GetLocalClientPlayer().ClientCommand("lobby_updateserversetting 3 " + text)
-            break;
-    }
+    GetLocalClientPlayer().ClientCommand("lobby_updateserversetting " + type + " " + text)
 }
 
 void function UICodeCallback_KickOrBanPlayer(int type, string player)
@@ -98,25 +83,8 @@ void function ServerCallback_PrivateMatch_UpdateUI()
 
 void function ServerCallback_PrivateMatch_SelectionUpdated(int type)
 {
-    switch( type )
-    {
-        case 0:
-                RunUIScript("UI_SetServerInfo", 0, tempstring)
-                tempstring = ""
-            break;
-        case 1:
-                RunUIScript("UI_SetServerInfo", 1, tempstring)
-                tempstring = ""
-            break;
-        case 2:
-                RunUIScript("UI_SetServerInfo", 2, tempstring)
-                tempstring = ""
-            break;
-        case 3:
-                RunUIScript("UI_SetServerInfo", 3, tempstring.tointeger())
-                tempstring = ""
-            break;
-    }
+    RunUIScript("UI_SetServerInfo", type, tempstring)
+    tempstring = ""
 }
 
 void function ServerCallback_PrivateMatch_BuildClientString( ... )

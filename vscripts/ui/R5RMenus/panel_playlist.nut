@@ -77,6 +77,8 @@ array<string> function GetPlaylists()
 
 void function SelectServerPlaylist( var button )
 {
+	EmitUISound( "menu_accept" )
+	
 	//Set selected server playlist
 	thread SetSelectedServerPlaylist(file.playlist_button_table[button])
 }

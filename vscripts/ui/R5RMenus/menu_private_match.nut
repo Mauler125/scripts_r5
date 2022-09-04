@@ -115,14 +115,7 @@ void function InitR5RKickPanel( var panel )
 
 void function KickOrBanPlayer(var button)
 {
-    switch (Hud_GetScriptID( button ).tointeger()) {
-        case 0: // Ban Player
-            RunClientScript("UICodeCallback_KickOrBanPlayer", 1, file.tempplayertokick)
-            break;
-        case 1: // Kick Player
-            RunClientScript("UICodeCallback_KickOrBanPlayer", 0, file.tempplayertokick)
-            break;
-    }
+    RunClientScript("UICodeCallback_KickOrBanPlayer", Hud_GetScriptID( button ).tointeger(), file.tempplayertokick)
 
     Hud_SetVisible( file.kickpanel, false )
 	Hud_SetVisible( Hud_GetChild(file.menu, "FadeBackground"), false )
@@ -410,7 +403,7 @@ void function UI_SetServerInfo( int type, string text )
             break;
         case 3:
                 ServerSettings.svVisibility = text.tointeger()
-	            Hud_SetText(Hud_GetChild( file.menu, "VisInfoEdit" ), vistoname[text])
+	            Hud_SetText(Hud_GetChild( file.menu, "VisInfoEdit" ), vistoname[text.tointeger()])
             break;
     }
 }
