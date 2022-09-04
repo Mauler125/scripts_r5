@@ -3,11 +3,11 @@
 	"DarkenBackground"
 	{
 		"ControlName"			"Label"
-		"xpos"					"550"
+		"xpos"					"0"
 		"ypos"					"0"
 		"zpos"					"0"
-		"wide"					"500"
-		"tall"					"935"
+		"wide"					"490"
+		"tall"					"820"
 		"labelText"				""
 		"bgcolor_override"		"0 0 0 200"
 		"visible"				"0"
@@ -18,12 +18,12 @@
 	{
 		"ControlName"			"Label"
 		"xpos"					"0"
-		"ypos"					"50"
+		"ypos"					"0"
 		"zpos"					"0"
 		"wide"					"490"
 		"tall"					"745"
 		"labelText"				""
-		"bgcolor_override"		"50 50 50 100"
+		"bgcolor_override"		"50 50 50 200"
 		"visible"				"1"
 		"paintbackground"		"1"
 
@@ -41,7 +41,7 @@
 		"wide"					"490"
 		"tall"					"40"
 		"labelText"				""
-		"bgcolor_override"		"195 29 38 200"
+		"bgcolor_override"		"195 29 38 220"
 		"visible"				"1"
 		"paintbackground"		"1"
 

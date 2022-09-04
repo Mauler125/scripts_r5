@@ -3,11 +3,11 @@
 	"DarkenBackground"
 	{
 		"ControlName"			"Label"
-		"xpos"					"550"
+		"xpos"					"0"
 		"ypos"					"0"
 		"zpos"					"0"
-		"wide"					"f0"
-		"tall"					"935"
+		"wide"					"1305"
+		"tall"					"1005"
 		"labelText"				""
 		"bgcolor_override"		"0 0 0 200"
 		"visible"				"0"
@@ -18,12 +18,12 @@
 	{
 		"ControlName"			"Label"
 		"xpos"					"0"
-		"ypos"					"50"
+		"ypos"					"0"
 		"zpos"					"0"
 		"wide"					"1305"
-		"tall"					"745"
+		"tall"					"930"
 		"labelText"				""
-		"bgcolor_override"		"50 50 50 100"
+		"bgcolor_override"		"50 50 50 200"
 		"visible"				"1"
 		"paintbackground"		"1"
 
@@ -41,7 +41,7 @@
 		"wide"					"1305"
 		"tall"					"40"
 		"labelText"				""
-		"bgcolor_override"		"195 29 38 200"
+		"bgcolor_override"		"195 29 38 220"
 		"visible"				"1"
 		"paintbackground"		"1"
 
@@ -144,14 +144,14 @@
 		"tall"           		"180"
 		"visible"				"0"
 		"rui"           		"ui/custom_loadscreen_image.rpak"
-		"ypos" 					"0"
-		"xpos"					"5"
+		"ypos" 					"5"
+		"xpos"					"0"
 		"zpos" 					"1"
 		"classname"				"mapimages"
 
-		"pin_to_sibling"		"MapImg0"
+		"pin_to_sibling"		"MapImg3"
 		"pin_corner_to_sibling"	"TOP_LEFT"
-		"pin_to_sibling_corner"	"TOP_RIGHT"
+		"pin_to_sibling_corner"	"BOTTOM_LEFT"
 	}
 
 	"MapImg5"
@@ -161,14 +161,14 @@
 		"tall"            		"180"
 		"visible"				"0"
 		"rui"           		"ui/custom_loadscreen_image.rpak"
-		"ypos" 					"5"
-		"xpos"					"0"
+		"ypos" 					"0"
+		"xpos"					"5"
 		"zpos" 					"1"
 		"classname"				"mapimages"
 
-		"pin_to_sibling"		"MapImg4"
+		"pin_to_sibling"		"MapImg0"
 		"pin_corner_to_sibling"	"TOP_LEFT"
-		"pin_to_sibling_corner"	"BOTTOM_LEFT"
+		"pin_to_sibling_corner"	"TOP_RIGHT"
 	}
 
 	"MapImg6"
@@ -212,14 +212,14 @@
 		"tall"           		"180"
 		"visible"				"0"
 		"rui"           		"ui/custom_loadscreen_image.rpak"
-		"ypos" 					"0"
-		"xpos"					"5"
+		"ypos" 					"5"
+		"xpos"					"0"
 		"zpos" 					"1"
 		"classname"				"mapimages"
 
-		"pin_to_sibling"		"MapImg4"
+		"pin_to_sibling"		"MapImg7"
 		"pin_corner_to_sibling"	"TOP_LEFT"
-		"pin_to_sibling_corner"	"TOP_RIGHT"
+		"pin_to_sibling_corner"	"BOTTOM_LEFT"
 	}
 
 	"MapImg9"
@@ -246,14 +246,14 @@
 		"tall"            		"180"
 		"visible"				"0"
 		"rui"           		"ui/custom_loadscreen_image.rpak"
-		"ypos" 					"5"
-		"xpos"					"0"
+		"ypos" 					"0"
+		"xpos"					"5"
 		"zpos" 					"1"
 		"classname"				"mapimages"
 
-		"pin_to_sibling"		"MapImg9"
+		"pin_to_sibling"		"MapImg5"
 		"pin_corner_to_sibling"	"TOP_LEFT"
-		"pin_to_sibling_corner"	"BOTTOM_LEFT"
+		"pin_to_sibling_corner"	"TOP_RIGHT"
 	}
 
 	"MapImg11"
@@ -280,14 +280,14 @@
 		"tall"           		"180"
 		"visible"				"0"
 		"rui"           		"ui/custom_loadscreen_image.rpak"
-		"ypos" 					"0"
-		"xpos"					"5"
+		"ypos" 					"5"
+		"xpos"					"0"
 		"zpos" 					"1"
 		"classname"				"mapimages"
 
-		"pin_to_sibling"		"MapImg8"
+		"pin_to_sibling"		"MapImg11"
 		"pin_corner_to_sibling"	"TOP_LEFT"
-		"pin_to_sibling_corner"	"TOP_RIGHT"
+		"pin_to_sibling_corner"	"BOTTOM_LEFT"
 	}
 
 	"MapImg13"
@@ -331,12 +331,80 @@
 		"tall"            		"180"
 		"visible"				"0"
 		"rui"           		"ui/custom_loadscreen_image.rpak"
+		"ypos" 					"0"
+		"xpos"					"5"
+		"zpos" 					"1"
+		"classname"				"mapimages"
+
+		"pin_to_sibling"		"MapImg10"
+		"pin_corner_to_sibling"	"TOP_LEFT"
+		"pin_to_sibling_corner"	"TOP_RIGHT"
+	}
+
+	"MapImg16"
+	{
+		"ControlName"			"RuiPanel"
+		"wide"					"320"
+		"tall"            		"180"
+		"visible"				"0"
+		"rui"           		"ui/custom_loadscreen_image.rpak"
 		"ypos" 					"5"
 		"xpos"					"0"
 		"zpos" 					"1"
 		"classname"				"mapimages"
 
-		"pin_to_sibling"		"MapImg14"
+		"pin_to_sibling"		"MapImg15"
+		"pin_corner_to_sibling"	"TOP_LEFT"
+		"pin_to_sibling_corner"	"BOTTOM_LEFT"
+	}
+
+	"MapImg17"
+	{
+		"ControlName"			"RuiPanel"
+		"wide"					"320"
+		"tall"            		"180"
+		"visible"				"0"
+		"rui"           		"ui/custom_loadscreen_image.rpak"
+		"ypos" 					"5"
+		"xpos"					"0"
+		"zpos" 					"1"
+		"classname"				"mapimages"
+
+		"pin_to_sibling"		"MapImg16"
+		"pin_corner_to_sibling"	"TOP_LEFT"
+		"pin_to_sibling_corner"	"BOTTOM_LEFT"
+	}
+
+	"MapImg18"
+	{
+		"ControlName"			"RuiPanel"
+		"wide"					"320"
+		"tall"            		"180"
+		"visible"				"0"
+		"rui"           		"ui/custom_loadscreen_image.rpak"
+		"ypos" 					"5"
+		"xpos"					"0"
+		"zpos" 					"1"
+		"classname"				"mapimages"
+
+		"pin_to_sibling"		"MapImg17"
+		"pin_corner_to_sibling"	"TOP_LEFT"
+		"pin_to_sibling_corner"	"BOTTOM_LEFT"
+	}
+
+	"MapImg19"
+	{
+		"ControlName"			"RuiPanel"
+		"wide"					"320"
+		"tall"            		"180"
+		"visible"				"0"
+		"rui"           		"ui/custom_loadscreen_image.rpak"
+		"ypos" 					"5"
+		"xpos"					"0"
+		"zpos" 					"1"
+		"classname"				"mapimages"
+
+		"pin_to_sibling"		"MapImg18"
 		"pin_corner_to_sibling"	"TOP_LEFT"
 		"pin_to_sibling_corner"	"BOTTOM_LEFT"
 	}
@@ -626,6 +694,78 @@
 
 
 		"pin_to_sibling" 		"MapImg15"
+		"pin_corner_to_sibling" "CENTER"
+		"pin_to_sibling_corner" "CENTER"
+	}
+
+	MapBtn16
+	{
+		"ControlName" 			"RuiButton"
+		"InheritProperties" 	"RuiSmallButton"
+		"wide" 					"320"
+		"tall" 					"180"
+		"xpos" 					"0"
+		"ypos" 					"0"
+		"zpos" 					"10"
+		"visible"				"0"
+		"classname"				"mapbuttons"
+
+
+		"pin_to_sibling" 		"MapImg16"
+		"pin_corner_to_sibling" "CENTER"
+		"pin_to_sibling_corner" "CENTER"
+	}
+
+	MapBtn17
+	{
+		"ControlName" 			"RuiButton"
+		"InheritProperties" 	"RuiSmallButton"
+		"wide" 					"320"
+		"tall" 					"180"
+		"xpos" 					"0"
+		"ypos" 					"0"
+		"zpos" 					"10"
+		"visible"				"0"
+		"classname"				"mapbuttons"
+
+
+		"pin_to_sibling" 		"MapImg17"
+		"pin_corner_to_sibling" "CENTER"
+		"pin_to_sibling_corner" "CENTER"
+	}
+
+	MapBtn18
+	{
+		"ControlName" 			"RuiButton"
+		"InheritProperties" 	"RuiSmallButton"
+		"wide" 					"320"
+		"tall" 					"180"
+		"xpos" 					"0"
+		"ypos" 					"0"
+		"zpos" 					"10"
+		"visible"				"0"
+		"classname"				"mapbuttons"
+
+
+		"pin_to_sibling" 		"MapImg18"
+		"pin_corner_to_sibling" "CENTER"
+		"pin_to_sibling_corner" "CENTER"
+	}
+
+	MapBtn19
+	{
+		"ControlName" 			"RuiButton"
+		"InheritProperties" 	"RuiSmallButton"
+		"wide" 					"320"
+		"tall" 					"180"
+		"xpos" 					"0"
+		"ypos" 					"0"
+		"zpos" 					"10"
+		"visible"				"0"
+		"classname"				"mapbuttons"
+
+
+		"pin_to_sibling" 		"MapImg19"
 		"pin_corner_to_sibling" "CENTER"
 		"pin_to_sibling_corner" "CENTER"
 	}
@@ -946,6 +1086,86 @@
 		"classname"				"MapLabels"
 
 		"pin_to_sibling" 		"MapImg15"
+		"pin_corner_to_sibling" "TOP_LEFT"
+		"pin_to_sibling_corner" "TOP_LEFT"
+	}
+
+	"MapText16"
+	{
+		"ControlName"			"Label"
+		"labelText"				"Map Name"
+		"font"					"DefaultBold_41"
+		"allcaps"				"1"
+		"auto_wide_tocontents"	"1"
+		"zpos" 					"6"
+		"fontHeight"			"25"
+		"xpos"					"-15"
+		"ypos"					"-15"
+		"fgcolor_override"		"255 255 255 255"
+		"visible"				"0"
+		"classname"				"MapLabels"
+
+		"pin_to_sibling" 		"MapImg16"
+		"pin_corner_to_sibling" "TOP_LEFT"
+		"pin_to_sibling_corner" "TOP_LEFT"
+	}
+
+	"MapText17"
+	{
+		"ControlName"			"Label"
+		"labelText"				"Map Name"
+		"font"					"DefaultBold_41"
+		"allcaps"				"1"
+		"auto_wide_tocontents"	"1"
+		"zpos" 					"6"
+		"fontHeight"			"25"
+		"xpos"					"-15"
+		"ypos"					"-15"
+		"fgcolor_override"		"255 255 255 255"
+		"visible"				"0"
+		"classname"				"MapLabels"
+
+		"pin_to_sibling" 		"MapImg17"
+		"pin_corner_to_sibling" "TOP_LEFT"
+		"pin_to_sibling_corner" "TOP_LEFT"
+	}
+
+	"MapText18"
+	{
+		"ControlName"			"Label"
+		"labelText"				"Map Name"
+		"font"					"DefaultBold_41"
+		"allcaps"				"1"
+		"auto_wide_tocontents"	"1"
+		"zpos" 					"6"
+		"fontHeight"			"25"
+		"xpos"					"-15"
+		"ypos"					"-15"
+		"fgcolor_override"		"255 255 255 255"
+		"visible"				"0"
+		"classname"				"MapLabels"
+
+		"pin_to_sibling" 		"MapImg18"
+		"pin_corner_to_sibling" "TOP_LEFT"
+		"pin_to_sibling_corner" "TOP_LEFT"
+	}
+
+	"MapText19"
+	{
+		"ControlName"			"Label"
+		"labelText"				"Map Name"
+		"font"					"DefaultBold_41"
+		"allcaps"				"1"
+		"auto_wide_tocontents"	"1"
+		"zpos" 					"6"
+		"fontHeight"			"25"
+		"xpos"					"-15"
+		"ypos"					"-15"
+		"fgcolor_override"		"255 255 255 255"
+		"visible"				"0"
+		"classname"				"MapLabels"
+
+		"pin_to_sibling" 		"MapImg19"
 		"pin_corner_to_sibling" "TOP_LEFT"
 		"pin_to_sibling_corner" "TOP_LEFT"
 	}

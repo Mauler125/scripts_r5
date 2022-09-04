@@ -26,10 +26,10 @@ void function RefreshUIMaps()
 	//Get number of maps
 	int m_vMaps_count = m_vMaps.len()
 
-	//Currently supports upto 16 maps
+	//Currently supports upto 20 maps
 	//Amos and I talked and will setup a page system for maps when needed
 	//Also note that all maps wont always be shown depending on the playlist selected
-	if(m_vMaps_count > 16)
+	if(m_vMaps_count > 20)
 		m_vMaps_count = 16
 	
 	for( int i=0; i < m_vMaps_count; i++ ) {
@@ -62,7 +62,7 @@ void function RefreshUIMaps()
 void function ResetMapsUI()
 {
 	//Reset all map ui
-	for( int i=0; i < 16; i++ ) {
+	for( int i=0; i < 20; i++ ) {
 		Hud_SetText( Hud_GetChild( file.panel, "MapText" + i ), "")
 		RuiSetImage( Hud_GetRui( Hud_GetChild( file.panel, "MapImg" + i ) ), "loadscreenImage", $"" )
 		Hud_SetVisible( Hud_GetChild( file.panel, "MapText" + i ), false )

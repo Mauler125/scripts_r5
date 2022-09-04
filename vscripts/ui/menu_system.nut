@@ -51,8 +51,12 @@ void function InitSystemPanelMain( var panel )
 
 	AddPanelFooterOption( panel, LEFT, BUTTON_B, true, "#B_BUTTON_BACK", "#B_BUTTON_BACK" )
 	#if R5DEV
+	//Only add dev menu if its not the lobby
+	if(!IsLobby())
+	{
 		if ( Dev_CommandLineHasParm( "-showdevmenu" ) )
 			AddPanelFooterOption( panel, LEFT, BUTTON_Y, true, "#Y_BUTTON_DEV_MENU", "#DEV_MENU", OpenDevMenu )
+	}
 	#endif
 	file.qaFooter = AddPanelFooterOption( panel, LEFT, BUTTON_X, true, "#X_BUTTON_QA", "QA", ToggleOptIn, ShouldDisplayOptInOptions )
 
@@ -180,6 +184,16 @@ void function UpdateSystemPanel( var panel )
 
 			if ( (GetTeamSize( GetTeam() ) > 1) && FiringRangeHasFriendlyFire() )
 				SetButtonData( panel, buttonIndex++, file.friendlyFireButtonData[ panel ] )
+		}
+	}
+	else if(IsLobby() && GetCurrentPlaylistName() == "private_match")
+	{
+		UISize screenSize = GetScreenSize()
+		SetCursorPosition( <1920.0 * 0.5, 1080.0 * 0.5, 0> )
+
+		SetButtonData( panel, buttonIndex++, file.settingsButtonData[ panel ] )
+		{
+			SetButtonData( panel, buttonIndex++, file.lobbyReturnButtonData[ panel ] )
 		}
 	}
 	else
