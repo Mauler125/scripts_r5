@@ -39,19 +39,35 @@ void function RefreshUIMaps()
         //If button already has a evenhandler remove it
 		if ( button in file.map_button_table ) {
 			Hud_RemoveEventHandler( button, UIE_CLICK, SelectServerMap )
+			Hud_RemoveEventHandler( button, UIE_GET_FOCUS, OnMapHover )
+			Hud_RemoveEventHandler( button, UIE_LOSE_FOCUS, OnMapUnHover )
 			delete file.map_button_table[button]
 		}
 
 		//Add the Even handler for the button
 		Hud_AddEventHandler( button, UIE_CLICK, SelectServerMap )
+		Hud_AddEventHandler( button, UIE_GET_FOCUS, OnMapHover )
+		Hud_AddEventHandler( button, UIE_LOSE_FOCUS, OnMapUnHover )
 
 		//Add the button and map to a table
 		file.map_button_table[button] <- map
 	}
+
+	Hud_SetHeight(Hud_GetChild(file.panel, "PanelBG"), Hud_GetHeight(file.listPanel) + 1)
 }
 
 void function SelectServerMap( var button )
 {
 	//Set selected server map
 	SetSelectedServerMap(file.map_button_table[button])
+}
+
+void function OnMapHover( var button )
+{
+	RuiSetImage( Hud_GetRui( Hud_GetChild( file.menu, "ServerMapImg" ) ), "loadscreenImage", GetUIMapAsset( file.map_button_table[button] ) )
+}
+
+void function OnMapUnHover( var button )
+{
+	RuiSetImage( Hud_GetRui( Hud_GetChild( file.menu, "ServerMapImg" ) ), "loadscreenImage", GetUIMapAsset( ServerSettings.svMapName ) )
 }

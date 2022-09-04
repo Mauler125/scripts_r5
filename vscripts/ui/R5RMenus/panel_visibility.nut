@@ -36,6 +36,8 @@ void function InitR5RVisPanel( var panel )
 
 		//Add the Even handler for the button
 		Hud_AddEventHandler( button, UIE_CLICK, SelectServerVis )
+		Hud_AddEventHandler( button, UIE_GET_FOCUS, OnVisHover )
+		Hud_AddEventHandler( button, UIE_LOSE_FOCUS, OnVisUnHover )
 
 		//Add the button and map to a table
 		file.vis_button_table[button] <- vis
@@ -46,4 +48,14 @@ void function SelectServerVis( var button )
 {
 	//Set selected server vis
 	SetSelectedServerVis(file.vis_button_table[button])
+}
+
+void function OnVisHover( var button )
+{
+	Hud_SetText(Hud_GetChild( file.menu, "VisInfoEdit" ), vistoname[file.vis_button_table[button]])
+}
+
+void function OnVisUnHover( var button )
+{
+	Hud_SetText(Hud_GetChild( file.menu, "VisInfoEdit" ), vistoname[ServerSettings.svVisibility])
 }

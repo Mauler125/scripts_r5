@@ -77,7 +77,7 @@ bool function ClientCommand_KickPlayer(entity player, array<string> args)
     if(playerisvalid)
     {
         printl("Kicking " + playertokick)
-        ClientCommand(playertokickent, "disconnect")
+        ClientCommand(gp()[0], "sv_kick \"" + playertokick + "\"")
     }
     else
     {
@@ -122,7 +122,7 @@ bool function ClientCommand_BanPlayer(entity player, array<string> args)
 
     if(playerisvalid) {
         printl("Banned " + playertoban)
-        ClientCommand(gp()[0], "sv_ban " + playertoban)
+        ClientCommand(gp()[0], "sv_ban \"" + playertoban + "\"")
     } else {
         printl("Error: Couldnt ban " + playertoban)
         return false

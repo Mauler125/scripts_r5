@@ -77,7 +77,7 @@
 		columns                 1
 		rows                    10
 		buttonSpacing           2
-		scrollbarSpacing        6
+		scrollbarSpacing        1
 		scrollbarOnLeft         0
 		setUnusedScrollbarInvisible 0
 		visible					1
