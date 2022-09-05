@@ -191,7 +191,7 @@ void function UpdateSystemPanel( var panel )
 		}
 
 		//If you used the private_match to host the server this will work, maybe there is a better way to find who is host in ui?
-		if(server_host_name == GetPlayerName())
+		if(server_host_name == GetPlayerName() && !IsFiringRangeGameMode() && !IsSurvivalTraining())
 			SetButtonData( panel, buttonIndex++, file.endmatchButtonData[ panel ] )
 	}
 	else if(IsLobby() && GetCurrentPlaylistName() == "private_match") // Used for private match system menu
