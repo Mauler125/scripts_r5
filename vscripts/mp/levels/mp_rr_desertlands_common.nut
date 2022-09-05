@@ -542,6 +542,7 @@ void function MiragePhone()
 
 void function SetButtonSettings( entity panel )
 {
+	thread MirageAnnouncerVoiceLines( panel )
 	EmitSoundOnEntity( panel, "Desertlands_Mirage_TT_PartySwitch_On" )
 	EmitSoundOnEntity( panel, "Desertlands_Mirage_TT_Firework_Streamer" )
 	EmitSoundOnEntity( panel, "Desertlands_Mirage_TT_Firework_SkyBurst" )
@@ -564,6 +565,22 @@ void function SetButtonSettings( entity panel )
 		wait 39
 	panel.SetUsable()
 	panel.SetSkin(2)
+}
+
+void function MirageAnnouncerVoiceLines( entity panel )
+{
+	array <string> dialogueChoices
+		dialogueChoices.append( "diag_mp_mirage_exp_seasonsGreetings_01_01_3p" )
+		dialogueChoices.append( "diag_mp_mirage_exp_seasonsGreetings_01_02_3p" )
+		dialogueChoices.append( "diag_mp_mirage_exp_seasonsGreetings_01_03_3p" )
+		dialogueChoices.append( "diag_mp_mirage_exp_seasonsGreetings_01_04_3p" )
+		dialogueChoices.append( "diag_mp_mirage_exp_seasonsGreetings_01_05_3p" )
+		dialogueChoices.append( "diag_mp_mirage_exp_seasonsGreetings_01_06_3p" )
+		dialogueChoices.append( "diag_mp_mirage_exp_seasonsGreetings_01_07_3p" )
+		dialogueChoices.append( "diag_mp_mirage_exp_seasonsGreetings_01_08_3p" )
+		dialogueChoices.append( "diag_mp_mirage_exp_seasonsGreetings_01_09_3p" )
+		dialogueChoices.randomize()
+		thread EmitSoundOnEntity( panel, dialogueChoices.getrandom() )
 }
 
 void function SetPhoneSettings( entity panel )
