@@ -164,6 +164,7 @@ void function RemoteFunctions_Init_Begin()
 			// CTF: Server to UI
 			Remote_RegisterUIFunction( "CloseCTFRespawnMenu" )
 			// END CTF
+		case PRIVATE_MATCH_LOBBY:
 		case CUSTOM_TDM:
 		case SURVIVAL:
 			RegisterNetworkedVariable( "isPlayerShadowForm", SNDC_PLAYER_GLOBAL, SNVT_BOOL, false )
