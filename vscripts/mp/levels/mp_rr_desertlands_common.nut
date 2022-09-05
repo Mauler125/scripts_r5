@@ -562,7 +562,7 @@ void function SetButtonSettings( entity panel )
 	if ( GameRules_GetGameMode() == "custom_tdm" )
 		WaitForever()
 	else
-		wait 39
+		wait 2
 	panel.SetUsable()
 	panel.SetSkin(2)
 }
