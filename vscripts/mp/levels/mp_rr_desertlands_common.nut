@@ -64,7 +64,8 @@ void function Desertlands_MapInit_Common()
 		InitLootRollers()
 		//%endif
 		if ( GetMapName() == "mp_rr_desertlands_64k_x_64k_tt" )
-			thread MirageVoyageButton()
+			thread MirageVoyageSetup()
+			
 		AddCallback_EntitiesDidLoad( EntitiesDidLoad )
 
 		SURVIVAL_SetPlaneHeight( 15250 )
@@ -495,6 +496,25 @@ void function FullmapPackage_Train( entity ent, var rui )
 #endif
 
 #if SERVER
+void function MirageVoyageSetup()
+{
+	thread MirageVoyageModels()
+	thread MirageVoyageButton()
+	thread MiragePhone()
+}
+
+void function MirageVoyageModels()
+{
+	entity BigDesk = CreatePropDynamic( $"mdl/desertlands/desertlands_lobby_desk_01.rmdl", <-23890,-5151,-2330>, <0,56,0>, SOLID_VPHYSICS )
+	entity CornerPlatform = CreatePropDynamic( $"mdl/desertlands/construction_bldg_platform_04_corner.rmdl", <-25738,-4338,-2181>, <0,190,0>, SOLID_VPHYSICS )
+	entity FixProp1 = CreatePropDynamic( $"mdl/containers/underbelly_cargo_container_128_blue_01.rmdl", <-24362,-5245,-2325>, <0,56,90>, SOLID_VPHYSICS )
+	entity FixProp2 = CreatePropDynamic( $"mdl/containers/underbelly_cargo_container_128_blue_01.rmdl", <-23980,-4670,-2325>, <0,56,90>, SOLID_VPHYSICS )
+	entity FixHole1 = CreatePropDynamic( $"mdl/pipes/airduct_l_turn_long_side.rmdl", <-25255,-4042,-2220>, <0,-70,0>, SOLID_VPHYSICS )
+	entity FixHole2 = CreatePropDynamic( $"mdl/pipes/airduct_l_turn_long_side.rmdl", <-25410,-4275,-2220>, <0,-70,0>, SOLID_VPHYSICS )
+	entity Table1 = CreatePropDynamic( $"mdl/domestic/glass_coffee_table.rmdl", <-26122,-4686,-2520>, <0,56,0>, SOLID_VPHYSICS )
+	entity Table2 = CreatePropDynamic( $"mdl/domestic/glass_coffee_table.rmdl", <-26300,-4570,-2520>, <0,56,0>, SOLID_VPHYSICS )
+}
+
 void function MirageVoyageButton()
 {
 	entity musicbutton = CreateFRButton(<-24990.9, -4413.94, -2208.57>, <0,-123.675,0>, "Press %&use% To Party")
@@ -530,11 +550,19 @@ void function SetButtonSettings( entity panel )
 	EmitSoundOnEntity( panel, "diag_mp_mirage_exp_partyBoatButton_3p" )
 	panel.UnsetUsable()
 	panel.SetSkin(1)
+	wait 0.01
+	StartParticleEffectInWorld( PrecacheParticleSystem( $"P_xo_exp_nuke_3P" ), <-24279,-4883,-2015>, <0,0,0> )
+	
 	wait 21
+	
 	EmitSoundOnEntity( panel, "Desertlands_Mirage_TT_PartySwitch_Off" )
 	StopSoundOnEntity( panel, "Desertlands_Mirage_TT_Firework_Streamer" )
 	StopSoundOnEntity( panel, "Desertlands_Mirage_TT_Firework_SkyBurst" )
-	wait 39
+	
+	if ( GameRules_GetGameMode() == "custom_tdm" )
+		WaitForever()
+	else
+		wait 39
 	panel.SetUsable()
 	panel.SetSkin(2)
 }
