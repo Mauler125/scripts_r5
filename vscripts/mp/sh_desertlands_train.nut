@@ -269,14 +269,9 @@ void function DesertlandsTrain_Init()
 			if(distance > 300)
 				continue
 
-			j++ //Spawn really good loot in the last car
-
 			if( GetCurrentPlaylistVarBool("lootbin_loot_enable", true) == true)
 			{
 				ClearLootBinContents( bin )
-				if(j != 2)
-					AddMultipleLootItemsToLootBin( bin, SURVIVAL_GetMultipleWeightedItemsFromGroup( "Desertlands_Train", 4 ) )
-				else
 					AddMultipleLootItemsToLootBin( bin, SURVIVAL_GetMultipleWeightedItemsFromGroup( "POI_Ultra", 4 ) )
 			}
 
