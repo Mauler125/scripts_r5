@@ -2,6 +2,7 @@ global function InitR5RPrivateMatchMenu
 global function InitR5RNamePanel
 global function InitR5RDescPanel
 global function InitR5RKickPanel
+global function InitR5RStartingPanel
 
 global function SetSelectedServerMap
 global function SetSelectedServerPlaylist
@@ -13,6 +14,7 @@ global function ClearPlayerUIArray
 global function EnableCreateMatchUI
 global function UI_SetServerInfo
 global function UpdateHostName
+global function ShowMatchStartingScreen
 
 struct
 {
@@ -22,6 +24,7 @@ struct
     var namepanel
 	var descpanel
     var kickpanel
+    var startingpanel
 
 	array<var> panels
 
@@ -35,6 +38,8 @@ struct
     bool name_open = false
     bool desc_open = false
     bool kick_open = false
+
+    bool inputsRegistered = false
 } file
 
 struct PM_PlayerData
@@ -124,6 +129,11 @@ void function KickOrBanPlayer(var button)
     file.tempplayertokick = ""
 }
 
+void function InitR5RStartingPanel( var panel )
+{
+	file.startingpanel = panel
+}
+
 void function DontKickOrBanPlayer(var button)
 {
     Hud_SetVisible( file.kickpanel, false )
@@ -143,6 +153,7 @@ void function InitR5RPrivateMatchMenu( var newMenuArg )
 	//Add menu event handlers
     AddMenuEventHandler( menu, eUIEvent.MENU_SHOW, OnR5RLobby_Open )
 	AddMenuEventHandler( menu, eUIEvent.MENU_OPEN, OnR5RLobby_Open )
+    AddMenuEventHandler( menu, eUIEvent.MENU_CLOSE, OnR5RLobby_Close )
 	AddMenuEventHandler( menu, eUIEvent.MENU_NAVIGATE_BACK, OnR5RLobby_Back )
 
     //Setup Button EventHandlers
@@ -159,6 +170,33 @@ void function InitR5RPrivateMatchMenu( var newMenuArg )
 	file.panels.append(Hud_GetChild(menu, "R5RVisPanel"))
 	file.panels.append(Hud_GetChild(menu, "R5RNamePanel"))
 	file.panels.append(Hud_GetChild(menu, "R5RDescPanel"))
+}
+
+void function RegisterInputs()
+{
+	if ( file.inputsRegistered )
+		return
+
+	RegisterButtonPressedCallback( KEY_ENTER, OnPrivateGameMenu_FocusChat )
+	file.inputsRegistered = true
+}
+
+
+void function DeregisterInputs()
+{
+	if ( !file.inputsRegistered )
+		return
+
+	DeregisterButtonPressedCallback( KEY_ENTER, OnPrivateGameMenu_FocusChat )
+	file.inputsRegistered = false
+}
+
+void function OnPrivateGameMenu_FocusChat( var panel )
+{
+	var textChat = Hud_GetChild( file.menu, "LobbyChatBox" )
+
+    printt( "starting message mode", Hud_IsEnabled( GetLobbyChatBox() ) )
+	Hud_StartMessageMode( textChat )
 }
 
 void function OpenSelectedPanel( var button )
@@ -197,7 +235,8 @@ void function OpenSelectedPanel( var button )
 
 void function StartNewGame( var button )
 {
-	CreateServer(ServerSettings.svServerName, ServerSettings.svServerDesc, ServerSettings.svMapName, ServerSettings.svPlaylist, ServerSettings.svVisibility)
+    RunClientScript("UICallback_StartMatch")
+	//CreateServer(ServerSettings.svServerName, ServerSettings.svServerDesc, ServerSettings.svMapName, ServerSettings.svPlaylist, ServerSettings.svVisibility)
 }
 
 void function SetSelectedServerMap( string map )
@@ -256,8 +295,15 @@ void function ShowSelectedPanel(var panel)
 	Hud_SetVisible( panel, true )
 }
 
+void function OnR5RLobby_Close()
+{
+    DeregisterInputs()
+}
+
 void function OnR5RLobby_Open()
 {
+    RegisterInputs()
+
     UI_SetPresentationType( ePresentationType.COLLECTION_EVENT )
     CurrentPresentationType = ePresentationType.COLLECTION_EVENT
 
@@ -273,6 +319,8 @@ void function OnR5RLobby_Open()
 
     Hud_SetVisible(Hud_GetChild( file.menu, "HostSettingUpGamePanel" ), true)
     Hud_SetVisible(Hud_GetChild( file.menu, "HostSettingUpGamePanelText" ), true)
+    Hud_SetVisible( file.startingpanel, false )
+    Hud_SetVisible( Hud_GetChild(file.menu, "FadeBackground"), false )
 
     RunClientScript("ServerCallback_PrivateMatch_UpdateUI")
 
@@ -406,4 +454,32 @@ void function UI_SetServerInfo( int type, string text )
 	            Hud_SetText(Hud_GetChild( file.menu, "VisInfoEdit" ), vistoname[text.tointeger()])
             break;
     }
+}
+
+void function ShowMatchStartingScreen()
+{
+    thread StartMatch()
+}
+
+void function StartMatch()
+{
+    Hud_SetVisible( file.startingpanel, true )
+    Hud_SetVisible( Hud_GetChild(file.menu, "FadeBackground"), true )
+    Hud_SetText( Hud_GetChild( file.startingpanel, "MapAndGamemode" ), GetUIPlaylistName(ServerSettings.svPlaylist) + " - " + GetUIMapName(ServerSettings.svMapName))
+
+    int timer = 5
+    while( timer > -1)
+    {
+        EmitUISound( "menu_accept" )
+        Hud_SetText( Hud_GetChild( file.startingpanel, "Timer" ), timer.tostring() )
+
+        timer--
+        wait 1
+    }
+
+    Hud_SetVisible( file.startingpanel, false )
+    Hud_SetVisible( Hud_GetChild(file.menu, "FadeBackground"), false )
+
+    if(GetPlayerName() == server_host_name)
+        CreateServer(ServerSettings.svServerName, ServerSettings.svServerDesc, ServerSettings.svMapName, ServerSettings.svPlaylist, ServerSettings.svVisibility)
 }

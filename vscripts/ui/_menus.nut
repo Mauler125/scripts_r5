@@ -1542,6 +1542,7 @@ void function InitMenus()
 	AddPanel( privatematchmenu, "R5RNamePanel", InitR5RNamePanel )
 	AddPanel( privatematchmenu, "R5RDescPanel", InitR5RDescPanel )
 	AddPanel( privatematchmenu, "R5RKickPanel", InitR5RKickPanel )
+	AddPanel( privatematchmenu, "R5RStartingPanel", InitR5RStartingPanel )
 	////////
 
 	//CTF UI

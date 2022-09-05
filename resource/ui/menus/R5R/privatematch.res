@@ -155,6 +155,71 @@
 			pin_to_sibling_corner		TOP
 		}
 
+		LobbyChatBox
+		{
+			ControlName             CBaseHudChat
+			InheritProperties       ChatBox
+
+			bgcolor_override        "0 0 0 80"
+			chatBorderThickness     1
+			chatHistoryBgColor      "24 27 30 120"
+			chatEntryBgColor        "24 27 30 120"
+			chatEntryBgColorFocused "24 27 30 120"
+
+			destination				    "global"
+			hideInputBox			0
+			visible                    1
+			teamChat                   0
+			stopMessageModeOnFocusLoss 1
+			menuModeWithFade           0
+			messageModeAlwaysOn		1
+
+			xpos					32
+			ypos					5
+			zpos                    200
+
+			tall 					261
+			wide					650
+
+			pin_to_sibling			ServerMapImg
+			pin_corner_to_sibling	BOTTOM_LEFT
+			pin_to_sibling_corner	BOTTOM_RIGHT
+		}
+
+		"ChatTopLine"
+		{
+			ControlName				ImagePanel
+			wide			648
+			tall            35
+			ypos			-1
+			xpos			0
+			fillColor		"195 29 38 200"
+			drawColor		"195 29 38 200"
+			visible					1
+			zpos					0
+			pin_to_sibling				LobbyChatBox
+			pin_corner_to_sibling		BOTTOM
+			pin_to_sibling_corner		TOP
+		}
+
+		ChatRoomText
+		{
+			ControlName				Label
+			labelText				"Chat Room"
+			"font"					"DefaultBold_41"
+			"allcaps"				"1"
+			auto_wide_tocontents	1
+			zpos 					3
+			fontHeight				25
+			xpos					0
+			ypos					0
+			"fgcolor_override"		"255 255 255 255"
+
+			pin_to_sibling ChatTopLine
+			pin_corner_to_sibling CENTER
+			pin_to_sibling_corner CENTER
+		}
+
 		HostSettingUpGamePanel
 		{
 			ControlName				ImagePanel
@@ -788,6 +853,19 @@
 			"tall"						"960"
 			"visible"					"0"
 			"controlSettingsFile"		"scripts/resource/ui/menus/R5R/panels/kickplayer.res"
+			"proportionalToParent"    	"1"
+			"zpos"                      "10"
+		}
+
+		"R5RStartingPanel"
+		{
+			"ControlName"				"CNestedPanel"
+			"ypos"						"0"
+			"zpos"						"45"
+			"wide"						"f0"
+			"tall"						"960"
+			"visible"					"0"
+			"controlSettingsFile"		"scripts/resource/ui/menus/R5R/panels/matchstarting.res"
 			"proportionalToParent"    	"1"
 			"zpos"                      "10"
 		}

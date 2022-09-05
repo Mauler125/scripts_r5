@@ -12,6 +12,7 @@ void function _PrivateMatch_Init()
     AddClientCommandCallback("lobby_updateclient", ClientCommand_UpdateClient)
     AddClientCommandCallback("lobby_kick", ClientCommand_KickPlayer)
     AddClientCommandCallback("lobby_ban", ClientCommand_BanPlayer)
+    AddClientCommandCallback("lobby_startmatch", ClientCommand_StartMatch)
 
     thread PlayerCheck()
 }
@@ -21,6 +22,25 @@ void function _PrivateMatch_Init()
 //             Client Commands             //
 //                                         //
 /////////////////////////////////////////////
+
+bool function ClientCommand_StartMatch(entity player, array<string> args)
+{
+    if( !IsValid( player ) )
+        return false
+
+    if( gp()[0].GetPlayerName() != player.GetPlayerName())
+        return false
+
+    foreach( p in GetPlayerArray() ) {
+        if( !IsValid( p ) )
+            continue
+
+        SetTeam(p, TEAM_SPECTATOR)
+        Remote_CallFunction_Replay( p, "ServerCallback_PrivateMatch_StartingMatch" )
+    }
+
+    return true
+}
 
 bool function ClientCommand_KickPlayer(entity player, array<string> args)
 {
@@ -186,6 +206,10 @@ void function _OnPlayerConnected(entity player)
 {
     //Get current server settings and update players ui
     UpdateServerSettings(player)
+
+    GameRules_EnableGlobalChat(true)
+
+    SetTeam(player, TEAM_IMC)
 
     //Grab the latest player array
     playerarray = GetPlayerArray()

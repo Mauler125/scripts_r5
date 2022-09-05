@@ -3,10 +3,12 @@ global function Cl_PrivateMatch_Init
 global function ServerCallback_PrivateMatch_UpdateUI
 global function ServerCallback_PrivateMatch_SelectionUpdated
 global function ServerCallback_PrivateMatch_BuildClientString
+global function ServerCallback_PrivateMatch_StartingMatch
 
 global function UICodeCallback_UpdateServerInfo
 global function UICodeCallback_KickOrBanPlayer
 global function UICallback_CheckForHost
+global function UICallback_StartMatch
 
 string tempstring = ""
 
@@ -22,9 +24,14 @@ void function OnResolutionChanged_UpdateClientUI()
 
 ////////////////////////////////////////////////
 //
-//    UI Call Backs
+//    UI CallBacks
 //
 ////////////////////////////////////////////////
+
+void function UICallback_StartMatch()
+{
+    GetLocalClientPlayer().ClientCommand("lobby_startmatch")
+}
 
 void function UICallback_CheckForHost()
 {
@@ -52,9 +59,14 @@ void function UICodeCallback_KickOrBanPlayer(int type, string player)
 
 ////////////////////////////////////////////////
 //
-//    Server Call Backs
+//    Server CallBacks
 //
 ////////////////////////////////////////////////
+
+void function ServerCallback_PrivateMatch_StartingMatch()
+{
+    RunUIScript( "ShowMatchStartingScreen")
+}
 
 void function ServerCallback_PrivateMatch_UpdateUI()
 {
