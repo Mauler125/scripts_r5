@@ -525,7 +525,6 @@ void function MirageVoyageButton()
 			thread SetButtonSettings( panel )
 		}
 	)
-	thread MiragePhone()
 }
 
 void function MiragePhone()
