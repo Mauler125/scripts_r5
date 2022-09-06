@@ -32,6 +32,7 @@ global const asset FIRINGRANGE_QUARRY_BLOCK_ASSET = $"mdl/rocks/thunderdome_quar
 #if SERVER
 // To be used outside if needed
 global int firingrange_infinite_ammo = 0
+global function CreateFRButton
 #endif
 
 #if CLIENT

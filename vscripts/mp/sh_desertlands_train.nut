@@ -250,7 +250,7 @@ void function DesertlandsTrain_Init()
 
 	// Deleted Button: while we don't know about it
 	// TODO: Hook the button to stop and start the train instead
-	GetEntByScriptName( "train_stop_panel" ).Destroy()
+	//GetEntByScriptName( "train_stop_panel" ).Destroy()
 
 	// Parent loot bins
 	array<entity> lootBins = GetEntArrayByClass_Expensive( "prop_dynamic" )
@@ -269,14 +269,9 @@ void function DesertlandsTrain_Init()
 			if(distance > 300)
 				continue
 
-			j++ //Spawn really good loot in the last car
-
 			if( GetCurrentPlaylistVarBool("lootbin_loot_enable", true) == true)
 			{
 				ClearLootBinContents( bin )
-				if(j != 2)
-					AddMultipleLootItemsToLootBin( bin, SURVIVAL_GetMultipleWeightedItemsFromGroup( "Desertlands_Train", 4 ) )
-				else
 					AddMultipleLootItemsToLootBin( bin, SURVIVAL_GetMultipleWeightedItemsFromGroup( "POI_Ultra", 4 ) )
 			}
 

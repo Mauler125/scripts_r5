@@ -32,7 +32,9 @@ void function ClientCodeCallback_MapInit()
 	SURVIVAL_AddMinimapLevelLabel( "#DES_ZONE_13_REFINERY", 0.57, 0.74, 0.5 )
 	SURVIVAL_AddMinimapLevelLabel( "#DES_ZONE_1_DRILL_SITE", 0.29, 0.35, 0.5 )
 	SURVIVAL_AddMinimapLevelLabel( "#DES_ZONE_9_FUEL", 0.52, 0.60, 0.5 )
-	//SURVIVAL_AddMinimapLevelLabel( "#DES_ZONE_8_MIRAGE", 0.23, 0.54, 0.5 )
+	
+	if ( GetMapName() == "mp_rr_desertlands_64k_x_64k_tt" )
+		SURVIVAL_AddMinimapLevelLabel( "Mirage Voyage", 0.23, 0.54, 0.5 )
 
 	//SURVIVAL_AddMinimapLevelLabel( "Tunnel", 0.52, 0.64, 0.3)
 //
