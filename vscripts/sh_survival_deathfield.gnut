@@ -26,6 +26,9 @@ global function SURVIVAL_GetSafeZoneCenter
 global function SURVIVAL_GetSafeZoneRadius
 global function SURVIVAL_GetDeathFieldShrinking
 global function SetSurveyBaconMinimapVisibility
+global function Pathfinder_SurveySuccess
+global function OnPanelUse_SurveyBeacon
+global function OnPanelUseFinished_SurveyBeacon
 #endif
 
 #if CLIENT
@@ -1260,6 +1263,7 @@ void function Pathfinder_RandomizeSurveyLocations()
 
 void function SetSurveyBaconMinimapVisibility( entity player )
 {
+	wait 0.01
 	int team = player.GetTeam()
 	bool hasPathfinder = false
 
@@ -1314,7 +1318,7 @@ void function Pathfinder_AddSurveyBeacon( entity surveyBeacon )
 	anims.panelAnimation3pIdle = "antenna_pathfinder_antenna_hack_mid"
 	anims.panelAnimation3pEnd = "antenna_pathfinder_antenna_hack_end"
 
-	UseCustomPanelHackingAnims( surveyBeacon, anims )
+	UseCustomPanelHackingAnims( surveyBeacon, anims )//TODO: FIX PATH PP
 
 	SetControlPanelUseFunc( surveyBeacon, OnPanelUse_SurveyBeacon )
 	ControlPanel_SetPlayerFinishesUsingFunc( surveyBeacon, OnPanelUseFinished_SurveyBeacon )
