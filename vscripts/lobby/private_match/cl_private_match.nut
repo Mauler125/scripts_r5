@@ -90,6 +90,7 @@ void function ServerCallback_PrivateMatch_UpdateUI()
     }
 
     RunUIScript( "UpdateHostName", gp()[0].GetPlayerName() )
+
     RunUIScript( "UpdatePlayersList" )
 }
 

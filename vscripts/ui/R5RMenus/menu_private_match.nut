@@ -40,6 +40,7 @@ struct
     bool kick_open = false
 
     bool inputsRegistered = false
+    bool startingmatch = false
 } file
 
 struct PM_PlayerData
@@ -322,13 +323,19 @@ void function OnR5RLobby_Open()
     Hud_SetVisible( file.startingpanel, false )
     Hud_SetVisible( Hud_GetChild(file.menu, "FadeBackground"), false )
 
-    RunClientScript("ServerCallback_PrivateMatch_UpdateUI")
+    if(!file.startingmatch)
+        RunClientScript("ServerCallback_PrivateMatch_UpdateUI")
+    else
+        UpdatePlayersList()
 
 	g_isAtMainMenu = false
 }
 
 void function OnR5RLobby_Back()
 {
+    if(file.startingmatch)
+        return
+
     if(file.maps_open || file.playlists_open || file.vis_open || file.name_open || file.desc_open || file.kick_open)
     {
         Hud_SetVisible( file.panels[0], false )
@@ -430,7 +437,11 @@ void function UpdatePlayersList()
         }
 	}
 
-    RunClientScript("UICallback_CheckForHost")
+    if(!file.startingmatch)
+        RunClientScript("UICallback_CheckForHost")
+    else if(GetPlayerName() == server_host_name)
+        EnableCreateMatchUI()
+
 }
 
 void function UI_SetServerInfo( int type, string text )
@@ -458,6 +469,11 @@ void function UI_SetServerInfo( int type, string text )
 
 void function ShowMatchStartingScreen()
 {
+    file.startingmatch = true
+    
+    if(GetActiveMenu() != GetMenu( "R5RPrivateMatch" ))
+        CloseActiveMenu()
+
     thread StartMatch()
 }
 
@@ -479,6 +495,8 @@ void function StartMatch()
 
     Hud_SetVisible( file.startingpanel, false )
     Hud_SetVisible( Hud_GetChild(file.menu, "FadeBackground"), false )
+
+    file.startingmatch = false
 
     if(GetPlayerName() == server_host_name)
         CreateServer(ServerSettings.svServerName, ServerSettings.svServerDesc, ServerSettings.svMapName, ServerSettings.svPlaylist, ServerSettings.svVisibility)
