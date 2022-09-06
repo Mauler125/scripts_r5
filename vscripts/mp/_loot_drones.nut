@@ -405,6 +405,8 @@ void function LootDrones_OnDamaged(entity ent, var damageInfo)
 
 	EmitSoundOnEntity( ent, LOOT_DRONE_DEATH_SOUND )
 	EmitSoundOnEntity( ent, LOOT_DRONE_CRASHING_SOUND )
+	
+	PlayBattleChatterLineToSpeakerAndTeam( attacker, "bc_cargoBotDamaged" )
 
 	entity effect = StartParticleEffectOnEntity_ReturnEntity
 	( 
