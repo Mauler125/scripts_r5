@@ -130,6 +130,22 @@ void function Sh_CustomTDM_Init()
             )
         )
         break
+		
+	case "mp_rr_aqueduct":
+	case "mp_rr_aqueduct_night":
+        Shared_RegisterLocation(
+            NewLocationSettings(
+                "Overflow Work Area",
+                [
+					NewLocPair(<-3442, -4093, 347>, <0, -20, 0>),
+					NewLocPair(<2153, -6570, 456>, <0, 180, 0>),
+					NewLocPair(<4860, -4097, 347>, <0, -158, 0>),
+					NewLocPair(<-819, -6570, 456>, <0, 0, 0>)
+                ],
+                <0, 0, 1000>
+            )
+        )
+        break
 
 	case "mp_rr_canyonlands_mu1":
 	case "mp_rr_canyonlands_mu1_night":

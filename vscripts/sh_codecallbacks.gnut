@@ -319,6 +319,9 @@ void function CodeCallback_PlayerClassChanged( entity player, bool actualSetting
 		TakeAllPassives( player ) // take old player passives
 
 		InitDamageStates( player )
+		
+		if ( GameRules_GetGameMode() == "survival" )// Survey Beacon Minimap Icon
+			thread SetSurveyBaconMinimapVisibility( player )
 	#endif
 
 	//if ( IsClient() && !player.IsTitan() )
