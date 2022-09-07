@@ -301,7 +301,6 @@ void function SURVIVAL_Loot_All_InitShared()
 		)
 		data.supportedAttachments = supportedAttachments
 
-		printt(data.ref, "| model:", string(GetLootTableAsset( data.ref, dt, i, "pickupModel" )))
 		data.lootTags = split( GetLootTableString( data.ref, dt, i, "lootTags" ), " " )
 
 		data.lootType = SURVIVAL_Loot_GetLootTypeFromString( lootType )
