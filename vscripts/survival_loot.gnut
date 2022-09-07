@@ -1530,7 +1530,7 @@ void function SURVIVAL_GivePlayerEquipment( entity player, string newEquip, int 
 			break
 		case eLootType.HELMET:
 			slot = "helmet"
-			break
+			break	
 		case eLootType.INCAPSHIELD:
 			slot = "incapshield"
 			break
