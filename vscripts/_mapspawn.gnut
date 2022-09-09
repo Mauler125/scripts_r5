@@ -238,6 +238,7 @@ void function CodeCallback_MapSpawn() // original script entry point
 	//Weapons
 
 	PrecacheWeapon( $"mp_weapon_melee_survival" )
+	PrecacheWeapon( $"melee_bolo_sword" )
 	PrecacheWeapon( $"mp_weapon_mdlspawner" )
 	PrecacheWeapon( $"mp_weapon_alternator_smg" )
 	PrecacheWeapon( $"mp_weapon_bubble_bunker" )
@@ -287,6 +288,7 @@ void function CodeCallback_MapSpawn() // original script entry point
 	PrecacheWeapon( $"melee_data_knife" )
 	PrecacheWeapon( $"mp_weapon_volt_smg" )
 	PrecacheWeapon( $"mp_weapon_frag_drone" )
+	PrecacheWeapon( $"mp_weapon_bolo_sword_primary" )
 
 	//if ( GetMapName() == "mp_rr_canyonlands_staging" ) //Precache NPC Weapons For Firing Range
 	{
