@@ -221,16 +221,6 @@ void function UICodeCallback_ToggleInGameMenu()
 
 	var activeMenu = GetActiveMenu()
 	bool isLobby   = IsLobby()
-	string playlistName = GetCurrentPlaylistName()
-
-	if ( isLobby && playlistName == "private_match" )
-	{
-		if ( activeMenu == null )
-			AdvanceMenu( GetMenu( "R5RPrivateMatch" ) )
-		else if ( activeMenu == GetMenu( "SystemMenu" ) )
-			CloseActiveMenu()
-		return
-	}
 
 	if ( isLobby )
 	{
@@ -1058,15 +1048,10 @@ void function UpdateMenusOnConnectThread( string levelname )
 	Assert( GetActiveMenu() != null || uiGlobal.menuStack.len() == 0 )
 
 	bool isLobby = IsLobbyMapName( levelname )
-	string playlistName = GetCurrentPlaylistName()
 
 	if ( isLobby )
 	{
-		if(playlistName == "menufall")
-			AdvanceMenu( GetMenu( "R5RLobbyMenu" ) )
-		else
-			AdvanceMenu( GetMenu( "R5RPrivateMatch" ) )
-
+		AdvanceMenu( GetMenu( "R5RLobbyMenu" ) )
 		UIMusicUpdate()
 
 		if ( IsFullyConnected() )
@@ -1533,16 +1518,13 @@ void function InitMenus()
 
 	var r5rlobbymenu = AddMenu( "R5RLobbyMenu", $"scripts/resource/ui/menus/R5R/lobbymenu.res", InitR5RLobbyMenu )
 	AddPanel( r5rlobbymenu, "R5RHomePanel", InitR5RHomePanel )
+	AddPanel( r5rlobbymenu, "R5RNamePanel", InitR5RNamePanel )
+	AddPanel( r5rlobbymenu, "R5RDescPanel", InitR5RDescPanel )
+	var createserverpanel = AddPanel( r5rlobbymenu, "R5RCreateServerPanel", InitR5RCreateServerPanel )
 	AddPanel( r5rlobbymenu, "R5RServerBrowserPanel", InitR5RServerBrowserPanel )
-
-	var privatematchmenu = AddMenu( "R5RPrivateMatch", $"scripts/resource/ui/menus/R5R/privatematch.res", InitR5RPrivateMatchMenu )
-	AddPanel( privatematchmenu, "R5RPlaylistPanel", InitR5RPlaylistPanel )
-	AddPanel( privatematchmenu, "R5RMapPanel", InitR5RMapPanel )
-	AddPanel( privatematchmenu, "R5RVisPanel", InitR5RVisPanel )
-	AddPanel( privatematchmenu, "R5RNamePanel", InitR5RNamePanel )
-	AddPanel( privatematchmenu, "R5RDescPanel", InitR5RDescPanel )
-	AddPanel( privatematchmenu, "R5RKickPanel", InitR5RKickPanel )
-	AddPanel( privatematchmenu, "R5RStartingPanel", InitR5RStartingPanel )
+	AddPanel( createserverpanel, "R5RPlaylistPanel", InitR5RPlaylistPanel )
+	AddPanel( createserverpanel, "R5RMapPanel", InitR5RMapPanel )
+	AddPanel( createserverpanel, "R5RVisPanel", InitR5RVisPanel )
 	////////
 
 	//CTF UI

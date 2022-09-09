@@ -93,7 +93,6 @@ void function InitR5RLobbyMenu( var newMenuArg )
 
 	//Button event handlers
 	Hud_AddEventHandler( Hud_GetChild(menu, "SettingsBtn"), UIE_CLICK, SettingsPressed )
-	Hud_AddEventHandler( Hud_GetChild(menu, "CreateServerBtn"), UIE_CLICK, CreateServerPressed )
 	Hud_AddEventHandler( Hud_GetChild(menu, "QuitBtn"), UIE_CLICK, QuitPressed )
 	array<var> buttons = GetElementsByClassname( file.menu, "TopButtons" )
 	foreach ( var elem in buttons ) {
@@ -102,13 +101,16 @@ void function InitR5RLobbyMenu( var newMenuArg )
 
 	//Setup panel array
 	file.panels.append(Hud_GetChild(menu, "R5RHomePanel"))
-	//file.panels.append(Hud_GetChild(menu, "R5RCreateServerPanel"))
+	file.panels.append(Hud_GetChild(menu, "R5RCreateServerPanel"))
 	file.panels.append(Hud_GetChild(menu, "R5RServerBrowserPanel"))
 
 	//Setup Button Vars
 	file.buttons.append(Hud_GetChild(menu, "HomeBtn"))
-	//file.buttons.append(Hud_GetChild(menu, "CreateServerBtn"))
+	file.buttons.append(Hud_GetChild(menu, "CreateServerBtn"))
 	file.buttons.append(Hud_GetChild(menu, "ServerBrowserBtn"))
+
+	//Show Home Panel
+	ShowSelectedPanel( file.panels[0], file.buttons[0] )
 }
 
 void function OpenSelectedPanel(var button)
@@ -124,21 +126,25 @@ void function OpenSelectedPanel(var button)
 			CurrentPresentationType = ePresentationType.PLAY
 			break;
 		case 1:
+			UI_SetPresentationType( ePresentationType.CHARACTER_SELECT )
+			CurrentPresentationType = ePresentationType.CHARACTER_SELECT
+			HideAllCreateServerPanels()
+			break;
+		case 2:
 			UI_SetPresentationType( ePresentationType.COLLECTION_EVENT )
 			CurrentPresentationType = ePresentationType.COLLECTION_EVENT
 			break;
 	}
+
+	//If create server button is pressed, hide all panels for that panel
+	if(scriptid == 1)
+		HideAllCreateServerPanels()
 }
 
 void function SettingsPressed(var button)
 {
 	//Open Settings Menu
 	AdvanceMenu( GetMenu( "MiscMenu" ) )
-}
-
-void function CreateServerPressed(var button)
-{
-	CreateServer( GetPlayerName() + " Private Match Lobby", "", "mp_lobby", "private_match", eServerVisibility.HIDDEN)
 }
 
 void function QuitPressed(var button)
@@ -152,15 +158,12 @@ void function OnR5RLobby_Open()
 	//needed on both show and open
 	SetupLobby()
 
-	//Show Home Panel
-	ShowSelectedPanel( file.panels[0], file.buttons[0] )
-	UI_SetPresentationType( ePresentationType.PLAY )
-	CurrentPresentationType = ePresentationType.PLAY
+	//Load Create Server maps and playlists
+	RefreshUIPlaylists()
+	RefreshUIMaps()
 
 	//Set back to default for next time
 	g_isAtMainMenu = false
-
-	server_host_name = ""
 }
 
 void function SetupLobby()

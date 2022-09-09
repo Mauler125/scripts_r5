@@ -30,7 +30,6 @@ struct
 	table<var, ButtonData > changeCharacterButtonData
 	table<var, ButtonData > friendlyFireButtonData
 	table<var, ButtonData > thirdPersonButtonData
-	table<var, ButtonData > endmatchButtonData
 
 	InputDef& qaFooter
 } file
@@ -52,12 +51,10 @@ void function InitSystemPanelMain( var panel )
 
 	AddPanelFooterOption( panel, LEFT, BUTTON_B, true, "#B_BUTTON_BACK", "#B_BUTTON_BACK" )
 	#if R5DEV
-	if ( Dev_CommandLineHasParm( "-showdevmenu" ) )
-		AddPanelFooterOption( panel, LEFT, BUTTON_Y, true, "#Y_BUTTON_DEV_MENU", "#DEV_MENU", OpenDevMenu, ShouldShowDevMenu )
+		if ( Dev_CommandLineHasParm( "-showdevmenu" ) )
+			AddPanelFooterOption( panel, LEFT, BUTTON_Y, true, "#Y_BUTTON_DEV_MENU", "#DEV_MENU", OpenDevMenu )
 	#endif
-
-	if ( Dev_CommandLineHasParm( "-showoptinmenu" ) )
-		file.qaFooter = AddPanelFooterOption( panel, LEFT, BUTTON_X, true, "#X_BUTTON_QA", "QA", ToggleOptIn, ShouldDisplayOptInOptions )
+	file.qaFooter = AddPanelFooterOption( panel, LEFT, BUTTON_X, true, "#X_BUTTON_QA", "QA", ToggleOptIn, ShouldDisplayOptInOptions )
 
 	#if CONSOLE_PROG
 		AddPanelFooterOption( panel, RIGHT, BUTTON_BACK, false, "#BUTTON_RETURN_TO_MAIN", "", ReturnToMain_OnActivate )
@@ -112,7 +109,6 @@ void function InitSystemPanel( var panel )
 	file.changeCharacterButtonData[ panel ] <- clone data
 	file.friendlyFireButtonData[ panel ] <- clone data
 	file.thirdPersonButtonData[ panel ] <- clone data
-	file.endmatchButtonData[ panel ] <- clone data
 
 	file.settingsButtonData[ panel ].label = "#SETTINGS"
 	file.settingsButtonData[ panel ].activateFunc = OpenSettingsMenu
@@ -141,9 +137,6 @@ void function InitSystemPanel( var panel )
 	file.thirdPersonButtonData[ panel ].label = "TOGGLE THIRD PERSON"
 	file.thirdPersonButtonData[ panel ].activateFunc = ToggleThirdPerson
 
-	file.endmatchButtonData[ panel ].label = "END GAME"
-	file.endmatchButtonData[ panel ].activateFunc = HostEndMatch
-
 	AddPanelEventHandler( panel, eUIEvent.PANEL_SHOW, SystemPanelShow )
 }
 
@@ -167,8 +160,7 @@ void function UpdateSystemPanel( var panel )
 		SetButtonData( panel, index, file.nullButtonData[ panel ] )
 
 	int buttonIndex = 0
-
-	if ( IsConnected() && !IsLobby() ) // Normal system menu
+	if ( IsConnected() && !IsLobby() )
 	{
 		UISize screenSize = GetScreenSize()
 		SetCursorPosition( <1920.0 * 0.5, 1080.0 * 0.5, 0> )
@@ -189,22 +181,8 @@ void function UpdateSystemPanel( var panel )
 			if ( (GetTeamSize( GetTeam() ) > 1) && FiringRangeHasFriendlyFire() )
 				SetButtonData( panel, buttonIndex++, file.friendlyFireButtonData[ panel ] )
 		}
-
-		//If you used the private_match to host the server this will work, maybe there is a better way to find who is host in ui?
-		if(server_host_name == GetPlayerName() && !IsFiringRangeGameMode() && !IsSurvivalTraining())
-			SetButtonData( panel, buttonIndex++, file.endmatchButtonData[ panel ] )
 	}
-	else if(IsLobby() && GetCurrentPlaylistName() == "private_match") // Used for private match system menu
-	{
-		UISize screenSize = GetScreenSize()
-		SetCursorPosition( <1920.0 * 0.5, 1080.0 * 0.5, 0> )
-
-		SetButtonData( panel, buttonIndex++, file.settingsButtonData[ panel ] )
-		{
-			SetButtonData( panel, buttonIndex++, file.lobbyReturnButtonData[ panel ] )
-		}
-	}
-	else // any other cases
+	else
 	{
 		if ( AmIPartyMember() || AmIPartyLeader() && GetPartySize() > 1 )
 			SetButtonData( panel, buttonIndex++, file.leavePartyData[ panel ] )
@@ -280,11 +258,6 @@ void function OpenSettingsMenu()
 	AdvanceMenu( GetMenu( "MiscMenu" ) )
 }
 
-void function HostEndMatch()
-{
-	CreateServer( GetPlayerName() + " Private Match Lobby", "", "mp_lobby", "private_match", eServerVisibility.HIDDEN)
-}
-
 #if CONSOLE_PROG
 void function ReturnToMain_OnActivate( var button )
 {
@@ -341,14 +314,6 @@ void function UpdateOptInFooter()
 	}
 
 	UpdateFooterOptions()
-}
-
-bool function ShouldShowDevMenu()
-{
-	if(IsLobby())
-		return false
-	
-	return true
 }
 
 
