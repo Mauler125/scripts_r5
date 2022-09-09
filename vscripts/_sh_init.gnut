@@ -9,14 +9,7 @@ void function SV_CL_Shared_Init()
 	GameModes_Init()
 	Settings_Init()
 
-	if ( IsLobby() && GetCurrentPlaylistName() == "private_match" )
-	{
-		Shared_Lobby_Init()
-		Shared_Private_Match_Init()
-		return
-	}
-
-	if ( IsLobby() )
+	if ( IsLobby())
 	{
 		Shared_Lobby_Init()
 		return
@@ -481,23 +474,15 @@ void function Shared_Lobby_Init()
 		Client_Lobby_Init()
 	#endif
 
-	RemoteFunctions_Init_Finish()
-}
-
-void function Shared_Private_Match_Init()
-{
-	#if SERVER
-		_PrivateMatch_Init()
-	#elseif CLIENT
-		Cl_PrivateMatch_Init()
-	#endif
-
 	Sh_PrivateMatch_Init()
+
+	RemoteFunctions_Init_Finish()
 }
 
 #if SERVER
 void function Server_Lobby_Init()
 {
+	_PrivateMatch_Init()
 	UIVars_Init()
 	MenuCallbacks_Init()
 	Lobby_Init()
@@ -518,5 +503,6 @@ void function Client_Lobby_Init()
 	ShPassPanel_LevelInit()
 	ClLoadscreensInit()
 	ClImagePakLoadInit()
+	Cl_PrivateMatch_Init()
 }
 #endif // CLIENT

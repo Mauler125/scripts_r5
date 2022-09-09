@@ -4,11 +4,15 @@ global function ServerCallback_PrivateMatch_UpdateUI
 global function ServerCallback_PrivateMatch_SelectionUpdated
 global function ServerCallback_PrivateMatch_BuildClientString
 global function ServerCallback_PrivateMatch_StartingMatch
+global function ServerCallback_ServerBrowser_JoinServer
+global function ServerCallback_ServerBrowser_RefreshServers
 
 global function UICodeCallback_UpdateServerInfo
 global function UICodeCallback_KickOrBanPlayer
 global function UICallback_CheckForHost
 global function UICallback_StartMatch
+global function UICallback_ServerBrowserJoinServer
+global function UICallback_RefreshServer
 
 string tempstring = ""
 
@@ -28,6 +32,11 @@ void function OnResolutionChanged_UpdateClientUI()
 //
 ////////////////////////////////////////////////
 
+void function UICallback_RefreshServer()
+{
+    GetLocalClientPlayer().ClientCommand("lobby_refreshservers")
+}
+
 void function UICallback_StartMatch()
 {
     GetLocalClientPlayer().ClientCommand("lobby_startmatch")
@@ -35,7 +44,7 @@ void function UICallback_StartMatch()
 
 void function UICallback_CheckForHost()
 {
-    if(GetLocalClientPlayer().GetPlayerName() == gp()[0].GetPlayerName())
+    if(GetLocalClientPlayer() == gp()[0])
         RunUIScript( "EnableCreateMatchUI" )
 }
 
@@ -57,11 +66,27 @@ void function UICodeCallback_KickOrBanPlayer(int type, string player)
     }
 }
 
+void function UICallback_ServerBrowserJoinServer(int id)
+{
+    if(GetLocalClientPlayer() == gp()[0])
+        GetLocalClientPlayer().ClientCommand("lobby_joinserver " + id)
+}
+
 ////////////////////////////////////////////////
 //
 //    Server CallBacks
 //
 ////////////////////////////////////////////////
+
+void function ServerCallback_ServerBrowser_RefreshServers()
+{
+    RunUIScript( "RefreshServerListing")
+}
+
+void function ServerCallback_ServerBrowser_JoinServer(int id)
+{
+    RunUIScript( "ServerBrowser_JoinServer", id)
+}
 
 void function ServerCallback_PrivateMatch_StartingMatch()
 {

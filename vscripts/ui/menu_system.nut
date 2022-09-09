@@ -191,18 +191,8 @@ void function UpdateSystemPanel( var panel )
 		}
 
 		//If you used the private_match to host the server this will work, maybe there is a better way to find who is host in ui?
-		if(server_host_name == GetPlayerName() && !IsFiringRangeGameMode() && !IsSurvivalTraining())
-			SetButtonData( panel, buttonIndex++, file.endmatchButtonData[ panel ] )
-	}
-	else if(IsLobby() && GetCurrentPlaylistName() == "private_match") // Used for private match system menu
-	{
-		UISize screenSize = GetScreenSize()
-		SetCursorPosition( <1920.0 * 0.5, 1080.0 * 0.5, 0> )
-
-		SetButtonData( panel, buttonIndex++, file.settingsButtonData[ panel ] )
-		{
-			SetButtonData( panel, buttonIndex++, file.lobbyReturnButtonData[ panel ] )
-		}
+		//if(server_host_name == GetPlayerName() && !IsFiringRangeGameMode() && !IsSurvivalTraining())
+			//SetButtonData( panel, buttonIndex++, file.endmatchButtonData[ panel ] )
 	}
 	else // any other cases
 	{
@@ -282,7 +272,7 @@ void function OpenSettingsMenu()
 
 void function HostEndMatch()
 {
-	CreateServer( GetPlayerName() + " Private Match Lobby", "", "mp_lobby", "private_match", eServerVisibility.HIDDEN)
+	CreateServer( GetPlayerName() + " Lobby", "", "mp_lobby", "menufall", eServerVisibility.HIDDEN)
 }
 
 #if CONSOLE_PROG

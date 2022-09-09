@@ -13,6 +13,8 @@ void function _PrivateMatch_Init()
     AddClientCommandCallback("lobby_kick", ClientCommand_KickPlayer)
     AddClientCommandCallback("lobby_ban", ClientCommand_BanPlayer)
     AddClientCommandCallback("lobby_startmatch", ClientCommand_StartMatch)
+    AddClientCommandCallback("lobby_joinserver", ClientCommand_JoinServer)
+    AddClientCommandCallback("lobby_refreshservers", ClientCommand_ResfreshServers)
 
     thread PlayerCheck()
 }
@@ -23,12 +25,49 @@ void function _PrivateMatch_Init()
 //                                         //
 /////////////////////////////////////////////
 
+bool function ClientCommand_ResfreshServers(entity player, array<string> args)
+{
+    if( !IsValid( player ) )
+        return false
+
+    if( gp()[0] != player)
+        return false
+
+    foreach( p in GetPlayerArray() ) {
+        Remote_CallFunction_Replay( p, "ServerCallback_ServerBrowser_RefreshServers" )
+    }
+
+    return true
+}
+
+bool function ClientCommand_JoinServer(entity player, array<string> args)
+{
+    if( !IsValid( player ) )
+        return false
+
+    if( gp()[0] != player)
+        return false
+
+    if(args.len() < 1)
+        return false
+
+    foreach( p in GetPlayerArray() ) {
+        if(p != player)
+            Remote_CallFunction_Replay( p, "ServerCallback_ServerBrowser_JoinServer", args[0].tointeger() )
+    }
+
+    //Host joins last otherwise players will get host shut down game
+    Remote_CallFunction_Replay( player, "ServerCallback_ServerBrowser_JoinServer", args[0].tointeger() )
+
+    return true
+}
+
 bool function ClientCommand_StartMatch(entity player, array<string> args)
 {
     if( !IsValid( player ) )
         return false
 
-    if( gp()[0].GetPlayerName() != player.GetPlayerName())
+    if( gp()[0] != player)
         return false
 
     foreach( p in GetPlayerArray() ) {
@@ -98,6 +137,8 @@ bool function ClientCommand_UpdateClient(entity player, array<string> args)
         return false
 
     UpdateServerSettings(player)
+
+    Remote_CallFunction_Replay( player, "ServerCallback_PrivateMatch_UpdateUI" )
 
     return true
 }
@@ -221,5 +262,6 @@ void function _OnPlayerConnected(entity player)
             continue
 
         Remote_CallFunction_Replay( p, "ServerCallback_PrivateMatch_UpdateUI" )
+        Remote_CallFunction_Replay( p, "ServerCallback_ServerBrowser_RefreshServers" )
     }
 }

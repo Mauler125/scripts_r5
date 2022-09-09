@@ -75,7 +75,7 @@
 		xpos                    0
 		ypos                    -2
 		columns                 1
-		rows                    10
+		rows                    8
 		buttonSpacing           2
 		scrollbarSpacing        1
 		scrollbarOnLeft         0

@@ -15,6 +15,7 @@ global function EnableCreateMatchUI
 global function UI_SetServerInfo
 global function UpdateHostName
 global function ShowMatchStartingScreen
+global function PrivateMatchMenuOpened
 
 struct
 {
@@ -32,16 +33,21 @@ struct
     string tempserverdesc
     string tempplayertokick
 
+    bool inputsRegistered = false
+    bool startingmatch = false
+
+    var realMenu
+} file
+
+global struct privatematchmenusopen
+{
     bool maps_open = false
     bool playlists_open = false
     bool vis_open = false
     bool name_open = false
     bool desc_open = false
     bool kick_open = false
-
-    bool inputsRegistered = false
-    bool startingmatch = false
-} file
+}
 
 struct PM_PlayerData
 {
@@ -60,6 +66,7 @@ global struct ServerStruct
 }
 
 global ServerStruct ServerSettings
+global privatematchmenusopen PMMenusOpen
 
 global string server_host_name = ""
 
@@ -79,7 +86,7 @@ void function UpdateServerName( var button )
     Hud_SetVisible( file.namepanel, false )
 	Hud_SetVisible( Hud_GetChild(file.menu, "FadeBackground"), false )
 
-    file.name_open = false
+    PMMenusOpen.name_open = false
 }
 
 void function TempSaveNameChanges( var button )
@@ -102,7 +109,7 @@ void function UpdateServerDesc( var button )
 	Hud_SetVisible( file.descpanel, false )
 	Hud_SetVisible( Hud_GetChild(file.menu, "FadeBackground"), false )
 
-    file.desc_open = false
+    PMMenusOpen.desc_open = false
 }
 
 void function TempSaveDescChanges( var button )
@@ -126,7 +133,7 @@ void function KickOrBanPlayer(var button)
     Hud_SetVisible( file.kickpanel, false )
 	Hud_SetVisible( Hud_GetChild(file.menu, "FadeBackground"), false )
 
-    file.kick_open = false
+    PMMenusOpen.kick_open = false
     file.tempplayertokick = ""
 }
 
@@ -140,27 +147,23 @@ void function DontKickOrBanPlayer(var button)
     Hud_SetVisible( file.kickpanel, false )
 	Hud_SetVisible( Hud_GetChild(file.menu, "FadeBackground"), false )
 
-    file.kick_open = false
+    PMMenusOpen.kick_open = false
     file.tempplayertokick = ""
 }
 
-void function InitR5RPrivateMatchMenu( var newMenuArg )
+void function InitR5RPrivateMatchMenu( var panel )
 {
-	var menu = GetMenu( "R5RPrivateMatch" )
-	file.menu = menu
+    var menu = panel
+	file.menu = panel
+
+    file.realMenu = GetParentMenu( menu )
 
     file.listPanel = Hud_GetChild( menu, "PlayerList" )
-
-	//Add menu event handlers
-    AddMenuEventHandler( menu, eUIEvent.MENU_SHOW, OnR5RLobby_Open )
-	AddMenuEventHandler( menu, eUIEvent.MENU_OPEN, OnR5RLobby_Open )
-    AddMenuEventHandler( menu, eUIEvent.MENU_CLOSE, OnR5RLobby_Close )
-	AddMenuEventHandler( menu, eUIEvent.MENU_NAVIGATE_BACK, OnR5RLobby_Back )
 
     //Setup Button EventHandlers
 	Hud_AddEventHandler( Hud_GetChild( file.menu, "BtnStartGame" ), UIE_CLICK, StartNewGame )
 	
-	array<var> buttons = GetElementsByClassname( menu, "createserverbuttons" )
+    array<var> buttons = GetElementsByClassname( file.realMenu, "createserverbuttons" )
 	foreach ( var elem in buttons ) {
 		Hud_AddEventHandler( elem, UIE_CLICK, OpenSelectedPanel )
 	}
@@ -169,35 +172,8 @@ void function InitR5RPrivateMatchMenu( var newMenuArg )
 	file.panels.append(Hud_GetChild(menu, "R5RMapPanel"))
 	file.panels.append(Hud_GetChild(menu, "R5RPlaylistPanel"))
 	file.panels.append(Hud_GetChild(menu, "R5RVisPanel"))
-	file.panels.append(Hud_GetChild(menu, "R5RNamePanel"))
-	file.panels.append(Hud_GetChild(menu, "R5RDescPanel"))
-}
-
-void function RegisterInputs()
-{
-	if ( file.inputsRegistered )
-		return
-
-	RegisterButtonPressedCallback( KEY_ENTER, OnPrivateGameMenu_FocusChat )
-	file.inputsRegistered = true
-}
-
-
-void function DeregisterInputs()
-{
-	if ( !file.inputsRegistered )
-		return
-
-	DeregisterButtonPressedCallback( KEY_ENTER, OnPrivateGameMenu_FocusChat )
-	file.inputsRegistered = false
-}
-
-void function OnPrivateGameMenu_FocusChat( var panel )
-{
-	var textChat = Hud_GetChild( file.menu, "LobbyChatBox" )
-
-    printt( "starting message mode", Hud_IsEnabled( GetLobbyChatBox() ) )
-	Hud_StartMessageMode( textChat )
+	file.panels.append(Hud_GetChild(file.realMenu, "R5RNamePanel"))
+	file.panels.append(Hud_GetChild(file.realMenu, "R5RDescPanel"))
 }
 
 void function OpenSelectedPanel( var button )
@@ -212,21 +188,21 @@ void function OpenSelectedPanel( var button )
     switch (Hud_GetScriptID( button ).tointeger())
     {
         case 0:
-                file.maps_open = true
+                PMMenusOpen.maps_open = true
             break;
         case 1:
-                file.playlists_open = true
+                PMMenusOpen.playlists_open = true
             break;
         case 2:
-                file.vis_open = true
+                PMMenusOpen.vis_open = true
             break;
         case 3:
-                file.name_open = true
+                PMMenusOpen.name_open = true
                 Hud_SetVisible( Hud_GetChild(file.menu, "FadeBackground"), true )
                 Hud_SetText( Hud_GetChild( file.namepanel, "BtnServerName" ), ServerSettings.svServerName )
             break;
         case 4:
-                file.desc_open = true
+                PMMenusOpen.desc_open = true
                 Hud_SetVisible( Hud_GetChild(file.menu, "FadeBackground"), true )
                 Hud_SetText( Hud_GetChild( file.descpanel, "BtnServerDesc" ), ServerSettings.svServerDesc )
             break;
@@ -247,7 +223,7 @@ void function SetSelectedServerMap( string map )
     RunClientScript("UICodeCallback_UpdateServerInfo", 1, map)
 	Hud_SetVisible( file.panels[0], false )
 
-    file.maps_open = false
+    PMMenusOpen.maps_open = false
 }
 
 void function SetSelectedServerPlaylist( string playlist )
@@ -271,7 +247,7 @@ void function SetSelectedServerPlaylist( string playlist )
     RefreshUIMaps()
     Hud_SetVisible( file.panels[1], false )
 
-    file.playlists_open = false
+    PMMenusOpen.playlists_open = false
 }
 
 void function SetSelectedServerVis( int vis )
@@ -282,7 +258,7 @@ void function SetSelectedServerVis( int vis )
 	Hud_SetVisible( file.panels[2], false )
 	Hud_SetVisible( Hud_GetChild(file.menu, "FadeBackground"), false )
 
-    file.vis_open = false
+    PMMenusOpen.vis_open = false
 }
 
 void function ShowSelectedPanel(var panel)
@@ -296,24 +272,15 @@ void function ShowSelectedPanel(var panel)
 	Hud_SetVisible( panel, true )
 }
 
-void function OnR5RLobby_Close()
+void function PrivateMatchMenuOpened()
 {
-    DeregisterInputs()
-}
 
-void function OnR5RLobby_Open()
-{
-    RegisterInputs()
-
-    UI_SetPresentationType( ePresentationType.COLLECTION_EVENT )
-    CurrentPresentationType = ePresentationType.COLLECTION_EVENT
-
-    array<var> privatematchui = GetElementsByClassname( file.menu, "CreateServerUI" )
+    array<var> privatematchui = GetElementsByClassname( file.realMenu, "CreateServerUI" )
 	foreach ( var elem in privatematchui ) {
 		Hud_SetVisible(elem, false)
 	}
 
-    array<var> buttons = GetElementsByClassname( file.menu, "createserverbuttons" )
+    array<var> buttons = GetElementsByClassname( file.realMenu, "createserverbuttons" )
 	foreach ( var elem in buttons ) {
 		Hud_SetVisible(elem, false)
 	}
@@ -331,34 +298,6 @@ void function OnR5RLobby_Open()
 	g_isAtMainMenu = false
 }
 
-void function OnR5RLobby_Back()
-{
-    if(file.startingmatch)
-        return
-
-    if(file.maps_open || file.playlists_open || file.vis_open || file.name_open || file.desc_open || file.kick_open)
-    {
-        Hud_SetVisible( file.panels[0], false )
-        Hud_SetVisible( file.panels[1], false )
-        Hud_SetVisible( file.panels[2], false )
-        Hud_SetVisible( file.namepanel, false )
-        Hud_SetVisible( file.descpanel, false )
-        Hud_SetVisible( file.kickpanel, false )
-        Hud_SetVisible( Hud_GetChild(file.menu, "FadeBackground"), false )
-
-        file.maps_open = false
-        file.playlists_open = false
-        file.vis_open = false
-        file.name_open = false
-        file.desc_open = false
-        file.kick_open = false
-    }
-    else
-    {
-        AdvanceMenu( GetMenu( "SystemMenu" ) )
-    }
-}
-
 /////////////////////////////////////////////////////
 //
 //   Client to UI
@@ -367,13 +306,13 @@ void function OnR5RLobby_Back()
 
 void function EnableCreateMatchUI()
 {
-    array<var> privatematchui = GetElementsByClassname( file.menu, "CreateServerUI" )
+    array<var> privatematchui = GetElementsByClassname( file.realMenu, "CreateServerUI" )
 	foreach ( var elem in privatematchui )
 	{
 		Hud_SetVisible(elem, true)
 	}
 
-    array<var> buttons = GetElementsByClassname( file.menu, "createserverbuttons" )
+    array<var> buttons = GetElementsByClassname( file.realMenu, "createserverbuttons" )
 	foreach ( var elem in buttons ) {
 		Hud_SetVisible(elem, true)
 	}
@@ -426,7 +365,7 @@ void function UpdatePlayersList()
                 Hud_SetVisible( file.kickpanel, true )
                 Hud_SetVisible( Hud_GetChild(file.menu, "FadeBackground"), true )
                 file.tempplayertokick = p.name
-                file.kick_open = true
+                PMMenusOpen.kick_open = true
             }
 		})
 
@@ -439,8 +378,6 @@ void function UpdatePlayersList()
 
     if(!file.startingmatch)
         RunClientScript("UICallback_CheckForHost")
-    else if(GetPlayerName() == server_host_name)
-        EnableCreateMatchUI()
 
 }
 
@@ -470,9 +407,6 @@ void function UI_SetServerInfo( int type, string text )
 void function ShowMatchStartingScreen()
 {
     file.startingmatch = true
-    
-    if(GetActiveMenu() != GetMenu( "R5RPrivateMatch" ))
-        CloseActiveMenu()
 
     thread StartMatch()
 }

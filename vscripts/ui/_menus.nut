@@ -223,15 +223,6 @@ void function UICodeCallback_ToggleInGameMenu()
 	bool isLobby   = IsLobby()
 	string playlistName = GetCurrentPlaylistName()
 
-	if ( isLobby && playlistName == "private_match" )
-	{
-		if ( activeMenu == null )
-			AdvanceMenu( GetMenu( "R5RPrivateMatch" ) )
-		else if ( activeMenu == GetMenu( "SystemMenu" ) )
-			CloseActiveMenu()
-		return
-	}
-
 	if ( isLobby )
 	{
 		if ( activeMenu == null )
@@ -1062,10 +1053,7 @@ void function UpdateMenusOnConnectThread( string levelname )
 
 	if ( isLobby )
 	{
-		if(playlistName == "menufall")
-			AdvanceMenu( GetMenu( "R5RLobbyMenu" ) )
-		else
-			AdvanceMenu( GetMenu( "R5RPrivateMatch" ) )
+		AdvanceMenu( GetMenu( "R5RLobbyMenu" ) )
 
 		UIMusicUpdate()
 
@@ -1534,15 +1522,15 @@ void function InitMenus()
 	var r5rlobbymenu = AddMenu( "R5RLobbyMenu", $"scripts/resource/ui/menus/R5R/lobbymenu.res", InitR5RLobbyMenu )
 	AddPanel( r5rlobbymenu, "R5RHomePanel", InitR5RHomePanel )
 	AddPanel( r5rlobbymenu, "R5RServerBrowserPanel", InitR5RServerBrowserPanel )
+	AddPanel( r5rlobbymenu, "R5RNamePanel", InitR5RNamePanel )
+	AddPanel( r5rlobbymenu, "R5RDescPanel", InitR5RDescPanel )
+	AddPanel( r5rlobbymenu, "R5RKickPanel", InitR5RKickPanel )
+	AddPanel( r5rlobbymenu, "R5RStartingPanel", InitR5RStartingPanel )
 
-	var privatematchmenu = AddMenu( "R5RPrivateMatch", $"scripts/resource/ui/menus/R5R/privatematch.res", InitR5RPrivateMatchMenu )
+	var privatematchmenu = AddPanel( r5rlobbymenu, "R5RPrivateMatchPanel", InitR5RPrivateMatchMenu )
 	AddPanel( privatematchmenu, "R5RPlaylistPanel", InitR5RPlaylistPanel )
 	AddPanel( privatematchmenu, "R5RMapPanel", InitR5RMapPanel )
 	AddPanel( privatematchmenu, "R5RVisPanel", InitR5RVisPanel )
-	AddPanel( privatematchmenu, "R5RNamePanel", InitR5RNamePanel )
-	AddPanel( privatematchmenu, "R5RDescPanel", InitR5RDescPanel )
-	AddPanel( privatematchmenu, "R5RKickPanel", InitR5RKickPanel )
-	AddPanel( privatematchmenu, "R5RStartingPanel", InitR5RStartingPanel )
 	////////
 
 	//CTF UI

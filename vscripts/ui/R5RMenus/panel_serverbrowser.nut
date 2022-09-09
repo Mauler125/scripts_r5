@@ -1,5 +1,6 @@
 global function InitR5RServerBrowserPanel
 global function RefreshServerListing
+global function ServerBrowser_JoinServer
 
 //Used for max items for page
 //Changing this requires a bit of work to get more to show correctly
@@ -89,8 +90,9 @@ void function InitR5RServerBrowserPanel( var panel )
 
 void function RefreshServersClick(var button)
 {
+	RunClientScript("UICallback_RefreshServer")
 	//Refresh Server Browser
-	RefreshServerListing()
+	//RefreshServerListing()
 }
 
 void function ConnectToServer(var button)
@@ -101,7 +103,13 @@ void function ConnectToServer(var button)
 
 	//Connect to server
 	printf("Connecting to server: (Server ID: " + m_vSelectedServer.svServerID + " | Server Name: " + m_vSelectedServer.svServerName + " | Map: " + m_vSelectedServer.svMapName + " | Playlist: " + m_vSelectedServer.svPlaylist + ")")
-	SetEncKeyAndConnect(m_vSelectedServer.svServerID)
+	//SetEncKeyAndConnect(m_vSelectedServer.svServerID)
+	RunClientScript("UICallback_ServerBrowserJoinServer", m_vSelectedServer.svServerID)
+}
+
+void function ServerBrowser_JoinServer(int id)
+{
+	SetEncKeyAndConnect(id)
 }
 
 void function SelectServer(var button)

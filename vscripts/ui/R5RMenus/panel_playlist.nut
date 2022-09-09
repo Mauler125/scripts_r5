@@ -13,7 +13,7 @@ struct
 void function InitR5RPlaylistPanel( var panel )
 {
 	file.panel = panel
-	file.menu = GetParentMenu( file.panel )
+	file.menu = GetPanel( "R5RPrivateMatchPanel" )
 
 	file.listPanel = Hud_GetChild( panel, "PlaylistList" )
 }

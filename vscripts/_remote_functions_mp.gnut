@@ -164,7 +164,6 @@ void function RemoteFunctions_Init_Begin()
 			// CTF: Server to UI
 			Remote_RegisterUIFunction( "CloseCTFRespawnMenu" )
 			// END CTF
-		case PRIVATE_MATCH_LOBBY:
 		case CUSTOM_TDM:
 		case SURVIVAL:
 			RegisterNetworkedVariable( "isPlayerShadowForm", SNDC_PLAYER_GLOBAL, SNVT_BOOL, false )
@@ -492,11 +491,13 @@ void function RemoteFunctions_Init_Begin()
 
 	Remote_RegisterClientFunction( "ServerCallback_SetWeaponPreviewState", "bool" )
 
-	if ( IsLobby() && GetCurrentPlaylistName() == "private_match")
+	if ( IsLobby())
 	{
 		Remote_RegisterClientFunction( "ServerCallback_PrivateMatch_UpdateUI" )
 		Remote_RegisterClientFunction( "ServerCallback_PrivateMatch_StartingMatch" )
 		Remote_RegisterClientFunction( "ServerCallback_PrivateMatch_SelectionUpdated", "int", 0, 255 )
+		Remote_RegisterClientFunction( "ServerCallback_ServerBrowser_JoinServer", "int", 0, 999 )
+		Remote_RegisterClientFunction( "ServerCallback_ServerBrowser_RefreshServers" )
 
 		Remote_RegisterUntypedFunction_deprecated( "ServerCallback_PrivateMatch_BuildClientString" )
 	}
