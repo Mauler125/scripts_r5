@@ -503,7 +503,7 @@ void function LeaveDialog()
 
 	{
 		//int lobbyType = GetLobbyTypeScript()
-		if ( IsLobby() ) // && (lobbyType != eLobbyType.MATCH) ) // SOLO, PARTY_LEADER, PARTY_MEMBER, PRIVATE_MATCH
+		if ( IsLobby() && GetCurrentPlaylistName() != "private_match") // && (lobbyType != eLobbyType.MATCH) ) // SOLO, PARTY_LEADER, PARTY_MEMBER, PRIVATE_MATCH
 		{
 			AddDialogButton( dialogData, "#CANCEL_NO" )
 
