@@ -217,7 +217,7 @@ ImpactTable
 		"O" "ronin_sword_impact_foilage_1p_vs_3p"
 		"P" "ronin_sword_impact_flesh_1p_vs_3p"
 
-		"R" "ronin_sword_impact_metal_1p_vs_3p"
+		"R" "ronin_sword_impact_glass_1p_vs_3p"
 		"S" "ronin_sword_impact_water_1p_vs_3p"
 		"T" "ronin_sword_impact_tile_1p_vs_3p"
 		"U" "ronin_sword_impact_glass_1p_vs_3p"
