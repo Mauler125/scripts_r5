@@ -34,12 +34,14 @@ void function OnResolutionChanged_UpdateClientUI()
 
 void function UICallback_RefreshServer()
 {
-    GetLocalClientPlayer().ClientCommand("lobby_refreshservers")
+    if(GetLocalClientPlayer() == gp()[0])
+        GetLocalClientPlayer().ClientCommand("lobby_refreshservers")
 }
 
 void function UICallback_StartMatch()
 {
-    GetLocalClientPlayer().ClientCommand("lobby_startmatch")
+    if(GetLocalClientPlayer() == gp()[0])
+        GetLocalClientPlayer().ClientCommand("lobby_startmatch")
 }
 
 void function UICallback_CheckForHost()
@@ -50,11 +52,15 @@ void function UICallback_CheckForHost()
 
 void function UICodeCallback_UpdateServerInfo(int type, string text)
 {
-    GetLocalClientPlayer().ClientCommand("lobby_updateserversetting " + type + " " + text)
+    if(GetLocalClientPlayer() == gp()[0])
+        GetLocalClientPlayer().ClientCommand("lobby_updateserversetting " + type + " " + text)
 }
 
 void function UICodeCallback_KickOrBanPlayer(int type, string player)
 {
+    if(GetLocalClientPlayer() != gp()[0])
+        return
+    
     switch (type)
     {
         case 0:
@@ -106,7 +112,7 @@ void function ServerCallback_LobbyVM_UpdateUI()
 
         string playername = player.GetPlayerName()
 
-        if(gp()[0].GetPlayerName() == playername)
+        if(gp()[0] == player)
         {
             playername = "[Host] " + player.GetPlayerName()
         }
