@@ -36,7 +36,8 @@ global table<string, asset> maptoasset = {
 	[ "mp_rr_canyonlands_mu1_night" ] = $"rui/menu/maps/mp_rr_canyonlands_mu1_night",
 	[ "mp_rr_desertlands_64k_x_64k" ] = $"rui/menu/maps/mp_rr_desertlands_64k_x_64k",
 	[ "mp_rr_desertlands_64k_x_64k_nx" ] = $"rui/menu/maps/mp_rr_desertlands_64k_x_64k_nx",
-	[ "mp_rr_arena_composite" ] = $"rui/menu/maps/mp_rr_arena_composite"
+	[ "mp_rr_arena_composite" ] = $"rui/menu/maps/mp_rr_arena_composite",
+	[ "mp_lobby" ] = $"rui/menu/maps/mp_lobby"
 }
 
 //Map to readable name
@@ -50,7 +51,8 @@ global table<string, string> maptoname = {
 	[ "mp_rr_canyonlands_mu1_night" ] = "Kings Canyon S2 After Dark",
 	[ "mp_rr_desertlands_64k_x_64k" ] = "Worlds Edge",
 	[ "mp_rr_desertlands_64k_x_64k_nx" ] = "Worlds Edge After Dark",
-	[ "mp_rr_arena_composite" ] = "Drop Off"
+	[ "mp_rr_arena_composite" ] = "Drop Off",
+	[ "mp_lobby" ] = "Lobby"
 }
 
 //Playlist to readable name
@@ -72,7 +74,8 @@ global table<string, string> playlisttoname = {
 	[ "tdm_gg" ] = "Gun Game",
 	[ "tdm_gg_double" ] = "Team Gun Game",
 	[ "survival_dev" ] = "Survival Dev",
-	[ "dev_default" ] = "Dev Default"
+	[ "dev_default" ] = "Dev Default",
+	[ "menufall" ] = "Lobby"
 }
 
 //Vis to readable name
@@ -238,6 +241,7 @@ asset function GetUIMapAsset(string map)
 
 void function OnR5RLobby_Back()
 {
+	AdvanceMenu( GetMenu( "SystemMenu" ) )
 	if(PMMenusOpen.maps_open || PMMenusOpen.playlists_open || PMMenusOpen.vis_open || PMMenusOpen.name_open || PMMenusOpen.desc_open || PMMenusOpen.kick_open)
     {
 		var pmpanel = GetPanel( "R5RPrivateMatchPanel" )

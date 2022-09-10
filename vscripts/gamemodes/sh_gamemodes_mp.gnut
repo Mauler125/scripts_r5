@@ -7,6 +7,22 @@ void function GameModes_Init_SV_CL()
 
 	////////////////////////////
 	//                        //
+	//        Menufall        //
+	//                        //
+	////////////////////////////
+
+	gameMode = MENUFALL
+	#if SERVER || CLIENT
+		GameMode_AddSharedInit( gameMode, GamemodeSurvivalShared_Init )
+	#endif
+	#if SERVER
+	GameMode_SetPilotSpawnpointsRatingFunc( gameMode, RateSpawnpoints_Generic )
+	GameMode_SetTitanSpawnpointsRatingFunc( gameMode, RateSpawnpoints_Generic )
+	GameMode_SetEvacEnabled( gameMode, false )
+	#endif
+
+	////////////////////////////
+	//                        //
 	//          TDM           //
 	//                        //
 	////////////////////////////
