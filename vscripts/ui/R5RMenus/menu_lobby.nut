@@ -243,7 +243,6 @@ asset function GetUIMapAsset(string map)
 
 void function OnR5RLobby_Back()
 {
-	AdvanceMenu( GetMenu( "SystemMenu" ) )
 	if(PMMenusOpen.maps_open || PMMenusOpen.playlists_open || PMMenusOpen.vis_open || PMMenusOpen.name_open || PMMenusOpen.desc_open || PMMenusOpen.kick_open)
     {
 		var pmpanel = GetPanel( "R5RPrivateMatchPanel" )
