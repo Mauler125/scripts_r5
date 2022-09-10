@@ -24,7 +24,6 @@ void function ShDevUtility_Init()
 
 	#if SERVER || CLIENT
 		PrecacheModel( $"mdl/Humans/class/medium/pilot_medium_empty.rmdl" ) // for spectator players
-		Remote_RegisterClientFunction( "R5RHeirloomCredit", "entity" )
 	#endif
 
 	#if SERVER
@@ -53,7 +52,7 @@ void function SetupHeirloom( bool allplayers = false)
 			player.TakeNormalWeaponByIndexNow( WEAPON_INVENTORY_SLOT_PRIMARY_2 )
 			player.GiveWeapon( "mp_weapon_bolo_sword_primary", WEAPON_INVENTORY_SLOT_PRIMARY_2 )
 			player.GiveOffhandWeapon( "melee_bolo_sword", OFFHAND_MELEE )
-			Remote_CallFunction_NonReplay( player, "R5RHeirloomCredit", player )
+			Dev_PrintMessage( player, "R5RELOADED CUSTOM HEIRLOOM", "Ported by @KralRindo, Textured by @Aetheon_ & @KralRindo. Powered by REPAK", 4, "LootCeremony_LootHologram_Appear_Heirloom" )
 		}
 	}
 	else
@@ -66,15 +65,8 @@ void function SetupHeirloom( bool allplayers = false)
 		player.TakeNormalWeaponByIndexNow( WEAPON_INVENTORY_SLOT_PRIMARY_2 )
 		player.GiveWeapon( "mp_weapon_bolo_sword_primary", WEAPON_INVENTORY_SLOT_PRIMARY_2 )
 		player.GiveOffhandWeapon( "melee_bolo_sword", OFFHAND_MELEE )
-		Remote_CallFunction_NonReplay( player, "R5RHeirloomCredit", player )
+		Dev_PrintMessage( player, "R5RELOADED CUSTOM HEIRLOOM", "Ported by @KralRindo, Textured by @Aetheon_ & @KralRindo. Powered by REPAK", 4, "LootCeremony_LootHologram_Appear_Heirloom" )
 	}
-}
-#endif
-
-#if CLIENT
-void function R5RHeirloomCredit(entity player)
-{
-	AnnouncementMessage( player, "R5RELOADED CUSTOM HEIRLOOM", "Ported by @KralRindo, Textured by @Aetheon_ & @KralRindo. Powered by REPAK", FRIENDLY_COLOR )
 }
 #endif
 
