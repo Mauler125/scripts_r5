@@ -125,6 +125,8 @@ void function ServerCallback_LobbyVM_UpdateUI()
     RunUIScript( "UpdatePlayersList" )
 
     RunUIScript( "EnableRefreshButton", gp()[0] == GetLocalClientPlayer() )
+
+    RunUIScript( "InPlayersLobby" , gp()[0] != GetLocalClientPlayer() && GetPlayerArray().len() > 1, gp()[0].GetPlayerName())
 }
 
 void function ServerCallback_LobbyVM_SelectionUpdated(int type)

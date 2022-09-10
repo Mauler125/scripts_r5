@@ -4,6 +4,7 @@ global function InitR5RConnectingPanel
 global function EnableRefreshButton
 global function RefreshServerListing
 global function ServerBrowser_JoinServer
+global function RefreshServersForEveryone
 
 //Used for max items for page
 //Changing this requires a bit of work to get more to show correctly
@@ -100,13 +101,17 @@ void function InitR5RServerBrowserPanel( var panel )
 void function EnableRefreshButton( bool show)
 {
 	Hud_SetVisible(Hud_GetChild( file.panel, "RefreshServers" ), show)
+	Hud_SetVisible(Hud_GetChild( file.panel, "RefreshServersText" ), show)
 }
 
 void function RefreshServersClick(var button)
 {
 	RunClientScript("UICallback_RefreshServer")
-	//Refresh Server Browser
-	//RefreshServerListing()
+}
+
+void function RefreshServersForEveryone()
+{
+	RunClientScript("UICallback_RefreshServer")
 }
 
 void function ConnectToServer(var button)
