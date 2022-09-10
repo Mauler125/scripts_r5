@@ -1,9 +1,9 @@
-global function Cl_PrivateMatch_Init
+global function Cl_LobbyVM_Init
 
-global function ServerCallback_PrivateMatch_UpdateUI
-global function ServerCallback_PrivateMatch_SelectionUpdated
-global function ServerCallback_PrivateMatch_BuildClientString
-global function ServerCallback_PrivateMatch_StartingMatch
+global function ServerCallback_LobbyVM_UpdateUI
+global function ServerCallback_LobbyVM_SelectionUpdated
+global function ServerCallback_LobbyVM_BuildClientString
+global function ServerCallback_LobbyVM_StartingMatch
 global function ServerCallback_ServerBrowser_JoinServer
 global function ServerCallback_ServerBrowser_RefreshServers
 
@@ -16,7 +16,7 @@ global function UICallback_RefreshServer
 
 string tempstring = ""
 
-void function Cl_PrivateMatch_Init()
+void function Cl_LobbyVM_Init()
 {
     AddClientCallback_OnResolutionChanged( OnResolutionChanged_UpdateClientUI )
 }
@@ -88,12 +88,12 @@ void function ServerCallback_ServerBrowser_JoinServer(int id)
     RunUIScript( "ServerBrowser_JoinServer", id)
 }
 
-void function ServerCallback_PrivateMatch_StartingMatch()
+void function ServerCallback_LobbyVM_StartingMatch()
 {
     RunUIScript( "ShowMatchStartingScreen")
 }
 
-void function ServerCallback_PrivateMatch_UpdateUI()
+void function ServerCallback_LobbyVM_UpdateUI()
 {
     array<string> playernames
 
@@ -117,15 +117,17 @@ void function ServerCallback_PrivateMatch_UpdateUI()
     RunUIScript( "UpdateHostName", gp()[0].GetPlayerName() )
 
     RunUIScript( "UpdatePlayersList" )
+
+    RunUIScript( "EnableRefreshButton", gp()[0] == GetLocalClientPlayer() )
 }
 
-void function ServerCallback_PrivateMatch_SelectionUpdated(int type)
+void function ServerCallback_LobbyVM_SelectionUpdated(int type)
 {
     RunUIScript("UI_SetServerInfo", type, tempstring)
     tempstring = ""
 }
 
-void function ServerCallback_PrivateMatch_BuildClientString( ... )
+void function ServerCallback_LobbyVM_BuildClientString( ... )
 {
 	for ( int i = 0; i < vargc; i++ )
 		tempstring += format("%c", vargv[i] )

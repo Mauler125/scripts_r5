@@ -1,4 +1,7 @@
 global function InitR5RServerBrowserPanel
+global function InitR5RConnectingPanel
+
+global function EnableRefreshButton
 global function RefreshServerListing
 global function ServerBrowser_JoinServer
 
@@ -11,6 +14,7 @@ struct
 {
 	var menu
 	var panel
+	var connectingpanel
 } file
 
 //Struct for page system
@@ -52,6 +56,11 @@ SelectedServerInfo m_vSelectedServer
 //Used for all player count
 int m_vAllPlayers
 
+void function InitR5RConnectingPanel( var panel )
+{
+	file.connectingpanel = panel
+}
+
 void function InitR5RServerBrowserPanel( var panel )
 {
 	file.panel = panel
@@ -88,6 +97,11 @@ void function InitR5RServerBrowserPanel( var panel )
 	Hud_SetText(Hud_GetChild( file.panel, "ServerCurrentMap" ), "" )
 }
 
+void function EnableRefreshButton( bool show)
+{
+	Hud_SetVisible(Hud_GetChild( file.panel, "RefreshServers" ), show)
+}
+
 void function RefreshServersClick(var button)
 {
 	RunClientScript("UICallback_RefreshServer")
@@ -105,11 +119,6 @@ void function ConnectToServer(var button)
 	printf("Connecting to server: (Server ID: " + m_vSelectedServer.svServerID + " | Server Name: " + m_vSelectedServer.svServerName + " | Map: " + m_vSelectedServer.svMapName + " | Playlist: " + m_vSelectedServer.svPlaylist + ")")
 	//SetEncKeyAndConnect(m_vSelectedServer.svServerID)
 	RunClientScript("UICallback_ServerBrowserJoinServer", m_vSelectedServer.svServerID)
-}
-
-void function ServerBrowser_JoinServer(int id)
-{
-	SetEncKeyAndConnect(id)
 }
 
 void function SelectServer(var button)
@@ -350,4 +359,21 @@ void function SetSelectedServer(int id, string name, string map, string playlist
 	Hud_SetText(Hud_GetChild( file.panel, "PlaylistInfoEdit" ), GetUIPlaylistName(playlist) )
 	Hud_SetText(Hud_GetChild( file.panel, "ServerDesc" ), desc )
 	RuiSetImage( Hud_GetRui( Hud_GetChild( file.panel, "ServerMapImg" ) ), "loadscreenImage", GetUIMapAsset(map) )
+}
+
+void function ServerBrowser_JoinServer(int id)
+{
+	thread StartServerConnection(id)
+}
+
+void function StartServerConnection(int id)
+{
+	Hud_SetVisible(Hud_GetChild( file.menu, "R5RConnectingPanel"), true)
+	Hud_SetText(Hud_GetChild( GetPanel( "R5RConnectingPanel" ), "ServerName" ), m_vServerList[id].svServerName )
+
+	wait 2
+
+	Hud_SetVisible(Hud_GetChild( file.menu, "R5RConnectingPanel"), false)
+
+	SetEncKeyAndConnect(id)
 }

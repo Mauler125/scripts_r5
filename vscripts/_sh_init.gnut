@@ -474,7 +474,7 @@ void function Shared_Lobby_Init()
 		Client_Lobby_Init()
 	#endif
 
-	Sh_PrivateMatch_Init()
+	Sh_LobbyVM_Init()
 
 	RemoteFunctions_Init_Finish()
 }
@@ -482,7 +482,7 @@ void function Shared_Lobby_Init()
 #if SERVER
 void function Server_Lobby_Init()
 {
-	_PrivateMatch_Init()
+	_LobbyVM_Init()
 	UIVars_Init()
 	MenuCallbacks_Init()
 	Lobby_Init()
@@ -503,6 +503,6 @@ void function Client_Lobby_Init()
 	ShPassPanel_LevelInit()
 	ClLoadscreensInit()
 	ClImagePakLoadInit()
-	Cl_PrivateMatch_Init()
+	Cl_LobbyVM_Init()
 }
 #endif // CLIENT

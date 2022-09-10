@@ -9,20 +9,6 @@
 			"visible"				"1"
 		}
 
-		"FadeBackground"
-		{
-			"ControlName"				"Label"
-			"xpos"						"0"
-			"ypos"						"0"
-			"zpos"						"30"
-			"wide"						"%100"
-			"tall"						"%100"
-			"labelText"					""
-			"bgcolor_override"			"0 0 0 100"
-			"visible"					"0"
-			"paintbackground"			"1"
-		}
-
 		"CreateServerBG"
 		{
 			ControlName				ImagePanel

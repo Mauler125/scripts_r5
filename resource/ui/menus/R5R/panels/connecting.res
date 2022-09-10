@@ -1,4 +1,4 @@
-"scripts/resource/ui/menus/R5R/panels/matchstarting.res"
+"scripts/resource/ui/menus/R5R/panels/connecting.res"
 {
 	"DarkenBackground"
 	{
@@ -23,7 +23,7 @@
 		"wide"					"f0"
 		"tall"					"350"
 		"labelText"				""
-		"bgcolor_override"		"25 25 25 150"
+		"bgcolor_override"		"25 25 25 200"
 		"visible"				"1"
 		"paintbackground"		"1"
 
@@ -35,7 +35,7 @@
 	TopMessage
 	{
 		ControlName				Label
-		labelText				"Match Starting"
+		labelText				"Connecting..."
 		"font"					"DefaultBold_41"
 		"allcaps"				"1"
 		auto_wide_tocontents	1
@@ -50,10 +50,10 @@
 		"pin_to_sibling_corner"	"TOP"
 	}
 
-	MapAndGamemode
+	ServerName
 	{
 		ControlName				Label
-		labelText				"CUSTOM_TDM - MP_RR_BOX"
+		labelText				""
 		"font"					"DefaultBold_41"
 		"allcaps"				"1"
 		auto_wide_tocontents	1
@@ -115,24 +115,6 @@
 		pin_to_sibling			PanelBG
 		pin_corner_to_sibling	CENTER
 		pin_to_sibling_corner	CENTER
-	}
-
-	Timer
-	{
-		ControlName				Label
-		labelText				"5"
-		"font"					"DefaultBold_41"
-		"allcaps"				"1"
-		auto_wide_tocontents	1
-		zpos 					71
-		fontHeight				35
-		xpos					0
-		ypos					0
-		"fgcolor_override"		"255 255 255 255"
-
-		"pin_to_sibling"		"DialogSpinner"
-		"pin_corner_to_sibling"	"CENTER"
-		"pin_to_sibling_corner"	"CENTER"
 	}
 }
 

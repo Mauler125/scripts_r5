@@ -896,7 +896,7 @@ Scripts:
 	gamemodes/custom_ctf/sh_gamemode_custom_ctf.nut
 	gamemodes/custom_ctf/custom_ctf_settings.nut
 
-	lobby/private_match/sh_private_match.nut
+	lobby/lobbyvm/sh_lobbyvm.nut
 ]
 
 When: "SERVER"
@@ -906,7 +906,7 @@ Scripts:
 
 	gamemodes/custom_ctf/_gamemode_custom_ctf.nut
 
-	lobby/private_match/_private_match.nut
+	lobby/lobbyvm/_lobbyvm.nut
 ]
 
 When: "CLIENT"
@@ -916,7 +916,7 @@ Scripts:
 
 	gamemodes/custom_ctf/cl_gamemode_custom_ctf.nut
 
-	lobby/private_match/cl_private_match.nut
+	lobby/lobbyvm/cl_lobbyvm.nut
 ]
 
 

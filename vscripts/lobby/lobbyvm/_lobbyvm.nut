@@ -1,10 +1,10 @@
-global function _PrivateMatch_Init
+global function _LobbyVM_Init
 
 array<entity> playerarray
 
 array<string> PrivateMatchSettings = ["A R5Reloaded Server", "mp_rr_canyonlands_mu1", "custom_tdm", "2"]
 
-void function _PrivateMatch_Init()
+void function _LobbyVM_Init()
 {
     AddCallback_OnClientConnected( void function(entity player) { thread _OnPlayerConnected(player) } )
 
@@ -56,7 +56,7 @@ bool function ClientCommand_JoinServer(entity player, array<string> args)
             Remote_CallFunction_Replay( p, "ServerCallback_ServerBrowser_JoinServer", args[0].tointeger() )
     }
 
-    //Host joins last otherwise players will get host shut down game
+    //Host joins last otherwise the vm will get shut down before everyone can join
     Remote_CallFunction_Replay( player, "ServerCallback_ServerBrowser_JoinServer", args[0].tointeger() )
 
     return true
@@ -75,7 +75,7 @@ bool function ClientCommand_StartMatch(entity player, array<string> args)
             continue
 
         SetTeam(p, TEAM_SPECTATOR)
-        Remote_CallFunction_Replay( p, "ServerCallback_PrivateMatch_StartingMatch" )
+        Remote_CallFunction_Replay( p, "ServerCallback_LobbyVM_StartingMatch" )
     }
 
     return true
@@ -86,7 +86,7 @@ bool function ClientCommand_KickPlayer(entity player, array<string> args)
     if( !IsValid( player ) )
         return false
 
-    if( gp()[0].GetPlayerName() != player.GetPlayerName())
+    if( gp()[0] != player)
         return false
 
     if(args.len() < 1)
@@ -111,7 +111,7 @@ bool function ClientCommand_BanPlayer(entity player, array<string> args)
     if( !IsValid( player ) )
         return false
 
-    if( gp()[0].GetPlayerName() != player.GetPlayerName())
+    if( gp()[0] != player)
         return false
 
     if(args.len() < 1)
@@ -138,7 +138,7 @@ bool function ClientCommand_UpdateClient(entity player, array<string> args)
 
     UpdateServerSettings(player)
 
-    Remote_CallFunction_Replay( player, "ServerCallback_PrivateMatch_UpdateUI" )
+    Remote_CallFunction_Replay( player, "ServerCallback_LobbyVM_UpdateUI" )
 
     return true
 }
@@ -148,7 +148,7 @@ bool function ClientCommand_ChangedServerSetting(entity player, array<string> ar
     if( !IsValid( player ) )
         return false
 
-    if( gp()[0].GetPlayerName() != player.GetPlayerName())
+    if( gp()[0] != player)
         return false
 
     if(args.len() < 2)
@@ -222,7 +222,7 @@ void function PlayerCheck()
         if(hasclientdisconnected) {
             foreach( p in playerarray ) {
             if( IsValid( p ) )
-                Remote_CallFunction_Replay( p, "ServerCallback_PrivateMatch_UpdateUI" )
+                Remote_CallFunction_Replay( p, "ServerCallback_LobbyVM_UpdateUI" )
             }
 
             hasclientdisconnected = false
@@ -237,9 +237,9 @@ void function UpdateServerSettings(entity player)
     foreach(int type, string text in PrivateMatchSettings)
     {
         for ( int i = 0; i < text.len(); i++ ) {
-            Remote_CallFunction_NonReplay( player, "ServerCallback_PrivateMatch_BuildClientString", text[i] )
+            Remote_CallFunction_NonReplay( player, "ServerCallback_LobbyVM_BuildClientString", text[i] )
         }
-        Remote_CallFunction_NonReplay( player, "ServerCallback_PrivateMatch_SelectionUpdated", type )
+        Remote_CallFunction_NonReplay( player, "ServerCallback_LobbyVM_SelectionUpdated", type )
     }
 }
 
@@ -261,7 +261,7 @@ void function _OnPlayerConnected(entity player)
         if( !IsValid( p ) )
             continue
 
-        Remote_CallFunction_Replay( p, "ServerCallback_PrivateMatch_UpdateUI" )
+        Remote_CallFunction_Replay( p, "ServerCallback_LobbyVM_UpdateUI" )
         Remote_CallFunction_Replay( p, "ServerCallback_ServerBrowser_RefreshServers" )
     }
 }

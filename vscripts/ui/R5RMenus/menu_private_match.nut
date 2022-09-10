@@ -84,7 +84,6 @@ void function UpdateServerName( var button )
     RunClientScript("UICodeCallback_UpdateServerInfo", 0, file.tempservername)
 
     Hud_SetVisible( file.namepanel, false )
-	Hud_SetVisible( Hud_GetChild(file.menu, "FadeBackground"), false )
 
     PMMenusOpen.name_open = false
 }
@@ -107,7 +106,6 @@ void function UpdateServerDesc( var button )
     ServerSettings.svServerDesc = file.tempserverdesc
 
 	Hud_SetVisible( file.descpanel, false )
-	Hud_SetVisible( Hud_GetChild(file.menu, "FadeBackground"), false )
 
     PMMenusOpen.desc_open = false
 }
@@ -131,7 +129,6 @@ void function KickOrBanPlayer(var button)
     RunClientScript("UICodeCallback_KickOrBanPlayer", Hud_GetScriptID( button ).tointeger(), file.tempplayertokick)
 
     Hud_SetVisible( file.kickpanel, false )
-	Hud_SetVisible( Hud_GetChild(file.menu, "FadeBackground"), false )
 
     PMMenusOpen.kick_open = false
     file.tempplayertokick = ""
@@ -145,7 +142,6 @@ void function InitR5RStartingPanel( var panel )
 void function DontKickOrBanPlayer(var button)
 {
     Hud_SetVisible( file.kickpanel, false )
-	Hud_SetVisible( Hud_GetChild(file.menu, "FadeBackground"), false )
 
     PMMenusOpen.kick_open = false
     file.tempplayertokick = ""
@@ -198,12 +194,10 @@ void function OpenSelectedPanel( var button )
             break;
         case 3:
                 PMMenusOpen.name_open = true
-                Hud_SetVisible( Hud_GetChild(file.menu, "FadeBackground"), true )
                 Hud_SetText( Hud_GetChild( file.namepanel, "BtnServerName" ), ServerSettings.svServerName )
             break;
         case 4:
                 PMMenusOpen.desc_open = true
-                Hud_SetVisible( Hud_GetChild(file.menu, "FadeBackground"), true )
                 Hud_SetText( Hud_GetChild( file.descpanel, "BtnServerDesc" ), ServerSettings.svServerDesc )
             break;
         
@@ -256,7 +250,6 @@ void function SetSelectedServerVis( int vis )
 
     RunClientScript("UICodeCallback_UpdateServerInfo", 3, vis.tostring())
 	Hud_SetVisible( file.panels[2], false )
-	Hud_SetVisible( Hud_GetChild(file.menu, "FadeBackground"), false )
 
     PMMenusOpen.vis_open = false
 }
@@ -288,10 +281,9 @@ void function PrivateMatchMenuOpened()
     Hud_SetVisible(Hud_GetChild( file.menu, "HostSettingUpGamePanel" ), true)
     Hud_SetVisible(Hud_GetChild( file.menu, "HostSettingUpGamePanelText" ), true)
     Hud_SetVisible( file.startingpanel, false )
-    Hud_SetVisible( Hud_GetChild(file.menu, "FadeBackground"), false )
 
     if(!file.startingmatch)
-        RunClientScript("ServerCallback_PrivateMatch_UpdateUI")
+        RunClientScript("ServerCallback_LobbyVM_UpdateUI")
     else
         UpdatePlayersList()
 
@@ -363,7 +355,6 @@ void function UpdatePlayersList()
                 EmitUISound( "menu_accept" )
                 Hud_SetText( Hud_GetChild( file.kickpanel, "SetPlayerKickMessage" ), "What do you want todo with " + p.name + "?" )
                 Hud_SetVisible( file.kickpanel, true )
-                Hud_SetVisible( Hud_GetChild(file.menu, "FadeBackground"), true )
                 file.tempplayertokick = p.name
                 PMMenusOpen.kick_open = true
             }
@@ -378,6 +369,16 @@ void function UpdatePlayersList()
 
     if(!file.startingmatch)
         RunClientScript("UICallback_CheckForHost")
+
+    if(playerdata.len() > 1) {
+        Hud_SetVisible( Hud_GetChild( file.menu, "PlayersListTop" ), true )
+        Hud_SetVisible( Hud_GetChild( file.menu, "CurrentPlayersText" ), true )
+        Hud_SetVisible( Hud_GetChild( file.menu, "PlayerList" ), true )
+    } else {
+        Hud_SetVisible( Hud_GetChild( file.menu, "PlayersListTop" ), false )
+        Hud_SetVisible( Hud_GetChild( file.menu, "CurrentPlayersText" ), false )
+        Hud_SetVisible( Hud_GetChild( file.menu, "PlayerList" ), false )
+    }
 
 }
 
@@ -414,7 +415,6 @@ void function ShowMatchStartingScreen()
 void function StartMatch()
 {
     Hud_SetVisible( file.startingpanel, true )
-    Hud_SetVisible( Hud_GetChild(file.menu, "FadeBackground"), true )
     Hud_SetText( Hud_GetChild( file.startingpanel, "MapAndGamemode" ), GetUIPlaylistName(ServerSettings.svPlaylist) + " - " + GetUIMapName(ServerSettings.svMapName))
 
     int timer = 5
@@ -428,7 +428,6 @@ void function StartMatch()
     }
 
     Hud_SetVisible( file.startingpanel, false )
-    Hud_SetVisible( Hud_GetChild(file.menu, "FadeBackground"), false )
 
     file.startingmatch = false
 

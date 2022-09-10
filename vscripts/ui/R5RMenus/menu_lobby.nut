@@ -168,9 +168,6 @@ void function SetupLobby()
 	UI_SetPresentationType( CurrentPresentationType )
 	thread TryRunDialogFlowThread()
 
-	//Set playername
-	Hud_SetText(Hud_GetChild( file.menu, "PlayerName" ), GetPlayerName())
-
 	//Set Version
 	SetUIVersion()
 
@@ -248,7 +245,6 @@ void function OnR5RLobby_Back()
         Hud_SetVisible( Hud_GetChild(file.menu, "R5RNamePanel"), false )
         Hud_SetVisible( Hud_GetChild(file.menu, "R5RDescPanel"), false )
         Hud_SetVisible( Hud_GetChild(file.menu, "R5RKickPanel"), false )
-        Hud_SetVisible( Hud_GetChild(pmpanel, "FadeBackground"), false )
 
         PMMenusOpen.maps_open = false
         PMMenusOpen.playlists_open = false

@@ -1526,6 +1526,7 @@ void function InitMenus()
 	AddPanel( r5rlobbymenu, "R5RDescPanel", InitR5RDescPanel )
 	AddPanel( r5rlobbymenu, "R5RKickPanel", InitR5RKickPanel )
 	AddPanel( r5rlobbymenu, "R5RStartingPanel", InitR5RStartingPanel )
+	AddPanel( r5rlobbymenu, "R5RConnectingPanel", InitR5RConnectingPanel )
 
 	var privatematchmenu = AddPanel( r5rlobbymenu, "R5RPrivateMatchPanel", InitR5RPrivateMatchMenu )
 	AddPanel( privatematchmenu, "R5RPlaylistPanel", InitR5RPlaylistPanel )
