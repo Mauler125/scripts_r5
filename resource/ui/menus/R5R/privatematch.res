@@ -772,7 +772,7 @@
 			"xpos"                      "-520"
 			"wide"						"500"
 			"tall"						"220"
-			"visible"					"0"
+			"visible"					"1"
 			"controlSettingsFile"		"scripts/resource/ui/menus/R5R/panels/visibility.res"
 			"proportionalToParent"    	"1"
 			"zpos"                      "10"
