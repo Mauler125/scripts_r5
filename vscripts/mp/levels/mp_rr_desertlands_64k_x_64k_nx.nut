@@ -5,7 +5,11 @@ global function CodeCallback_MapInit
 #if SERVER
 void function CodeCallback_MapInit()
 {
-	SharedInit()
+	if ( IsFallLTM() )
+	{
+		SharedInit()
+		SURVIVAL_AddCallback_OnDeathFieldStopShrink( OnDeathFieldStopShrink_ShadowSquad )
+	}
 	Desertlands_MapInit_Common()
 }
 #endif //SERVER
@@ -13,7 +17,8 @@ void function CodeCallback_MapInit()
 #if CLIENT
 void function ClientCodeCallback_MapInit()
 {
-	SharedInit()
+	if ( IsFallLTM() )
+		SharedInit()
 }
 #endif //CLIENT
 
@@ -25,7 +30,7 @@ void function SharedInit()
 }
 
 #if SERVER
-void function OnDeathFieldStopShrink_ShadowSquad( DeathFieldStageData deathFieldData )
+void function OnDeathFieldStopShrink_ShadowSquad( DeathFieldData deathFieldData )
 {
 	LootCreepGarbageCollect()
 }

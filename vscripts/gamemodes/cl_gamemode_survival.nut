@@ -2740,7 +2740,7 @@ bool function Survival_HandleKeyInput( int key )
 				vector worldPos = ConvertNormalizedPosToWorldPos( GetMapNormalizedAimCoordinate() )
 				GetLocalClientPlayer().ClientCommand( format( "GoToMapPoint %.3f %.3f %.3f", worldPos.x, worldPos.y, worldPos.z ) )
 				ScreenFlash( 0.0, 0.0, 0.0, 0.1, 0.5 )
-				EmitSoundOnEntity( GetLocalViewPlayer(), "dropship_mp_epilogue_warpout" )
+				EmitSoundOnEntity( GetLocalViewPlayer(), "UI_InGame_ShadowSquad_ShipIncoming" )
 				delaythread( 0.25 ) HideScoreboard()
 				return true
 

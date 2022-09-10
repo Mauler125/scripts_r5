@@ -19,13 +19,13 @@ void function MeleeBloodhoundAxe_Init()
 void function OnWeaponActivate_melee_bloodhound_axe( entity weapon )
 {
 	//
-	weapon.PlayWeaponEffect( AXE_FX_ATTACK_SWIPE_FP, AXE_FX_ATTACK_SWIPE_3P, "FX_CROW_MOUTH" )
+	//weapon.PlayWeaponEffect( AXE_FX_ATTACK_SWIPE_FP, AXE_FX_ATTACK_SWIPE_3P, "FX_CROW_MOUTH" )
 }
 
 void function OnWeaponDeactivate_melee_bloodhound_axe( entity weapon )
 {
 	//
-	weapon.StopWeaponEffect( AXE_FX_ATTACK_SWIPE_FP, AXE_FX_ATTACK_SWIPE_3P )
+	//weapon.StopWeaponEffect( AXE_FX_ATTACK_SWIPE_FP, AXE_FX_ATTACK_SWIPE_3P )
 
 }
 
