@@ -17,7 +17,7 @@ array<int> visibility = [
 void function InitR5RVisPanel( var panel )
 {
 	file.panel = panel
-	file.menu = GetParentMenu( file.panel )
+	file.menu = GetPanel( "R5RPrivateMatchPanel" )
 
 	for( int i=0; i < visibility.len(); i++ ) {
 		//Set vis name

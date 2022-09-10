@@ -280,9 +280,10 @@ Scripts:
 
 	weapons/mp_weapon_lifeline_baton_primary.nut
 	weapons/melee_lifeline_baton.nut
-	
+
 	weapons/mp_weapon_bolo_sword_primary.nut
 	weapons/melee_bolo_sword.nut
+
 
 	weapons/mp_weapon_shadow_squad_hands_primary.nut
 	weapons/melee_shadowsquad_hands.nut
@@ -803,8 +804,8 @@ Scripts:
 	//R5RUI
 	ui/R5RMenus/menu_main.nut
 	ui/R5RMenus/menu_lobby.nut
+	ui/R5RMenus/menu_private_match.nut
 	ui/R5RMenus/panel_home.nut
-	ui/R5RMenus/panel_createserver.nut
 	ui/R5RMenus/panel_serverbrowser.nut
 	ui/R5RMenus/panel_mainmenu.nut
 	ui/R5RMenus/panel_playlist.nut
@@ -897,6 +898,8 @@ Scripts:
 
 	gamemodes/custom_ctf/sh_gamemode_custom_ctf.nut
 	gamemodes/custom_ctf/custom_ctf_settings.nut
+
+	lobby/lobbyvm/sh_lobbyvm.nut
 ]
 
 When: "SERVER"
@@ -905,6 +908,8 @@ Scripts:
 	gamemodes/custom_tdm/_gamemode_custom_tdm.nut
 
 	gamemodes/custom_ctf/_gamemode_custom_ctf.nut
+
+	lobby/lobbyvm/_lobbyvm.nut
 ]
 
 When: "CLIENT"
@@ -913,6 +918,8 @@ Scripts:
 	gamemodes/custom_tdm/cl_gamemode_custom_tdm.nut
 
 	gamemodes/custom_ctf/cl_gamemode_custom_ctf.nut
+
+	lobby/lobbyvm/cl_lobbyvm.nut
 ]
 
 

@@ -8,7 +8,8 @@ void function SV_CL_Shared_Init()
 
 	GameModes_Init()
 	Settings_Init()
-	if ( IsLobby() )
+
+	if ( IsLobby())
 	{
 		Shared_Lobby_Init()
 		return
@@ -473,12 +474,15 @@ void function Shared_Lobby_Init()
 		Client_Lobby_Init()
 	#endif
 
+	Sh_LobbyVM_Init()
+
 	RemoteFunctions_Init_Finish()
 }
 
 #if SERVER
 void function Server_Lobby_Init()
 {
+	_LobbyVM_Init()
 	UIVars_Init()
 	MenuCallbacks_Init()
 	Lobby_Init()
@@ -499,5 +503,6 @@ void function Client_Lobby_Init()
 	ShPassPanel_LevelInit()
 	ClLoadscreensInit()
 	ClImagePakLoadInit()
+	Cl_LobbyVM_Init()
 }
 #endif // CLIENT
