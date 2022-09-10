@@ -165,6 +165,8 @@ void function OnR5RLobby_Open()
 	g_isAtMainMenu = false
 
 	server_host_name = ""
+
+	RunClientScript("UICallback_SetHostName", GetPlayerName() + "'s Lobby")
 }
 
 void function SetupLobby()

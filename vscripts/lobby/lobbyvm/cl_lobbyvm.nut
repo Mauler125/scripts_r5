@@ -13,6 +13,7 @@ global function UICallback_CheckForHost
 global function UICallback_StartMatch
 global function UICallback_ServerBrowserJoinServer
 global function UICallback_RefreshServer
+global function UICallback_SetHostName
 
 string tempstring = ""
 
@@ -31,6 +32,12 @@ void function OnResolutionChanged_UpdateClientUI()
 //    UI CallBacks
 //
 ////////////////////////////////////////////////
+
+void function UICallback_SetHostName(string name)
+{
+    if(GetLocalClientPlayer() == gp()[0])
+        GetLocalClientPlayer().ClientCommand("hostname " + name)
+}
 
 void function UICallback_RefreshServer()
 {

@@ -9,7 +9,7 @@ global function RefreshServersForEveryone
 //Used for max items for page
 //Changing this requires a bit of work to get more to show correctly
 //So keep at 19
-global const SB_MAX_SERVER_PER_PAGE = 19
+const SB_MAX_SERVER_PER_PAGE = 19
 
 struct
 {
