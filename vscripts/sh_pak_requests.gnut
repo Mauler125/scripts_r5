@@ -33,26 +33,6 @@ global struct PakHandle
 	bool                           isAvailable
 	int                            pakType
 }
-
-global enum ePakStatus
-{
-	PAK_STATUS_FREED,
-	PAK_STATUS_LOAD_PENDING,
-	PAK_STATUS_REPAK_RUNNING,
-	PAK_STATUS_REPAK_DONE,
-	PAK_STATUS_LOAD_STARTING,
-	PAK_STATUS_LOAD_PAKHDR,
-	PAK_STATUS_LOAD_PATCH_INIT,
-	PAK_STATUS_LOAD_PATCH_EDIT_STREAM,
-	PAK_STATUS_LOAD_ASSETS,
-	PAK_STATUS_LOADED, // 9
-	PAK_STATUS_UNLOAD_PENDING,
-	PAK_STATUS_FREE_PENDING,
-	PAK_STATUS_CANCELING,
-	PAK_STATUS_ERROR, // 13
-	PAK_STATUS_INVALID_PAKHANDLE,
-	PAK_STATUS_BUSY
-}
 #endif
 
 
@@ -294,10 +274,8 @@ void function RunPakRequests()
 #if CLIENT
 void function ClientCodeCallback_PakAsyncLoadFinished( int pakId, int status )
 {
-	printf( "ClientCodeCallback_PakAsyncLoadFinished: %d %d (%s)\n", pakId, status, GetEnumString("ePakStatus", status) )
-	printt( "Assert( status == PAK_STATUS_LOADED ):", status == PAK_STATUS_LOADED )
-	//
-	//
+	printf( "ClientCodeCallback_PakAsyncLoadFinished: %d %d\n", pakId, status )
+	Assert( status == PAK_STATUS_LOADED )
 
 	PakRequestState prs = expect PakRequestState(file.activeRequestOrNull)
 	file.activeRequestOrNull = null
@@ -347,15 +325,15 @@ void function WORKAROUND_ProcessPakQueues()
 			PakRequestState prs = file.unloadQueue[0] // should be the earliest
 			Assert( prs.status == ePakRequestStatus.QUEUED_TO_UNLOAD )
 
-			float waitTime = (prs.WORKAROUND_unloadQueueTime + WORKAROUND_UNLOAD_MIN_WAIT_TIME) - Time()
-			if ( waitTime > 0.0 )
+			float waitTime = Time() - (prs.WORKAROUND_unloadQueueTime + WORKAROUND_UNLOAD_MIN_WAIT_TIME)
+			if ( waitTime > 0.001 )
 				wait waitTime
 
-			waitTime = (prs.WORKAROUND_unloadQueueTime + WORKAROUND_UNLOAD_MIN_WAIT_TIME) - Time()
-			if ( file.unloadQueue.len() == 0 || file.unloadQueue[0] != prs || waitTime > 0.0 )
+			if ( prs.status != ePakRequestStatus.QUEUED_TO_UNLOAD )
 				continue // while we were waiting, someone may have requested it again (so its no longer in the unload queue)
 
-			file.unloadQueue.remove( 0 )
+			PakRequestState removed = file.unloadQueue.remove( 0 )
+			Assert( removed == prs )
 
 			printf( "ClientPakFile_Unload: %s\n", prs.rpakPath + ".rpak" )
 			int unloadResult = ClientPakFile_Unload( prs.pakId )

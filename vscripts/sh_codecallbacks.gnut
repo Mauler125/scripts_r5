@@ -274,7 +274,6 @@ void function AddCallback_PlayerClassActuallyChanged( void functionref( entity )
 
 void function CodeCallback_PlayerClassChanged( entity player, bool actualSettingsFileChanged )
 {
-	printt(FUNC_NAME(), player, "actualSettingsFileChanged", actualSettingsFileChanged)
 	if ( !IsValid( player ) )
 		return
 
@@ -309,19 +308,13 @@ void function CodeCallback_PlayerClassChanged( entity player, bool actualSetting
 		//player.ForceShadowVisible( newClass == "titan" )
 
 		UpdatePlayerStatusCounts()
-		MapConVar_Init()
 
 		/*if ( IsWatchingReplay() )
 			UpdateKillReplayIconPosition()*/
 	#else
 		player.kv.renderColor = "255 255 255 255"
 
-		TakeAllPassives( player ) // take old player passives
-
 		InitDamageStates( player )
-		
-		if ( GameRules_GetGameMode() == "survival" )// Survey Beacon Minimap Icon
-			thread SetSurveyBaconMinimapVisibility( player )
 	#endif
 
 	//if ( IsClient() && !player.IsTitan() )

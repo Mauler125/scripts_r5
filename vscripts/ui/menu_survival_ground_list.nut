@@ -56,7 +56,7 @@ void function OnQuickSwapMenuCommand( var panel, var button, int index, string c
 {
 }
 
-void function InitGroundListMenu( var newMenuArg )
+void function InitGroundListMenu( var newMenuArg ) //
 {
 	RegisterSignal( "Delayed_SetCursorToObject" )
 	RegisterSignal( "StartGroundItemExtendedUse" )
@@ -83,8 +83,6 @@ void function InitGroundListMenu( var newMenuArg )
 	ListPanel_SetButtonHandler( file.groundList, UIE_LOSE_FOCUS, OnGroundItemLoseFocus )
 	ListPanel_SetKeyPressHandler( file.groundList, OnGroundItemKeyPress )
 	ListPanel_SetScrollCallback( file.groundList, OnGroundListScroll )
-	ListPanel_SetItemHeightCallback( file.groundList, GetGroundListItemHeight )
-	ListPanel_SetItemHeaderCheckCallback( file.groundList, GetGroundListItemIsHeader )
 
 	AddMenuEventHandler( menu, eUIEvent.MENU_INPUT_MODE_CHANGED, OnSurvivalGroundListMenu_InputModeChanged )
 	Survival_AddPassthroughCommandsToMenu( menu )
@@ -156,7 +154,7 @@ void function Delayed_SetCursorToObject( var obj )
 	Signal( uiGlobal.signalDummy, "Delayed_SetCursorToObject" )
 	EndSignal( uiGlobal.signalDummy, "Delayed_SetCursorToObject" )
 
-	wait 0.1 // TODO: Why do we need this?
+	wait 0.1 //
 
 	float width  = 1920
 	float height = 1080
@@ -222,7 +220,7 @@ void function OnGroundItemClick( var panel, var button, int position )
 	if ( file.groundItemUpdateInProgress )
 		return
 
-	// close quick swap
+	//
 	if ( Hud_IsSelected( button ) )
 	{
 		file.groundListSelected = null
@@ -512,14 +510,4 @@ void function OnWeaponSwapButtonClick( var button )
 
 	if ( IsFullyConnected() )
 		RunClientScript( "UICallback_WeaponSwap" )
-}
-
-float function GetGroundListItemHeight( var panel, int index )
-{
-	return SurvivalGroundItem_IsHeader( index ) ? 0.5 : 1.0
-}
-
-bool function GetGroundListItemIsHeader( var panel, int index )
-{
-	return SurvivalGroundItem_IsHeader( index )
 }

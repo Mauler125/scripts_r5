@@ -1,8 +1,10 @@
+#if(true)//
+
 global function InitEliteIntroMenu
 global function OpenEliteIntroMenu
 global function OpenEliteIntroMenuNonAnimated
 
-#if R5DEV
+#if(DEV)
 global function TestEliteIntroMenu
 #endif
 
@@ -62,9 +64,6 @@ void function InitEliteIntroMenu( var newMenuArg ) //
 
 void function OpenEliteIntroMenuNonAnimated( var button )
 {
-	if ( !GetCurrentPlaylistVarBool( "elite_enabled", false ) )
-		return
-
 	OpenEliteIntroMenu( true )
 
 	{
@@ -97,9 +96,6 @@ void function OpenEliteIntroMenuNonAnimated( var button )
 
 void function OpenEliteIntroMenu( bool skipAnimation = false )
 {
-	if ( !GetCurrentPlaylistVarBool( "elite_enabled", false ) )
-		return
-
 	if ( skipAnimation )
 	{
 		file.menuState = eEliteMenuState.SHOW_BUTTONS
@@ -402,3 +398,6 @@ void function TestEliteIntroMenu()
 	file.menuState = eEliteMenuState.START
 	thread EliteIntroThread()
 }
+
+
+#endif //

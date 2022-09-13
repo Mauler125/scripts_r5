@@ -5,8 +5,8 @@ global function OnProjectileCollision_weapon_grenade_electric_smoke
 global function ElectricGrenadeSmokescreen
 #endif
 
-global const FX_ELECTRIC_SMOKESCREEN_PILOT = $"P_smokescreen_FD"
-global const FX_ELECTRIC_SMOKESCREEN_PILOT_AIR = $"P_smokescreen_FD"
+global const FX_ELECTRIC_SMOKESCREEN_PILOT = $"P_wpn_smk_electric_pilot"
+global const FX_ELECTRIC_SMOKESCREEN_PILOT_AIR = $"P_wpn_smk_electric_pilot_air"
 
 void function MpWeaponGreandeElectricSmoke_Init()
 {
@@ -58,32 +58,18 @@ void function OnProjectileCollision_weapon_grenade_electric_smoke( entity projec
 void function ElectricGrenadeSmokescreen( entity projectile, asset fx )
 {
 	entity owner = projectile.GetThrower()
-	vector pos = projectile.GetOrigin()
 
 	if ( !IsValid( owner ) )
 		return
-	
-	EmitSoundAtPosition( TEAM_UNASSIGNED, pos, "Wattson_Ultimate_I", owner )
-	
-	float duration = 10
-	
-	entity effect = StartParticleEffectInWorld_ReturnEntity( GetParticleSystemIndex( $"P_impact_exp_emp_med_default" ), pos+<0,0,32>, <0,0,0> )
-	effect.SetOwner( owner )
-	AddToUltimateRealm( owner, effect )
-	for(int i = 0; i<duration*2; i++)
-	{
-		EntFireByHandle( effect, "Stop", "", i*0.5, null, null )
-		EntFireByHandle( effect, "Start", "", i*0.5+0.1, null, null )
-	}
-	EntFireByHandle( effect, "Kill", "", duration, null, null )
-	
 
 	RadiusDamageData radiusDamageData = GetRadiusDamageDataFromProjectile( projectile, owner )
 
 	SmokescreenStruct smokescreen
 	smokescreen.smokescreenFX = fx
 	smokescreen.ownerTeam = owner.GetTeam()
-	smokescreen.damageSource = eDamageSourceId.mp_weapon_droneplasma
+	smokescreen.damageSource = eDamageSourceId.mp_weapon_grenade_electric_smoke
+	smokescreen.deploySound1p = "explo_electric_smoke_impact"
+	smokescreen.deploySound3p = "explo_electric_smoke_impact"
 	smokescreen.attacker = owner
 	smokescreen.inflictor = owner
 	smokescreen.weaponOrProjectile = projectile
@@ -93,20 +79,12 @@ void function ElectricGrenadeSmokescreen( entity projectile, asset fx )
 	smokescreen.damageDelay = 1.0
 	smokescreen.dpsPilot = radiusDamageData.explosionDamage
 	smokescreen.dpsTitan = radiusDamageData.explosionDamageHeavyArmor
-	smokescreen.lifetime = duration
-	
-	smokescreen.deploySound1p = "bangalore_smoke_screen_3p"
-	smokescreen.deploySound3p = "bangalore_smoke_screen_3p"
-	smokescreen.stopSound1p = "bangalore_smoke_screen_stop_3p"
-	smokescreen.stopSound3p = "bangalore_smoke_screen_stop_3p"
 
-	smokescreen.origin = pos
-	smokescreen.angles = <0,0,0>
+	smokescreen.origin = projectile.GetOrigin()
+	smokescreen.angles = projectile.GetAngles()
 	smokescreen.fxUseWeaponOrProjectileAngles = true
-	smokescreen.fxOffsets = [ <0.0, 0.0, 5.0> ]
+	smokescreen.fxOffsets = [ <0.0, 0.0, 2.0> ]
 
 	Smokescreen( smokescreen, owner )
-	
-	projectile.Destroy()
 }
 #endif

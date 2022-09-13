@@ -258,44 +258,6 @@ vector function GetPlayerCrosshairOrigin( entity player )
 	return (GetPlayerCrosshairOriginRaw( player ) + Vector( 0, 0, CROSSHAIR_VERT_OFFSET ))
 }
 
-void function DEV_MoveToAllAINodes( float delay = 0.0, int loglevel = 0 )
-{
-	thread function() : ( delay, loglevel )
-	{
-		printt( "++++--------------------------------------------------------------------------------------------------------------------------++++" )
-		printt( ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> DEBUGGING AI NODEGRAPH DATA <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" )
-		printt( "++++--------------------------------------------------------------------------------------------------------------------------++++" )
-		for( int cIndex = 0; cIndex < NavMeshNode_GetNodeCount(); cIndex++ )
-		{
-			wait delay
-			vector cOrigin = NavMeshNode_GetNodePos( cIndex )
-
-			GetPlayerArray()[0].SetOrigin( cOrigin )
-
-			if ( loglevel == 1 )
-			{
-				printt( "Index: " + cIndex )
-			}
-			else if ( loglevel > 1 )
-			{
-				int nIndex =  NavMeshNode_GetNearestNodeToPos( OriginToGround( cOrigin ) )
-				vector nOrigin
-				if ( nIndex != -1 )
-				{
-					nOrigin = NavMeshNode_GetNodePos( nIndex )
-				}
-				printt( "<<<<<***********************************************************>>>>>" )
-				printt( "Current index    : " + cIndex )
-				printt( "Current position : " + cOrigin )
-				printt( "Nearest index    : " + nIndex )
-				printt( "Nearest position : " + nOrigin )
-			}
-		}
-		printt( "++++--------------------------------------------------------------------------------------------------------------------------++++" )
-		printt( "++++--------------------------------------------------------------------------------------------------------------------------++++" )
-	}()
-}
-
 void function DEV_SpawnBTAtCrosshair( bool hotdrop = false )
 {
 	// DisablePrecacheErrors()
@@ -320,37 +282,6 @@ void function DEV_SpawnBTAtCrosshair( bool hotdrop = false )
 
 	// if ( hotdrop )
 	// 	thread NPCTitanHotdrops( npc, false )
-}
-
-void function DEV_SpawnDummyAtCrosshair()
-{
-	entity player = GetPlayerArray()[ 0 ]
-
-	vector origin = GetPlayerCrosshairOrigin( player )
-	vector angles = Vector( 0, 0, 0 )
-
-	entity dummy = CreateDummy( 99, origin, angles )
-
-	DispatchSpawn( dummy )
-	
-    dummy.SetSkin(RandomInt(6))
-    
-    array<string> weapons = ["npc_weapon_lstar", "npc_weapon_energy_shotgun", "npc_weapon_hemlok"] //We are giving them original firing range weapons, they are shooting better this way
-    string randomWeapon = weapons[RandomInt(weapons.len())]
-    dummy.GiveWeapon(randomWeapon, WEAPON_INVENTORY_SLOT_ANY)
-}
-
-void function DEV_SpawnExplosiveTickAtCrosshair()
-{
-	entity player = GetPlayerArray()[ 0 ]
-
-	vector origin = GetPlayerCrosshairOrigin( player )
-	vector angles = Vector( 0, 0, 0 )
-
-	entity tick = CreateFragDrone( 99, origin, angles )
-
-	DispatchSpawn( tick )
-	tick.SetSkin(RandomInt(2))
 }
 
 void function DEV_SpawnAllNPCsWithTeam( int team )
@@ -517,6 +448,7 @@ void function DEV_SpawnNPCWithWeaponAtCrosshairEnd( bool restoreHostThreadMode )
 		RestorePrecacheErrors()
 	}
 }
+
 
 function SetAISettingsWrapper( entity npc, string settings )
 {

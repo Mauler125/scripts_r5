@@ -5,12 +5,9 @@ global function GetPromoDataVersion
 global function GetPromoDataLayout
 global function GetPromoImage
 
-global function GetPromoRpakName
-global function GetMiniPromoRpakName
-
 global function UICodeCallback_MainMenuPromosUpdated
 
-#if R5DEV
+#if(DEV)
 global function DEV_PrintPromoData
 #endif //
 
@@ -24,15 +21,6 @@ struct
 	table<string, asset> imageMap
 } file
 
-string function GetPromoRpakName()
-{
-	return file.promoData.promoRpak
-}
-
-string function GetMiniPromoRpakName()
-{
-	return file.promoData.miniPromoRpak
-}
 
 void function InitPromoData()
 {
@@ -51,9 +39,9 @@ void function InitPromoData()
 
 void function UpdatePromoData()
 {
-	#if R5DEV
-		//if ( GetConVarBool( "mainMenuPromos_scriptUpdateDisabled" ) || GetCurrentPlaylistVarBool( "mainMenuPromos_scriptUpdateDisabled", false ) )
-		//	return
+	#if(DEV)
+		if ( GetConVarBool( "mainMenuPromos_scriptUpdateDisabled" ) || GetCurrentPlaylistVarBool( "mainMenuPromos_scriptUpdateDisabled", false ) )
+			return
 	#endif //
 	file.promoData = GetMainMenuPromos()
 }
@@ -63,9 +51,9 @@ void function UICodeCallback_MainMenuPromosUpdated()
 {
 	printt( "Promos updated" )
 
-	#if R5DEV
-		//if ( GetConVarInt( "mainMenuPromos_preview" ) == 1 ) // ConVar is not registered in R5Launch
-			//UpdatePromoData()
+	#if(DEV)
+		if ( GetConVarInt( "mainMenuPromos_preview" ) == 1 )
+			UpdatePromoData()
 	#endif //
 }
 
@@ -101,13 +89,11 @@ asset function GetPromoImage( string identifier )
 	return image
 }
 
-#if R5DEV
+#if(DEV)
 void function DEV_PrintPromoData()
 {
-	printt( "protocol:      ", file.promoData.prot )
-	printt( "version:       ", file.promoData.version )
-	printt( "promoRpak:     ", file.promoData.promoRpak )
-	printt( "miniPromoRpak: ", file.promoData.miniPromoRpak )
-	printt( "layout:        ", file.promoData.layout )
+	printt( "protocol:", file.promoData.prot )
+	printt( "version: ", file.promoData.version )
+	printt( "layout:  ", file.promoData.layout )
 }
 #endif //

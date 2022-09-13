@@ -15,7 +15,7 @@ ImpactTable
 	FX
 	{
 		"C" "P_impact_exp_FRAG_concrete" //Concrete, rock, porcelain, boulder, gravel, asphalt, brick, concrete_block, plaster
-		"D" "P_impact_exp_FRAG_dirt" //Dirt, mud, sand, slipperyslime, snow, carpet, cardboard, floatingstandable, ceiling_tile, papercup, lava_rock
+		"D" "P_impact_exp_FRAG_dirt"
 		"E" "P_impact_exp_FRAG_metal" // metal_titan
 
 		"F" "P_impact_exp_FRAG_metal" //flesh
@@ -29,8 +29,6 @@ ImpactTable
 		"N" "P_impact_exp_lrg_slime" //Slime
 		"O" "P_impact_exp_FRAG_dirt" //Foliage
 		"P" "P_impact_exp_FRAG_metal" //Computer
-		"Q" "P_impact_exp_FRAG_snow"  //Snow
-		"R" "P_impact_exp_FRAG_ice" //Ice
 		"S" "P_impact_exp_FRAG_water" //water, slime
 		"T" "P_impact_exp_FRAG_concrete" //tile
 		"U" "P_impact_exp_FRAG_metal" //glass_breakble
@@ -42,8 +40,6 @@ ImpactTable
 		"Z" "P_impact_exp_FRAG_sand"  //sand
 
 //		"0" "openslot"
-		"1" "P_impact_exp_lrg_lava" //lava_flow
-		"2" "P_impact_exp_lrg_lava" //lava_rock_hot
 //		"3" "openslot"
 //		"4" "openslot"
 //		"5" "openslot"
@@ -133,7 +129,6 @@ ImpactTable
 		"Y" "explo_fraggrenade_impact_glass_1p"
 		"Z" "Explo_FragGrenade_Impact_Sand_1P"
 
-		"1" "Explo_FragGrenade_Impact_Mud_1P"  //lava_flow
 		"2" "Explo_FragGrenade_Impact_1P"
 
 		//"splash" "Water.BulletImpact"

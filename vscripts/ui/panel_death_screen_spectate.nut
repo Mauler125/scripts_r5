@@ -1,3 +1,4 @@
+#if(true)//
 global function InitDeathScreenSpectatePanel
 global function UI_UpdateDeathScreenSpectatePanel
 
@@ -61,3 +62,4 @@ void function SpectateOnClosePanel( var panel )
 	DeregisterButtonPressedCallback( MOUSE_WHEEL_DOWN, DeathScreenSpectateNext )
 	DeregisterButtonPressedCallback( KEY_TAB, DeathScreenSkipDeathCam )
 }
+#endif //

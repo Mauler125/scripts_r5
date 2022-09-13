@@ -1,20 +1,7 @@
 global function InitConfirmPurchaseDialog
 
 global function PurchaseDialog
-
-global struct PurchaseDialogConfig
-{
-	ItemFlavor ornull     flav = null
-	GRXScriptOffer ornull offer = null
-
-	int           quantity = 1
-	bool          markAsNew = true
-	string ornull messageOverride = null
-	string ornull purchaseSoundOverride = null
-
-	void functionref()                     onPurchaseStartCallback = null
-	void functionref( bool wasSuccessful ) onPurchaseResultCallback = null
-}
+global function PurchaseDialog_SetPurchaseOverrideSound
 
 global enum ePurchaseDialogStatus
 {
@@ -26,15 +13,6 @@ global enum ePurchaseDialogStatus
 }
 
 const int MAX_PURCHASE_BUTTONS = 5
-
-struct PurchaseDialogState
-{
-	PurchaseDialogConfig&                   cfg
-	array<GRXScriptOffer>                   purchaseOfferList
-	table<var, GRXScriptOffer>              purchaseButtonOfferMap
-	table<var, ItemFlavorBag>               purchaseButtonPriceMap
-	string                                  purchaseSoundOverride = ""
-}
 
 struct
 {
@@ -49,17 +27,25 @@ struct
 	var        cancelButton
 	array<var> purchaseButtonBottomToTopList
 
-	int                  status = ePurchaseDialogStatus.INACTIVE
-	PurchaseDialogState& state
+	int                                    purchaseStatus = ePurchaseDialogStatus.INACTIVE
+	ItemFlavor ornull                      purchaseItemFlavOrNull
+	int                                    purchaseQuantity
+	bool                                   purchaseMarkAsNew
+	array<GRXScriptOffer>                  purchaseOfferList
+	table<var, ItemFlavorBag>              purchaseButtonPriceMap
+	void functionref()                     onPurchaseStartCallback
+	void functionref( bool wasSuccessful ) onPurchaseResultCallback
+	string                                 purchaseSoundOverride = ""
 } file
 
 void function InitConfirmPurchaseDialog( var newMenuArg )
+//
 {
 	var menu = GetMenu( "ConfirmPurchaseDialog" )
 	file.menu = menu
-	//file.contentRui = Hud_GetRui( Hud_GetChild( file.menu, "ContentRui" ) )
-	//file.processingButton = Hud_GetChild( menu, "ProcessingButton" )
-	//file.buttonsPanel = Hud_GetChild( menu, "FooterButtons" )
+	//
+	//
+	//
 
 	file.cancelButton = Hud_GetChild( menu, "CancelButton" )
 	HudElem_SetRuiArg( file.cancelButton, "buttonText", "#B_BUTTON_CANCEL" )
@@ -82,75 +68,70 @@ void function InitConfirmPurchaseDialog( var newMenuArg )
 
 	SetDialog( menu, true )
 	SetClearBlur( menu, false )
-	//SetGamepadCursorEnabled( menu, false )
+	//
 
 	AddMenuEventHandler( menu, eUIEvent.MENU_OPEN, ConfirmPurchaseDialog_OnOpen )
 	AddMenuEventHandler( menu, eUIEvent.MENU_CLOSE, ConfirmPurchaseDialog_OnClose )
 	AddMenuEventHandler( menu, eUIEvent.MENU_NAVIGATE_BACK, ConfirmPurchaseDialog_OnNavigateBack )
 
-	//AddMenuFooterOption( menu, LEFT, BUTTON_A, true, "#A_BUTTON_PURCHASE", "#PURCHASE", ConfirmPurchase )
-	//AddMenuFooterOption( menu, LEFT, BUTTON_B, true, "#B_BUTTON_CANCEL", "#CANCEL" )
+	//
+	//
 
 	RegisterSignal( "ConfirmPurchaseClosed" )
 }
 
 
-void function PurchaseDialog( PurchaseDialogConfig cfg )
+void function PurchaseDialog( ItemFlavor flav, int quantity, bool markAsNew,
+		void functionref() onPurchaseStartCallback,
+		void functionref( bool wasSuccessful ) onPurchaseResultCallback )
 {
+	printt( "PurchaseDialog", ItemFlavor_GetAsset( flav ) )
+
 	Assert( GRX_IsInventoryReady() )
-	Assert( file.status == ePurchaseDialogStatus.INACTIVE )
+	Assert( file.purchaseStatus == ePurchaseDialogStatus.INACTIVE )
+	Assert( ItemFlavor_GetGRXMode( flav ) != GRX_ITEMFLAVORMODE_NONE )
 
-	PurchaseDialogState state
-	file.state = state
-	file.status = ePurchaseDialogStatus.AWAITING_USER_CONFIRMATION
-	file.state.cfg = cfg
-
-	if ( cfg.flav != null )
+	if ( ItemFlavor_GetGRXMode( flav ) == GRX_ITEMFLAVORMODE_REGULAR && GRX_IsItemOwnedByPlayer( flav ) )
 	{
-		ItemFlavor flav = expect ItemFlavor(cfg.flav)
-		printt( "PurchaseDialog", ItemFlavor_GetHumanReadableRef( flav ) )
-
-		Assert( ItemFlavor_GetGRXMode( flav ) != GRX_ITEMFLAVORMODE_NONE )
-
-		if ( ItemFlavor_GetGRXMode( flav ) == GRX_ITEMFLAVORMODE_REGULAR && GRX_IsItemOwnedByPlayer( flav ) )
-		{
-			Assert( false, "Called PurchaseDialog with an already-owned item: " + ItemFlavor_GetHumanReadableRef( flav ) )
-			EmitUISound( "menu_deny" )
-			return
-		}
-
-		ItemFlavorPurchasabilityInfo ifpi = GRX_GetItemPurchasabilityInfo( flav )
-		Assert( ifpi.isPurchasableAtAll )
-
-		if ( ifpi.craftingOfferOrNull != null )
-			file.state.purchaseOfferList.append( expect GRXScriptOffer(ifpi.craftingOfferOrNull) )
-
-		foreach ( string location, array<GRXScriptOffer> locationOfferList in ifpi.locationToDedicatedStoreOffersMap )
-			foreach ( GRXScriptOffer locationOffer in locationOfferList )
-				file.state.purchaseOfferList.append( locationOffer )
-	}
-	else if ( cfg.offer != null )
-	{
-		GRXScriptOffer offer = expect GRXScriptOffer(cfg.offer)
-		printt( "PurchaseDialog", DEV_GRX_DescribeOffer( offer ) )
-		if ( GRXOffer_IsFullyClaimed( offer ) )
-		{
-			Assert( false, "Called PurchaseDialog with an already-fully-claimed offer: " + DEV_GRX_DescribeOffer( offer ) )
-			EmitUISound( "menu_deny" )
-			return
-		}
-		file.state.purchaseOfferList.append( offer )
-	}
-	else
-	{
-		Assert( false, "Called PurchaseDialog with no flav or offer" )
+		Assert( false, "Called PurchaseDialog with an already-owned item: " + ItemFlavor_GetHumanReadableRef( flav ) )
+		EmitUISound( "menu_deny" )
 		return
 	}
 
-	// todo(dw): locationToBundledStoreOffersMap
+	Assert( file.purchaseItemFlavOrNull == null )
+	Assert( file.purchaseQuantity == 0 )
+	Assert( file.purchaseOfferList.len() == 0 )
+	Assert( file.purchaseButtonPriceMap.len() == 0 )
+	Assert( file.onPurchaseResultCallback == null )
+
+	file.purchaseStatus = ePurchaseDialogStatus.AWAITING_USER_CONFIRMATION
+	file.purchaseItemFlavOrNull = flav
+	file.purchaseQuantity = quantity
+	file.purchaseMarkAsNew = markAsNew
+	file.onPurchaseStartCallback = onPurchaseStartCallback
+	file.onPurchaseResultCallback = onPurchaseResultCallback
+	file.purchaseSoundOverride = ""
+
+	ItemFlavorPurchasabilityInfo ifpi = GRX_GetItemPurchasabilityInfo( flav )
+	Assert( ifpi.isPurchasableAtAll )
+
+	if ( ifpi.craftingOfferOrNull != null )
+		file.purchaseOfferList.append( expect GRXScriptOffer(ifpi.craftingOfferOrNull) )
+
+	foreach ( string location, array<GRXScriptOffer> locationOfferList in ifpi.locationToDedicatedStoreOffersMap )
+		foreach ( GRXScriptOffer locationOffer in locationOfferList )
+			file.purchaseOfferList.append( locationOffer )
+
+	//
 
 	EmitUISound( "UI_Menu_Cosmetic_Unlock" )
 	AdvanceMenu( file.menu )
+}
+
+
+void function PurchaseDialog_SetPurchaseOverrideSound( string overrideSound )
+{
+	file.purchaseSoundOverride = overrideSound
 }
 
 
@@ -174,17 +155,15 @@ void function GotoPremiumStoreTab()
 
 void function PurchaseButton_Activate( var button )
 {
-	Assert( file.status == ePurchaseDialogStatus.AWAITING_USER_CONFIRMATION )
+	Assert( file.purchaseStatus == ePurchaseDialogStatus.AWAITING_USER_CONFIRMATION )
 
 	if ( Hud_IsLocked( button ) )
 		return
 
-	GRXScriptOffer offer = file.state.purchaseButtonOfferMap[button]
-	ItemFlavorBag price  = file.state.purchaseButtonPriceMap[button]
+	ItemFlavorBag price = file.purchaseButtonPriceMap[button]
 
 	bool isPremiumOnly = GRX_IsPremiumPrice( price )
-	int quantity       = file.state.cfg.quantity
-	bool canAfford     = GRX_CanAfford( price, quantity )
+	bool canAfford     = GRX_CanAfford( price, file.purchaseQuantity )
 	if ( isPremiumOnly && !canAfford )
 	{
 		GotoPremiumStoreTab()
@@ -193,42 +172,41 @@ void function PurchaseButton_Activate( var button )
 
 	Assert( canAfford )
 
-	file.status = ePurchaseDialogStatus.WORKING
+	file.purchaseStatus = ePurchaseDialogStatus.WORKING
 
-
-	int queryGoal
-	if ( offer.isCraftingOffer )
+	ScriptGRXOperationInfo operation
+	if ( GRX_IsCraftingPrice( price ) )
 	{
-		queryGoal = GRX_HTTPQUERYGOAL_CRAFT_ITEM
+		operation.expectedQueryGoal = GRX_HTTPQUERYGOAL_CRAFT_ITEM
+		operation.doOperationFunc = (void function( int opID )
+		{
+			GRX_CraftItem( opID, ItemFlavor_GetGRXIndex( expect ItemFlavor(file.purchaseItemFlavOrNull) ) )
+		})
 	}
 	else
 	{
-		queryGoal = GRX_HTTPQUERYGOAL_PURCHASE_STORE_OFFER
+		int itemType  = ItemFlavor_GetType( expect ItemFlavor(file.purchaseItemFlavOrNull) )
+		int queryGoal = GRX_HTTPQUERYGOAL_PURCHASE_ITEM
+		if ( itemType == eItemType.character )
+			queryGoal = GRX_HTTPQUERYGOAL_PURCHASE_CHARACTER
+		else if ( itemType == eItemType.account_pack )
+			queryGoal = GRX_HTTPQUERYGOAL_PURCHASE_PACK
 
-		if ( file.state.cfg.flav != null )
+		operation.expectedQueryGoal = queryGoal
+		operation.doOperationFunc = (void function( int opID ) : ( queryGoal, price )
 		{
-			int itemType = ItemFlavor_GetType( expect ItemFlavor(file.state.cfg.flav) )
-			if ( itemType == eItemType.character )
-				queryGoal = GRX_HTTPQUERYGOAL_PURCHASE_CHARACTER
-			else if ( itemType == eItemType.account_pack )
-				queryGoal = GRX_HTTPQUERYGOAL_PURCHASE_PACK
-		}
+			GRX_PurchaseItem( opID, queryGoal, file.purchaseQuantity, ItemFlavor_GetGRXIndex( expect ItemFlavor(file.purchaseItemFlavOrNull) ), GRX_GetCurrencyArrayFromBag( price ) )
+		})
 	}
-
-	ScriptGRXOperationInfo operation
-	operation.expectedQueryGoal = queryGoal
-	operation.doOperationFunc = (void function( int opId ) : (queryGoal, offer, price, quantity) {
-		GRX_PurchaseOffer( opId, queryGoal, offer, price, quantity )
-	})
-	operation.onDoneCallback = (void function( int status ) : ( offer, price )
+	operation.onDoneCallback = (void function( int status ) : ( price )
 	{
-		OnPurchaseOperationFinished( status, offer, price )
+		OnPurchaseOperationFinished( status, price )
 	})
 
-	if ( file.state.cfg.onPurchaseStartCallback != null )
+	if ( file.onPurchaseStartCallback != null )
 	{
-		file.state.cfg.onPurchaseStartCallback()
-		file.state.cfg.onPurchaseStartCallback = null
+		file.onPurchaseStartCallback()
+		file.onPurchaseStartCallback = null
 	}
 
 	QueueGRXOperation( GetUIPlayer(), operation )
@@ -246,13 +224,13 @@ void function CancelButton_Activate( var button )
 
 void function UpdateProcessingElements()
 {
-	bool isWorking = (file.status == ePurchaseDialogStatus.WORKING)
+	bool isWorking = (file.purchaseStatus == ePurchaseDialogStatus.WORKING)
 
-	//Hud_Hide( file.buttonsPanel )
-	//Hud_Show( file.processingButton )
+	//
+	//
 	Hud_SetEnabled( file.cancelButton, !isWorking )
 	HudElem_SetRuiArg( file.cancelButton, "isProcessing", isWorking )
-	HudElem_SetRuiArg( file.cancelButton, "processingState", file.status )
+	HudElem_SetRuiArg( file.cancelButton, "processingState", file.purchaseStatus )
 
 	foreach ( button in file.purchaseButtonBottomToTopList )
 	{
@@ -262,32 +240,34 @@ void function UpdateProcessingElements()
 }
 
 
-void function OnPurchaseOperationFinished( int status, GRXScriptOffer offer, ItemFlavorBag price )
+void function OnPurchaseOperationFinished( int status, ItemFlavorBag price )
 {
-	Assert( file.status == ePurchaseDialogStatus.WORKING )
+	Assert( file.purchaseStatus == ePurchaseDialogStatus.WORKING )
 
 	bool wasSuccessful = (status == eScriptGRXOperationStatus.DONE_SUCCESS)
 
-	file.status = (wasSuccessful ? ePurchaseDialogStatus.FINISHED_SUCCESS : ePurchaseDialogStatus.FINISHED_FAILURE)
+	file.purchaseStatus = (wasSuccessful ? ePurchaseDialogStatus.FINISHED_SUCCESS : ePurchaseDialogStatus.FINISHED_FAILURE)
 
 	if ( wasSuccessful )
 	{
 		ClientCommand( "lastSeenPremiumCurrency" )
 
 		string purchaseSound
-		if ( file.state.cfg.purchaseSoundOverride != null )
+		if ( file.purchaseSoundOverride != "" )
 		{
-			purchaseSound = expect string(file.state.cfg.purchaseSoundOverride)
+			purchaseSound = file.purchaseSoundOverride
 		}
 		else
 		{
 			int lowestCurrencyIndex = GRX_CURRENCY_COUNT
 			foreach ( int costIndex, ItemFlavor costFlav in price.flavors )
 			{
+				//
+				//
 				if ( GRXCurrency_GetCurrencyIndex( costFlav ) < lowestCurrencyIndex )
 					lowestCurrencyIndex = GRXCurrency_GetCurrencyIndex( costFlav )
 			}
-
+			
 			if ( lowestCurrencyIndex != GRX_CURRENCY_COUNT )
 				purchaseSound = GRXCurrency_GetPurchaseSound( GRX_CURRENCIES[lowestCurrencyIndex] )
 		}
@@ -299,19 +279,16 @@ void function OnPurchaseOperationFinished( int status, GRXScriptOffer offer, Ite
 		EmitUISound( "menu_deny" )
 	}
 
-	if ( file.state.cfg.markAsNew )
+	if ( file.purchaseMarkAsNew )
+		Newness_TEMP_MarkItemAsNewAndInformServer( expect ItemFlavor(file.purchaseItemFlavOrNull) )
+
+	if ( file.onPurchaseResultCallback != null )
 	{
-		foreach ( ItemFlavor outputFlav in offer.output.flavors )
-			Newness_TEMP_MarkItemAsNewAndInformServer( outputFlav )
+		file.onPurchaseResultCallback( wasSuccessful )
+		file.onPurchaseResultCallback = null
 	}
 
-	if ( file.state.cfg.onPurchaseResultCallback != null )
-	{
-		file.state.cfg.onPurchaseResultCallback( wasSuccessful )
-		file.state.cfg.onPurchaseResultCallback = null
-	}
-
-	thread ReportStatusAndClose( file.status )
+	thread ReportStatusAndClose( file.purchaseStatus )
 }
 
 
@@ -331,7 +308,7 @@ void function ReportStatusAndClose( int processingState )
 
 void function ConfirmPurchaseDialog_OnOpen()
 {
-	Assert( file.status == ePurchaseDialogStatus.AWAITING_USER_CONFIRMATION )
+	Assert( file.purchaseStatus == ePurchaseDialogStatus.AWAITING_USER_CONFIRMATION )
 
 	AddCallbackAndCallNow_OnGRXInventoryStateChanged( UpdatePurchaseDialog )
 }
@@ -339,123 +316,80 @@ void function ConfirmPurchaseDialog_OnOpen()
 
 void function UpdatePurchaseDialog()
 {
-	if ( file.status != ePurchaseDialogStatus.AWAITING_USER_CONFIRMATION )
+	if ( file.purchaseStatus != ePurchaseDialogStatus.AWAITING_USER_CONFIRMATION )
 		return
 
-	int quality        = eQuality.COMMON
-	string messageText = "#PURCHASE"
-	string devDesc
+	Assert( file.purchaseItemFlavOrNull != null )
 
-	if ( file.state.cfg.messageOverride != null )
+	ItemFlavor purchaseItem = expect ItemFlavor(file.purchaseItemFlavOrNull)
+	string purchaseItemName = Localize( ItemFlavor_GetLongName( purchaseItem ) )
+	int quality             = ItemFlavor_HasQuality( purchaseItem ) ? ItemFlavor_GetQuality( purchaseItem ) : 0
+
+	string messageText
+	switch ( ItemFlavor_GetType( purchaseItem ) )
 	{
-		messageText = expect string(file.state.cfg.messageOverride)
+		case eItemType.gladiator_card_intro_quip:
+		case eItemType.gladiator_card_kill_quip:
+			messageText = Localize( "#QUOTE_STRING", purchaseItemName )
+			break
+
+		case eItemType.character:
+			messageText = purchaseItemName
+			break
+
+		case eItemType.battlepass_purchased_xp:
+			if ( file.purchaseQuantity > 1 )
+				messageText = Localize( "#STORE_ITEM_X_N", purchaseItemName, file.purchaseQuantity )
+			else
+				messageText = purchaseItemName
+			break
+
+		default:
+			if ( file.purchaseQuantity > 1 )
+				messageText = Localize( "#STORE_ITEM_X_N", purchaseItemName, file.purchaseQuantity ) + "\n`1" + Localize( ItemFlavor_GetQualityName( purchaseItem ) )
+			else
+				messageText = purchaseItemName + "\n`1" + Localize( ItemFlavor_GetQualityName( purchaseItem ) )
+			break
 	}
-	else if ( file.state.cfg.flav != null )
-	{
-		ItemFlavor flav = expect ItemFlavor(file.state.cfg.flav)
-		devDesc = ItemFlavor_GetHumanReadableRef( flav )
-
-		string flavName = Localize( ItemFlavor_GetLongName( flav ) )
-		quality = ItemFlavor_HasQuality( flav ) ? ItemFlavor_GetQuality( flav ) : 0
-
-		switch ( ItemFlavor_GetType( flav ) )
-		{
-			case eItemType.gladiator_card_intro_quip:
-			case eItemType.gladiator_card_kill_quip:
-				messageText = Localize( "#QUOTE_STRING", flavName )
-				break
-
-			case eItemType.character:
-				messageText = flavName
-				break
-
-			case eItemType.battlepass_purchased_xp:
-				if ( file.state.cfg.quantity > 1 )
-					messageText = Localize( "#STORE_ITEM_X_N", flavName, file.state.cfg.quantity )
-				else
-					messageText = flavName
-				break
-
-			default:
-				if ( file.state.cfg.quantity > 1 )
-					messageText = Localize( "#STORE_ITEM_X_N", flavName, file.state.cfg.quantity ) + "\n`1" + Localize( ItemFlavor_GetQualityName( flav ) )
-				else
-					messageText = flavName + "\n`1" + Localize( ItemFlavor_GetQualityName( flav ) )
-				break
-		}
-	}
-	else if ( file.state.cfg.offer != null )
-	{
-		GRXScriptOffer offer = expect GRXScriptOffer(file.state.cfg.offer)
-		devDesc = DEV_GRX_DescribeOffer( offer )
-
-		messageText = offer.titleText
-
-		quality = eQuality.COMMON
-		foreach ( ItemFlavor outputFlav in offer.output.flavors )
-			quality = maxint( quality, ItemFlavor_GetQuality( outputFlav ) )
-	}
-
-	printt( "UpdatePurchaseDialog", devDesc )
-
-	HudElem_SetRuiArg( file.dialogContent, "quality", quality )
-	HudElem_SetRuiArg( file.dialogContent, "quantity", file.state.cfg.quantity )
-	HudElem_SetRuiArg( file.dialogContent, "headerText", "#CONFIRM_PURCHASE_HEADER" )
-	HudElem_SetRuiArg( file.dialogContent, "messageText", messageText )
 
 	UpdateProcessingElements()
 
 	int purchaseButtonIdx = 0
-	file.state.purchaseButtonOfferMap.clear()
-	file.state.purchaseButtonPriceMap.clear()
+	file.purchaseButtonPriceMap.clear()
 
-	array<GRXScriptOffer> offerList = clone file.state.purchaseOfferList
-	offerList.reverse() // reverse because the purchase buttons are set up from bottom to top
+	array<GRXScriptOffer> offerList = clone file.purchaseOfferList
+	offerList.reverse() //
 	foreach ( GRXScriptOffer offer in offerList )
 	{
 		array<ItemFlavorBag> priceList = clone offer.prices
-		priceList.sort( int function( ItemFlavorBag a, ItemFlavorBag b ) {
-			if ( GRXCurrency_GetCurrencyIndex( a.flavors[0] ) > GRXCurrency_GetCurrencyIndex( b.flavors[0] ) )
-				return 1
-
-			if ( GRXCurrency_GetCurrencyIndex( a.flavors[0] ) < GRXCurrency_GetCurrencyIndex( b.flavors[0] ) )
-				return -1
-
-			return 0
-		} )
-		// same thing
+		priceList.reverse() //
 		foreach ( ItemFlavorBag price in priceList )
 		{
-			Assert( purchaseButtonIdx < file.purchaseButtonBottomToTopList.len(), format( "Item %s had more than %d prices, failed to show purchase dialog", devDesc, file.purchaseButtonBottomToTopList.len() ) )
+			Assert( purchaseButtonIdx < file.purchaseButtonBottomToTopList.len(), format( "Item %s had more than %d prices, failed to show purchase dialog", ItemFlavor_GetHumanReadableRef( purchaseItem ), file.purchaseButtonBottomToTopList.len() ) )
 			if ( purchaseButtonIdx >= file.purchaseButtonBottomToTopList.len() )
 				break
 
 			var button = file.purchaseButtonBottomToTopList[purchaseButtonIdx]
 
-			file.state.purchaseButtonOfferMap[button] <- offer
-			file.state.purchaseButtonPriceMap[button] <- price
+			file.purchaseButtonPriceMap[button] <- price
 
 			Hud_Show( button )
 			HudElem_SetRuiArg( button, "buttonText", offer.isCraftingOffer ? "#CONFIRM_CRAFT_WITH" : "#CONFIRM_PURCHASE_WITH" )
-			HudElem_SetRuiArg( button, "priceText", GRX_GetFormattedPrice( price, file.state.cfg.quantity ) )
+			HudElem_SetRuiArg( button, "priceText", GRX_GetFormattedPrice( price, file.purchaseQuantity ) )
 			HudElem_SetRuiArg( button, "isProcessing", false )
 
 			bool isLoadingPrice = false
 			if ( GRX_IsInventoryReady() )
 			{
 				bool isPremiumOnly = GRX_IsPremiumPrice( price )
-				bool canAfford     = GRX_CanAfford( price, file.state.cfg.quantity )
+				bool canAfford     = GRX_CanAfford( price, file.purchaseQuantity )
 
 				isLoadingPrice = false
 				Hud_SetEnabled( button, true )
-				Hud_SetLocked( button, offer.isAvailable && !canAfford && !isPremiumOnly )
+				Hud_SetLocked( button, !canAfford && !isPremiumOnly )
 
 				Hud_ClearToolTipData( button )
-				if ( !offer.isAvailable )
-				{
-					HudElem_SetRuiArg( button, "buttonText", "#UNAVAILABLE" )//
-				}
-				else if ( isPremiumOnly && !canAfford )
+				if ( isPremiumOnly && !canAfford )
 				{
 					HudElem_SetRuiArg( button, "buttonText", "#CONFIRM_GET_PREMIUM" )
 				}
@@ -477,7 +411,7 @@ void function UpdatePurchaseDialog()
 						break
 					}
 
-					toolTipData.descText = Localize( "#CANNOT_AFFORD_DESC", GRX_CanAffordDelta( price, file.state.cfg.quantity ), Localize( currencyName ) )
+					toolTipData.descText = Localize( "#CANNOT_AFFORD_DESC", GRX_CanAffordDelta( price, file.purchaseQuantity ), Localize( currencyName ) )
 					Hud_SetToolTipData( button, toolTipData )
 				}
 			}
@@ -493,6 +427,13 @@ void function UpdatePurchaseDialog()
 	}
 	int usedPurchaseButtonCount = purchaseButtonIdx
 
+	printt( purchaseItemName + " quality " + quality )
+
+	HudElem_SetRuiArg( file.dialogContent, "quality", quality )
+	HudElem_SetRuiArg( file.dialogContent, "quantity", file.purchaseQuantity )
+	HudElem_SetRuiArg( file.dialogContent, "headerText", "#CONFIRM_PURCHASE_HEADER" )
+	HudElem_SetRuiArg( file.dialogContent, "messageText", messageText )
+
 	for ( int unusedPurchaseButtonIdx = purchaseButtonIdx; unusedPurchaseButtonIdx < file.purchaseButtonBottomToTopList.len(); unusedPurchaseButtonIdx++ )
 		Hud_Hide( file.purchaseButtonBottomToTopList[unusedPurchaseButtonIdx] )
 
@@ -506,10 +447,13 @@ void function ConfirmPurchaseDialog_OnClose()
 {
 	RemoveCallback_OnGRXInventoryStateChanged( UpdatePurchaseDialog )
 
-	file.status = ePurchaseDialogStatus.INACTIVE
-	PurchaseDialogState state
-	file.state = state
-
+	file.purchaseStatus = ePurchaseDialogStatus.INACTIVE
+	file.purchaseItemFlavOrNull = null
+	file.purchaseQuantity = 0
+	file.purchaseOfferList.clear()
+	file.purchaseButtonPriceMap.clear()
+	file.onPurchaseStartCallback = null
+	file.onPurchaseResultCallback = null
 	UpdateProcessingElements()
 
 	Signal( uiGlobal.signalDummy, "ConfirmPurchaseClosed" )
@@ -518,7 +462,7 @@ void function ConfirmPurchaseDialog_OnClose()
 
 void function ConfirmPurchaseDialog_OnNavigateBack()
 {
-	if ( file.status == ePurchaseDialogStatus.INACTIVE || file.status == ePurchaseDialogStatus.WORKING )
+	if ( file.purchaseStatus == ePurchaseDialogStatus.INACTIVE || file.purchaseStatus == ePurchaseDialogStatus.WORKING )
 		return
 
 	CloseActiveMenu()

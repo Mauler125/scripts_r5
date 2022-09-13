@@ -27,7 +27,6 @@ const SHIFTER_DASH_APPEAR_FX = $"P_phase_dash_end"
 const SHIFTER_DASH_DISAPPEAR_FX = $"P_phase_dash_start"
 const SHIFTER_DASH_DISAPPEAR_ON_WRAITH_FX = $"P_phase_dash_start_mdl"
 
-const SHIFTER_GATE_DISAPPEAR_FX = $"P_wrth_tt_dash_3P"
 const SHIFTER_SCREEN_FX = $"P_phase_shift_screen"
 const SHIFTER_PERSONAL_FX = $"P_phase_shift_player"
 const SHIFTER_SCREEN_FX_START = $"P_phase_shift_screen_start"
@@ -66,8 +65,6 @@ global enum eShiftStyle
 	Balance,
 	Tunnel,
 	Dash,
-	Gate,
-	COUNT,
 }
 
 const int TELEFRAG_DAMAGE = 5000
@@ -120,6 +117,7 @@ void function MpAbilityShifter_Init()
 		ColorCorrection_RegisterPhaseShift( SHIFTER_COLORCORRECTION )
 		thread ClientPhaseShiftFirstPersonFXThread()
 
+		thread ClientRemoteTurretFirstPersonFXThread()
 	#endif // #if CLIENT
 
 	PrecacheParticleSystem( SHIFTER_PRE_FX )
@@ -135,7 +133,6 @@ void function MpAbilityShifter_Init()
 	PrecacheParticleSystem( SHIFTER_DASH_DISAPPEAR_FX )
 	PrecacheParticleSystem( SHIFTER_DASH_DISAPPEAR_ON_WRAITH_FX )
 
-	PrecacheParticleSystem( SHIFTER_GATE_DISAPPEAR_FX )
 	MpAbilityPhaseWalk_Init()
 
 	RegisterSignal( "StartPhaseShift" )
@@ -180,7 +177,6 @@ int function PhaseShift( entity ent, float warmupTime, float duration, int shift
 		switch ( shiftStyle )
 		{
 			case eShiftStyle.Balance:
-			case eShiftStyle.Gate:
 			case eShiftStyle.Tunnel:
 				ent.SetSeeOtherNonShifters( false )
 				StatusEffect_AddTimed( ent, eStatusEffect.speed_boost, 0.05, duration, 0.25 )
@@ -458,7 +454,7 @@ void function ServerPhaseShiftPlayerThread( entity ent, float warmupTime, float 
 		if ( proxy != null )
 			proxy.SetForceVisibleInPhaseShift( true )
 
-		/*if ( RodeoState_GetIsPlayerRodeoing( ent ) ) // RodeoState_GetIsPlayerRodeoing no longer exist in S3
+		/*if ( RodeoState_GetIsPlayerRodeoing( ent ) )
 		{
 			if ( ent.GetParent() != null && ent.GetParent().IsPhaseShifted() )
 				keepAnimActive = true
@@ -550,7 +546,7 @@ void function ServerPhaseShiftPlayerThread( entity ent, float warmupTime, float 
 	{
 		soul = ent.GetTitanSoul()
 		string titanType = GetSoulTitanSubClass( soul )
-		/*foreach( entity rider in RodeoState_GetPlayersRodeingVehicle( ent ) ) // RodeoState_GetIsPlayerRodeoing no longer exist in S3
+		/*foreach( entity rider in RodeoState_GetPlayersRodeingVehicle( ent ) )
 		{
 			if ( !rider.IsPlayer() )
 				Rodeo_TriggerRiderRodeoEnd( rider, true )
@@ -999,6 +995,54 @@ void function ClientPhaseShiftFirstPersonFXThread()
 				ourPlayer = localViewPlayer
 
 				Chroma_PhaseShiftStarting()
+			}
+		}
+
+		WaitFrame()
+	}
+}
+
+void function ClientRemoteTurretFirstPersonFXThread()
+{
+	int effectSparkles
+	int effectScreen
+	bool effectsAreActive = false
+	entity ourPlayer      = null
+
+	const string TURRET_LOOP_SOUND = "Pilot_RemoteTurret_Loop_1P"
+
+	while ( true )
+	{
+		if ( effectsAreActive )
+		{
+			entity localViewPlayer = GetLocalViewPlayer()
+
+			bool needShutdown = false
+			if ( !IsValid( ourPlayer ) || !IsAlive( ourPlayer ) )
+				needShutdown = true
+			else if ( ourPlayer != localViewPlayer )
+				needShutdown = true
+			else if ( ourPlayer.GetRemoteTurret() == null )
+				needShutdown = true
+
+			if ( needShutdown )
+			{
+				if ( IsValid( ourPlayer ) && (ourPlayer == localViewPlayer) )
+					StopSoundOnEntity( ourPlayer, TURRET_LOOP_SOUND )
+
+				effectsAreActive = false
+				ourPlayer = null
+			}
+		}
+
+		if ( !effectsAreActive )
+		{
+			entity localViewPlayer = GetLocalViewPlayer()
+			if ( IsValid( localViewPlayer ) && (localViewPlayer.GetRemoteTurret() != null) )
+			{
+				EmitSoundOnEntity( localViewPlayer, TURRET_LOOP_SOUND )
+				effectsAreActive = true
+				ourPlayer = localViewPlayer
 			}
 		}
 

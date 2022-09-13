@@ -45,7 +45,7 @@ void function OnHideLegendPage( var panel )
 
 void function PopulateSkillElem( var elem, ItemFlavor character )
 {
-	string skillType = Hud_GetScriptID( elem )
+	/*string skillType = Hud_GetScriptID( elem )
 	var rui = Hud_GetRui( elem )
 
 	switch ( skillType )
@@ -117,7 +117,7 @@ void function PopulateSkillElem( var elem, ItemFlavor character )
 	}
 
 	RuiSetBool( rui, "isUltimate", skillType == "ultimate" )
-	RuiSetGameTime( rui, "initTime", Time() )
+	RuiSetGameTime( rui, "initTime", Time() )*/
 }
 
 

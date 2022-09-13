@@ -97,22 +97,20 @@ int function LSTAR_Proto_TitanAttack( entity weapon, WeaponPrimaryAttackParams a
 }
 
 // note: called for both "blowoff" and "burnout" states, check charge frac to determine
-void function OnWeaponCooldown_weapon_lstar( entity weapon, bool temp )
+void function OnWeaponCooldown_weapon_lstar( entity weapon, bool isFirstTimeCooldown )
 {
-	// weapon overheated!
-	if ( weapon.GetWeaponChargeFraction() == 1.0 )  // only works if charge_cooldown_delay is > 0
-	{
-		weapon.EmitWeaponSound_1p3p( LSTAR_BURNOUT_SOUND_1P, LSTAR_BURNOUT_SOUND_3P )
-		weapon.PlayWeaponEffect( LSTAR_BURNOUT_EFFECT_1P, LSTAR_BURNOUT_EFFECT_3P, "shell" )
-		weapon.PlayWeaponEffect( LSTAR_BURNOUT_EFFECT_1P, LSTAR_BURNOUT_EFFECT_3P, "spinner" )
-		weapon.PlayWeaponEffect( LSTAR_BURNOUT_EFFECT_1P, LSTAR_BURNOUT_EFFECT_3P, "vent_cover_L" )
-		weapon.PlayWeaponEffect( LSTAR_BURNOUT_EFFECT_1P, LSTAR_BURNOUT_EFFECT_3P, "vent_cover_R" )
-	}
-	// "blowoff" after firing
-	else
+	//
+	if ( isFirstTimeCooldown )
 	{
 		weapon.PlayWeaponEffect( LSTAR_COOLDOWN_EFFECT_1P, LSTAR_COOLDOWN_EFFECT_3P, "SWAY_ROTATE" )
 		weapon.EmitWeaponSound_1p3p( "LSTAR_VentCooldown", "LSTAR_VentCooldown_3p" )
+
+		//
+		if ( weapon.IsOverheated() )
+		{
+			weapon.EmitWeaponSound_1p3p( LSTAR_BURNOUT_SOUND_1P, LSTAR_BURNOUT_SOUND_3P )
+			weapon.PlayWeaponEffect( LSTAR_BURNOUT_EFFECT_1P, LSTAR_BURNOUT_EFFECT_3P, "vent_spinner" )
+		}
 	}
 }
 

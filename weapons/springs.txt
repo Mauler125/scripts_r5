@@ -121,25 +121,7 @@ WeaponSprings
 		"ADS_roll_damping"				"25.0"
 	}
 
-
-	g2_vkp_double_tap_hot
-	{
-		"hipfire_pitch_springConstant"	"20.0"
-		"hipfire_pitch_damping"			"25.0"
-		"hipfire_yaw_springConstant"	"15.0"
-		"hipfire_yaw_damping"			"12.0"
-		"hipfire_roll_springConstant"	"20000.0"
-		"hipfire_roll_damping"			"15.0"
-
-		"ADS_pitch_springConstant"		"20.0"
-		"ADS_pitch_damping"				"65.0"
-		"ADS_yaw_springConstant"		"10.0"
-		"ADS_yaw_damping"				"90.0"
-		"ADS_roll_springConstant"		"20000.0"
-		"ADS_roll_damping"				"25.0"
-	}
-
-	g2_viewmodel_jolt
+    g2_viewmodel_jolt
 	{
 		"hipfire_pitch_springConstant"	"80.0"
 		"hipfire_pitch_damping"			"20.0"
@@ -336,38 +318,6 @@ WeaponSprings
 		"ADS_roll_springConstant"		"20000"
 		"ADS_roll_damping"				"20.0"
 	}
-	rspn101_highcal_vkp
-	{
-		"hipfire_pitch_springConstant"	"60.0"
-		"hipfire_pitch_damping"			"15.0"
-		"hipfire_yaw_springConstant"	"60.0"
-		"hipfire_yaw_damping"			"9.0"
-		"hipfire_roll_springConstant"	"400.0"
-		"hipfire_roll_damping"			"15.0"
-
-		"ADS_pitch_springConstant"		"210.0"
-		"ADS_pitch_damping"				"25.0"
-		"ADS_yaw_springConstant"		"180.0"
-		"ADS_yaw_damping"				"20.0"
-		"ADS_roll_springConstant"		"30000.0"
-		"ADS_roll_damping"				"25.0"
-	}
-	rspn101_highcal_vkp_hot
-	{
-		"hipfire_pitch_springConstant"	"40.0"
-		"hipfire_pitch_damping"			"25.0"
-		"hipfire_yaw_springConstant"	"30.0"
-		"hipfire_yaw_damping"			"12.0"
-		"hipfire_roll_springConstant"	"20000.0"
-		"hipfire_roll_damping"			"15.0"
-
-		"ADS_pitch_springConstant"		"8.0"
-		"ADS_pitch_damping"				"40.0"
-		"ADS_yaw_springConstant"		"0.0"
-		"ADS_yaw_damping"				"90.0"
-		"ADS_roll_springConstant"		"20000.0"
-		"ADS_roll_damping"				"25.0"
-	}
 
 	autofire_viewmodel_jolt
 	{
@@ -486,38 +436,6 @@ WeaponSprings
 		"ADS_yaw_damping"				"50.0"
 		"ADS_roll_springConstant"		"20000.0"
 		"ADS_roll_damping"				"18.0"
-	}
-	flatline_highcal_vkp
-	{
-		"hipfire_pitch_springConstant"	"60.0"
-		"hipfire_pitch_damping"			"15.0"
-		"hipfire_yaw_springConstant"	"60.0"
-		"hipfire_yaw_damping"			"9.0"
-		"hipfire_roll_springConstant"	"400.0"
-		"hipfire_roll_damping"			"15.0"
-
-		"ADS_pitch_springConstant"		"190.0"
-		"ADS_pitch_damping"				"25.0"
-		"ADS_yaw_springConstant"		"150.0"
-		"ADS_yaw_damping"				"20.0"
-		"ADS_roll_springConstant"		"30000.0"
-		"ADS_roll_damping"				"25.0"
-	}
-	flatline_highcal_vkp_hot
-	{
-		"hipfire_pitch_springConstant"	"40.0"
-		"hipfire_pitch_damping"			"25.0"
-		"hipfire_yaw_springConstant"	"30.0"
-		"hipfire_yaw_damping"			"12.0"
-		"hipfire_roll_springConstant"	"20000.0"
-		"hipfire_roll_damping"			"15.0"
-
-		"ADS_pitch_springConstant"		"12.0"
-		"ADS_pitch_damping"				"45.0"
-		"ADS_yaw_springConstant"		"0.0"
-		"ADS_yaw_damping"				"90.0"
-		"ADS_roll_springConstant"		"20000.0"
-		"ADS_roll_damping"				"25.0"
 	}
 
 	hemlok
@@ -730,57 +648,6 @@ WeaponSprings
 		"ADS_yaw_damping"				"30.0"
 		"ADS_roll_springConstant"		"20000"
 		"ADS_roll_damping"				"20.0"
-	}
-
-	volt
-	{
-		"hipfire_pitch_springConstant"	"65"
-		"hipfire_pitch_damping"			"15"
-		"hipfire_yaw_springConstant"	"200"
-		"hipfire_yaw_damping"			"15"
-		"hipfire_roll_springConstant"	"250"
-		"hipfire_roll_damping"			"10"
-
-		"ADS_pitch_springConstant"		"75.0"
-		"ADS_pitch_damping"				"18.0"
-		"ADS_yaw_springConstant"		"120.0"
-		"ADS_yaw_damping"				"18.0"
-		"ADS_roll_springConstant"		"250.0"
-		"ADS_roll_damping"				"18.0"
-	}
-
-	volt_vkp
-	{
-		"hipfire_pitch_springConstant"	"95.0"
-		"hipfire_pitch_damping"			"20.0"
-		"hipfire_yaw_springConstant"	"35.0"
-		"hipfire_yaw_damping"			"18.0"
-		"hipfire_roll_springConstant"	"20000.0"
-		"hipfire_roll_damping"			"18.0"
-
-		"ADS_pitch_springConstant"		"135.0"
-		"ADS_pitch_damping"				"22.0"
-		"ADS_yaw_springConstant"		"85.0"
-		"ADS_yaw_damping"				"15.0"
-		"ADS_roll_springConstant"		"20000.0"
-		"ADS_roll_damping"				"16.0"
-	}
-
-	volt_vkp_hot
-	{
-		"hipfire_pitch_springConstant"	"50.0"
-		"hipfire_pitch_damping"			"65.0"
-		"hipfire_yaw_springConstant"	"35.0"
-		"hipfire_yaw_damping"			"50.0"
-		"hipfire_roll_springConstant"	"20000.0"
-		"hipfire_roll_damping"			"18.0"
-
-		"ADS_pitch_springConstant"		"0.0"
-		"ADS_pitch_damping"				"120.0"
-		"ADS_yaw_springConstant"		"0.0"
-		"ADS_yaw_damping"				"120.0"
-		"ADS_roll_springConstant"		"20000.0"
-		"ADS_roll_damping"				"16.0"
 	}
 
 	car
@@ -1111,40 +978,6 @@ WeaponSprings
 		"ADS_roll_damping"				"22.0"
 	}
 
-	shotgun_double_tap
-	{
-	    "hipfire_pitch_springConstant"	"350.0"
-        "hipfire_pitch_damping"			"22.0"
-        "hipfire_yaw_springConstant"	"350.0"
-        "hipfire_yaw_damping"			"18.0"
-        "hipfire_roll_springConstant"	"350.0"
-        "hipfire_roll_damping"			"25.0"
-
-        "ADS_pitch_springConstant"		"150.0"
-        "ADS_pitch_damping"				"27.0"
-        "ADS_yaw_springConstant"		"85.0"
-        "ADS_yaw_damping"				"16.0"
-        "ADS_roll_springConstant"		"350.0"
-        "ADS_roll_damping"				"22.0"
-	}
-
-	shotgun_pistol
-    {
-        "hipfire_pitch_springConstant"	"350.0"
-        "hipfire_pitch_damping"			"22.0"
-        "hipfire_yaw_springConstant"	"350.0"
-        "hipfire_yaw_damping"			"18.0"
-        "hipfire_roll_springConstant"	"350.0"
-        "hipfire_roll_damping"			"25.0"
-
-        "ADS_pitch_springConstant"		"175.0"
-        "ADS_pitch_damping"				"22.0"
-        "ADS_yaw_springConstant"		"150.0"
-        "ADS_yaw_damping"				"18.0"
-        "ADS_roll_springConstant"		"350.0"
-        "ADS_roll_damping"				"22.0"
-    }
-
 	energy_shotgun
 	{
 		"hipfire_pitch_springConstant"	"45.0"
@@ -1295,41 +1128,6 @@ WeaponSprings
 		"ADS_roll_damping"				"20.0"
 	}
 
-	volt_vkp
-	{
-		"hipfire_pitch_springConstant"	"120"
-		"hipfire_pitch_damping"			"20"
-		"hipfire_yaw_springConstant"	"220"
-		"hipfire_yaw_damping"			"20"
-		"hipfire_roll_springConstant"	"20000"
-		"hipfire_roll_damping"			"15"
-
-		"ADS_pitch_springConstant"		"150.0"
-		"ADS_pitch_damping"				"40.0"
-		"ADS_yaw_springConstant"		"145.0"
-		"ADS_yaw_damping"				"40.0"
-		"ADS_roll_springConstant"		"20000.0"
-		"ADS_roll_damping"				"15"
-	}
-    volt_vkp_hot
-    {
-        "hipfire_pitch_springConstant"	"0"
-        "hipfire_pitch_damping"			"100"
-        "hipfire_yaw_springConstant"	"0"
-        "hipfire_yaw_damping"			"100"
-        "hipfire_roll_springConstant"	"20000"
-        "hipfire_roll_damping"			"15"
-
-        "ADS_pitch_springConstant"		"0.0"
-        "ADS_pitch_damping"				"80"
-        "ADS_yaw_springConstant"		"0.0"
-        "ADS_yaw_damping"				"60"
-        "ADS_roll_springConstant"		"22000"
-        "ADS_roll_damping"				"18"
-    }
-
-
-
 
 	launcher
 	{
@@ -1446,7 +1244,7 @@ WeaponSprings
 		"hipfire_roll_damping"			"7.0"
 
 		"ADS_pitch_springConstant"		"50.0"
-		"ADS_pitch_damping"				"17.0"
+		"ADS_pitch_damping"				"20.0"
 		"ADS_yaw_springConstant"		"40.0"
 		"ADS_yaw_damping"				"13.5"
 		"ADS_roll_springConstant"		"16000.0"

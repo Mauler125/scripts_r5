@@ -197,6 +197,8 @@ void function InitInventoryFooter( var panel )
 {
 	AddPanelFooterOption( panel, LEFT, BUTTON_Y, false, "", "", SurvivalMenuSwapWeapon, IsSurvivalMenuEnabled )
 
+	AddPanelFooterOption( panel, LEFT, KEY_F2, false, "", "", TryChangeCharacters, ShowChangeCharactersOption )
+
 	AddPanelFooterOption( panel, LEFT, BUTTON_BACK, false, "", "", TryToggleMap )
 
 	AddPanelFooterOption( panel, LEFT, KEY_M, false, "", "", TryToggleMap, PROTO_ShouldInventoryFooterHack )
@@ -204,10 +206,10 @@ void function InitInventoryFooter( var panel )
 
 	AddPanelFooterOption( panel, LEFT, BUTTON_B, true, "#B_BUTTON_BACK", "#B_BUTTON_BACK" )
 	AddPanelFooterOption( panel, RIGHT, BUTTON_START, true, "#HINT_SYSTEM_MENU_GAMEPAD", "#HINT_SYSTEM_MENU_KB", TryOpenSystemMenu )
+	AddPanelFooterOption( panel, RIGHT, BUTTON_DPAD_UP, true, "#UP_BUTTON_CHARACTER_CHANGE", "#UP_BUTTON_CHARACTER_CHANGE", TryChangeCharacters, ShowChangeCharactersOption )
 
-	#if R5DEV
-		if ( Dev_CommandLineHasParm( "-showdevmenu" ) )
-			AddPanelFooterOption( panel, LEFT, BUTTON_STICK_LEFT, true, "#LEFT_STICK_DEV_MENU", "#DEV_MENU", OpenDevMenu )
+	#if(DEV)
+		AddPanelFooterOption( panel, LEFT, BUTTON_STICK_LEFT, true, "#LEFT_STICK_DEV_MENU", "#DEV_MENU", OpenDevMenu )
 	#endif
 }
 
@@ -324,9 +326,9 @@ void function SurvivalQuickInventory_OnUpdate()
 
 	UpdateBackpackDpadNav()
 
-// -----------------------------------------------------------------
-// CONDENSE UNUSED ATTACHMENTS
-// -----------------------------------------------------------------
+//
+//
+//
 	array<string> attachmentSuffix =
 	[
 		"Barrel",
@@ -366,7 +368,7 @@ void function SurvivalQuickInventory_OnUpdate()
 			prevButton = button
 		}
 	}
-// -----------------------------------------------------------------
+//
 }
 
 
@@ -513,30 +515,31 @@ void function SurvivalQuickInventory_UpdateEquipmentForActiveWeapon( int activeW
 
 		Hud_SetSelected( file.equipmentButtons[slotName], selected )
 
-		//if ( activeWeaponSlot != -1 )
-		//{
-		//	string pinTo = selected ?  "MainWeaponAnchor" : "StowedWeaponAnchor"
-		//	float scale  = selected ?  1.0 : INACTIVE_WEAPON_SCALE
-		//	Hud_SetPinSibling( file.equipmentButtons[slotName], pinTo )
-		//}
+		//
+		//
+		//
+		//
+		//
+		//
 	}
-	//		foreach ( point in GetAllAttachmentPoints() )
-	//		{
-	//			ScaleButton( slotName + "_" + point, scale )
-	//		}
-	//	}
-	//}
+	//
+	//
+	//
+	//
+	//
+	//
+	//
+	//
 }
 
 
-void function SurvivalQuickInventory_UpdateWeaponSlot( int weaponSlot, int skinTier, string skinName, string charmName )
+void function SurvivalQuickInventory_UpdateWeaponSlot( int weaponSlot, int skinTier, string skinName )
 {
 	var reskin = Hud_GetChild( file.mainInventoryPanel, "MainWeaponReskin" + weaponSlot )
-	bool isVisible = (skinTier > 0 && skinName != "") || (charmName != "")
-	Hud_SetVisible( reskin, isVisible )
+	Hud_SetVisible( reskin, skinTier > 0 && skinName != "" )
 
 	ToolTipData toolTipData
-	toolTipData.titleText = "Apply Loadout"
+	toolTipData.titleText = "#APPLY_SKIN"
 	toolTipData.descText = skinName
 
 	Hud_SetToolTipData( reskin, toolTipData )
@@ -550,6 +553,8 @@ void function OnReskinButtonClick( var button )
 
 	ClientCommand( "WeaponCosmeticsApply " + weaponSlot )
 }
+
+
 
 void function ScaleButton( string equipmentSlot, float scale )
 {
@@ -581,6 +586,15 @@ ListPanelListDef function GetGroundItemDef( var panel )
 {
 	ListPanelListDef def
 	def.itemCount = file.groundItemCount
+	def.itemHeights.resize( def.itemCount, 1.0 )
+	def.itemIsHeaderList.resize( def.itemCount, false )
+
+	for( int index = 0; index < def.itemCount; index++ )
+	{
+		def.itemHeights[index] = SurvivalGroundItem_IsHeader( index ) ? 0.5 : 1.0
+		def.itemIsHeaderList[index] = SurvivalGroundItem_IsHeader( index )
+	}
+
 	return def
 }
 
@@ -752,12 +766,12 @@ int function TranslateBackpackGridPosition( int position )
 	return newPos
 }
 
-void function SurvivalQuickInventory_SetEmptyTooltipForSlot( var button, string title, int commsAction, int tooltipFlags )
+void function SurvivalQuickInventory_SetEmptyTooltipForSlot( var button, string title, int commsAction )
 {
 	ToolTipData dt
 	dt.titleText = title
 	dt.descText = ""
-	dt.tooltipFlags = eToolTipFlag.EMPTY_SLOT | eToolTipFlag.SOLID | tooltipFlags
+	dt.tooltipFlags = eToolTipFlag.EMPTY_SLOT | eToolTipFlag.SOLID
 	dt.commsAction = commsAction
 
 	dt.tooltipStyle = eTooltipStyle.DEFAULT
@@ -802,6 +816,18 @@ void function CloseCharacterDetails()
 
 	if ( Hud_IsVisible( file.characterDetailsPanel ) )
 		Hud_SetVisible( file.characterDetailsPanel, false )
+}
+
+void function TryChangeCharacters( var button )
+{
+	RunClientScript( "UICallback_OpenCharacterSelectNewMenu" )
+}
+
+bool function ShowChangeCharactersOption()
+{
+	if ( GetGlobalNetInt( "gameState" ) >= eGameState.PickLoadout || IsSurvivalTraining() )
+		return false
+	return true
 }
 
 void function TryToggleMap( var button )
@@ -941,7 +967,7 @@ LootData function GetLootDataFromButton( var button, int index )
 {
 	LootData data
 
-	// this function will set file.tempButtonRef
+	//
 	RunClientScript( "UICallback_GetLootDataFromButton", button, index )
 
 	if ( SURVIVAL_Loot_IsRefValid( file.tempButtonRef ) )
@@ -954,7 +980,7 @@ LootData function GetLootDataFromButton( var button, int index )
 
 bool function MouseDragAllowed( var panel, var button, var index )
 {
-	// sets file.tempBoolMouseDragAllowed
+	//
 	RunClientScript( "UICallback_GetMouseDragAllowedFromButton", button, index )
 	return file.tempBoolMouseDragAllowed
 }

@@ -9,7 +9,7 @@ ImpactTable
 	FX
 	{
 		"C" "veh_jetwash_concrete" //Concrete, rock, porcelain, boulder, gravel, asphalt, brick, concrete_block, plaster
-		"D" "veh_jetwash_dirt" //Dirt, mud, sand, slipperyslime, snow, carpet, cardboard, floatingstandable, ceiling_tile, papercup, lava_rock
+		"D" "veh_jetwash_dirt"
 		"E" "veh_jetwash_metal_Full" // metal_titan
 
 		"F" "veh_jetwash_metal_Full" //flesh
@@ -24,8 +24,6 @@ ImpactTable
 		"O" "veh_jetwash_grass_FULL" //Foliage
 		"P" "veh_jetwash_metal_Full" //Computer
 
-		"Q" "P_veh_jetwash_snow" //snow
-		"R" "P_veh_jetwash_snow" //ice
 
 		"S" "veh_jetwash_dirt" //water, slime
 		"T" "veh_jetwash_concrete" //tile
@@ -40,8 +38,6 @@ ImpactTable
 		"Z" "veh_jetwash_dirt"  //sand
 
 		"0" "veh_jetwash_dirt"
-		"1" "veh_jetwash_metal_Full" //lava_flow
-		"2" "veh_jetwash_metal_Full" //lava_rock_hot
 		"3" "veh_jetwash_dirt"
 		"4" "veh_jetwash_dirt"
 		"5" "veh_jetwash_dirt"
@@ -88,8 +84,6 @@ Sound
 		"Z" "none"
 
 		"0" "none"
-		"1" "none" //lava_flow
-		"2" "none" //lava_rock_hot
 		"3" "none"
 		"4" "none"
 		"5" "none"
@@ -139,8 +133,6 @@ Sound
 		"Z" "none"
 
 		"0" "none"
-		"1" "none" //lava_flow
-		"2" "none" //lava_rock_hot
 		"3" "none"
 		"4" "none"
 		"5" "none"
@@ -190,8 +182,6 @@ Sound
 		"Z" "none"
 
 		"0" "none"
-		"1" "none" //lava_flow
-		"2" "none" //lava_rock_hot
 		"3" "none"
 		"4" "none"
 		"5" "none"

@@ -850,58 +850,6 @@ rock:
 	gamematerial:	"C"
 }
 
-
-lava_rock:
-{
-	id: 116
-
-	base:		"dirt"
-
-	density:	2400
-	elasticity:	0.2
-	friction:	0.8
-
-	step:			"Concrete"
-	//"scraperough"	"lava.ScrapeRough"
-	//"scrapesmooth" "lava.ScrapeSmooth"
-	//"impacthard"	"lava.ImpactHard"
-	//"impactsoft"	"lava.ImpactSoft"
-
-	audioreflectivity: 0.66
-	//gamematerial:	"D"
-}
-
-
-//Lava rock that shows a glows when shot
-lava_rock_hot:
-{
-	id: 117
-
-	base: "lava_rock"
-
-	gamematerial:	"2"
-}
-
-
-//scrolling uv lava, like water.
-lava_flow:
-{
-	id: 118
-
-	density:	2400
-	elasticity:	0.2
-	friction:	0.8
-
-	step:			"Concrete"
-	//"scraperough"	"lava.ScrapeRough"
-	//"scrapesmooth" "lava.ScrapeSmooth"
-	//"impacthard"	"lava.ImpactHard"
-	//"impactsoft"	"lava.ImpactSoft"
-
-	audioreflectivity: 0.66
-	gamematerial:	"1"
-}
-
 // tubs, urinals, sinks
 porcelain:
 {
@@ -1031,7 +979,7 @@ snow:
 	audiohardnessfactor: 0.25
 	audioreflectivity: 0.03
 
-	step:			"Sand"
+	//step:			"Dirt"
 	gamematerial:	"Q"
 }
 
@@ -1045,7 +993,6 @@ ice:
 
 	audioroughnessfactor: 0.1
 
-	step:			"Sand"
 	gamematerial: "R"
 
 }
@@ -1321,10 +1268,7 @@ roller:
 	base:		"metalpanel"
 	friction:	0.7
 	elasticity:	0.3
-	impactHardThreshold: 0.0
-	audioHardMinVelocity: 200
-	impact_table_hard: "physobject_Lootball_Hard"
-	impact_table_soft: "physobject_Lootball_Soft"
+	impacthard:	"Roller.Impact"
 }
 
 // small aluminum can, full

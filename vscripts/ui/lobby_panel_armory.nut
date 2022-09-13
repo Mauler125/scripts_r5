@@ -73,7 +73,7 @@ void function ArmoryPanel_OnHide( var panel )
 
 void function ArmoryPanel_OnFocusChanged( var panel, var oldFocus, var newFocus )
 {
-	if ( !IsValid( panel ) ) // uiscript_reset
+	if ( !IsValid( panel ) ) //
 		return
 
 	if ( !newFocus || GetParentMenu( panel ) != GetActiveMenu() )
@@ -104,7 +104,8 @@ void function MiscCustomizeButton_Init( var button )
 
 	var rui = Hud_GetRui( button )
 	RuiSetString( rui, "buttonText", Localize( "#MISC_CUSTOMIZATION" ).toupper() )
-	RuiSetInt( rui, "numPips", 3 )
+	//
+	RuiSetInt( rui, "numPips", 2 )
 }
 
 

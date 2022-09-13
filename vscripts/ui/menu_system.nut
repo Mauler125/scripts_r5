@@ -27,10 +27,6 @@ struct
 	table<var, ButtonData > nullButtonData
 	table<var, ButtonData > leavePartyData
 	table<var, ButtonData > abandonMissionButtonData
-	table<var, ButtonData > changeCharacterButtonData
-	table<var, ButtonData > friendlyFireButtonData
-	table<var, ButtonData > thirdPersonButtonData
-	table<var, ButtonData > endmatchButtonData
 
 	InputDef& qaFooter
 } file
@@ -51,15 +47,12 @@ void function InitSystemPanelMain( var panel )
 	InitSystemPanel( panel )
 
 	AddPanelFooterOption( panel, LEFT, BUTTON_B, true, "#B_BUTTON_BACK", "#B_BUTTON_BACK" )
-	#if R5DEV
-	if ( Dev_CommandLineHasParm( "-showdevmenu" ) )
-		AddPanelFooterOption( panel, LEFT, BUTTON_Y, true, "#Y_BUTTON_DEV_MENU", "#DEV_MENU", OpenDevMenu, ShouldShowDevMenu )
+	#if(DEV)
+		AddPanelFooterOption( panel, LEFT, BUTTON_Y, true, "#Y_BUTTON_DEV_MENU", "#DEV_MENU", OpenDevMenu )
 	#endif
+	file.qaFooter = AddPanelFooterOption( panel, LEFT, BUTTON_X, true, "#X_BUTTON_QA", "QA", ToggleOptIn, ShouldDisplayOptInOptions )
 
-	if ( Dev_CommandLineHasParm( "-showoptinmenu" ) )
-		file.qaFooter = AddPanelFooterOption( panel, LEFT, BUTTON_X, true, "#X_BUTTON_QA", "QA", ToggleOptIn, ShouldDisplayOptInOptions )
-
-	#if CONSOLE_PROG
+	#if(CONSOLE_PROG)
 		AddPanelFooterOption( panel, RIGHT, BUTTON_BACK, false, "#BUTTON_RETURN_TO_MAIN", "", ReturnToMain_OnActivate )
 	#endif
 	AddPanelFooterOption( panel, RIGHT, BUTTON_STICK_RIGHT, true, "#BUTTON_VIEW_CINEMATIC", "#VIEW_CINEMATIC", ViewCinematic, IsLobby )
@@ -69,21 +62,6 @@ void function ViewCinematic( var button )
 {
 	CloseActiveMenu()
 	thread PlayVideoMenu( false, "intro", "Apex_Opening_Movie", eVideoSkipRule.INSTANT )
-}
-
-void function TryChangeCharacters()
-{
-	RunClientScript( "UICallback_OpenCharacterSelectNewMenu" )
-}
-
-void function ToggleFriendlyFire()
-{
-	ClientCommand( "firingrange_toggle_friendlyfire" )
-}
-
-void function ToggleThirdPerson()
-{
-	ClientCommand( "ToggleThirdPerson" )
 }
 
 void function InitSystemPanel( var panel )
@@ -109,10 +87,6 @@ void function InitSystemPanel( var panel )
 	file.lobbyReturnButtonData[ panel ] <- clone data
 	file.leavePartyData[ panel ] <- clone data
 	file.abandonMissionButtonData[ panel ] <- clone data
-	file.changeCharacterButtonData[ panel ] <- clone data
-	file.friendlyFireButtonData[ panel ] <- clone data
-	file.thirdPersonButtonData[ panel ] <- clone data
-	file.endmatchButtonData[ panel ] <- clone data
 
 	file.settingsButtonData[ panel ].label = "#SETTINGS"
 	file.settingsButtonData[ panel ].activateFunc = OpenSettingsMenu
@@ -131,18 +105,6 @@ void function InitSystemPanel( var panel )
 
 	file.abandonMissionButtonData[ panel ].label = "#ABANDON_MISSION"
 	file.abandonMissionButtonData[ panel ].activateFunc = LeaveDialog
-
-	file.changeCharacterButtonData[ panel ].label = "#BUTTON_CHARACTER_CHANGE"
-	file.changeCharacterButtonData[ panel ].activateFunc = TryChangeCharacters
-
-	file.friendlyFireButtonData[ panel ].label = "#BUTTON_FRIENDLY_FIRE_TOGGLE"
-	file.friendlyFireButtonData[ panel ].activateFunc = ToggleFriendlyFire
-	
-	file.thirdPersonButtonData[ panel ].label = "TOGGLE THIRD PERSON"
-	file.thirdPersonButtonData[ panel ].activateFunc = ToggleThirdPerson
-
-	file.endmatchButtonData[ panel ].label = "END GAME"
-	file.endmatchButtonData[ panel ].activateFunc = HostEndMatch
 
 	AddPanelEventHandler( panel, eUIEvent.PANEL_SHOW, SystemPanelShow )
 }
@@ -167,39 +129,32 @@ void function UpdateSystemPanel( var panel )
 		SetButtonData( panel, index, file.nullButtonData[ panel ] )
 
 	int buttonIndex = 0
-
-	if ( IsConnected() && !IsLobby() ) // Normal system menu
+	if ( IsConnected() && !IsLobby() )
 	{
 		UISize screenSize = GetScreenSize()
 		SetCursorPosition( <1920.0 * 0.5, 1080.0 * 0.5, 0> )
 
 		SetButtonData( panel, buttonIndex++, file.settingsButtonData[ panel ] )
+#if(false)
+
+
+
+
+
+
+
+
+#endif
 		{
-			if ( IsSurvivalTraining() || IsFiringRangeGameMode() )
-				SetButtonData( panel, buttonIndex++, file.lobbyReturnButtonData[ panel ] )
-			else
-				SetButtonData( panel, buttonIndex++, file.leaveMatchButtonData[ panel ] )
+			SetButtonData( panel, buttonIndex++, file.leaveMatchButtonData[ panel ] )
 		}
-
-		if ( IsFiringRangeGameMode() )
-		{
-			SetButtonData( panel, buttonIndex++, file.changeCharacterButtonData[ panel ] )
-		//	SetButtonData( panel, buttonIndex++, file.thirdPersonButtonData[ panel ] )
-
-			if ( (GetTeamSize( GetTeam() ) > 1) && FiringRangeHasFriendlyFire() )
-				SetButtonData( panel, buttonIndex++, file.friendlyFireButtonData[ panel ] )
-		}
-
-		//If you used the private_match to host the server this will work, maybe there is a better way to find who is host in ui?
-		//if(server_host_name == GetPlayerName() && !IsFiringRangeGameMode() && !IsSurvivalTraining())
-			//SetButtonData( panel, buttonIndex++, file.endmatchButtonData[ panel ] )
 	}
-	else // any other cases
+	else
 	{
 		if ( AmIPartyMember() || AmIPartyLeader() && GetPartySize() > 1 )
 			SetButtonData( panel, buttonIndex++, file.leavePartyData[ panel ] )
 		SetButtonData( panel, buttonIndex++, file.settingsButtonData[ panel ] )
-		#if PC_PROG
+		#if(PC_PROG)
 			SetButtonData( panel, buttonIndex++, file.exitButtonData[ panel ] )
 		#endif
 	}
@@ -270,19 +225,14 @@ void function OpenSettingsMenu()
 	AdvanceMenu( GetMenu( "MiscMenu" ) )
 }
 
-void function HostEndMatch()
-{
-	CreateServer( GetPlayerName() + " Lobby", "", "mp_lobby", "menufall", eServerVisibility.HIDDEN)
-}
-
-#if CONSOLE_PROG
+#if(CONSOLE_PROG)
 void function ReturnToMain_OnActivate( var button )
 {
 	ConfirmDialogData data
 	data.headerText = "#EXIT_TO_MAIN"
 	data.messageText = ""
 	data.resultCallback = OnReturnToMainMenu
-	//data.yesText = ["YES_RETURN_TO_TITLE_MENU", "#YES_RETURN_TO_TITLE_MENU"]
+	//
 
 	OpenConfirmDialogFromData( data )
 	AdvanceMenu( GetMenu( "ConfirmDialog" ) )
@@ -310,9 +260,6 @@ bool function ShouldDisplayOptInOptions()
 	if ( !IsFullyConnected() )
 		return false
 
-	// if ( GRX_IsInventoryReady() && (GRX_HasItem( GRX_DEV_ITEM ) || GRX_HasItem( GRX_QA_ITEM )) )
-		return true
-
 	return GetGlobalNetBool( "isOptInServer" )
 }
 
@@ -331,14 +278,6 @@ void function UpdateOptInFooter()
 	}
 
 	UpdateFooterOptions()
-}
-
-bool function ShouldShowDevMenu()
-{
-	if(IsLobby())
-		return false
-	
-	return true
 }
 
 

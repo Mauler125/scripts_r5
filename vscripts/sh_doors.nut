@@ -10,8 +10,6 @@
 
 global function ShDoors_Init
 global function IsDoor
-global function IsCodeDoor
-global function IsDoorOpen
 global function GetAllPropDoors
 
 #if SERVER && R5DEV
@@ -28,19 +26,6 @@ enum eDoorType
 	SLIDING,
 	BLOCKABLE,
 	CODE,
-}
-
-struct DoorData
-{
-	string className
-	string scriptName
-	vector origin
-	vector angles
-	int realm
-	asset modelName
-	entity linkDoor
-	bool hasLinkDoor
-	DoorData ornull linkDoorData
 }
 
 struct
@@ -100,37 +85,7 @@ void function ShDoors_Init()
 
 bool function IsDoor( entity ent )
 {
-	if ( IsCodeDoor( ent ) )
-		return true
-
-	switch ( ent.GetScriptName() )
-	{
-		case "survival_door_model":
-		case "survival_door_plain":
-		case "survival_door_sliding":
-		case "survival_door_blockable":
-		case "survival_door_code":
-		return true
-	}
-
-	return false
-}
-
-bool function IsDoorOpen( entity door )
-{
-	if ( !IsDoor( door ) )
-		return false
-
-	if ( IsCodeDoor( door ) )
-	{
-		return door.IsDoorOpen()
-	}
-	else
-	{
-		return GradeFlagsHas( door, eGradeFlags.IS_OPEN ) //
-	}
-
-	return false
+	return IsCodeDoor( ent )
 }
 
 array<entity> function GetAllPropDoors()
@@ -229,8 +184,8 @@ void function OnDoorSpawned( entity door )
 			// Special legacy case for a specific door model
 			// Faster to do these experiments in script than to keep changing models in leveled and recompiling
 			// TODO: Should eventually delete
-			bool useBlockableDoors = GetCurrentPlaylistVarBool( "survival_force_blockable_doors", false )
-			bool useCodeDoors = GetCurrentPlaylistVarBool( "survival_force_code_doors", true )//TODO: FIX THIS ASAP
+			bool useBlockableDoors = GetCurrentPlaylistVarBool( "survival_force_blockable_doors", true )
+			bool useCodeDoors = GetCurrentPlaylistVarBool( "survival_force_code_doors", true )
 			if ( useCodeDoors )
 			{
 				bool makeLeftDoor  = false, makeRightDoor = false
@@ -1491,9 +1446,6 @@ void function BlockableDoor_OnDamage( entity door, var damageInfo )
 			DamageInfo_SetDamage( damageInfo, damageInflicted )
 			thread FinishDoorExplosiveDamage( door, damageInfo )
 		}
-	}
-	else if (DamageInfo_GetDamageSourceIdentifier( damageInfo ) == eDamageSourceId.mp_weapon_thermite_grenade ) {
-		damageInflicted = DamageInfo_GetDamage( damageInfo )
 	}
 	else if ( !GetCurrentPlaylistVarBool( "blockable_door_can_be_hurt_by_normal_weapons", false ) )
 	{

@@ -60,7 +60,6 @@ global struct TabData
 
 	int initialFirstTabButtonWidth = -1
 	int initialFirstTabButtonXPos = -1
-	int initialSecondTabButtonXPos = -1
 }
 
 struct
@@ -391,7 +390,6 @@ void function UpdateMenuTabs()
 		{
 			tabData.initialFirstTabButtonWidth = Hud_GetWidth( tabButtons[0] )
 			tabData.initialFirstTabButtonXPos = Hud_GetX( tabButtons[0] )
-			tabData.initialSecondTabButtonXPos = Hud_GetX( tabButtons[1] )
 		}
 
 		int leftMostVisibleTabIndex  = -1
@@ -399,7 +397,6 @@ void function UpdateMenuTabs()
 		int firstTabXOffset          = 0
 		int totalWidth               = 0
 		var previousPanelForPinning  = null
-		int offsetForNextPin
 		for ( int tabIndex = 0; tabIndex < MAX_TABS; tabIndex++ )
 		{
 			var tabButton    = tabButtons[ tabIndex ]
@@ -407,11 +404,8 @@ void function UpdateMenuTabs()
 
 			if ( previousPanelForPinning != null )
 				Hud_SetPinSibling( tabButton, Hud_GetHudName( previousPanelForPinning ) )
-			if ( tabIndex > 0 )
-				Hud_SetX( tabButton, offsetForNextPin )
 
 			previousPanelForPinning = tabButton
-			offsetForNextPin = tabData.initialSecondTabButtonXPos
 
 			if ( tabIndex < numTabs )
 			{
@@ -482,7 +476,6 @@ void function UpdateMenuTabs()
 				Hud_Show( divider )
 				Hud_SetPinSibling( divider, Hud_GetHudName( tabButton ) )
 				previousPanelForPinning = divider
-				offsetForNextPin = 0
 			}
 
 			firstTabXOffset -= int(tabDef.tabBarLeftOffsetFracIfVisible * float(Hud_GetWidth( tabButton )))

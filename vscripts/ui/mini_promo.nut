@@ -13,12 +13,19 @@ const bool MINIPROMO_NAV_LEFT = false
 const bool MINIPROMO_PAGE_FORMAT_DEFAULT = true
 const bool MINIPROMO_PAGE_FORMAT_OPENPACK = false
 
+enum eStickState
+{
+	NEUTRAL = 0,
+	LEFT = 1,
+	RIGHT = 2,
+	_count,
+}
+
 struct MiniPromoPageData
 {
 	bool          isValid = false
 	bool          format = MINIPROMO_PAGE_FORMAT_DEFAULT
 	asset         image = $""
-	string		  imageName = ""
 	string        text1 = ""
 	string        text2 = ""
 	string        linkType = ""
@@ -242,7 +249,7 @@ int function GetActivePageIndexForRui()
 array<MiniPromoPageData> function InitPages()
 {
 	string content = "<m|m_openpack|OPEN PACK||openpack>"
-	content += GetPromoDataLayout()
+	content +=  GetPromoDataLayout()
 	//
 	//
 	//
@@ -261,18 +268,15 @@ array<MiniPromoPageData> function InitPages()
 
 	array<MiniPromoPageData> pages
 
-	foreach ( idx, vals in matches )
+	foreach ( vals in matches )
 	{
 		//
 		//
 		//
 
-		//
-		//
 		MiniPromoPageData newPage
-		newPage.imageName = vals[1]
-		if( !GetConVarBool( "assetdownloads_enabled" ) || idx == 0 )
-			newPage.image = GetPromoImage( newPage.imageName )
+		//
+		newPage.image = GetPromoImage( vals[1] )
 		newPage.text1 = vals[2]
 		newPage.text2 = vals[3]
 
@@ -348,12 +352,12 @@ void function ChangePage( bool direction )
 	Assert( direction == MINIPROMO_NAV_LEFT || direction == MINIPROMO_NAV_RIGHT )
 	Assert( file.activePageIndex != -1 )
 
-	int numPages      = file.allPages.len()
+	int numPages = file.allPages.len()
 	int nextPageIndex = file.activePageIndex
 
 	for ( int i = 1; i < numPages; i++ )
 	{
-		int candidatePageIndex          = direction == MINIPROMO_NAV_RIGHT ? (file.activePageIndex + i) % numPages : (file.activePageIndex - i + numPages) % numPages
+		int candidatePageIndex = direction == MINIPROMO_NAV_RIGHT ? (file.activePageIndex + i) % numPages : (file.activePageIndex - i + numPages) % numPages
 		//
 		MiniPromoPageData candidatePage = file.allPages[candidatePageIndex]
 		if ( IsPageValidToShow( candidatePage ) )
@@ -387,26 +391,20 @@ void function SetPage( int pageIndex, bool instant = false )
 	file.activePageIndex = pageIndex
 
 	MiniPromoPageData lastPage = file.allPages[lastActivePage]
-	if( GetConVarBool( "assetdownloads_enabled" ) && lastActivePage > 0 )
-		RuiSetImage( rui, "lastImageAsset", GetDownloadedImageAsset( GetMiniPromoRpakName(), lastPage.imageName, ePakType.DL_MINI_PROMO ) )
-	else
-		RuiSetImage( rui, "lastImageAsset", lastPage.image )
 	RuiSetBool( rui, "lastFormat", lastPage.format )
+	RuiSetImage( rui, "lastImageAsset", lastPage.image )
 	RuiSetString( rui, "lastText1", lastPage.text1 )
 	RuiSetString( rui, "lastText2", lastPage.text2 )
 
 	MiniPromoPageData page = file.allPages[file.activePageIndex]
-	if( GetConVarBool( "assetdownloads_enabled" ) && file.activePageIndex > 0 )
-		RuiSetImage( rui, "imageAsset", GetDownloadedImageAsset( GetMiniPromoRpakName(), page.imageName, ePakType.DL_MINI_PROMO, file.button ) )
-	else
-		RuiSetImage( rui, "imageAsset", page.image )
 	RuiSetBool( rui, "format", page.format )
+	RuiSetImage( rui, "imageAsset", page.image )
 	RuiSetString( rui, "text1", page.text1 )
 	RuiSetString( rui, "text2", page.text2 )
 
 	RuiSetInt( rui, "activePageIndex", GetActivePageIndexForRui() )
 
-	int ownedPacks = GRX_IsInventoryReady() ? GRX_GetTotalPackCount() : 0
+	int ownedPacks = GRX_GetTotalPackCount()
 	if ( ownedPacks > 0 )
 	{
 		RuiSetInt( rui, "ownedPacks", ownedPacks )
@@ -421,8 +419,8 @@ void function SetPage( int pageIndex, bool instant = false )
 		//
 		//
 
-		asset packIcon            = GRXPack_GetOpenButtonIcon( pack )
-		int packRarity            = ItemFlavor_GetQuality( pack )
+		asset packIcon = GRXPack_GetOpenButtonIcon( pack )
+		int packRarity = ItemFlavor_GetQuality( pack )
 		vector ornull customColor = GRXPack_GetCustomColor( pack, 0 )
 
 		vector packColor = <1, 1, 1>
@@ -431,16 +429,10 @@ void function SetPage( int pageIndex, bool instant = false )
 		else
 			packColor = GetKeyColor( COLORID_TEXT_LOOT_TIER0, packRarity + 1 ) / 255.0
 
-		vector countTextCol              = <255, 78, 29> * 1.0 / 255.0
-		vector ornull customCountTextCol = GRXPack_GetCustomCountTextCol( pack )
-		if ( customCountTextCol != null )
-			countTextCol = expect vector(customCountTextCol)
-
 		vector rarityColor = GetKeyColor( COLORID_TEXT_LOOT_TIER0, packRarity + 1 ) / 255.0
 
 		RuiSetAsset( rui, "packIcon", packIcon )
 		RuiSetColorAlpha( rui, "packColor", SrgbToLinear( packColor ), 1.0 )
-		RuiSetColorAlpha( rui, "packCountTextCol", SrgbToLinear( countTextCol ), 1.0 )
 		RuiSetColorAlpha( rui, "rarityColor", SrgbToLinear( rarityColor ), 1.0 )
 	}
 }
@@ -465,7 +457,11 @@ void function MiniPromoButton_OnActivate( var button )
 	{
 		EmitUISound( "UI_Menu_Accept" )
 
-		string panelName = "PassPanelV2"
+		#if(false)
+
+#else
+			string panelName = "PassPanel"
+		#endif
 
 		TabData lobbyTabData = GetTabDataForPanel( GetMenu( "LobbyMenu" ) )
 		ActivateTab( lobbyTabData, Tab_GetTabIndexByBodyName( lobbyTabData, panelName ) )
@@ -514,8 +510,8 @@ void function MiniPromoButton_OnGetFocus( var button )
 
 	file.lastStickState = eStickState.NEUTRAL
 	RegisterStickMovedCallback( ANALOG_RIGHT_X, OnStickMoved )
-	AddCallback_OnMouseWheelUp( ChangePromoPageToLeft )
-	AddCallback_OnMouseWheelDown( ChangePromoPageToRight )
+	RegisterButtonPressedCallback( MOUSE_WHEEL_UP, OnMouseWheelUp )
+	RegisterButtonPressedCallback( MOUSE_WHEEL_DOWN, OnMouseWheelDown )
 	file.navInputCallbacksRegistered = true
 }
 
@@ -526,8 +522,8 @@ void function MiniPromoButton_OnLoseFocus( var button )
 		return
 
 	DeregisterStickMovedCallback( ANALOG_RIGHT_X, OnStickMoved )
-	RemoveCallback_OnMouseWheelUp( ChangePromoPageToLeft )
-	RemoveCallback_OnMouseWheelDown( ChangePromoPageToRight )
+	DeregisterButtonPressedCallback( MOUSE_WHEEL_UP, OnMouseWheelUp )
+	DeregisterButtonPressedCallback( MOUSE_WHEEL_DOWN, OnMouseWheelDown )
 	file.navInputCallbacksRegistered = false
 }
 
@@ -563,7 +559,7 @@ void function OnStickMoved( ... )
 }
 
 
-void function ChangePromoPageToLeft()
+void function OnMouseWheelUp( var unused )
 {
 	if ( file.activePageIndex == -1 )
 		return
@@ -573,7 +569,7 @@ void function ChangePromoPageToLeft()
 }
 
 
-void function ChangePromoPageToRight()
+void function OnMouseWheelDown( var unused )
 {
 	if ( file.activePageIndex == -1 )
 		return

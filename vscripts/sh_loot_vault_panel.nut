@@ -35,9 +35,9 @@ struct LootVaultPanelData
 	int panelState = ePanelState.LOCKED
 
 	array<entity> vaultDoors
-	#if SERVER
+	#if(false)
 
-	#endif // SERVER
+#endif //
 
 	entity minimapObj
 	entity openMinimapObj
@@ -55,18 +55,17 @@ struct
 
 void function Sh_Loot_Vault_Panel_Init()
 {
+	#if(false)
 
-	#if SERVER
-	AddSpawnCallback( "prop_dynamic", VaultPanelSpawned )
-	AddSpawnCallback( "prop_door", VaultDoorSpawned)
-	AddCallback_EntitiesDidLoad( EntitiesDidLoad )
-	#endif // SERVER
 
-	#if CLIENT
+
+
+#endif //
+
+	#if(CLIENT)
 	AddCreateCallback( "prop_dynamic", VaultPanelSpawned )
 	AddCreateCallback( "prop_door", VaultDoorSpawned )
-	#endif // CLIENT
-
+	#endif //
 
 	LootVaultPanels_AddCallback_OnVaultPanelStateChangedToUnlocking( VaultPanelUnlocking )
 	LootVaultPanels_AddCallback_OnVaultPanelStateChangedToUnlocked( VaultPanelUnlocked )
@@ -81,12 +80,12 @@ void function VaultPanelSpawned( entity panel )
 	LootVaultPanelData newPanel
 	newPanel.panel = panel
 
-	#if SERVER
+	#if(false)
 
-	#endif // SERVER
+
+#endif //
 
 	file.vaultControlPanels.append( newPanel )
-//	SetVaultPanelState(panel, ePanelState.UNLOCKED)
 
 	SetVaultPanelUsable( panel )
 }
@@ -96,15 +95,16 @@ void function VaultDoorSpawned( entity door )
 	if ( !IsValidLootVaultDoorEnt( door ) )
 		return
 
-	#if SERVER
+	#if(false)
 
-	door.SetSkin( 1 )
-	door.UnsetUsable()
 
-	#endif // SERVER
 
-	SetObjectCanBeMeleed( door, false )
-	door.SetTakeDamageType( DAMAGE_NO )
+
+
+
+
+
+#endif //
 
 	door.kv.IsVaultDoor = true
 
@@ -126,9 +126,7 @@ void function EntitiesDidLoad()
 			if ( Distance( panelPos, doorPos ) <= PANEL_TO_DOOR_RADIUS )
 			{
 				if ( !panelData.vaultDoors.contains( door ) )
-				{
 					panelData.vaultDoors.append( door )
-				}
 			}
 		}
 	}
@@ -156,7 +154,7 @@ void function SetVaultPanelState( entity panel, int panelState )
 		}
 		case ePanelState.UNLOCKED:
 		{
-			printf( "LootVaultPanelDebug: Changing panel state to UNLOCKED" )
+			printf( "LootVaultPanelDebug: Changing panel state to UNLOCKING" )
 			LootVaultPanelState_Unlocked( panelData, panelState )
 		}
 		default:
@@ -216,10 +214,7 @@ void function OnVaultPanelUse( entity panel, entity playerUser, int useInputFlag
 	if ( !(useInputFlags & USE_INPUT_LONG) )
 		return
 
-	// TODO: Fix vault key
-
-//	if ( !playerUser.GetPlayerNetBool( "hasDataKnife" ) )
-	if ( !VaultPanel_HasPlayerDataKnife(playerUser) )
+	if ( !playerUser.GetPlayerNetBool( "hasDataKnife" ) )
 			return
 
 	ExtendedUseSettings settings
@@ -229,7 +224,7 @@ void function OnVaultPanelUse( entity panel, entity playerUser, int useInputFlag
 	settings.successSound = LOOT_VAULT_AUDIO_ACCESS
 	settings.successFunc = VaultPanelUseSuccess
 
-	#if CLIENT
+	#if(CLIENT)
 	settings.loopSound = LOOT_VAULT_AUDIO_STATUSBAR
 	settings.displayRuiFunc = DisplayRuiForLootVaultPanel
 	settings.displayRui = $"ui/health_use_progress.rpak"
@@ -237,46 +232,34 @@ void function OnVaultPanelUse( entity panel, entity playerUser, int useInputFlag
 	settings.hint = "#HINT_VAULT_UNLOCKING"
 
 	//
-	#endif // CLIENT
+	#endif //
 
-	#if SERVER
+	#if(false)
 
 
 
-	#endif // SERVER
+#endif //
 
 	thread ExtendedUse( panel, playerUser, settings )
 }
 
 void function VaultPanelUseSuccess( entity panel, entity player, ExtendedUseSettings settings )
 {
-	if ( !VaultPanel_HasPlayerDataKnife(player) )
-	{
-		printf( "LootVaultPanelDebug: Player likely dropped the vault key while opening" )
-		return
-	}
-
 	LootVaultPanelData panelData = GetVaultPanelDataFromEntity( panel )
 
 	printf( "LootVaultPanelDebug: Panel Use Success" )
 
-	#if SERVER
+	#if(false)
 
-	// TODO: proper anims
 
-	foreach( entity door in GetVaultPanelDataFromEntity( panel ).vaultDoors)
-	{
-		door.Dissolve( ENTITY_DISSOLVE_CORE, <0,0,0>, 1000 )
-	}
 
-	panel.SetSkin(0)
-	panel.Dissolve( ENTITY_DISSOLVE_CORE, <0,0,0>, 1000 )
 
-	PlayBattleChatterLineToSpeakerAndTeam( player, "bc_vaultOpened" )
 
-	SURVIVAL_RemoveFromPlayerInventory( player, "data_knife", 1 )
 
-	#endif
+//
+
+
+#endif
 
 	if ( panelData.panelState != ePanelState.UNLOCKING )
 		SetVaultPanelState( panel, ePanelState.UNLOCKING )
@@ -291,9 +274,9 @@ void function VaultPanelUnlocking( LootVaultPanelData panelData, int panelState 
 
 	SetVaultPanelUnusable( panelData.panel )
 
-	#if SERVER
+	#if(false)
 
-	#endif // SERVER
+#endif //
 
 	thread HideVaultPanel( panelData )
 }
@@ -307,7 +290,7 @@ void function VaultPanelUnlocked( LootVaultPanelData panelData, int panelState )
 
 	printf( "LootVaultPanelDebug: Panel State: Unlocked" )
 
-	#if SERVER
+	#if(false)
 
 
 
@@ -324,10 +307,10 @@ void function VaultPanelUnlocked( LootVaultPanelData panelData, int panelState )
 
 
 
-	#endif // SERVER
+#endif //
 }
 
-#if SERVER
+#if(false)
 
 
 
@@ -365,27 +348,45 @@ void function VaultPanelUnlocked( LootVaultPanelData panelData, int panelState )
 
 
 
-#endif // SERVER
+#endif //
 
 void function HideVaultPanel( LootVaultPanelData panelData )
 {
 	entity panel = panelData.panel
 
-	#if SERVER
+	#if(false)
 
-	#endif // SERVER
+#endif //
 
 	wait 2.0
 
 	SetVaultPanelState( panelData.panel, ePanelState.UNLOCKED )
 }
 
-#if CLIENT
+#if(CLIENT)
 string function VaultPanel_TextOverride( entity panel )
 {
-//	if ( !GetLocalViewPlayer().GetPlayerNetBool( "hasDataKnife" ) )
-	if ( !VaultPanel_HasPlayerDataKnife(GetLocalViewPlayer()) )
+	entity player = GetLocalViewPlayer()
+
+	int currentUnixTime = GetUnixTimestamp()
+	int ornull keyAccessTimeStamp = GetCurrentPlaylistVarTimestamp( "loot_vault_key_availability_unixtime", 1566864000 )
+	if ( keyAccessTimeStamp != null )
+	{
+		if ( currentUnixTime < expect int( keyAccessTimeStamp ) )
+		{
+			int timeDelta = expect int(keyAccessTimeStamp) - currentUnixTime
+			TimeParts timeParts = GetUnixTimeParts( timeDelta )
+			string timeString = GetDaysHoursMinutesSecondsString( timeDelta )
+			string displayString = Localize( "#HINT_VAULT_NEED_TIMESTAMP", timeString )
+			return displayString
+		}
+	}
+
+	if ( !player.GetPlayerNetBool( "hasDataKnife" ) )
+	{
 		return "#HINT_VAULT_NEED"
+	}
+
 	return "#HINT_VAULT_USE"
 }
 
@@ -403,7 +404,7 @@ void function DisplayRuiForLootVaultPanel_Internal( var rui, asset icon, float s
 	RuiSetString( rui, "hintKeyboardMouse", hint )
 	RuiSetString( rui, "hintController", hint )
 }
-#endif // CLIENT
+#endif //
 
 LootVaultPanelData function GetVaultPanelDataFromEntity( entity panel )
 {
@@ -440,30 +441,27 @@ bool function IsValidLootVaultDoorEnt( entity ent )
 
 void function SetVaultPanelUsable( entity panel )
 {
-	#if SERVER
+#if(false)
 
-	panel.SetSkin(1) // red
 
-	panel.SetUsable()
-	panel.SetUsableByGroup( "pilot" )
-	panel.AddUsableValue( VAULTPANEL_MAX_VIEW_ANGLE_TO_AXIS )
-	panel.SetUsableValue( USABLE_BY_ALL | USABLE_CUSTOM_HINTS )
+//
 
-	#endif // SERVER
+
+#endif //
 
 	SetCallback_CanUseEntityCallback( panel, LootVaultPanel_CanUseFunction )
-	AddCallback_OnUseEntity( panel, OnVaultPanelUse )
 
-	#if CLIENT
+#if(CLIENT)
 	AddEntityCallback_GetUseEntOverrideText( panel, VaultPanel_TextOverride )
-	#endif // CLIENT
+	AddCallback_OnUseEntity( panel, OnVaultPanelUse )
+#endif //
 }
 
 void function SetVaultPanelUnusable( entity panel )
 {
-	#if SERVER
-	SetVaultPanelState( panel, ePanelState.LOCKED )
-	#endif // SERVER
+	#if(false)
+
+#endif //
 }
 
 void function SetVaultPanelMinimapObj( entity panel, entity minimapObj )
@@ -504,7 +502,7 @@ entity function GetBestVaultPanelMinimapObj( entity panel )
 	return panelData.minimapObj
 }
 
-#if SERVER
+#if(false)
 
 
 
@@ -522,7 +520,7 @@ bool function HACK_IsVaultDoor( entity ent )
 
 	if ( !IsDoor( ent ) )
 		return false
-
+	
 	if ( ent.GetSkin() == 1 )
 		return true
 
@@ -547,15 +545,15 @@ entity function GetVaultPanelFromDoor( entity door )
 		if ( !IsValid( panelData.panel ) )
 			return null
 
-		#if SERVER
+		#if(false)
 
 
 
 
 
-		#endif
+#endif
 
-		#if CLIENT
+		#if(CLIENT)
 		vector panelPos = panelData.panel.GetOrigin()
 		vector doorPos = door.GetOrigin()
 
@@ -573,8 +571,7 @@ entity function VaultPanel_GetTeammateWithKey( int teamIdx )
 
 	foreach( player in squad )
 	{
-	//	if ( player.GetPlayerNetBool( "hasDataKnife" ) )
-		if ( VaultPanel_HasPlayerDataKnife(player)  )
+		if ( player.GetPlayerNetBool( "hasDataKnife" ) )
 			return player
 	}
 
@@ -609,16 +606,4 @@ array< entity > function VaultPanel_GetAllMinimapObjs()
 	}
 
 	return mapObjs
-}
-
-bool function VaultPanel_HasPlayerDataKnife(entity player)
-{
-	array<ConsumableInventoryItem> playerInventory = SURVIVAL_GetPlayerInventory( player )
-
-	foreach ( invItem in playerInventory )
-	{
-		if(invItem.type == 120) // no clue what its const is called, 120 == dataknife/vaultkey
-			return true
-	}
-	return false
 }

@@ -37,7 +37,7 @@
 
 	// Behavior - Firing
 	//
-	"fire_rate"                                "1.3"
+	"fire_rate"                                "1.6"
 
 	// Behavior - Animation
 	"deployfirst_time"                         "1.6"
@@ -55,11 +55,6 @@
 
 	"damage_rodeo"                             "400"
 
-                     
-	"damage_headshot_scale"			           "2.15"
-      
-
-	"damage_leg_scale"                         "0.8"
 
 	// Viewmodel
 	"viewmodel_shake_forward"                  "0.07"
@@ -68,13 +63,6 @@
 
 	// Projectile
 	"projectile_launch_speed"                  "30500"
-
-	"bolt_hitsize_grow1_time"				    "0.129"  //~100m
-	"bolt_hitsize_grow1_size"				    "0.33"
-	"bolt_hitsize_grow2_time"				    "0.258"  //~200m
-	"bolt_hitsize_grow2_size"				    "1.25"
-	"bolt_hitsize_growfinal_lerptime"		    "0.387"  //~300m
-	"bolt_hitsize_growfinal_size"               "2.0"
 
 	// Ammo
 	//
@@ -185,9 +173,9 @@
 
 	"Mods"
 	{
-		gold
-		{
-		}
+	    gold
+	    {
+	    }
 
 		"survival_finite_ammo"
 		{
@@ -199,29 +187,29 @@
 		}
 
 		hopup_headshot_dmg
-		{
-			"damage_headshot_scale"			"2.5"
-			"projectile_trail_effect_0"     "P_tracer_proj_sniper_piercer"
+        {
+        	"damage_headshot_scale"			"2.5"
+        	"projectile_trail_effect_0"     "P_tracer_proj_sniper_piercer"
 			"fire_sound_1_player_1p"                   "weapon_dmr_fire_skull_1p"
 			"fire_sound_1_player_3p"                   "weapon_dmr_fire_skull_3p"
 			"fire_sound_1_npc"                         "weapon_dmr_fire_skull_3p"
-		}
+        }
 
-		"optic_sniper"
+        "optic_sniper"
 		{
-			"viewkick_ads_weaponFraction"              "0.5"
+		    "viewkick_ads_weaponFraction"              "0.5"
 			"viewkick_ads_weaponFraction_vmScale"      "0.5"
 		}
 
 		"optic_sniper_variable"
 		{
-			"viewkick_ads_weaponFraction"              "0.5"
+		    "viewkick_ads_weaponFraction"              "0.5"
 			"viewkick_ads_weaponFraction_vmScale"      "0.5"
 		}
 
 		"optic_sniper_threat"
 		{
-			"viewkick_ads_weaponFraction"              "0.5"
+		    "viewkick_ads_weaponFraction"              "0.5"
 			"viewkick_ads_weaponFraction_vmScale"      "0.5"
 
 			"viewmodel_offset_hip"  "0 0 -0.6"

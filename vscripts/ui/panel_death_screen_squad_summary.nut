@@ -1,5 +1,5 @@
+#if(true)//
 global function InitDeathScreenSquadSummaryPanel
-global function UI_UpdateSquadSummary
 
 struct panelData
 {
@@ -153,11 +153,6 @@ void function SquadSummaryOnOpenPanel( var panel )
 
 		file.panelData[panel].cardsInitialized[cardElem] = true
 
-		if ( Hud_GetHudName( cardElem ) == "GCard0" && GetExpectedSquadSize( GetLocalClientPlayer() ) == 2 )
-		{
-			Hud_SetX( cardElem, 201 )
-		}
-
 		i++
 	}
 
@@ -166,11 +161,6 @@ void function SquadSummaryOnOpenPanel( var panel )
 	RunClientScript( "UICallback_SquadSummaryDisplayed" )
 }
 
-
-void function UI_UpdateSquadSummary()
-{
-	SquadSummaryOnOpenPanel( file.panel )
-}
 
 void function SquadSummaryOnClosePanel( var panel )
 {
@@ -237,3 +227,4 @@ bool function IsNotFocusedOnAButton()
 {
 	return (file.buttons.contains( GetFocus() ))
 }
+#endif //

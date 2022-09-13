@@ -1,3 +1,4 @@
+#if(true)//
 global function InitDeathScreenRecapPanel
 global function UI_UpdateRespawnStatus
 
@@ -109,3 +110,4 @@ void function OnDevButtonClick( var button )
 	SetTabDefEnabled( squadSummaryTab, isEnabled )
 	isEnabled = !isEnabled
 }
+#endif //

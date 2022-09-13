@@ -771,7 +771,7 @@ void function TitanEmbark_PlayerEmbarks( entity player, entity titan, table e )
 		}
 	)
 
-	player.ContextAction_SetBusy()
+    player.ContextAction_SetBusy()
 
 	bool standing = false
 
@@ -1156,7 +1156,7 @@ void function TitanEmbark_TitanEmbarks( entity player, entity titan, table e )
 
 	//sequence.blendTime = 0.5
 
-	printt( "This is mount animation name: " + animation )
+    printt( "This is mount animation name: " + animation )
 	if ( e.embarkAction.alignFrontEnabled && alignFront )
 	{
 		vector titanOrg = titan.GetOrigin()
@@ -1673,8 +1673,8 @@ void function PlayerEndsDisembarkThread( entity player, table e )
 	player.p.isDisembarking = false
 
 	//// give a player a boost out the door
-	//
-	//
+    //
+    //
 	if ( IsAlive( player ) && !wasCustomDisembark )
 	{
 		vector angles = player.EyeAngles()

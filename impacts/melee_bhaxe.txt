@@ -3,7 +3,7 @@ ImpactTable
 	FX
 	{
 		"C" "P_bhaxe_impact_base" //Concrete, rock, porcelain, boulder, gravel, asphalt, brick, concrete_block, plaster
-		"D" "P_bhaxe_impact_base" //Dirt, slipperyslime, snow, carpet, cardboard, floatingstandable, ceiling_tile, papercup, lava_rock
+		"D" "P_bhaxe_impact_base"
 		"E" "P_bhaxe_impact_base" // metal_titan
 
 		"F" "P_bhaxe_impact_base" //flesh
@@ -32,8 +32,6 @@ ImpactTable
 		"Z" "P_bhaxe_impact_base" //sand
 
 		"0" "P_bhaxe_impact_base"
-		"1" "P_bhaxe_impact_base" //lava_flow
-		"2" "P_bhaxe_impact_base" //lava_rock_hot
 		"3" "P_bhaxe_impact_base"
 		"4" "P_bhaxe_impact_base"
 		"5" "P_bhaxe_impact_base"
@@ -67,8 +65,6 @@ ImpactTable
 		"O" "P_melee_dirt"  //Foliage
 		"P" "P_melee_metal" //metal_spectre
 
-		"Q" "P_melee_snow"  //Snow
-		"R" "P_melee_ice" //Ice
 
 		"S" "P_impact_water" //water, slime
 		"T" "P_melee_default" //tile
@@ -82,8 +78,6 @@ ImpactTable
 		"Z" "P_melee_dirt"  //sand
 
 //		"0" "openslot"
-		"1" "P_impact_lava_nodecal" //lava_flow
-		"2" "P_impact_lava" //lava_rock_hot
 //		"3" "openslot"
 //		"4" "openslot"
 //		"5" "openslot"
@@ -117,8 +111,6 @@ ImpactTable
 		"O" "Generic_Axe_Impact_3p_vs_3p"
 		"P" "Victim_Axe_Impact_3p_vs_3p"
 
-		"Q" "Generic_Axe_Impact_3p_vs_3p" //snow
-		"R" "Generic_Axe_Impact_3p_vs_3p" //Ice
 
 		"S" "Generic_Axe_Impact_3p_vs_3p"
 		"T" "Generic_Axe_Impact_3p_vs_3p"
@@ -131,8 +123,6 @@ ImpactTable
 		"Z" "Generic_Axe_Impact_3p_vs_3p"
 
 //		"0" "openslot"
-		"1" "Generic_Axe_Impact_3p_vs_3p" //lava_flow
-		"2" "Generic_Axe_Impact_3p_vs_3p" //lava_rock_hot
 //		"3" "openslot"
 //		"4" "openslot"
 //		"5" "openslot"
@@ -181,8 +171,6 @@ ImpactTable
 		"Z" "Generic_Axe_Impact_1p_vs_3p"
 
 //		"0" "openslot"
-		"1" "Generic_Axe_Impact_1p_vs_3p" //lava_flow
-		"2" "Generic_Axe_Impact_1p_vs_3p" //lava_rock_hot
 //		"3" "openslot"
 //		"4" "openslot"
 //		"5" "openslot"
@@ -231,8 +219,6 @@ ImpactTable
 		"Z" "Player_Melee_Impact_Dirt_3p_vs_3p"
 
 //		"0" "openslot"
-		"1" "Player_Melee_Impact_Mud_3p_vs_3p" //lava_flow
-		"2" "Player_Melee_Impact_Dirt_3p_vs_3p" //lava_rock_hot
 //		"3" "openslot"
 //		"4" "openslot"
 //		"5" "openslot"
@@ -281,8 +267,6 @@ ImpactTable
 		"Z" "Generic_Axe_Impact_3p_vs_1p"
 
 //		"0" "openslot"
-		"1" "Generic_Axe_Impact_3p_vs_1p" //lava_flow
-		"2" "Generic_Axe_Impact_3p_vs_1p" //lava_rock_hot
 //		"3" "openslot"
 //		"4" "openslot"
 //		"5" "openslot"

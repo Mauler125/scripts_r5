@@ -30,14 +30,9 @@ global function GetStringArrayAvailableClassesForPlayer
 global function CharacterClass_ConsiderLegHitBoxAsTorso
 global function CharacterClass_GetMenuZoomOffset
 
-#if CLIENT || UI
+#if CLIENT || UI 
 global function GetCharacterButtonMapping
 global function GetCharacterButtonOrder
-#endif
-
-#if SERVER || CLIENT
-global function GetPlayerSettingBaseHealth
-global function GetPlayerSettingBaseShield
 #endif
 
 //////////////////////
@@ -94,11 +89,11 @@ FileStruct_LifetimeLevel& fileLevel
 
 table< ItemFlavor, array<int> > legHitBoxOverrides = {}
 
-////////////////////////
-////////////////////////
-//// Initialization ////
-////////////////////////
-////////////////////////
+/////////////////////////
+/////////////////////////
+//// Initialiszation ////
+/////////////////////////
+/////////////////////////
 #if SERVER || CLIENT || UI
 void function ShCharacters_LevelInit()
 {
@@ -139,7 +134,7 @@ void function OnRegisterRootItemFlavors()
 	entry.stryderCharDataArrayIndex = ePlayerStryderCharDataArraySlots.CHARACTER
 	entry.networkTo = eLoadoutNetworking.PLAYER_GLOBAL
 	entry.networkVarName = "CharacterSelection"
-	entry.isItemFlavorUnlocked = bool function( EHI playerEHI, ItemFlavor flavor, bool shouldIgnoreOtherSlots ) {
+	entry.isItemFlavorUnlocked = bool function( EHI playerEHI, ItemFlavor flavor ) {
 		return CharacterClass_IsAvailable( playerEHI, flavor )
 	}
 	entry.isSlotLocked = bool function( EHI playerEHI ) {
@@ -516,17 +511,6 @@ int function SortByMenuButtonIndex( ItemFlavor a, ItemFlavor b )
 	return 0
 }
 #endif // CLIENT || UI
-#if SERVER || CLIENT
-int function GetPlayerSettingBaseHealth( entity player )
-{
-	return int( player.GetPlayerSettingFloat( "health" ) )
-}
-
-int function GetPlayerSettingBaseShield( entity player )
-{
-	return int( player.GetPlayerSettingFloat( "healthShield" ) )
-}
-#endif
 
 ///////////////////
 ///////////////////

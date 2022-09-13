@@ -1,0 +1,204 @@
+global function Cl_Passives_Init
+
+struct
+{
+
+	#if(false)
+
+#endif
+	#if(false)
+
+#endif
+	var cameraCircleStatusRui
+} file
+
+#if(false)
+//
+#endif
+
+void function Cl_Passives_Init()
+{
+	AddCallback_OnInitWeaponStatusRuis( OnInitWeaponStatusRuis_CLPassives )
+	AddCallback_PlayerClassChanged( OnPlayerClassChanged_CLPassives )
+	#if(false)
+//
+//
+
+#endif
+
+	#if(false)
+//
+#endif
+}
+
+#if(false)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#endif
+
+#if(false)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+
+
+#endif
+
+#if(false)
+
+
+
+
+#endif
+
+#if(false)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#endif //
+
+void function OnInitWeaponStatusRuis_CLPassives( entity player )
+{
+	if ( player != GetLocalViewPlayer() )
+		return
+
+	#if(false)
+
+
+#endif
+
+}
+
+void function OnPlayerClassChanged_CLPassives( entity player )
+{
+	if ( player != GetLocalViewPlayer() )
+		return
+
+	#if(false)
+
+
+
+
+
+#endif
+}
+
+#if(false)
+
+
+
+
+
+
+
+
+
+
+#endif

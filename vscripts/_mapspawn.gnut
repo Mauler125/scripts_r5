@@ -1,24 +1,14 @@
-untyped
-
 //=========================================================
 //	_mapspawn.nut
-//	Called on newgame or transitions, BEFORE entities have been created and initialized
+//  Called on newgame or transitions, BEFORE entities have been created and initialized
 //=========================================================
 
 global function CodeCallback_MapSpawn
 global function CodeCallback_ClientCommand
-global function MapTriggers_Init
-global table _ClientCommandCallbacks = {}
-global entity _cc = null
-global entity _sc = null
-
-
-
-// dumpsite for other files
-
-global const int TEAM_COUNT = 31
-
-// end dumpsite
+global table _ClientCommandCallbacks 	= {}
+global entity _cc 						= null
+global entity _sc 						= null
+global const int TEAM_COUNT 			= 31
 
 
 global struct spawnCallbackFuncArray
@@ -157,10 +147,10 @@ global struct SvGlobals
 
 	bool roundBasedTeamScore_RoundReset         = true  // if true, reset team scores at the start of each round.
 	bool isInPilotGracePeriod                   = false // if true, all players will be allowed to switch loadouts.
-
+	
 	table<string, void functionref(entity,array<string>)> globalAnimEventTokenizeCallbacks
 	array<bool functionref( entity player, entity zipline, vector ziplineClosestPoint )> canUseZiplineCallbacks
-
+	
 	// r5 stuff
 	array<void functionref(entity, entity)> onPilotEmbarkingTitanCallbacks
 	array<void functionref(entity, entity)> onPlayerUsedOffhandCallbacks
@@ -173,21 +163,12 @@ global SvGlobals svGlobal
 
 void function CodeCallback_MapSpawn() // original script entry point
 {
-	ShWeapons_LevelInit()
-	//seterrorhandler(void function() {})
+	seterrorhandler(void function() {})
 	ScriptCompilerTest()
 	LoadDiamond()
-	MapTriggers_Init()
-
-	RegisterSignal( "CleanupFXAndSoundsForDecoy" )
-	RegisterSignal( "MirageSpotted" )
-	RegisterSignal( "forever" )
-	RegisterSignal( "UpdatePlayerStatusCounts" )
-	RegisterSignal( "BleedOut_OnReviveStart" )
-	RegisterSignal( "PlayerPlaneStatusChanged" )
-	RegisterSignal( "CancelTryRelinquishSquadLeaderOrBreakFromSquad" )
-	RegisterSignal( "GameStateChanged" )
-	RegisterSignal( "CleanupOutsideCircle" )
+	ShAssets_LevelInit()
+	ShSignal_LevelInit()
+	ShWeapons_LevelInit()
 
 	_cc = CreateEntity( "point_clientcommand" )
 	_sc = CreateEntity( "point_servercommand" )
@@ -205,259 +186,152 @@ void function CodeCallback_MapSpawn() // original script entry point
 	PrecacheModel( $"mdl/dev/empty_model.rmdl" )
 	PrecacheModel( $"mdl/error.rmdl" ) // model used when no model is provided
 
-	PrecacheModel( $"mdl/Humans/class/medium/combat_dummie_medium.rmdl" )
+	PrecacheModel( $"mdl/weapons/arms/pov_pilot_heavy_pathfinder.rmdl" )
+    PrecacheModel( $"mdl/humans/class/heavy/pilot_heavy_pathfinder.rmdl" )
 
-	//Charms - todo: find a better way
-
-	PrecacheModel( $"mdl/props/charm/charm_fireball.rmdl" )
-	PrecacheModel( $"mdl/props/charm/charm_yeti.rmdl" )
-	PrecacheModel( $"mdl/props/charm/charm_crow.rmdl" )
-	PrecacheModel( $"mdl/props/charm/charm_rank_gold.rmdl" )
-	PrecacheModel( $"mdl/props/charm/charm_rank_diamond.rmdl" )
-	PrecacheModel( $"mdl/props/charm/charm_rank_predator.rmdl" )
-	PrecacheModel( $"mdl/props/charm/charm_nessy.rmdl" )
-	PrecacheModel( $"mdl/props/charm/charm_lifeline_drone.rmdl" )
-	PrecacheModel( $"mdl/props/charm/charm_rank_platinum.rmdl" )
-	PrecacheModel( $"mdl/props/charm/charm_pumpkin.rmdl" )
-	PrecacheModel( $"mdl/props/charm/charm_gas_canister.rmdl" )
-	PrecacheModel( $"mdl/props/charm/charm_jester.rmdl" )
-	PrecacheModel( $"mdl/props/charm/charm_nessy_ghost.rmdl" )
-	PrecacheModel( $"mdl/props/charm/charm_clown.rmdl" )
-	PrecacheModel( $"mdl/props/charm/charm_witch.rmdl" )
-
-	//Lobby Models
-
-	PrecacheModel( $"mdl/robots/drone_frag/drone_frag.rmdl" )
-	PrecacheModel( $"mdl/vehicle/droppod_fireteam/droppod_fireteam.rmdl" )
-	PrecacheModel( $"mdl/vehicle/droppod_loot/droppod_loot_LL_holo.rmdl" )
-	PrecacheModel( $"mdl/robots/marvin/marvin_gladcard.rmdl" )
-	PrecacheModel( $"mdl/menu/xp_badge.rmdl" )
-	PrecacheModel( $"mdl/menu/coin.rmdl" )
-	PrecacheModel( $"mdl/currency/crafting/currency_crafting_epic.rmdl" )
-
-	//Weapons
-
-	PrecacheWeapon( $"mp_weapon_melee_survival" )
-	PrecacheWeapon( $"mp_weapon_mdlspawner" )
-	PrecacheWeapon( $"mp_weapon_alternator_smg" )
-	PrecacheWeapon( $"mp_weapon_bubble_bunker" )
-	PrecacheWeapon( $"mp_weapon_dmr" )
-	PrecacheWeapon( $"mp_weapon_doubletake" )
-	PrecacheWeapon( $"mp_weapon_energy_shotgun" )
-	PrecacheWeapon( $"mp_weapon_lmg" )
-	PrecacheWeapon( $"mp_weapon_lstar" )
-	PrecacheWeapon( $"mp_weapon_mastiff" )
-	PrecacheWeapon( $"mp_weapon_shotgun" )
-	PrecacheWeapon( $"mp_weapon_shotgun_pistol" )
-	PrecacheWeapon( $"mp_weapon_sniper" )
-	PrecacheWeapon( $"mp_weapon_r97" )
-	PrecacheWeapon( $"mp_ability_holopilot" )
-	PrecacheWeapon( $"mp_weapon_hemlok" )
-	PrecacheWeapon( $"mp_weapon_autopistol" )
-	PrecacheWeapon( $"mp_weapon_wingman" )
-	PrecacheWeapon( $"mp_weapon_thermite_grenade" )
+    PrecacheWeapon( $"mp_weapon_sniper" )
+    PrecacheWeapon( $"mp_weapon_alternator_smg" )
+    PrecacheWeapon( $"mp_weapon_wraith_kunai_primary" )
+    PrecacheWeapon( $"mp_ability_grapple" )
 	PrecacheWeapon( $"mp_weapon_deployable_medic" )
-	PrecacheWeapon( $"mp_ability_grapple" )
-	PrecacheWeapon( $"mp_weapon_vinson" )
-	PrecacheWeapon( $"mp_weapon_pdw" )
-	PrecacheWeapon( $"mp_ability_phase_walk" )
-	PrecacheWeapon( $"mp_ability_3dash" )
-	PrecacheWeapon( $"mp_weapon_phase_tunnel" )
-	PrecacheWeapon( $"mp_weapon_zipline" )
-	PrecacheWeapon( $"mp_ability_area_sonar_scan" )
-	PrecacheWeapon( $"mp_ability_consumable" )
-	PrecacheWeapon( $"mp_weapon_g2" )
-	PrecacheWeapon( $"mp_weapon_grenade_bangalore" )
-	PrecacheWeapon( $"mp_weapon_incap_shield" )
-	PrecacheWeapon( $"mp_ability_care_package" )
-	PrecacheWeapon( $"mp_ability_hunt_mode" )
+	PrecacheWeapon( $"mp_ability_gibraltar_shield" )
+	PrecacheWeapon( $"mp_weapon_bubble_bunker" )
+	PrecacheWeapon( $"mp_ability_holopilot" )
+	PrecacheWeapon( $"mp_ability_phase_walk")
+	PrecacheWeapon( $"mp_ability_hunt_mode")
+	PrecacheWeapon( $"mp_weapon_frag_grenade")
+	PrecacheWeapon( $"mp_weapon_grenade_emp" )
 	PrecacheWeapon( $"mp_weapon_dirty_bomb" )
-	PrecacheWeapon( $"mp_weapon_energy_ar" )
-	PrecacheWeapon( $"mp_weapon_esaw" )
-	PrecacheWeapon( $"mp_weapon_semipistol" )
-	PrecacheWeapon( $"mp_weapon_frag_grenade" )
-	PrecacheWeapon( $"mp_weapon_rspn101" )
-	PrecacheWeapon( $"mp_weapon_defender" )
-	PrecacheWeapon( $"mp_weapon_jump_pad" )
-	PrecacheWeapon( $"mp_weapon_grenade_creeping_bombardment" )
-	PrecacheWeapon( $"mp_weapon_grenade_defensive_bombardment" )
-	PrecacheWeapon( $"mp_weapon_grenade_sonar" )
-	PrecacheWeapon( $"mp_weapon_grenade_electric_smoke" )
-	PrecacheWeapon( $"mp_weapon_deployable_cover" )
-	PrecacheWeapon( $"melee_data_knife" )
-	PrecacheWeapon( $"melee_bolo_sword" )
-	PrecacheWeapon( $"mp_weapon_bolo_sword_primary" )
-	PrecacheWeapon( $"mp_weapon_volt_smg" )
-	PrecacheWeapon( $"mp_weapon_frag_drone" )
 
-	//if ( GetMapName() == "mp_rr_canyonlands_staging" ) //Precache NPC Weapons For Firing Range
-	{
-		PrecacheWeapon( $"npc_weapon_energy_shotgun" )
-		PrecacheWeapon( $"npc_weapon_hemlok" )
-		PrecacheWeapon( $"npc_weapon_lstar" )
-	}
-
+	RegisterSignal("forever")
 	printl( "Code Script: _mapspawn" )
 
+	//SPMP_MapSpawn_Init() // naw actually dont lol
 	SV_CL_Shared_Init()
-	ClientCommands_Init()
 }
+
 
 var function CodeCallback_ClientCommand( entity player, array<string> args )
 {
-	if( !Dev_CommandLineHasParm( "-nodebugprints" ) )
-	{
-		printl( "############################" )
-		printl( "CodeCallback_ClientCommand() before" )
-		printl( "player = " + player )
-		printl( "args:" )
-		foreach( key, value in args )
-			printl( key + " : " + value )
-		printl( "############################" )
-	}
-
+	printl( "############################" )
+	printl( "] CodeCallback_ClientCommand() before" )
+	printl( "] player = " + player )
+	printl( "] args: --------------------" )
+	foreach( key, value in args )
+		printl( "] " + key + " : " + value )
+	printl( "############################" )
 
 	string commandString = args.remove( 0 )
 
 	//TODO: Track down Why VModEnable is being called from code?
-
 	//Assert( commandString in svGlobal.clientCommandCallbacks )
-	if (commandString in svGlobal.clientCommandCallbacksNew)
-	{
-		printt("CodeCallback_ClientCommand", commandString)
-		svGlobal.clientCommandCallbacksNew[ commandString ]( player, args )
-		return true
-	}
-
 	if ( commandString in svGlobal.clientCommandCallbacks  )
 	{
+		printt("CodeCallback_ClientCommand", commandString)
 		return svGlobal.clientCommandCallbacks[ commandString ]( player, args )
 	}
 	else
 	{
 		printl( "############################" )
-		printl( "CommandString: " + commandString  + " was not added via AddClientCommandCallback but is being called in CodeCallback_ClientCommand" )
+		printl( "] CommandString: " + "'" + commandString + "'" + " not added via AddClientCommandCallback [called in CodeCallback_ClientCommand]" )
 		printl( "############################" )
 		return false
 	}
 }
 
-void function MapTriggers_Init()
+void function ShSignal_LevelInit()
 {
-	switch (GetMapName())
-	{
-		case "mp_rr_aqueduct_night":
-		case "mp_rr_aqueduct":
-		{
-			CreateWallTrigger( <425, -1590, -1689> , 30000 , true)
-			CreateWallTrigger( <732, -4456, 840>  , 6000 , false, true )
-			CreateWallTrigger( <774, -6394, 2067>  )
-			break
-		}
-		case "mp_rr_arena_composite":
-		{
-			CreateWallTrigger( <5, 2587, -520> , 30000 , true)
-			CreateWallTrigger( <5, 5379, 860>  )
-			//CreateWallTrigger( <0, 5600, -190> , 85 , true)
-			//CreateWallTrigger( <0, 5600, -240> , 120)
-			break
-		}
-		case "mp_rr_ashs_redemption":
-		{
-			CreateWallTrigger( <-20857, 5702, -25746> )
-			break
-		}
-		default:
-			break
-	}
+	RegisterSignal( "CleanupFXAndSoundsForDecoy" )
+	RegisterSignal( "BleedOut_OnStartDying" )
+	RegisterSignal( "MirageSpotted" )
+	RegisterSignal( "forever" )
+	RegisterSignal( "UpdatePlayerStatusCounts" )
+	RegisterSignal( "BleedOut_OnReviveStart" )
+	RegisterSignal( "PlayerPlaneStatusChanged" )
+	RegisterSignal( "CancelTryRelinquishSquadLeaderOrBreakFromSquad" )
+	RegisterSignal( "GameStateChanged" )
+	RegisterSignal( "CleanupOutsideCircle" )
+	RegisterSignal( "FreefallEnded" )
 }
 
-entity function CreateWallTrigger( vector origin , float radius = 30000 , bool killzone = false , bool oob_timer = false, bool debugdraw = false)
+void function ShAssets_LevelInit()
 {
-	// Set up the trigger
-    entity trigger = CreateEntity( "trigger_cylinder" )
-	trigger.SetRadius( radius )
-	trigger.SetAboveHeight( 2000 )
-	trigger.SetBelowHeight( 50 )
-	trigger.SetOrigin( origin )
-	trigger.SetEnterCallback(  WallTriggerEnter )
-	trigger.SetLeaveCallback(  WallTriggerLeave )
-
-    if (killzone) // hacky way of adding killzone option
-	{
-		trigger.SetScriptName("WallTrigger_Killzone")
-		trigger.SetAboveHeight( 350 )
-	}
+	PrecacheModel( $"mdl/dev/editor_ref.rmdl" )
+	PrecacheModel( $"mdl/dev/empty_model.rmdl" )
+	PrecacheModel( $"mdl/error.rmdl" ) // model used when no model is provided
 	
-    if (oob_timer)
-	{
-		trigger.SetScriptName("WallTrigger_oob_timer")
-		trigger.SetAboveHeight( 2350 )
-	}
+	// PrecacheParticleSystem( $"wpn_grenade_sonar_impact" )
 
-	if (debugdraw) // draw trigger bounds if needed
-	{
-		DebugDrawCylinder( trigger.GetOrigin() , < -90, 0, 0 >, radius, trigger.GetAboveHeight(), 0, 165, 255, true, 9999.9 )
-		DebugDrawCylinder( trigger.GetOrigin() , < -90, 0, 0 >, radius, -trigger.GetBelowHeight(), 255, 90, 0, true, 9999.9 )
-	}
+	// PrecacheModel( $"mdl/weapons/arms/pov_pilot_heavy_pathfinder.rmdl" )
+	// PrecacheModel( $"mdl/humans/class/heavy/pilot_heavy_pathfinder.rmdl" )
+	// PrecacheModel( $"mdl/weapons/arms/pov_pilot_medium_stim.rmdl" )
+	// PrecacheModel( $"mdl/Humans/class/medium/pilot_medium_stim.rmdl" )
+	// PrecacheModel( $"mdl/vehicle/hovership/hovership_platform_mp.rmdl" )
+	// PrecacheModel( $"mdl/fx/sonar_pulse_cone.rmdl" )
+	// PrecacheModel( $"mdl/weapons/titan_raptor_rocket_pod/atpov_titan_raptor_rocket_pod_right.rmdl" )
+	// PrecacheModel( $"mdl/currency/crafting/currency_crafting_legendary.rmdl" )
+	// PrecacheModel( $"mdl/vehicle/droppod_loot/droppod_loot_LL_holo.rmdl" )
 
-	// deploy the trigger
-    DispatchSpawn( trigger )
-
-    return trigger
-}
-
-void function WallTriggerEnter( entity trigger , entity ent )
-{
-    if (IsValid(ent)) // ensure the entity is valid
-	{
-		if (ent.IsPlayer() && ent.GetPhysics() != MOVETYPE_NOCLIP) // Noclip players are not affected by the trigger
-		{
-			if (trigger.GetScriptName() == "WallTrigger_Killzone") // Check if it's a killzone
-			{
-				ent.TakeDamage(ent.GetMaxHealth() + 1, null, null, { damageSourceId=damagedef_suicide, scriptType=DF_BYPASS_SHIELD })
-			} 
-			else if (trigger.GetScriptName() == "WallTrigger_oob_timer") // Check if it's only out of bounds timer
-			{
-				EntityOutOfBounds( trigger, ent, null, null )
-			}
-			else 
-			{
-				EntityOutOfBounds( trigger, ent, null, null )
-				ent.DisableWeapon()
-				ent.Zipline_Stop()
-				StatusEffect_AddEndless( ent, eStatusEffect.hunt_mode_visuals, 100 )
-				StatusEffect_AddEndless( ent, eStatusEffect.minimap_jammed, 100 )
-				StatusEffect_AddEndless( ent, eStatusEffect.move_slow, 0.2 )
-
-				vector newdir
-				if (trigger.GetAngles() == <0,0,0>)
-				{
-					newdir = -ent.GetAngles() / 2 + -<0,0,-100> * -1
-				}
-				else
-				{
-					newdir = -ent.GetAngles() / 2 + -trigger.GetAngles() * -1
-				}
-
-				ent.SetVelocity(newdir * 15)
-			}
-		}
-	}
-}
-
-void function WallTriggerLeave( entity trigger , entity ent )
-{
-    if (IsValid(ent)) // ensure the entity is valid
-	{
-		if (ent.IsPlayer())
-		{
-			EntityBackInBounds( trigger, ent, null, null )
-			ent.EnableWeapon()
-
-			StatusEffect_StopAllOfType( ent, eStatusEffect.hunt_mode_visuals)
-			StatusEffect_StopAllOfType( ent, eStatusEffect.minimap_jammed)
-			StatusEffect_StopAllOfType( ent, eStatusEffect.move_slow)
-		}
-	}
+    // PrecacheWeapon( $"mp_weapon_melee_survival" )
+    // PrecacheWeapon( $"mp_weapon_data_knife" )
+	// PrecacheWeapon( $"mp_weapon_jack_dknife" )
+	// PrecacheWeapon( $"mp_weapon_mdlspawner" )
+	// PrecacheWeapon( $"mp_weapon_alternator_smg" )
+	// PrecacheWeapon( $"mp_weapon_bubble_bunker" )
+	// PrecacheWeapon( $"mp_weapon_dmr" )
+	// PrecacheWeapon( $"mp_weapon_doubletake" )
+	// PrecacheWeapon( $"mp_weapon_energy_shotgun" )
+	// PrecacheWeapon( $"mp_weapon_lmg" )
+	// PrecacheWeapon( $"mp_weapon_lstar" )
+	// PrecacheWeapon( $"mp_weapon_mastiff" )
+	// PrecacheWeapon( $"mp_weapon_shotgun" )
+	// PrecacheWeapon( $"mp_weapon_shotgun_pistol" )
+	// PrecacheWeapon( $"mp_weapon_sniper" )
+	// PrecacheWeapon( $"mp_weapon_r97" )
+	// PrecacheWeapon( $"mp_ability_holopilot" )
+	// PrecacheWeapon( $"mp_weapon_hemlok" )
+	// PrecacheWeapon( $"mp_weapon_autopistol" )
+	// PrecacheWeapon( $"mp_weapon_wingman" )
+	// PrecacheWeapon( $"mp_weapon_thermite_grenade" )
+    // PrecacheWeapon( $"mp_weapon_wraith_kunai_primary" )
+	// PrecacheWeapon( $"mp_weapon_deployable_medic" )
+	// PrecacheWeapon( $"mp_weapon_car" )
+    // PrecacheWeapon( $"mp_ability_grapple" )
+	// PrecacheWeapon( $"mp_weapon_vinson" )
+	// PrecacheWeapon( $"mp_weapon_pdw" )
+	// PrecacheWeapon( $"mp_ability_phase_walk" )
+	// PrecacheWeapon( $"mp_weapon_phase_tunnel" )
+	// PrecacheWeapon( $"mp_weapon_zipline" )
+	// PrecacheWeapon( $"mp_ability_area_sonar_scan" )
+	// PrecacheWeapon( $"mp_ability_consumable" )
+	// PrecacheWeapon( $"mp_weapon_g2" )
+	// PrecacheWeapon( $"mp_weapon_epg" )
+	// PrecacheWeapon( $"mp_weapon_rocket_launcher" )
+	// PrecacheWeapon( $"mp_weapon_grenade_emp" )
+	// PrecacheWeapon( $"mp_weapon_dirty_bomb" )
+	// PrecacheWeapon( $"mp_weapon_grenade_bangalore" )
+	// PrecacheWeapon( $"mp_weapon_incap_shield" )
+	// PrecacheWeapon( $"mp_ability_care_package" )
+	// PrecacheWeapon( $"mp_ability_hunt_mode" )
+	// PrecacheWeapon( $"mp_weapon_dirty_bomb" )
+	// PrecacheWeapon( $"mp_weapon_softball" )
+	// PrecacheWeapon( $"mp_weapon_energy_ar" )
+	// PrecacheWeapon( $"mp_weapon_esaw" )
+	// PrecacheWeapon( $"mp_weapon_semipistol" )
+	// PrecacheWeapon( $"mp_weapon_frag_grenade" )
+	// PrecacheWeapon( $"mp_weapon_rspn101" )
+	// PrecacheWeapon( $"mp_weapon_defender" )
+	// PrecacheWeapon( $"mp_weapon_jump_pad" )
+	// PrecacheWeapon( $"mp_weapon_smr" )
+	// PrecacheWeapon( $"mp_weapon_kunai_ns" )
+	// PrecacheWeapon( $"mp_weapon_smart_pistol" )
+	// PrecacheWeapon( $"mp_weapon_grenade_creeping_bombardment" )
+	// PrecacheWeapon( $"mp_weapon_grenade_defensive_bombardment" )
+	// PrecacheWeapon( $"mp_weapon_grenade_sonar" )
+	// PrecacheWeapon( $"mp_weapon_grenade_gravity" )
+	// PrecacheWeapon( $"mp_weapon_grenade_electric_smoke" )
+	// PrecacheWeapon( $"mp_weapon_deployable_cover" )
+	// PrecacheWeapon( $"mp_ability_laser_trip" )
+	// PrecacheWeapon( $"mp_weapon_satchel" )
+	// PrecacheWeapon( $"mp_weapon_spectre_spawner" )
 }

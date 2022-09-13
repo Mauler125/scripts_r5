@@ -11,7 +11,7 @@ struct
 } file
 
 
-void function InitCustomizeWeaponMenu( var newMenuArg )
+void function InitCustomizeWeaponMenu( var newMenuArg ) //
 {
 	var menu = GetMenu( "CustomizeWeaponMenu" )
 	file.menu = menu
@@ -44,7 +44,7 @@ void function InitCustomizeWeaponMenu( var newMenuArg )
 
 void function CustomizeWeaponMenu_OnOpen()
 {
-	// (dw): the customize context should not change while this menu is up
+	//
 
 	RuiSetGameTime( file.decorationRui, "initTime", Time() )
 	RuiSetString( file.titleRui, "title", Localize( ItemFlavor_GetLongName( GetTopLevelCustomizeContext() ) ).toupper() )
@@ -57,8 +57,25 @@ void function CustomizeWeaponMenu_OnOpen()
 		TabData tabData = GetTabDataForPanel( file.menu )
 		ActivateTab( tabData, 0 )
 	}
-	//else
-	//	ActivateTab( file.menu, GetMenuActiveTabIndex( file.menu ) )
+	//
+	//
+
+	int numTabs = GetMenuNumTabs( file.menu )
+	var tabButtonPanel = Hud_GetChild( file.menu, "TabsCommon" )
+	var parentPanel = Hud_GetParent( tabButtonPanel )
+	TabData tabData = GetTabDataForPanel( parentPanel )
+	array<var> tabButtons = tabData.tabButtons
+	float totalWidth = 0
+
+	for ( int i=0; i<numTabs; i++ )
+	{
+		var tab = tabButtons[ i ]
+		totalWidth += float( Hud_GetWidth( tab ) )
+	}
+
+	var firstTab = tabButtons[ 0 ]
+	int x = int( -(totalWidth*0.5) )
+	Hud_SetX( firstTab, x + ( Hud_GetWidth( firstTab )*0.3 ) )
 }
 
 
@@ -89,11 +106,13 @@ void function CustomizeWeaponMenu_Update( var menu )
 	}
 	file.weaponList.clear()
 
-	CharmsButton_Reset()
+#if(false)
+
+#endif
 
 	ClearTabs( menu )
 
-	// set up, but only if we're active
+	//
 	if ( GetActiveMenu() == menu )
 	{
 		ItemFlavor category = GetTopLevelCustomizeContext()
@@ -103,8 +122,7 @@ void function CustomizeWeaponMenu_Update( var menu )
 		{
 			var tabBodyPanel = file.weaponTabBodyPanelList[weaponIdx]
 
-			float tabBarLeftOffsetFracIfVisible = 0.434
-			AddTab( menu, tabBodyPanel, Localize( ItemFlavor_GetShortName( weapon ) ).toupper(), false, tabBarLeftOffsetFracIfVisible )
+			AddTab( menu, tabBodyPanel, Localize( ItemFlavor_GetShortName( weapon ) ).toupper() )
 
 			WeaponSkinsPanel_SetWeapon( tabBodyPanel, weapon )
 			Newness_AddCallbackAndCallNow_OnRerverseQueryUpdated( NEWNESS_QUERIES.WeaponTab[weapon], OnNewnessQueryChangedUpdatePanelTab, tabBodyPanel )
@@ -119,11 +137,13 @@ void function CustomizeWeaponMenu_OnNavigateBack()
 {
 	Assert( GetActiveMenu() == file.menu )
 
-	if ( IsCharmsMenuActive() )
-	{
-		CharmsMenuEnableOrDisable()
-		return
-	}
+#if(false)
+
+
+
+
+
+#endif
 
 	CloseActiveMenu()
 }

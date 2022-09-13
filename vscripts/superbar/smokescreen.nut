@@ -76,14 +76,14 @@ struct
 
 void function Smokescreen_Init()
 {
-	PrecacheParticleSystem( FX_ELECTRIC_SMOKESCREEN )
-	PrecacheParticleSystem( FX_ELECTRIC_SMOKESCREEN_BURN )
-	#if MP
-		PrecacheParticleSystem( FX_ELECTRIC_SMOKESCREEN_HEAL )
-	#endif
+    PrecacheParticleSystem( FX_ELECTRIC_SMOKESCREEN )
+    PrecacheParticleSystem( FX_ELECTRIC_SMOKESCREEN_BURN )
+    #if MP
+    	PrecacheParticleSystem( FX_ELECTRIC_SMOKESCREEN_HEAL )
+    #endif
 	PrecacheParticleSystem( FX_GRENADE_SMOKESCREEN )
 
-	PrecacheSprite( $"sprites/physbeam.vmt" )
+    PrecacheSprite( $"sprites/physbeam.vmt" )
 	PrecacheSprite( $"sprites/glow01.vmt" )
 
 #if SERVER

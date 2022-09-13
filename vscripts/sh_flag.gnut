@@ -25,12 +25,12 @@ global function FlagClearOnFlag
 global function GetTriggerEnabled
 
 #if SERVER
-global function SetupFlagKilledForNPC
+	global function SetupFlagKilledForNPC
 
-struct
-{
-	table flagOnKilled
-} file
+	struct
+	{
+		table flagOnKilled
+	} file
 #endif
 
 

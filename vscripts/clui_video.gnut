@@ -79,6 +79,7 @@ int function ReserveVideoChannel( void functionref( int channel ) onFinishedCall
 }
 #endif
 
+
 #if UI
 int function ReserveVideoChannelInternal( bool calledFromUI )
 {
@@ -97,6 +98,7 @@ int function ReserveVideoChannelInternal( bool calledFromUI )
 }
 #endif
 
+
 #if UI
 void function ClientToUI_RequestVideoChannel()
 {
@@ -104,6 +106,7 @@ void function ClientToUI_RequestVideoChannel()
 	RunClientScript( "UIToClient_VideoChannelReserved", channel )
 }
 #endif
+
 
 #if CLIENT
 void function UIToClient_VideoChannelReserved( int channel )
@@ -186,3 +189,5 @@ void function UIToClient_VideoChannelFinishedPlaying( int channel )
 	}
 }
 #endif
+
+

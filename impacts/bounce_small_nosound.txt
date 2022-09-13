@@ -9,7 +9,7 @@ ImpactTable
 		"B" "none" //Bloodyflesh?
 
 		"C" "none" // Concrete, rock, porcelain, boulder, gravel, asphalt, brick, concrete_block, plaster
-		"D" "P_hmn_footstep_dust" // Dirt, slipperyslime, snow, carpet, cardboard, floatingstandable, ceiling_tile, papercup, lavarock
+		"D" "P_hmn_footstep_dust"
 		"E" "none" // metal_titan
 		"F" "none" //flesh
 		"G" "none" //metalgrate, chainlink, chain
@@ -24,8 +24,6 @@ ImpactTable
 		"N" "P_impact_slime" //Slime
 		"O" "P_hmn_footstep_dust" //Foliage
 		"P" "none" //Computer
-		"Q" "P_hmn_footstep_snow" //Snow
-		"R" "none" //Ice
 		"S" "P_impact_water" //water, slime
 		"T" "none" //tile
 		"U" "none" //glass_breakable
@@ -36,8 +34,6 @@ ImpactTable
 		"Z" "P_hmn_footstep_dust" //sand
 
 //		"0" "openslot"
-		"1" "P_hmn_footstep_lava" //lava_flow
-		"2" "P_hmn_footstep_lava" //lava_rock_hot
 //		"3" "openslot"
 //		"4" "openslot"
 //		"5" "openslot"
@@ -88,8 +84,6 @@ ImpactTable
 		"Z" "none"
 
 		"0" "none"
-		"1" "none" //lava_flow
-		"2" "none" //lava_rock_hot
 		"3" "none"
 		"4" "none"
 		"5" "none"
@@ -140,8 +134,6 @@ ImpactTable
 		"Z" "none"
 
 		"0" "none"
-		"1" "none" //lava_flow
-		"2" "none" //lava_rock_hot
 		"3" "none"
 		"4" "none"
 		"5" "none"
@@ -192,8 +184,6 @@ ImpactTable
 		"Z" "none"
 
 		"0" "none"
-		"1" "none" //lava_flow
-		"2" "none" //lava_rock_hot
 		"3" "none"
 		"4" "none"
 		"5" "none"
@@ -244,8 +234,6 @@ ImpactTable
 		"Z" "none"
 
 		"0" "none"
-		"1" "none" //lava_flow
-		"2" "none" //lava_rock_hot
 		"3" "none"
 		"4" "none"
 		"5" "none"

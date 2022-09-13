@@ -255,7 +255,7 @@ void function TryLeechAbortCallback( entity self, entity leecher )
 
 void function DataKnifeSuccessSounds( entity player )
 {
-	EmitDifferentSoundsOnEntityForPlayerAndWorld( "Pathfinder_SurveyBeacon_SuccessPulse", "Pathfinder_SurveyBeacon_SuccessPulse", player, player )
+	EmitDifferentSoundsOnEntityForPlayerAndWorld( "dataknife_complete", "dataknife_complete_3p", player, player )
 }
 
 void function DataKnifeCanceledSounds( entity player )

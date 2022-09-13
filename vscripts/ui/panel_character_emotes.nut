@@ -63,11 +63,6 @@ void function InitCharacterEmotesPanel( var panel )
 		Hud_SetVisible( sectionDef.panel, false )
 		Hud_AddEventHandler( sectionDef.button, UIE_CLICK, SectionButton_Activate )
 	}
-
-	Hud_EnableKeyBindingIcons( Hud_GetChild( file.panel, "HintMKB" ) )
-	Hud_EnableKeyBindingIcons( Hud_GetChild( file.panel, "HintGamepad" ) )
-	HudElem_SetRuiArg( Hud_GetChild( file.panel, "HintMKB" ), "textBreakWidth", 400.0 )
-	HudElem_SetRuiArg( Hud_GetChild( file.panel, "HintGamepad" ), "textBreakWidth", 400.0 )
 }
 
 void function SectionButton_Activate( var button )
@@ -126,9 +121,6 @@ void function EmotesPanel_OnShow( var panel )
 
 	for ( int i=0; i<MAX_QUIPS_EQUIPPED; i++ )
 		AddCallback_ItemFlavorLoadoutSlotDidChange_SpecificPlayer( LocalClientEHI(), Loadout_CharacterQuip( GetTopLevelCustomizeContext(), i ), OnEmoteChanged )
-
-	RunClientScript( "SetHintTextOnHudElem", Hud_GetChild( panel, "HintMKB" ), "#HINT_QUIP_WHEEL_MKB" )
-	RunClientScript( "SetHintTextOnHudElem", Hud_GetChild( panel, "HintGamepad" ), "#HINT_QUIP_WHEEL_GAMEPAD" )
 }
 
 void function OnEmoteChanged( EHI playerEHI, ItemFlavor flavor )
@@ -171,9 +163,6 @@ void function CharacterEmotesPanel_Update()
 	SectionButton_Activate( file.sections[file.activeSectionIndex].button )
 	UpdateNewnessCallbacks()
 	UpdateSectionTitles()
-	ItemFlavor character = GetTopLevelCustomizeContext()
-	ItemFlavor characterSkin = LoadoutSlot_GetItemFlavor( LocalClientEHI(), Loadout_CharacterSkin( character ) )
-	RunClientScript( "UIToClient_PreviewCharacterSkin", ItemFlavor_GetNetworkIndex_DEPRECATED( characterSkin ), ItemFlavor_GetNetworkIndex_DEPRECATED( character ) )
 }
 
 

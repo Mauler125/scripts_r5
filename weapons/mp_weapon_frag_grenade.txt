@@ -21,10 +21,10 @@ WeaponData
 	"offhand_default_inventory_slot"				"0"
 	"show_grenade_indicator"						"1"
 	"projectile_ignores_vortex"						"fall"
-	"does_not_interrupt_cloak"						"1"
-	"ads_dof_disable"								"1"
-	"allow_gibraltar_shield"                        "0"
-	"hide_when_holstered"							"1"
+    "does_not_interrupt_cloak"						"1"
+    "ads_dof_disable"								"1"
+    "allow_gibraltar_shield"                        "0"
+    "hide_when_holstered"							"1"
 
 	"OnWeaponTossReleaseAnimEvent"					"Grenade_OnWeaponTossReleaseAnimEvent"
 	"OnWeaponTossPrep"								"Grenade_OnWeaponTossPrep"
@@ -306,18 +306,18 @@ WeaponData
 			grenade_arc_indicator_bounce_count				"0"
 		}
 
-		survival_finite_ordnance
-		{
-			"ammo_clip_size"								"100"
-			"ammo_default_total"							"0"
-			"ammo_display"									"count"
-			"ammo_min_to_fire"								"1"
-			"ammo_per_shot"									"1"
-			"ammo_stockpile_max"							"0"
-			"regen_ammo_refill_rate"						"0"
-			"regen_ammo_refill_start_delay"					"0.0"
-			"ammo_no_remove_from_stockpile"					"1"
-		}
+        survival_finite_ordnance
+        {
+            "ammo_clip_size"								"100"
+            "ammo_default_total"							"0"
+            "ammo_display"									"count"
+            "ammo_min_to_fire"								"1"
+            "ammo_per_shot"									"1"
+            "ammo_stockpile_max"							"0"
+            "regen_ammo_refill_rate"						"0"
+            "regen_ammo_refill_start_delay"					"0.0"
+            "ammo_no_remove_from_stockpile"					"1"
+        }
 	}
 
 	active_crosshair_count				"1"

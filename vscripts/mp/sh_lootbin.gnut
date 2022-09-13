@@ -1,10 +1,8 @@
 global function ShLootBin_Init
-global function GetAllLootBins
 
 #if SERVER
-global function Survival_AddCallback_OnLootbinOpened
 global function SURVIVAL_DebugLootBins
-
+global function GetAllLootBins
 global function AddLootToLootBin
 global function AddMultipleLootItemsToLootBin
 global function GetLootBinContents
@@ -20,9 +18,6 @@ global function DestroyMovableLootBin
 global function DissolveLootBin
 global function Thread_DissolveMovableLootBin
 global function RefreshLootBin
-global function ClearLootBinContents
-#elseif CLIENT
-global function ServerCallback_RefreshLootbinHighlight
 #endif
 
 global function LootBin_IsBusy
@@ -34,42 +29,28 @@ global const string LOOT_BIN_MARKER_SCRIPTNAME = "survival_lootbin"
 global const string LOOT_BIN_SCRIPTNAME = "survival_lootbin_spawned"
 
 global const asset LOOT_BIN_MODEL = $"mdl/props/loot_bin/loot_bin_01_animated.rmdl"
-global const bool LOOT_BIN_CLOSABLE = false // note that they will always be closable if playlist var lootbins_infinite is set to 1
+global const bool LOOT_BIN_CLOSABLE = true // note that they will always be closable if playlist var lootbins_infinite is set to 1
 
 global const string SOUND_LOOT_BIN_OPEN = "Door_Lootbin_Open"
 global const string SOUND_LOOT_BIN_IDLE = "Door_Lootbin_Presence_Loop"
-const float NUM_LOOT_BIN_SOUND_INITS_PER_SEC = 50.0 // If not a float, script lang converts result to an int
+const float NUM_LOOT_BIN_SOUND_INITS_PER_SEC = 50.0        // If not a float, script lang converts result to an int
 const float LOOT_BIN_SOUND_INIT_MIN_WAIT = 5.0
 
 const bool SURVIVAL_DEBUG_LOOT_BINS = false
-
-global typedef OnLootBinOpenedCallbackType void functionref( entity, entity, array<string> )
-
-//
-struct LootBinLocationBackupData
-{
-	vector origin
-	vector angles
-	bool   onMovingGeo
-}
 
 struct
 {
 	bool                          lootBinsInfinite = false
 	table<entity, array<entity> > lootBinsSpawnedLootMap
 	table<entity, array<string> > lootBinsLootInside
-	array<entity>                    lootBinList
-	array<LootBinLocationBackupData> lootBinBackupLocations
-	int                              numLootBins
-	
-	array<OnLootBinOpenedCallbackType> onLootBinOpenedCallbacks
+	array<entity>                 lootBinList
+	int                           numLootBins
 } file
 
 void function ShLootBin_Init()
 {
 	PrecacheModel( LOOT_BIN_MODEL )
 
-	RegisterSignal( "TryRefreshLootbinHighlights_Internal" )
 	#if SERVER
 		AddSpawnCallback_ScriptName( LOOT_BIN_MARKER_SCRIPTNAME, InitLootBinFromMap )
 
@@ -79,25 +60,11 @@ void function ShLootBin_Init()
 	#endif
 	#if CLIENT
 		AddCreateCallback( "prop_dynamic", OnPropDynamicCreated )
-		AddDestroyCallback( "prop_dynamic", OnPropDynamicDestroyed )
 	#endif
 }
 
-// return all lootbins
-array<entity> function GetAllLootBins()
-{
-	return file.lootBinList
-}
 
-// These callbacks are called before loot is spawned in a lootbin
 #if SERVER
-void function Survival_AddCallback_OnLootbinOpened( OnLootBinOpenedCallbackType callbackFunc )
-{
-	Assert( !file.onLootBinOpenedCallbacks.contains( callbackFunc ), "Already added " + string( callbackFunc ) + " with Survival_AddCallback_OnLootbinOpened" )
-	file.onLootBinOpenedCallbacks.append( callbackFunc )
-}
-
-// SERVER
 void function EntitiesDidLoad()
 {
 	// make sure all the bins that were spawned since the preprocess step seems to happen before ShLootBin_Init() is called
@@ -110,7 +77,6 @@ void function EntitiesDidLoad()
 	AddSpawnCallback_ScriptName( LOOT_BIN_SCRIPTNAME, InitLootBin )
 }
 
-// SERVER
 void function InitLootBinFromMap( entity lootbin )
 {
 	SURVIVAL_AddLootBin( lootbin )
@@ -121,13 +87,11 @@ void function InitLootBinFromMap( entity lootbin )
 		InitLootBin( lootbin )
 	}
 }
+#endif
 
-// SERVER
+#if SERVER
 bool function ClientCommand_spawn_lootbin( entity player, array<string> args )
 {
-	if( GetConVarInt( "sv_cheats" ) != 1 )
-		return false
-	
 	TraceResults tr = TraceLine( player.EyePosition(), player.EyePosition() + 900.0 * player.GetViewVector(), player, TRACE_MASK_NPCWORLDSTATIC, TRACE_COLLISION_GROUP_NONE )
 	entity lootbin  = CreateLootBin( tr.endPos, VectorToAngles( FlattenNormalizeVec( player.EyePosition() - tr.endPos ) ) )
 
@@ -136,7 +100,9 @@ bool function ClientCommand_spawn_lootbin( entity player, array<string> args )
 
 	return true
 }
+#endif
 
+#if SERVER
 entity function CreateLootBin( vector origin, vector angles, bool onMovingGeo = false )
 {
 	entity lootbin = CreateEntity( "prop_dynamic" )
@@ -207,23 +173,6 @@ void function Thread_AttachMovingLootBinToGeo( entity lootbin )
 	}
 }
 
-void function ClearLootBinContents( entity lootbin )
-{
-	if (!(lootbin in file.lootBinsSpawnedLootMap) || !(lootbin in file.lootBinsLootInside))
-		return
-			
-	array<entity> loot = file.lootBinsSpawnedLootMap[ lootbin ]
-
-	foreach( ent in loot)
-	{
-		if ( IsValid( ent ) )
-			ent.Destroy()
-	}
-
-	file.lootBinsSpawnedLootMap[lootbin] <- []
-	file.lootBinsLootInside[lootbin] <- []
-}
-
 void function InitLootBin( entity lootbin )
 {
 	if ( file.lootBinList.contains( lootbin ) )
@@ -257,10 +206,12 @@ void function InitLootBin( entity lootbin )
 		DebugDrawLine( lootbin.GetOrigin(), lootbin.GetOrigin() + <0, 0, 1000>, 255, 255, 255, true, 100.0 )
 	}
 	
-	if( GetCurrentPlaylistVarBool("lootbin_loot_enable", true) == true)
+	array<string> items
+	for( int i=0; i < RandomIntRange(2, 4); i++ )
 	{
-		AddMultipleLootItemsToLootBin( lootbin, SURVIVAL_GetMultipleWeightedItemsFromGroup( LootZones_GetRefForOrigin(lootbin.GetOrigin()), RandomIntRange(2,4) ) )
+		items.append( GetDataTableString( dataTable, RandomInt( numRows ), GetDataTableColumnByName( dataTable, "ref" ) ) )
 	}
+	AddMultipleLootItemsToLootBin( lootbin, items )
 }
 
 // the loop doesn't play without a delay involved for some reason
@@ -289,6 +240,11 @@ void function DelayedLootBinLoop( entity lootbin, float waitTime )
 #endif
 
 #if SERVER
+array<entity> function GetAllLootBins()
+{
+	return file.lootBinList
+}
+
 array<string> function GetLootBinContents( entity bin )
 {
 	for ( int i = file.lootBinsLootInside[ bin ].len() - 1; i >= 0; i-- )
@@ -380,12 +336,6 @@ void function DissolveLootBin( entity lootBin )
 #if SERVER
 void function AddMultipleLootItemsToLootBin( entity lootBin, array<string> refs )
 {
-	array<string> lootToSpawn = GetLootBinContents( lootBin )
-	if(lootToSpawn.len() > 0)
-	{
-		printt("Lootbin already has contents! Clear it first before adding multiple items.")
-		return
-	}
 	int numRefs = refs.len()
 	for ( int i; i < numRefs; i++ )
 		AddLootToLootBin( lootBin, refs[ i ] )
@@ -414,6 +364,7 @@ void function SpawnLootInLootBin( entity lootbin, string ref, int lootI, int loo
 {
 	Point p       = GetLootBinSpawnLocation( lootbin, lootI, lootCount )
 	LootData data = SURVIVAL_Loot_GetLootDataByRef( ref )
+	printt("K0k", ref, data.netInt)
 	entity loot   = SpawnGenericLoot( ref, p.origin, p.angles, data.countPerDrop )
 	loot.RemoveFromAllRealms()
 	loot.AddToOtherEntitysRealms( lootbin )
@@ -474,11 +425,10 @@ void function HandleLootbinUse( entity lootbin, entity player )
 
 	EmitSoundOnEntity( lootbin, SOUND_LOOT_BIN_OPEN )
 
-	if ( ( LOOT_BIN_CLOSABLE || GetCurrentPlaylistVarBool( "lootbins_infinite", false ) ) && LootBin_IsOpen( lootbin ) )
+	if ( LOOT_BIN_CLOSABLE && LootBin_IsOpen( lootbin ) )
 		thread LootBin_PlayCloseSequence( lootbin )
 	else
 		thread LootBin_PlayOpenSequence( lootbin, player )
-	
 	if ( IsValid( player ) )
 		TrackingVision_CreatePOI( eTrackingVisionNetworkedPOITypes.PLAYER_LOOTBIN_USED, lootbin, lootbin.GetWorldSpaceCenter(), player.GetTeam(), player )
 }
@@ -500,16 +450,10 @@ void function LootBin_PlayOpenSequence( entity lootbin, entity player )
 		int lootIndex             = 0
 		array<string> lootToSpawn = GetLootBinContents( lootbin )
 
-		foreach( callbackFunc in file.onLootBinOpenedCallbacks )
-			callbackFunc( player, lootbin, lootToSpawn )
-
-		if( lootbin.e.shouldSpawnLoot )
+		foreach ( ref in lootToSpawn )
 		{
-			foreach ( ref in lootToSpawn )
-			{
-				SpawnLootInLootBin( lootbin, ref, lootIndex, lootToSpawn.len() )
-				lootIndex++
-			}
+			SpawnLootInLootBin( lootbin, ref, lootIndex, lootToSpawn.len() )
+			lootIndex++
 		}
 
 		lootToSpawn.clear()
@@ -522,7 +466,6 @@ void function LootBin_PlayOpenSequence( entity lootbin, entity player )
 		waitthread PlayAnim( lootbin, "loot_bin_01_open", lootbinParent, "ref" )
 	else
 		waitthread PlayAnim( lootbin, "loot_bin_01_open" )
-
 
 	GradeFlagsClear( lootbin, eGradeFlags.IS_BUSY )
 }
@@ -582,6 +525,21 @@ void function CleanUpPermanentsParentedToLootbin( entity lootBin )
 
 #endif
 
+bool function LootBin_IsOpen( entity lootbin )
+{
+	if ( GradeFlagsHas( lootbin, eGradeFlags.IS_OPEN ) )
+		return true
+	return false
+}
+
+
+bool function LootBin_IsBusy( entity lootbin )
+{
+	if ( GradeFlagsHas( lootbin, eGradeFlags.IS_BUSY ) )
+		return true
+	return false
+}
+
 #if CLIENT
 void function OnPropDynamicCreated( entity lootbin )
 {
@@ -591,17 +549,8 @@ void function OnPropDynamicCreated( entity lootbin )
 	AddEntityCallback_GetUseEntOverrideText( lootbin, GetLootBinUseTextOverride )
 
 	SetCallback_CanUseEntityCallback( lootbin, LootBin_CanUse )
-
-	file.lootBinList.append( lootbin )
-}
-
-void function OnPropDynamicDestroyed( entity lootbin )
-{
-	if ( file.lootBinList.contains( lootbin ) )
-		file.lootBinList.removebyvalue( lootbin )
 }
 #endif // CLIENT
-
 
 entity function GetLootBinForHitEnt( entity hitEnt )
 {
@@ -609,26 +558,10 @@ entity function GetLootBinForHitEnt( entity hitEnt )
 		return hitEnt
 
 	entity parentEnt = hitEnt.GetParent()
-
 	if ( IsValid( parentEnt ) && (parentEnt.GetScriptName() == LOOT_BIN_SCRIPTNAME) )
 		return parentEnt
 
 	return null
-}
-
-// lootbin state functions
-bool function LootBin_IsOpen( entity lootbin )
-{
-	if ( GradeFlagsHas( lootbin, eGradeFlags.IS_OPEN ) )
-		return true
-	return false
-}
-
-bool function LootBin_IsBusy( entity lootbin )
-{
-	if ( GradeFlagsHas( lootbin, eGradeFlags.IS_BUSY ) )
-		return true
-	return false
 }
 
 
@@ -643,36 +576,22 @@ bool function LootBin_CanUse( entity player, entity lootBin )
 	if ( LootBin_IsBusy( lootBin ) )
 		return false
 
-	if ( !LootBin_IsOpen( lootBin ) )
-		return true
+	if ( !LOOT_BIN_CLOSABLE && LootBin_IsOpen( lootBin ) )
+		return false
 
-	return false
+	return true
 }
 
 #if CLIENT
 string function GetLootBinUseTextOverride( entity lootbin )
 {
 	if ( !LootBin_IsOpen( lootbin ) )
-	{
-		if ( GradeFlagsHas( lootbin, eGradeFlags.IS_LOCKED ) )
-			return "#SURVIVAL_LOOTBIN_LOCKED"
 		return "#SURVIVAL_LOOTBIN_OPEN"
-	}
-	else if ( ( LOOT_BIN_CLOSABLE || GetCurrentPlaylistVarBool( "lootbins_infinite", false ) ) )
+	else if ( LOOT_BIN_CLOSABLE )
 		return "#SURVIVAL_LOOTBIN_CLOSE"
 	else
 		return ""
 
 	unreachable
-}
-
-void function ServerCallback_RefreshLootbinHighlight()
-{
-	array<entity> lootbins = GetAllLootBins()
-	//
-	foreach ( lootbin in lootbins )
-	{
-		ManageHighlightEntity( lootbin )
-	}
 }
 #endif

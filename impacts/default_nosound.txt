@@ -4,7 +4,7 @@ ImpactTable
 	{
 
 		"C" "impact_concrete" //Concrete, rock, porcelain, boulder, gravel, asphalt, brick, concrete_block, plaster
-		"D" "impact_dirt" //Dirt, slippery, carpet, cardboard, floatingstandable, ceiling_tile, papercup, lava_rock
+		"D" "impact_dirt"
 		"E" "impact_metal" // metal_titan
 		"F" "impact_flesh" //flesh
 		"G" "impact_metal" //metalgrate, chainlink, chain
@@ -17,8 +17,6 @@ ImpactTable
 		"N" "P_impact_slime" //Slime
 		"O" "impact_leaves"  //Foliage
 		"P" "P_impact_metal_spectre" //metal_spectre
-		"Q" "P_impact_snow"  //Snow
-		"R" "P_impact_snow" //Ice
 		"S" "P_impact_water" //water
 		"T" "impact_tile" //tile
 		"U" "impact_glass" // glass_breakable
@@ -29,8 +27,6 @@ ImpactTable
 		"Z" "impact_sand"  //sand
 
 //		"0" "openslot"
-		"1" "P_impact_lava_nodecal" //lava_flow
-		"2" "P_impact_lava" //lava_rock_hot
 //		"3" "openslot"
 //		"4" "openslot"
 //		"5" "openslot"
@@ -80,8 +76,6 @@ ImpactTable
 		"Z" "none"
 
 		"0" "none"
-		"1" "none" //lava_flow
-		"2" "none" //lava_rock_hot
 		"3" "none"
 		"4" "none"
 		"5" "none"
@@ -132,8 +126,6 @@ ImpactTable
 		"Z" "none"
 
 		"0" "none"
-		"1" "none" //lava_flow
-		"2" "none" //lava_rock_hot
 		"3" "none"
 		"4" "none"
 		"5" "none"
@@ -184,8 +176,6 @@ ImpactTable
 		"Z" "none"
 
 		"0" "none"
-		"1" "none" //lava_flow
-		"2" "none" //lava_rock_hot
 		"3" "none"
 		"4" "none"
 		"5" "none"
@@ -236,8 +226,6 @@ ImpactTable
 		"Z" "none"
 
 		"0" "none"
-		"1" "none" //lava_flow
-		"2" "none" //lava_rock_hot
 		"3" "none"
 		"4" "none"
 		"5" "none"

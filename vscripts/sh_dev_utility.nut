@@ -38,38 +38,6 @@ void function ShDevUtility_Init()
 }
 #endif
 
-#if SERVER
-void function SetupHeirloom( bool allplayers = false)
-{
-	if ( allplayers )
-	{
-		foreach( entity player in GetPlayerArray() )
-		{
-			if ( !IsValid( player ) )
-				return
-
-			player.TakeOffhandWeapon(OFFHAND_MELEE)
-			player.TakeNormalWeaponByIndexNow( WEAPON_INVENTORY_SLOT_PRIMARY_2 )
-			player.GiveWeapon( "mp_weapon_bolo_sword_primary", WEAPON_INVENTORY_SLOT_PRIMARY_2 )
-			player.GiveOffhandWeapon( "melee_bolo_sword", OFFHAND_MELEE )
-			Dev_PrintMessage( player, "R5RELOADED CUSTOM HEIRLOOM", "Ported by @KralRindo, Textured by @Aetheon_ & @KralRindo. Powered by REPAK", 4, "LootCeremony_LootHologram_Appear_Heirloom" )
-		}
-	}
-	else
-	{
-		entity player = gp()[0]
-		if ( !IsValid( player ) )
-			return
-
-		player.TakeOffhandWeapon(OFFHAND_MELEE)
-		player.TakeNormalWeaponByIndexNow( WEAPON_INVENTORY_SLOT_PRIMARY_2 )
-		player.GiveWeapon( "mp_weapon_bolo_sword_primary", WEAPON_INVENTORY_SLOT_PRIMARY_2 )
-		player.GiveOffhandWeapon( "melee_bolo_sword", OFFHAND_MELEE )
-		Dev_PrintMessage( player, "R5RELOADED CUSTOM HEIRLOOM", "Ported by @KralRindo, Textured by @Aetheon_ & @KralRindo. Powered by REPAK", 4, "LootCeremony_LootHologram_Appear_Heirloom" )
-	}
-}
-#endif
-
 #if SERVER || CLIENT || UI
 void function ShDevConsole_Init()
 {
@@ -131,16 +99,10 @@ void function PrintEntArray( array<entity> arr )
 {
 	printf( "%s() - len:%d  %s", FUNC_NAME(), arr.len(), string( arr ) )
 	foreach( int index, entity ent in arr )
-		printf( " [%d] - %s %s", index, string( ent ), string( ent.GetOrigin() ) )
+		printf( " [%d] - %s", index, string( arr[index] ) )
 }
 #endif
 
-void function PrintStringArray( array<string> arr )
-{
-	printf( "%s() - len:%d  %s", FUNC_NAME(), arr.len(), string( arr ) )
-	foreach( int index, string str in arr )
-		printf( " [%d] - \"%s\"", index, str )
-}
 
 // short cut for the console
 // script gp()[0].Die( gp()[1] )
@@ -446,7 +408,7 @@ bool ornull function DevRespawnGetPlayerEliminationOverride( entity player )
 
 void function DevRespawnPlayer( entity player, bool shouldForce, void functionref( entity, int ) devCallbackFunc = null, int devIndex = -1 )
 {
-	if ( shouldForce && IsAlive( player ) )
+	/*if ( shouldForce && IsAlive( player ) )
 	{
 		player.SetHealth( 0 )
 		wait 1.0
@@ -458,12 +420,19 @@ void function DevRespawnPlayer( entity player, bool shouldForce, void functionre
 		//player.p.hasMatchParticipationEnded = false // they're still going!
 		//player.p.lastDeathTime = -1.0
 		ClearPlayerEliminated( player )
-		DecideRespawnPlayer( player )
+		if ( shouldForce )
+		{
+			//RespawnTitanPilot( player )
+		}
+		else
+		{
+			DecideRespawnPlayer( player )
+		}
 	}
 	if ( devCallbackFunc != null )
 	{
 		devCallbackFunc( player, devIndex )
-	}
+	}*/
 }
 
 void function _DelayUnsetRespawnPodLanded( entity player )
@@ -615,18 +584,12 @@ void function DEV_RespawnAllPlayersAndPutThemInALineAndGiveRandomSurvivalStuff( 
 
 bool function ClientCommand_Respawn( entity commandPlayer, array<string> argList )
 {
-	if ( GetConVarInt( "sv_cheats" ) != 1 )
-		return true
-
 	thread DEV_RespawnPlayersBySpecifiers( argList, commandPlayer )
 	return true
 }
 
 bool function ClientCommand_SetRespawnOverride( entity commandPlayer, array<string> al )
 {
-	if ( GetConVarInt( "sv_cheats" ) != 1 )
-		return true
-
 	if ( al.len() != 1 || !(al[0] == "off" || al[0] == "allow" || al[0] == "deny" || al[0] == "bots") )
 	{
 		Dev_PrintMessage( commandPlayer, "Invalid usage of set_respawn_override", "Please pass one of: off, allow, deny, bots" )

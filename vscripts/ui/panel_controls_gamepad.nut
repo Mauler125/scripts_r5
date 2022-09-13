@@ -40,6 +40,9 @@ void function InitControlsGamepadPanel( var panel )
 	button = SetupSettingsButton( Hud_GetChild( contentPanel, "SwchLookSensitivity" ), "#LOOK_SENSITIVITY", "#GAMEPAD_MENU_SENSITIVITY_DESC", $"rui/menu/settings/settings_gamepad" )
 	file.advanceControlsDisableItems.append( button )
 
+	//
+	//
+
 	button = SetupSettingsButton( Hud_GetChild( contentPanel, "BtnLookSensitivityMenu" ), "#MENU_SENSITIVITY", "#GAMEPAD_MENU_SENSITIVITY_ADS_DESC", $"rui/menu/settings/settings_gamepad" )
 	AddButtonEventHandler( button, UIE_CLICK, AdvanceMenuEventHandler( GetMenu( "ControlsAdvancedLookMenuConsole" ) ) )
 	file.advanceControlsDisableItems.append( button )
@@ -51,11 +54,11 @@ void function InitControlsGamepadPanel( var panel )
 
 	SetupSettingsButton( Hud_GetChild( contentPanel, "SwchMoveDeadzone" ), "#MOVE_DRIFT_GUARD", "#GAMEPAD_MENU_MOVE_DRIFT_GUARD_DESC", $"rui/menu/settings/settings_gamepad" )
 
-	#if DURANGO_PROG
+	#if(DURANGO_PROG)
 		button = SetupSettingsButton( Hud_GetChild( contentPanel, "SwchLookAiming" ), "#LOOKSTICK_AIMING", "#GAMEPAD_MENU_LOOK_AIMING_DESC_DURANGO", $"rui/menu/settings/settings_gamepad" )
-	#else // #if DURANGO_PROG
+	#else //
 		button = SetupSettingsButton( Hud_GetChild( contentPanel, "SwchLookAiming" ), "#LOOKSTICK_AIMING", "#GAMEPAD_MENU_LOOK_AIMING_DESC", $"rui/menu/settings/settings_gamepad" )
-	#endif // #if DURANGO_PROG
+	#endif //
 	file.advanceControlsDisableItems.append( button )
 
 	SetupSettingsButton( Hud_GetChild( contentPanel, "SwchVibration" ), "#VIBRATION", "#GAMEPAD_MENU_VIBRATION_DESC", $"rui/menu/settings/settings_gamepad" )
@@ -63,14 +66,14 @@ void function InitControlsGamepadPanel( var panel )
 	SetupSettingsButton( Hud_GetChild( contentPanel, "SwchTapToUse" ), "#TAPTOUSE", "#GAMEPAD_MENU_TAPTOUSE_DESC", $"rui/menu/settings/settings_gamepad" )
 	SetupSettingsButton( Hud_GetChild( contentPanel, "SwchToggleGamepadADS" ), "#GAMEPAD_TOGGLE_ADS", "#GAMEPAD_TOGGLE_ADS_DESC", $"rui/menu/settings/settings_gamepad" )
 	SetupSettingsButton( Hud_GetChild( contentPanel, "SwchTriggerDeadzone" ), "#GAMEPAD_TRIGGER_DEADZONES", "#GAMEPAD_TRIGGER_DEADZONES_DESC", $"rui/menu/settings/settings_gamepad" )
-	SetupSettingsSlider( Hud_GetChild( contentPanel, "SldCursorVelocity" ), "#GAMEPAD_CURSOR_VELOCITY", "#GAMEPAD_CURSOR_VELOCITY_DESC", $"rui/menu/settings/settings_gamepad" )
+//
 
 	file.advanceControlsVisibleItems.append( Hud_GetChild( contentPanel, "SwchLookSensitivity_AdvLabel" ) )
 	file.advanceControlsVisibleItems.append( Hud_GetChild( contentPanel, "SwchLookSensitivityADS_AdvLabel" ) )
 	file.advanceControlsVisibleItems.append( Hud_GetChild( contentPanel, "SwchLookAiming_AdvLabel" ) )
 	file.advanceControlsVisibleItems.append( Hud_GetChild( contentPanel, "SwchLookDeadzone_AdvLabel" ) )
-	//file.advanceControlsVisibleItems.append( Hud_GetChild( contentPanel, "LblAdvControllerOn" ) )
-	//file.advanceControlsOffVisibleItems.append( Hud_GetChild( contentPanel, "LblAdvControllerOff" ) )
+	//
+	//
 
 	ScrollPanel_InitPanel( panel )
 	ScrollPanel_InitScrollBar( panel, Hud_GetChild( panel, "ScrollBar" ) )
@@ -190,7 +193,7 @@ void function RestoreGamepadDefaults()
 	ExecConfig( "gamepad_stick_layout_default.cfg" )
 	ExecConfig( "gamepad_button_layout_custom.cfg" )
 
-#if CONSOLE_PROG
+#if(CONSOLE_PROG)
 	ExecConfig( "config_default_console.cfg" )
 #endif
 

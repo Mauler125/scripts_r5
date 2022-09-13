@@ -1,6 +1,5 @@
 global function InitPromoDialog
 global function OpenPromoDialogIfNew
-global function OpenPromoDialogIfNewAfterPakLoad
 global function IsPromoDialogAllowed
 
 global function PromoDialog_OpenHijacked
@@ -10,7 +9,6 @@ const PROMO_DIALOG_MAX_PAGES = 9
 struct PromoDialogPageData
 {
 	asset  image = $""
-	string imageName = ""
 	string title = ""
 	string desc = ""
 	string link = ""
@@ -18,7 +16,7 @@ struct PromoDialogPageData
 
 enum eTransType
 {
-	// must match TRANSTYPE_* in promo.rui
+	//
 	NONE = 0,
 	SLIDE_LEFT = 1,
 	SLIDE_RIGHT = 2,
@@ -48,31 +46,6 @@ struct
 
 bool function OpenPromoDialogIfNew()
 {
-	if( GetConVarBool( "assetdownloads_enabled" ) )
-	{
-		file.pages = InitPages()
-		RunClientScript( "RequestDownloadedImagePakLoad", GetPromoRpakName(), ePakType.DL_PROMO, Hud_GetChild( file.menu, "ActivePage" ), file.pages[0].imageName )
-		RunClientScript( "RequestDownloadedImagePakLoad", GetPromoRpakName(), ePakType.DL_PROMO, Hud_GetChild( file.menu, "LastPage" ), file.pages[0].imageName )
-	}
-	else if ( IsPromoDialogNew() )
-	{
-		AdvanceMenu( file.menu )
-		return true
-	}
-
-	return false
-}
-
-void function OpenPromoDialogIfNewAfterPakLoad()
-{
-	RuiSetBool( file.lastPageRui, "isImageLoading", false )
-	
-	if ( IsPromoDialogNew() )
-		AdvanceMenu( file.menu )
-}
-
-bool function IsPromoDialogNew()
-{
 	UpdatePromoData()
 
 	entity player = GetUIPlayer()
@@ -83,8 +56,15 @@ bool function IsPromoDialogNew()
 	if ( file.promoVersionSeen_PREDICTED == -1 )
 		file.promoVersionSeen_PREDICTED = player.GetPersistentVarAsInt( "promoVersionSeen" )
 
-	return promoVersion != 0 && promoVersion != file.promoVersionSeen_PREDICTED
+	if ( promoVersion != 0 && promoVersion != file.promoVersionSeen_PREDICTED )
+	{
+		AdvanceMenu( file.menu )
+		return true
+	}
+
+	return false
 }
+
 
 bool function IsPromoDialogAllowed()
 {
@@ -122,6 +102,7 @@ void function InitPromoDialog( var newMenuArg ) //
 void function PromoDialog_OpenHijacked( string content )
 {
 	file.hijackContent = content
+	//
 	AdvanceMenu( file.menu )
 }
 
@@ -167,17 +148,22 @@ void function PromoDialog_OnNavigateBack()
 
 void function GoToStoreItem( var button )
 {
-	// TODO
+	//
 }
 
 
 array<PromoDialogPageData> function InitPages()
 {
 	string content = file.hijackContent != null ? expect string( file.hijackContent ) : GetPromoDataLayout()
+	//
+	//
+	//
+	//
 
 	if ( content.find( "<" ) != 0 ) //
 		content = "<p|0||" + content + ">"
 
+	//
 	array< array<string> > matches = RegexpFindAll( content, "<p\\|([^>\\|]*)\\|([^>\\|]*)\\|([^>\\|]*)>" )
 	if ( matches.len() > PROMO_DIALOG_MAX_PAGES )
 	{
@@ -190,11 +176,12 @@ array<PromoDialogPageData> function InitPages()
 	foreach ( vals in matches )
 	{
 		PromoDialogPageData newPage
-		newPage.imageName = vals[1]
-		if( !GetConVarBool( "assetdownloads_enabled" ) )
-			newPage.image = GetPromoImage( vals[1] )
+		//
+		newPage.image = GetPromoImage( vals[1] )
 		newPage.title = vals[2]
 		newPage.desc = vals[3]
+		//
+		//
 		pages.append( newPage )
 	}
 
@@ -306,11 +293,7 @@ void function UpdatePageRui( var rui, int pageIndex )
 {
 	PromoDialogPageData page = file.pages[pageIndex]
 
-	if( GetConVarBool( "assetdownloads_enabled" ) )
-		RuiSetImage( rui, "imageAsset", GetDownloadedImageAsset( GetPromoRpakName(), page.imageName, ePakType.DL_PROMO ) )
-	else
-		RuiSetImage( rui, "imageAsset", page.image )
-
+	RuiSetImage( rui, "imageAsset", page.image )
 	RuiSetString( rui, "titleText", page.title )
 	RuiSetString( rui, "descText", page.desc )
 	RuiSetInt( rui, "activePageIndex", file.activePageIndex )

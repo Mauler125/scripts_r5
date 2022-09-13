@@ -11,7 +11,6 @@ WeaponData
 	"menu_icon"										"rui/hud/common/melee_icon"
 	"hud_icon"										"rui/hud/common/melee_icon"
 
-	"weapon_type_flags"								"WPT_MELEE"
 	"weaponClass" 									"human"
 	"weaponType" 									"melee"
 	"body_type"										"battle_rifle"
@@ -32,12 +31,12 @@ WeaponData
 	"melee_rumble_on_hit_partial"					"pilot_melee_hit_partial"
 	"melee_freezelook_on_hit"						"0.25"
 	//"melee_sound_attack_1p"						"Player_Melee_Backhand_1P"
-	//"melee_sound_attack_3p"						"bangalore_smoke_grenade_explosion_3p"
-	//"melee_anim_3p"								"ACT_MP_MELEE_KNIFE_FIRST"
+	//"melee_sound_attack_3p"							"bangalore_smoke_grenade_explosion_3p"
+	"melee_anim_3p"									"ACT_MP_MELEE_KNIFE_FIRST"
 	"damage_flags"									"DF_MELEE | DF_KNOCK_BACK"
 	"impact_effect_table"							"melee_human"
 	"impulse_force"   								"0"
-	"offhand_keep_primary_in_hand"					"0"
+	"offhand_keep_primary_in_hand"					"1"
 
 	"zoom_effects"									"0"
 	"melee_anim_1p_number"							"2"
@@ -76,7 +75,7 @@ WeaponData
 	{
 		data_knife
 		{
-			"viewmodel"   									"mdl/weapons/data_knife/ptpov_data_knife.rmdl"
+            "viewmodel"   									"mdl/weapons/data_knife/ptpov_data_knife.rmdl"
 			"melee_attack_animtime"							"1"
 			"damage_flags"									"DF_BULLET"
 

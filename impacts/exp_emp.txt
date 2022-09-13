@@ -12,7 +12,7 @@ ImpactTable
 	FX
 	{
 		"C" "P_impact_exp_emp_med_default" //Concrete, rock, porcelain, boulder, gravel, asphalt, brick, concrete_block, plaster
-		"D" "P_impact_exp_emp_med_dirt" //Dirt, slipperyslime, snow, carpet, cardboard, floatingstandable, ceiling_tile, papercup, lava_rock
+		"D" "P_impact_exp_emp_med_dirt"
 		"E" "P_impact_exp_emp_med_default" // metal_titan
 
 		"F" "P_impact_exp_emp_med_default" //flesh
@@ -26,8 +26,6 @@ ImpactTable
 		"N" "P_impact_exp_emp_med_default"
 		"O" "P_impact_exp_emp_med_default" //Foliage
 		"P" "P_impact_exp_emp_med_default" //Computer
-		"Q" "P_impact_exp_emp_med_default" //Snow
-		"R" "P_impact_exp_emp_med_default" //ice
 		"S" "P_impact_exp_emp_med_default" //water, slime
 		"T" "P_impact_exp_emp_med_default" //tile
 		"U" "P_impact_exp_emp_med_default" //glass_breakable
@@ -41,8 +39,6 @@ ImpactTable
 		"Z" "P_impact_exp_emp_med_dirt"  //sand
 
 //		"0" "openslot"
-		"1" "P_impact_exp_emp_med_lava" //lava_flow
-		"2" "P_impact_exp_emp_med_lava" //lava_rock_hot
 //		"3" "openslot"
 //		"4" "openslot"
 //		"5" "openslot"
@@ -51,17 +47,11 @@ ImpactTable
 //		"8" "openslot"
 //		"9" "openslot"
 
-		"splash" "P_impact_water" //brush water
-		"slime_splash" "P_impact_slime"
-
 		"airburst" "P_impact_exp_emp_med_air"
 		"critical_hit" "P_impact_exp_emp_med_default"
-		"shieldhit" "P_impact_exp_emp_med_air"
-		"holohit" "P_impact_exp_emp_med_air"
-		"shadowhit" "P_impact_exp_emp_med_air"
 
-		"headshot_flesh" "P_impact_exp_emp_med_air"
-		"headshot_mechanical" "P_impact_exp_emp_med_air"
+		"headshot_flesh" "P_impact_exp_emp_med_default"
+		"headshot_mechanical" "P_impact_exp_emp_med_default"
 	}
 
 	Sound

@@ -89,8 +89,6 @@ ImpactTable
 		"N" "Water.BulletImpact_3P_vs_3P"	// sand?
 		"O" "Grass.BulletImpact_3P_vs_3P"
 		"P" "Android.Light.BulletImpact_3P_vs_3P"
-		"Q" "Concrete.BulletImpact_3P_vs_3P"  //Snow
-		"R" "Concrete.BulletImpact_3P_vs_3P" //Ice
 		"S" "Water.BulletImpact_3P_vs_3P"
 		"T" "Tile.BulletImpact_3P_vs_3P"
 
@@ -101,8 +99,6 @@ ImpactTable
 		"Z" "Sand.BulletImpact_3P_vs_3P"
 
 //		"0" "openslot"
-		"1" "Mud.BulletImpact_3P_vs_3P" //lava_flow
-		"2" "Concrete.BulletImpact_3P_vs_3P" //lava_rock_hot
 //		"3" "openslot"
 //		"4" "openslot"
 //		"5" "openslot"
@@ -151,8 +147,6 @@ ImpactTable
 		"Z" "Sand.BulletImpact_1P_vs_3P"
 
 //		"0" "openslot"
-		"1" "Mud.BulletImpact_1P_vs_3P" //lava_flow
-		"2" "Concrete.BulletImpact_1P_vs_3P" //lava_rock_hot
 //		"3" "openslot"
 //		"4" "openslot"
 //		"5" "openslot"
@@ -200,8 +194,6 @@ ImpactTable
 		"Y" "Glass.BulletImpact_3P_vs_1P"
 		"Z" "Sand.BulletImpact_3P_vs_1P"
 
-		"1" "Mud.BulletImpact_3P_vs_1P"  // lava_flow
-		"2" "Default.BulletImpact_3P_vs_1P" // lava_rock_hot
 
 		"splash" "Water.BulletImpact"
 		"slime_splash" "Water.BulletImpact"

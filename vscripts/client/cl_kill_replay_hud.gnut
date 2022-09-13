@@ -4,13 +4,9 @@ global function KillReplayHud_AddClient
 global function KillReplayHud_Activate
 global function KillReplayHud_Deactivate
 
-global function ServerCallback_KillReplayHud_Activate
-global function ServerCallback_KillReplayHud_Deactivate
-
 struct
 {
 	var killReplayOverlayRui
-	bool IsWatchingReplay = false
 } file
 
 void function ClKillReplayHud_Init()
@@ -58,20 +54,6 @@ string function GetRefFromDamageSourceId( int damageSourceId )
 	unreachable
 }
 
-void function ServerCallback_KillReplayHud_Activate() {	
-	if ( !GetCurrentPlaylistVarBool( "replay_new_ui", false ) )
-		KillReplayHud_Activate()
-	else
-		Custom_KillReplayHud_Activate()
-}
-
-void function ServerCallback_KillReplayHud_Deactivate() {
-	if ( !GetCurrentPlaylistVarBool( "replay_new_ui", false ) )
-		KillReplayHud_Deactivate()
-	else
-		Custom_KillReplayHud_Deactivate()
-}
-
 void function KillReplayHud_Activate()
 {
 	if ( IsReplayRoundWinning() )
@@ -83,7 +65,7 @@ void function KillReplayHud_Activate()
 	//var rui = CreateCockpitRui( $"ui/kill_replay_overlay.rpak", 0 )
 	file.killReplayOverlayRui = rui
 
-	RuiSetString( rui, "killReplayTitleText", "Kill Replay" )
+	RuiSetString( rui, "killReplayTitleText", "#KILL_REPLAY" )
 
 	AttackerDisplayNameStruct nameOfLastKiller = clGlobal.nameOfLastKiller
 
@@ -95,7 +77,7 @@ void function KillReplayHud_Activate()
 		string attackerPetName = nameOfLastKiller.attackerPetName
 		if ( attackerName != GetLocalClientPlayer().GetPlayerName() )
 		{
-			RuiSetString( file.killReplayOverlayRui, "killerName", "attackerName" )
+			RuiSetString( file.killReplayOverlayRui, "killerName", attackerName )
 		}
 
 		entity attacker
@@ -121,7 +103,7 @@ void function KillReplayHud_Activate()
 		if ( IsFriendlyTeam( attacker.GetTeam(), player.GetTeam() ) )
 			return
 
-		RuiSetBool( file.killReplayOverlayRui, "showKillerInfo", false )
+		RuiSetBool( file.killReplayOverlayRui, "showKillerInfo", true )
 		RuiSetFloat( file.killReplayOverlayRui, "killerHealthFrac", nameOfLastKiller.healthFrac )
 	}
 }
@@ -212,78 +194,4 @@ void function RoundWinningKillReplayClientHud_Deactivate() //Not doing screen fa
 
 		StopLocal1PDeathSound()
 	}
-}
-
-void function Custom_KillReplayHud_Activate()
-{
-	if ( IsReplayRoundWinning() )
-		return
-
-	asset image
-	int armorTier
-	string attackerName
-	bool islocalclient = false
-
-	//Set is watching replay
-	file.IsWatchingReplay = true
-
-	//Get the attackers entity
-	entity observerTarget = GetLocalClientPlayer().GetObserverTarget()
-
-	//Make sure the entity is valid
-	if(!IsValid(observerTarget))
-		observerTarget = GetLocalClientPlayer()
-
-	//Causes issues when the observer is the local client
-	if(observerTarget.IsPlayer() && observerTarget != GetLocalClientPlayer())
-	{
-		thread UpdatePlayerHealthAndSheild(observerTarget)
-
-		//Gets attackers legend image
-		ItemFlavor character = LoadoutSlot_WaitForItemFlavor( ToEHI( observerTarget ), Loadout_CharacterClass() )
-		image = CharacterClass_GetGalleryPortrait( character )
-		//Get armor tier
-		armorTier = EquipmentSlot_GetEquipmentTier( observerTarget, "armor" )
-		//Get attacker name
-		attackerName = observerTarget.GetPlayerName()
-	}
-	else
-	{
-		image = $""
-		armorTier = 0
-		attackerName = ""
-		islocalclient = true
-	}
-
-	//Open Kill Replay Hud
-	RunUIScript("OpenKillReplayHud", image, attackerName, armorTier, islocalclient)
-}
-
-void function Custom_KillReplayHud_Deactivate()
-{
-	//Set is not watching replay
-	file.IsWatchingReplay = false
-
-	if ( IsReplayRoundWinning() )
-		return
-
-	//Close the replay menu
-	RunUIScript("CloseKillReplayHud")
-
-	GetLocalClientPlayer().Signal( "DeactivateKillReplayHud" )
-}
-
-void function UpdatePlayerHealthAndSheild(entity attacker)
-{
-	//Gets armor Tier
-	int armorTier = EquipmentSlot_GetEquipmentTier( attacker, "armor" )
-
-	//Update health and sheild while they are watching the replay
-    while(file.IsWatchingReplay)
-    {
-		if(IsValid(attacker))	
-			RunUIScript("ReplayHud_UpdatePlayerHealthAndSheild", GetHealthFrac( attacker ), GetShieldHealthFrac( attacker ), armorTier)
-
-		WaitFrame()
-    }
 }

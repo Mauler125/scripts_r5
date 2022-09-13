@@ -26,7 +26,6 @@ void function InitMiscCustomizeMenu( var newMenuArg ) //
 	file.tabBodyPanelList = [
 		Hud_GetChild( menu, "LoadscreenPanel" )
 		Hud_GetChild( menu, "MusicPackPanel" )
-		Hud_GetChild( menu, "SkydiveTrailPanel" )
 	]
 
 	AddMenuEventHandler( menu, eUIEvent.MENU_OPEN, MiscCustomizeMenu_OnOpen )
@@ -57,9 +56,25 @@ void function MiscCustomizeMenu_OnOpen()
 	//
 	//
 
+	int numTabs = GetMenuNumTabs( file.menu )
+	var tabButtonPanel = Hud_GetChild( file.menu, "TabsCommon" )
+	var parentPanel = Hud_GetParent( tabButtonPanel )
+	TabData tabData = GetTabDataForPanel( parentPanel )
+	array<var> tabButtons = tabData.tabButtons
+	float totalWidth = 0
+
+	for ( int i=0; i<numTabs; i++ )
+	{
+		var tab = tabButtons[ i ]
+		totalWidth += float( Hud_GetWidth( tab ) )
+	}
+
+	var firstTab = tabButtons[ 0 ]
+	int x = int( -(totalWidth*0.5) )
+	Hud_SetX( firstTab, x + ( Hud_GetWidth( firstTab )*0.3 ) )
+
 	Newness_AddCallbackAndCallNow_OnRerverseQueryUpdated( NEWNESS_QUERIES.LoadscreenButton, OnNewnessQueryChangedUpdatePanelTab, GetPanel( "LoadscreenPanel" ) )
 	Newness_AddCallbackAndCallNow_OnRerverseQueryUpdated( NEWNESS_QUERIES.MusicPackButton, OnNewnessQueryChangedUpdatePanelTab, GetPanel( "MusicPackPanel" ) )
-	Newness_AddCallbackAndCallNow_OnRerverseQueryUpdated( NEWNESS_QUERIES.SkydiveTrailButton, OnNewnessQueryChangedUpdatePanelTab, GetPanel( "SkydiveTrailPanel" ) )
 }
 
 
@@ -74,7 +89,6 @@ void function MiscCustomizeMenu_OnClose()
 
 	Newness_RemoveCallback_OnRerverseQueryUpdated( NEWNESS_QUERIES.LoadscreenButton, OnNewnessQueryChangedUpdatePanelTab, GetPanel( "LoadscreenPanel" ) )
 	Newness_RemoveCallback_OnRerverseQueryUpdated( NEWNESS_QUERIES.MusicPackButton, OnNewnessQueryChangedUpdatePanelTab, GetPanel( "MusicPackPanel" ) )
-	Newness_RemoveCallback_OnRerverseQueryUpdated( NEWNESS_QUERIES.SkydiveTrailButton, OnNewnessQueryChangedUpdatePanelTab, GetPanel( "SkydiveTrailPanel" ) )
 
 	RemoveCallback_OnTopLevelCustomizeContextChanged( file.menu, MiscCustomizeMenu_Update )
 	MiscCustomizeMenu_Update( file.menu )
@@ -116,15 +130,12 @@ void function MiscCustomizeMenu_Update( var menu )
 
 */
 
-		float tabBarLeftOffsetFracIfVisible = 0.434
-		AddTab( menu, file.tabBodyPanelList[0], Localize( "#TAB_CUSTOMIZE_LOADSCREEN" ).toupper(), false, tabBarLeftOffsetFracIfVisible )
-		AddTab( menu, file.tabBodyPanelList[1], Localize( "#TAB_CUSTOMIZE_MUSIC_PACK" ).toupper(), false, tabBarLeftOffsetFracIfVisible )
-		AddTab( menu, file.tabBodyPanelList[2], Localize( "#TAB_CUSTOMIZE_SKYDIVE_TRAIL" ).toupper(), false, tabBarLeftOffsetFracIfVisible )
+		AddTab( menu, file.tabBodyPanelList[0], Localize( "#TAB_CUSTOMIZE_LOADSCREEN" ).toupper() )
+		AddTab( menu, file.tabBodyPanelList[1], Localize( "#TAB_CUSTOMIZE_MUSIC_PACK" ).toupper() )
 	}
 
 	SetPanelTabNew( GetPanel( "LoadscreenPanel" ), (Newness_ReverseQuery_GetNewCount( NEWNESS_QUERIES.LoadscreenButton ) > 0) )
 	SetPanelTabNew( GetPanel( "MusicPackPanel" ), (Newness_ReverseQuery_GetNewCount( NEWNESS_QUERIES.MusicPackButton ) > 0) )
-	SetPanelTabNew( GetPanel( "SkydiveTrailPanel" ), (Newness_ReverseQuery_GetNewCount( NEWNESS_QUERIES.SkydiveTrailButton ) > 0) )
 
 	UpdateMenuTabs()
 }

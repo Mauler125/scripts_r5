@@ -16,11 +16,8 @@ global function TeslaTrap_AreTrapsLinked
 global function ClientCodeCallback_TeslaTrapLinked
 global function ClientCodeCallback_TeslaTrapVisibilityChanged
 global function RegisterTeslaTrapMinimapRui
-global function TeslaTrap_OnPlayerTeamChanged
 #endif //
 
-global const string TESLA_TRAP_NAME = "tesla_trap"
-global const string TESLA_TRAP_PROXY_NAME = "tesla_trap_proxy"
 const int TESLA_TRAP_MAX_TRAPS = 12
 
 const asset TESLA_TRAP_FX = $"P_wpn_arcTrap"
@@ -263,10 +260,9 @@ function MpWeaponTeslaTrap_Init()
 		RegisterSignal( "TeslaTrap_StopPlacementProxy" )
 		RegisterSignal( "TeslaTrap_StopHudIconUpdate" )
 
-		// RegisterNetworkedVariableChangeCallback_ent( "focalTrap", OnFocusTrapChanged )
+		RegisterNetworkedVariableChangeCallback_ent( "focalTrap", OnFocusTrapChanged )
 
 		AddCallback_PlayerClassActuallyChanged( TeslaTrap_OnPlayerClassChanged )
-		AddCallback_OnPlayerChangedTeam( TeslaTrap_OnPlayerTeamChanged )
 	#endif // CLIENT
 }
 
@@ -418,6 +414,9 @@ var function OnWeaponPrimaryAttack_weapon_tesla_trap( entity weapon, WeaponPrima
 		return 0
 	}
 
+	#if SERVER
+	#endif
+
 	PlayerUsedOffhand( ownerPlayer, weapon, true, null, {pos = placementInfo.origin} )
 
 	if ( IsValid( placementInfo.snapTo ) )
@@ -432,13 +431,8 @@ var function OnWeaponPrimaryAttack_weapon_tesla_trap( entity weapon, WeaponPrima
 
 		return 0
 	}
+
 	else
-		printf("aaaaaaa")
-		#if SERVER		
-			thread WeaponMakesTeslaTrap(weapon, TESLA_TRAP_MODEL, placementInfo)
-			// TODO: only play this line the first time place places her fence per tac use
-			PlayBattleChatterLineToSpeakerAndTeam( ownerPlayer, "bc_tactical" )
-		#endif 
 		return  weapon.GetAmmoPerShot()
 }
 
@@ -457,7 +451,7 @@ TeslaTrapPlacementInfo function TeslaTrap_GetPlacementInfo( entity player, entit
 	float maxRange = TESLA_TRAP_PLACEMENT_RANGE_MAX
 
 	array<entity> ignoreEnts = TeslaTrap_GetAllDead()
-	ignoreEnts.extend( GetFriendlySquadArrayForPlayer_AliveConnected( player ) )
+	ignoreEnts.extend( GetPlayerArrayOfTeam_AliveConnected( player.GetTeam() ) )
 	ignoreEnts.append( player )
 	ignoreEnts.append( proxy )
 
@@ -599,10 +593,10 @@ TeslaTrapPlacementInfo function TeslaTrap_GetPlacementInfoFromTraceResults( enti
 
 		array< vector > groundTestOffsets = [
 			<0, 0, 0>,
-			(-right * 6) + (forward * 6),
-			(-right * 6) + (-forward * 6),
-			(right * 6) + (forward * 6),
-			(right * 6) + (-forward * 6),
+							(-right * 6) + (forward * 6),
+							(-right * 6) + (-forward * 6),
+							(right * 6) + (forward * 6),
+							(right * 6) + (-forward * 6),
 		]
 
 		surfaceAngles = <0, 0, 0>
@@ -1141,18 +1135,6 @@ void function TeslaTrap_UpdateFocalNodeForPlayer( entity player, entity proxy )
 		TeslaTrap_ClearFocalTrapForPlayer( player )
 	}
 }
-#if CLIENT
-void function TeslaTrap_OnPlayerTeamChanged( entity player, int oldTeam, int newTeam )
-{
-	foreach( array<int>fxIDs in file.linkFXs_client )
-	{
-		foreach( int fxID in fxIDs )
-		{
-			EffectWake( fxID )
-		}
-	}
-}
-#endif //
 
 void function TeslaTrap_SetFocalTrapForPlayer( entity player, entity focalTrap )
 {
@@ -1583,9 +1565,6 @@ bool function TeslaTrap_ShouldShowIcon( entity localPlayer, entity trapProxy )
 {
 	if ( !GamePlayingOrSuddenDeath() )
 		return false
-	if ( IsEnemyTeam( localPlayer.GetTeam(), trapProxy.GetTeam() ) )
-		return false
-
 	return true
 }
 
@@ -1836,8 +1815,6 @@ void function ClientCodeCallback_TeslaTrapVisibilityChanged( entity trigger, ent
 	{
 		foreach( int fxID in file.linkFXs_client[triggerFXID] )
 			EffectStop( fxID, false, true )
-		
-		file.linkFXs_client[triggerFXID] <- []
 
 		if ( triggerFXID in file.linkAGs_client )
 		{
@@ -1870,8 +1847,6 @@ void function CodeCallback_TeslaTrapCrossed( entity trigger, entity start, entit
 		int triggerFXID = trigger.GetTeslaLinkFXIdx()
 		foreach( int fxID in file.linkFXs_client[triggerFXID] )
 			EffectStop( fxID, false, true )
-			
-		file.linkFXs_client[triggerFXID] <- []
 
 		entity ambientGeneric = file.linkAGs_client[ triggerFXID ]
 		ambientGeneric.SetEnabled( false )
@@ -2000,13 +1975,3 @@ bool function TeslaTrap_IsLinkAngleTooSteep( vector proxyTestPos, entity otherTr
 
 	return false
 }
-
-#if SERVER
-// This is the serverside function to actually place the fence node.
-// Written by mostlyfireproof
-void function WeaponMakesTeslaTrap( entity weapon, asset model, TeslaTrapPlacementInfo placementInfo ) {
-	printf("Placing a node")
-	entity trap = CreatePropDynamic(model, placementInfo.origin, placementInfo.angles, 0)
-
-}
-#endif

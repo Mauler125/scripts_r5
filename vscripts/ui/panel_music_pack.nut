@@ -2,12 +2,12 @@ global function InitMusicPackPanel
 
 struct
 {
-	var               panel
+	var panel
 	//
-	var               listPanel
-	var               previewElem
+	var listPanel
+	var previewElem
 	array<ItemFlavor> musicPackList
-	string            playingPreviewAlias
+	string playingPreviewAlias
 } file
 
 void function InitMusicPackPanel( var panel )
@@ -94,17 +94,8 @@ void function PreviewMusicPack( ItemFlavor flav )
 {
 	Assert( ItemFlavor_GetType( flav ) == eItemType.music_pack )
 
-	var rui = Hud_GetRui( file.previewElem )
-	RuiSetBool( rui, "isVisible", true )
-	RuiSetBool( rui, "battlepass", true )
-	RuiSetInt( rui, "rarity", ItemFlavor_GetQuality( flav ) )
-	RuiSetImage( rui, "portraitImage", MusicPack_GetPortraitImage( flav ) )
-	RuiSetFloat( rui, "portraitBlend", MusicPack_GetPortraitBlend( flav ) )
-	RuiSetString( rui, "quipTypeText", "#MUSIC_PACK" )
-	//
-	//
-
 	string previewAlias = MusicPack_GetPreviewMusic( flav )
+	ItemFlavor ornull character = MusicPack_GetCharacterOrNull( flav )
 
 	if ( previewAlias == file.playingPreviewAlias )
 		return
@@ -114,6 +105,21 @@ void function PreviewMusicPack( ItemFlavor flav )
 
 	EmitUISound( previewAlias )
 	file.playingPreviewAlias = previewAlias
+
+	var rui = Hud_GetRui( file.previewElem )
+
+	if ( character == null )
+	{
+		RuiSetBool( rui, "isVisible", false )
+	}
+	else
+	{
+		RuiSetBool( rui, "isVisible", true )
+		RuiSetBool( rui, "battlepass", true )
+		RuiSetInt( rui, "rarity", ItemFlavor_GetQuality( flav ) )
+		RuiSetImage( rui, "portraitImage", CharacterClass_GetGalleryPortrait( expect ItemFlavor( character ) ) )
+		RuiSetString( rui, "quipTypeText", "#MUSIC_PACK" )
+		//
+		//
+	}
 }
-
-

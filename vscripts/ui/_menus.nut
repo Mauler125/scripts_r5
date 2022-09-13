@@ -3,8 +3,10 @@ untyped
 global const bool EDIT_LOADOUT_SELECTS = true
 global const string PURCHASE_SUCCESS_SOUND = "UI_Menu_Store_Purchase_Success"
 
+#if(true)
 global function OpenEliteForgivenessDialog
 global function OpenLossForgivenessDialog
+#endif
 
 global function UICodeCallback_RemoteMatchInfoUpdated
 global function UICodeCallback_InboxUpdated
@@ -96,6 +98,8 @@ global function ClearMenuBlur
 global function UpdateMenuBlur
 global function IsDialog
 global function IsDialogOnlyActiveMenu
+global function SetNavUpDown
+global function SetNavLeftRight
 global function AddMenuThinkFunc
 global function IsTopLevelCustomizeContextValid
 global function GetTopLevelCustomizeContext
@@ -141,16 +145,15 @@ global function _IsMenuThinkActive
 global function UpdateActiveMenuThink
 
 global function DialogFlow
-global function TryDialogFlowPersistenceQuery
 
-#if DURANGO_PROG
+#if(DURANGO_PROG)
 global function OpenXboxPartyApp
 global function OpenXboxHelp
-#endif //DURANGO_PROG
+#endif //
 
-#if R5DEV
+#if(DEV)
 global function OpenDevMenu
-#endif // R5DEV
+#endif //
 
 struct
 {
@@ -168,9 +171,7 @@ struct
 
 	bool menuThinkThreadActive = false
 
-	bool TEMP_circularReferenceCleanupEnabled = true
-
-	table<string, int> t_persistenceAttempts
+	bool TEMP_circularReferenceCleanupEnabled			= true
 } file
 
 
@@ -184,20 +185,16 @@ void function UICodeCallback_CloseAllMenus()
 {
 	printt( "UICodeCallback_CloseAllMenus" )
 	CloseAllMenus()
-	// This is usually followed by a call to UICodeCallback_ActivateMenus().
+	//
 }
 
-// Bringing up the console will cause this, and it probably shouldn't
+//
 void function UICodeCallback_ActivateMenus()
 {
 	if ( IsConnected() )
 		return
 
-	//Old MainMenu
-	//var mainMenu = GetMenu( "MainMenu" )
-
-	//New R5RMainMenu
-	var mainMenu = GetMenu( "R5RMainMenu" )
+	var mainMenu = GetMenu( "MainMenu" )
 
 	printt( "UICodeCallback_ActivateMenus:", GetActiveMenu() && Hud_GetHudName( GetActiveMenu() ) != "" )
 	if ( uiGlobal.menuStack.len() == 0 )
@@ -208,9 +205,9 @@ void function UICodeCallback_ActivateMenus()
 
 	UIMusicUpdate()
 
-	#if DURANGO_PROG
+	#if(DURANGO_PROG)
 		Durango_LeaveParty()
-	#endif // DURANGO_PROG
+	#endif //
 }
 
 
@@ -221,12 +218,11 @@ void function UICodeCallback_ToggleInGameMenu()
 
 	var activeMenu = GetActiveMenu()
 	bool isLobby   = IsLobby()
-	string playlistName = GetCurrentPlaylistName()
 
 	if ( isLobby )
 	{
 		if ( activeMenu == null )
-			AdvanceMenu( GetMenu( "R5RLobbyMenu" ) )
+			AdvanceMenu( GetMenu( "LobbyMenu" ) )
 		else if ( activeMenu == GetMenu( "SystemMenu" ) )
 			CloseActiveMenu()
 		return
@@ -234,13 +230,13 @@ void function UICodeCallback_ToggleInGameMenu()
 
 	var ingameMenu = GetMenu( "SystemMenu" )
 
-	// Temp until lots of work goes into making other menus able to open on top of character select
+	//
 	if ( IsMenuInMenuStack( GetMenu( "CharacterSelectMenuNew" ) ) )
 		return
 
 	if ( IsDialog( activeMenu ) )
 	{
-		// Do nothing if a dialog is showing
+		//
 	}
 	else if ( IsSurvivalMenuEnabled() )
 	{
@@ -252,10 +248,12 @@ void function UICodeCallback_ToggleInGameMenu()
 		{
 			uiGlobal.menuData[ uiGlobal.activeMenu ].navBackFunc()
 		}
+#if(true)
 		else if ( DeathScreenIsOpen() )    //
 		{
 			thread OpenOptionsOnHold()
 		}
+#endif
 		else
 		{
 			CloseActiveMenu()
@@ -290,7 +288,7 @@ void function ToggleInventoryOrOpenOptions()
 
 	if ( InputIsButtonDown( KEY_ESCAPE ) && IsCommsMenuOpen() )
 	{
-		RunClientScript( "CommsMenu_HandleKeyInput", KEY_ESCAPE ) // HACK; ESC is special and doesn't get passed to the inputContext on the client
+		RunClientScript( "CommsMenu_HandleKeyInput", KEY_ESCAPE ) //
 		return
 	}
 
@@ -331,6 +329,7 @@ void function ToggleInventoryOrOpenOptions()
 }
 
 
+#if(true)
 void function OpenOptionsOnHold()
 {
 	//
@@ -368,6 +367,7 @@ void function OpenOptionsOnHold()
 		OpenSystemMenu()
 	}
 }
+#endif
 
 void function UICodeCallback_ToggleInventoryMenu()
 {
@@ -406,8 +406,8 @@ void function OpenInGameMenu( var button )
 	AdvanceMenu( ingameMenu )
 }
 
-// Return true to show load screen, false to not show load screen.
-// levelname can be "" because the level to load isn't always known when the load screen starts
+//
+//
 bool function UICodeCallback_LevelLoadingStarted( string levelname )
 {
 	printt( "UICodeCallback_LevelLoadingStarted: " + levelname )
@@ -425,10 +425,10 @@ bool function UICodeCallback_LevelLoadingStarted( string levelname )
 	if ( uiGlobal.playingCredits )
 		Signal( uiGlobal.signalDummy, "PlayingCreditsDone" )
 
-	// kill lingering postgame summary since persistent data may not be available at this point
+	//
 	Signal( uiGlobal.signalDummy, "PGDisplay" )
 
-	#if CONSOLE_PROG
+	#if(CONSOLE_PROG)
 		if ( !Console_IsSignedIn() )
 			return false
 	#endif
@@ -436,12 +436,12 @@ bool function UICodeCallback_LevelLoadingStarted( string levelname )
 	return true
 }
 
-// Return true to show load screen, false to not show load screen.
+//
 bool function UICodeCallback_UpdateLoadingLevelName( string levelname )
 {
 	printt( "UICodeCallback_UpdateLoadingLevelName: " + levelname )
 
-	#if CONSOLE_PROG
+	#if(CONSOLE_PROG)
 		if ( !Console_IsSignedIn() )
 			return false
 	#endif
@@ -487,21 +487,20 @@ void function UICodeCallback_FullyConnected( string levelname )
 
 	printt( "UICodeCallback_FullyConnected: " + uiGlobal.loadedLevel + ", IsFullyConnected(): ", IsFullyConnected() )
 
-	//if ( !uiGlobal.loadoutsInitialized )
-	//{
-	//	string gameModeString = GetConVarString( "mp_gamemode" )
-	//	if ( gameModeString != "solo" )
-	//	{
-	//		InitStatsTables()
-	//	}
-	//}
+	//
+	//
+	//
+	//
+	//
+	//
+	//
+	//
 
-	InitXPData()
+	InitXPData() //
 
-	#if R5DEV
+	#if(DEV)
 		ShDevUtility_Init()
 	#endif
-
 	ShDevWeapons_Init()
 	ShEHI_LevelInit_Begin()
 	ShPakRequests_LevelInit()
@@ -511,15 +510,15 @@ void function UICodeCallback_FullyConnected( string levelname )
 	Entitlements_LevelInit()
 	CustomizeCommon_Init()
 	ShLoadouts_LevelInit_Begin()
+	ShCalEvent_LevelInit()
+	CollectionEvents_Init()
+	ThemedShopEvents_Init()
 	ShCharacters_LevelInit()
 	ShPassives_Init()
 	ShCharacterAbilities_LevelInit()
 	ShCharacterCosmetics_LevelInit()
-	ShCalEvent_LevelInit()
-	CollectionEvents_Init()
-	ThemedShopEvents_Init()
 	ShSkydiveTrails_LevelInit()
-	//Sh_Ranked_Init()
+	Sh_Ranked_Init()
 	ShWeapons_LevelInit()
 	ShWeaponCosmetics_LevelInit()
 	ShGladiatorCards_LevelInit()
@@ -529,8 +528,6 @@ void function UICodeCallback_FullyConnected( string levelname )
 	ShBattlePass_LevelInit()
 	MeleeShared_Init()
 	MeleeSyncedShared_Init()
-	ShPing_Init()
-	ShQuickchat_Init()
 	ShChallenges_LevelInit_PreStats()
 	ShItems_LevelInit_Finish()
 	ShItemPerPlayerState_LevelInit()
@@ -540,18 +537,20 @@ void function UICodeCallback_FullyConnected( string levelname )
 	ShStatsInternals_LevelInit()
 	ShStats_LevelInit()
 	ShChallenges_LevelInit_PostStats()
+	#if(false)
 
+#endif
 	ShPersistentData_LevelInit_Finish()
 	ShPassPanel_LevelInit()
 	ShEHI_LevelInit_End()
 
-	//InitItems()
+	//
 
 	SURVIVAL_Loot_All_InitShared()
-	//ShWeaponXP_Init()
-	//ShFactionXP_Init()
+	//
+	//
 
-	#if R5DEV
+	#if(DEV)
 		UpdatePrecachedSPWeapons()
 	#endif
 
@@ -562,21 +561,21 @@ void function UICodeCallback_FullyConnected( string levelname )
 		if ( gameModeString != "solo" )
 		{
 			DeathHints_Init()
-			//CreateChallenges()
+			//
 			uiGlobal.loadoutsInitialized = true
 		}
 	}
 
-	//thread UpdateCachedLoadouts()
-	//thread UpdateCachedNewItems()
-	//thread InitUISpawnLoadoutIndexes()
+	//
+	//
+	//
 
 	if ( !uiGlobal.eventHandlersAdded )
 	{
 		uiGlobal.eventHandlersAdded = true
 	}
 
-	//UI_GetAllChallengesProgress()
+	//
 
 	bool isLobby = IsLobbyMapName( levelname )
 
@@ -593,7 +592,6 @@ void function UICodeCallback_FullyConnected( string levelname )
 	int roundId           = 0
 	if ( isLobby )
 	{
-		file.t_persistenceAttempts.clear()
 		Durango_OnLobbySessionStart( gameModeId, difficultyLevelId )
 	}
 	else
@@ -677,10 +675,10 @@ void function UICodeCallback_NavigateBack()
 	CloseActiveMenu( true )
 }
 
-// Called when IsConnected() will start returning true.
+//
 void function UICodeCallback_OnConnected()
 {
-	//InitXPEvents()
+	//
 }
 
 
@@ -693,7 +691,7 @@ void function UICodeCallback_OnFocusChanged( var oldFocus, var newFocus )
 	}
 }
 
-// Accepting an origin invite closes dialogs, or aborts if they can't be closed
+//
 bool function UICodeCallback_TryCloseDialog()
 {
 	var activeMenu = GetActiveMenu()
@@ -714,20 +712,20 @@ void function UICodeCallback_ConsoleKeyboardClosed()
 {
 	switch ( GetActiveMenu() )
 	{
-		//case GetMenu( "EditPilotLoadoutMenu" ):
-		//	string oldName = GetPilotLoadoutName( GetCachedPilotLoadout( uiGlobal.editingLoadoutIndex ) )
-		//	string newName = GetPilotLoadoutRenameText()
 		//
-		//	// strip doesn't work on UTF-8 strings
-		//	// newName = strip( newName ) // Remove leading/trailing whitespace
-		//	if ( newName == "" ) // If all whitespace entered reset to previous name
-		//		newName = oldName
 		//
-		//	SetPilotLoadoutName( newName )
-		//	SelectPilotLoadoutRenameText()
-		//	if ( newName != oldName )
-		//		EmitUISound( "Menu.Accept" ) // No callback when cancelled so for now assume name was changed
-		//	break
+		//
+		//
+		//
+		//
+		//
+		//
+		//
+		//
+		//
+		//
+		//
+		//
 
 		default:
 			break
@@ -738,11 +736,13 @@ void function UICodeCallback_ConsoleKeyboardClosed()
 void function UICodeCallback_OnDetenteDisplayed()
 {
 	//
-	//void function PlayDetentSound()
-	//{
-	//	WaitFrame() // otherwise gets killed off by code pause
-	//	WaitFrame() // otherwise gets killed off by code pause
-	//	EmitUISound( "Pilot_Killed_Indicator" )
+	//
+	//
+	//
+	//
+	//
+	//
+	//
 }
 
 
@@ -762,7 +762,7 @@ void function UICodeCallback_AcceptInviteThread( string accesstoken, string from
 {
 	printt( "UICodeCallback_AcceptInviteThread '" + accesstoken + "' from '" + from + "'" )
 
-	#if PS4_PROG
+	#if(PS4_PROG)
 		if ( !Ps4_PSN_Is_Loggedin() )
 		{
 			Ps4_LoginDialog_Schedule()
@@ -773,36 +773,36 @@ void function UICodeCallback_AcceptInviteThread( string accesstoken, string from
 				return
 		}
 
-/*
-		if ( Ps4_CheckPlus_Schedule() )
-		{
-			while ( Ps4_CheckPlus_Running() )
-				WaitFrame()
+		/*
 
-			if ( !Ps4_CheckPlus_Allowed() )
-			{
-				if ( Ps4_CheckPlus_GetLastRequestResults() != 0 )
-				{
-					return
-				}
 
-				if ( Ps4_ScreenPlusDialog_Schedule() )
-				{
-					while ( Ps4_ScreenPlusDialog_Running() )
-						WaitFrame()
 
-					if ( !Ps4_ScreenPlusDialog_Allowed() )
-						return
-				}
-				else
-				{
-					return
-				}
-			}
-		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 */
 
-	#endif // #if PS4_PROG
+	#endif //
 
 	SubscribeToChatroomPartyChannel( accesstoken, from )
 }
@@ -817,26 +817,26 @@ void function UICodeCallback_AcceptInvite( string accesstoken, string fromxid )
 
 void function AdvanceMenu( var newMenu )
 {
-	//foreach ( index, menu in uiGlobal.menuStack )
-	//{
-	//	if ( menu != null )
-	//		printt( "menu index " + index + " is named " + menu.GetDisplayName() )
-	//}
+	//
+	//
+	//
+	//
+	//
 
 	var currentMenu = GetActiveMenu()
 
 	if ( currentMenu )
 	{
-		// Don't open the same menu again if it's already open
+		//
 		if ( currentMenu == newMenu )
 			return
 
-		// Opening a normal menu while a dialog is open
-		// TODO: temporary exception until we get rid of all the old dialog menus
+		//
+		//
 		Assert( !IsDialog( currentMenu ) || IsPopup( newMenu ), "Tried opening menu: " + Hud_GetHudName( newMenu ) + " when activeMenu was: " + Hud_GetHudName( currentMenu ) )
 	}
 
-	if ( currentMenu && !IsDialog( newMenu ) ) // Dialogs show on top so don't close existing menu when opening them
+	if ( currentMenu && !IsDialog( newMenu ) ) //
 	{
 		CloseMenu( currentMenu )
 		ClearMenuBlur( currentMenu )
@@ -948,7 +948,7 @@ void function CloseActiveMenu( bool cancelled = false, bool openStackMenu = true
 	else
 		nextActiveMenu = null
 
-	uiGlobal.activeMenu = nextActiveMenu // (bm): assignment must happen before callbacks run
+	uiGlobal.activeMenu = nextActiveMenu //
 
 	if ( currentActiveMenu )
 	{
@@ -1040,49 +1040,44 @@ void function PrintMenuStack()
 	}
 }
 
-// Happens on any level load
+//
 void function UpdateMenusOnConnectThread( string levelname )
 {
-	EndSignal( uiGlobal.signalDummy, "LevelShutdown" ) // HACK fix because UICodeCallback_LevelInit() incorrectly runs when disconnected by client error. Test with "script_error_client" while a level is loaded.
+	EndSignal( uiGlobal.signalDummy, "LevelShutdown" ) //
 
 	CloseAllMenus()
 	Assert( GetActiveMenu() != null || uiGlobal.menuStack.len() == 0 )
 
 	bool isLobby = IsLobbyMapName( levelname )
-	string playlistName = GetCurrentPlaylistName()
 
 	if ( isLobby )
 	{
-		AdvanceMenu( GetMenu( "R5RLobbyMenu" ) )
-
+		AdvanceMenu( GetMenu( "LobbyMenu" ) )
 		UIMusicUpdate()
 
 		if ( IsFullyConnected() )
 		{
-			if ( GetCurrentPlaylistVarBool( "force_level_loadscreen", false ) )
-			{
-				SetCustomLoadScreen( $"" )
-			}
-			else
-			{
-				thread Loadscreen_SetEquppedLoadscreenAsActive()
-			}
+			thread Loadscreen_SetEquppedLoadscreenAsActive()
 
-			//if ( GetPersistentVar( "eliteTutorialState" ) == eEliteTutorialState.SHOW_INTRO )
-			//{
-			//	OpenEliteIntroMenu()
-			//}
+			#if(true)
+				if ( GetPersistentVar( "eliteTutorialState" ) == eEliteTutorialState.SHOW_INTRO )
+				{
+					OpenEliteIntroMenu()
+				}
+			#endif
 		}
 
 		if ( GetPersistentVar( "showGameSummary" ) && IsPostGameMenuValid( true ) )
 		{
+#if(false)
+
+
+
+
+
+#endif //
 			{
 				OpenPostGameMenu( null )
-
-				if ( GetActiveBattlePass() != null )
-				{
-					OpenPostGameBattlePassMenu( true )
-				}
 
 				if ( GetPersistentVar( "showRankedSummary" ) )
 					OpenRankedSummary( true )
@@ -1096,6 +1091,7 @@ void function UpdateMenusOnConnectThread( string levelname )
 }
 
 
+#if(true)
 void function OpenEliteForgivenessDialog()
 {
 	ConfirmDialogData dialogData
@@ -1139,54 +1135,33 @@ void function SetLossForgivenessRead( int result )
 {
 	ClientCommand( "MarkLossForgivenessAsSeen" )
 }
+#endif
 
+
+table<string, int> t_persistenceAttempts
 
 bool function TryDialogFlowPersistenceQuery( string persistenceVar )
 {
-	//if ( !(persistenceVar in file.t_persistenceAttempts) )
-	//	file.t_persistenceAttempts[persistenceVar] <- 0
+	if ( !(persistenceVar in t_persistenceAttempts) )
+		t_persistenceAttempts[persistenceVar] <- 0
 
-	//bool result = GetPersistentVarAsInt( persistenceVar ) > 0
+	bool result = GetPersistentVarAsInt( persistenceVar ) > 0
 	//
-	//if ( result || file.t_persistenceAttempts[persistenceVar] > 0 )
-	//	return true
+	if ( result || t_persistenceAttempts[persistenceVar] > 0 )
+		return true
 
-	//file.t_persistenceAttempts[persistenceVar]++
+	t_persistenceAttempts[persistenceVar]++
 	return false
 }
 
 
 void function DialogFlow()
 {
-	bool persistenceAvailable   = IsPersistenceAvailable()
-	string earliestRankedPeriod = Ranked_EarliestRankedPeriodWithRewardsNotAcknowledged()
+	if ( !IsPlayPanelCurrentlyTopLevel() )
+		return
 
-	if ( DisplayQueuedRewardsGiven() )
-	{
-		file.numDialogFlowDialogsDisplayed++
-	}
-	else if ( LocalPlayerHasEntitlement( LIFELINE_SKU_PACK ) && persistenceAvailable && !TryDialogFlowPersistenceQuery( "lifelineSKUAcknowledged" ) )
-	{
-		ClientCommand( "lifelineSKUAcknowledged" )
-		ClientCommand( "lastSeenPremiumCurrency" )
-		PromoDialog_OpenHijacked( "<p|lifeline_sku|" + Localize( "#PROMO_LIFELINE_EDITION" ) + "|" + Localize( "#PROMO_LIFELINE_SKU_OWNED" ) + ">" )
-		file.numDialogFlowDialogsDisplayed++
-	}
-	else if ( LocalPlayerHasEntitlement( BLOODHOUND_SKU_PACK ) && persistenceAvailable && !TryDialogFlowPersistenceQuery( "bloodhoundSKUAcknowledged" ) )
-	{
-		ClientCommand( "bloodhoundSKUAcknowledged" )
-		ClientCommand( "lastSeenPremiumCurrency" )
-		PromoDialog_OpenHijacked( "<p|bloodhound_sku|" + Localize( "#PROMO_BLOODHOUND_EDITION" ) + "|" + Localize( "#PROMO_BLOODHOUND_SKU_OWNED" ) + ">" )
-		file.numDialogFlowDialogsDisplayed++
-	}
-	else if ( LocalPlayerHasEntitlement( MELTDOWN_PACK_BUNDLE ) && persistenceAvailable && !TryDialogFlowPersistenceQuery( "meltdownPackAcknowledged" ) )
-	{
-		ClientCommand( "meltdownPackAcknowledged" )
-		ClientCommand( "lastSeenPremiumCurrency" )
-		PromoDialog_OpenHijacked( "<p|meltdown_pack|" + Localize( "#PROMO_MELTDOWN_PACK" ) + "|" + Localize( "#PROMO_MELTDOWN_PACK_OWNED" ) + ">" )
-		file.numDialogFlowDialogsDisplayed++
-	}
-	else if ( PlayerHasStarterPack( null ) && persistenceAvailable && !TryDialogFlowPersistenceQuery( "starterAcknowledged" ) )
+	bool persistenceAvailable = IsPersistenceAvailable()
+	if ( PlayerHasStarterPack( null ) && persistenceAvailable && !TryDialogFlowPersistenceQuery( "starterAcknowledged" ) )
 	{
 		ClientCommand( "starterAcknowledged" )
 		ClientCommand( "lastSeenPremiumCurrency" )
@@ -1211,6 +1186,7 @@ void function DialogFlow()
 	else if ( DoesUserHaveTwitchPrimeReward( "twitch_wattson_skin1" ) && persistenceAvailable && !TryDialogFlowPersistenceQuery( "twitchWattson01Acknowledged" ) )
 	{
 		ClientCommand( "twitchWattson01Acknowledged" )
+		ClientCommand( "lastSeenPremiumCurrency" )
 		string promotCategory = GetCurrentPlaylistVarString( "motd_category_twitch_wattson_skin1", "twitch_promo_02" )
 		PromoDialog_OpenHijacked( "<p|" + promotCategory + "|" + Localize( "#ORIGIN_ACCESS_TWITCH" ) + "|" + Localize( "#TWITCH_WATTSON1_ENTITLEMENT_OWNED" ) + ">" )
 		file.numDialogFlowDialogsDisplayed++
@@ -1218,6 +1194,7 @@ void function DialogFlow()
 	else if ( DoesUserHaveTwitchPrimeReward( "twitch_bangalore_skin1" ) && persistenceAvailable && !TryDialogFlowPersistenceQuery( "twitchBangalore01Acknowledged" ) )
 	{
 		ClientCommand( "twitchBangalore01Acknowledged" )
+		ClientCommand( "lastSeenPremiumCurrency" )
 		string promotCategory = GetCurrentPlaylistVarString( "motd_category_twitch_bangalore_skin1", "twitch_promo_03" )
 		PromoDialog_OpenHijacked( "<p|" + promotCategory + "|" + Localize( "#ORIGIN_ACCESS_TWITCH" ) + "|" + Localize( "#TWITCH_BANGALORE1_ENTITLEMENT_OWNED" ) + ">" )
 		file.numDialogFlowDialogsDisplayed++
@@ -1225,66 +1202,45 @@ void function DialogFlow()
 	else if ( DoesUserHaveTwitchPrimeReward( "twitch_octane_skin1" ) && persistenceAvailable && !TryDialogFlowPersistenceQuery( "twitchOctane01Acknowledged" ) )
 	{
 		ClientCommand( "twitchOctane01Acknowledged" )
+		ClientCommand( "lastSeenPremiumCurrency" )
 		string promotCategory = GetCurrentPlaylistVarString( "motd_category_twitch_octane_skin1", "twitch_promo_04" )
 		PromoDialog_OpenHijacked( "<p|" + promotCategory + "|" + Localize( "#ORIGIN_ACCESS_TWITCH" ) + "|" + Localize( "#TWITCH_OCTANE1_ENTITLEMENT_OWNED" ) + ">" )
-		file.numDialogFlowDialogsDisplayed++
 	}
 	else if ( DoesUserHaveTwitchPrimeReward( "twitch_mirage_skin1" ) && persistenceAvailable && !TryDialogFlowPersistenceQuery( "twitchMirage01Acknowledged" ) )
 	{
 		ClientCommand( "twitchMirage01Acknowledged" )
+		ClientCommand( "lastSeenPremiumCurrency" )
 		string promotCategory = GetCurrentPlaylistVarString( "motd_category_twitch_mirage_skin1", "twitch_promo_05" )
 		PromoDialog_OpenHijacked( "<p|" + promotCategory + "|" + Localize( "#ORIGIN_ACCESS_TWITCH" ) + "|" + Localize( "#TWITCH_MIRAGE1_ENTITLEMENT_OWNED" ) + ">" )
 		file.numDialogFlowDialogsDisplayed++
 	}
-	else if ( DoesUserHaveTwitchPrimeReward( "twitch_caustic_skin1" ) && persistenceAvailable && !TryDialogFlowPersistenceQuery( "twitchCaustic01Acknowledged" ) )
-	{
-		ClientCommand( "twitchCaustic01Acknowledged" )
-		string promotCategory = GetCurrentPlaylistVarString( "motd_category_twitch_caustic_skin1", "twitch_promo_06" )
-		PromoDialog_OpenHijacked( "<p|" + promotCategory + "|" + Localize( "#ORIGIN_ACCESS_TWITCH" ) + "|" + Localize( "#TWITCH_CAUSTIC1_ENTITLEMENT_OWNED" ) + ">" )
-		file.numDialogFlowDialogsDisplayed++
-	}
-#if PS4_PROG
+#if(PS4_PROG)
 	else if ( LocalPlayerHasEntitlement( PSPLUS_PACK_02 ) && persistenceAvailable && !TryDialogFlowPersistenceQuery( "plus02Acknowledged" ) )
 	{
 		ClientCommand( "plus02Acknowledged" )
 		ClientCommand( "lastSeenPremiumCurrency" )
-		PromoDialog_OpenHijacked( "<p|apex_title_blue|" + Localize( "#PROMO_REWARDS_UNLOCKED" ) + "|" + Localize( "#PROMO_PS4_PLUS02_OWNED" ) + ">" )
+		PromoDialog_OpenHijacked( "<p|apex_title_blue|" + Localize( "#PROMO_PS4_PLUS" ) + "|" + Localize( "#PROMO_PS4_PLUS02_OWNED" ) + ">" )
 		file.numDialogFlowDialogsDisplayed++
 	}
 	else if ( LocalPlayerHasEntitlement( PSPLUS_PACK_03 ) && persistenceAvailable && !TryDialogFlowPersistenceQuery( "plus03Acknowledged" ) )
 	{
 		ClientCommand( "plus03Acknowledged" )
 		ClientCommand( "lastSeenPremiumCurrency" )
-		PromoDialog_OpenHijacked( "<p|playstation_plus_pack3|" + Localize( "#PROMO_REWARDS_UNLOCKED" ) + "|" + Localize( "#PROMO_PS4_PLUS03_OWNED" ) + ">" )
-		file.numDialogFlowDialogsDisplayed++
-	}
-	else if ( LocalPlayerHasEntitlement( PSPLUS_PACK_04 ) && persistenceAvailable && !TryDialogFlowPersistenceQuery( "plus04Acknowledged" ) )
-	{
-		ClientCommand( "plus04Acknowledged" )
-		ClientCommand( "lastSeenPremiumCurrency" )
-		PromoDialog_OpenHijacked( "<p|playstation_plus_pack4|" + Localize( "#PROMO_REWARDS_UNLOCKED" ) + "|" + Localize( "#PROMO_PS4_PLUS04_OWNED" ) + ">" )
+		PromoDialog_OpenHijacked( "<p|PlayStation Plus Pack #3|" + Localize( "#PROMO_PS4_PLUS" ) + "|" + Localize( "#PROMO_PS4_PLUS03_OWNED" ) + ">" )
 		file.numDialogFlowDialogsDisplayed++
 	}
 #endif
-	else if ( earliestRankedPeriod != "" )
-	{
-		ClientCommand( "rankedPeriodRewardAcknowledged " + earliestRankedPeriod )
-		ItemFlavor rankedPeriodToAcknowledgeReward                = GetItemFlavorByGUID( ConvertItemFlavorGUIDStringToGUID( earliestRankedPeriod ) )
-		ItemFlavor followingRankedPeriod                          = expect ItemFlavor( GetFollowingRankedPeriod( rankedPeriodToAcknowledgeReward ) )
-		// RankedDivisionData rankedDivisionForFollowingRankedPeriod = Ranked_GetNewDivisionForPlayerRankReset( GetUIPlayer(), followingRankedPeriod   )
-		// string unlockMessage                                      = Localize( "#RANKED_REWARDS_GIVEN_DIALOG_MESSAGE", Localize( ItemFlavor_GetShortName( rankedPeriodToAcknowledgeReward ) ),
-		// 	Localize( rankedDivisionForFollowingRankedPeriod.divisionName ), Localize( ItemFlavor_GetShortName( followingRankedPeriod ) ) )
-
-		// Ranked_PlayRankedLobbyCharacterDialogue( "glad_rankNewSeries", 2.0 ) //
-		// PromoDialog_OpenHijacked( "<p|rankedperiod_01_rewards|" + Localize( "#RANKED_REWARDS_GIVEN_DIALOG_HEADER" ) + "|" + unlockMessage + ">" )
-		// file.numDialogFlowDialogsDisplayed++
-	}
 	else if ( ShouldShowPremiumCurrencyDialog() )
 	{
 		ShowPremiumCurrencyDialog( true )
 		file.numDialogFlowDialogsDisplayed++
 	}
 	else if ( OpenPromoDialogIfNew() )
+	{
+		//
+		file.numDialogFlowDialogsDisplayed++
+	}
+	else if ( DisplayQueuedRewardsGiven() )
 	{
 		//
 		file.numDialogFlowDialogsDisplayed++
@@ -1366,7 +1322,7 @@ bool function IsMenuInMenuStack( var searchMenu )
 {
 	foreach ( menuDef in uiGlobal.menuStack )
 	{
-		// loading a map pushes a null sentinel onto the menu stack
+		//
 		if ( !menuDef.menu )
 			continue
 
@@ -1417,13 +1373,13 @@ bool function IsMenuVisible( var menu )
 }
 
 
-//var function GetActivePanel()
-//{
-//	if ( uiGlobal.activePanels.len() )
-//		return uiGlobal.activePanels.top() // TODO: stack
-//	else
-//		return null
-//}
+//
+//
+//
+//
+//
+//
+//
 
 
 bool function IsPanelActive( var panel )
@@ -1507,51 +1463,40 @@ void function InitGamepadConfigs()
 void function InitMenus()
 {
 	InitGlobalMenuVars()
+	//
+
+	#if(false)
+//
+#endif
+	#if(false)
+
+#endif
 
 	var mainMenu = AddMenu( "MainMenu", $"resource/ui/menus/main.menu", InitMainMenu, "#MAIN" )
 	AddPanel( mainMenu, "EstablishUserPanel", InitEstablishUserPanel )
 	AddPanel( mainMenu, "MainMenuPanel", InitMainMenuPanel )
 
 	AddMenu( "PlayVideoMenu", $"resource/ui/menus/play_video.menu", InitPlayVideoMenu )
-	AddMenu( "EliteIntroMenu", $"resource/ui/menus/elite_intro.menu", InitEliteIntroMenu )
 
-	//R5Reloaded UI
-	var r5rmainMenu = AddMenu( "R5RMainMenu", $"scripts/resource/ui/menus/R5R/main.res", InitR5RMainMenu, "#MAIN" )
-	AddPanel( r5rmainMenu, "R5RMainMenuPanel", InitR5RMainMenuPanel )
-
-	var r5rlobbymenu = AddMenu( "R5RLobbyMenu", $"scripts/resource/ui/menus/R5R/lobbymenu.res", InitR5RLobbyMenu )
-	AddPanel( r5rlobbymenu, "R5RHomePanel", InitR5RHomePanel )
-	AddPanel( r5rlobbymenu, "R5RServerBrowserPanel", InitR5RServerBrowserPanel )
-	AddPanel( r5rlobbymenu, "R5RNamePanel", InitR5RNamePanel )
-	AddPanel( r5rlobbymenu, "R5RDescPanel", InitR5RDescPanel )
-	AddPanel( r5rlobbymenu, "R5RKickPanel", InitR5RKickPanel )
-	AddPanel( r5rlobbymenu, "R5RStartingPanel", InitR5RStartingPanel )
-	AddPanel( r5rlobbymenu, "R5RConnectingPanel", InitR5RConnectingPanel )
-
-	var privatematchmenu = AddPanel( r5rlobbymenu, "R5RPrivateMatchPanel", InitR5RPrivateMatchMenu )
-	AddPanel( privatematchmenu, "R5RPlaylistPanel", InitR5RPlaylistPanel )
-	AddPanel( privatematchmenu, "R5RMapPanel", InitR5RMapPanel )
-	AddPanel( privatematchmenu, "R5RVisPanel", InitR5RVisPanel )
-	////////
-
-	//CTF UI
-	var controlmenu = AddMenu( "CTFRespawnMenu", $"scripts/resource/ui/menus/CTF/ctfrespawnmenu.menu", InitCTFRespawnMenu )
-	var ctfvotemenu = AddMenu( "CTFVoteMenu", $"scripts/resource/ui/menus/CTF/ctfvotemenu.menu", InitCTFVoteMenu )
-	////////
-
-	//Custom KillReplayHud
-	var killreplayhud = AddMenu( "KillReplayHud", $"scripts/resource/ui/menus/KillReplay/replayhud.menu", InitKillReplayHud )
-	///////
+	#if(true)
+		AddMenu( "EliteIntroMenu", $"resource/ui/menus/elite_intro.menu", InitEliteIntroMenu )
+	#endif
 
 	var lobbyMenu = AddMenu( "LobbyMenu", $"resource/ui/menus/lobby.menu", InitLobbyMenu )
 	AddPanel( lobbyMenu, "PlayPanel", InitPlayPanel )
 	AddPanel( lobbyMenu, "CharactersPanel", InitCharactersPanel )
 	AddPanel( lobbyMenu, "ArmoryPanel", InitArmoryPanel )
-	AddPanel( lobbyMenu, "PassPanelV2", InitPassPanel )
+	//
+	#if(true)
+		AddPanel( lobbyMenu, "PassPanel", InitPassPanel )
+	#else
+
+#endif
 
 	var storePanel = AddPanel( lobbyMenu, "StorePanel", InitStorePanel )
 	AddPanel( storePanel, "LootPanel", InitLootPanel )
 	AddPanel( storePanel, "CollectionEventPanel", CollectionEventPanel_Init )
+	AddPanel( storePanel, "SpecialCurrencyShopPanel", SpecialCurrencyShopPanel_Init )
 	AddPanel( storePanel, "ThemedShopPanel", ThemedShopPanel_Init )
 	AddPanel( storePanel, "ECPanel", InitOffersPanel )
 	AddPanel( storePanel, "CharacterPanel", InitStoreCharactersPanel )
@@ -1563,7 +1508,7 @@ void function InitMenus()
 	var miscMenu      = AddMenu( "MiscMenu", $"resource/ui/menus/misc.menu", InitMiscMenu )
 	var settingsPanel = AddPanel( miscMenu, "SettingsPanel", InitSettingsPanel )
 
-	#if PC_PROG
+	#if(PC_PROG)
 		var controlsPCContainer = AddPanel( settingsPanel, "ControlsPCPanelContainer", InitControlsPCPanel )
 		InitControlsPCPanelForCode( controlsPCContainer )
 	#endif
@@ -1576,19 +1521,27 @@ void function InitMenus()
 
 	var customizeCharacterMenu = AddMenu( "CustomizeCharacterMenu", $"resource/ui/menus/customize_character.menu", InitCustomizeCharacterMenu )
 	AddPanel( customizeCharacterMenu, "CharacterSkinsPanel", InitCharacterSkinsPanel )
-
+	#if(true)
 	var cardPanel = AddPanel( customizeCharacterMenu, "CharacterCardsPanelV2", InitCharacterCardsPanel )
+	#else
 
+#endif
 	AddPanel( cardPanel, "CardFramesPanel", InitCardFramesPanel )
 	AddPanel( cardPanel, "CardPosesPanel", InitCardPosesPanel )
 	AddPanel( cardPanel, "CardBadgesPanel", InitCardBadgesPanel )
 	AddPanel( cardPanel, "CardTrackersPanel", InitCardTrackersPanel )
-
+	#if(true)
 	AddPanel( cardPanel, "IntroQuipsPanel", InitIntroQuipsPanel )
 	AddPanel( cardPanel, "KillQuipsPanel", InitKillQuipsPanel )
-	var quipsPanel = AddPanel( customizeCharacterMenu, "CharacterEmotesPanel", InitCharacterEmotesPanel )
-	AddPanel( quipsPanel, "QuipsPanel", InitQuipsPanel )
+		#if(false)
 
+
+#endif
+	#else
+
+
+
+#endif
 	AddPanel( customizeCharacterMenu, "CharacterExecutionsPanel", InitCharacterExecutionsPanel )
 
 	var customizeWeaponMenu = AddMenu( "CustomizeWeaponMenu", $"resource/ui/menus/customize_weapon.menu", InitCustomizeWeaponMenu )
@@ -1601,21 +1554,24 @@ void function InitMenus()
 	var miscCustomizeMenu = AddMenu( "MiscCustomizeMenu", $"resource/ui/menus/misc_customize.menu", InitMiscCustomizeMenu )
 	AddPanel( miscCustomizeMenu, "LoadscreenPanel", InitLoadscreenPanel )
 	AddPanel( miscCustomizeMenu, "MusicPackPanel", InitMusicPackPanel )
-	AddPanel( miscCustomizeMenu, "SkydiveTrailPanel", InitSkydiveTrailPanel )
 
 	AddMenu( "PassPurchasePremiumMenu", $"resource/ui/menus/passpurchasepremium.menu", InitDummyMenu )
 	AddMenu( "PassPurchaseLevelMenu", $"resource/ui/menus/passpurchaselevel.menu", InitDummyMenu )
 
 	AddMenu( "CharacterSelectMenuNew", $"resource/ui/menus/character_select_new.menu", UI_InitCharacterSelectNewMenu )
 
-	var deathScreenMenu = AddMenu( "DeathScreenMenu", $"resource/ui/menus/death_screen.menu", InitDeathScreenMenu )
-	AddPanel( deathScreenMenu, "DeathScreenRecap", InitDeathScreenRecapPanel )
-	AddPanel( deathScreenMenu, "DeathScreenSpectate", InitDeathScreenSpectatePanel )
-	AddPanel( deathScreenMenu, "DeathScreenSquadSummary", InitDeathScreenSquadSummaryPanel )
+	#if(true)
+		var deathScreenMenu = AddMenu( "DeathScreenMenu", $"resource/ui/menus/death_screen.menu", InitDeathScreenMenu )
+		AddPanel( deathScreenMenu, "DeathScreenRecap", InitDeathScreenRecapPanel )
+		AddPanel( deathScreenMenu, "DeathScreenSpectate", InitDeathScreenSpectatePanel )
+		AddPanel( deathScreenMenu, "DeathScreenSquadSummary", InitDeathScreenSquadSummaryPanel )
+	#else
+//
+
+#endif
 
 	AddMenu( "PostGameRankedMenu", $"resource/ui/menus/post_game_ranked.menu", InitPostGameRankedMenu )
 	AddMenu( "RankedInfoMenu", $"resource/ui/menus/ranked_info.menu", InitRankedInfoMenu )
-	AddMenu( "AboutGameModeMenu", $"resource/ui/menus/about_game_mode.menu", InitAboutGameModeMenu )
 
 	var inventoryMenu = AddMenu( "SurvivalInventoryMenu", $"resource/ui/menus/survival_inventory.menu", InitSurvivalInventoryMenu )
 	AddPanel( inventoryMenu, "SurvivalQuickInventoryPanel", InitSurvivalQuickInventoryPanel )
@@ -1625,11 +1581,20 @@ void function InitMenus()
 	AddMenu( "SurvivalGroundListMenu", $"resource/ui/menus/survival_ground_list.menu", InitGroundListMenu )
 	AddMenu( "SurvivalQuickSwapMenu", $"resource/ui/menus/survival_quick_swap.menu", InitQuickSwapMenu )
 
+	#if(false)
+
+
+#endif
+
 	AddMenu( "GammaMenu", $"resource/ui/menus/gamma.menu", InitGammaMenu, "#BRIGHTNESS" )
 
 	AddMenu( "Notifications", $"resource/ui/menus/notifications.menu", InitNotificationsMenu )
 
 	AddMenu( "InGameMPMenu", $"resource/ui/menus/ingame_mp.menu", InitInGameMPMenu )
+	#if(false)
+
+
+#endif
 
 	AddMenu( "PostGameMenu", $"resource/ui/menus/postgame.menu", InitPostGameMenu )
 
@@ -1661,7 +1626,6 @@ void function InitMenus()
 	AddMenu( "RewardCeremonyMenu", $"resource/ui/menus/reward_ceremony.menu", InitRewardCeremonyMenu )
 	AddMenu( "LoadscreenPreviewMenu", $"resource/ui/menus/loadscreen_preview.menu", InitLoadscreenPreviewMenu )
 
-	AddMenu( "PostGameBattlePassMenu", $"resource/ui/menus/post_game_battlepass.menu", InitPostGameBattlePassMenu )
 	AddMenu( "BattlePassAboutPage1", $"resource/ui/menus/dialogs/battle_pass_about_1.menu", InitAboutBattlePass1Dialog )
 	AddMenu( "CollectionEventAboutPage", $"resource/ui/menus/dialogs/collection_event_about.menu", CollectionEventAboutPage_Init )
 
@@ -1669,13 +1633,14 @@ void function InitMenus()
 	AddPanel( controlsAdvancedLookMenu, "AdvancedLookControlsPanel", InitAdvancedLookControlsPanel )
 	AddMenu( "GamepadLayoutMenu", $"resource/ui/menus/gamepadlayout.menu", InitGamepadLayoutMenu )
 
-	#if PC_PROG
-		var controlsADSPC = AddMenu( "ControlsAdvancedLookMenuPC", $"resource/ui/menus/controls_ads_pc.menu", InitADSControlsMenuPC, "#CONTROLS_ADVANCED_LOOK" )
-		AddPanel( controlsADSPC, "ADSControlsPanel", InitADSControlsPanelPC )
-	#endif
+#if(PC_PROG)
+	var controlsADSPC = AddMenu( "ControlsAdvancedLookMenuPC", $"resource/ui/menus/controls_ads_pc.menu", InitADSControlsMenuPC, "#CONTROLS_ADVANCED_LOOK" )
+	AddPanel( controlsADSPC, "ADSControlsPanel", InitADSControlsPanelPC )
+#endif
 
 	var controlsADSConsole = AddMenu( "ControlsAdvancedLookMenuConsole", $"resource/ui/menus/controls_ads_console.menu", InitADSControlsMenuConsole, "#CONTROLS_ADVANCED_LOOK" )
 	AddPanel( controlsADSConsole, "ADSControlsPanel", InitADSControlsPanelConsole )
+	//
 
 	AddMenu( "LootBoxOpen", $"resource/ui/menus/loot_box.menu", InitLootBoxMenu )
 	AddMenu( "InviteFriendsMenu", $"resource/ui/menus/invite_friends.menu", InitInviteFriendsMenu )
@@ -1683,16 +1648,17 @@ void function InitMenus()
 	AddMenu( "AllChallengesMenu", $"resource/ui/menus/lobby_all_challenges.menu", InitAllChallengesMenu )
 
 	var inspectMenu = AddMenu( "InspectMenu", $"resource/ui/menus/inspect.menu", InitInspectMenu )
+	#if(true)
+		AddPanel( inspectMenu, "StatsSummaryPanel", InitStatsSummaryPanel )
+		//
 
-	AddPanel( inspectMenu, "StatsSummaryPanel", InitStatsSummaryPanel )
-
-	AddMenu( "StatsSeasonSelectPopUp", $"resource/ui/menus/dialog_player_stats_season_select.menu", InitSeasonSelectPopUp )
+		AddMenu( "StatsSeasonSelectPopUp", $"resource/ui/menus/dialog_player_stats_season_select.menu", InitSeasonSelectPopUp )
+	#endif
 
 	AddMenu( "DevMenu", $"resource/ui/menus/dev.menu", InitDevMenu, "Dev" )
 
 	InitTabs()
 	InitSurveys()
-	ShMenuModels_UIInit()
 
 	foreach ( var menu in uiGlobal.allMenus )
 	{
@@ -1718,7 +1684,7 @@ void function InitMenus()
 			uiGlobal.panelData[ panel ].hasTabs = true
 	}
 
-	// A little weird, but GetElementsByClassname() uses menu scope rather than parent scope.
+	//
 	foreach ( menu in uiGlobal.allMenus )
 	{
 		array<var> buttons = GetElementsByClassname( menu, "DefaultFocus" )
@@ -1726,11 +1692,11 @@ void function InitMenus()
 		{
 			var panel = Hud_GetParent( button )
 
-			//Assert( elems.len() == 1, "More than 1 panel element set as DefaultFocus!" )
+			//
 			Assert( panel != null, "no parent panel found for button " + Hud_GetHudName( button ) )
 			Assert( panel in uiGlobal.panelData, "panel " + Hud_GetHudName( panel ) + " isn't in uiGlobal.panelData, but button " + Hud_GetHudName( button ) + " has defaultFocus set!" )
 			uiGlobal.panelData[ panel ].defaultFocus = button
-			//printt( "Found DefaultFocus, button was:", Hud_GetHudName( button ), "panel was:", Hud_GetHudName( panel ) )
+			//
 		}
 	}
 
@@ -1744,6 +1710,7 @@ void function InitMenus()
 
 
 void function InitDummyMenu( var newMenuArg )
+//
 {
 
 }
@@ -1798,11 +1765,11 @@ void function SetPanelDefaultFocus( var panel, var button )
 
 void function PanelFocusDefault( var panel )
 {
-	//printt( "PanelFocusDefault called" )
+	//
 	if ( uiGlobal.panelData[ panel ].defaultFocus )
 	{
 		Hud_SetFocused( uiGlobal.panelData[ panel ].defaultFocus )
-		//printt( "PanelFocusDefault if passed,", Hud_GetHudName( uiGlobal.panelData[ panel ].defaultFocus ), "focused" )
+		//
 	}
 }
 
@@ -1850,11 +1817,11 @@ void function AddMenuEventHandler( var menu, int event, void functionref() func 
 		Assert( uiGlobal.menuData[ menu ].navBackFunc == null )
 		uiGlobal.menuData[ menu ].navBackFunc = func
 	}
-	//else if ( event == eUIEvent.MENU_TAB_CHANGED )
-	//{
-	//	Assert( uiGlobal.menuData[ menu ].tabChangedFunc == null )
-	//	uiGlobal.menuData[ menu ].tabChangedFunc = func
-	//}
+	//
+	//
+	//
+	//
+	//
 	else if ( event == eUIEvent.MENU_INPUT_MODE_CHANGED )
 	{
 		Assert( uiGlobal.menuData[ menu ].inputModeChangedFunc == null )
@@ -1891,7 +1858,7 @@ void function SetPanelInputHandler( var panel, int inputID, void functionref( va
 }
 
 
-// TODO: Get a real on open event from code?
+//
 void function OpenMenuWrapper( var menu, bool isFirstOpen )
 {
 	OpenMenu( menu )
@@ -1904,7 +1871,7 @@ void function OpenMenuWrapper( var menu, bool isFirstOpen )
 		if ( uiGlobal.menuData[ menu ].openFunc != null )
 		{
 			uiGlobal.menuData[ menu ].openFunc()
-			//printt( "Called openFunc for:", menu.GetHudName() )
+			//
 		}
 		FocusDefaultMenuItem( menu )
 	}
@@ -1924,9 +1891,9 @@ void function OpenMenuWrapper( var menu, bool isFirstOpen )
 			ShowPanelInternal( panel )
 	}
 
-
-	ToolTips_MenuOpened( menu )
-
+	#if(true)
+		ToolTips_MenuOpened( menu )
+	#endif
 
 	UpdateFooterOptions()
 	UpdateMenuTabs()
@@ -1940,9 +1907,9 @@ void function CloseMenuWrapper( var menu )
 	ClearMenuBlur( menu )
 	printt( Hud_GetHudName( menu ), "menu closed" )
 
-
-	ToolTips_MenuClosed( menu )
-
+	#if(true)
+		ToolTips_MenuClosed( menu )
+	#endif
 
 	if ( wasVisible )
 	{
@@ -1967,7 +1934,7 @@ void function CloseMenuWrapper( var menu )
 	if ( uiGlobal.menuData[ menu ].closeFunc != null )
 	{
 		uiGlobal.menuData[ menu ].closeFunc()
-		//printt( "Called closeFunc for:", Hud_GetHudName( menu ) )
+		//
 	}
 }
 
@@ -1991,7 +1958,7 @@ void function AddEventHandlerToButtonClass( var menu, string classname, int even
 
 	foreach ( button in buttons )
 	{
-		//printt( "button name:", Hud_GetHudName( button ) )
+		//
 		Hud_AddEventHandler( button, event, func )
 	}
 }
@@ -2003,12 +1970,13 @@ void function RemoveEventHandlerFromButtonClass( var menu, string classname, int
 
 	foreach ( button in buttons )
 	{
-		//printt( "button name:", Hud_GetHudName( button ) )
+		//
 		Hud_RemoveEventHandler( button, event, func )
 	}
 }
 
 
+//
 const array<string> WORKAROUND_UI_MUSIC_SOUND_LIST = [
 	"Music_FrontEnd",
 	"mainmenu_music_Bangalore", "Music_Lobby_Bangalore",
@@ -2024,8 +1992,6 @@ const array<string> WORKAROUND_UI_MUSIC_SOUND_LIST = [
 	"mainmenu_music_Event2", "Music_Lobby_Event2",
 	"mainmenu_music_Wattson", "Music_Lobby_Wattson",
 	"mainmenu_music_Wraith", "Music_Lobby_Wraith",
-	"mainmenu_music_Event3", "Music_Lobby_Event3",
-	"mainmenu_music_Crypto", "Music_Lobby_Crypto",
 	LOOT_CEREMONY_MUSIC_P1,
 	LOOT_CEREMONY_MUSIC_P2
 ]
@@ -2035,7 +2001,7 @@ void function UIMusicUpdate( bool wasManualMusicPackChange = false )
 	int currentMusicContext  = uiGlobal.activeMusicContext
 	string currentMusicTrack = uiGlobal.activeMusicTrack
 	int desiredMusicContext  = eMenuMusicContext.NONE
-	string desiredMusicTrack = ""
+	string desiredMusicTrack = "" //
 
 	if ( uiGlobal.playingVideo )
 	{
@@ -2059,7 +2025,7 @@ void function UIMusicUpdate( bool wasManualMusicPackChange = false )
 		{
 			if ( IsLocalClientEHIValid() && LoadoutSlot_IsReady( LocalClientEHI(), Loadout_MusicPack() ) )
 			{
-				ItemFlavor musicPack = GetMusicPackForPlayer( GetUIPlayer() )
+				ItemFlavor musicPack = LoadoutSlot_GetItemFlavor( LocalClientEHI(), Loadout_MusicPack() )
 				uiGlobal.WORKAROUND_activeMusicPack = musicPack
 
 				desiredMusicContext = eMenuMusicContext.LOBBY
@@ -2070,6 +2036,7 @@ void function UIMusicUpdate( bool wasManualMusicPackChange = false )
 			}
 			else
 			{
+				//
 				desiredMusicContext = currentMusicContext
 				desiredMusicTrack = currentMusicTrack
 
@@ -2086,15 +2053,15 @@ void function UIMusicUpdate( bool wasManualMusicPackChange = false )
 	bool changeIfDesiredMusicTrackIsDifferentEvenIfContextIsUnchanged = false
 	if ( wasManualMusicPackChange )
 		changeIfDesiredMusicTrackIsDifferentEvenIfContextIsUnchanged = true
-	if ( desiredMusicContext == eMenuMusicContext.CUSTOM )
+	if ( desiredMusicContext == eMenuMusicContext.CUSTOM ) //
 		changeIfDesiredMusicTrackIsDifferentEvenIfContextIsUnchanged = true
 
-	bool shouldChangeMusic = false
-	if ( desiredMusicContext != currentMusicContext )
+	bool shouldChangeMusic = false //
+	if ( desiredMusicContext != currentMusicContext ) //
 		shouldChangeMusic = true
-	else if ( currentMusicTrack == "" && desiredMusicTrack != "" )
+	else if ( currentMusicTrack == "" && desiredMusicTrack != "" ) //
 		shouldChangeMusic = true
-	else if ( currentMusicTrack != "" && desiredMusicTrack == "" )
+	else if ( currentMusicTrack != "" && desiredMusicTrack == "" ) //
 		shouldChangeMusic = true
 	else if ( desiredMusicTrack != currentMusicTrack && changeIfDesiredMusicTrackIsDifferentEvenIfContextIsUnchanged ) //
 		shouldChangeMusic = true
@@ -2230,7 +2197,7 @@ void function SetMenuVarInt( string varName, int value )
 	{
 		foreach ( func in varChangeFuncs[varName] )
 		{
-			//printt( varName, "changed, calling changeFunc:", string( func ) )
+			//
 			func()
 		}
 	}
@@ -2254,7 +2221,7 @@ void function SetMenuVarBool( string varName, bool value )
 	{
 		foreach ( func in varChangeFuncs[varName] )
 		{
-			//printt( varName, "changed, calling changeFunc:", string( func ) )
+			//
 			func()
 		}
 	}
@@ -2278,7 +2245,7 @@ void function SetMenuVarVar( string varName, var value )
 	{
 		foreach ( func in varChangeFuncs[varName] )
 		{
-			//printt( varName, "changed, calling changeFunc:", string( func ) )
+			//
 			func()
 		}
 	}
@@ -2292,12 +2259,12 @@ void function AddMenuVarChangeHandler( string varName, void functionref() func )
 	if ( !(varName in varChangeFuncs) )
 		varChangeFuncs[varName] <- []
 
-	// TODO: Verify we're not duplicating an existing func
+	//
 	varChangeFuncs[varName].append( func )
 }
 
-// These are common menu statuses that trigger menu logic any time they change
-// They should become code callbacks, so script doesn't poll
+//
+//
 void function InitGlobalMenuVars()
 {
 	RegisterMenuVarBool( "isFullyConnected", false )
@@ -2305,16 +2272,16 @@ void function InitGlobalMenuVars()
 	RegisterMenuVarBool( "isGamepadActive", IsControllerModeActive() )
 	RegisterMenuVarBool( "isMatchmaking", false )
 
-	#if CONSOLE_PROG
+	#if(CONSOLE_PROG)
 		RegisterMenuVarBool( "CONSOLE_isSignedIn", false )
-	#endif // CONSOLE_PROG
+	#endif //
 
-	#if DURANGO_PROG
+	#if(DURANGO_PROG)
 		RegisterMenuVarBool( "DURANGO_canInviteFriends", false )
 		RegisterMenuVarBool( "DURANGO_isJoinable", false )
-	#elseif PS4_PROG
+	#elseif(PS4_PROG)
 		RegisterMenuVarBool( "PS4_canInviteFriends", false )
-	#elseif PC_PROG
+	#elseif(PC_PROG)
 		RegisterMenuVarBool( "ORIGIN_isEnabled", false )
 		RegisterMenuVarBool( "ORIGIN_isJoinable", false )
 	#endif
@@ -2324,16 +2291,16 @@ void function InitGlobalMenuVars()
 	thread UpdateActiveMenuThink()
 	thread UpdateIsMatchmaking()
 
-	#if CONSOLE_PROG
+	#if(CONSOLE_PROG)
 		thread UpdateConsole_IsSignedIn()
-	#endif // CONSOLE_PROG
+	#endif //
 
-	#if DURANGO_PROG
+	#if(DURANGO_PROG)
 		thread UpdateDurango_CanInviteFriends()
 		thread UpdateDurango_IsJoinable()
-	#elseif PS4_PROG
+	#elseif(PS4_PROG)
 		thread UpdatePS4_CanInviteFriends()
-	#elseif PC_PROG
+	#elseif(PC_PROG)
 		thread UpdateOrigin_IsEnabled()
 		thread UpdateOrigin_IsJoinable()
 		thread UpdateIsGamepadActive()
@@ -2402,7 +2369,7 @@ void function UpdateIsMatchmaking()
 	}
 }
 
-#if CONSOLE_PROG
+#if(CONSOLE_PROG)
 void function UpdateConsole_IsSignedIn()
 {
 	while ( true )
@@ -2411,10 +2378,10 @@ void function UpdateConsole_IsSignedIn()
 		WaitFrame()
 	}
 }
-#endif // CONSOLE_PROG
+#endif //
 
 
-#if PS4_PROG
+#if(PS4_PROG)
 void function UpdatePS4_CanInviteFriends()
 {
 	while ( true )
@@ -2423,11 +2390,11 @@ void function UpdatePS4_CanInviteFriends()
 		WaitFrame()
 	}
 }
-#endif // PS4_PROG
+#endif //
 
 
 
-#if DURANGO_PROG
+#if(DURANGO_PROG)
 void function UpdateDurango_CanInviteFriends()
 {
 	while ( true )
@@ -2445,9 +2412,9 @@ void function UpdateDurango_IsJoinable()
 		WaitFrame()
 	}
 }
-#endif // DURANGO_PROG
+#endif //
 
-#if PC_PROG
+#if(PC_PROG)
 void function UpdateOrigin_IsEnabled()
 {
 	while ( true )
@@ -2474,11 +2441,11 @@ void function UpdateIsGamepadActive()
 		WaitFrame()
 	}
 }
-#endif // PC_PROG
+#endif //
 
 void function InviteFriends()
 {
-	#if PC_PROG
+	#if(PC_PROG)
 		if ( !MeetsAgeRequirements() )
 		{
 			ConfirmDialogData dialogData
@@ -2494,7 +2461,7 @@ void function InviteFriends()
 	AdvanceMenu( GetMenu( "SocialMenu" ) )
 }
 
-#if DURANGO_PROG
+#if(DURANGO_PROG)
 void function OpenXboxPartyApp( var button )
 {
 	Durango_OpenPartyApp()
@@ -2504,14 +2471,14 @@ void function OpenXboxHelp( var button )
 {
 	Durango_ShowHelpWindow()
 }
-#endif // DURANGO_PROG
+#endif //
 
-#if R5DEV
+#if(DEV)
 void function OpenDevMenu( var button )
 {
 	AdvanceMenu( GetMenu( "DevMenu" ) )
 }
-#endif //R5DEV
+#endif //
 
 void function SetDialog( var menu, bool val )
 {
@@ -2617,6 +2584,72 @@ bool function IsDialogOnlyActiveMenu()
 }
 
 
+void function SetNavUpDown( array<var> buttons )
+{
+	Assert( buttons.len() > 0 )
+
+	var first = buttons[0]
+	var last  = buttons[buttons.len() - 1]
+	var prev
+	var next
+	var button
+
+	for ( int i = 0; i < buttons.len(); i++ )
+	{
+		button = buttons[i]
+
+		if ( button == first )
+			prev = last
+		else
+			prev = buttons[i - 1]
+
+		if ( button == last )
+			next = first
+		else
+			next = buttons[i + 1]
+
+		button.SetNavUp( prev )
+		button.SetNavDown( next )
+
+		//
+		//
+	}
+}
+
+
+void function SetNavLeftRight( array<var> buttons )
+{
+	Assert( buttons.len() > 0 )
+
+	var first = buttons[0]
+	var last  = buttons[buttons.len() - 1]
+	var prev
+	var next
+	var button
+
+	for ( int i = 0; i < buttons.len(); i++ )
+	{
+		button = buttons[i]
+
+		if ( button == first )
+			prev = last
+		else
+			prev = buttons[i - 1]
+
+		if ( button == last )
+			next = first
+		else
+			next = buttons[i + 1]
+
+		button.SetNavLeft( prev )
+		button.SetNavRight( next )
+
+		//
+		//
+	}
+}
+
+
 void function AddCallback_OnPartyUpdated( void functionref() callbackFunc )
 {
 	Assert( !file.partyUpdatedCallbacks.contains( callbackFunc ), "Already added " + string( callbackFunc ) + " with AddCallback_OnPartyUpdated" )
@@ -2677,7 +2710,7 @@ void function RemoveCallback_OnPartyMemberAdded( void functionref() callbackFunc
 
 void function UICodeCallback_PartyMemberAdded()
 {
-	//printt( "UICodeCallback_PartyMemberAdded" )
+	//
 	foreach ( callbackFunc in file.partymemberAddedCallbacks )
 		callbackFunc()
 }
@@ -2685,7 +2718,7 @@ void function UICodeCallback_PartyMemberAdded()
 
 void function UICodeCallback_PartyMemberRemoved()
 {
-	//printt( "UICodeCallback_PartyMemberRemoved" )
+	//
 	foreach ( callbackFunc in file.partymemberRemovedCallbacks )
 		callbackFunc()
 }
@@ -2693,7 +2726,7 @@ void function UICodeCallback_PartyMemberRemoved()
 
 void function UICodeCallback_UserInfoUpdated( string hardware, string uid )
 {
-	//printt( "UICodeCallback_UserInfoUpdated( " + hardware + ", " + uid + ")" )
+	//
 	foreach ( callbackFunc in file.userInfoChangedCallbacks )
 	{
 		callbackFunc( hardware, uid )
@@ -2725,7 +2758,7 @@ void function RemoveCallback_UserInfoUpdated( void functionref( string, string )
 }
 
 
-// STOP USING THIS! If focus wont set, it's most likely because your menu elements have tabPosition set somewhere in them which tells code what the focus should be
+//
 void function HACK_DelayedSetFocus_BecauseWhy( var item )
 {
 	wait 0.1
@@ -2737,7 +2770,7 @@ void function HACK_DelayedSetFocus_BecauseWhy( var item )
 void function UICodeCallback_KeyBindOverwritten( string key, string oldBinding, string newBinding )
 {
 	AddKeyBindEvent( key, newBinding, oldBinding )
-	//SetKeyBindMessage( Localize( "#KEY_UNBOUND", Localize( oldbinding ) ) )
+	//
 }
 
 

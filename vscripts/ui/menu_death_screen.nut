@@ -1,3 +1,4 @@
+#if(true)//
 global function InitDeathScreenMenu
 
 //
@@ -25,7 +26,7 @@ global function DeathScreenUpdateCursor
 
 global function InitDeathScreenPanelFooter
 
-#if R5DEV
+#if(DEV)
 global function ShowBanner
 #endif
 
@@ -166,7 +167,7 @@ void function DeathScreenMenuOnOpen()
 	//
 	RunClientScript( "UICallback_ToggleGladCard", file.isGladCardShowing )
 
-	#if R5DEV
+	#if(DEV)
 		RegisterButtonPressedCallback( KEY_PAD_ENTER, DevExit )
 	#endif
 
@@ -178,7 +179,7 @@ void function DeathScreenMenuOnClose()
 	TabData tabData = GetTabDataForPanel( file.menu )
 	DeactivateTab( tabData )
 
-	#if R5DEV
+	#if(DEV)
 		DeregisterButtonPressedCallback( KEY_PAD_ENTER, DevExit )
 	#endif
 
@@ -190,8 +191,8 @@ void function DeathScreenMenuOnClose()
 void function UI_OpenDeathScreenMenu( int tabIndex )
 {
 	//
-	//
-	CloseAllMenus()
+	if ( IsDialog( GetActiveMenu() ) )
+		CloseActiveMenu( true )
 
 	if ( !IsMenuInMenuStack( file.menu ) )
 	{
@@ -445,9 +446,9 @@ void function DeathScreenMenuOnNavBack()
 	TabData tabData = GetTabDataForPanel( file.menu )
 	{
 		int tabIndex = GetMenuActiveTabIndex( file.menu )
-		if ( tabIndex == eDeathScreenPanel.SPECTATE && GetGameState() < eGameState.Epilogue )
+		if ( tabIndex == eDeathScreenPanel.SPECTATE )
 		{
-			if ( file.isEliminated && IsTabIndexEnabled( tabData, eDeathScreenPanel.SQUAD_SUMMARY ) )
+			if ( file.isEliminated )
 			{
 				ActivateTab( tabData, eDeathScreenPanel.SQUAD_SUMMARY )
 			}
@@ -456,9 +457,9 @@ void function DeathScreenMenuOnNavBack()
 				OpenSystemMenu()
 			}
 		}
-		else if ( tabIndex == eDeathScreenPanel.DEATH_RECAP && GetGameState() < eGameState.Epilogue )
+		else if ( tabIndex == eDeathScreenPanel.DEATH_RECAP )
 		{
-			if ( file.isEliminated && IsTabIndexEnabled( tabData, eDeathScreenPanel.SQUAD_SUMMARY ) )
+			if ( file.isEliminated )
 			{
 				ActivateTab( tabData, eDeathScreenPanel.SQUAD_SUMMARY )
 			}
@@ -508,7 +509,7 @@ bool function DeathScreenCanLeaveMatch()
 
 bool function DeathScreenShowNavBack()
 {
-	return !CurrentTabIsDeadEnd() && GetGameState() < eGameState.Epilogue
+	return !CurrentTabIsDeadEnd()
 }
 
 bool function DeathScreenShowMenuButton()
@@ -698,7 +699,7 @@ bool function DeathScreenIsOpen()
 }
 
 
-#if R5DEV
+#if(DEV)
 void function DevExit( var button )
 {
 	CloseActiveMenu()
@@ -712,3 +713,4 @@ void function ShowBanner()
 	RunClientScript( "DEV_UICallback_UpdateHeader", headerElement )
 }
 #endif
+#endif //

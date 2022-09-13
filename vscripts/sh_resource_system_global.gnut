@@ -1,7 +1,3 @@
-//=========================================================
-//	sh_resource_system_global.gnut
-//=========================================================
-
 #if SERVER
 global function ObjectiveResourceSystem_ServerInit
 global function SpawnCallback_JustDeleteMeNow

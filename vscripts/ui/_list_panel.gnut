@@ -15,8 +15,6 @@ global function ListPanel_ScrollListPaneltoIndex
 global function ListPanel_FocusFirstItem
 global function ListPanel_UpdateSelectedState
 global function ListPanel_SetScrollCallback
-global function ListPanel_SetItemHeightCallback
-global function ListPanel_SetItemHeaderCheckCallback
 
 global function ListPanel_SetCommandHandler
 
@@ -25,6 +23,8 @@ global function ListPanel_GetBaseButtonHeight
 global struct ListPanelListDef
 {
 	int          itemCount
+	array<float> itemHeights = []
+	array<bool>  itemIsHeaderList = []  //
 }
 
 struct ListElementData
@@ -75,8 +75,6 @@ struct ListPanelData
 	void functionref( var panel, var button, int index )   loseFocusCallback
 	ListPanelListDef  functionref( var panel )             listDefCallback
 	void functionref( var panel, float scrollValue )       scrollCallback
-	float functionref( var panel, int index ) 				getHeightCallbackFunc
-	bool functionref( var panel, int index ) 				getIsHeaderCallback
 
 	bool functionref( var panel, var button, int position, int keyId, bool isDown ) keyPressHandler
 	void functionref( var panel, var button, int index, string command )            commandHandler
@@ -310,8 +308,8 @@ void function OnListButtonGetFocus( var button )
 {
 	ListPanelData data                = GetDataForPanel( Hud_GetValueForKey( button, "parentPanel" ) )
 	ListElementData ornull buttonData = GetElementDataForButton( data, button )
-	// TEMP fix
-	//Assert( buttonData != null, "Focused an unassigned button element" )
+	//
+	//
 	if ( buttonData == null )
 		return
 
@@ -324,6 +322,7 @@ void function OnListButtonGetFocus( var button )
 
 		if ( focusOffset < 0 )
 		{
+			//
 			bool isIndexValid = buttonData.assignedIndex > 0 && buttonData.assignedIndex < ListPanel_GetItemCount( data )
 			if( isIndexValid && ListPanel_IsHeaderItemAtIndex( data, buttonData.assignedIndex - 1 ) )
 			{
@@ -357,8 +356,8 @@ void function OnListButtonLoseFocus( var button )
 {
 	ListPanelData data                = GetDataForPanel( Hud_GetValueForKey( button, "parentPanel" ) )
 	ListElementData ornull buttonData = GetElementDataForButton( data, button )
-	// TEMP fix
-	//Assert( buttonData != null, "Focused an unassigned button element" )
+	//
+	//
 	if ( buttonData == null )
 		return
 
@@ -373,8 +372,8 @@ void function ListPanel_OnListButtonClick( var button )
 {
 	ListPanelData data                = GetDataForPanel( Hud_GetValueForKey( button, "parentPanel" ) )
 	ListElementData ornull buttonData = GetElementDataForButton( data, button )
-	// TEMP fix
-	//Assert( buttonData != null, "Focused an unassigned button element" )
+	//
+	//
 	if ( buttonData == null )
 		return
 
@@ -399,8 +398,8 @@ bool function OnListButtonKeyPress( var button, int keyId, bool isDown )
 		return false
 
 	ListElementData ornull buttonData = GetElementDataForButton( data, button )
-	// TEMP fix
-	//Assert( buttonData != null, "Focused an unassigned button element" )
+	//
+	//
 	if ( buttonData == null )
 		return false
 
@@ -431,8 +430,8 @@ void function ListPanel_OnListButtonClickRight( var button )
 {
 	ListPanelData data                = GetDataForPanel( Hud_GetValueForKey( button, "parentPanel" ) )
 	ListElementData ornull buttonData = GetElementDataForButton( data, button )
-	// TEMP fix
-	//Assert( buttonData != null, "Focused an unassigned button element" )
+	//
+	//
 	if ( buttonData == null )
 		return
 
@@ -608,6 +607,7 @@ array<int> function GetVisibleListItemsIndices( ListPanelData data, float offset
 	int visibleHeight = (buttonHeight + data.paddingVert)
 	visibleHeight = int(data.indexAtOffset[firstIndex] - offset)
 
+	//
 	int heightPadding = buttonHeight * 2
 	if( firstIndex > 0 )
 		visibleIndices.append ( firstIndex - 1 )
@@ -628,7 +628,7 @@ array<int> function GetVisibleListItemsIndices( ListPanelData data, float offset
 
 void function UpdateButtonElements( ListPanelData data, bool forceRefresh = false )
 {
-	// TODO: find a more appropriate place/way to do this
+	//
 	int itemCount       = ListPanel_GetItemCount( data )
 	float totalListSize = ListPanel_GetTotalSize( data )
 	bool itemCountDecreased = false
@@ -648,7 +648,7 @@ void function UpdateButtonElements( ListPanelData data, bool forceRefresh = fals
 		if ( data.scrollBarElement != null )
 			UpdateScrollBar( data )
 
-		return // don't allow scrolling when an element is selected
+		return //
 	}
 
 	data.listOffset = clamp( lastOffset + (data.scrollValue * SCROLL_SPEED), 0, (data.totalListSize - (data.panelHeight / data.totalListSize) * data.totalListSize) )
@@ -717,6 +717,8 @@ void function UpdateButtonElements( ListPanelData data, bool forceRefresh = fals
 	if ( data.needsInitialFocus && data.usedElements.len() > 0 )
 		ListPanel_FocusFirstItem( data.panel )
 
+	//
+	//
 	bool didFocusChangeToHeader = false
 	if( data.lastFocusedIndex < ListPanel_GetItemCount( data ) )
 		didFocusChangeToHeader = ListPanel_IsHeaderItemAtIndex( data, data.lastFocusedIndex )
@@ -779,6 +781,7 @@ void function UpdateButtonFocus( ListPanelData data )
 {
 	int usedElemCount = data.usedElements.len()
 
+	//
 	if( IsControllerModeActive() && usedElemCount > 0 && data.lastClickedAssignedIndex >= 0 )
 	{
 		int buttonToFocusIndex = data.lastClickedAssignedIndex
@@ -886,15 +889,11 @@ void function ListPanel_SetExclusiveSelection( var panel, bool state )
 }
 
 
-void function ListPanel_SetItemHeightCallback( var panel, float functionref( var panel, int index ) callbackFunc )
-{
-	file.listPanels[string(panel)].getHeightCallbackFunc = callbackFunc
-}
+//
+//
+//
+//
 
-void function ListPanel_SetItemHeaderCheckCallback( var panel, bool functionref( var panel, int index ) callbackFunc )
-{
-	file.listPanels[string(panel)].getIsHeaderCallback = callbackFunc
-}
 
 void function ListPanel_UpdateSelectedState( var panel )
 {
@@ -988,16 +987,15 @@ int function ListPanel_GetBaseButtonHeight( var panel )
 
 int function ListPanel_GetItemHeight( ListPanelData data, int index )
 {
-	if ( data.getHeightCallbackFunc == null )
-		return data.buttonHeight
-	return int( data.getHeightCallbackFunc( data.panel, index ) * data.buttonHeight )
+	return int( data.listDefCallback( data.panel ).itemHeights[index] * data.buttonHeight )
 }
 
 bool function ListPanel_IsHeaderItemAtIndex( ListPanelData data, int index )
 {
-	if ( data.getIsHeaderCallback == null )
+	if( data.listDefCallback( data.panel ).itemIsHeaderList.len() <= 0 )
 		return false
-	return data.getIsHeaderCallback( data.panel, index )
+
+	return data.listDefCallback( data.panel ).itemIsHeaderList[index]
 }
 
 
@@ -1014,9 +1012,8 @@ float function ListPanel_GetTotalSize( ListPanelData data, bool updateOffsets = 
 	int totalItemHeightWithPadding = 0
 	for ( int index = 0; index < listItemCount; index++ )
 	{
-		int height = ListPanel_GetItemHeight( data, index )
-		totalItemHeight += height
-		totalItemHeightWithPadding += height + data.paddingVert
+		totalItemHeight += ListPanel_GetItemHeight( data, index )
+		totalItemHeightWithPadding += ListPanel_GetItemHeight( data, index ) + data.paddingVert
 		if ( updateOffsets )
 		{
 			data.indexAtOffset[index] = totalItemHeightWithPadding

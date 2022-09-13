@@ -1,23 +1,26 @@
-#if CLIENT || UI
+//
+#if(true)
+
+#if CLIENT || UI 
 global function ShPassPanel_LevelInit
 #endif
 
-#if CLIENT
-global function UIToClient_StartTempBattlePassPresentationBackground
-global function UIToClient_StopTempBattlePassPresentationBackground
+#if(CLIENT)
+global function UIToClient_StartBattlePassScene
 global function UIToClient_StopBattlePassScene
 global function UIToClient_ItemPresentation
-global function TempBattlePassPresentationBackground_Thread
+global function BattlePassScene_Thread
 global function InitBattlePassLights
 global function BattlePassLightsOn
 global function BattlePassLightsOff
 global function ClearBattlePassItem
 #endif
 
-#if UI
+#if(UI)
 global function InitPassPanel
 global function UpdateRewardPanel
 global function InitAboutBattlePass1Dialog
+global function GetRewardPanel
 
 global function InitPassXPPurchaseDialog
 global function InitPassPurchaseMenu
@@ -27,14 +30,6 @@ global function GetNumPages
 global function TryDisplayBattlePassAwards
 
 global function InitBattlePassRewardButtonRui
-
-global function Battlepass_ShouldShowLow
-
-global function BattlePass_PopulateRewardButton
-global function BattlePass_SetTallButtonSettings
-global function BattlePass_SetUnlockedString
-
-global function ServerCallback_GotBPFromPremier
 #endif
 
 
@@ -43,28 +38,23 @@ global function ServerCallback_GotBPFromPremier
 //
 //
 //
-struct BattlePassPageData
-{
-	int startLevel
-	int endLevel
-}
+
 
 struct FileStruct_LifetimeLevel
 {
-	#if CLIENT
-		bool                         isTempBattlePassPresentationBackgroundThreadActive = false
-		vector                       sceneRefOrigin
-		vector                       sceneRefAngles
-		entity                       mover
-		array<entity>                models
-		NestedGladiatorCardHandle&   bannerHandle
-		var                          topo
-		var                          rui
-		array<entity>                stationaryLights
-		table<entity, vector>        stationaryLightOffsets
+	#if(CLIENT)
+		bool                       isBattlePassSceneThreadActive = false
+		vector                     sceneRefOrigin
+		vector                     sceneRefAngles
+		entity                     mover
+		array<entity>              models
+		NestedGladiatorCardHandle& bannerHandle
+		var                        topo
+		var                        rui
+		array<entity>              stationaryLights
 		//
 		//
-		string                       playingPreviewAlias
+		string                     playingPreviewAlias
 
 		var loadscreenPreviewBox = null
 	#endif
@@ -75,11 +65,7 @@ struct FileStruct_LifetimeLevel
 FileStruct_LifetimeLevel& fileLevel
 
 
-#if UI
-const float CURSOR_DELAY_BASE = 0.3
-const float CURSOR_DELAY_MED = 0.3
-const float CURSOR_DELAY_FAST = 0.1
-
+#if(UI)
 global struct RewardGroup
 {
 	int                     level
@@ -87,30 +73,26 @@ global struct RewardGroup
 }
 struct RewardButtonData
 {
-	var               button
-	var               footer
-	int               rewardGroupSubIdx
-	RewardGroup&      rewardGroup
-	int               rewardSubIdx
-	BattlePassReward& bpReward
+	var          button
+	var          footer
+	int          rewardGroupSubIdx
+	RewardGroup& rewardGroup
+	int          rewardSubIdx
 }
 #endif
 
 struct
 {
-	#if UI
+	#if(UI)
 		int                                previousPage = -1
 		int                                currentPage = -1
 		array<RewardGroup>                 currentRewardGroups = []
 		string ornull                      currentRewardButtonKey = null
-		//
-		//
-		var                                rewardBarPanelHeader
-		array<var>                         rewardButtonsFree
-		array<var>                         rewardButtonsPremium
+		var                                rewardBarPanel
+		array<var>                         rewardButtons
 		table<var, RewardButtonData>       rewardButtonToDataMap
 		table<string, RewardButtonData>    rewardKeyToRewardButtonDataMap
-		array<var>                         rewardHeaders
+		array<var>                         rewardFooters
 		var                                rewardBarFooter
 		bool                               rewardButtonFocusForced
 
@@ -121,7 +103,6 @@ struct
 		var invisiblePageRightTriggerButton
 
 		var statusBox
-		var purchaseBG
 		var purchaseButton
 
 		var levelReqButton
@@ -130,22 +111,12 @@ struct
 		var detailBox
 		var loadscreenPreviewBox
 		var loadscreenPreviewBoxOverlay
-
-		int   lastStickState
-		float stickRepeatAllowTime
-
-		var focusedRewardButton
-		int aboutVideoChannel
-		var aboutPurchaseButton
-
-		table< ItemFlavor, table<int, BattlePassPageData> > pageDatas
 	#endif
 
 } file
 
-#if UI
-const int MAX_LEVELS_PER_PAGE = 8
-const int REWARDS_PER_PAGE = 9
+#if(UI)
+const int REWARDS_PER_PAGE = 14
 #endif
 
 //
@@ -153,11 +124,11 @@ const int REWARDS_PER_PAGE = 9
 //
 //
 //
-#if CLIENT || UI
+#if CLIENT || UI 
 void function ShPassPanel_LevelInit()
 {
-	#if CLIENT
-		RegisterSignal( "StopTempBattlePassPresentationBackgroundThread" )
+	#if(CLIENT)
+		RegisterSignal( "StopBattlePassSceneThread" )
 		RegisterButtonPressedCallback( MOUSE_WHEEL_UP, OnMouseWheelUp )
 		RegisterButtonPressedCallback( MOUSE_WHEEL_DOWN, OnMouseWheelDown )
 
@@ -165,63 +136,34 @@ void function ShPassPanel_LevelInit()
 			fileLevel.loadscreenPreviewBox = null //
 		} )
 	#endif
-	#if UI
-		ItemFlavor ornull activeBattlePass = GetActiveBattlePass()
-		if ( activeBattlePass != null )
-			BuildPageDatas( expect ItemFlavor( activeBattlePass ) )
-	#endif
 }
 #endif
 
 
-#if UI
+#if(UI)
 void function InitPassPanel( var panel )
 {
-	RegisterSignal( "TryChangePageThread" )
-
 	SetPanelTabTitle( panel, "#PASS" )
 
 	AddPanelEventHandler( panel, eUIEvent.PANEL_SHOW, OnPanelShow )
 	AddPanelEventHandler( panel, eUIEvent.PANEL_HIDE, OnPanelHide )
 
-	file.purchaseBG = Hud_GetChild( panel, "PurchaseBG" )
-
 	file.purchaseButton = Hud_GetChild( panel, "PurchaseButton" )
 	Hud_AddEventHandler( file.purchaseButton, UIE_CLICK, BattlePass_PurchaseButton_OnActivate )
 
-	//
-	//
-	//
-	//
+	file.rewardBarPanel = Hud_GetChild( panel, "RewardBarPanel" )
 
-	file.rewardBarPanelHeader = Hud_GetChild( panel, "RewardBarPanelHeader" )
-	file.rewardHeaders = GetPanelElementsByClassname( file.rewardBarPanelHeader, "RewardFooter" )
-	foreach ( int rewardButtonIdx, var rewardButton in file.rewardHeaders )
-	{
-		Hud_AddEventHandler( rewardButton, UIE_GET_FOCUS, BattlePass_RewardButtonHeader_OnGetFocus )
-		Hud_AddEventHandler( rewardButton, UIE_LOSE_FOCUS, BattlePass_RewardButtonHeader_OnLoseFocus )
-	}
-
-	file.rewardButtonsFree = GetPanelElementsByClassname( file.rewardBarPanelHeader, "RewardButtonFree" )
-	foreach ( int rewardButtonIdx, var rewardButton in file.rewardButtonsFree )
+	file.rewardButtons = GetPanelElementsByClassname( file.rewardBarPanel, "RewardButton" )
+	foreach ( int rewardButtonIdx, var rewardButton in file.rewardButtons )
 	{
 		Hud_SetNavUp( rewardButton, file.purchaseButton )
-		Hud_AddEventHandler( rewardButton, UIE_GET_FOCUS, BattlePass_RewardButtonFree_OnGetFocus )
-		Hud_AddEventHandler( rewardButton, UIE_LOSE_FOCUS, BattlePass_RewardButtonFree_OnLoseFocus )
-		Hud_AddEventHandler( rewardButton, UIE_CLICK, BattlePass_RewardButtonFree_OnActivate )
-		Hud_AddEventHandler( rewardButton, UIE_CLICKRIGHT, BattlePass_RewardButtonFree_OnAltActivate )
+		Hud_AddEventHandler( rewardButton, UIE_GET_FOCUS, BattlePass_RewardButton_OnGetFocus )
+		Hud_AddEventHandler( rewardButton, UIE_LOSE_FOCUS, BattlePass_RewardButton_OnLoseFocus )
+		Hud_AddEventHandler( rewardButton, UIE_CLICK, BattlePass_RewardButton_OnActivate )
+		Hud_AddEventHandler( rewardButton, UIE_CLICKRIGHT, BattlePass_RewardButton_OnAltActivate )
 	}
 
-	file.rewardButtonsPremium = GetPanelElementsByClassname( file.rewardBarPanelHeader, "RewardButtonPremium" )
-	foreach ( int rewardButtonIdx, var rewardButton in file.rewardButtonsPremium )
-	{
-		Hud_SetNavUp( rewardButton, file.rewardButtonsFree[ rewardButtonIdx ] )
-		Hud_SetNavDown( file.rewardButtonsFree[ rewardButtonIdx ], rewardButton )
-		Hud_AddEventHandler( rewardButton, UIE_GET_FOCUS, BattlePass_RewardButtonPremium_OnGetFocus )
-		Hud_AddEventHandler( rewardButton, UIE_LOSE_FOCUS, BattlePass_RewardButtonPremium_OnLoseFocus )
-		Hud_AddEventHandler( rewardButton, UIE_CLICK, BattlePass_RewardButtonPremium_OnActivate )
-		Hud_AddEventHandler( rewardButton, UIE_CLICKRIGHT, BattlePass_RewardButtonPremium_OnAltActivate )
-	}
+	file.rewardFooters = GetPanelElementsByClassname( file.rewardBarPanel, "RewardFooter" )
 
 	file.rewardBarFooter = Hud_GetChild( panel, "RewardBarFooter" )
 
@@ -235,7 +177,8 @@ void function InitPassPanel( var panel )
 	//
 	file.statusBox = Hud_GetChild( panel, "StatusBox" )
 
-	Hud_AddEventHandler( Hud_GetChild( panel, "StatusBox" ), UIE_CLICK, AdvanceMenuEventHandler( GetMenu( "BattlePassAboutPage1" ) ) )
+	HudElem_SetRuiArg( Hud_GetChild( panel, "AboutButton" ), "buttonText", "#BATTLE_PASS_BUTTON_ABOUT" )
+	Hud_AddEventHandler( Hud_GetChild( panel, "AboutButton" ), UIE_CLICK, AdvanceMenuEventHandler( GetMenu( "BattlePassAboutPage1" ) ) )
 
 	file.levelReqButton = Hud_GetChild( panel, "LevelReqButton" )
 	file.premiumReqButton = Hud_GetChild( panel, "PremiumReqButton" )
@@ -248,16 +191,21 @@ void function InitPassPanel( var panel )
 	AddPanelFooterOption( panel, LEFT, BUTTON_A, false, "#A_BUTTON_INSPECT", "#A_BUTTON_INSPECT", null, BattlePass_IsFocusedItemInspectable )
 	AddPanelFooterOption( panel, LEFT, BUTTON_X, false, "#X_BUTTON_EQUIP", "#X_BUTTON_EQUIP", null, BattlePass_IsFocusedItemEquippable )
 
-	file.invisiblePageLeftTriggerButton = Hud_GetChild( file.rewardBarPanelHeader, "InvisiblePageLeftTriggerButton" )
+	file.invisiblePageLeftTriggerButton = Hud_GetChild( file.rewardBarPanel, "InvisiblePageLeftTriggerButton" )
 	Hud_AddEventHandler( file.invisiblePageLeftTriggerButton, UIE_GET_FOCUS, void function( var button ) {
 		BattlePass_PageBackward( button )
 	} )
-	file.invisiblePageRightTriggerButton = Hud_GetChild( file.rewardBarPanelHeader, "InvisiblePageRightTriggerButton" )
+	file.invisiblePageRightTriggerButton = Hud_GetChild( file.rewardBarPanel, "InvisiblePageRightTriggerButton" )
 	Hud_AddEventHandler( file.invisiblePageRightTriggerButton, UIE_GET_FOCUS, void function( var button ) {
 		BattlePass_PageForward( button )
 	} )
 }
 
+
+var function GetRewardPanel()
+{
+	return file.rewardBarPanel
+}
 
 string function GetRewardButtonKey( int levelNum, int rewardSubIdx )
 {
@@ -266,7 +214,8 @@ string function GetRewardButtonKey( int levelNum, int rewardSubIdx )
 
 void function UpdateRewardPanel( array<RewardGroup> rewardGroups )
 {
-	int panelMaxWidth = Hud_GetBaseWidth( file.rewardBarPanelHeader )
+	int panelMaxWidth = Hud_GetBaseWidth( file.rewardBarPanel )
+	printt( panelMaxWidth, Hud_GetBaseWidth( file.rewardBarPanel ), Hud_GetWidth( file.rewardBarPanel ) )
 
 	const int MAX_REWARD_BUTTONS = 15
 	const int MAX_REWARD_FOOTERS = 15
@@ -282,38 +231,24 @@ void function UpdateRewardPanel( array<RewardGroup> rewardGroups )
 		thinDividers += (rewardGroup.rewards.len() - 1)
 		if ( rewardIdx < (rewardGroups.len() - 1) )
 			thickDividers++
-
-		numButtons += GetRewardsBoxSizeForGroup( rewardGroup )
+		numButtons += rewardGroup.rewards.len()
 	}
 
-	Assert( file.rewardHeaders.len() == MAX_REWARD_FOOTERS )
+	Assert( file.rewardFooters.len() == MAX_REWARD_FOOTERS )
 
-	Assert( file.rewardButtonsFree.len() == MAX_REWARD_BUTTONS )
-	Assert( file.rewardButtonsPremium.len() == MAX_REWARD_BUTTONS )
+	Assert( file.rewardButtons.len() == MAX_REWARD_BUTTONS )
+	file.rewardButtons.sort( SortByScriptId )
+	int buttonWidth = Hud_GetWidth( file.rewardButtons[0] )
 
-	file.rewardButtonsFree.sort( SortByScriptId )
-	file.rewardButtonsPremium.sort( SortByScriptId )
-
-	int buttonWidth = Hud_GetWidth( file.rewardButtonsFree[0] )
-
-	foreach ( headerBox in file.rewardHeaders )
+	foreach ( rewardFooter in file.rewardFooters )
 	{
-		Hud_Hide( headerBox )
-		Hud_SetEnabled( headerBox, false )
-		HudElem_SetRuiArg( headerBox, "isButtonFocused", false )
+		Hud_Hide( rewardFooter )
+		HudElem_SetRuiArg( rewardFooter, "isButtonFocused", false )
 	}
 
-	foreach ( rewardButton in file.rewardButtonsFree )
+	foreach ( rewardButton in file.rewardButtons )
 	{
 		Hud_Hide( rewardButton )
-		Hud_SetEnabled( rewardButton, false )
-		Hud_SetSelected( rewardButton, false )
-	}
-
-	foreach ( rewardButton in file.rewardButtonsPremium )
-	{
-		Hud_Hide( rewardButton )
-		Hud_SetEnabled( rewardButton, false )
 		Hud_SetSelected( rewardButton, false )
 	}
 
@@ -322,23 +257,16 @@ void function UpdateRewardPanel( array<RewardGroup> rewardGroups )
 
 	//
 
-	int thinPadding  = ContentScaledXAsInt( 4 )
-	int thickPadding = ContentScaledXAsInt( 50 )
-
-	if ( file.currentPage == 0 )
-	{
-		thickPadding = ContentScaledXAsInt( 56 )
-	}
+	int thinPadding  = ContentScaledXAsInt( 8 )
+	int thickPadding = ContentScaledXAsInt( 16 )
 
 	int contentWidth       = (buttonWidth * numButtons) + (thinPadding * thinDividers) + (thickPadding * thickDividers)
-	int minContentWidth    = (buttonWidth * 5) + (thinPadding * thinDividers) + (thickPadding * 4)
 	//
 	bool hasPremiumPass    = false
 	int battlePassLevelIdx = 0
 
-	//
-	//
-	//
+	Hud_SetWidth( file.rewardBarPanel, contentWidth )
+	Hud_SetWidth( file.rewardBarFooter, contentWidth )
 
 	ItemFlavor ornull activeBattlePass = GetPlayerLastActiveBattlePass( ToEHI( GetUIPlayer() ) )
 	bool hasActiveBattlePass           = activeBattlePass != null && GRX_IsInventoryReady()
@@ -354,80 +282,61 @@ void function UpdateRewardPanel( array<RewardGroup> rewardGroups )
 	int offset    = 0
 	int buttonIdx = 0
 	int footerIdx = 0
-
-	int numLevels
 	foreach ( int rewardGroupSubIdx, RewardGroup rewardGroup in rewardGroups )
 	{
 		if ( rewardGroup.rewards.len() == 0 )
 			continue
 
-		numLevels++
-	}
-
-	foreach ( int rewardGroupSubIdx, RewardGroup rewardGroup in rewardGroups )
-	{
-		if ( rewardGroup.rewards.len() == 0 )
-			continue
-
-		var rewardFooter = file.rewardHeaders[footerIdx]
+		var rewardFooter = file.rewardFooters[footerIdx]
 		Hud_SetX( rewardFooter, offset )
 		var footerRui = Hud_GetRui( rewardFooter )
-		RuiSetString( footerRui, "levelText", GetBattlePassDisplayLevel( rewardGroup.level ) )
+		RuiSetString( footerRui, "levelText", GetBattlePassDisplayLevel( rewardGroup.level, true ) )
 		RuiSetInt( footerRui, "level", rewardGroup.level )
 		Hud_Show( rewardFooter )
-		Hud_SetEnabled( rewardFooter, true )
 
-		array<RewardButtonData> rbd_freeArray
-		array<RewardButtonData> rbd_premiumArray
-
+		int footerWidth = 0
 		foreach ( int rewardSubIdx, BattlePassReward bpReward in rewardGroup.rewards )
 		{
+			var rewardButton = file.rewardButtons[buttonIdx]
+
 			RewardButtonData rbd
+			rbd.button = rewardButton
 			rbd.footer = rewardFooter
 			rbd.rewardGroupSubIdx = rewardGroupSubIdx
 			rbd.rewardGroup = rewardGroup
 			rbd.rewardSubIdx = rewardSubIdx
-			rbd.bpReward = bpReward
+			file.rewardButtonToDataMap[rewardButton] <- rbd
+			file.rewardKeyToRewardButtonDataMap[GetRewardButtonKey( rewardGroup.level, rewardSubIdx )] <- rbd
+			rewardButtonDataList.append( rbd )
 
-			if ( bpReward.isPremium )
-				rbd_premiumArray.append( rbd )
-			else
-				rbd_freeArray.append( rbd )
-		}
+			Hud_SetX( rewardButton, offset )
+			Hud_SetEnabled( rewardButton, hasActiveBattlePass )
+			//
+			//
 
-		int footerWidth           = 0
-		int numButtonsInThisLevel = maxint( rbd_freeArray.len(), rbd_premiumArray.len() )
-
-		for ( int i = 0; i < numButtonsInThisLevel; i++ )
-		{
-			RewardButtonData rbd_free
-			RewardButtonData rbd_premium
-			BattlePassReward bpReward
-
-			Hud_Hide( file.rewardButtonsFree[buttonIdx] )
-			Hud_Hide( file.rewardButtonsPremium[buttonIdx] )
-
-			if ( rbd_freeArray.len() > i )
-			{
-				rbd_free = rbd_freeArray[ i ]
-				PopulateBattlePassButton( rbd_free, file.rewardButtonsFree[buttonIdx], rewardButtonDataList, hasActiveBattlePass, hasPremiumPass, battlePassLevelIdx, offset )
-				bpReward = rbd_free.bpReward
-			}
-
-			if ( rbd_premiumArray.len() > i )
-			{
-				rbd_premium = rbd_premiumArray[ i ]
-				PopulateBattlePassButton( rbd_premium, file.rewardButtonsPremium[buttonIdx], rewardButtonDataList, hasActiveBattlePass, hasPremiumPass, battlePassLevelIdx, offset )
-				bpReward = rbd_premium.bpReward
-			}
-
-			bool isOwned = bpReward.level <= battlePassLevelIdx
+			bool isOwned = (!bpReward.isPremium || hasPremiumPass) && bpReward.level <= battlePassLevelIdx
+			HudElem_SetRuiArg( rewardButton, "isOwned", isOwned )
 			RuiSetBool( footerRui, "isOwned", isOwned )
+			HudElem_SetRuiArg( rewardButton, "isPremium", bpReward.isPremium )
+
+			int rarity = ItemFlavor_HasQuality( bpReward.flav ) ? ItemFlavor_GetQuality( bpReward.flav ) : 0
+			HudElem_SetRuiArg( rewardButton, "rarity", rarity )
+			RuiSetImage( Hud_GetRui( rewardButton ), "buttonImage", GetImageForBattlePassReward( bpReward ) )
+
+			if ( ItemFlavor_GetType( bpReward.flav ) == eItemType.account_pack )
+				HudElem_SetRuiArg( rewardButton, "isLootBox", true )
+
+			HudElem_SetRuiArg( rewardButton, "itemCountString", "" )
+			if ( ItemFlavor_GetType( bpReward.flav ) == eItemType.account_currency )
+				HudElem_SetRuiArg( rewardButton, "itemCountString", string( bpReward.quantity ) )
+
+			HudElem_SetRuiArg( rewardButton, "bpLevel", bpReward.level )
+			HudElem_SetRuiArg( rewardButton, "isRewardBar", true )
 
 			offset += buttonWidth
 			footerWidth += buttonWidth
 
-			if ( i < numButtonsInThisLevel - 1 )
+			if ( rewardSubIdx < (rewardGroup.rewards.len() - 1) )
 			{
 				offset += thinPadding
 				footerWidth += thinPadding
@@ -439,258 +348,55 @@ void function UpdateRewardPanel( array<RewardGroup> rewardGroups )
 
 			buttonIdx++
 		}
-
-		int margin = thickPadding
-		Hud_SetWidth( rewardFooter, footerWidth + margin )
-		Hud_SetX( rewardFooter, Hud_GetX( rewardFooter ) - int( margin * 0.5 ) )
-		RuiSetBool( footerRui, "isLast", footerIdx >= numLevels - 1 )
-		RuiSetBool( footerRui, "isFirst", footerIdx == 0 )
+		Hud_SetWidth( rewardFooter, footerWidth )
 		footerIdx++
 	}
 
-	var buttonToFocus
-
-	if ( GetFocus() == file.invisiblePageLeftTriggerButton || GetFocus() == file.prevPageButton )
-		buttonToFocus = file.rewardButtonsPremium[buttonIdx - 1]
-	else if ( GetFocus() == file.invisiblePageRightTriggerButton || GetFocus() == file.nextPageButton )
-		buttonToFocus = file.rewardButtonsPremium[0]
-
-	if ( buttonToFocus != null )
+	for ( int index = 0; index < buttonIdx; index++ )
 	{
-		if ( buttonToFocus != file.focusedRewardButton )
-		{
-			Hud_SetFocused( buttonToFocus )
-		}
-		else
-		{
-			BattlePass_RewardButton_OnLoseFocus( buttonToFocus )
-			BattlePass_RewardButton_OnGetFocus( buttonToFocus )
-		}
+		Hud_Show( file.rewardButtons[index] )
 	}
 
-	//
-	//
-	//
-	//
-	//
-	//
-	//
-	//
-	//
-	//
-	//
-	//
-	//
-	//
-	//
-	//
-	//
-	//
-	//
-	//
-	//
-}
-
-void function PopulateBattlePassButton( RewardButtonData rbd, var rewardButton, array<RewardButtonData> rewardButtonDataList, bool hasActiveBattlePass, bool hasPremiumPass, int battlePassLevelIdx, int offset )
-{
-	rbd.button = rewardButton
-
-	file.rewardButtonToDataMap[rewardButton] <- rbd
-	file.rewardKeyToRewardButtonDataMap[GetRewardButtonKey( rbd.rewardGroup.level, rbd.rewardSubIdx )] <- rbd
-
-	rewardButtonDataList.append( rbd )
-
-	Hud_SetX( rewardButton, offset )
-	Hud_SetEnabled( rewardButton, hasActiveBattlePass )
-
-	BattlePassReward bpReward = rbd.bpReward
-
-	bool isOwned = (!bpReward.isPremium || hasPremiumPass) && bpReward.level <= battlePassLevelIdx
-
-	BattlePass_PopulateRewardButton( bpReward, rewardButton, isOwned, bpReward.isPremium )
-}
-
-void function BattlePass_PopulateRewardButton( BattlePassReward bpReward, var rewardButton, bool isOwned, bool canUseTallButton, var ruiOverride = null )
-{
-	var btnRui
-	if ( rewardButton != null )
-		btnRui = Hud_GetRui( rewardButton )
-	if ( ruiOverride != null )
-		btnRui = ruiOverride
-
-	Assert( btnRui != null )
-
-	RuiSetBool( btnRui, "isOwned", isOwned )
-	RuiSetBool( btnRui, "isPremium", bpReward.isPremium )
-
-	int rarity = ItemFlavor_HasQuality( bpReward.flav ) ? ItemFlavor_GetQuality( bpReward.flav ) : 0
-	RuiSetInt( btnRui, "rarity", rarity )
-
-	asset rewardImage = CustomizeMenu_GetRewardButtonImage( bpReward.flav )
-	RuiSetImage( btnRui, "buttonImage", rewardImage )
-
-	if ( ItemFlavor_GetType( bpReward.flav ) == eItemType.account_pack )
-		RuiSetBool( btnRui, "isLootBox", true )
-
-	RuiSetString( btnRui, "itemCountString", "" )
-	if ( ItemFlavor_GetType( bpReward.flav ) == eItemType.account_currency )
-		RuiSetString( btnRui, "itemCountString", string( bpReward.quantity ) )
-
-	RuiSetInt( btnRui, "bpLevel", bpReward.level )
-	RuiSetBool( btnRui, "isRewardBar", false )
-	RuiSetBool( btnRui, "showCharacterIcon", false )
-
-	BattlePass_SetTallButtonSettings( bpReward.flav, btnRui, rewardButton, canUseTallButton )
-
-	RuiSetBool( btnRui, "forceShowRarityBG", ShouldForceShowRarityBG( bpReward.flav ) )
-
-	if ( rewardButton != null )
-		Hud_Show( rewardButton )
-}
-
-void function BattlePass_SetTallButtonSettings( ItemFlavor flav, var btnRui, var rewardButton, bool canUseTallButton )
-{
-	asset rewardImage = CustomizeMenu_GetRewardButtonImage( flav )
-
-	if ( rewardButton != null )
-		Hud_SetHeight( rewardButton, Hud_GetBaseHeight( rewardButton ) )
-
-	RuiSetBool( btnRui, "forceFullIcon", false )
-	if ( ShouldDisplayTallButton( flav ) )
+	if ( GetFocus() == file.invisiblePageLeftTriggerButton )
+		Hud_SetFocused( file.rewardButtons[buttonIdx - 1] )
+	else if ( GetFocus() == file.invisiblePageRightTriggerButton )
+		Hud_SetFocused( file.rewardButtons[0] )
+	else
 	{
-		if ( canUseTallButton )
+		int lowestLevelIdx  = 999999
+		int highestLevelIdx = -999999
+		foreach( RewardButtonData rbd in rewardButtonDataList )
 		{
-			if ( rewardButton != null )
-				Hud_SetHeight( rewardButton, Hud_GetBaseHeight( rewardButton ) * 1.5 )
+			lowestLevelIdx = minint( rbd.rewardGroup.level, lowestLevelIdx )
+			highestLevelIdx = maxint( rbd.rewardGroup.level, highestLevelIdx )
 		}
 
-		if ( ItemFlavor_GetType( flav ) != eItemType.character_skin )
+		int desiredLevelIdx = lowestLevelIdx
+		if ( hasActiveBattlePass && hasPremiumPass )
 		{
-			asset icon = GetCharacterIconToDisplay( flav )
-			RuiSetBool( btnRui, "showCharacterIcon", icon != $"" )
-			RuiSetImage( btnRui, "characterIcon", icon )
-
-			if ( ItemFlavor_GetType( flav ) == eItemType.weapon_skin )
-			{
-				if ( icon != $"" && icon != rewardImage )
-				{
-					RuiSetBool( btnRui, "showCharacterIcon", false )
-					RuiSetBool( btnRui, "forceFullIcon", true )
-				}
-			}
+			desiredLevelIdx = BattlePass_GetNextLevelWithReward( expect ItemFlavor( activeBattlePass ), battlePassLevelIdx )
+			desiredLevelIdx = ClampInt( desiredLevelIdx, lowestLevelIdx, highestLevelIdx )
 		}
-		else
-		{
-			RuiSetBool( btnRui, "forceFullIcon", true )
-		}
+
+		string desiredFocusRewardButtonKey = GetRewardButtonKey( desiredLevelIdx, 0 )
+		Assert( desiredFocusRewardButtonKey in file.rewardKeyToRewardButtonDataMap, format( "Tried to focus reward button '%s' on page %d'", desiredFocusRewardButtonKey, file.currentPage ) )
+		BattlePass_FocusRewardButton( file.rewardKeyToRewardButtonDataMap[desiredFocusRewardButtonKey] )
 	}
-}
-
-bool function ShouldForceShowRarityBG( ItemFlavor flav )
-{
-	int itemType = ItemFlavor_GetType( flav )
-	switch ( itemType )
-	{
-		case eItemType.weapon_skin:
-		case eItemType.weapon_charm:
-		case eItemType.character_skin:
-		case eItemType.gladiator_card_frame:
-		case eItemType.gladiator_card_stance:
-		case eItemType.gladiator_card_intro_quip:
-		case eItemType.gladiator_card_kill_quip:
-			return true
-	}
-
-	return false
-}
-
-asset function GetCharacterIconToDisplay( ItemFlavor flav )
-{
-	ItemFlavor ornull char = GetItemFlavorAssociatedCharacterOrWeapon( flav )
-
-	if ( char != null )
-	{
-		expect ItemFlavor( char )
-		asset icon = ItemFlavor_GetIcon( char )
-		if ( icon != ItemFlavor_GetIcon( flav ) )
-			return icon
-	}
-
-	return $""
-}
-
-bool function ShouldDisplayTallButton( ItemFlavor flav )
-{
-	int itemType = ItemFlavor_GetType( flav )
-
-	switch ( itemType )
-	{
-		case eItemType.skydive_emote:
-		case eItemType.character_skin:
-		case eItemType.gladiator_card_frame:
-		case eItemType.gladiator_card_stance:
-		case eItemType.gladiator_card_kill_quip:
-		case eItemType.gladiator_card_intro_quip:
-		case eItemType.character_execution:
-			return true
-
-		case eItemType.weapon_skin:
-			return ItemFlavor_GetQuality( flav ) >= eQuality.EPIC
-	}
-
-	return false
 }
 
 void function BattlePass_PageForward( var button )
 {
-	if ( GetActiveMenu() != GetMenu( "LobbyMenu" ) )
-		return
-
-	int oldPage = file.currentPage
+	EmitUISound( "UI_Menu_BattlePass_LevelTab" )
 	BattlePass_SetPage( file.currentPage + 1 )
-
-	var focus = GetFocus()
-
-	if ( focus != file.nextPageButton
-			&& focus != file.prevPageButton
-			&& focus != file.invisiblePageLeftTriggerButton
-			&& focus != file.invisiblePageRightTriggerButton )
-	{
-		file.focusedRewardButton = null
-		ForceVGUIFocusUpdate()
-	}
-
-	if ( oldPage != file.currentPage )
-	{
-		EmitUISound( "UI_Menu_BattlePass_LevelTab" )
-	}
 }
 
 
 void function BattlePass_PageBackward( var button )
 {
-	if ( GetActiveMenu() != GetMenu( "LobbyMenu" ) )
-		return
-
-	int oldPage = file.currentPage
+	EmitUISound( "UI_Menu_BattlePass_LevelTab" )
 	BattlePass_SetPage( file.currentPage - 1 )
-
-	var focus = GetFocus()
-
-	if ( focus != file.nextPageButton
-			&& focus != file.prevPageButton
-			&& focus != file.invisiblePageLeftTriggerButton
-			&& focus != file.invisiblePageRightTriggerButton )
-	{
-		file.focusedRewardButton = null
-		ForceVGUIFocusUpdate()
-	}
-
-	if ( oldPage != file.currentPage )
-	{
-		EmitUISound( "UI_Menu_BattlePass_LevelTab" )
-	}
 }
+
 
 void function BattlePass_PurchaseButton_OnActivate( var button )
 {
@@ -711,86 +417,10 @@ void function BattlePass_PurchaseButton_OnActivate( var button )
 		return
 }
 
-void function BattlePass_RewardButtonHeader_OnGetFocus( var button )
-{
-	Hud_Show( file.detailBox )
-
-	if ( file.focusedRewardButton != null && file.focusedRewardButton in file.rewardButtonToDataMap )
-	{
-		RewardButtonData rbd = file.rewardButtonToDataMap[file.focusedRewardButton]
-		if ( rbd.footer == button )
-		{
-			return
-		}
-	}
-
-	array<RewardButtonData> allrbds
-	foreach ( new_rbd in file.rewardButtonToDataMap )
-	{
-		if ( new_rbd.footer == button )
-		{
-			allrbds.append( new_rbd )
-		}
-	}
-
-	if ( allrbds.len() > 0 )
-	{
-		BattlePass_RewardButton_OnLoseFocus( file.focusedRewardButton )
-		BattlePass_RewardButton_OnGetFocus( allrbds[0].button )
-	}
-}
-
-void function BattlePass_RewardButtonHeader_OnLoseFocus( var button )
-{
-	Hud_Hide( file.detailBox )
-}
-
-void function BattlePass_RewardButtonFree_OnGetFocus( var button )
-{
-	BattlePass_RewardButton_OnGetFocus( button )
-}
-
-void function BattlePass_RewardButtonFree_OnLoseFocus( var button )
-{
-	BattlePass_RewardButton_OnLoseFocus( button )
-}
-
-void function BattlePass_RewardButtonFree_OnActivate( var button )
-{
-	BattlePass_RewardButton_OnActivate( button )
-}
-
-void function BattlePass_RewardButtonFree_OnAltActivate( var button )
-{
-	BattlePass_RewardButton_OnAltActivate( button )
-}
-
-void function BattlePass_RewardButtonPremium_OnGetFocus( var button )
-{
-	BattlePass_RewardButton_OnGetFocus( button )
-}
-
-void function BattlePass_RewardButtonPremium_OnLoseFocus( var button )
-{
-	BattlePass_RewardButton_OnLoseFocus( button )
-}
-
-void function BattlePass_RewardButtonPremium_OnActivate( var button )
-{
-	BattlePass_RewardButton_OnActivate( button )
-}
-
-void function BattlePass_RewardButtonPremium_OnAltActivate( var button )
-{
-	BattlePass_RewardButton_OnAltActivate( button )
-}
 
 void function BattlePass_RewardButton_OnGetFocus( var button )
 {
 	Hud_SetNavDown( file.purchaseButton, button )
-
-	if ( !(button in file.rewardButtonToDataMap) )
-		return
 
 	RewardButtonData rbd    = file.rewardButtonToDataMap[button]
 	//
@@ -802,14 +432,11 @@ void function BattlePass_RewardButton_OnGetFocus( var button )
 
 	Hud_SetNavDown( file.purchaseButton, rbd.button )
 
-	foreach ( var otherButton in file.rewardButtonsFree )
+	foreach ( var otherButton in file.rewardButtons )
 		Hud_SetSelected( otherButton, false )
-	foreach ( var otherButton in file.rewardButtonsPremium )
-		Hud_SetSelected( otherButton, false )
-
 	Hud_SetSelected( button, true )
 
-	foreach ( var rewardFooter in file.rewardHeaders )
+	foreach ( var rewardFooter in file.rewardFooters )
 		HudElem_SetRuiArg( rewardFooter, "isButtonFocused", false )
 	HudElem_SetRuiArg( rbd.footer, "isButtonFocused", true )
 
@@ -817,9 +444,6 @@ void function BattlePass_RewardButton_OnGetFocus( var button )
 	if ( activeBattlePass == null || !GRX_IsInventoryReady() )
 		return
 	expect ItemFlavor( activeBattlePass )
-
-	file.focusedRewardButton = button
-	Hud_Show( file.detailBox )
 
 	int battlePassLevel = GetPlayerBattlePassLevel( GetUIPlayer(), activeBattlePass, false )
 	bool hasPremiumPass = DoesPlayerOwnBattlePass( GetUIPlayer(), activeBattlePass )
@@ -846,20 +470,29 @@ void function BattlePass_RewardButton_OnGetFocus( var button )
 	{
 		if ( rarity == 1 )
 		{
-			HudElem_SetRuiArg( file.detailBox, "rarityBulletText1", Localize( "#APEX_PACK_PROBABILITIES_RARE" ) )
+			HudElem_SetRuiArg( file.detailBox, "rarityBulletText1", Localize( "#LOOT_RARITY_CHANCE_1" ) )
+			HudElem_SetRuiArg( file.detailBox, "rarityBulletText2", Localize( "#LOOT_RARITY_CHANCE_2" ) )
+			HudElem_SetRuiArg( file.detailBox, "rarityBulletText3", Localize( "#LOOT_RARITY_CHANCE_3" ) )
+			HudElem_SetRuiArg( file.detailBox, "rarityPercentText1", Localize( "#LOOT_RARITY_PERCENT_1" ) )
+			HudElem_SetRuiArg( file.detailBox, "rarityPercentText2", Localize( "#LOOT_RARITY_PERCENT_2" ) )
+			HudElem_SetRuiArg( file.detailBox, "rarityPercentText3", Localize( "#LOOT_RARITY_PERCENT_3" ) )
 		}
 		else if ( rarity == 2 )
 		{
-			HudElem_SetRuiArg( file.detailBox, "rarityBulletText1", Localize( "#APEX_PACK_PROBABILITIES_EPIC" ) )
+			HudElem_SetRuiArg( file.detailBox, "rarityBulletText1", Localize( "#LOOT_RARITY_CHANCE_2" ) )
+			HudElem_SetRuiArg( file.detailBox, "rarityBulletText2", Localize( "#LOOT_RARITY_CHANCE_3" ) )
+			HudElem_SetRuiArg( file.detailBox, "rarityPercentText1", Localize( "#LOOT_RARITY_PERCENT_1" ) )
+			HudElem_SetRuiArg( file.detailBox, "rarityPercentText2", Localize( "#LOOT_RARITY_PERCENT_3" ) )
 		}
 		else if ( rarity == 3 )
 		{
-			HudElem_SetRuiArg( file.detailBox, "rarityBulletText1", Localize( "#APEX_PACK_PROBABILITIES_LEGENDARY" ) )
+			HudElem_SetRuiArg( file.detailBox, "rarityBulletText1", Localize( "#LOOT_RARITY_CHANCE_3" ) )
+			HudElem_SetRuiArg( file.detailBox, "rarityPercentText1", Localize( "#LOOT_RARITY_PERCENT_1" ) )
 		}
 	}
 
-	HudElem_SetRuiArg( file.levelReqButton, "buttonText", Localize( "#BATTLE_PASS_LEVEL_REQUIRED", reward.level + 2 ) )
-	HudElem_SetRuiArg( file.levelReqButton, "meetsRequirement", battlePassLevel >= reward.level + 1 )
+	HudElem_SetRuiArg( file.levelReqButton, "buttonText", Localize( "#BATTLE_PASS_LEVEL_REQUIRED", reward.level + 1 ) )
+	HudElem_SetRuiArg( file.levelReqButton, "meetsRequirement", battlePassLevel >= reward.level )
 	HudElem_SetRuiArg( file.levelReqButton, "isPremium", false )
 
 	if ( reward.isPremium && hasPremiumPass )
@@ -885,21 +518,11 @@ void function BattlePass_RewardButton_OnGetFocus( var button )
 	Hud_SetVisible( file.loadscreenPreviewBoxOverlay, isLoadScreen )
 
 	bool shouldPlayAudioPreview = !wasFocusForced
-	RunClientScript( "UIToClient_ItemPresentation", ItemFlavor_GetGUID( reward.flav ), reward.level, 1.0, Battlepass_ShouldShowLow( reward.flav ), file.loadscreenPreviewBox, shouldPlayAudioPreview, "battlepass_right_ref" )
+	RunClientScript( "UIToClient_ItemPresentation", ItemFlavor_GetGUID( reward.flav ), reward.level, false, file.loadscreenPreviewBox, shouldPlayAudioPreview )
 
 	UpdateFooterOptions() //
 }
 
-bool function Battlepass_ShouldShowLow( ItemFlavor flav )
-{
-	switch ( ItemFlavor_GetType( flav ) )
-	{
-		case eItemType.character_skin:
-		case eItemType.gladiator_card_frame:
-			return true
-	}
-	return false
-}
 
 void function BattlePass_RewardButton_OnLoseFocus( var button )
 {
@@ -937,9 +560,8 @@ void function BattlePass_RewardButton_OnActivate( var button )
 		LoadscreenPreviewMenu_SetLoadscreenToPreview( reward.flav )
 		AdvanceMenu( GetMenu( "LoadscreenPreviewMenu" ) )
 	}
-	else if ( InspectItemTypePresentationSupported( reward.flav ) )
+	else if ( InspectItemTypePresentationSupported( reward.flav ) && ItemFlavor_GetType( reward.flav ) != eItemType.account_currency )
 	{
-		RunClientScript( "ClearBattlePassItem" )
 		SetBattlePassItemPresentationModeActive( reward )
 	}
 }
@@ -967,11 +589,11 @@ void function BattlePass_RewardButton_OnAltActivate( var button )
 	else
 	{
 		//
-		OpenSelectSlotDialog( entry, item, GetItemFlavorAssociatedCharacterOrWeapon( item ),
+		OpenSelectSlotDialog( entry, item, GetItemFlavorAssociatedCharacter( item ),
 					(void function( int index ) : ( entry, item )
 			{
 				EmitUISound( "UI_Menu_Equip_Generic" )
-				RequestSetItemFlavorLoadoutSlot_WithDuplicatePrevention( ToEHI( GetUIPlayer() ), entry, item, index )
+				//RequestSetItemFlavorLoadoutSlot_WithDuplicatePrevention( ToEHI( GetUIPlayer() ), entry, item, index )
 			})
 		)
 	}
@@ -1022,7 +644,7 @@ string function BattlePass_GetShortDescString( BattlePassReward reward )
 	{
 		case eItemType.weapon_skin:
 			ItemFlavor ref = WeaponSkin_GetWeaponFlavor( reward.flav )
-			return Localize( "#REWARD_SKIN", Localize( ItemFlavor_GetShortName( ref ) ) )
+			return Localize( "#REWARD_SKIN", Localize( ItemFlavor_GetLongName( ref ) ) )
 
 		case eItemType.character_skin:
 			ItemFlavor ref = CharacterSkin_GetCharacterFlavor( reward.flav )
@@ -1034,11 +656,11 @@ string function BattlePass_GetShortDescString( BattlePassReward reward )
 
 		case eItemType.gladiator_card_intro_quip:
 			ItemFlavor ref = CharacterIntroQuip_GetCharacterFlavor( reward.flav )
-			return Localize( "#REWARD_INTRO_QUIP", Localize( ItemFlavor_GetLongName( ref ) ) )
+			return Localize( "#REWARD_QUIP", Localize( ItemFlavor_GetLongName( ref ) ) )
 
 		case eItemType.gladiator_card_kill_quip:
 			ItemFlavor ref = CharacterKillQuip_GetCharacterFlavor( reward.flav )
-			return Localize( "#REWARD_KILL_QUIP", Localize( ItemFlavor_GetLongName( ref ) ) )
+			return Localize( "#REWARD_QUIP", Localize( ItemFlavor_GetLongName( ref ) ) )
 
 		case eItemType.gladiator_card_frame:
 			ItemFlavor ref = GladiatorCardFrame_GetCharacterFlavor( reward.flav )
@@ -1060,9 +682,6 @@ string function BattlePass_GetShortDescString( BattlePassReward reward )
 		case eItemType.skydive_emote:
 			ItemFlavor ref = CharacterSkydiveEmote_GetCharacterFlavor( reward.flav )
 			return Localize( "#REWARD_SKYDIVE_EMOTE", Localize( ItemFlavor_GetLongName( ref ) ) )
-
-		case eItemType.weapon_charm:
-			return Localize( ItemFlavor_GetTypeName( reward.flav ) )
 	}
 
 	return ""
@@ -1117,8 +736,7 @@ array<RewardGroup> function GetRewardGroupsForPage( int pageNumber )
 	expect ItemFlavor( activeBattlePass )
 
 	int levelOffset    = GetLevelOffsetForPage( activeBattlePass, pageNumber )
-	int endLevelOffset = GetLevelEndForPage( activeBattlePass, pageNumber )
-
+	int endLevelOffset = GetNumLevelsForPage( activeBattlePass, pageNumber )
 	for ( int levelIdx = levelOffset; levelIdx < endLevelOffset; levelIdx++ )
 	{
 		RewardGroup rewardGroup
@@ -1130,67 +748,22 @@ array<RewardGroup> function GetRewardGroupsForPage( int pageNumber )
 	return rewardGroups
 }
 
-int function GetRewardsBoxSizeForGroup( RewardGroup rewardGroup )
-{
-	int numFree
-	int numPremium
-
-	foreach ( reward in rewardGroup.rewards )
-	{
-		if ( reward.isPremium )
-			numPremium++
-		else
-			numFree++
-	}
-
-	return maxint( numPremium, numFree ) //
-}
-
-int function GetRewardsCountForLevel( ItemFlavor activeBattlePass, int level )
-{
-	int numFree
-	int numPremium
-
-	array<BattlePassReward> rewards = GetBattlePassLevelRewards( activeBattlePass, level )
-
-	foreach ( reward in rewards )
-	{
-		if ( reward.isPremium )
-			numPremium++
-		else
-			numFree++
-	}
-
-	return maxint( numPremium, numFree ) //
-}
 
 int function GetLevelOffsetForPage( ItemFlavor activeBattlePass, int pageIdx )
 {
-	if ( activeBattlePass in file.pageDatas )
-	{
-		return file.pageDatas[ activeBattlePass ][ pageIdx ].startLevel
-	}
-
 	array<int> pageToLevelIdx = [0]
-	int levelsInCurrentPage   = 0
 	int rewardCount           = 0
-	int maxLevel              = GetBattlePassMaxLevelIndex( activeBattlePass )
-	for ( int levelIdx = 0; levelIdx < maxLevel; levelIdx++ )
+	for ( int levelIdx = 0; levelIdx < GetBattlePassMaxLevelIndex( activeBattlePass ); levelIdx++ )
 	{
-		int rewardsLen = GetRewardsCountForLevel( activeBattlePass, levelIdx )
-
-		if ( rewardsLen > 0 )
-			levelsInCurrentPage++
-
-		if ( rewardCount + rewardsLen <= REWARDS_PER_PAGE && levelsInCurrentPage < MAX_LEVELS_PER_PAGE )
+		array<BattlePassReward> rewards = GetBattlePassLevelRewards( activeBattlePass, levelIdx )
+		if ( rewardCount + rewards.len() <= REWARDS_PER_PAGE )
 		{
-			rewardCount += rewardsLen
+			rewardCount += rewards.len()
 		}
 		else
 		{
 			pageToLevelIdx.append( levelIdx )
-			rewardCount = rewardsLen
-			levelsInCurrentPage = 0
+			rewardCount = rewards.len()
 		}
 	}
 
@@ -1201,25 +774,18 @@ int function GetLevelOffsetForPage( ItemFlavor activeBattlePass, int pageIdx )
 int function GetNumPages( ItemFlavor activeBattlePass )
 {
 	array<int> pageToLevelIdx = [0]
-	int levelsInCurrentPage   = 0
 	int rewardCount           = 0
-	int maxLevel              = GetBattlePassMaxLevelIndex( activeBattlePass )
-	for ( int levelIdx = 0; levelIdx < maxLevel; levelIdx++ )
+	for ( int levelIdx = 0; levelIdx < GetBattlePassMaxLevelIndex( activeBattlePass ); levelIdx++ )
 	{
-		int rewardsLen = GetRewardsCountForLevel( activeBattlePass, levelIdx )
-
-		if ( rewardsLen > 0 )
-			levelsInCurrentPage++
-
-		if ( rewardCount + rewardsLen <= REWARDS_PER_PAGE && levelsInCurrentPage < MAX_LEVELS_PER_PAGE )
+		array<BattlePassReward> rewards = GetBattlePassLevelRewards( activeBattlePass, levelIdx )
+		if ( rewardCount + rewards.len() <= REWARDS_PER_PAGE )
 		{
-			rewardCount += rewardsLen
+			rewardCount += rewards.len()
 		}
 		else
 		{
 			pageToLevelIdx.append( levelIdx )
-			rewardCount = rewardsLen
-			levelsInCurrentPage = 0
+			rewardCount = rewards.len()
 		}
 	}
 
@@ -1227,25 +793,17 @@ int function GetNumPages( ItemFlavor activeBattlePass )
 }
 
 
-int function GetLevelEndForPage( ItemFlavor activeBattlePass, int pageIdx )
+int function GetNumLevelsForPage( ItemFlavor activeBattlePass, int pageIdx )
 {
-	if ( activeBattlePass in file.pageDatas )
-	{
-		return file.pageDatas[ activeBattlePass ][ pageIdx ].endLevel
-	}
-
 	int rewardCount = 0
 	int levelIdx    = GetLevelOffsetForPage( activeBattlePass, pageIdx )
-	for ( int i = 0 ; i < MAX_LEVELS_PER_PAGE && levelIdx <= GetBattlePassMaxLevelIndex( activeBattlePass ) && rewardCount < REWARDS_PER_PAGE; levelIdx++ )
+	for ( ; levelIdx <= GetBattlePassMaxLevelIndex( activeBattlePass ) && rewardCount < REWARDS_PER_PAGE; levelIdx++ )
 	{
-		int rewardsLen = GetRewardsCountForLevel( activeBattlePass, levelIdx )
-		rewardCount += rewardsLen
+		array<BattlePassReward> rewards = GetBattlePassLevelRewards( activeBattlePass, levelIdx )
+		rewardCount += rewards.len()
 
 		if ( rewardCount > REWARDS_PER_PAGE )
 			return levelIdx
-
-		if ( rewardsLen > 0 )
-			i++
 	}
 
 	return levelIdx
@@ -1295,7 +853,10 @@ void function BattlePass_UpdatePageOnOpen()
 	}
 	else
 	{
-		desiredPageNum = BattlePass_GetPageForLevel( activeBattlePass, currentLevel )
+		if ( hasPremiumPass )
+			desiredPageNum = BattlePass_GetPageForLevel( activeBattlePass, currentLevel )
+		else
+			desiredPageNum = 0
 	}
 
 	BattlePass_SetPage( desiredPageNum )
@@ -1304,46 +865,20 @@ void function BattlePass_UpdatePageOnOpen()
 		Assert( desiredFocusRewardButtonKey in file.rewardKeyToRewardButtonDataMap, format( "Tried to focus reward button '%s' on page %d'", desiredFocusRewardButtonKey, desiredPageNum ) )
 		BattlePass_FocusRewardButton( file.rewardKeyToRewardButtonDataMap[desiredFocusRewardButtonKey] )
 	}
-	else
-	{
-		Hud_SetFocused( file.rewardButtonsPremium[0] )
-	}
 }
 
-void function BuildPageDatas( ItemFlavor activeBattlePass )
-{
-	int numPages = GetNumPages( activeBattlePass )
-
-	if ( activeBattlePass in file.pageDatas )
-		delete file.pageDatas[ activeBattlePass ]
-
-	table<int, BattlePassPageData> datas
-
-	for ( int pageNum = 0 ; pageNum < numPages ; pageNum++ )
-	{
-		int startLevel = GetLevelOffsetForPage( activeBattlePass, pageNum )
-		int endLevel   = GetLevelEndForPage( activeBattlePass, pageNum )
-		BattlePassPageData pData
-		pData.startLevel = startLevel
-		pData.endLevel = endLevel
-		datas[ pageNum ] <- pData
-	}
-
-	file.pageDatas[ activeBattlePass ] <- datas
-}
 
 int function BattlePass_GetPageForLevel( ItemFlavor activeBattlePass, int level )
 {
-	int numPages = GetNumPages( activeBattlePass )
-	for ( int pageNum = 0 ; pageNum < numPages ; pageNum++ )
+	for ( int pageNum = 0 ; pageNum < GetNumPages( activeBattlePass ) ; pageNum++ )
 	{
 		int startLevel = GetLevelOffsetForPage( activeBattlePass, pageNum )
-		int endLevel   = GetLevelEndForPage( activeBattlePass, pageNum )
+		int endLevel   = GetNumLevelsForPage( activeBattlePass, pageNum )
 		if ( level >= startLevel && level <= endLevel )
 			return pageNum
 	}
 
-	return numPages
+	return GetNumPages( activeBattlePass )
 }
 
 
@@ -1375,9 +910,6 @@ void function BattlePass_SetPage( int pageNumber )
 
 	int numPages = GetNumPages( activeBattlePass )
 	pageNumber = ClampInt( pageNumber, 0, numPages - 1 )
-
-	bool isSamePage = file.currentPage == pageNumber
-
 	file.previousPage = file.currentPage
 	file.currentPage = pageNumber
 
@@ -1392,158 +924,50 @@ void function BattlePass_SetPage( int pageNumber )
 	Hud_SetEnabled( file.invisiblePageRightTriggerButton, nextPageButton )
 
 	int startLevel = GetLevelOffsetForPage( activeBattlePass, pageNumber )
-	int endLevel   = GetLevelEndForPage( activeBattlePass, pageNumber )
+	int endLevel   = GetNumLevelsForPage( activeBattlePass, pageNumber )
 
 	HudElem_SetRuiArg( file.rewardBarFooter, "currentPage", pageNumber )
 	HudElem_SetRuiArg( file.rewardBarFooter, "levelRangeText", Localize( "#BATTLE_PASS_LEVEL_RANGE", startLevel + 1, endLevel ) )
 	HudElem_SetRuiArg( file.rewardBarFooter, "numPages", GetNumPages( activeBattlePass ) )
-
-	if ( !isSamePage )
-	{
-		foreach ( button in file.rewardButtonsPremium )
-		{
-			HudElem_SetRuiArg( button, "forceFocusShineMarker", RandomInt( INT_MAX ) )
-		}
-
-		foreach ( button in file.rewardButtonsFree )
-		{
-			HudElem_SetRuiArg( button, "forceFocusShineMarker", RandomInt( INT_MAX ) )
-		}
-	}
 }
 #endif
 
 
-#if UI
+#if(UI)
 void function OnPanelShow( var panel )
 {
-	RegisterStickMovedCallback( ANALOG_RIGHT_X, TryChangePageFromRS )
-
-	UI_SetPresentationType( ePresentationType.BATTLE_PASS_3 )
+	UI_SetPresentationType( ePresentationType.BATTLE_PASS )
 	//
 
 	RegisterButtonPressedCallback( MOUSE_WHEEL_DOWN, BattlePass_PageForward )
 	RegisterButtonPressedCallback( MOUSE_WHEEL_UP, BattlePass_PageBackward )
-	//
-	//
+	RegisterButtonPressedCallback( BUTTON_TRIGGER_LEFT, BattlePass_PageBackward )
+	RegisterButtonPressedCallback( BUTTON_TRIGGER_RIGHT, BattlePass_PageForward )
 
 	BattlePass_UpdatePageOnOpen()
 	BattlePass_UpdateStatus()
-	BattlePass_UpdatePurchaseButton( file.purchaseButton )
+	BattlePass_UpdatePurchaseButton()
 
 	AddCallbackAndCallNow_OnGRXOffersRefreshed( OnGRXStateChanged )
 	AddCallbackAndCallNow_OnGRXInventoryStateChanged( OnGRXStateChanged )
 
-	HudElem_SetRuiArg( file.detailBox, "useSmallFont", ShouldUseSmallFont() )
-	HudElem_SetRuiArg( file.statusBox, "timeRemainingOffsetY", GetTimeRemainingOffsetY() )
 	//
 }
 
-bool function ShouldUseSmallFont()
-{
-	switch ( GetLanguage() )
-	{
-		case "german":
-			return true
-	}
-
-	return false
-}
-
-float function GetTimeRemainingOffsetY()
-{
-	switch ( GetLanguage() )
-	{
-		case "japanese":
-			return 8.0
-	}
-
-	return 2.0
-}
 
 void function OnPanelHide( var panel )
 {
-	Signal( uiGlobal.signalDummy, "TryChangePageThread" )
-	DeregisterStickMovedCallback( ANALOG_RIGHT_X, TryChangePageFromRS )
-
-	//
+	RunClientScript( "UIToClient_StopBattlePassScene" )
 
 	DeregisterButtonPressedCallback( MOUSE_WHEEL_DOWN, BattlePass_PageForward )
 	DeregisterButtonPressedCallback( MOUSE_WHEEL_UP, BattlePass_PageBackward )
-	//
-	//
+	DeregisterButtonPressedCallback( BUTTON_TRIGGER_LEFT, BattlePass_PageBackward )
+	DeregisterButtonPressedCallback( BUTTON_TRIGGER_RIGHT, BattlePass_PageForward )
 
 	RemoveCallback_OnGRXOffersRefreshed( OnGRXStateChanged )
 	RemoveCallback_OnGRXInventoryStateChanged( OnGRXStateChanged )
-
-	RunClientScript( "ClearBattlePassItem" )
 }
 
-void function TryChangePageFromRS( ... )
-{
-	float stickDeflection = expect float( vargv[1] )
-	//
-
-	int stickState = eStickState.NEUTRAL
-	if ( stickDeflection > 0.25 )
-		stickState = eStickState.RIGHT
-	else if ( stickDeflection < -0.25 )
-		stickState = eStickState.LEFT
-
-	if ( stickState != file.lastStickState )
-	{
-		file.stickRepeatAllowTime = Time()
-		file.lastStickState = stickState
-		thread TryChangePageThread( stickState )
-	}
-	else
-	{
-		file.lastStickState = stickState
-	}
-}
-
-void function TryChangePageThread( int stickState )
-{
-	Signal( uiGlobal.signalDummy, "TryChangePageThread" )
-	EndSignal( uiGlobal.signalDummy, "TryChangePageThread" )
-
-	if ( stickState == eStickState.NEUTRAL )
-		return
-
-	int times = 0
-
-	while ( stickState == file.lastStickState )
-	{
-		if ( file.stickRepeatAllowTime <= Time() )
-		{
-			if ( stickState == eStickState.RIGHT )
-			{
-				//
-				BattlePass_PageForward( null )
-			}
-			else if ( stickState == eStickState.LEFT )
-			{
-				//
-				BattlePass_PageBackward( null )
-			}
-
-			file.stickRepeatAllowTime = Time() + GetPageDelay( times )
-			times++
-		}
-
-		WaitFrame()
-	}
-}
-
-float function GetPageDelay( int repeatCount )
-{
-	if ( repeatCount > 2 )
-		return CURSOR_DELAY_FAST
-	if ( repeatCount > 0 )
-		return CURSOR_DELAY_MED
-
-	return CURSOR_DELAY_BASE
-}
 
 void function OnGRXStateChanged()
 {
@@ -1552,180 +976,53 @@ void function OnGRXStateChanged()
 	if ( !ready )
 		return
 
-	thread TryDisplayBattlePassAwards( true )
+	thread TryDisplayBattlePassAwards()
 }
 
 
-void function BattlePass_UpdatePurchaseButton( var button, bool showUpsell = true )
+void function BattlePass_UpdatePurchaseButton()
 {
 	ItemFlavor ornull activeBattlePass = GetPlayerActiveBattlePass( ToEHI( GetUIPlayer() ) )
 	if ( activeBattlePass == null || !GRX_IsInventoryReady() )
 	{
-		Hud_SetEnabled( button, false )
-		Hud_SetVisible( button, false )
-		HudElem_SetRuiArg( button, "buttonText", "#COMING_SOON" )
+		Hud_SetEnabled( file.purchaseButton, false )
+		Hud_SetVisible( file.purchaseButton, false )
+		HudElem_SetRuiArg( file.purchaseButton, "buttonText", "#COMING_SOON" )
 		return
 	}
 
 	expect ItemFlavor( activeBattlePass )
 
-	Hud_SetEnabled( button, true )
-	Hud_SetVisible( button, true )
-	Hud_SetLocked( button, false )
-	Hud_ClearToolTipData( button )
-
-	HudElem_SetRuiArg( button, "showUnlockedString", false )
+	Hud_SetEnabled( file.purchaseButton, true )
+	Hud_SetVisible( file.purchaseButton, true )
+	Hud_SetLocked( file.purchaseButton, false )
+	Hud_ClearToolTipData( file.purchaseButton )
 
 	if ( GRX_IsItemOwnedByPlayer( activeBattlePass ) )
 	{
-		HudElem_SetRuiArg( button, "buttonText", "#BATTLE_PASS_BUTTON_PURCHASE_XP" )
+		HudElem_SetRuiArg( file.purchaseButton, "buttonText", "#BATTLE_PASS_BUTTON_PURCHASE_XP" )
 
 		if ( GetPlayerBattlePassPurchasableLevels( ToEHI( GetUIPlayer() ), activeBattlePass ) == 0 )
 		{
-			Hud_SetLocked( button, true )
+			Hud_SetLocked( file.purchaseButton, true )
 			ToolTipData toolTipData
 			toolTipData.titleText = "#BATTLE_PASS_MAX_PURCHASE_LEVEL"
 			toolTipData.descText = "#BATTLE_PASS_MAX_PURCHASE_LEVEL_DESC"
-			Hud_SetToolTipData( button, toolTipData )
+			Hud_SetToolTipData( file.purchaseButton, toolTipData )
 		}
 	}
 	else
 	{
-		HudElem_SetRuiArg( button, "buttonText", "#BATTLE_PASS_BUTTON_PURCHASE" )
+		HudElem_SetRuiArg( file.purchaseButton, "buttonText", "#BATTLE_PASS_BUTTON_PURCHASE" )
 
-		int level = GetPlayerBattlePassLevel( GetUIPlayer(), activeBattlePass, false )
-
-		if ( level > 0 )
+		if ( GetPlayerBattlePassLevel( GetUIPlayer(), activeBattlePass, false ) > 0 )
 		{
 			ToolTipData toolTipData
 			toolTipData.titleText = "#BATTLE_PASS_BUTTON_PURCHASE"
 			toolTipData.descText = "#BUTTON_BATTLE_PASS_PURCHASE_DESC"
-			Hud_SetToolTipData( button, toolTipData )
-		}
-
-		if ( showUpsell )
-		{
-			if ( level > 10 )
-			{
-				HudElem_SetRuiArg( button, "showUnlockedString", true )
-
-				Hud_SetY( button, -1 * int(Hud_GetHeight( file.purchaseBG ) * 0.15) )
-
-				BattlePass_SetUnlockedString( button, level )
-			}
-			else
-			{
-				Hud_SetY( button, 0 )
-			}
+			Hud_SetToolTipData( file.purchaseButton, toolTipData )
 		}
 	}
-}
-
-void function BattlePass_SetUnlockedString( var button, int level )
-{
-	int numRares       = GetNumPremiumRewardsOfTypeUpToLevel( level, eQuality.RARE, [ eItemType.account_currency, eItemType.account_currency_bundle ] )
-	int numEpics       = GetNumPremiumRewardsOfTypeUpToLevel( level, eQuality.EPIC, [ eItemType.account_currency, eItemType.account_currency_bundle ] )
-	int numLegendaries = GetNumPremiumRewardsOfTypeUpToLevel( level, eQuality.LEGENDARY, [ eItemType.account_currency, eItemType.account_currency_bundle ] )
-
-	ItemFlavor apexCoins        = GRX_CURRENCIES[ GRX_CURRENCY_PREMIUM ]
-	ItemFlavor craftingCurrency = GRX_CURRENCIES[ GRX_CURRENCY_CRAFTING ]
-
-	int numCoins    = GetNumPremiumRewardsOfTypeUpToLevel( level, -1, [], [ apexCoins ] )
-	int numCrafting = GetNumPremiumRewardsOfTypeUpToLevel( level, -1, [], [ craftingCurrency ] )
-
-	printt( "numRares " + numRares )
-	printt( "numEpics " + numEpics )
-	printt( "numLegendaries " + numLegendaries )
-	printt( "numCoins " + numCoins )
-	printt( "numCrafting " + numCrafting )
-
-	const int MAX_UNLOCK_THINGS = 5
-	const int MAX_COLOR_TIERS = 3
-
-	array<string> unlockedStrings
-	int colorTiersUsed
-	if ( colorTiersUsed < MAX_COLOR_TIERS && unlockedStrings.len() < MAX_UNLOCK_THINGS && numLegendaries > 0 )
-	{
-		int quality = eQuality.LEGENDARY
-		int count   = numLegendaries
-		unlockedStrings.append( Localize( "#BATTLEPASS_DISPLAY_QUANTITY_QUALITY", count, Localize( ItemQuality_GetQualityName( quality ) ), (colorTiersUsed + 1) ) )
-		HudElem_SetRuiArg( button, "unlockedStringColorTier" + (colorTiersUsed + 1), quality )
-		colorTiersUsed++
-	}
-
-	if ( colorTiersUsed < MAX_COLOR_TIERS && unlockedStrings.len() < MAX_UNLOCK_THINGS && numEpics > 0 )
-	{
-		int quality = eQuality.EPIC
-		int count   = numEpics
-		unlockedStrings.append( Localize( "#BATTLEPASS_DISPLAY_QUANTITY_QUALITY", count, Localize( ItemQuality_GetQualityName( quality ) ), (colorTiersUsed + 1) ) )
-		HudElem_SetRuiArg( button, "unlockedStringColorTier" + (colorTiersUsed + 1), quality )
-		colorTiersUsed++
-	}
-
-	if ( colorTiersUsed < MAX_COLOR_TIERS && unlockedStrings.len() < MAX_UNLOCK_THINGS && numRares > 0 )
-	{
-		int quality = eQuality.RARE
-		int count   = numRares
-		unlockedStrings.append( Localize( "#BATTLEPASS_DISPLAY_QUANTITY_QUALITY", count, Localize( ItemQuality_GetQualityName( quality ) ), (colorTiersUsed + 1) ) )
-		HudElem_SetRuiArg( button, "unlockedStringColorTier" + (colorTiersUsed + 1), quality )
-		colorTiersUsed++
-	}
-
-	if ( unlockedStrings.len() < MAX_UNLOCK_THINGS && numCoins > 0 )
-	{
-		int count          = numCoins
-		string imageString = ItemFlavor_GetIcon( apexCoins )
-		unlockedStrings.append( Localize( "#BATTLEPASS_DISPLAY_QUANTITY_CURRENCY", "%$" + imageString + "%", count, 0 ) )
-	}
-
-	if ( unlockedStrings.len() < MAX_UNLOCK_THINGS && numCrafting > 0 )
-	{
-		int count          = numCrafting
-		string imageString = ItemFlavor_GetIcon( craftingCurrency )
-		unlockedStrings.append( Localize( "#BATTLEPASS_DISPLAY_QUANTITY_CURRENCY", "%$" + imageString + "%", count, 0 ) )
-	}
-
-	int stringCount = unlockedStrings.len()
-	while ( unlockedStrings.len() < MAX_UNLOCK_THINGS )
-		unlockedStrings.append( "" )
-
-	string unlockedString = Localize( "#BATTLEPASS_REWARDS_DISPLAY_" + stringCount, unlockedStrings[0], unlockedStrings[1], unlockedStrings[2], unlockedStrings[3], unlockedStrings[4] )
-
-	HudElem_SetRuiArg( button, "unlockedString", unlockedString )
-}
-
-int function GetNumPremiumRewardsOfTypeUpToLevel( int endLevel, int tier, array<int> excludeItemTypes = [], array<ItemFlavor> onlyMatchItemFlavs = [] )
-{
-	ItemFlavor ornull activeBattlePass = GetActiveBattlePass()
-
-	if ( activeBattlePass == null )
-		return 0
-
-	expect ItemFlavor( activeBattlePass )
-
-	int count
-
-	for ( int levelIdx = 0; levelIdx < endLevel; levelIdx++ )
-	{
-		array<BattlePassReward> rewards = GetBattlePassLevelRewards( activeBattlePass, levelIdx )
-		foreach ( reward in rewards )
-		{
-			if ( reward.isPremium )
-			{
-				if ( (tier == -1 || ItemFlavor_GetQuality( reward.flav ) == tier)
-						&& (
-												(onlyMatchItemFlavs.len() == 0 && !excludeItemTypes.contains( ItemFlavor_GetType( reward.flav ) ))
-										|| (onlyMatchItemFlavs.len() > 0 && onlyMatchItemFlavs.contains( reward.flav ))
-								)
-						)
-				{
-					count += reward.quantity
-				}
-			}
-		}
-	}
-
-	return count
 }
 
 void function BattlePass_UpdateStatus()
@@ -1784,13 +1081,13 @@ void function BattlePass_UpdateStatus()
 	ItemFlavor dummy
 	ItemFlavor bpLevelBadge = GetBattlePassProgressBadge( activeBattlePass )
 
-	RuiDestroyNestedIfAlive( Hud_GetRui( file.purchaseBG ), "currentBadgeHandle" )
-	CreateNestedGladiatorCardBadge( Hud_GetRui( file.purchaseBG ), "currentBadgeHandle", ToEHI( GetUIPlayer() ), bpLevelBadge, 0, dummy, ending_passLevel + 1 )
+	RuiDestroyNestedIfAlive( Hud_GetRui( file.statusBox ), "currentBadgeHandle" )
+	CreateNestedGladiatorCardBadge( Hud_GetRui( file.statusBox ), "currentBadgeHandle", ToEHI( GetUIPlayer() ), bpLevelBadge, 0, dummy, ending_passLevel + 1 )
 }
 #endif
 
 
-#if UI
+#if(UI)
 struct
 {
 	var menu
@@ -1812,7 +1109,7 @@ struct
 #endif
 
 
-#if UI
+#if(UI)
 void function InitPassXPPurchaseDialog( var newMenuArg )
 //
 {
@@ -1943,10 +1240,22 @@ void function PassXPPurchaseDialog_UpdateRewards()
 		//
 		//
 
-		BattlePassReward bpReward = rewards[ rewards.len() - 1 - index]
+		BattlePassReward bpReward = rewards[index]
 		s_passPurchaseXPDialog.buttonToItem[button] <- bpReward
 
-		BattlePass_PopulateRewardButton( bpReward, button, true, false )
+		HudElem_SetRuiArg( button, "isOwned", true )
+		HudElem_SetRuiArg( button, "isPremium", bpReward.isPremium )
+
+		int rarity = ItemFlavor_HasQuality( bpReward.flav ) ? ItemFlavor_GetQuality( bpReward.flav ) : 0
+		HudElem_SetRuiArg( button, "rarity", rarity )
+		RuiSetImage( Hud_GetRui( button ), "buttonImage", GetImageForBattlePassReward( bpReward ) )
+
+		if ( ItemFlavor_GetType( bpReward.flav ) == eItemType.account_pack )
+			HudElem_SetRuiArg( button, "isLootBox", true )
+
+		HudElem_SetRuiArg( button, "itemCountString", "" )
+		if ( ItemFlavor_GetType( bpReward.flav ) == eItemType.account_currency )
+			HudElem_SetRuiArg( button, "itemCountString", string( bpReward.quantity ) )
 
 		ToolTipData toolTip
 		toolTip.titleText = GetBattlePassRewardHeaderText( bpReward )
@@ -1969,13 +1278,13 @@ void function InitBattlePassRewardButtonRui( var rui, BattlePassReward bpReward 
 		battlePassLevel = GetPlayerBattlePassLevel( GetUIPlayer(), activeBattlePass, false )
 	}
 
-	bool isOwned = (!bpReward.isPremium || hasPremiumPass) && bpReward.level < battlePassLevel
+	bool isOwned = (!bpReward.isPremium || hasPremiumPass) && bpReward.level <= battlePassLevel
 	RuiSetBool( rui, "isOwned", isOwned )
 	RuiSetBool( rui, "isPremium", bpReward.isPremium )
 
 	int rarity = ItemFlavor_HasQuality( bpReward.flav ) ? ItemFlavor_GetQuality( bpReward.flav ) : 0
 	RuiSetInt( rui, "rarity", rarity )
-	RuiSetImage( rui, "buttonImage", CustomizeMenu_GetRewardButtonImage( bpReward.flav ) )
+	RuiSetImage( rui, "buttonImage", GetImageForBattlePassReward( bpReward ) )
 
 	if ( ItemFlavor_GetType( bpReward.flav ) == eItemType.account_pack )
 		RuiSetBool( rui, "isLootBox", true )
@@ -2011,12 +1320,8 @@ void function PassXPPurchaseButton_OnActivate( var something )
 	if ( IsDialog( GetActiveMenu() ) )
 		CloseActiveMenu()
 
-	PurchaseDialogConfig pdc
-	pdc.flav = purchasedXPFlav
-	pdc.quantity = s_passPurchaseXPDialog.purchaseQuantity
-	pdc.markAsNew = false
-	pdc.onPurchaseResultCallback = OnBattlePassXPPurchaseResult
-	PurchaseDialog( pdc )
+	int quantity = s_passPurchaseXPDialog.purchaseQuantity
+	PurchaseDialog( purchasedXPFlav, quantity, false, null, OnBattlePassXPPurchaseResult )
 }
 
 
@@ -2038,8 +1343,6 @@ void function PassXPIncButton_OnActivate( var button )
 	int maxPurchasableLevels = GetPlayerBattlePassPurchasableLevels( ToEHI( GetUIPlayer() ), activeBattlePass )
 	s_passPurchaseXPDialog.purchaseQuantity = minint( s_passPurchaseXPDialog.purchaseQuantity + 1, maxPurchasableLevels )
 
-	EmitUISound( "UI_Menu_BattlePass_LevelIncreaseTab" )
-
 	PassXPPurchaseDialog_UpdateRewards()
 }
 
@@ -2048,45 +1351,21 @@ void function PassXPDecButton_OnActivate( var button )
 {
 	s_passPurchaseXPDialog.purchaseQuantity = maxint( s_passPurchaseXPDialog.purchaseQuantity - 1, 1 )
 
-	EmitUISound( "UI_Menu_BattlePass_LevelIncreaseTab" )
-
 	PassXPPurchaseDialog_UpdateRewards()
 }
 #endif
 
-#if UI
+#if(UI)
 
 void function InitAboutBattlePass1Dialog( var newMenuArg )
 //
 {
-	var menu = newMenuArg
+	var menu = GetMenu( "BattlePassAboutPage1" )
 	SetDialog( menu, true )
-	AddMenuEventHandler( menu, eUIEvent.MENU_SHOW, AboutBattlePass1Dialog_OnOpen )
-	AddMenuEventHandler( menu, eUIEvent.MENU_HIDE, AboutBattlePass1Dialog_OnClose )
+	AddMenuEventHandler( menu, eUIEvent.MENU_OPEN, AboutBattlePass1Dialog_OnOpen )
 	AddMenuFooterOption( menu, LEFT, BUTTON_B, true, "#B_BUTTON_BACK", "#B_BUTTON_BACK" )
-	file.aboutVideoChannel = ReserveVideoChannel()
-
-	file.aboutPurchaseButton = Hud_GetChild( menu, "PurchaseButton" )
-	AddButtonEventHandler( file.aboutPurchaseButton, UIE_CLICK, AboutPurchaseButton_OnClick )
 }
 
-void function AboutPurchaseButton_OnClick( var button )
-{
-	ItemFlavor ornull activeBattlePass = GetPlayerActiveBattlePass( ToEHI( GetUIPlayer() ) )
-	if ( activeBattlePass == null || !GRX_IsInventoryReady() )
-	{
-		return
-	}
-	expect ItemFlavor( activeBattlePass )
-
-	bool hasPremiumPass = DoesPlayerOwnBattlePass( GetUIPlayer(), activeBattlePass )
-
-	if ( !hasPremiumPass )
-	{
-		CloseActiveMenu()
-		AdvanceMenu( GetMenu( "PassPurchaseMenu" ) )
-	}
-}
 
 void function AboutBattlePass1Dialog_OnOpen()
 {
@@ -2094,39 +1373,12 @@ void function AboutBattlePass1Dialog_OnOpen()
 	var rui  = Hud_GetRui( Hud_GetChild( menu, "InfoPanel" ) )
 
 	RuiSetBool( rui, "grxOfferRestricted", GRX_IsOfferRestricted() )
-
-	ItemFlavor ornull activeBattlePass = GetActiveBattlePass()
-
-	if ( activeBattlePass == null )
-		return
-
-	expect ItemFlavor( activeBattlePass )
-
-	var infoPanel = Hud_GetChild( menu, "InfoPanel" )
-	HudElem_SetRuiArg( infoPanel, "battlePassName", ItemFlavor_GetLongName( activeBattlePass ) )
-	HudElem_SetRuiArg( infoPanel, "battlePassTitle", ItemFlavor_GetShortName( activeBattlePass ) )
-
-	StartVideoOnChannel( file.aboutVideoChannel, GetGlobalSettingsStringAsAsset( ItemFlavor_GetAsset( activeBattlePass ), "rewardsVideo" ), true, 0.0 )
-	HudElem_SetRuiArg( infoPanel, "channel", file.aboutVideoChannel )
-
-	bool passOwned = GRX_IsItemOwnedByPlayer( activeBattlePass )
-
-	HudElem_SetRuiArg( infoPanel, "passOwned", passOwned )
-
-	BattlePass_UpdatePurchaseButton( file.aboutPurchaseButton, false )
-
-	Hud_SetVisible( file.aboutPurchaseButton, !passOwned )
-}
-
-void function AboutBattlePass1Dialog_OnClose()
-{
-	StopVideoOnChannel( file.aboutVideoChannel )
 }
 
 #endif
 
 
-#if UI
+#if(UI)
 void function ShowRewardTable( var button )
 {
 	//
@@ -2134,36 +1386,26 @@ void function ShowRewardTable( var button )
 #endif
 
 
-#if CLIENT
-void function UIToClient_StartTempBattlePassPresentationBackground( asset bgImage )
+#if(CLIENT)
+void function UIToClient_StartBattlePassScene( var panel )
 {
 	//
-	if ( fileLevel.isTempBattlePassPresentationBackgroundThreadActive )
-		return
-	thread TempBattlePassPresentationBackground_Thread( bgImage )
-}
-#endif
-
-
-#if CLIENT
-void function UIToClient_StopTempBattlePassPresentationBackground()
-{
-	//
-	Signal( fileLevel.signalDummy, "StopTempBattlePassPresentationBackgroundThread" )
 	//
 }
 #endif
 
 
-#if CLIENT
+#if(CLIENT)
 void function UIToClient_StopBattlePassScene()
 {
+	//
+	Signal( fileLevel.signalDummy, "StopBattlePassSceneThread" )
 	ClearBattlePassItem()
 }
 #endif
 
 
-#if CLIENT
+#if(CLIENT)
 //
 //
 //
@@ -2185,12 +1427,12 @@ struct CarouselColumnState
 }
 
 
-void function TempBattlePassPresentationBackground_Thread( asset bgImage )
+void function BattlePassScene_Thread( var panel )
 {
-	Signal( fileLevel.signalDummy, "StopTempBattlePassPresentationBackgroundThread" ) //
-	EndSignal( fileLevel.signalDummy, "StopTempBattlePassPresentationBackgroundThread" )
+	Signal( fileLevel.signalDummy, "StopBattlePassSceneThread" ) //
+	EndSignal( fileLevel.signalDummy, "StopBattlePassSceneThread" )
 
-	fileLevel.isTempBattlePassPresentationBackgroundThreadActive = true
+	fileLevel.isBattlePassSceneThreadActive = true
 
 	entity cam = clGlobal.menuCamera
 	//
@@ -2204,26 +1446,19 @@ void function TempBattlePassPresentationBackground_Thread( asset bgImage )
 	vector camRight    = AnglesToRight( camAng )
 	vector camUp       = AnglesToUp( camAng )
 
-	float lol          = 0.2
-	vector bgCenterPos = camOrg + 600.0 * camForward - lol * 1920.0 * 0.5 * camRight + lol * 1080.0 * 0.5 * camUp
-	var bgTopo         = RuiTopology_CreatePlane( bgCenterPos, lol * 1920.0 * camRight, lol * 1080.0 * -camUp, false )
-	//
-	var bgRui          = RuiCreate( $"ui/lobby_battlepass_temp_bg.rpak", bgTopo, RUI_DRAW_WORLD, 10000 )
-	//
-	RuiSetImage( bgRui, "bgImage", bgImage )
-	//
+	float bgSize       = 10000.0
+	vector bgCenterPos = camOrg + 300.0 * camForward - bgSize * 0.5 * camRight + bgSize * 0.5 * camUp
+	var bgTopo         = RuiTopology_CreatePlane( bgCenterPos, bgSize * camRight, bgSize * -camUp, false )
+	DebugDrawAxis( camOrg + camSceneDist * camForward )
+	var bgRui = RuiCreate( $"ui/lobby_battlepass_temp_bg.rpak", bgTopo, RUI_DRAW_WORLD, 10000 )
+	RuiSetFloat3( bgRui, "pos", bgCenterPos )
+	RuiKeepSortKeyUpdated( bgRui, true, "pos" )
 
-	entity bgModel = CreateClientSidePropDynamic( bgCenterPos + 50.0 * camForward, -camForward, $"mdl/menu/loot_ceremony_stat_tracker_bg.rmdl" )
-	bgModel.MakeSafeForUIScriptHack()
-	bgModel.SetModelScale( 20.0 )
-
-	OnThreadEnd( function() : ( bgTopo, bgRui, bgModel ) {
-		fileLevel.isTempBattlePassPresentationBackgroundThreadActive = false
+	OnThreadEnd( function() : ( bgTopo, bgRui ) {
+		fileLevel.isBattlePassSceneThreadActive = false
 
 		RuiDestroy( bgRui )
 		RuiTopology_Destroy( bgTopo )
-		if ( IsValid( bgModel ) )
-			bgModel.Destroy()
 	} )
 
 	WaitForever()
@@ -2231,7 +1466,7 @@ void function TempBattlePassPresentationBackground_Thread( asset bgImage )
 #endif
 
 
-#if CLIENT
+#if(CLIENT)
 void function OnMouseWheelUp( entity unused )
 {
 	//
@@ -2239,14 +1474,14 @@ void function OnMouseWheelUp( entity unused )
 #endif
 
 
-#if CLIENT
+#if(CLIENT)
 void function OnMouseWheelDown( entity unused )
 {
 	//
 }
 #endif
 
-#if UI
+#if(UI)
 struct
 {
 	var menu
@@ -2293,13 +1528,8 @@ void function PassPurchaseButton_OnActivate( var button )
 	ItemFlavor purchasePack = BattlePass_GetBasicPurchasePack( activeBattlePass )
 	if ( !GRX_GetItemPurchasabilityInfo( purchasePack ).isPurchasableAtAll )
 		return
-
-	PurchaseDialogConfig pdc
-	pdc.flav = purchasePack
-	pdc.quantity = 1
-	pdc.onPurchaseResultCallback = OnBattlePassPurchaseResults
-	pdc.purchaseSoundOverride = "UI_Menu_BattlePass_Purchase"
-	PurchaseDialog( pdc )
+	PurchaseDialog( purchasePack, 1, false, null, OnBattlePassPurchaseResults )
+	PurchaseDialog_SetPurchaseOverrideSound( "UI_Menu_BattlePass_Purchase" )
 }
 
 
@@ -2320,13 +1550,8 @@ void function BundlePurchaseButton_OnActivate( var button )
 	ItemFlavor purchasePack = BattlePass_GetBundlePurchasePack( activeBattlePass )
 	if ( !GRX_GetItemPurchasabilityInfo( purchasePack ).isPurchasableAtAll )
 		return
-
-	PurchaseDialogConfig pdc
-	pdc.flav = purchasePack
-	pdc.quantity = 1
-	pdc.onPurchaseResultCallback = OnBattlePassPurchaseResults
-	pdc.purchaseSoundOverride = "UI_Menu_BattlePass_Purchase"
-	PurchaseDialog( pdc )
+	PurchaseDialog( purchasePack, 1, false, null, OnBattlePassPurchaseResults )
+	PurchaseDialog_SetPurchaseOverrideSound( "UI_Menu_BattlePass_Purchase" )
 }
 
 
@@ -2445,8 +1670,8 @@ void function OnBattlePassPurchaseResults( bool wasSuccessful )
 }
 #endif //
 
-#if UI
-bool function TryDisplayBattlePassAwards( bool playSound = false )
+#if(UI)
+bool function TryDisplayBattlePassAwards()
 {
 	WaitEndFrame()
 
@@ -2472,7 +1697,7 @@ bool function TryDisplayBattlePassAwards( bool playSound = false )
 	if ( IsDialog( GetActiveMenu() ) )
 		return false
 
-	int lastLevel    = GetBattlePassLevelForXP( activeBattlePass, lastSeenXP ) + 1
+	int lastLevel    = GetBattlePassLevelForXP( activeBattlePass, lastSeenXP )+1
 	int currentLevel = GetBattlePassLevelForXP( activeBattlePass, currentXP )
 
 	array<BattlePassReward> allAwards
@@ -2522,8 +1747,7 @@ bool function TryDisplayBattlePassAwards( bool playSound = false )
 		Localize( "#BATTLE_PASS_REACHED_LEVEL", GetBattlePassDisplayLevel( currentLevel ) ),
 		"",
 		allAwards,
-		true,
-		playSound )
+		true )
 
 	return true
 }
@@ -2547,49 +1771,16 @@ int function SortByAwardLevel( BattlePassReward a, BattlePassReward b )
 #endif
 
 
-#if CLIENT
-void function UIToClient_ItemPresentation( SettingsAssetGUID itemFlavorGUID, int level, float scale, bool showLow, var loadscreenPreviewBox, bool shouldPlayAudioPreview, string sceneRefName )
+#if(CLIENT)
+void function UIToClient_ItemPresentation( SettingsAssetGUID itemFlavorGUID, int level, bool showLow, var loadscreenPreviewBox, bool shouldPlayAudioPreview )
 {
-	ItemFlavor flav = GetItemFlavorByGUID( itemFlavorGUID )
-	entity sceneRef = GetEntByScriptName( sceneRefName )
-
+	entity sceneRef = GetEntByScriptName( "battlepass_ref" )
 	fileLevel.sceneRefOrigin = sceneRef.GetOrigin()
-
-	if ( sceneRefName == "battlepass_right_ref" )
-	{
-		if ( fabs( float( GetScreenSize().width ) / float( GetScreenSize().height ) - (16.0 / 10.0) ) < 0.07 )
-			fileLevel.sceneRefOrigin += <0, 25, 0>
-	}
-
 	if ( showLow )
-	{
-		if ( sceneRefName == "battlepass_center_ref" )
-			fileLevel.sceneRefOrigin += <0, 0, -10.5>
-		else
-			fileLevel.sceneRefOrigin += <0, 0, -2>
-	}
-
-	if ( sceneRefName == "battlepass_right_ref" || sceneRefName == "battlepass_center_ref" )
-	{
-		MoveLightsToSceneRef( sceneRef )
-	}
-	else if ( sceneRefName == "collection_event_ref" )
-	{
-		//
-		if ( ItemFlavor_GetType( flav ) == eItemType.character_skin )
-		{
-			fileLevel.sceneRefOrigin += <0, 0, -9>
-		}
-		else if ( ItemFlavor_GetType( flav ) == eItemType.gladiator_card_stance )
-		{
-			fileLevel.sceneRefOrigin += <0, 0, 1>
-			scale *= 0.8
-		}
-	}
-
+		fileLevel.sceneRefOrigin += <0, 0, -8.5>
 	fileLevel.sceneRefAngles = sceneRef.GetAngles()
 
-	ShowBattlepassItem( flav, level, scale, loadscreenPreviewBox, shouldPlayAudioPreview )
+	ShowBattlepassItem( GetItemFlavorByGUID( itemFlavorGUID ), level, loadscreenPreviewBox, shouldPlayAudioPreview )
 
 	//
 	//
@@ -2597,15 +1788,8 @@ void function UIToClient_ItemPresentation( SettingsAssetGUID itemFlavorGUID, int
 	//
 }
 
-void function MoveLightsToSceneRef( entity sceneRef )
-{
-	foreach ( light in fileLevel.stationaryLights )
-	{
-		light.SetOrigin( sceneRef.GetOrigin() + fileLevel.stationaryLightOffsets[ light ] )
-	}
-}
 
-void function ShowBattlepassItem( ItemFlavor item, int level, float scale, var loadscreenPreviewBox, bool shouldPlayAudioPreview )
+void function ShowBattlepassItem( ItemFlavor item, int level, var loadscreenPreviewBox, bool shouldPlayAudioPreview )
 {
 	fileLevel.loadscreenPreviewBox = loadscreenPreviewBox //
 
@@ -2619,80 +1803,76 @@ void function ShowBattlepassItem( ItemFlavor item, int level, float scale, var l
 	{
 		case eItemType.account_currency:
 		case eItemType.account_currency_bundle:
-			ShowBattlePassItem_Currency( item, scale )
+			ShowBattlePassItem_Currency( item )
 			break
 
 		case eItemType.account_pack:
-			ShowBattlePassItem_ApexPack( item, scale )
+			ShowBattlePassItem_ApexPack( item )
 			break
 
 		case eItemType.character_skin:
-			ShowBattlePassItem_CharacterSkin( item, scale )
+			ShowBattlePassItem_CharacterSkin( item )
 			break
 
 		case eItemType.character_execution:
-			ShowBattlePassItem_Execution( item, scale )
+			ShowBattlePassItem_Execution( item )
 			break
 
 		case eItemType.weapon_skin:
 			asset video = WeaponSkin_GetVideo( item )
 			if ( video != $"" )
-				ShowBattlePassItem_WeaponSkinVideo( item, scale, video )
+				ShowBattlePassItem_WeaponSkinVideo( item, video )
 			else
-				ShowBattlePassItem_WeaponSkin( item, scale )
-			break
-
-		case eItemType.weapon_charm:
-			ShowBattlePassItem_WeaponCharm( item, scale )
+				ShowBattlePassItem_WeaponSkin( item )
 			break
 
 		case eItemType.melee_skin:
-			ShowBattlePassItem_MeleeSkin( item, scale )
+			ShowBattlePassItem_MeleeSkin( item )
 			break
 
 		case eItemType.gladiator_card_stance:
 		case eItemType.gladiator_card_frame:
-			ShowBattlePassItem_Banner( item, scale )
+			ShowBattlePassItem_Banner( item )
 			break
 
 		case eItemType.gladiator_card_intro_quip:
 		case eItemType.gladiator_card_kill_quip:
-			ShowBattlePassItem_Quip( item, scale, shouldPlayAudioPreview )
+			ShowBattlePassItem_Quip( item, shouldPlayAudioPreview )
 			break
 
 		case eItemType.gladiator_card_stat_tracker:
-			ShowBattlePassItem_StatTracker( item, scale )
+			ShowBattlePassItem_StatTracker( item )
 			break
 
 		case eItemType.xp_boost:
-			ShowBattlePassItem_XPBoost( item, scale )
+			ShowBattlePassItem_XPBoost( item )
 			break
 
 		case eItemType.gladiator_card_badge:
-			ShowBattlePassItem_Badge( item, scale, level )
+			ShowBattlePassItem_Badge( item, level )
 			break
 
 		case eItemType.music_pack:
-			ShowBattlePassItem_MusicPack( item, scale, shouldPlayAudioPreview )
+			ShowBattlePassItem_MusicPack( item, shouldPlayAudioPreview )
 			break
 
 		case eItemType.loadscreen:
-			ShowBattlePassItem_Loadscreen( item, scale )
+			ShowBattlePassItem_Loadscreen( item )
 			break
 
 		case eItemType.skydive_emote:
-			ShowBattlePassItem_SkydiveEmote( item, scale )
+			ShowBattlePassItem_SkydiveEmote( item )
 			break
 
 		default:
 			Warning( "Loot Ceremony reward item type not supported: " + DEV_GetEnumStringSafe( "eItemType", itemType ) )
-			ShowBattlePassItem_Unknown( item, scale )
+			ShowBattlePassItem_Unknown( item )
 			break
 	}
 }
 #endif //
 
-#if CLIENT
+#if(CLIENT)
 const float BATTLEPASS_MODEL_ROTATE_SPEED = 15.0
 
 void function ClearBattlePassItem()
@@ -2700,13 +1880,7 @@ void function ClearBattlePassItem()
 	foreach ( model in fileLevel.models )
 	{
 		if ( IsValid( model ) )
-		{
-			foreach ( entity ent in GetEntityAndAllChildren( model ) )
-			{
-				if ( IsValid( ent ) )
-					ent.Destroy()
-			}
-		}
+			model.Destroy()
 	}
 
 	if ( IsValid( fileLevel.mover ) )
@@ -2739,7 +1913,7 @@ void function ClearBattlePassItem()
 	}
 }
 
-void function ShowBattlePassItem_ApexPack( ItemFlavor item, float scale )
+void function ShowBattlePassItem_ApexPack( ItemFlavor item )
 {
 	vector origin = fileLevel.sceneRefOrigin + <0, 0, 10.0>
 	vector angles = fileLevel.sceneRefAngles
@@ -2752,7 +1926,7 @@ void function ShowBattlePassItem_ApexPack( ItemFlavor item, float scale )
 	string tickSkin = GRXPack_GetTickModelSkin( item )
 	entity model    = CreateClientSidePropDynamic( origin, AnglesCompose( angles, <0, 135, 0> ), tickAsset )
 	model.MakeSafeForUIScriptHack()
-	model.SetModelScale( scale * 0.60 )
+	model.SetModelScale( 0.75 )
 	model.SetParent( mover )
 	model.SetSkin( model.GetSkinIndexByName( tickSkin ) )
 
@@ -2765,11 +1939,10 @@ void function ShowBattlePassItem_ApexPack( ItemFlavor item, float scale )
 }
 
 
-void function ShowBattlePassItem_CharacterSkin( ItemFlavor item, float scale )
+void function ShowBattlePassItem_CharacterSkin( ItemFlavor item )
 {
-	ItemFlavor char = CharacterSkin_GetCharacterFlavor( item )
-	vector origin   = fileLevel.sceneRefOrigin + <0, 0, 4.0> - 0.6 * CharacterClass_GetMenuZoomOffset( char )
-	vector angles   = fileLevel.sceneRefAngles
+	vector origin = fileLevel.sceneRefOrigin + <0, 0, 4.0>
+	vector angles = fileLevel.sceneRefAngles
 
 	entity mover = CreateClientsideScriptMover( $"mdl/dev/empty_model.rmdl", origin, angles )
 	mover.MakeSafeForUIScriptHack()
@@ -2777,10 +1950,8 @@ void function ShowBattlePassItem_CharacterSkin( ItemFlavor item, float scale )
 	entity model = CreateClientSidePropDynamic( origin, angles, $"mdl/dev/empty_model.rmdl" )
 	CharacterSkin_Apply( model, item )
 	model.MakeSafeForUIScriptHack()
-	model.SetModelScale( scale * 0.75 )
+	model.SetModelScale( 0.75 )
 	model.SetParent( mover )
-	//
-	thread MoverPendulum( mover )
 
 	thread PlayAnim( model, "ACT_MP_MENU_LOOT_CEREMONY_IDLE", mover )
 
@@ -2790,26 +1961,8 @@ void function ShowBattlePassItem_CharacterSkin( ItemFlavor item, float scale )
 	fileLevel.models.append( model )
 }
 
-void function MoverPendulum( entity mover )
-{
-	vector baseAngles = mover.GetAngles()
-	bool firstTime    = false
-	float dir         = 1
-	float delta       = 30.0
-	const float MOVE_TIME = 10.0
 
-	while ( IsValid( mover ) )
-	{
-		float scalar   = firstTime ? 0.5 : 1.0
-		float moveTime = MOVE_TIME * scalar
-		mover.NonPhysicsRotateTo( baseAngles - (dir * <0, delta, 0>), moveTime, 0.5 * scalar, 0.5 * scalar )
-		firstTime = false
-		dir *= -1
-		wait moveTime
-	}
-}
-
-void function ShowBattlePassItem_Execution( ItemFlavor item, float scale )
+void function ShowBattlePassItem_Execution( ItemFlavor item )
 {
 	const float BATTLEPASS_EXECUTION_Z_OFFSET = 12.0
 	const vector BATTLEPASS_EXECUTION_LOCAL_ANGLES = <0, 15, 0>
@@ -2866,8 +2019,8 @@ void function ShowBattlePassItem_Execution( ItemFlavor item, float scale )
 	victimModel.SetParent( mover )
 
 	//
-	attackerModel.SetModelScale( scale * BATTLEPASS_EXECUTION_SCALE )
-	victimModel.SetModelScale( scale * BATTLEPASS_EXECUTION_SCALE )
+	attackerModel.SetModelScale( BATTLEPASS_EXECUTION_SCALE )
+	victimModel.SetModelScale( BATTLEPASS_EXECUTION_SCALE )
 
 	int rarity = ItemFlavor_GetQuality( item )
 	ModelRarityFlash( attackerModel, rarity )
@@ -2879,7 +2032,7 @@ void function ShowBattlePassItem_Execution( ItemFlavor item, float scale )
 }
 
 
-void function ShowBattlePassItem_WeaponSkin( ItemFlavor item, float scale )
+void function ShowBattlePassItem_WeaponSkin( ItemFlavor weapSkin )
 {
 	const vector BATTLEPASS_WEAPON_SKIN_LOCAL_ANGLES = <5, -45, 0>
 
@@ -2887,18 +2040,18 @@ void function ShowBattlePassItem_WeaponSkin( ItemFlavor item, float scale )
 	vector angles = fileLevel.sceneRefAngles
 
 	//
-	ItemFlavor weaponItem = WeaponSkin_GetWeaponFlavor( item )
+	ItemFlavor weaponItem = WeaponSkin_GetWeaponFlavor( weapSkin )
 
 	entity mover = CreateClientsideScriptMover( $"mdl/dev/empty_model.rmdl", origin, angles )
 	mover.MakeSafeForUIScriptHack()
 
 	entity model = CreateClientSidePropDynamic( origin, AnglesCompose( angles, BATTLEPASS_WEAPON_SKIN_LOCAL_ANGLES ), $"mdl/dev/empty_model.rmdl" )
-	WeaponCosmetics_Apply( model, item, null )
+	WeaponCosmetics_Apply( model, weapSkin, null )
 	ShowDefaultBodygroupsOnFakeWeapon( model, WeaponItemFlavor_GetClassname( weaponItem ) )
 	model.MakeSafeForUIScriptHack()
 	model.SetVisibleForLocalPlayer( 0 )
 	model.Anim_SetPaused( true )
-	model.SetModelScale( scale * WeaponItemFlavor_GetBattlePassScale( weaponItem ) * 0.75 )
+	model.SetModelScale( WeaponItemFlavor_GetBattlePassScale( weaponItem ) )
 	model.SetParent( mover )
 
 	//
@@ -2907,53 +2060,14 @@ void function ShowBattlePassItem_WeaponSkin( ItemFlavor item, float scale )
 
 	mover.NonPhysicsRotate( <0, 0, -1>, BATTLEPASS_MODEL_ROTATE_SPEED )
 
-	ModelRarityFlash( model, ItemFlavor_GetQuality( item ) )
+	ModelRarityFlash( model, ItemFlavor_GetQuality( weapSkin ) )
 
 	fileLevel.mover = mover
 	fileLevel.models.append( model )
 }
 
 
-void function ShowBattlePassItem_WeaponCharm( ItemFlavor item, float scale )
-{
-	const vector BATTLEPASS_WEAPON_CHARM_LOCAL_ANGLES = <-5, -140, 0>
-
-	vector angles = fileLevel.sceneRefAngles
-	vector origin = fileLevel.sceneRefOrigin + <0, 0, 29.0> + -3.6 * AnglesToRight( angles )
-
-	entity mover = CreateClientsideScriptMover( $"mdl/dev/empty_model.rmdl", origin, angles )
-	mover.MakeSafeForUIScriptHack()
-
-	entity model = CreateClientSidePropDynamic( origin, AnglesCompose( angles, BATTLEPASS_WEAPON_CHARM_LOCAL_ANGLES ), $"mdl/dev/empty_model.rmdl" )
-	model.SetModel( $"mdl/weapons/p2011/ptpov_p2011.rmdl" )
-	model.SetSkin( model.GetSkinIndexByName( "charm_preview_black" ) )
-	model.MakeSafeForUIScriptHack()
-	model.SetVisibleForLocalPlayer( 0 )
-	model.Anim_SetPaused( true )
-	float modelScale = 7.85
-	model.SetModelScale( scale * modelScale )
-	model.SetParent( mover )
-	ShowDefaultBodygroupsOnFakeWeapon( model, "mp_weapon_semipistol" )
-
-	//
-	model.SetLocalOrigin( GetAttachmentOriginOffset( model, "CHARM", BATTLEPASS_WEAPON_CHARM_LOCAL_ANGLES ) )
-	model.SetLocalAngles( BATTLEPASS_WEAPON_CHARM_LOCAL_ANGLES )
-
-	WeaponCosmetics_Apply( model, null, item )
-
-	entity charmEnt = GetCharmForWeaponEntity( model )
-	charmEnt.SetModelScale( modelScale * 1.23 )
-
-	//
-
-	ModelRarityFlash( model, ItemFlavor_GetQuality( item ) )
-
-	fileLevel.mover = mover
-	fileLevel.models.append( model )
-}
-
-
-void function ShowBattlePassItem_MeleeSkin( ItemFlavor item, float scale )
+void function ShowBattlePassItem_MeleeSkin( ItemFlavor item )
 {
 	const float MELEE_SKIN_SCALE = 2.6
 
@@ -2967,12 +2081,8 @@ void function ShowBattlePassItem_MeleeSkin( ItemFlavor item, float scale )
 	entity model         = CreateClientSidePropDynamic( origin, AnglesCompose( angles, extraRotation ), MeleeSkin_GetMenuModel( item ) )
 	model.MakeSafeForUIScriptHack()
 	model.SetVisibleForLocalPlayer( 0 )
-
-	asset animSeq = MeleeSkin_GetMenuAnimSeq( item )
-	if ( animSeq != $"" )
-		model.Anim_Play( animSeq )
-
-	model.SetModelScale( scale * MELEE_SKIN_SCALE )
+	model.Anim_SetPaused( true )
+	model.SetModelScale( MELEE_SKIN_SCALE )
 	model.SetParent( mover )
 
 	model.SetLocalOrigin( GetAttachmentOriginOffset( model, "MENU_ROTATE", extraRotation ) )
@@ -2987,7 +2097,7 @@ void function ShowBattlePassItem_MeleeSkin( ItemFlavor item, float scale )
 }
 
 
-void function ShowBattlePassItem_Banner( ItemFlavor item, float scale )
+void function ShowBattlePassItem_Banner( ItemFlavor item )
 {
 	int itemType = ItemFlavor_GetType( item )
 	Assert( itemType == eItemType.gladiator_card_frame || itemType == eItemType.gladiator_card_stance )
@@ -3001,15 +2111,15 @@ void function ShowBattlePassItem_Banner( ItemFlavor item, float scale )
 	vector origin = fileLevel.sceneRefOrigin + <0, 0, BATTLEPASS_BANNER_Z_OFFSET>
 	vector angles = AnglesCompose( fileLevel.sceneRefAngles, <0, 180, 0> )
 
-	float width  = scale * BATTLEPASS_BANNER_WIDTH * BATTLEPASS_BANNER_SCALE
-	float height = scale * BATTLEPASS_BANNER_HEIGHT * BATTLEPASS_BANNER_SCALE
+	float width  = BATTLEPASS_BANNER_WIDTH * BATTLEPASS_BANNER_SCALE
+	float height = BATTLEPASS_BANNER_HEIGHT * BATTLEPASS_BANNER_SCALE
 
 	var topo = CreateRUITopology_Worldspace( origin + <0, 0, height * 0.5>, angles, width, height )
 	var rui  = RuiCreate( $"ui/loot_ceremony_glad_card.rpak", topo, RUI_DRAW_VIEW_MODEL, 0 )
 
 	int gcardPresentation
 	if ( itemType == eItemType.gladiator_card_frame )
-		gcardPresentation = eGladCardPresentation.FRONT_CLEAN
+		gcardPresentation = eGladCardPresentation.FRONT_FRAME_ONLY
 	else
 		gcardPresentation = eGladCardPresentation.FRONT_STANCE_ONLY
 
@@ -3041,7 +2151,7 @@ void function ShowBattlePassItem_Banner( ItemFlavor item, float scale )
 }
 
 
-void function ShowBattlePassItem_Quip( ItemFlavor item, float scale, bool shouldPlayAudioPreview )
+void function ShowBattlePassItem_Quip( ItemFlavor item, bool shouldPlayAudioPreview )
 {
 	int itemType = ItemFlavor_GetType( item )
 	Assert( itemType == eItemType.gladiator_card_intro_quip || itemType == eItemType.gladiator_card_kill_quip )
@@ -3057,12 +2167,12 @@ void function ShowBattlePassItem_Quip( ItemFlavor item, float scale, bool should
 	vector placardAngles = VectorToAngles( AnglesToForward( angles ) * -1 )
 
 	//
-	float width  = scale * BATTLEPASS_QUIP_WIDTH * BATTLEPASS_QUIP_SCALE
-	float height = scale * BATTLEPASS_QUIP_HEIGHT * BATTLEPASS_QUIP_SCALE
+	float width  = BATTLEPASS_QUIP_WIDTH * BATTLEPASS_QUIP_SCALE
+	float height = BATTLEPASS_QUIP_HEIGHT * BATTLEPASS_QUIP_SCALE
 
 	entity model = CreateClientSidePropDynamic( origin, angles, BATTLEPASS_QUIP_BG_MODEL )
 	model.MakeSafeForUIScriptHack()
-	model.SetModelScale( scale * BATTLEPASS_QUIP_SCALE )
+	model.SetModelScale( BATTLEPASS_QUIP_SCALE )
 
 	var topo         = CreateRUITopology_Worldspace( origin + <0, 0, (height * 0.5)>, placardAngles, width, height )
 	var rui
@@ -3107,7 +2217,7 @@ void function ShowBattlePassItem_Quip( ItemFlavor item, float scale, bool should
 }
 
 
-void function ShowBattlePassItem_StatTracker( ItemFlavor item, float scale )
+void function ShowBattlePassItem_StatTracker( ItemFlavor item )
 {
 	const float BATTLEPASS_STAT_TRACKER_WIDTH = 594.0
 	const float BATTLEPASS_STAT_TRACKER_HEIGHT = 230.0
@@ -3119,19 +2229,15 @@ void function ShowBattlePassItem_StatTracker( ItemFlavor item, float scale )
 	vector placardAngles = VectorToAngles( AnglesToForward( angles ) * -1 )
 
 	//
-	float width = BATTLEPASS_STAT_TRACKER_WIDTH
-	width *= scale
-	width *= BATTLEPASS_STAT_TRACKER_SCALE
-	float height = BATTLEPASS_STAT_TRACKER_HEIGHT
-	height *= scale
-	height *= BATTLEPASS_STAT_TRACKER_SCALE
+	float width  = BATTLEPASS_STAT_TRACKER_WIDTH * BATTLEPASS_STAT_TRACKER_SCALE
+	float height = BATTLEPASS_STAT_TRACKER_HEIGHT * BATTLEPASS_STAT_TRACKER_SCALE
 
 	var topo = CreateRUITopology_Worldspace( origin + <0, 0, (height * 0.5)>, placardAngles, width, height )
 	var rui  = RuiCreate( $"ui/loot_ceremony_stat_tracker.rpak", topo, RUI_DRAW_WORLD, 0 )
 
 	entity model = CreateClientSidePropDynamic( origin, angles, BATTLEPASS_STAT_TRACKER_BG_MODEL )
 	model.MakeSafeForUIScriptHack()
-	model.SetModelScale( scale * BATTLEPASS_STAT_TRACKER_SCALE )
+	model.SetModelScale( BATTLEPASS_STAT_TRACKER_SCALE )
 
 	ItemFlavor character = GladiatorCardStatTracker_GetCharacterFlavor( item )
 
@@ -3147,7 +2253,7 @@ void function ShowBattlePassItem_StatTracker( ItemFlavor item, float scale )
 }
 
 
-void function ShowBattlePassItem_Badge( ItemFlavor item, float scale, int level )
+void function ShowBattlePassItem_Badge( ItemFlavor item, int level )
 {
 	const float BATTLEPASS_BADGE_WIDTH = 670.0
 	const float BATTLEPASS_BADGE_HEIGHT = 670.0
@@ -3157,8 +2263,8 @@ void function ShowBattlePassItem_Badge( ItemFlavor item, float scale, int level 
 	vector angles        = fileLevel.sceneRefAngles
 	vector placardAngles = VectorToAngles( AnglesToForward( angles ) * -1 )
 
-	float width  = scale * BATTLEPASS_BADGE_WIDTH * BATTLEPASS_BADGE_SCALE
-	float height = scale * BATTLEPASS_BADGE_HEIGHT * BATTLEPASS_BADGE_SCALE
+	float width  = BATTLEPASS_BADGE_WIDTH * BATTLEPASS_BADGE_SCALE
+	float height = BATTLEPASS_BADGE_HEIGHT * BATTLEPASS_BADGE_SCALE
 
 	var topo = CreateRUITopology_Worldspace( origin, placardAngles, width, height )
 	var rui  = RuiCreate( $"ui/world_space_badge.rpak", topo, RUI_DRAW_VIEW_MODEL, 0 )
@@ -3172,14 +2278,14 @@ void function ShowBattlePassItem_Badge( ItemFlavor item, float scale, int level 
 }
 
 
-void function ShowBattlePassItem_Currency( ItemFlavor item, float scale )
+void function ShowBattlePassItem_Currency( ItemFlavor item )
 {
 	int itemType = ItemFlavor_GetType( item )
 	Assert( itemType == eItemType.account_currency || itemType == eItemType.account_currency_bundle )
 
 	asset modelAsset = $"mdl/dev/empty_model.rmdl"
 	float modelScale = 1.0
-	int rarity       = 0
+	int rarity = 0
 	if ( ItemFlavor_HasQuality( item ) )
 		rarity = ItemFlavor_GetQuality( item )
 
@@ -3199,9 +2305,9 @@ void function ShowBattlePassItem_Currency( ItemFlavor item, float scale )
 	{
 		asset itemAsset = ItemFlavor_GetAsset( item )
 		Assert( itemAsset == $"settings/itemflav/currency_bundle/crafting_common.rpak" ||
-						itemAsset == $"settings/itemflav/currency_bundle/crafting_rare.rpak" ||
-						itemAsset == $"settings/itemflav/currency_bundle/crafting_epic.rpak" ||
-						itemAsset == $"settings/itemflav/currency_bundle/crafting_legendary.rpak" )
+				itemAsset == $"settings/itemflav/currency_bundle/crafting_rare.rpak" ||
+				itemAsset == $"settings/itemflav/currency_bundle/crafting_epic.rpak" ||
+				itemAsset == $"settings/itemflav/currency_bundle/crafting_legendary.rpak" )
 
 		switch ( rarity )
 		{
@@ -3235,7 +2341,8 @@ void function ShowBattlePassItem_Currency( ItemFlavor item, float scale )
 
 	entity model = CreateClientSidePropDynamic( origin, AnglesCompose( angles, <0, 32, 0> ), modelAsset )
 	model.MakeSafeForUIScriptHack()
-	model.SetModelScale( scale * modelScale )
+	if ( modelScale != 1.0 )
+		model.SetModelScale( modelScale )
 	model.SetParent( mover )
 
 	mover.NonPhysicsRotate( <0, 0, -1>, BATTLEPASS_MODEL_ROTATE_SPEED )
@@ -3247,7 +2354,7 @@ void function ShowBattlePassItem_Currency( ItemFlavor item, float scale )
 }
 
 
-void function ShowBattlePassItem_XPBoost( ItemFlavor item, float scale )
+void function ShowBattlePassItem_XPBoost( ItemFlavor item )
 {
 	vector origin = fileLevel.sceneRefOrigin + <0, 0, 28.0>
 	vector angles = fileLevel.sceneRefAngles
@@ -3258,7 +2365,6 @@ void function ShowBattlePassItem_XPBoost( ItemFlavor item, float scale )
 	entity model = CreateClientSidePropDynamic( origin, AnglesCompose( angles, <0, 32, 0> ), BATTLEPASS_MODEL_BOOST )
 	model.MakeSafeForUIScriptHack()
 	model.SetParent( mover )
-	model.SetModelScale( scale * 0.85 )
 
 	mover.NonPhysicsRotate( <0, 0, -1>, BATTLEPASS_MODEL_ROTATE_SPEED )
 
@@ -3268,19 +2374,19 @@ void function ShowBattlePassItem_XPBoost( ItemFlavor item, float scale )
 	fileLevel.models.append( model )
 }
 
-const float BATTLEPASS_VIDEO_WIDTH = 600.0
-const float BATTLEPASS_VIDEO_HEIGHT = 338.0
 
-void function ShowBattlePassItem_WeaponSkinVideo( ItemFlavor item, float scale, asset video )
+void function ShowBattlePassItem_WeaponSkinVideo( ItemFlavor item, asset video )
 {
+	const float BATTLEPASS_UNKNOWN_WIDTH = 800.0
+	const float BATTLEPASS_UNKNOWN_HEIGHT = 450.0
 	const float BATTLEPASS_UNKNOWN_Z_OFFSET = 28
 
 	//
 	vector origin = fileLevel.sceneRefOrigin + <0, 0, BATTLEPASS_UNKNOWN_Z_OFFSET>
 	vector angles = VectorToAngles( AnglesToForward( fileLevel.sceneRefAngles ) * -1 )
 
-	float width  = scale * BATTLEPASS_VIDEO_WIDTH / 14.0
-	float height = scale * BATTLEPASS_VIDEO_HEIGHT / 14.0
+	float width  = BATTLEPASS_UNKNOWN_WIDTH / 14.0
+	float height = BATTLEPASS_UNKNOWN_HEIGHT / 14.0
 
 	var topo = CreateRUITopology_Worldspace( origin, angles, width, height )
 	var rui  = RuiCreate( $"ui/finisher_video.rpak", topo, RUI_DRAW_VIEW_MODEL, 0 )
@@ -3294,8 +2400,8 @@ void function ShowBattlePassItem_WeaponSkinVideo( ItemFlavor item, float scale, 
 }
 
 
-void function ShowBattlePassItem_MusicPack( ItemFlavor item, float scale, bool shouldPlayAudioPreview )
-{/*
+void function ShowBattlePassItem_MusicPack( ItemFlavor item, bool shouldPlayAudioPreview )
+{
 	int itemType = ItemFlavor_GetType( item )
 	Assert( itemType == eItemType.music_pack )
 
@@ -3310,23 +2416,23 @@ void function ShowBattlePassItem_MusicPack( ItemFlavor item, float scale, bool s
 	vector placardAngles = VectorToAngles( AnglesToForward( angles ) * -1 )
 
 	//
-	float width  = scale * BATTLEPASS_QUIP_WIDTH * BATTLEPASS_QUIP_SCALE
-	float height = scale * BATTLEPASS_QUIP_HEIGHT * BATTLEPASS_QUIP_SCALE
+	float width  = BATTLEPASS_QUIP_WIDTH * BATTLEPASS_QUIP_SCALE
+	float height = BATTLEPASS_QUIP_HEIGHT * BATTLEPASS_QUIP_SCALE
 
 	entity model = CreateClientSidePropDynamic( origin, angles, BATTLEPASS_QUIP_BG_MODEL )
 	model.MakeSafeForUIScriptHack()
-	model.SetModelScale( scale * BATTLEPASS_QUIP_SCALE )
+	model.SetModelScale( BATTLEPASS_QUIP_SCALE )
 
 	var topo = CreateRUITopology_Worldspace( origin + <0, 0, (height * 0.5)>, placardAngles, width, height )
 	var rui  = RuiCreate( $"ui/loot_reward_intro_quip.rpak", topo, RUI_DRAW_WORLD, 0 )
 
-	string previewAlias = MusicPack_GetPreviewMusic( item )
+	ItemFlavor ornull character = MusicPack_GetCharacterOrNull( item )
+	string previewAlias         = MusicPack_GetPreviewMusic( item )
 
 	RuiSetBool( rui, "isVisible", true )
 	RuiSetBool( rui, "battlepass", true )
 	RuiSetInt( rui, "rarity", ItemFlavor_GetQuality( item ) )
-	RuiSetImage( rui, "portraitImage", MusicPack_GetPortraitImage( item ) )
-	RuiSetFloat( rui, "portraitBlend", MusicPack_GetPortraitBlend( item ) )
+	RuiSetImage( rui, "portraitImage", CharacterClass_GetGalleryPortrait( expect ItemFlavor( character ) ) )
 	RuiSetString( rui, "quipTypeText", "#MUSIC_PACK" )
 	RuiTrackFloat( rui, "level", null, RUI_TRACK_SOUND_METER, 0 )
 
@@ -3339,26 +2445,28 @@ void function ShowBattlePassItem_MusicPack( ItemFlavor item, float scale, bool s
 	{
 		fileLevel.playingPreviewAlias = previewAlias
 		EmitSoundOnEntity( GetLocalClientPlayer(), previewAlias )
-	}*/
+	}
 }
 
 
-void function ShowBattlePassItem_Loadscreen( ItemFlavor item, float scale )
+void function ShowBattlePassItem_Loadscreen( ItemFlavor item )
 {
 	UpdateLoadscreenPreviewMaterial( fileLevel.loadscreenPreviewBox, null, ItemFlavor_GetGUID( item ) )
 }
 
 
-void function ShowBattlePassItem_SkydiveEmote( ItemFlavor item, float scale )
+void function ShowBattlePassItem_SkydiveEmote( ItemFlavor item )
 {
+	const float BATTLEPASS_UNKNOWN_WIDTH = 800.0
+	const float BATTLEPASS_UNKNOWN_HEIGHT = 450.0
 	const float BATTLEPASS_UNKNOWN_Z_OFFSET = 28
 
 	//
 	vector origin = fileLevel.sceneRefOrigin + <0, 0, BATTLEPASS_UNKNOWN_Z_OFFSET>
 	vector angles = VectorToAngles( AnglesToForward( fileLevel.sceneRefAngles ) * -1 )
 
-	float width  = scale * BATTLEPASS_VIDEO_WIDTH / 14.0
-	float height = scale * BATTLEPASS_VIDEO_HEIGHT / 14.0
+	float width  = BATTLEPASS_UNKNOWN_WIDTH / 14.0
+	float height = BATTLEPASS_UNKNOWN_HEIGHT / 14.0
 
 	var topo = CreateRUITopology_Worldspace( origin, angles, width, height )
 	var rui  = RuiCreate( $"ui/finisher_video.rpak", topo, RUI_DRAW_VIEW_MODEL, 0 )
@@ -3372,16 +2480,18 @@ void function ShowBattlePassItem_SkydiveEmote( ItemFlavor item, float scale )
 }
 
 
-void function ShowBattlePassItem_Unknown( ItemFlavor item, float scale )
+void function ShowBattlePassItem_Unknown( ItemFlavor item )
 {
+	const float BATTLEPASS_UNKNOWN_WIDTH = 450.0
+	const float BATTLEPASS_UNKNOWN_HEIGHT = 200.0
 	const float BATTLEPASS_UNKNOWN_Z_OFFSET = 25
 
 	//
 	vector origin = fileLevel.sceneRefOrigin + <0, 0, BATTLEPASS_UNKNOWN_Z_OFFSET>
 	vector angles = VectorToAngles( AnglesToForward( fileLevel.sceneRefAngles ) * -1 )
 
-	float width  = scale * BATTLEPASS_VIDEO_WIDTH / 16.0
-	float height = scale * BATTLEPASS_VIDEO_HEIGHT / 16.0
+	float width  = BATTLEPASS_UNKNOWN_WIDTH / 16.0
+	float height = BATTLEPASS_UNKNOWN_HEIGHT / 16.0
 
 	var topo = CreateRUITopology_Worldspace( origin, angles, width, height )
 	var rui  = RuiCreate( $"ui/loot_reward_temp.rpak", topo, RUI_DRAW_WORLD, 0 )
@@ -3420,14 +2530,6 @@ void function BattlePassVideoOnFinished( int channel )
 void function InitBattlePassLights()
 {
 	fileLevel.stationaryLights = GetEntArrayByScriptName( "battlepass_stationary_light" )
-	fileLevel.stationaryLightOffsets.clear()
-
-	entity ref = GetEntByScriptName( "battlepass_right_ref" )
-
-	foreach ( light in fileLevel.stationaryLights )
-	{
-		fileLevel.stationaryLightOffsets[ light ] <- light.GetOrigin() - ref.GetOrigin()
-	}
 
 	//
 	/*
@@ -3530,8 +2632,8 @@ void function ModelAndChildrenRarityFlash( entity model, vector color, float fil
 	if ( !IsValid( model ) )
 		return
 
-	foreach ( ent in GetEntityAndImmediateChildren( model ) )
-		BattlePassModelHighlightBloom( ent, color, fillIntensityScalar, outlineIntensityScalar, fadeInTime, fadeOutTime, lifeTime )
+//	foreach ( ent in GetEntityAndItsChildren( model ) )
+	//	BattlePassModelHighlightBloom( ent, color, fillIntensityScalar, outlineIntensityScalar, fadeInTime, fadeOutTime, lifeTime )
 }
 
 void function BattlePassModelHighlightBloom( entity model, vector color, float fillIntensityScalar, float outlineIntensityScalar, float fadeInTime, float fadeOutTime, float lifeTime )
@@ -3554,26 +2656,4 @@ void function BattlePassModelHighlightBloom( entity model, vector color, float f
 }
 #endif //
 
-#if UI
-void function ServerCallback_GotBPFromPremier()
-{
-	thread _GotBPFromPremier()
-}
-
-void function _GotBPFromPremier()
-{
-	DialogData dialogData
-	dialogData.header = "#BATTLEPASS_EA_ACCESS_PREMIUM_HEADER"
-	dialogData.message = "#BATTLEPASS_EA_ACCESS_PREMIUM_BODY"
-	dialogData.darkenBackground = true
-	dialogData.noChoiceWithNavigateBack = true
-
-	AddDialogButton( dialogData, "#CLOSE" )
-
-	while ( IsDialog( GetActiveMenu() ) )
-		WaitFrame()
-
-	OpenDialog( dialogData )
-}
 #endif
-

@@ -2,7 +2,6 @@ global function InitGamemodeSelectV2Dialog
 global function GamemodeSelectV2_IsEnabled
 global function GamemodeSelectV2_UpdateSelectButton
 global function GamemodeSelectV2_PlayVideo
-global function GamemodeSelectV2_PlaylistIsDefaultSlot
 
 struct {
 	var menu
@@ -17,23 +16,23 @@ struct {
 } file
 
 
-const int MAX_DISPLAYED_MODES = 5
+const int MAX_DISPLAYED_MODES = 4
 
 const table<string, asset> GAMEMODE_IMAGE_MAP = {
 	play_apex = $"rui/menu/gamemode/play_apex",
 	apex_elite = $"rui/menu/gamemode/apex_elite",
 	training = $"rui/menu/gamemode/training",
-	firing_range = $"rui/menu/gamemode/firing_range",
 	generic_01 = $"rui/menu/gamemode/generic_01",
 	generic_02 = $"rui/menu/gamemode/generic_02",
 	ranked_1 = $"rui/menu/gamemode/ranked_1",
 	ranked_2 = $"rui/menu/gamemode/ranked_2",
 	solo_iron_crown = $"rui/menu/gamemode/solo_iron_crown",
-	duos = $"rui/menu/gamemode/duos",
-	worlds_edge = $"rui/menu/gamemode/worlds_edge",
-	shotguns_and_snipers = $"rui/menu/gamemode/shotguns_and_snipers",
-	shadow_squad = $"rui/menu/gamemode/shadow_squad",
-	worlds_edge_after_dark = $"rui/menu/gamemode/shadow_squad",
+	#if(true)
+		shotguns_and_snipers = $"rui/menu/gamemode/shotguns_and_snipers",
+	#endif
+	#if(false)
+
+#endif
 }
 
 const table<string, asset> GAMEMODE_BINK_MAP = {
@@ -45,11 +44,12 @@ const table<string, asset> GAMEMODE_BINK_MAP = {
 	ranked_1 = $"media/gamemodes/ranked_1.bik",
 	ranked_2 = $"media/gamemodes/ranked_2.bik",
 	solo_iron_crown = $"media/gamemodes/solo_iron_crown.bik",
-	duos = $"media/gamemodes/duos.bik",
-	worlds_edge = $"media/gamemodes/worlds_edge.bik",
-	shotguns_and_snipers = $"media/gamemodes/shotguns_and_snipers.bik",
-	shadow_squad = $"media/gamemodes/shadow_squad.bik",
-	worlds_edge_after_dark = $"media/gamemodes/wead.bik",
+	#if(true)
+		shotguns_and_snipers = $"media/gamemodes/shotguns_and_snipers.bik",
+	#endif
+	#if(false)
+
+#endif
 }
 
 
@@ -102,9 +102,9 @@ void function GamemodeSelectV2_UpdateSelectButton( var button, string playlistNa
 	int emblemMode = DRAW_NONE
 	if ( IsRankedPlaylist( playlistName ) )
 	{
-		emblemMode = DRAW_RANK
+		/*emblemMode = DRAW_RANK
 		int rankScore = GetPlayerRankScore( GetUIPlayer() )
-		PopulateRuiWithRankedBadgeDetails( rui, rankScore, Ranked_GetDisplayNumberForRuiBadge( GetUIPlayer() ) )
+		PopulateRuiWithRankedBadgeDetails( rui, rankScore, Ranked_GetDisplayNumberForRuiBadge( GetUIPlayer() ) )*/
 	}
 	else
 	{
@@ -210,12 +210,6 @@ void function InitGamemodeSelectV2Dialog( var newMenuArg ) //
 	AddMenuFooterOption( menu, LEFT, BUTTON_A, true, "#A_BUTTON_SELECT" )
 }
 
-const string DEFAULT_PLAYLIST_UI_SLOT_NAME = "regular_1"
-bool function GamemodeSelectV2_PlaylistIsDefaultSlot( string playlist )
-{
-	string uiSlot = GetPlaylistVarString( playlist, "ui_slot", "" )
-	return (uiSlot == DEFAULT_PLAYLIST_UI_SLOT_NAME)
-}
 
 void function OnOpenModeSelectDialog()
 {
@@ -225,7 +219,6 @@ void function OnOpenModeSelectDialog()
 
 	table<string, string> slotToPlaylistNameMap = {
 		training = "",
-		firing_range = "",
 		regular_1 = "",
 		regular_2 = "",
 		ltm = "",
@@ -248,42 +241,39 @@ void function OnOpenModeSelectDialog()
 		}
 	}
 
-	table<string, var > slotToButtonMap = {
-		training =		Hud_GetChild( file.menu, "GamemodeButton0" ),
-		firing_range =	Hud_GetChild( file.menu, "GamemodeButton1" ),
-		regular_1 =		Hud_GetChild( file.menu, "GamemodeButton2" ),
-		regular_2 =		Hud_GetChild( file.menu, "GamemodeButton3" ),
-		ltm =			Hud_GetChild( file.menu, "GamemodeButton4" ),
+	table<string, var> slotToButtonMap = {
+		training = Hud_GetChild( file.menu, "GamemodeButton0" ),
+		regular_1 = Hud_GetChild( file.menu, "GamemodeButton1" ),
+		regular_2 = Hud_GetChild( file.menu, "GamemodeButton2" ),
+		ltm = Hud_GetChild( file.menu, "GamemodeButton3" ),
 	}
 
-	int drawWidth = 0
+	int totalButtonWidth = 0
+
+	printt( GetScreenSize().width )
+	float scale = float( GetScreenSize().width ) / 1920.0
+	printt( totalButtonWidth )
+	printt( scale )
+
 	foreach ( string slot, var button in slotToButtonMap )
 	{
 		string playlistName = slotToPlaylistNameMap[slot]
 		if ( playlistName == "" )
 		{
 			Hud_Hide( button )
-			Hud_SetWidth( button, 0 )
-			Hud_SetX( button, 0 )
 			continue
 		}
 
-		Hud_SetX( button, REPLACEHud_GetBasePos( button ).x )
-		Hud_SetWidth( button, Hud_GetBaseWidth( button ) )
 		Hud_Show( button )
-		drawWidth += (REPLACEHud_GetPos( button ).x + Hud_GetWidth( button ))
+		totalButtonWidth += Hud_GetWidth( button ) + int(48*scale)
 
 		GamemodeSelectV2_UpdateSelectButton( button, playlistName )
 	}
 
-	//
-	float scale = float( GetScreenSize().width ) / 1920.0
-	drawWidth += int( 48 * scale )
-
 	bool hasLimitedMode = (slotToPlaylistNameMap["ltm"] != "")
 	RuiSetBool( Hud_GetRui( file.selectionPanel ), "hasLimitedMode", hasLimitedMode )
-	RuiSetFloat( Hud_GetRui( file.selectionPanel ), "drawWidth", (drawWidth / scale) )
-	Hud_SetWidth( file.selectionPanel, drawWidth )
+	int w = hasLimitedMode ? Hud_GetBaseWidth( file.selectionPanel ) : ( totalButtonWidth + int(48*scale) )
+	Hud_SetWidth( file.selectionPanel, w )
 }
 
 

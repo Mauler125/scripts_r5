@@ -1,3 +1,6 @@
+#if(true)//
+
+
 global function InitStatsSummaryPanel
 
 struct
@@ -52,3 +55,7 @@ void function StatsSummaryPanel_OnFocusChanged( var panel, var oldFocus, var new
 	if ( IsControllerModeActive() )
 		CustomizeMenus_UpdateActionContext( newFocus )
 }
+
+
+
+#endif //

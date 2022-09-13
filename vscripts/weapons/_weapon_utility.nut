@@ -49,6 +49,12 @@ global function FireBallisticRoundWithDrop
 global function DoesModExist
 global function DoesModExistFromWeaponClassName
 global function IsModActive
+global function ChargeBall_Precache
+global function ChargeBall_FireProjectile
+global function ChargeBall_ChargeBegin
+global function ChargeBall_ChargeEnd
+global function ChargeBall_StopChargeEffects
+global function ChargeBall_GetChargeTime
 global function PlayerUsedOffhand
 global function GetDistanceString
 global function IsWeaponInSingleShotMode
@@ -74,6 +80,7 @@ global function WeaponHasCosmetics
 
 #if CLIENT
 global function ServerCallback_SetWeaponPreviewState
+global function ServerCallback_GuidedMissileDestroyed
 #endif
 
 global function GetRadiusDamageDataFromProjectile
@@ -123,7 +130,6 @@ global function RemoveThreatScopeColorStatusEffect
 global function LimitVelocityHorizontal
 global function GiveMatchingAkimboWeapon
 global function TakeMatchingAkimboWeapon
-global function GetDualPrimarySlotForWeapon
 global function AddWeaponModChangedCallback
 global function TryApplyingBurnDamage
 global function AddEntityBurnDamageStack
@@ -148,11 +154,11 @@ global function AddCallback_OnPlayerRemoveWeaponMod
 global function CodeCallback_OnPlayerAddedWeaponMod
 global function CodeCallback_OnPlayerRemovedWeaponMod
 
-global const bool PROJECTILE_PREDICTED = true
-global const bool PROJECTILE_NOT_PREDICTED = false
+global const PROJECTILE_PREDICTED 							= true
+global const PROJECTILE_NOT_PREDICTED 						= false
 
-global const bool PROJECTILE_LAG_COMPENSATED = true
-global const bool PROJECTILE_NOT_LAG_COMPENSATED = false
+global const PROJECTILE_LAG_COMPENSATED 					= true
+global const PROJECTILE_NOT_LAG_COMPENSATED 				= false
 
 global const PRO_SCREEN_IDX_MATCH_KILLS 					= 1
 global const PRO_SCREEN_IDX_AMMO_COUNTER_OVERRIDE_HACK 		= 2
@@ -273,7 +279,6 @@ void function WeaponUtility_Init()
 	level.stickyClasses[ "door_mover" ]                <- true
 	level.stickyClasses[ "prop_door" ]                <- true
 	level.stickyClasses[ "script_mover" ]                <- true
-	level.stickyClasses[ "player_vehicle" ]                <- true
 
 	level.trapChainReactClasses <- {}
 	level.trapChainReactClasses[ "mp_weapon_frag_grenade" ]            <- true
@@ -286,11 +291,9 @@ void function WeaponUtility_Init()
 	RegisterSignal( "EMP_FX" )
 	RegisterSignal( "ArcStunned" )
 	RegisterSignal( "CleanupPlayerPermanents" )
-	RegisterSignal( "PlayerChangedClass" )
 	RegisterSignal( "OnSustainedDischargeEnd" )
 	RegisterSignal( "EnergyWeapon_ChargeStart" )
 	RegisterSignal( "EnergyWeapon_ChargeReleased" )
-	RegisterSignal( "WeaponSignal_EnemyKilled" )
 
 	PrecacheParticleSystem( EMP_GRENADE_BEAM_EFFECT )
 	PrecacheParticleSystem( FX_EMP_BODY_TITAN )
@@ -386,39 +389,52 @@ void function OnWeaponActivate_RUIColorSchemeOverrides( entity weapon )
 
 int function Fire_EnergyChargeWeapon( entity weapon, WeaponPrimaryAttackParams attackParams, EnergyChargeWeaponData chargeWeaponData, bool playerFired = true, float patternScale = 1.0, bool ignoreSpread = true )
 {
+	weapon.EmitWeaponNpcSound( LOUD_WEAPON_AI_SOUND_RADIUS_MP, 0.2 )
+
+	bool shouldCreateProjectile = false
+	if ( IsServer() || weapon.ShouldPredictProjectiles() )
+		shouldCreateProjectile = true
+
+	#if CLIENT
+		if ( !playerFired )
+			shouldCreateProjectile = false
+	#endif
+
 	int chargeLevel = EnergyChargeWeapon_GetChargeLevel( weapon )
 	//printt( "LVL", chargeLevel )
 	if ( chargeLevel == 0 )
 		return 0
 
-	// scale spread pattern for weapon charge level
-	float spreadChokeFrac = 1.0
-	// NOTE uses a switch instead of concatenating the string, so we can search for the same string that is in weaponsettings
-	switch( chargeLevel )
+	if ( shouldCreateProjectile )
 	{
-		case 1:
-			spreadChokeFrac = expect float( weapon.GetWeaponInfoFileKeyField( "projectile_spread_choke_frac_1" ) )
-			break
+		// scale spread pattern for weapon charge level
+		float spreadChokeFrac = 1.0
+		// NOTE uses a switch instead of concatenating the string, so we can search for the same string that is in weaponsettings
+		switch( chargeLevel )
+		{
+			case 1:
+				spreadChokeFrac = expect float( weapon.GetWeaponInfoFileKeyField( "projectile_spread_choke_frac_1" ) )
+				break
 
-		case 2:
-			spreadChokeFrac = expect float( weapon.GetWeaponInfoFileKeyField( "projectile_spread_choke_frac_2" ) )
-			break
+			case 2:
+				spreadChokeFrac = expect float( weapon.GetWeaponInfoFileKeyField( "projectile_spread_choke_frac_2" ) )
+				break
 
-		case 3:
-			spreadChokeFrac = expect float( weapon.GetWeaponInfoFileKeyField( "projectile_spread_choke_frac_3" ) )
-			break
+			case 3:
+				spreadChokeFrac = expect float( weapon.GetWeaponInfoFileKeyField( "projectile_spread_choke_frac_3" ) )
+				break
 
-		case 4:
-			spreadChokeFrac = expect float( weapon.GetWeaponInfoFileKeyField( "projectile_spread_choke_frac_4" ) )
-			break
+			case 4:
+				spreadChokeFrac = expect float( weapon.GetWeaponInfoFileKeyField( "projectile_spread_choke_frac_4" ) )
+				break
 
-		default:
-			Assert( false, "chargeLevel " + chargeLevel + " doesn't have matching weaponsetting for projectile_spread_choke_frac_" + chargeLevel )
+			default:
+				Assert( false, "chargeLevel " + chargeLevel + " doesn't have matching weaponsetting for projectile_spread_choke_frac_" + chargeLevel )
+		}
+		patternScale *= spreadChokeFrac
+
+		FireProjectileBlastPattern( weapon, attackParams, playerFired, chargeWeaponData.blastPattern, patternScale, ignoreSpread )
 	}
-	patternScale *= spreadChokeFrac
-
-	float speedScale = 1.0
-	weapon.FireWeapon_Default( attackParams.pos, attackParams.dir, speedScale, patternScale, ignoreSpread )
 
 	if ( weapon.IsChargeWeapon() )
 		EnergyChargeWeapon_StopCharge( weapon, chargeWeaponData )
@@ -1021,11 +1037,7 @@ entity function FireBallisticRoundWithDrop( entity weapon, vector pos, vector di
 	fireBoltParams.dontApplySpread = ignoreSpread
 	fireBoltParams.projectileIndex = projectileIndex
 	fireBoltParams.deferred = deferred
-	entity bolt = weapon.FireWeaponBoltAndReturnEntity( fireBoltParams )
-
-	#if CLIENT
-	Chroma_FiredWeapon( weapon )
-	#endif
+	entity bolt = weapon.FireWeaponBolt( fireBoltParams )
 
 	if ( bolt != null )
 	{
@@ -1088,7 +1100,7 @@ int function FireGenericBoltWithDrop( entity weapon, WeaponPrimaryAttackParams a
 	fireBoltParams.scriptExplosionDamageType = damageFlags
 	fireBoltParams.clientPredicted = isPlayerFired
 	fireBoltParams.additionalRandomSeed = 0
-	entity bolt = weapon.FireWeaponBoltAndReturnEntity( fireBoltParams )
+	entity bolt = weapon.FireWeaponBolt( fireBoltParams )
 	if ( bolt != null )
 	{
 		bolt.kv.gravity = PROJ_GRAVITY
@@ -1096,10 +1108,6 @@ int function FireGenericBoltWithDrop( entity weapon, WeaponPrimaryAttackParams a
 		bolt.kv.renderamt = 0
 		bolt.kv.fadedist = 1
 	}
-	#if CLIENT
-	Chroma_FiredWeapon( weapon )
-	#endif
-
 
 	return 1
 }
@@ -1268,15 +1276,11 @@ bool function PlantStickyEntity( entity ent, table collisionParams, vector angle
 		if ( !ent.IsMarkedForDeletion() && !collisionParams.hitEnt.IsMarkedForDeletion() )
 		{
 			if ( collisionParams.hitbox > 0 )
-			{
 				ent.SetParentWithHitbox( collisionParams.hitEnt, collisionParams.hitbox, true )
-			}
+
 			// Hit a func_brush
 			else
-			{
-				//
 				ent.SetParent( collisionParams.hitEnt )
-			}
 
 			if ( collisionParams.hitEnt.IsPlayer() )
 			{
@@ -1488,15 +1492,12 @@ bool function EntityCanHaveStickyEnts( entity stickyEnt, entity ent )
 		local stickPlayer      = GetWeaponInfoFileKeyField_Global( weaponClassName, "stick_pilot" )
 		local stickTitan       = GetWeaponInfoFileKeyField_Global( weaponClassName, "stick_titan" )
 		local stickNPC         = GetWeaponInfoFileKeyField_Global( weaponClassName, "stick_npc" )
-		local stickDrone       = GetWeaponInfoFileKeyField_Global( weaponClassName, "stick_drone" )
 
 		if ( ent.IsTitan() && stickTitan == 0 )
 			return false
 		else if ( ent.IsPlayer() && stickPlayer == 0 )
 			return false
 		else if ( ent.IsNPC() && stickNPC == 0 )
-			return false
-		else if ( ent.GetScriptName() == "crypto_camera" && stickDrone == 0 )
 			return false
 	}
 
@@ -2326,6 +2327,33 @@ bool function CanWeaponShootWhileRunning( entity weapon )
 }
 
 #if CLIENT
+void function ServerCallback_GuidedMissileDestroyed()
+{
+	entity player = GetLocalViewPlayer()
+
+	// guided missiles has not been updated to work with replays. added this if statement defensively just in case. - Roger
+	if ( !( "missileInFlight" in player.s ) )
+		return
+
+	player.s.missileInFlight = false
+}
+
+function ServerCallback_AirburstIconUpdate( toggle )
+{
+	entity player = GetLocalViewPlayer()
+	entity cockpit = player.GetCockpit()
+	if ( cockpit )
+	{
+		entity mainVGUI = cockpit.e.mainVGUI
+		if ( mainVGUI )
+		{
+			if ( toggle )
+				cockpit.s.offhandHud[OFFHAND_RIGHT].icon.SetImage( $"vgui/HUD/dpad_airburst_activate" )
+			else
+				cockpit.s.offhandHud[OFFHAND_RIGHT].icon.SetImage( $"vgui/HUD/dpad_airburst" )
+		}
+	}
+}
 
 bool function IsOwnerViewPlayerFullyADSed( entity weapon )
 {
@@ -2937,6 +2965,161 @@ entity function GetPlayerFromTitanWeapon( entity weapon )
 		player = titan
 
 	return player
+}
+
+
+const asset CHARGE_SHOT_PROJECTILE = $"models/weapons/bullets/temp_triple_threat_projectile_large.mdl"
+
+const asset CHARGE_EFFECT_1P = $"P_ordnance_charge_st_FP" // $"P_wpn_defender_charge_FP"
+const asset CHARGE_EFFECT_3P = $"P_ordnance_charge_st" // $"P_wpn_defender_charge"
+const asset CHARGE_EFFECT_DLIGHT = $"defender_charge_CH_dlight"
+
+const string CHARGE_SOUND_WINDUP_1P = "Weapon_ChargeRifle_WindUp_1P"
+const string CHARGE_SOUND_WINDUP_3P = "Weapon_ChargeRifle_WindUp_3P"
+const string CHARGE_SOUND_WINDDOWN_1P = "Weapon_ChargeRifle_WindDown_1P"
+const string CHARGE_SOUND_WINDDOWN_3P = "Weapon_ChargeRifle_WindDown_3P"
+
+void function ChargeBall_Precache()
+{
+#if SERVER
+	PrecacheModel( CHARGE_SHOT_PROJECTILE )
+	PrecacheEffect( CHARGE_EFFECT_1P )
+	PrecacheEffect( CHARGE_EFFECT_3P )
+#endif // #if SERVER
+}
+
+void function ChargeBall_FireProjectile( entity weapon, vector position, vector direction, bool shouldPredict )
+{
+	weapon.EmitWeaponNpcSound( LOUD_WEAPON_AI_SOUND_RADIUS_MP, 0.2 )
+
+	entity owner = weapon.GetWeaponOwner()
+	const float MISSILE_SPEED = 1200.0
+	const int CONTACT_DAMAGE_TYPES = (damageTypes.projectileImpact | DF_DOOM_FATALITY)
+	const int EXPLOSION_DAMAGE_TYPES = damageTypes.explosive
+	const bool DO_POPUP = false
+
+	if ( shouldPredict )
+	{
+	WeaponFireMissileParams fireMissileParams
+	fireMissileParams.speed = 1
+	fireMissileParams.scriptTouchDamageType = damageTypes.largeCaliberExp
+	fireMissileParams.scriptExplosionDamageType = damageTypes.largeCaliberExp
+	fireMissileParams.doRandomVelocAndThinkVars = false
+	fireMissileParams.clientPredicted = false
+	entity missile = weapon.FireWeaponMissile( fireMissileParams )
+		if ( missile )
+		{
+			EmitSoundOnEntity( owner, "ShoulderRocket_Cluster_Fire_3P" )
+			missile.SetModel( CHARGE_SHOT_PROJECTILE )
+#if CLIENT
+			const ROCKETEER_MISSILE_EXPLOSION = $"xo_exp_death"
+			const ROCKETEER_MISSILE_SHOULDER_FX = $"wpn_mflash_xo_rocket_shoulder_FP"
+			//entity owner = weapon.GetWeaponOwner()
+			vector origin = owner.OffsetPositionFromView( Vector(0, 0, 0), Vector(25, -25, 15) )
+			vector angles = owner.CameraAngles()
+			StartParticleEffectOnEntityWithPos( owner, GetParticleSystemIndex( ROCKETEER_MISSILE_SHOULDER_FX ), FX_PATTACH_EYES_FOLLOW, -1, origin, angles )
+#else // #if CLIENT
+			missile.SetProjectileImpactDamageOverride( 1440 )
+			missile.kv.damageSourceId = eDamageSourceId.charge_ball
+#endif // #else // #if CLIENT
+		}
+	}
+}
+
+bool function ChargeBall_ChargeBegin( entity weapon, string tagName )
+{
+#if CLIENT
+	if ( InPrediction() && !IsFirstTimePredicted() )
+		return true
+#endif // #if CLIENT
+
+	weapon.w.statusEffects.append( StatusEffect_AddEndless( weapon.GetWeaponOwner(), eStatusEffect.move_slow, 0.6 ) )
+	weapon.w.statusEffects.append( StatusEffect_AddEndless( weapon.GetWeaponOwner(), eStatusEffect.turn_slow, 0.35 ) )
+
+	weapon.PlayWeaponEffect( CHARGE_EFFECT_1P, CHARGE_EFFECT_3P, tagName )
+	weapon.PlayWeaponEffect( $"", CHARGE_EFFECT_DLIGHT, tagName )
+
+#if SERVER
+	StopSoundOnEntity( weapon, CHARGE_SOUND_WINDDOWN_3P )
+	entity weaponOwner = weapon.GetWeaponOwner()
+	if ( IsValid( weaponOwner ) )
+	{
+		if ( weaponOwner.IsPlayer() )
+			EmitSoundOnEntityExceptToPlayer( weapon, weaponOwner, CHARGE_SOUND_WINDUP_3P )
+		else
+			EmitSoundOnEntity( weapon, CHARGE_SOUND_WINDUP_3P )
+	}
+#else
+	StopSoundOnEntity( weapon, CHARGE_SOUND_WINDDOWN_1P )
+	EmitSoundOnEntity( weapon, CHARGE_SOUND_WINDUP_1P )
+#endif
+
+	return true
+}
+
+void function ChargeBall_ChargeEnd( entity weapon )
+{
+#if CLIENT
+	if ( InPrediction() && !IsFirstTimePredicted() )
+		return
+#endif
+
+	if ( IsValid( weapon.GetWeaponOwner() ) )
+	{
+		#if CLIENT
+		if ( InPrediction() && IsFirstTimePredicted() )
+		{
+		#endif
+
+			foreach ( effect in weapon.w.statusEffects )
+			{
+				StatusEffect_Stop( weapon.GetWeaponOwner(), effect )
+			}
+
+		#if CLIENT
+		}
+		#endif
+	}
+
+#if SERVER
+	StopSoundOnEntity( weapon, CHARGE_SOUND_WINDUP_3P )
+	entity weaponOwner = weapon.GetWeaponOwner()
+	if ( IsValid( weaponOwner ) )
+	{
+		if ( weaponOwner.IsPlayer() )
+			EmitSoundOnEntityExceptToPlayer( weapon, weaponOwner, CHARGE_SOUND_WINDDOWN_3P )
+		else
+			EmitSoundOnEntity( weapon, CHARGE_SOUND_WINDDOWN_3P )
+	}
+#else
+	StopSoundOnEntity( weapon, CHARGE_SOUND_WINDUP_1P )
+	EmitSoundOnEntity( weapon, CHARGE_SOUND_WINDDOWN_1P )
+#endif
+
+	ChargeBall_StopChargeEffects( weapon )
+}
+
+void function ChargeBall_StopChargeEffects( entity weapon )
+{
+	Assert( IsValid( weapon ) )
+	// weapon.StopWeaponEffect( CHARGE_EFFECT_1P, CHARGE_EFFECT_3P )
+	// weapon.StopWeaponEffect( CHARGE_EFFECT_3P, CHARGE_EFFECT_1P )
+	// weapon.StopWeaponEffect( CHARGE_EFFECT_DLIGHT, CHARGE_EFFECT_DLIGHT )
+	thread HACK_Deplayed_ChargeBall_StopChargeEffects( weapon )
+}
+
+void function HACK_Deplayed_ChargeBall_StopChargeEffects( entity weapon )
+{
+	weapon.EndSignal( "OnDestroy" )
+	wait 0.2
+	weapon.StopWeaponEffect( CHARGE_EFFECT_1P, CHARGE_EFFECT_3P )
+	weapon.StopWeaponEffect( CHARGE_EFFECT_3P, CHARGE_EFFECT_1P )
+	weapon.StopWeaponEffect( CHARGE_EFFECT_DLIGHT, CHARGE_EFFECT_DLIGHT )
+}
+
+float function ChargeBall_GetChargeTime()
+{
+	return 1.05
 }
 
 #if SERVER
@@ -4237,7 +4420,6 @@ void function PlayerUsedOffhand( entity player, entity offhandWeapon, bool sendP
 	#if CLIENT
 		if ( offhandWeapon == player.GetOffhandWeapon( OFFHAND_ULTIMATE ) )
 			UltimateWeaponStateSet( eUltimateState.ACTIVE )
-		Chroma_PlayerUsedAbility( player, offhandWeapon )
 	#endif //CLIENT
 }
 
@@ -4516,11 +4698,9 @@ bool function EntityCanBurnOverTime( entity ent )
 	if ( !IsAlive( ent ) )
 		return false
 
-	if ( IsDoor(ent) )
-		return true
-
 	if ( ent.IsPlayer() && !ent.IsPlayerDecoy() )
 		return true
+
 	else if ( ent.IsNPC() )
 		return true
 
@@ -4558,7 +4738,7 @@ bool function EntityCanAcceptNewBurnDamageStack( entity ent, BurnDamageSettings 
 
 void function AddEntityBurnDamageStack( entity ent, entity owner, entity inflictor, BurnDamageSettings burnSettings )
 {
-	Assert( IsDoor(ent) || ent.IsPlayer() || ent.IsNPC() , "Burn damage currently only supports players, NPCs and doors." )
+	Assert( ent.IsPlayer() || ent.IsNPC(), "Burn damage currently only supports players and NPCs." )
 
 	BurnDamageStack stack
 	stack.owner = owner
@@ -4570,9 +4750,7 @@ void function AddEntityBurnDamageStack( entity ent, entity owner, entity inflict
 	stack.damagePerTick = burnSettings.burnDamage / numIntervals
 	stack.burnSettings = burnSettings
 
-	if ( IsDoor(ent) )
-		ent.e.burnDamageStacks.append( stack )
-	else if ( ent.IsPlayer() )
+	if ( ent.IsPlayer() )
 		ent.p.burnDamageStacks.append( stack )
 	else if ( ent.IsNPC() )
 		ent.ai.burnDamageStacks.append( stack )
@@ -4590,11 +4768,9 @@ void function AddEntityBurnDamageStack( entity ent, entity owner, entity inflict
 
 void function RemoveEntityBurnDamageStack( entity ent, int stackIdx )
 {
-	if ( IsDoor(ent) )
-		ent.e.burnDamageStacks.remove( stackIdx )
-	else if ( ent.IsPlayer() )
+	if ( ent.IsPlayer() )
 		ent.p.burnDamageStacks.remove( stackIdx )
-	else if ( ent.IsNPC() )
+	else
 		ent.ai.burnDamageStacks.remove( stackIdx )
 
 	#if R5DEV && DEBUG_BURN_DAMAGE
@@ -4691,9 +4867,7 @@ bool function EntityHasMaxBurnDamageStacks( entity ent, BurnDamageSettings burnS
 
 array<BurnDamageStack> function GetEntityBurnDamageStacks( entity ent )
 {
-	if ( IsDoor(ent) )
-		return ent.e.burnDamageStacks
-	else if ( ent.IsPlayer() )
+	if ( ent.IsPlayer() )
 		return ent.p.burnDamageStacks
 
 	return ent.ai.burnDamageStacks
@@ -4701,12 +4875,7 @@ array<BurnDamageStack> function GetEntityBurnDamageStacks( entity ent )
 
 int function GetEntityBurnDamageStackCount( entity ent )
 {
-	if ( !IsAlive(ent) )
-		return 0
-
-	if ( IsDoor(ent) )
-		return ent.e.burnDamageStacks.len()
-	else if ( ent.IsPlayer() )
+	if ( ent.IsPlayer() )
 		return ent.p.burnDamageStacks.len()
 
 	return ent.ai.burnDamageStacks.len()
@@ -4714,9 +4883,7 @@ int function GetEntityBurnDamageStackCount( entity ent )
 
 bool function EntityIsBurning( entity ent )
 {
-	if ( IsDoor(ent) )
-		return ent.e.isBurning
-	else if ( ent.IsPlayer() )
+	if ( ent.IsPlayer() )
 		return ent.p.isBurning
 
 	return ent.ai.isBurning
@@ -4724,9 +4891,7 @@ bool function EntityIsBurning( entity ent )
 
 void function SetEntityIsBurning( entity ent, bool isBurning )
 {
-	if ( IsDoor(ent) )
-		ent.e.isBurning = isBurning
-	else if ( ent.IsPlayer() )
+	if ( ent.IsPlayer() )
 		ent.p.isBurning = isBurning
 	else
 		ent.ai.isBurning = isBurning
@@ -4806,8 +4971,8 @@ bool function IsWeaponInSingleShotMode( entity weapon )
 	if ( weapon.GetWeaponSettingBool( eWeaponVar.attack_button_presses_melee ) )
 		return false
 
-	if ( !weapon.GetWeaponSettingBool( eWeaponVar.is_semi_auto ) )
-		return false
+	//if ( weapon.GetWeaponSettingEnum( eWeaponVar.fire_mode, eWeaponFireMode ) != eWeaponFireMode.semiauto )
+	//	return false
 
 	return weapon.GetWeaponSettingInt( eWeaponVar.burst_fire_count ) == 0
 }
@@ -4834,8 +4999,9 @@ bool function IsWeaponOffhand( entity weapon )
 
 bool function IsWeaponInAutomaticMode( entity weapon )
 {
-	return !weapon.GetWeaponSettingBool( eWeaponVar.is_semi_auto )
+	return weapon.GetWeaponSettingEnum( eWeaponVar.fire_mode, eWeaponFireMode ) == eWeaponFireMode.automatic
 }
+
 
 bool function OnWeaponAttemptOffhandSwitch_Never( entity weapon )
 {
@@ -4887,13 +5053,6 @@ void function OnWeaponRegenEndGeneric( entity weapon )
 		return
 	ReportOffhandWeaponRegenEnded( weapon )
 	#endif
-	#if CLIENT
-		entity owner = weapon.GetWeaponOwner()
-		if ( !IsValid( owner ) || !owner.IsPlayer() )
-			return
-		if ( owner.GetOffhandWeapon( OFFHAND_ULTIMATE ) == weapon )
-			Chroma_UltimateReady()
-	#endif
 }
 
 void function Ultimate_OnWeaponRegenBegin( entity weapon )
@@ -4902,7 +5061,6 @@ void function Ultimate_OnWeaponRegenBegin( entity weapon )
 		UltimateWeaponStateSet( eUltimateState.CHARGING )
 	#endif
 }
-
 
 #if SERVER
 void function ReportOffhandWeaponRegenEnded( entity weapon )

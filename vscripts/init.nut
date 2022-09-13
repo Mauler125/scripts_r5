@@ -7,7 +7,7 @@
 global function printl
 global function CodeCallback_Precompile
 
-global const bool R5DEV = true
+global const bool R5DEV = false
 
 global struct EchoTestStruct
 {
@@ -177,8 +177,6 @@ global struct CommunityUserInfo
 	int eliteStreak
 	int rankScore
 	int rankLadderPos
-	int rankedLadderPos
-	string rankedPeriodName
 	int lastCharIdx
 	bool isLivestreaming
 	bool isOnline
@@ -285,9 +283,7 @@ global struct MainMenuPromos
 {
 	int prot,
 	int version,
-	string layout,
-	string promoRpak,
-	string miniPromoRpak
+	string layout
 }
 
 #if SERVER || UI
@@ -304,15 +300,9 @@ global struct MatchmakingDatacenterETA
 #endif // #if SERVER || UI
 
 #if SERVER || UI
-global struct GRXCraftingOffer
+global struct GRXCodeOffer
 {
 	int itemIdx
-	int craftingPrice
-}
-
-global struct GRXStoreOffer
-{
-	array< int > items
 	array< array< int > > prices
 	table< string, string > attrs
 }

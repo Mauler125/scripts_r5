@@ -127,11 +127,11 @@ void function InitEOGMenu( var newMenuArg ) //
 	AddMenuFooterOption( menu, LEFT, KEY_TAB, false, "", "", Spectate )
 	AddMenuFooterOption( menu, LEFT, BUTTON_A, false, "", "", TrySpectate )
 
-	#if R5DEV
+	#if(DEV)
 		AddMenuFooterOption( menu, LEFT, BUTTON_Y, true, "Dev Menu", "Dev Menu", OpenDevMenu )
 	#endif
 
-	#if PC_PROG
+	#if(PC_PROG)
 		AddMenuFooterOption( menu, RIGHT, KEY_ENTER, false, "", "", UI_OnLoadoutButton_Enter )
 	#endif
 }
@@ -281,6 +281,10 @@ void function OnClose()
 			file.menuData[menu].cardsInitialized[elem] = false
 		}
 	}
+
+	#if(false)
+
+#endif
 }
 
 void function OnButtonFocus( var button )

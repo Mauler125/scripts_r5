@@ -40,8 +40,8 @@ void function InitSelectSlotDialog( var newMenuArg )
 	SetDialog( menu, true )
 	SetClearBlur( menu, false )
 
-	AddMenuEventHandler( menu, eUIEvent.MENU_OPEN, SelectSlotDialog_OnOpen )
-	AddMenuEventHandler( menu, eUIEvent.MENU_CLOSE, SelectSlotDialog_OnClose )
+	AddMenuEventHandler( menu, eUIEvent.MENU_OPEN, ConfirmPurchaseDialog_OnOpen )
+	AddMenuEventHandler( menu, eUIEvent.MENU_CLOSE, ConfirmPurchaseDialog_OnClose )
 
 	AddMenuFooterOption( menu, LEFT, BUTTON_A, true, "#A_BUTTON_SELECT" )
 	AddMenuFooterOption( menu, LEFT, BUTTON_B, true, "#B_BUTTON_CLOSE", "#CLOSE" )
@@ -143,7 +143,7 @@ void function PurchaseButton_Activate( var button )
 	CloseActiveMenu()
 }
 
-void function SelectSlotDialog_OnOpen()
+void function ConfirmPurchaseDialog_OnOpen()
 {
 	file.badgeMode = false
 
@@ -203,7 +203,7 @@ void function SelectSlotDialog_OnOpen()
 	HudElem_SetRuiArg( file.displayItem, "bgVisible", !file.badgeMode )
 }
 
-void function SelectSlotDialog_OnClose()
+void function ConfirmPurchaseDialog_OnClose()
 {
 
 }

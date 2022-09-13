@@ -21,8 +21,6 @@ ImpactTable
 		"O" "P_exp_GasGrenade_default" //"P_impact_exp_med_dirt" //Foliage
 		"P" "P_exp_GasGrenade_default" //"P_impact_exp_med_metal" //Computer
 
-		"Q" "P_exp_GasGrenade_default" //"P_impact_exp_med_metal" //snow
-		"R" "P_exp_GasGrenade_default" //"P_impact_exp_med_metal" //ice
 
 		"S" "P_exp_GasGrenade_default" //water, slime
 		"T" "P_exp_GasGrenade_default" //"P_impact_exp_med_concrete" //tile
@@ -37,8 +35,6 @@ ImpactTable
 		"Z" "P_exp_GasGrenade_default" //"P_impact_exp_med_sand"  //sand
 
 		"0" "P_exp_GasGrenade_default" //
-		"1" "P_exp_GasGrenade_default" // lava_flow
-		"2" "P_exp_GasGrenade_default" // lava_rock_hot
 		"3" "P_exp_GasGrenade_default" //
 		"4" "P_exp_GasGrenade_default" //
 		"5" "P_exp_GasGrenade_default" //
@@ -78,8 +74,6 @@ ImpactTable
 		"O" "GasGrenade_Explo"
 		"P" "GasGrenade_Explo"
 
-		"Q" "GasGrenade_Explo" //snow
-		"R" "GasGrenade_Explo" //ice
 		"S" "GasGrenade_Explo"
 		"T" "GasGrenade_Explo"
 		"U" "GasGrenade_Explo"
@@ -91,8 +85,6 @@ ImpactTable
 		"Z" "GasGrenade_Explo"
 
 		"0" "GasGrenade_Explo" //
-		"1" "GasGrenade_Explo" // lava_flow
-		"2" "GasGrenade_Explo" // lava_rock_hot
 		"3" "GasGrenade_Explo" //
 		"4" "GasGrenade_Explo" //
 		"5" "GasGrenade_Explo" //
@@ -127,8 +119,6 @@ ImpactTable
 		"O" "GasGrenade_Explo"
 		"P" "GasGrenade_Explo"
 
-		"Q" "GasGrenade_Explo" //Snow
-		"R" "GasGrenade_Explo" //Ice
 		"S" "GasGrenade_Explo"
 		"T" "GasGrenade_Explo"
 		"U" "GasGrenade_Explo"
@@ -140,8 +130,6 @@ ImpactTable
 		"Z" "GasGrenade_Explo"
 
 		"0" "GasGrenade_Explo" //
-		"1" "GasGrenade_Explo" // lava_flow
-		"2" "GasGrenade_Explo" // lava_rock_hot
 		"3" "GasGrenade_Explo" //
 		"4" "GasGrenade_Explo" //
 		"5" "GasGrenade_Explo" //
@@ -176,8 +164,6 @@ ImpactTable
 		"O" "GasGrenade_Explo"
 		"P" "GasGrenade_Explo"
 
-		"Q" "GasGrenade_Explo" //snow
-		"R" "GasGrenade_Explo" //ice
 		"S" "GasGrenade_Explo"
 		"T" "GasGrenade_Explo"
 		"U" "GasGrenade_Explo"
@@ -189,8 +175,6 @@ ImpactTable
 		"Z" "GasGrenade_Explo"
 
 		"0" "GasGrenade_Explo" //
-		"1" "GasGrenade_Explo" // lava_flow
-		"2" "GasGrenade_Explo" // lava_rock_hot
 		"3" "GasGrenade_Explo" //
 		"4" "GasGrenade_Explo" //
 		"5" "GasGrenade_Explo" //

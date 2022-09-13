@@ -98,9 +98,6 @@ void function FragDroneArmed( entity npc )
 
 void function FragDroneDeath( entity spectre, var damageInfo )
 {
-    if ( spectre.GetAISettingsName() == "npc_frag_drone_treasure_tick" )
-        return
-    
 	FragDroneDeath_Think( spectre, damageInfo )
 }
 
@@ -261,7 +258,6 @@ void function SuicideSpectre_WaittillNearEnemyOrExploding( entity spectre )
 
 	bool pursuitSoundPlaying = false
 
-    // We expect float since GraphCapped uses it.
 	float minScale = expect float( spectre.Dev_GetAISettingByKeyField( "minSpeedScale" ) )
 	float maxScale = expect float( spectre.Dev_GetAISettingByKeyField( "maxSpeedScale" ) )
 
@@ -518,11 +514,7 @@ int function GetExplosionTeamBasedOnGamemode( entity spectre )
 
 \************************************************************************************************/
 void function SpectreSuicideOnDamaged_Callback( entity spectre, var damageInfo )
-{	
-    printt("SpectreSuicideOnDamaged")
-    if ( spectre.GetAISettingsName() == "npc_frag_drone_treasure_tick" )
-        return
-
+{
 	SpectreSuicideOnDamaged( spectre, damageInfo )
 }
 

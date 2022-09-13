@@ -1,10 +1,10 @@
 global function PIN_Init
-global function PIN_Customization
 
 #if UI
 global function UICodeCallback_PINEvent
 global function PIN_Shutdown
 global function PIN_PageView
+global function PIN_Customization
 global function PIN_Message
 global function PIN_Survey
 global function PIN_Settings
@@ -13,10 +13,6 @@ global function PIN_Settings
 struct
 {
 	float startupTime
-
-	#if CLIENT
-		entity networkWaypoint
-	#endif
 } file
 
 table function PIN_StandardHeader()
@@ -55,10 +51,6 @@ void function PIN_Init()
 		)
 
 //		thread PIN_PageView_Think()
-	#endif
-
-	#if CLIENT
-		Waypoints_RegisterCustomType( "PIN", OnPINWaypointCreated )
 	#endif
 }
 
@@ -120,7 +112,6 @@ void function PIN_Message( string titleText, string messageText )
 }
 #endif
 
-
 #if UI
 void function PIN_Survey( int surveyType, string questionText, string aOptionText, string bOptionText, string answerText, float sampleRate, bool ignored )
 {
@@ -167,7 +158,6 @@ void function PIN_Survey( int surveyType, string questionText, string aOptionTex
 }
 #endif
 
-
 #if UI
 void function PIN_Settings( table settingsTable )
 {
@@ -182,8 +172,8 @@ void function PIN_Settings( table settingsTable )
 }
 #endif
 
-
-void function PIN_Customization( ItemFlavor ornull context, ItemFlavor itemFlavor, int index = 0 )
+#if UI
+void function PIN_Customization( ItemFlavor context, LoadoutEntry loadoutEntry, ItemFlavor itemFlavor )
 {
 	string customizeTarget
 	string customizeType
@@ -196,6 +186,8 @@ void function PIN_Customization( ItemFlavor ornull context, ItemFlavor itemFlavo
 	string selection3 = "NULL"
 	string selection3_rarity = "NULL"
 
+	int index = -1
+
 	string customizeQuality = ItemFlavor_HasQuality( itemFlavor  ) ? GetPINRarity( ItemFlavor_GetQuality( itemFlavor ) + 1 ) : GetPINRarity( eQuality.COMMON )
 
 	switch ( ItemFlavor_GetType( itemFlavor ) )
@@ -207,8 +199,10 @@ void function PIN_Customization( ItemFlavor ornull context, ItemFlavor itemFlavo
 			break
 
 		case eItemType.gladiator_card_stat_tracker:
+			index = index == -1 ? GetCardPropertyIndex() : index
 			customizeType = customizeType == "" ? "stat_tracker" : customizeType
 		case eItemType.gladiator_card_badge:
+			index = index == -1 ? GetCardPropertyIndex() : index
 			customizeType = customizeType == "" ? "badge" : customizeType
 		case eItemType.gladiator_card_stance:
 			customizeType = customizeType == "" ? "pose" : customizeType
@@ -219,24 +213,20 @@ void function PIN_Customization( ItemFlavor ornull context, ItemFlavor itemFlavo
 		case eItemType.gladiator_card_intro_quip:
 			customizeType = customizeType == "" ? "intro_quip" : customizeType
 			customizeTarget = "gladiator_card"
-			if ( context != null )
-				customizeClass = ItemFlavor_GetHumanReadableRef( expect ItemFlavor( context ) )
+			customizeClass = ItemFlavor_GetHumanReadableRef( context )
 			break
 
 		case eItemType.character_skin:
 			customizeType = customizeType == "" ? "skin" : customizeType
 		case eItemType.character_execution:
 			customizeType = customizeType == "" ? "finisher" : customizeType
-		case eItemType.melee_skin:
-			customizeType = customizeType == "" ? "melee" : customizeType
 			customizeTarget = "character"
-			if ( context != null )
-				customizeClass = ItemFlavor_GetHumanReadableRef( expect ItemFlavor( context ) )
+			customizeClass = ItemFlavor_GetHumanReadableRef( context )
 			break
 	}
 
 	if ( index <= 0 )
-	{
+		{
 		selection1 = ItemFlavor_GetHumanReadableRef( itemFlavor ).tolower()
 		selection1_rarity = customizeQuality.tolower()
 	}
@@ -246,10 +236,10 @@ void function PIN_Customization( ItemFlavor ornull context, ItemFlavor itemFlavo
 		selection2_rarity = customizeQuality.tolower()
 	}
 	else if ( index == 2 )
-	{
+			{
 		selection3 = ItemFlavor_GetHumanReadableRef( itemFlavor ).tolower()
 		selection3_rarity = customizeQuality.tolower()
-	}
+			}
 
 	//printt( index )
 	//printt( customizeQuality )
@@ -276,10 +266,11 @@ void function PIN_Customization( ItemFlavor ornull context, ItemFlavor itemFlavo
 		}
 	)
 }
+#endif
 
 
 string function GetPINRarity( int tier )
-{
+		{
 	switch ( tier )
 			{
 		case 0:
@@ -304,15 +295,4 @@ string function GetPINRarity( int tier )
 		}
 
 	unreachable
-}
-
-#if CLIENT
-void function OnPINWaypointCreated( entity wp )
-{
-	file.networkWaypoint = wp
-
-	RunUIScript( "UpdateMatchPINData", "mid", wp.GetWaypointString( 0 ) )
-	RunUIScript( "UpdateMatchPINData", "map", GetMapName() )
-	RunUIScript( "UpdateMatchPINData", "match_type", GetCurrentPlaylistVarString( "pin_match_type", "survival" ) )
-}
-#endif
+	}

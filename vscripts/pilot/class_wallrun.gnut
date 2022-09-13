@@ -21,6 +21,7 @@ function Wallrun_AddPlayer( player )
 	player.playerClassData[level.pilotClass] <- {}
 }
 
+
 function Wallrun_EnforceWeaponDefaults( player )
 {
 	if ( player.playerClassData[ level.pilotClass ].primaryWeapon )
@@ -60,20 +61,79 @@ function Wallrun_PlayerTookDamage( entity player, damageInfo, entity attacker )
 		printt( "    After Wallrun_PlayerTookDamage:", DamageInfo_GetDamage( damageInfo ) )
 	#endif
 
-	if ( player.GetShieldHealthMax() > 0
-		&& !( DamageInfo_GetCustomDamageType( damageInfo ) & DF_BYPASS_SHIELD ) )
+	if ( player.GetShieldHealthMax() > 0 )
 	{
 		local shieldDamage = PilotShieldHealthUpdate( player, damageInfo )
 		return shieldDamage
 	}
 
-	return 0.0
+	return
 }
 
 function AdjustDamageForRodeoPlayers( entity player, var damageInfo, entity attacker )
 {
 	if ( player == attacker )
 		return
+
+	local titanSoulRodeoed = player.GetTitanSoulBeingRodeoed()
+	if ( !IsValid( titanSoulRodeoed ) )
+		return
+
+	local playerParent = titanSoulRodeoed.GetTitan()
+
+	// dont let npcs hurt rodeo player
+	if ( attacker.IsNPC() && attacker != playerParent && DamageInfo_GetDamageSourceIdentifier( damageInfo ) != eDamageSourceId.mp_titanability_smoke )
+	{
+		DamageInfo_SetDamage( damageInfo, 0 )
+		return
+	}
+
+	local damage = DamageInfo_GetDamage( damageInfo )
+
+	if ( !ShouldAdjustDamageForRodeoPlayer( damageInfo ) )
+		return
+
+	local maxPer500ms
+
+	if ( attacker == playerParent )
+	{
+		// rodeo'd player can't damage quite as much
+		maxPer500ms = 56
+	}
+	else
+	if ( playerParent.GetTeam() == player.GetTeam() )
+	{
+		// riding same team titan protects you a bit from random fire on that titan
+		if ( DamageInfo_GetCustomDamageType( damageInfo ) & DF_EXPLOSION )
+		{
+			maxPer500ms = 75
+		}
+		else if ( DamageInfo_GetCustomDamageType( damageInfo ) & DF_MELEE  ) //If melee, players still die in one hit
+		{
+			maxPer500ms = player.GetMaxHealth() + 1
+		}
+		else
+		{
+			maxPer500ms = 175
+		}
+	}
+	else
+	{
+		return
+	}
+
+	//Set a cap on how much damage the playerParent can do.
+	local damageTaken = GetTotalDamageTakenInTime( player, 0.5 )
+
+	local allowedDamage = maxPer500ms - damageTaken
+	if ( damage < allowedDamage )
+		return
+
+	damage = allowedDamage
+	if ( damage <= 0 )
+		damage = 0
+
+	DamageInfo_SetDamage( damageInfo, damage )
 }
 
 

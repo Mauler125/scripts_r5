@@ -19,12 +19,12 @@ WeaponData
 	"leveled_pickup"								"1"
 	"dev_menu_type"									"offhand"
 	"show_grenade_indicator"						"1"
-	"hide_when_holstered"							"1"
+    "hide_when_holstered"							"1"
 
-	"does_not_interrupt_cloak"						"1"
-	"ads_dof_disable"								"1"
-	"allow_gibraltar_shield"                        "0"
-	"activitymodifier"								"ordnance"
+    "does_not_interrupt_cloak"						"1"
+    "ads_dof_disable"								"1"
+    "allow_gibraltar_shield"                        "0"
+    "activitymodifier"								"ordnance"
 
 	"OnWeaponTossReleaseAnimEvent"					"Grenade_OnWeaponTossReleaseAnimEvent"
 	"OnWeaponTossPrep"								"Grenade_OnWeaponTossPrep"
@@ -153,7 +153,7 @@ WeaponData
 	"cooldown_type"									"ammo_instant"
 	"max_cook_time"									"-1"
 	"grenade_fuse_time"								"0.0"
-	"start_fuse_on_launch"                          "0"
+    "start_fuse_on_launch"                          "0"
 	"grenade_ignition_time"                         "2.8"
 	"fire_rate"   									"1.0"
 	"deploy_time" 									"0.5"
@@ -191,7 +191,6 @@ WeaponData
 	"stick_pilot"                                   "1"
 	"stick_titan"                                   "1"
 	"stick_npc"                                     "1"
-	"stick_drone"                                   "1"
 
 	// Spread
 
@@ -199,6 +198,7 @@ WeaponData
 
 	// View Kick
 	"viewkick_spring" 								"pistol"
+
 
 	// Bob
 	"bob_cycle_time"  								"0.4"
@@ -327,19 +327,20 @@ WeaponData
 			grenade_arc_indicator_bounce_count				"0"
 		}
 
-		survival_finite_ordnance
-		{
-			"ammo_clip_size"								"100"
-			"ammo_default_total"							"0"
-			"ammo_display"									"count"
-			"ammo_min_to_fire"								"1"
-			"ammo_per_shot"									"1"
-			"ammo_stockpile_max"							"0"
-			"regen_ammo_refill_rate"						"0"
-			"regen_ammo_refill_start_delay"					"0.0"
-			"ammo_no_remove_from_stockpile"					"1"
-		}
+        survival_finite_ordnance
+        {
+            "ammo_clip_size"								"100"
+            "ammo_default_total"							"0"
+            "ammo_display"									"count"
+            "ammo_min_to_fire"								"1"
+            "ammo_per_shot"									"1"
+            "ammo_stockpile_max"							"0"
+            "regen_ammo_refill_rate"						"0"
+            "regen_ammo_refill_start_delay"					"0.0"
+            "ammo_no_remove_from_stockpile"					"1"
+        }
 	}
+
 
 	active_crosshair_count				"1"
 	rui_crosshair_index					"0"

@@ -1,42 +1,6 @@
-global function MpAbilityMirageUltimate_Init
 global function OnWeaponChargeBegin_ability_mirage_ultimate
 global function OnWeaponChargeEnd_ability_mirage_ultimate
 global function OnWeaponAttemptOffhandSwitch_ability_mirage_ultimate
-
-struct
-{
-	#if CLIENT
-	var cancelHintRui
-	#endif
-} file
-
-void function MpAbilityMirageUltimate_Init()
-{
-	RegisterSignal( "CancelCloak" )
-	#if CLIENT
-	StatusEffect_RegisterEnabledCallback( eStatusEffect.mirage_ultimate_cancel_hint, CancelHint_OnCreate )
-	StatusEffect_RegisterDisabledCallback( eStatusEffect.mirage_ultimate_cancel_hint, CancelHint_OnDestroy )
-	#endif
-}
-
-#if CLIENT
-void function CancelHint_OnCreate( entity player, int statusEffect, bool actuallyChanged )
-{
-	if ( player != GetLocalViewPlayer() )
-		return
-
-	file.cancelHintRui = CreateFullscreenRui( $"ui/mirage_ultimate_cancel_hint.rpak" )
-}
-
-void function CancelHint_OnDestroy( entity player, int statusEffect, bool actuallyChanged )
-{
-	if ( player != GetLocalViewPlayer() )
-		return
-
-	RuiDestroyIfAlive( file.cancelHintRui )
-	file.cancelHintRui = null
-}
-#endif // CLIENT
 
 bool function OnWeaponAttemptOffhandSwitch_ability_mirage_ultimate( entity weapon )
 {
@@ -58,29 +22,15 @@ var function OnWeaponPrimaryAttack_mirage_ultimate( entity weapon, WeaponPrimary
 	thread HolsterAndDisableWeaponsMirageUltimate( weapon.GetWeaponOwner(), fireDuration )
 	#endif
 
-	// int ammoMax = weapon.GetWeaponPrimaryClipCountMax()
-	// weapon.SetWeaponPrimaryClipCount( ammoMax )
+	int ammoMax = weapon.GetWeaponPrimaryClipCountMax()
+	weapon.SetWeaponPrimaryClipCount( ammoMax )
 	
 	return ammoToReturn
 }
 
-void function MirageUltimateCancelCloak( entity player )
-{
-	player.Signal( "CancelCloak")
-}
-
 void function OnWeaponChargeEnd_ability_mirage_ultimate( entity weapon )
 {
-	if ( weapon.GetWeaponChargeFraction() < 1 )
-	{
-		entity player = weapon.GetWeaponOwner()
-		if ( IsValid( player ) )
-			MirageUltimateCancelCloak( player )
-
-		return
-	}
-
-	if ( weapon.GetWeaponPrimaryClipCount() == 0 ) //
+	if ( weapon.GetWeaponPrimaryClipCount() == 0 ) //This is to prevent a bad bug where ChargeEnd is being called 3 times on the server. Investigating that.
 		return
 
 	weapon.SetWeaponPrimaryClipCount( 0 )

@@ -1,7 +1,3 @@
-//=========================================================
-//	lobby_panel_store.nut
-//=========================================================
-
 global function InitStorePanel
 global function InitStoreVCPanel
 global function InitStoreCharactersPanel
@@ -12,10 +8,6 @@ global function JumpToStoreCharacter
 global function JumpToStoreSkin
 global function JumpToThemedShop
 
-#if R5DEV
-global function DEV_OffersPanel_DoFakeOffers
-#endif
-
 enum eStoreSection
 {
 	SHOP,
@@ -24,28 +16,16 @@ enum eStoreSection
 	CURRECNY
 }
 
-///////////////////////
-///////////////////////
-//// Private Types ////
-///////////////////////
-///////////////////////
-const int MAX_FEATURED_OFFERS  = 2
+const int MAX_FEATURED_OFFERS = 2
 const int MAX_EXCLUSIVE_OFFERS = 2
-const int STORE_VC_NUM_PACKS   = 5
 
 struct
 {
 	var  storePanel
-	bool tabsInitialized            = false
-	bool storeCacheValid            = false
+	bool tabsInitialized = false
+	bool storeCacheValid = false
 	var  tabBar
 	bool openDLCStoreCallbackCalled = false
-
-	#if R5DEV
-		string DEV_fakeOffers_itemRef      = ""
-		string DEV_fakeOffers_seasonTag    = ""
-		int[5] DEV_fakeOffers_columnCounts = [1, 1, 1, 1, 1]
-	#endif
 } file
 
 struct
@@ -65,6 +45,8 @@ struct
 
 } s_characters
 
+
+const int STORE_VC_NUM_PACKS = 5
 struct VCPackDef
 {
 	int    entitlementId
@@ -76,7 +58,7 @@ struct VCPackDef
 	int    total
 	asset  image = $""
 
-	bool valid   = false
+	bool valid = false
 }
 
 struct
@@ -84,7 +66,7 @@ struct
 	bool packsInitialized = false
 
 	array<int>   vcPackEntitlements = [PREMIUM_CURRENCY_10, PREMIUM_CURRENCY_20, PREMIUM_CURRENCY_40, PREMIUM_CURRENCY_60, PREMIUM_CURRENCY_100]
-	array<int>   vcPackBase  = [1000, 2000, 4000, 6000, 10000]
+	array<int>   vcPackBase = [1000, 2000, 4000, 6000, 10000]
 	array<int>   vcPackBonus = [0, 150, 350, 700, 1500]
 	array<asset> vcPackImage = [$"rui/menu/store/store_coins_t1", $"rui/menu/store/store_coins_t2", $"rui/menu/store/store_coins_t3", $"rui/menu/store/store_coins_t4", $"rui/menu/store/store_coins_t5"]
 
@@ -101,45 +83,38 @@ struct
 	var lootButtonPurchaseN
 } s_loot
 
+
 struct SeasonalStoreData
 {
-	string seasonTag               = ""
-	asset  tallImage               = $""
-	asset  squareImage             = $""
-	asset  topImage                = $""
-	asset  tallFrameOverlayImage   = $""
+	string seasonTag = ""
+	asset  tallImage = $""
+	asset  squareImage = $""
+	asset  topImage = $""
+	asset  tallFrameOverlayImage = $""
 	asset  squareFrameOverlayImage = $""
-	asset  specialPageHeaderImage  = $""
-	string specialPageHeaderTitle  = ""
 }
+
 
 struct
 {
 	var offersPanel
 
-	var        buttonAnchor
 	array<var> fullOfferButtons
 	array<var> topOfferButtons
 	array<var> bottomOfferButtons
 
 	var featuredHeader
 	var exclusiveHeader
-	var specialPageHeader
 
 	array<var> shopButtons
 
-	// meh.
+	//
 	table< var, GRXScriptOffer > buttonToOfferData
 
 	table< string, SeasonalStoreData > seasonalDataMap
 } s_offers
 
 
-/////////////////////////
-/////////////////////////
-//// Initialiszation ////
-/////////////////////////
-/////////////////////////
 void function InitStorePanel( var panel )
 {
 	file.storePanel = panel
@@ -153,15 +128,22 @@ void function InitStorePanel( var panel )
 	AddPanelEventHandler( panel, eUIEvent.PANEL_SHOW, OnStorePanel_Show )
 	AddPanelEventHandler( panel, eUIEvent.PANEL_HIDE, OnStorePanel_Hide )
 
-	// Event
+	//
 	{
 		var tabBody                         = Hud_GetChild( panel, "CollectionEventPanel" )
+		float tabBarLeftOffsetFracIfVisible = 0.4
+		AddTab( panel, tabBody, "#MENU_STORE_PANEL_COLLECTION", false, tabBarLeftOffsetFracIfVisible )
+	}
+
+	//
+	{
+		var tabBody                         = Hud_GetChild( panel, "SpecialCurrencyShopPanel" )
 		bool wantDividerAfter               = true
 		float tabBarLeftOffsetFracIfVisible = 0.4
-		AddTab( panel, tabBody, "#MENU_STORE_PANEL_COLLECTION", wantDividerAfter, tabBarLeftOffsetFracIfVisible )
+		AddTab( panel, tabBody, "#MENU_STORE_PANEL_EVENT_SHOP", wantDividerAfter, tabBarLeftOffsetFracIfVisible )
 	}
-	
-	// Shop
+
+	//
 	{
 		var tabBody                         = Hud_GetChild( panel, "ThemedShopPanel" )
 		bool wantDividerAfter               = true
@@ -169,25 +151,26 @@ void function InitStorePanel( var panel )
 		AddTab( panel, tabBody, "BUG THIS", wantDividerAfter, tabBarLeftOffsetFracIfVisible )
 	}
 
-	// Offers
+	//
 	{
 		var tabBody = Hud_GetChild( panel, "ECPanel" )
+		//
 		AddTab( panel, tabBody, "#MENU_STORE_PANEL_SHOP" )
 	}
 
-	// Loot
+	//
 	{
 		var tabBody = Hud_GetChild( panel, "LootPanel" )
 		AddTab( panel, tabBody, "#MENU_STORE_PANEL_LOOT" )
 	}
 
-	// Characters
+	//
 	{
 		var tabBody = Hud_GetChild( panel, "CharacterPanel" )
 		AddTab( panel, tabBody, "#MENU_STORE_PANEL_CHARACTERS" )
 	}
 
-	// Virtual Currency
+	//
 	{
 		var tabBody = Hud_GetChild( panel, "VCPanel" )
 		AddTab( panel, tabBody, "#MENU_STORE_PANEL_CURRENCY" )
@@ -205,7 +188,7 @@ void function OnStorePanel_Show( var panel )
 		file.tabsInitialized = true
 	}
 
-	// Start disabled, only enable when store updates are complete
+	//
 	DeactivateTab( tabData )
 	SetTabNavigationEnabled( file.storePanel, false )
 
@@ -237,7 +220,7 @@ void function TabNavigateToLobby()
 {
 	TabData lobbyTabData = GetTabDataForPanel( GetMenu( "LobbyMenu" ) )
 
-	//TODO: assert we're the active tab
+	//
 	ActivateTabPrev( lobbyTabData )
 }
 
@@ -265,7 +248,7 @@ void function CallDLCStoreCallback_Safe()
 
 
 void function OnGRXStoreUpdate()
-{/*
+{
 	TabData tabData = GetTabDataForPanel( file.storePanel )
 	int numTabs     = tabData.tabDefs.len()
 
@@ -308,12 +291,10 @@ void function OnGRXStoreUpdate()
 			else if ( Hud_GetHudName( tabDef.panel ) == "CollectionEventPanel" || Hud_GetHudName( tabDef.panel ) == "SpecialCurrencyShopPanel" )
 			{
 				showTab = haveActiveCollectionEvent
-				enableTab = true//
+				enableTab = !GRX_IsOfferRestricted() || Hud_GetHudName( tabDef.panel ) == "SpecialCurrencyShopPanel"
 				if ( haveActiveCollectionEvent )
 				{
 					expect ItemFlavor(activeCollectionEvent)
-
-					tabDef.title = CollectionEvent_GetFrontTabText( activeCollectionEvent )
 
 					tabDef.useCustomColors = true
 					tabDef.customDefaultBGCol = CollectionEvent_GetTabBGDefaultCol( activeCollectionEvent )
@@ -365,7 +346,7 @@ void function OnGRXStoreUpdate()
 		Hud_SetVisible( Hud_GetChild( file.storePanel, "BusyPanel" ), false )
 		if ( isActiveIndexVCPanel )
 			CallDLCStoreCallback_Safe()
-	}*/
+	}
 }
 
 
@@ -379,16 +360,18 @@ void function UpdateLootTickTabNewness()
 
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//
-// ██╗   ██╗██╗██████╗ ████████╗██╗   ██╗ █████╗ ██╗          ██████╗██╗   ██╗██████╗ ██████╗ ███████╗███╗   ██╗ ██████╗██╗   ██╗
-// ██║   ██║██║██╔══██╗╚══██╔══╝██║   ██║██╔══██╗██║         ██╔════╝██║   ██║██╔══██╗██╔══██╗██╔════╝████╗  ██║██╔════╝╚██╗ ██╔╝
-// ██║   ██║██║██████╔╝   ██║   ██║   ██║███████║██║         ██║     ██║   ██║██████╔╝██████╔╝█████╗  ██╔██╗ ██║██║      ╚████╔╝
-// ╚██╗ ██╔╝██║██╔══██╗   ██║   ██║   ██║██╔══██║██║         ██║     ██║   ██║██╔══██╗██╔══██╗██╔══╝  ██║╚██╗██║██║       ╚██╔╝
-//  ╚████╔╝ ██║██║  ██║   ██║   ╚██████╔╝██║  ██║███████╗    ╚██████╗╚██████╔╝██║  ██║██║  ██║███████╗██║ ╚████║╚██████╗   ██║
-//   ╚═══╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝╚══════╝     ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═══╝ ╚═════╝   ╚═╝
-//
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/*
+
+
+
+
+
+
+
+
+
+*/
 
 void function InitStoreVCPanel( var panel )
 {
@@ -445,7 +428,7 @@ void function VCPanel_Think( var panel )
 
 		var discountPanel = Hud_GetChild( panel, "DiscountPanel" )
 		Hud_SetVisible( discountPanel, Script_UserHasEAAccess() )
-		#if PC_PROG
+		#if(PC_PROG)
 			HudElem_SetRuiArg( discountPanel, "discountImage", $"rui/menu/common/ea_access_pc", eRuiArgType.IMAGE )
 		#else
 			HudElem_SetRuiArg( discountPanel, "discountImage", $"rui/menu/common/ea_access", eRuiArgType.IMAGE )
@@ -494,8 +477,8 @@ void function InitVCPacks( var panel )
 
 		RuiSetImage( vcRui, "vcImage", GetVCPackImage( vcPackIndex ) )
 
-		//Hud_SetEnabled( vcButton, vcPack.valid )
-		//Hud_SetLocked( vcButton, !vcPack.valid )
+		//
+		//
 		Hud_SetEnabled( vcButton, true )
 		Hud_SetLocked( vcButton, false )
 	}
@@ -512,7 +495,7 @@ void function OnVCButtonActivate( var button )
 		return
 	}
 
-	#if PC_PROG
+	#if(PC_PROG)
 		if ( !Origin_IsOverlayAvailable() )
 		{
 			ConfirmDialogData dialogData
@@ -572,8 +555,8 @@ string function GetVCPackTotalString( int vcPackIndex )
 
 string function GetVCPackBonusBaseString( int vcPackIndex )
 {
-	//if ( !s_vc.vcPacks[vcPackIndex].bonus )
-	//	return ""
+	//
+	//
 
 	return Localize( "#STORE_VC_BONUS_BASE", ShortenNumber( string( s_vc.vcPacks[vcPackIndex].base ) ) )
 }
@@ -618,17 +601,16 @@ asset function GetVCPackImage( int vcPackIndex )
 }
 
 
+/*
 
-////////////////////////////////////////////////////////////////////////////
-//
-//  ██████╗██╗  ██╗ █████╗ ██████╗  █████╗  ██████╗████████╗███████╗██████╗
-// ██╔════╝██║  ██║██╔══██╗██╔══██╗██╔══██╗██╔════╝╚══██╔══╝██╔════╝██╔══██╗
-// ██║     ███████║███████║██████╔╝███████║██║        ██║   █████╗  ██████╔╝
-// ██║     ██╔══██║██╔══██║██╔══██╗██╔══██║██║        ██║   ██╔══╝  ██╔══██╗
-// ╚██████╗██║  ██║██║  ██║██║  ██║██║  ██║╚██████╗   ██║   ███████╗██║  ██║
-//  ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝   ╚═╝   ╚══════╝╚═╝  ╚═╝
-//
-////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+*/
+
 
 void function InitStoreCharactersPanel( var panel )
 {
@@ -782,11 +764,9 @@ void function CharacterButton_OnActivate( var button )
 	}
 
 	ItemFlavor character = s_characters.buttonToCharacter[button]
-
-	PurchaseDialogConfig pdc
-	pdc.flav = character
-	pdc.quantity = 1
-	PurchaseDialog( pdc )
+	//
+	//
+	PurchaseDialog( character, 1, true, null, null )
 }
 
 
@@ -806,20 +786,20 @@ void function CharacterButton_OnGetFocus( var button )
 	foreach ( characterButton in s_characters.buttons )
 		Hud_SetSelected( characterButton, false )
 
-	//Hud_SetSelected( button, true )
+	//
 
 	bool grxReady = GRX_IsInventoryReady() && GRX_AreOffersReady()
 
 	ItemFlavor character     = s_characters.buttonToCharacter[button]
 	ItemFlavor characterSkin = LoadoutSlot_GetItemFlavor( LocalClientEHI(), Loadout_CharacterSkin( character ) )
 
-	//RuiSetBool( s_characters.characterSelectInfoRui, "showInfo", true )
+	//
 	RuiSetString( s_characters.characterSelectInfoRui, "nameText", Localize( ItemFlavor_GetLongName( character ) ).toupper() )
 	RuiSetString( s_characters.characterSelectInfoRui, "subtitleText", Localize( CharacterClass_GetCharacterSelectSubtitle( character ) ) )
-	//RuiSetString( s_characters.characterSelectInfoRui, "descText", Localize( ItemFlavor_GetShortDescription( character ) ) )
+	//
 	if ( s_characters.buttonWithFocus != button )
 		RuiSetGameTime( s_characters.characterSelectInfoRui, "initTime", Time() )
-	//RuiSetImage( s_characters.characterSelectInfoRui, "roleImage", CharacterClass_GetCharacterRoleImage( character ) )
+	//
 
 	s_characters.buttonWithFocus = button
 
@@ -850,9 +830,9 @@ void function CharacterButton_OnGetFocus( var button )
 			if ( formattedPrices.len() == 0 )
 				priceText = "#STORE_CHARACTER_UNAVAILALBE"
 			else if ( formattedPrices.len() == 1 )
-				priceText = Localize( "#STORE_PRICE_N", formattedPrices[0] )
+				priceText = Localize( "#STORE_CHARACTER_PRICE_N", formattedPrices[0] )
 			else if ( formattedPrices.len() == 2 )
-				priceText = Localize( "#STORE_PRICE_N_N", formattedPrices[0], formattedPrices[1] )
+				priceText = Localize( "#STORE_CHARACTER_PRICE_N_N", formattedPrices[0], formattedPrices[1] )
 		}
 		else if ( isOwned )
 		{
@@ -869,25 +849,24 @@ void function CharacterButton_OnGetFocus( var button )
 	RunClientScript( "UIToClient_PreviewCharacterSkin", ItemFlavor_GetNetworkIndex_DEPRECATED( characterSkin ), ItemFlavor_GetNetworkIndex_DEPRECATED( character ) )
 }
 
+/*
 
 
-//////////////////////////////////////////////////////////////////////
-//
-// ██╗      ██████╗  ██████╗ ████████╗    ████████╗██╗ ██████╗██╗  ██╗
-// ██║     ██╔═══██╗██╔═══██╗╚══██╔══╝    ╚══██╔══╝██║██╔════╝██║ ██╔╝
-// ██║     ██║   ██║██║   ██║   ██║          ██║   ██║██║     █████╔╝
-// ██║     ██║   ██║██║   ██║   ██║          ██║   ██║██║     ██╔═██╗
-// ███████╗╚██████╔╝╚██████╔╝   ██║          ██║   ██║╚██████╗██║  ██╗
-// ╚══════╝ ╚═════╝  ╚═════╝    ╚═╝          ╚═╝   ╚═╝ ╚═════╝╚═╝  ╚═╝
-//
-//////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+*/
 
 void function InitLootPanel( var panel )
 {
 	var lootPanelA = Hud_GetChild( panel, "LootPanelA" )
-	//	var rui = Hud_GetRui( Hud_GetChild( lootPanelA, "LootFrame" ) )
-	//	RuiSetImage( rui, "basicImage", $"rui/menu/store/loot_tick_temp" )
-	//HudElem_SetRuiArg( Hud_GetChild( lootPanelA, "LootFrame" ), "lootImage", $"rui/menu/store/loot_tick_temp" )
+	//
+	//
+	//
 
 	s_loot.lootPanel = Hud_GetChild( lootPanelA, "PanelContent" )
 	HudElem_SetRuiArg( s_loot.lootPanel, "titleText", Localize( "#RARE_LOOT_TICK" ) )
@@ -1015,24 +994,26 @@ void function LootTickPurchaseButton_Activate( var button )
 	if ( Hud_IsLocked( button ) )
 		return
 
-	GRXScriptOffer ornull offer = GetLootTickPurchaseOffer()
-	if ( offer == null )
-	{
-		EmitUISound( "menu_deny" )
-		return
-	}
-	expect GRXScriptOffer(offer)
+	ItemFlavor lootTick = GetItemFlavorByAsset( $"settings/itemflav/pack/cosmetic_rare.rpak" )
 
 	int quantity = 1
 	if ( int( Hud_GetScriptID( button ) ) != 0 )
-		quantity = GetCurrentPlaylistVarInt( "loot_tick_purchase_max", 10 )
+	{
+		ItemFlavorPurchasabilityInfo ifpi = GRX_GetItemPurchasabilityInfo( lootTick )
+		Assert( ifpi.isPurchasableAtAll )
 
-	PurchaseDialogConfig pdc
-	pdc.offer = offer
-	pdc.quantity = quantity
-	pdc.markAsNew = false
-	pdc.onPurchaseResultCallback = OnLootTickPurchaseResult
-	PurchaseDialog( pdc )
+		foreach ( string location, array<GRXScriptOffer> locationOfferList in ifpi.locationToDedicatedStoreOffersMap )
+		{
+			foreach ( GRXScriptOffer locationOffer in locationOfferList )
+			{
+				//
+			}
+		}
+
+		quantity = GetCurrentPlaylistVarInt( "loot_tick_purchase_max", 10 )
+	}
+
+	PurchaseDialog( lootTick, quantity, false, null, OnLootTickPurchaseResult )
 }
 
 
@@ -1046,26 +1027,18 @@ void function OnLootTickPurchaseResult( bool wasSuccessful )
 
 
 
-////////////////////////////////////////////////////////
-//
-// ███████╗ ██████╗    ███████╗██╗  ██╗ ██████╗ ██████╗
-// ██╔════╝██╔════╝    ██╔════╝██║  ██║██╔═══██╗██╔══██╗
-// █████╗  ██║         ███████╗███████║██║   ██║██████╔╝
-// ██╔══╝  ██║         ╚════██║██╔══██║██║   ██║██╔═══╝
-// ███████╗╚██████╗    ███████║██║  ██║╚██████╔╝██║
-// ╚══════╝ ╚═════╝    ╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚═╝
-//
-////////////////////////////////////////////////////////
+/*
+
+
+
+*/
 
 void function InitOffersPanel( var panel )
 {
 	s_offers.offersPanel = panel
 
-	s_offers.buttonAnchor = Hud_GetChild( panel, "ButtonAnchor" )
-
 	s_offers.featuredHeader = Hud_GetChild( panel, "LeftHeader" )
 	s_offers.exclusiveHeader = Hud_GetChild( panel, "RightHeader" )
-	s_offers.specialPageHeader = Hud_GetChild( panel, "SpecialPageHeader" )
 
 	s_offers.fullOfferButtons = GetPanelElementsByClassname( panel, "FullOfferButton" )
 	s_offers.topOfferButtons = GetPanelElementsByClassname( panel, "TopOfferButton" )
@@ -1161,8 +1134,6 @@ void function InitOffers()
 		asset tallFrameOverlayImage   = GetDataTableAsset( dataTable, i, GetDataTableColumnByName( dataTable, "tallFrameOverlay" ) )
 		asset squareFrameOverlayImage = GetDataTableAsset( dataTable, i, GetDataTableColumnByName( dataTable, "squareFrameOverlay" ) )
 		asset topImage                = GetDataTableAsset( dataTable, i, GetDataTableColumnByName( dataTable, "topImage" ) )
-		asset specialPageHeaderImage  = GetDataTableAsset( dataTable, i, GetDataTableColumnByName( dataTable, "specialPageHeaderImage" ) )
-		string specialPageHeaderTitle = GetDataTableString( dataTable, i, GetDataTableColumnByName( dataTable, "specialPageHeaderTitle" ) )
 
 		SeasonalStoreData seasonalStoreData
 		seasonalStoreData.seasonTag = seasonTag
@@ -1171,72 +1142,21 @@ void function InitOffers()
 		seasonalStoreData.tallFrameOverlayImage = tallFrameOverlayImage
 		seasonalStoreData.squareFrameOverlayImage = squareFrameOverlayImage
 		seasonalStoreData.topImage = topImage
-		seasonalStoreData.specialPageHeaderImage = specialPageHeaderImage
-		seasonalStoreData.specialPageHeaderTitle = specialPageHeaderTitle
 
 		s_offers.seasonalDataMap[seasonTag] <- seasonalStoreData
 	}
+	//
 
 	int featuredColumns  = 0
 	int exclusiveColumns = 0
 
-	bool isSpecialPageHeaderDataValid = false
-	asset specialPageHeaderImage      = $""
-	string specialPageHeaderTitle     = ""
-
 	for ( int col = 0; col < 5; col++ )
 	{
+		//
+		//
+		//
+
 		array<GRXScriptOffer> columnOffers = GRX_GetStoreOfferColumn( col )
-
-		#if R5DEV
-			if ( file.DEV_fakeOffers_itemRef != "" )
-			{
-				array<GRXScriptOffer> fakeOffers
-				for ( int fakeOfferIdx = 0; fakeOfferIdx < file.DEV_fakeOffers_columnCounts[col]; fakeOfferIdx++ )
-				{
-					ItemFlavor flav = GetItemFlavorByHumanReadableRef( file.DEV_fakeOffers_itemRef )
-					GRXScriptOffer fakeOffer
-					fakeOffer.output.flavors = [flav]
-					fakeOffer.output.quantities = [1]
-					fakeOffer.prices = [ MakeItemFlavorBag( { [GetItemFlavorByHumanReadableRef( "grx_currency_premium" )] = 550, } ) ]
-					fakeOffer.titleText = ItemFlavor_GetLongName( flav )
-					fakeOffer.descText = ItemFlavor_GetTypeName( flav )
-					fakeOffer.image = ItemFlavor_GetIcon( flav )
-					fakeOffer.imageRef = ""
-					fakeOffer.tagText = "banana"
-					fakeOffer.seasonTag = file.DEV_fakeOffers_seasonTag//
-					fakeOffer.originalPrice = MakeItemFlavorBag( { [GetItemFlavorByHumanReadableRef( "grx_currency_premium" )] = 700, } )
-					fakeOffer.expireTime = int( ceil( GetUnixTimestamp() / 1000.0 ) * 1000.0 )
-					fakeOffers.append( fakeOffer )
-				}
-				columnOffers = fakeOffers
-			}
-		#endif
-
-		foreach ( GRXScriptOffer offerData in columnOffers )
-		{
-			string seasonTag = offerData.seasonTag in s_offers.seasonalDataMap ? offerData.seasonTag : "default"
-
-			if ( isSpecialPageHeaderDataValid )
-			{
-				if ( s_offers.seasonalDataMap[seasonTag].specialPageHeaderImage != specialPageHeaderImage )
-				{
-					Warning( "Mismatched store special page header images: \"%s\", \"%s\"", string(specialPageHeaderImage), string(s_offers.seasonalDataMap[seasonTag].specialPageHeaderImage) )
-					specialPageHeaderImage = $""
-				}
-				if ( s_offers.seasonalDataMap[seasonTag].specialPageHeaderTitle != specialPageHeaderTitle )
-				{
-					Warning( "Mismatched store special page header titles: \"%s\", \"%s\"", specialPageHeaderTitle, s_offers.seasonalDataMap[seasonTag].specialPageHeaderTitle )
-					specialPageHeaderTitle = ""
-				}
-			}
-			else
-			{
-				isSpecialPageHeaderDataValid = true
-				specialPageHeaderImage = s_offers.seasonalDataMap[seasonTag].specialPageHeaderImage
-				specialPageHeaderTitle = s_offers.seasonalDataMap[seasonTag].specialPageHeaderTitle
-			}
-		}
 
 		HudElem_SetRuiArg( s_offers.fullOfferButtons[col], "isSpacer", false )
 		HudElem_SetRuiArg( s_offers.topOfferButtons[col], "isSpacer", false )
@@ -1280,7 +1200,7 @@ void function InitOffers()
 			Hud_SetVisible( s_offers.topOfferButtons[col], false )
 			Hud_SetVisible( s_offers.bottomOfferButtons[col], false )
 
-			InitOfferButton( s_offers.fullOfferButtons[col], columnOffers[0], true )
+			//InitOfferButton( s_offers.fullOfferButtons[col], columnOffers[0], true )
 
 			if ( columnOffers[0].prereq != null && col > 0 )
 				InitSpacerButton( s_offers.fullOfferButtons[col - 1], columnOffers[0] )
@@ -1305,8 +1225,8 @@ void function InitOffers()
 			Hud_SetVisible( s_offers.topOfferButtons[col], true )
 			Hud_SetVisible( s_offers.bottomOfferButtons[col], true )
 
-			InitOfferButton( s_offers.topOfferButtons[col], columnOffers[0], false )
-			InitOfferButton( s_offers.bottomOfferButtons[col], columnOffers[1], false )
+			//InitOfferButton( s_offers.topOfferButtons[col], columnOffers[0], false )
+			//InitOfferButton( s_offers.bottomOfferButtons[col], columnOffers[1], false )
 
 			if ( columnOffers[0].prereq != null && col > 0 )
 				InitSpacerButton( s_offers.topOfferButtons[col - 1], columnOffers[0] )
@@ -1317,28 +1237,12 @@ void function InitOffers()
 		totalWidth += Hud_GetX( s_offers.fullOfferButtons[col] ) + Hud_GetWidth( s_offers.fullOfferButtons[col] )
 	}
 
-	if ( specialPageHeaderImage != $"" || specialPageHeaderTitle != "" )
-	{
-		Hud_Hide( s_offers.featuredHeader )
-		Hud_Hide( s_offers.exclusiveHeader )
-		Hud_Show( s_offers.specialPageHeader )
-		HudElem_SetRuiArg( s_offers.specialPageHeader, "headerImage", specialPageHeaderImage, eRuiArgType.IMAGE )
-		HudElem_SetRuiArg( s_offers.specialPageHeader, "headerTitle", specialPageHeaderTitle )
-		Hud_SetY( s_offers.buttonAnchor, ContentScaledYAsInt( -28 ) )
-	}
-	else
-	{
-		Hud_Hide( s_offers.specialPageHeader )
-		Hud_SetY( s_offers.buttonAnchor, 0 )
-		Hud_Show( s_offers.featuredHeader )
-		Hud_SetVisible( s_offers.exclusiveHeader, exclusiveColumns > 0 )
-	}
-
 	Hud_SetWidth( s_offers.offersPanel, totalWidth )
 	Hud_SetWidth( s_offers.featuredHeader, featuredWidth > 0 ? featuredWidth : totalWidth )
 
 	Hud_SetX( s_offers.exclusiveHeader, exclusiveX )
 	Hud_SetWidth( s_offers.exclusiveHeader, exclusiveWidth > 0 ? exclusiveWidth : totalWidth - exclusiveX )
+	Hud_SetVisible( s_offers.exclusiveHeader, exclusiveColumns > 0 )
 }
 
 
@@ -1346,12 +1250,8 @@ void function InitSpacerButton( var button, GRXScriptOffer offerData )
 {
 	ItemFlavor prereqFlav = expect ItemFlavor( offerData.prereq )
 	Hud_SetVisible( button, true )
-	Hud_SetEnabled( button, false )
 	Hud_SetLocked( button, !GRX_IsItemOwnedByPlayer( prereqFlav ) )
 	HudElem_SetRuiArg( button, "isSpacer", true )
-
-	if ( button in s_offers.buttonToOfferData )
-		delete s_offers.buttonToOfferData[button]
 }
 
 
@@ -1376,175 +1276,8 @@ void function ClearOffers()
 }
 
 
-#if R5DEV
-void function DEV_OffersPanel_DoFakeOffers( bool doIt = false, string itemRef = "character_skin_caustic_legendary_04", string seasonTag = "", int col0 = 2, int col1 = 1, int col2 = 1, int col3 = 1, int col4 = 1 )
-{
-	if ( !doIt )
-		itemRef = ""
-
-	file.DEV_fakeOffers_itemRef = itemRef
-	file.DEV_fakeOffers_seasonTag = seasonTag
-	file.DEV_fakeOffers_columnCounts[0] = col0
-	file.DEV_fakeOffers_columnCounts[1] = col1
-	file.DEV_fakeOffers_columnCounts[2] = col2
-	file.DEV_fakeOffers_columnCounts[3] = col3
-	file.DEV_fakeOffers_columnCounts[4] = col4
-}
-#endif
-
-
 void function OfferButton_Activate( var button )
 {
-	if ( !(button in s_offers.buttonToOfferData) )
-		return
-
-	GRXScriptOffer offer = s_offers.buttonToOfferData[button]
-	Assert( offer.output.flavors.len() == 1 )
-	ItemFlavor flav = s_offers.buttonToOfferData[button].output.flavors[0]
-
-	if ( InspectItemTypePresentationSupported( flav ) )
-	{
-		SetStoreItemPresentationModeActive( offer )
-	}
-	else
-	{
-		PurchaseDialogConfig pdc
-		pdc.flav = flav
-		pdc.quantity = 1
-		PurchaseDialog( pdc )
-	}
-}
-
-
-void function InitOfferButton( var button, GRXScriptOffer offerData, bool isTall )
-{
-	// var rui = Hud_GetRui( button )
-
-	// if ( GetConVarBool( "assetdownloads_enabled" ) )
-	// {
-	// 	offerData.image = GetDownloadedImageAsset( offerData.imageRef, offerData.imageRef, ePakType.DL_STORE, button )
-	// }
-	// RuiSetImage( rui, "ecImage", offerData.image )
-
-	// RuiSetString( rui, "ecTitle", offerData.titleText )
-	// RuiSetString( rui, "ecDesc", ""/**/ )
-	// RuiSetString( rui, "tagText", offerData.tagText )
-
-	// string originalPriceText = ""
-	// if ( offerData.originalPrice != null )
-	// 	originalPriceText = GRX_GetFormattedPrice( expect ItemFlavorBag(offerData.originalPrice) )
-	// RuiSetString( rui, "ecOriginalPrice", originalPriceText )
-
-	// asset topImage
-	// asset backgroundImage
-	// asset frameOverlayImage
-	// string seasonTag = offerData.seasonTag in s_offers.seasonalDataMap ? offerData.seasonTag : "default"
-
-	// topImage = s_offers.seasonalDataMap[seasonTag].topImage
-	// backgroundImage = isTall ? s_offers.seasonalDataMap[seasonTag].tallImage : s_offers.seasonalDataMap[seasonTag].squareImage
-	// frameOverlayImage = isTall ? s_offers.seasonalDataMap[seasonTag].tallFrameOverlayImage : s_offers.seasonalDataMap[seasonTag].squareFrameOverlayImage
-
-	// RuiSetImage( rui, "topSlotImg", topImage )
-	// RuiSetImage( rui, "backgroundImg", backgroundImage )
-	// RuiSetImage( rui, "frameOverlayImg", frameOverlayImage )
-
-	// if ( offerData.tooltipDesc != "" )
-	// {
-	// 	ToolTipData tooltipData
-	// 	tooltipData.titleText = offerData.tooltipTitle
-	// 	tooltipData.descText = offerData.tooltipDesc
-
-	// 	Hud_SetToolTipData( button, tooltipData )
-	// }
-	// else
-	// {
-	// 	Hud_ClearToolTipData( button )
-	// }
-
-	// bool isPurchasableByLocalPlayer = false
-	// string priceText                = ""
-
-	// Assert( offerData.output.flavors.len() == 1 )
-
-	// ItemFlavor itemFlav               = offerData.output.flavors[0]
-	// ItemFlavorPurchasabilityInfo ifpi = GRX_GetItemPurchasabilityInfo( itemFlav )
-
-	// float vertAlign = 0.0
-	// switch ( ItemFlavor_GetType( itemFlav ) )
-	// {
-	// 	case eItemType.weapon_skin:
-	// 		vertAlign = -0.6
-	// 		break
-
-	// 	default:
-	// 		vertAlign = -0.1
-	// 		break
-	// }
-	// RuiSetFloat( rui, "vertAlign", vertAlign )
-	// //
-
-	// bool isOfferFullyClaimed = GRXOffer_IsFullyClaimed( offerData )
-
-	// asset containerImage = $""
-	// if ( !offerData.isAvailable )
-	// {
-	// 	priceText = offerData.unavailableReason
-	// }
-	// else if ( isOfferFullyClaimed )
-	// {
-	// 	priceText = "#OWNED"
-	// }
-	// else if ( offerData.prices.len() > 0 )
-	// {
-	// 	isPurchasableByLocalPlayer = true
-	// 	priceText = GRX_GetFormattedPrice( offerData.prices[0] )
-	// 	if ( offerData.prices.len() == 1 )
-	// 	{
-	// 		array<int> priceArray = GRX_GetCurrencyArrayFromBag( offerData.prices[0] )
-	// 		foreach ( currencyIndex, price in priceArray )
-	// 		{
-	// 			if ( price == 0 )
-	// 				continue
-
-	// 			containerImage = GRX_CURRENCY_CONTAINERS[currencyIndex]
-	// 			break
-	// 		}
-	// 	}
-	// }
-	// else
-	// {
-	// 	Warning( "Offer has no price: %s", ItemFlavor_GetHumanReadableRef( itemFlav ) )
-	// 	priceText = "#UNAVAILABLE"
-	// }
-
-	// RuiSetImage( rui, "ecContainerImage", containerImage )
-	// RuiSetString( rui, "ecPrice", priceText )
-	// RuiSetInt( rui, "rarity", ItemFlavor_GetQuality( itemFlav ) )
-	// RuiSetString( rui, "rarityName", ItemFlavor_GetQualityName( itemFlav ) )
-
-	// int remainingTime = offerData.expireTime - GetUnixTimestamp()
-	// if ( remainingTime > 0 )
-	// 	RuiSetGameTime( rui, "expireTime", Time() + remainingTime )
-	// else
-	// 	RuiSetGameTime( rui, "expireTime", RUI_BADGAMETIME )
-
-	// //
-	// Hud_SetEnabled( button, true )
-
-	// if ( offerData.prereq != null )
-	// {
-	// 	ItemFlavor prereqFlav = expect ItemFlavor( offerData.prereq )
-	// 	if ( GRX_IsItemOwnedByPlayer( prereqFlav ) )
-	// 		RuiSetString( rui, "ecReqs", Localize( "#STORE_REQUIRES_OWNED", Localize( ItemFlavor_GetLongName( prereqFlav ) ) ) )
-	// 	else
-	// 		RuiSetString( rui, "ecReqs", Localize( "#STORE_REQUIRES_LOCKED", Localize( ItemFlavor_GetLongName( prereqFlav ) ) ) )
-	// }
-	// else
-	// {
-	// 	RuiSetString( rui, "ecReqs", "" )
-	// }
-
-	// s_offers.buttonToOfferData[button] <- offerData
 }
 
 
@@ -1615,3 +1348,312 @@ void function CharactersPanel_OnFocusChanged( var panel, var oldFocus, var newFo
 
 	UpdateFooterOptions()
 }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//

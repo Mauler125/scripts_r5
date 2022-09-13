@@ -72,7 +72,7 @@ global struct HoverTank
 	entity turret
 	entity turretBarrelClip
 	entity triggerVolume
-	array<entity> linkedEnts
+	var linkedEnts
 }
 
 global struct SupplyShip
@@ -85,18 +85,15 @@ global struct SupplyShip
 
 global struct PingTableStruct // TODO: fix shared waypoints script, look at BurnDamageStack for reference
 {
-	array<entity> locations
-	array<entity> loots
+	table<entity> locations
+	table<entity> loots
 	entity latestPing
 }
 
 global struct LootZone
 {
 	vector origin
-	float radius
-	float height
 	int zoneClass
-	string ref
 }
 
 global struct ThreatEventCallbackData
@@ -342,7 +339,7 @@ global struct ServerEntityStruct
 	string enemyHighlight = ""
 	string burnReward = ""
 	int fd_roundDeployed = -1
-
+	
 	// r5 stuff
 	EHIScriptStruct ehiss
 	bool isBusy = false
@@ -392,16 +389,6 @@ global struct ServerEntityStruct
 	table<entity, float> sharedGasDamageHelper
 	int triggerZoneId
 	bool gravityOrbInteraction
-
-	bool shouldSpawnLoot = true
-
-	array<BurnDamageStack> burnDamageStacks
-	bool isBurning
-
-	float lastGrappleTime
-
-	//Trophy Structs
-	float pylonhealth
 }
 
 global struct MeritData
@@ -549,8 +536,6 @@ global struct ServerPlayerStruct
 
 	array<StoredWeapon> storedWeapons
 
-	int CTFClassID = 0
-
 	bool rodeoShouldAdjustJumpOffVelocity = false
 	float rodeoRequestBatteryHintLastShownTime = 0.0
 	float batteryLastTouchedNotificationTime = 0.0
@@ -602,7 +587,7 @@ global struct ServerPlayerStruct
 	int turretArrayId = -1
 
 	float hotStreakTime = 0.0
-
+	
 	// extra stuff for apex
 	int skydiveDecoysFired = 0
 	bool isInExtendedUse = false
@@ -616,9 +601,9 @@ global struct ServerPlayerStruct
 	array<int> statValues_Int
 	array<float> statValuesAtStart_Float
 	array<float> statValues_Float
-	table< array<void functionref( entity player, bool oldValue, bool newValue )> > statEntryChangeCallbacks_Bool
-	table< array<void functionref( entity player, int oldValue, int newValue )> > statEntryChangeCallbacks_Int
-	table< array<void functionref( entity player, float oldValue, float newValue )> > statEntryChangeCallbacks_Float
+	array< array<void functionref( entity player, bool oldValue, bool newValue )> > statEntryChangeCallbacks_Bool
+	array< array<void functionref( entity player, int oldValue, int newValue )> > statEntryChangeCallbacks_Int
+	array< array<void functionref( entity player, float oldValue, float newValue )> > statEntryChangeCallbacks_Float
 	bool placementStatsRecorded = false
 	bool noWitnessess = false
 	int executions = 0
@@ -661,14 +646,6 @@ global struct ServerPlayerStruct
 	int zoneNoTouchStack
 	int currentZoneId
 	entity DEV_lastDroppedSurvivalWeaponProp
-
-	int squadRank
-
-	float respawnChanceExpiryTime
-
-	float playerDamageDealt
-	int respawnsGiven
-	int revivesGiven
 }
 
 global struct ServerPlayerWaypoint

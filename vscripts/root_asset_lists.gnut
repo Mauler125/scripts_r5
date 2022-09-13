@@ -9,66 +9,34 @@
 //////////////////////
 global const array<asset> CHARACTER_ASSETS =
 [
-	$"settings/itemflav/character/bangalore.rpak",  // character_bangalore
-	$"settings/itemflav/character/bloodhound.rpak", // character_bloodhound
-	$"settings/itemflav/character/caustic.rpak",    // character_caustic
-	$"settings/itemflav/character/gibraltar.rpak",  // character_gibraltar
-	$"settings/itemflav/character/lifeline.rpak",   // character_lifeline
-	$"settings/itemflav/character/mirage.rpak",     // character_mirage
-	$"settings/itemflav/character/octane.rpak",     // character_octane
-	$"settings/itemflav/character/pathfinder.rpak", // character_pathfinder
-	$"settings/itemflav/character/wraith.rpak",     // character_wraith
-	$"settings/itemflav/character/wattson.rpak",    // character_wattson
-	$"settings/itemflav/character/crypto.rpak",     // character_crypto
+	$"settings/itemflav/character/bangalore.rpak",  //
+	$"settings/itemflav/character/bloodhound.rpak", //
+	$"settings/itemflav/character/caustic.rpak",    //
+	$"settings/itemflav/character/gibraltar.rpak",  //
+	$"settings/itemflav/character/lifeline.rpak",   //
+	$"settings/itemflav/character/mirage.rpak",     //
+	$"settings/itemflav/character/octane.rpak",     //
+	$"settings/itemflav/character/pathfinder.rpak", //
+	$"settings/itemflav/character/wraith.rpak",     //
+	$"settings/itemflav/character/wattson.rpak",    //
 ]
 
 global const array<asset> CAL_EVENT_ASSET_LIST =
 [
 	$"settings/itemflav/calevent/season01.rpak",
 	$"settings/itemflav/calevent/season02.rpak",
-	$"settings/itemflav/calevent/season03.rpak",
 	$"settings/itemflav/calevent/rankedperiod01.rpak",
-	$"settings/itemflav/calevent/rankedperiod02.rpak",
-
-	$"settings/itemflav/calevent/s03e01.rpak",
 ]
 
 global const array<asset> LOADSCREEN_ASSET_LIST =
 [
 	$"settings/itemflav/loadscreen/default.rpak",
-	$"settings/itemflav/loadscreen/random.rpak",
-	$"settings/itemflav/loadscreen/kings_canyon_og.rpak",
-	$"settings/itemflav/loadscreen/kings_canyon_mu1.rpak",
-	$"settings/itemflav/loadscreen/001.rpak",
-	$"settings/itemflav/loadscreen/002.rpak",
-	$"settings/itemflav/loadscreen/003.rpak",
-	$"settings/itemflav/loadscreen/004.rpak",
-	$"settings/itemflav/loadscreen/005.rpak",
-	$"settings/itemflav/loadscreen/006.rpak",
-	$"settings/itemflav/loadscreen/007.rpak",
-	$"settings/itemflav/loadscreen/008.rpak",
-	$"settings/itemflav/loadscreen/009.rpak",
-	$"settings/itemflav/loadscreen/010.rpak",
-	$"settings/itemflav/loadscreen/011.rpak",
-	$"settings/itemflav/loadscreen/s03bp_01.rpak",
-	$"settings/itemflav/loadscreen/s03bp_02.rpak",
-	$"settings/itemflav/loadscreen/s03bp_03.rpak",
-	$"settings/itemflav/loadscreen/s03bp_04.rpak",
-	$"settings/itemflav/loadscreen/s03bp_05.rpak",
-	$"settings/itemflav/loadscreen/s03bp_06.rpak",
-	$"settings/itemflav/loadscreen/s03bp_07.rpak",
-	$"settings/itemflav/loadscreen/s03bp_08.rpak",
-	$"settings/itemflav/loadscreen/s03bp_09.rpak",
-	$"settings/itemflav/loadscreen/s03bp_10.rpak",
-	$"settings/itemflav/loadscreen/s03bp_11.rpak",
 ]
 
 global const array<asset> MUSIC_PACK_ASSET_LIST =
 [
 	$"settings/itemflav/musicpack/default.rpak",
-	$"settings/itemflav/musicpack/random.rpak",
 	$"settings/itemflav/musicpack/season02_event01.rpak",
-	$"settings/itemflav/musicpack/s03e01.rpak",
 	$"settings/itemflav/musicpack/bangalore.rpak",
 	$"settings/itemflav/musicpack/bloodhound.rpak",
 	$"settings/itemflav/musicpack/caustic.rpak",
@@ -78,20 +46,16 @@ global const array<asset> MUSIC_PACK_ASSET_LIST =
 	$"settings/itemflav/musicpack/pathfinder.rpak",
 	$"settings/itemflav/musicpack/wattson.rpak",
 	$"settings/itemflav/musicpack/wraith.rpak",
-	$"settings/itemflav/musicpack/s03bp_crypto.rpak",
-	$"settings/itemflav/musicpack/s03bp_gibraltar.rpak",
 ]
 
 
 global const array<asset> SKYDIVE_TRAIL_ASSET_LIST = [
 	$"settings/itemflav/skydive_trail/default.rpak",
-	$"settings/itemflav/skydive_trail/rankedperiod_01_diamond.rpak",
-	$"settings/itemflav/skydive_trail/rankedperiod_01_apex.rpak",
-	$"settings/itemflav/skydive_trail/shadow_default.rpak",
 ]
 
 
-global const array<asset> ENTITLEMENT_ASSETS = [
+global const array<asset> ENTITLEMENT_ASSETS =
+[
 	$"settings/itemflav/entitlement/BLOODHOUND_SKU_PACK.rpak",
 	$"settings/itemflav/entitlement/LIFELINE_SKU_PACK.rpak",
 	$"settings/itemflav/entitlement/MELTDOWN_PACK_BUNDLE.rpak",
@@ -127,5 +91,4 @@ global const array<asset> WEAPON_ASSETS =
 	$"settings/itemflav/loot/main_weapon/wingman.rpak",
 	$"settings/itemflav/loot/main_weapon/energy_ar.rpak",
 	$"settings/itemflav/loot/main_weapon/lstar.rpak",
-	$"settings/itemflav/loot/main_weapon/chargerifle.rpak",
 ]

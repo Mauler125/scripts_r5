@@ -21,14 +21,14 @@ WeaponData
 	"minimap_reveal_distance"						"32000"
 	"leveled_pickup"								"1"
 	"dev_menu_type"									"offhand" // fire_mode isn't readable from script
-	"offhand_default_inventory_slot"				"4"
+	"offhand_default_inventory_slot"				"0"
 	"offhand_interupts_weapon_anims"				"1"
 	"offhand_toss_activates_on_attack"              "1"
 	"offhand_toss_hold_is_resumable"                "1"
 
-	"does_not_interrupt_cloak"						"1"
+    "does_not_interrupt_cloak"						"1"
 
-	"fire_in_real_world_while_phased"				"1"
+    "fire_in_real_world_while_phased"				"1"
 
 	"OnWeaponTossReleaseAnimEvent"					"OnWeaponTossReleaseAnimEvent_WeaponDefensiveBombardment"
 	"OnWeaponTossPrep"								"Grenade_OnWeaponTossPrep"
@@ -38,17 +38,17 @@ WeaponData
 
 	// Menu Stats
 
-	"trophy_system_ignore"                          "1"
+    "trophy_system_ignore"                          "1"
 
 	// Models
 	"viewmodel"										"mdl/weapons/grenades/ptpov_gibraltar_beacon.rmdl"
 	"playermodel"									"mdl/weapons/grenades/w_gibraltar_beacon.rmdl"
 	"projectilemodel"								"mdl/weapons/grenades/w_gibraltar_beacon_projectile.rmdl"
 
-	show_grenade_indicator                          1
-	grenade_show_indicator_to_owner                 1
+    show_grenade_indicator                          1
+    grenade_show_indicator_to_owner                 1
 
-	"zoom_effects"									"0"
+    "zoom_effects"									"0"
 
 	// Effects
 	"bounce_effect_table"							"bounce_small"
@@ -75,7 +75,6 @@ WeaponData
 	"stick_pilot"                                   "0"
 	"stick_titan"                                   "0"
 	"stick_npc"                                     "0"
-	"stick_drone"                                   "0"
 
 	"critical_hit"									"0"
 
@@ -106,16 +105,16 @@ WeaponData
 
 	MP_BASE
 	{
-		"ammo_clip_size"								"180"
-		"ammo_default_total"							"0"
-		"ammo_display"									"count"
-		"ammo_min_to_fire"								"180"
-		"ammo_per_shot"									"180"
-		"ammo_stockpile_max"							"0"
-		"regen_ammo_refill_rate"						"1"
-		"regen_ammo_refill_start_delay"					"0.0"
-		"fire_duration"									"15.0"
-		"ammo_no_remove_from_stockpile"					"0"
+		"ammo_clip_size"								"270"
+        "ammo_default_total"							"0"
+        "ammo_display"									"count"
+        "ammo_min_to_fire"								"270"
+        "ammo_per_shot"									"270"
+        "ammo_stockpile_max"							"0"
+        "regen_ammo_refill_rate"						"1"
+        "regen_ammo_refill_start_delay"					"0.0"
+        "fire_duration"									"15.0"
+        "ammo_no_remove_from_stockpile"					"0"
 
 		"enable_highlight_networking_on_creation"		"<KEEP_DEFAULT>"
 
@@ -140,7 +139,7 @@ WeaponData
 		"regen_ammo_refill_rate"						"0"
 		"regen_ammo_refill_start_delay"					"0.0"
 		"fire_duration"									"<KEEP_DEFAULT>"
-		"ammo_no_remove_from_stockpile"					"<KEEP_DEFAULT>"
+        "ammo_no_remove_from_stockpile"					"<KEEP_DEFAULT>"
 
 		"enable_highlight_networking_on_creation"		"1"
 
@@ -158,7 +157,7 @@ WeaponData
 	"cooldown_type"									"ammo_instant"
 	"max_cook_time"									"99999.99"
 	"grenade_fuse_time"								"0"
-	"start_fuse_on_launch"                          "0"
+    "start_fuse_on_launch"                          "0"
 	"grenade_ignition_time"                         "8.0"
 	"fire_rate"   									"2"
 	//"deploy_time" 									"0.5"
@@ -180,7 +179,7 @@ WeaponData
 	//"toss_pullout_time"								"0.2"
 	//"toss_time"										"0.4"
 	"toss_overhead_time"							"0.4"
-	"projectile_launch_speed"						"1500"
+	"projectile_launch_speed"						"1100"
 	"projectile_launch_pitch_offset"				"8"
 
 	"red_crosshair_range" 							"0"
@@ -264,10 +263,10 @@ WeaponData
 
 	Mods
 	{
-		survival_armor_cooldown_mod
-		{
-			"regen_ammo_refill_rate"    "*1.25"
-		}
+	    survival_armor_cooldown_mod
+        {
+            "regen_ammo_refill_rate"    "*1.25"
+        }
 
 		burn_card_weapon_mod
 		{
@@ -284,9 +283,10 @@ WeaponData
 			active_crosshair_count				"1"
 			rui_crosshair_index					"1"
 		}
-		survival_finite_ammo
-		{
-		}
+        survival_finite_ammo
+        {
+
+        }
 	}
 
 	active_crosshair_count				"0"
@@ -323,9 +323,9 @@ WeaponData
 			"ui"						"ui/crosshair_ordnance"
 			Args
 			{
-				regenRate               "eWeaponVar.regen_ammo_refill_rate"
-				ammoFrac                "progress_weapon_clip_ammo_frac"
-				dryfireTime             "weapon_latest_dryfire_time"
+			    regenRate               "eWeaponVar.regen_ammo_refill_rate"
+			    ammoFrac                "progress_weapon_clip_ammo_frac"
+			    dryfireTime             "weapon_latest_dryfire_time"
 			}
 		}
 	}

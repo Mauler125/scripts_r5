@@ -31,8 +31,6 @@ ImpactTable
 		"O" "P_hmn_footstep_dust" //Foliage
 		"P" "none" //Computer
 
-		"Q" "P_hmn_footstep_snow" //Snow
-		"R" "P_hmn_footstep_snow" //ice
 
 		"S" "P_impact_water" //water, slime
 		"T" "none" //tile
@@ -44,8 +42,6 @@ ImpactTable
 		"Z" "P_hmn_footstep_dust" //sand
 
 //		"0" "openslot"
-		"1" "P_hmn_footstep_lava" //lava_flow
-		"2" "P_hmn_footstep_lava" //lava_rock_hot
 //		"3" "openslot"
 //		"4" "openslot"
 //		"5" "openslot"
@@ -85,8 +81,6 @@ ImpactTable
 		"O" "GasTrap_Land_Default"
 		"P" "GasTrap_Land_Default"
 
-		"Q" "GasTrap_Land_Default" //snow
-		"R" "GasTrap_Land_Default"  //ice
 
 		"S" "GasTrap_Land_Water"
 		"T" "GasTrap_Land_Default"
@@ -99,8 +93,6 @@ ImpactTable
 		"Z" "GasTrap_Land_Default"
 
 
-		"1" "GasTrap_Land_Water" //lava_flow
-		"2" "GasTrap_Land_Default" //lava_rock_hot
 
 		//"splash" "Water.BulletImpact"
 		//"slime_splash" "Water.BulletImpact"
@@ -127,8 +119,6 @@ ImpactTable
 		"O" "GasTrap_Land_Default"
 		"P" "GasTrap_Land_Default"
 
-		"Q" "GasTrap_Land_Default" //snow
-		"R" "GasTrap_Land_Default"  //ice
 
 		"S" "GasTrap_Land_Water"
 		"T" "GasTrap_Land_Default"
@@ -140,8 +130,6 @@ ImpactTable
 		"Y" "GasTrap_Land_Default"
 		"Z" "GasTrap_Land_Default"
 
-		"1" "GasTrap_Land_Water" //lava_flow
-		"2" "GasTrap_Land_Default" //lava_rock_hot
 
 		//"splash" "Water.BulletImpact"
 		//"slime_splash" "Water.BulletImpact"
@@ -168,8 +156,6 @@ ImpactTable
 		"O" "GasTrap_Land_Default"
 		"P" "GasTrap_Land_Default"
 
-		"Q" "GasTrap_Land_Default" //snow
-		"R" "GasTrap_Land_Default"  //ice
 
 		"S" "GasTrap_Land_Water"
 		"T" "GasTrap_Land_Default"
@@ -181,8 +167,6 @@ ImpactTable
 		"Y" "GasTrap_Land_Default"
 		"Z" "GasTrap_Land_Default"
 
-		"1" "GasTrap_Land_Water" //lava_flow
-		"2" "GasTrap_Land_Default" //lava_rock_hot
 
 		//"splash" "Water.BulletImpact"
 		//"slime_splash" "Water.BulletImpact"

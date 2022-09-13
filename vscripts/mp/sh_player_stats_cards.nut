@@ -16,6 +16,7 @@ global function StatCard_AddStatToolTipString
 global function StatCard_SetStatToolTip
 global function StatsScreen_SetPanelRui
 
+global function LocalizeAndShortenNumber_Float
 #endif // UI
 
 global function StatCard_GetAvailableSeasons
@@ -134,11 +135,8 @@ void function ShPlayerStatCards_Init()
 {
 	file.GUIDToSeasonNumber[ "SAID01769158912" ] <- 1
 	file.GUIDToSeasonNumber[ "SAID01774506873" ] <- 2
-	file.GUIDToSeasonNumber[ "SAID00724938940" ] <- 3
 
-	//
 	file.GUIDToSeasonNumber[ "SAID00747315762" ] <- 0
-	file.GUIDToSeasonNumber[ "SAID00091805734" ] <- 0
 
 	var dataTable = GetDataTable( $"datatable/player_stat_cards.rpak" )
 
@@ -565,15 +563,11 @@ void function StatCard_ConstructRankedBadge( var panel, entity player, string ra
 	var rui = Hud_GetRui( panel )
 	RuiDestroyNestedIfAlive( rui, "battlePassLevelBadge" )
 
-	var badgeRui            = CreateNestedRankedBadge( rui, "battlePassLevelBadge" )
-	int score               = Ranked_GetHistoricalRankScore( player, rankedPeriodRef )
-	RankedDivisionData data = Ranked_GetHistoricalRankedDivisionFromScore( score, rankedPeriodRef )
+	var badgeRui = CreateNestedRankedBadge( rui, "battlePassLevelBadge" )
+	int score = GetPlayerRankScore( player )
+	RankedData data = GetCurrentRankFromScore( score )
 
-	if ( rankedPeriodRef == GetCurrentStatRankedPeriodRefOrNull() )
-		PopulateRuiWithRankedBadgeDetails( badgeRui, score, Ranked_GetDisplayNumberForRuiBadge( GetUIPlayer() ) )
-	else
-		PopulateRuiWithHistoricalRankedBadgeDetails( badgeRui, score, score, rankedPeriodRef  ) //
-
+	PopulateRuiWithRankedBadgeDetails( badgeRui, score, Ranked_GetLadderPosition( GetUIPlayer() ) )
 	RuiSetBool( badgeRui, "showScore", false )
 	RuiSetInt( badgeRui, "score", score )
 	RuiSetInt( badgeRui, "scoreMax", 0 )
@@ -1305,6 +1299,120 @@ var function GetToolTipField( var menuPanel, string category )
 	{
 		return Hud_GetChild( menuPanel, "StatsCardToolTipField_Season_ColumnB"  )
 	}
+}
+
+string function LocalizeAndShortenNumber_Float( float number, int maxDisplayIntegral = 3, int maxDisplayDecimal = 0 )
+{
+	string lang = GetLanguage()
+	string integralSeparator = lang == "english" || lang == "korean" || lang == "schinese" || lang == "tchinese" || lang == "thai" || lang == "japanese" ? "," : "."
+	string decimalSeparator = integralSeparator == "," ? "." : ","
+
+	printf( "ShortenNumberDebug: Shortening %i with max Integrals of %i and max decimals of %i", number, maxDisplayIntegral, maxDisplayDecimal )
+	float integral = 0.0
+	string integralString = ""
+	string integralSuffix = ""
+
+	if( number == 0.0 )
+	{
+		return "0"
+	}
+
+	integral = floor( number )
+	int digits = int( floor( log10( integral ) + 1 ) )
+
+	if ( digits > maxDisplayIntegral )
+	{
+		printf( "ShortenNumberDebug: Number too large for display (%i digits). Shortening to 3 digits", digits )
+		float displayIntegral = integral / pow( 10, (digits - 3) )
+		displayIntegral = floor( displayIntegral )
+		integralString = format( "%0.0f", displayIntegral )
+
+		printf( "ShortenNumberDebug: Number shortened to %s", integralString )
+
+		if ( digits/16 >= 1 )
+			integralSuffix = Localize( "#STATS_VALUE_QUADRILLIONS" )
+		else if ( digits/13 >= 1 )
+			integralSuffix = Localize( "#STATS_VALUE_TRILLIONS" )
+		else if ( digits/10 >= 1 )
+			integralSuffix = Localize( "#STATS_VALUE_BILLIONS" )
+		else if ( digits/7 >= 1 )
+			integralSuffix = Localize( "#STATS_VALUE_MILLIONS" )
+		else if ( digits/4 >= 1 )
+			integralSuffix = Localize( "#STATS_VALUE_THOUSANDS" )
+	}
+	else
+	{
+		integralString = format( "%0.0f", integral )
+	}
+
+	if ( integralString.len() > 3 )
+	{
+		string separatedIntegralString = ""
+		int integralsAdded = 0
+
+		printf( "ShortenNumberDebug: Adding integral separators to %s", integralString )
+
+		for ( int i = integralString.len(); i > 0; i-- )
+		{
+			string num = integralString.slice( i-1, i )
+			if ( (separatedIntegralString.len() - integralsAdded) % 3 == 0 && separatedIntegralString.len() > 0 )
+			{
+				integralsAdded++
+				separatedIntegralString = num + integralSeparator + separatedIntegralString
+			}
+			else
+			{
+				separatedIntegralString = num + separatedIntegralString
+			}
+
+			printf( "ShortenNumberDebug: Separated Integral Progress: %s", separatedIntegralString )
+		}
+
+		printf( "ShortenNumberDebug: Separated Integral String Complete: %s", separatedIntegralString )
+		integralString = separatedIntegralString
+	}
+
+	if ( integralString.len() <= 3 && integralString != "0" && digits > 3 )
+	{
+		printf( "ShortenNumberDebug: Four or larger digit number shrunk to 3 or fewer digits! Making the number a decimal and adding a suffix (value = %s, digits = %i, maxDisplayIntegral = %i)", integralString, digits, maxDisplayIntegral )
+
+		int separatorPos
+		if ( maxDisplayIntegral == 3 )
+			separatorPos = (digits - maxDisplayIntegral) % 3
+		else
+			separatorPos = ((digits - maxDisplayIntegral) % 3) + 1
+
+
+		if( separatorPos != 0 && separatorPos != 3 )
+			integralString = integralString.slice( 0, separatorPos ) + decimalSeparator + integralString.slice( separatorPos, integralString.len() ) + integralSuffix
+		else
+			integralString += integralSuffix
+	}
+
+	float decimal = 0.0
+	string decimalString = ""
+
+	decimal = number % 1
+	decimalString = string( decimal )
+	printf( "ShortenNumberDebug: decimalString = %s", decimalString )
+	if ( decimalString.find( "0." ) != -1 )
+	{
+		decimalString = decimalString.slice( 2 )
+	}
+	if ( decimalString.len() > maxDisplayDecimal )
+	{
+		decimalString = decimalString.slice( 0, maxDisplayDecimal )
+	}
+
+	string finalDisplayNumber = integralString
+
+	if ( maxDisplayDecimal > 0 && decimal != 0.0 )
+	{
+		printf( "ShortenNumberDebug: Attaching decimal value %f/%s to final display %s (original number = %f)", decimal, decimalString, finalDisplayNumber, number )
+		finalDisplayNumber += decimalSeparator + decimalString
+	}
+
+	return finalDisplayNumber
 }
 
 var function CreateNestedProgressBar( var parentRui, string argName )

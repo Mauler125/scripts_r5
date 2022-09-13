@@ -101,9 +101,6 @@ struct PlayerTrainingData
 	bool completed_weapons
 	bool completed_ping
 	bool completed_pathfinder
-
-	vector playerRandomStartOrigin
-	vector bloodhoundRandomStartOrigin
 }
 
 struct
@@ -271,8 +268,8 @@ void function PlayerStartsTraining( entity player )
 		player.SetPlayerNetBool( "pingEnabled", true )
 	}
 
-	//PlayerMatchState_Set( player, ePlayerMatchState.TRAINING )
-	//player.SetPersistentVar( "trainingCompleted", 1 )
+	PlayerMatchState_Set( player, ePlayerMatchState.TRAINING )
+	player.SetPersistentVar( "trainingCompleted", 1 )
 
 	PIN_Training( player, "start", "training_start" )
 
@@ -285,7 +282,7 @@ void function PlayerStartsTraining( entity player )
 	PlayerTrainingData data = file.playerTrainingData[ player ]
 
 	// Disable inventory for now (gets enabled later)
-	Survival_SetInventoryEnabled( player, false )
+	//Survival_SetInventoryEnabled( player, false )
 
 	EndSignal( player, "OnDeath" )
 
@@ -1615,6 +1612,8 @@ void function TrainingDeathBoxCreated( entity ent )
 {
 	if ( ent.GetTargetName() == DEATH_BOX_TARGETNAME_TRAINING )
 	{
+		TEMP_SaveEHI( ent )
+
 		entity localViewPlayer = GetLocalViewPlayer()
 		if( !IsValid( localViewPlayer ) || ent.DoesShareRealms( localViewPlayer ) )
 			thread CreateDeathBoxRui( ent )

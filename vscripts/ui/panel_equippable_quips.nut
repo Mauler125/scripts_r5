@@ -21,7 +21,7 @@ void function InitQuipsPanel( var panel )
 	AddPanelEventHandler_FocusChanged( panel, QuipsPanel_OnFocusChanged )
 
 	AddPanelFooterOption( panel, LEFT, BUTTON_B, true, "#B_BUTTON_BACK", "#B_BUTTON_BACK" )
-	AddPanelFooterOption( panel, LEFT, BUTTON_A, false, "#A_BUTTON_SELECT", "", null, CustomizeMenus_IsFocusedItem )
+	//
 	AddPanelFooterOption( panel, LEFT, BUTTON_X, false, "#X_BUTTON_UNLOCK_LEGEND", "#X_BUTTON_UNLOCK_LEGEND", null, CustomizeMenus_IsFocusedItemParentItemLocked )
 	AddPanelFooterOption( panel, LEFT, BUTTON_X, false, "#X_BUTTON_EQUIP", "#X_BUTTON_EQUIP", null, CustomizeMenus_IsFocusedItemEquippable )
 	AddPanelFooterOption( panel, LEFT, BUTTON_X, false, "#X_BUTTON_CLEAR", "#X_BUTTON_CLEAR", null, bool function () : ()
@@ -109,27 +109,23 @@ void function QuipsPanel_OnFocusChanged( var panel, var oldFocus, var newFocus )
 
 void function PreviewQuip( ItemFlavor flav )
 {
+	printt( ItemFlavor_GetHumanReadableRef( flav ) )
+
 	StopLastPlayedQuip()
 
 	if ( CharacterQuip_IsTheEmpty( flav ) )
 		return
 
+	ItemFlavor character = GetTopLevelCustomizeContext()
+	asset playerSettings = CharacterClass_GetSetFile( character )
+	string voice = GetGlobalSettingsString( playerSettings, "voice" )
 	string subAlias = CharacterQuip_GetAliasSubName( flav )
-
-	if ( subAlias != "" )
+	string quipAlias = "diag_mp_" + voice + "_" + subAlias + "_1p"
+	if ( quipAlias != "" )
 	{
-		ItemFlavor character = GetTopLevelCustomizeContext()
-		asset playerSettings = CharacterClass_GetSetFile( character )
-		string voice = GetGlobalSettingsString( playerSettings, "voice" )
-
-		string quipAlias = "diag_mp_" + voice + "_" + subAlias + "_1p"
-		if ( quipAlias != "" )
-		{
-			EmitUISound( quipAlias )
-			file.lastSoundPlayed = quipAlias
-		}
+		EmitUISound( quipAlias )
+		file.lastSoundPlayed = quipAlias
 	}
-
 }
 
 

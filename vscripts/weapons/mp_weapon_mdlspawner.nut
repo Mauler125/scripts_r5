@@ -19,7 +19,7 @@ struct {
 		[0.0, 0.0], // 
 	]*/
 
-	var model = $"mdl/dev/empty_model.rmdl"
+	var model = $"mdl/titans/medium/titan_medium_battery_static.rmdl"
 } file
 
 

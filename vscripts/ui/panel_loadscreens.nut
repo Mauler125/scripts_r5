@@ -1,15 +1,15 @@
-#if CLIENT
+#if(CLIENT)
 global function UpdateLoadscreenPreviewMaterial
 global function ClLoadscreensInit
 #endif
 
-#if UI
+#if(UI)
 global function InitLoadscreenPanel
 #endif
 
 struct
 {
-	#if UI
+	#if(UI)
 		var               panel
 		//
 		var               listPanel
@@ -19,19 +19,19 @@ struct
 		var               loadscreenElem
 	#endif
 
-	#if CLIENT
+	#if(CLIENT)
 		array<PakHandle> pakHandles
 	#endif
 } file
 
-#if CLIENT
+#if(CLIENT)
 void function ClLoadscreensInit()
 {
 	RegisterSignal( "UpdateLoadscreenPreviewMaterial" )
 }
 #endif
 
-#if UI
+#if(UI)
 void function InitLoadscreenPanel( var panel )
 {
 	file.panel = panel
@@ -71,10 +71,7 @@ void function LoadscreenPanel_OnHide( var panel )
 
 void function OnLoadscreenEquipChanged( EHI playerEHI, ItemFlavor flavor )
 {
-	if ( GetPlaylistVarBool( Lobby_GetSelectedPlaylist(), "force_level_loadscreen", false ) )
-		Lobby_UpdateLoadscreenFromPlaylist()
-	else
-		thread Loadscreen_SetCustomLoadscreen( flavor )
+	Loadscreen_SetCustomLoadscreen( flavor )
 }
 
 
@@ -127,7 +124,7 @@ void function PreviewLoadscreen( ItemFlavor flav )
 }
 #endif //
 
-#if CLIENT
+#if(CLIENT)
 void function UpdateLoadscreenPreviewMaterial( var loadscreenElem, var descriptionElem, SettingsAssetGUID guid )
 {
 	//

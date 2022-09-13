@@ -14,7 +14,7 @@ ImpactTable
 	{
 
 		"C" "impact_concrete" //Concrete, rock, porcelain, boulder, gravel, asphalt, brick, concrete_block, plaster
-		"D" "impact_dirt" //Dirt, slippery, carpet, cardboard, floatingstandable, ceiling_tile, papercup, lava_rock
+		"D" "impact_dirt"
 		"E" "impact_metal" // metal_titan
 		"F" "impact_flesh" //flesh
 		"G" "impact_metal" //metalgrate, chainlink, chain
@@ -27,8 +27,6 @@ ImpactTable
 		"N" "P_impact_slime" //Slime
 		"O" "impact_leaves"  //Foliage
 		"P" "P_impact_metal_spectre" //metal_spectre
-		"Q" "P_impact_snow"  //Snow
-		"R" "P_impact_snow" //Ice
 		"S" "P_impact_water" //water
 		"T" "impact_tile" //tile
 		"U" "impact_glass" // glass_breakable
@@ -39,8 +37,6 @@ ImpactTable
 		"Z" "impact_sand"  //sand
 
 //		"0" "openslot"
-		"1" "P_impact_lava_nodecal" //lava_flow
-		"2" "P_impact_lava" //lava_rock_hot
 //		"3" "openslot"
 //		"4" "openslot"
 //		"5" "openslot"
@@ -54,7 +50,6 @@ ImpactTable
 		"airburst" "P_impact_exp_smll_air"  //No Surface
 		"shieldhit" "P_armor_impact"
 		"holohit" "P_holohit_impact"
-		"shadowhit" "impact_flesh"
 		"critical_hit" "impact_metal"
 
 		"headshot_flesh" "impact_metal"
@@ -70,7 +65,6 @@ ImpactTable
 
 		"shieldhit" "impact_metal"
 		"holohit" "impact_metal"
-		"shadowhit" "impact_flesh_victim"
 	}
 
 	FX_attacker_replace
@@ -105,8 +99,6 @@ ImpactTable
 		"N" "Water.BulletImpact_3P_vs_3P"	// sand?
 		"O" "Grass.BulletImpact_3P_vs_3P"
 		"P" "Android.Light.BulletImpact_3P_vs_3P"
-		"Q" "Sand.BulletImpact_3P_vs_3P" // Snow
-		"R" "Concrete.BulletImpact_3P_vs_3P" //Ice
 		"S" "Water.BulletImpact_3P_vs_3P"
 		"T" "Tile.BulletImpact_3P_vs_3P"
 
@@ -117,8 +109,6 @@ ImpactTable
 		"Z" "Sand.BulletImpact_3P_vs_3P"
 
 //		"0" "openslot"
-		"1" "Mud.BulletImpact_3P_vs_3P" //lava_flow
-		"2" "Concrete.BulletImpact_3P_vs_3P" //lava_rock_hot
 //		"3" "openslot"
 //		"4" "openslot"
 //		"5" "openslot"
@@ -133,7 +123,6 @@ ImpactTable
 		"airburst" ""
 		"shieldhit" "humanshield_light_bulletimpact_3p_vs_3p"
 		"holohit" "HoloPilot_light_bulletimpact_holo_3p_vs_3p"
-		"shadowhit" "Flesh.BulletImpact_3P_vs_3P"
 
 		"headshot_flesh" "Flesh.BulletImpact_3P_vs_3P"
 		"headshot_mechanical" "Android.Light.BulletImpact_3P_vs_3P"
@@ -156,7 +145,7 @@ ImpactTable
 		"N" "Water.BulletImpact_1P_vs_3P"	// Slime
 		"O" "Grass.BulletImpact_1P_vs_3P"
 		"P" "Android.Light.BulletImpact_1P_vs_3P"
-		"Q" "Sand.BulletImpact_1P_vs_3P" // Snow
+		"Q" "Concrete.BulletImpact_1P_vs_3P"
 		"R" "Concrete.BulletImpact_1P_vs_3P"
 		"S" "Water.BulletImpact_1P_vs_3P"
 		"T" "Tile.BulletImpact_1P_vs_3P"
@@ -167,9 +156,7 @@ ImpactTable
 		"Y" "Glass.BulletImpact_1P_vs_3P"
 		"Z" "Sand.BulletImpact_1P_vs_3P"
 
-//		"0" "openslot"w
-		"1" "Mud.BulletImpact_1P_vs_3P" //lava_flow
-		"2" "Concrete.BulletImpact_1P_vs_3P" //lava_rock_hot
+//		"0" "openslot"
 //		"3" "openslot"
 //		"4" "openslot"
 //		"5" "openslot"
@@ -184,7 +171,6 @@ ImpactTable
 		"airburst" ""
 		"shieldhit" "humanshield_light_bulletimpact_1p_vs_3p"
 		"holohit" "HoloPilot_light_bulletimpact_holo_1p_vs_3p_V2"
-		"shadowhit" "Flesh.BulletImpact_1P_vs_3P"
 
 		"headshot_flesh" "Flesh.BulletImpact_1P_vs_3P"
 		"headshot_mechanical" "Android.Light.BulletImpact_1P_vs_3P"
@@ -207,7 +193,7 @@ ImpactTable
 		"N" "Water.BulletImpact_3P_vs_1P"	// Slime
 		"O" "Grass.BulletImpact_3P_vs_1P"
 		"P" "Android.Light.BulletImpact_3P_vs_1P"
-		"Q" "Sand.BulletImpact_3P_vs_1P" // Snow
+		"Q" "Concrete.BulletImpact_3P_vs_1P"
 		"R" "Concrete.BulletImpact_3P_vs_1P"
 		"S" "Water.BulletImpact_3P_vs_1P"
 		"T" "Tile.BulletImpact_3P_vs_1P"
@@ -218,8 +204,6 @@ ImpactTable
 		"Y" "Glass.BulletImpact_3P_vs_1P"
 		"Z" "Sand.BulletImpact_3P_vs_1P"
 
-		"1" "Mud.BulletImpact_3P_vs_1P"  // lava_flow
-		"2" "Default.BulletImpact_3P_vs_1P" // lava_rock
 
 		"splash" "Water.BulletImpact"
 		"slime_splash" "Water.BulletImpact"
@@ -227,7 +211,6 @@ ImpactTable
 		"airburst" ""
 		"shieldhit" "humanshield_light_bulletimpact_3p_vs_1p"
 		"holohit" "holopilot_impacts"
-		"shadowhit" "Flesh.BulletImpact_3P_vs_1P"
 
 		// Victim headshot sounds taken care of in PlayVictimHeadshotConfirmation():
 		//"headshot_flesh" "Flesh.BulletImpact_3P_vs_1P"

@@ -22,7 +22,7 @@ void function CollectionEventAboutPage_OnOpen()
 {
 	ItemFlavor ornull activeCollectionEvent = GetActiveCollectionEvent( GetUnixTimestamp() )
 	if ( activeCollectionEvent == null )
-	return
+		return
 	expect ItemFlavor(activeCollectionEvent)
 
 	HudElem_SetRuiArg( file.infoPanel, "eventName", ItemFlavor_GetLongName( activeCollectionEvent ) )
@@ -30,20 +30,19 @@ void function CollectionEventAboutPage_OnOpen()
 	HudElem_SetRuiArg( file.infoPanel, "headerIcon", CollectionEvent_GetHeaderIcon( activeCollectionEvent ) )
 	HudElem_SetRuiArg( file.infoPanel, "specialTextCol", SrgbToLinear( CollectionEvent_GetAboutPageSpecialTextCol( activeCollectionEvent ) ) )
 
-	array<string> aboutLines = CollectionEvent_GetAboutText( activeCollectionEvent, GRX_IsOfferRestricted() )
-	Assert( aboutLines.len() < 7, "Rui about_collection_event does not support more than 6 lines." )
-
-	foreach ( int lineIdx, string line in aboutLines )
+	string aboutText = ""
+	foreach( int lineIdx, string line in CollectionEvent_GetAboutText( activeCollectionEvent, GRX_IsOfferRestricted() ) )
 	{
-	if ( line == "" )
-		continue
+		if ( lineIdx > 0 )
+			aboutText += "\n"
 
-	string aboutLine = "%@embedded_bullet_point%" + Localize( line )
-	HudElem_SetRuiArg( file.infoPanel, "aboutLine" + lineIdx, aboutLine )
+		aboutText += "%@embedded_bullet_point%"
+		aboutText += Localize( line )
 	}
+	HudElem_SetRuiArg( file.infoPanel, "aboutTextLines", aboutText )
 
 	ItemFlavor backgroundItemFlav = CollectionEvent_GetMainPackFlav( activeCollectionEvent )
-	RunClientScript( "UIToClient_ItemPresentation", ItemFlavor_GetGUID( backgroundItemFlav ), -1, 1.21, false, null, false, "collection_event_ref" )
+	RunClientScript( "UIToClient_ItemPresentation", ItemFlavor_GetGUID( backgroundItemFlav ), -1, false, null, false )
 }
 
 

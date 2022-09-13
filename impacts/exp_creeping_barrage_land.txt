@@ -6,7 +6,7 @@ ImpactTable
 	FX
 	{
 		"C" "P_impact_proj_med_rock" //Concrete, rock, porcelain, boulder, gravel, asphalt, brick, concrete_block, plaster
-		"D" "P_impact_proj_med_dirt" //Dirt, slipperyslime, snow, carpet, cardboard, floatingstandable, ceiling_tile, papercup, lava_rock
+		"D" "P_impact_proj_med_dirt"
 		"E" "P_impact_proj_med_default" // metal_titan
 
 		"F" "P_impact_proj_med_default" //flesh
@@ -21,8 +21,6 @@ ImpactTable
 		"O" "P_impact_proj_med_dirt" //Foliage
 		"P" "P_impact_proj_med_default" //Computer
 
-		"Q" "P_impact_proj_med_snow" //snow
-		"R" "P_impact_proj_med_snow" //ice
 
 		"S" "P_impact_exp_med_water" //water
 		"T" "P_impact_proj_med_rock" //tile
@@ -37,8 +35,6 @@ ImpactTable
 		"Z" "P_impact_proj_med_sand"  //sand
 
 		"0" "P_impact_proj_med_default"
-		"1" "P_impact_proj_med_lava_nodecal" //lava_flow
-		"2" "P_impact_proj_med_lava" //lava_rock_hot
 		"3" "P_impact_proj_med_default"
 		"4" "P_impact_proj_med_default"
 		"5" "P_impact_proj_med_default"
@@ -90,8 +86,6 @@ ImpactTable
 		"O" "bangalore_ultimate_rocket_impact_foilage"
 		"P" "bangalore_ultimate_rocket_impact_concrete"
 
-		"Q" "bangalore_ultimate_rocket_impact_concrete" //snow
-		"R" "bangalore_ultimate_rocket_impact_metal" //ice
 		"S" "bangalore_ultimate_rocket_impact_water"
 		"T" "bangalore_ultimate_rocket_impact_tile"
 		"U" "bangalore_ultimate_rocket_impact_concrete"
@@ -103,8 +97,6 @@ ImpactTable
 		"Z" "bangalore_ultimate_rocket_impact_sand"
 
 //		"0" "openslot"
-		"1" "bangalore_ultimate_rocket_impact_water" //lava_flow
-		"2" "bangalore_ultimate_rocket_impact_concrete" //lava_rock_hot
 //		"3" "openslot"
 //		"4" "openslot"
 //		"5" "openslot"
@@ -139,8 +131,6 @@ ImpactTable
 		"O" "bangalore_ultimate_rocket_impact_foilage"
 		"P" "bangalore_ultimate_rocket_impact_concrete"
 
-		"Q" "bangalore_ultimate_rocket_impact_concrete" //Snow
-		"R" "bangalore_ultimate_rocket_impact_metal" //Ice
 		"S" "bangalore_ultimate_rocket_impact_water"
 		"T" "bangalore_ultimate_rocket_impact_tile"
 		"U" "bangalore_ultimate_rocket_impact_concrete"
@@ -152,8 +142,6 @@ ImpactTable
 		"Z" "bangalore_ultimate_rocket_impact_sand"
 
 //		"0" "openslot"
-		"1" "bangalore_ultimate_rocket_impact_water" //lava_flow
-		"2" "bangalore_ultimate_rocket_impact_concrete" //lava_rock_hot
 //		"3" "openslot"
 //		"4" "openslot"
 //		"5" "openslot"
@@ -188,8 +176,6 @@ ImpactTable
 		"O" "bangalore_ultimate_rocket_impact_foilage"
 		"P" "bangalore_ultimate_rocket_impact_concrete"
 
-		"Q" "bangalore_ultimate_rocket_impact_concrete" //snow
-		"R" "bangalore_ultimate_rocket_impact_metal" //ice
 		"S" "bangalore_ultimate_rocket_impact_water"
 		"T" "bangalore_ultimate_rocket_impact_tile"
 		"U" "bangalore_ultimate_rocket_impact_concrete"
@@ -201,8 +187,6 @@ ImpactTable
 		"Z" "bangalore_ultimate_rocket_impact_sand"
 
 //		"0" "openslot"
-		"1" "bangalore_ultimate_rocket_impact_water" //lava_flow
-		"2" "bangalore_ultimate_rocket_impact_concrete" //lava_rock_hot
 //		"3" "openslot"
 //		"4" "openslot"
 //		"5" "openslot"

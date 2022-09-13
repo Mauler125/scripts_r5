@@ -19,7 +19,7 @@ void function InitSurveys()
 	Assert( surveyTypeToNameMap.len() == eSurveyType._COUNT )
 }
 
-float lastSurveyDisplayTime = 0.0
+
 bool function TryOpenSurvey( int surveyType )
 {
 	if ( !GetConVarBool( "pin_opt_in" ) || !MeetsAgeRequirements() )
@@ -31,10 +31,6 @@ bool function TryOpenSurvey( int surveyType )
 
 	array<string> surveyList = GetSurveysOfType( surveyType )
 	if ( surveyList.len() == 0 )
-		return false
-
-	//
-	if (Time() - lastSurveyDisplayTime < 30.0 )
 		return false
 
 	surveyList.randomize()
@@ -57,7 +53,7 @@ void function OpenSurveyByRef( string surveyRef, float sampleRate )
 	{
 		string answerText = result == eDialogResult.YES ? aAnswerText : bAnswerText
 
-		#if R5DEV
+		#if(DEV)
 			if ( !("mid" in uiGlobal.matchPinData) )
 			{
 				uiGlobal.matchPinData["mid"] <- "[fe80::78dc:e7ef:e13b:68e]:0:37015:1562712876"
@@ -70,7 +66,6 @@ void function OpenSurveyByRef( string surveyRef, float sampleRate )
 	}
 
 	OpenABDialogFromData( data )
-	lastSurveyDisplayTime = Time()
 }
 
 
@@ -80,7 +75,10 @@ ConfirmDialogData function GetSurveyDialogDataByRef( string surveyRef )
 	string headerText = GetCurrentPlaylistVarString( "survey_" + surveyRef + "_header", "#SURVEY_MATCH_QUALITY_HEADER" )
 	string questionText = GetCurrentPlaylistVarString( "survey_" + surveyRef + "_message", "#SURVEY_MATCH_QUALITY_MESSAGE" )
 
+	string aTextController = GetCurrentPlaylistVarString( "survey_" + surveyRef + "_a_controller", "#X_BUTTON_YES" )
 	string aTextKBM = GetCurrentPlaylistVarString( "survey_" + surveyRef + "_a_kbm", "#YES" )
+
+	string bTextController = GetCurrentPlaylistVarString( "survey_" + surveyRef + "_b_controller", "#Y_BUTTON_NO" )
 	string bTextKBM = GetCurrentPlaylistVarString( "survey_" + surveyRef + "_b_kbm", "#NO" )
 
 	ConfirmDialogData data
@@ -88,16 +86,8 @@ ConfirmDialogData function GetSurveyDialogDataByRef( string surveyRef )
 	data.headerText = headerText
 	data.messageText = questionText
 	data.contextImage = $"ui/menu/common/dialog_question"
-	if ( CoinFlip() )
-	{
-		data.yesText = [Localize( "#X_BUTTON_N", Localize( aTextKBM ) ), aTextKBM]
-		data.noText = [Localize( "#Y_BUTTON_N", Localize( bTextKBM ) ), bTextKBM]
-	}
-	else
-	{
-		data.yesText = [Localize( "#X_BUTTON_N", Localize( bTextKBM ) ), bTextKBM]
-		data.noText = [Localize( "#Y_BUTTON_N", Localize( aTextKBM ) ), aTextKBM]
-	}
+	data.yesText = [aTextController, aTextKBM]
+	data.noText = [bTextController, bTextKBM]
 
 	return data
 }

@@ -51,7 +51,7 @@ void function AddPlayerScore( entity targetPlayer, string scoreEventName, entity
 			if ( player == targetPlayer ) // targetplayer already gets this in the scorevent callback
 				continue
 				
-			//Remote_CallFunction_NonReplay( player, "ServerCallback_CallingCardEvent", event.eventId, associatedHandle )
+			Remote_CallFunction_NonReplay( player, "ServerCallback_CallingCardEvent", event.eventId, associatedHandle )
 		}
 	}
 	
@@ -66,10 +66,7 @@ void function AddPlayerScore( entity targetPlayer, string scoreEventName, entity
 
 void function ScoreEvent_PlayerKilled( entity victim, entity attacker, var damageInfo )
 {
-	if( GetGameState() >= eGameState.Playing )
-		AddPlayerScore( attacker, "EliminatePilot", victim )
-	else
-		AddPlayerScore( attacker, "KillPilot", victim )
+	AddPlayerScore( attacker, "KillPilot", victim )
 	
 	if ( DamageInfo_GetCustomDamageType( damageInfo ) & DF_HEADSHOT )
 		AddPlayerScore( attacker, "Headshot", victim )

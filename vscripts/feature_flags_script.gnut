@@ -8,6 +8,7 @@ global function GetFeatureFlagByString
 global function ForAssertingOnly_IsValidFeatureFlagString
 #endif
 
+
 //////////////////////
 //////////////////////
 //// Global Types ////
@@ -30,7 +31,12 @@ global const table<string, bool> FEATURE_FLAGS_TBL = {
 	HAS_EVA_HOPUP           = true,
 	HAS_WARP_GATES          = true,
 	HAS_RANDOMIZED_TRAINING = true,
+	HAS_SEASON2_EVENT2 		= true,
+	HAS_APEX_ELITE			= true,
+	HAS_RETAIL01			= true,
+	HAS_BLOODHOUND_AXE		= true,
 }
+
 
 //////////////////////////
 //////////////////////////
@@ -54,6 +60,7 @@ bool function GetFeatureFlagByString( string featureFlagRef )
 	return FEATURE_FLAGS_TBL[featureFlagRefToUse] == comparison
 }
 #endif
+
 
 #if SERVER || CLIENT || UI && ASSERTING 
 bool function ForAssertingOnly_IsValidFeatureFlagString( string featureFlagRef )

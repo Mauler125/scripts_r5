@@ -4,14 +4,15 @@ global function UIVars_Init
 
 global function GetUIVar
 #if SERVER
-	global function SetUIVar
+global function SyncUIVars
+global function SetUIVar
 #endif
 
 global function ServerCallback_SetUIVar
 global function RegisterUIVarChangeCallback
 
-#if SERVER
-	global function SyncUIVars
+#if(false)
+
 #endif
 
 table _uiVars = {}
@@ -32,7 +33,7 @@ void function UIVars_Init()
 	RegisterUIVar( "privatematch_map", 0 )
 	RegisterUIVar( "privatematch_mode", 0 )
 	RegisterUIVar( "privatematch_starting", 0 )
-	RegisterUIVar( "coopLobbyMap", null ) // ePrivateMatchMaps.mp_fracture
+	RegisterUIVar( "coopLobbyMap", null ) //
 	RegisterUIVar( "createamatch_isPrivate", false )
 	RegisterUIVar( "penalizeDisconnect", true )
 	RegisterUIVar( "rankedPenalizeDisconnect", false )
@@ -56,13 +57,40 @@ void function RegisterUIVar( string varName, value )
 	_uiVars[varName] <- value
 }
 
-// Hooked up in code to .ui
+//
 function GetUIVar( obj, string varName )
 {
 	Assert( varName in _uiVars )
 
 	return _uiVars[varName]
 }
+
+#if(false)
+//
+
+
+
+
+
+
+
+
+
+
+//
+
+
+//
+
+
+
+
+
+
+
+
+
+#endif //
 
 #if SERVER
 // Hooked up in code to .ui
@@ -91,6 +119,16 @@ void function SetUIVar( table<string,var> obj, string varName, value )
 }
 #endif // SERVER
 
+#if SERVER
+void function SyncUIVars( entity player )
+{
+	foreach ( varName, value in _uiVars )
+	{
+		Remote_CallFunction_UI( player, "ServerCallback_SetUIVar", _uiVarHandles[varName], value )
+	}
+}
+#endif
+
 function ServerCallback_SetUIVar( varHandle, value )
 {
 	local varName = _uiVarHandles[varHandle]
@@ -114,7 +152,7 @@ void function RegisterUIVarChangeCallback( string varName, callbackFunc )
 
 void function UIVarChangedCallbacks( string varName )
 {
-	// Run change callback if one exists
+	//
 	if ( !( varName in _uiVarChangeCallbacks ) )
 		return
 
@@ -122,12 +160,12 @@ void function UIVarChangedCallbacks( string varName )
 		callbackFunc()
 }
 
-#if SERVER
-void function SyncUIVars( entity player )
-{
-	foreach ( varName, value in _uiVars )
-	{
-		Remote_CallFunction_UI( player, "ServerCallback_SetUIVar", _uiVarHandles[varName], value )
-	}
-}
+#if(false)
+
+
+
+
+
+
+
 #endif

@@ -19,20 +19,18 @@ global function InitCrosshair
 global function IsWatchingReplay
 
 global const MAX_ACTIVE_TRAPS_DISPLAYED = 5
-global const VGUI_CLOSED                = 0
-global const VGUI_CLOSING               = 1
-global const VGUI_OPEN                  = 2
-global const VGUI_OPENING               = 3
+global const VGUI_CLOSED = 0
+global const VGUI_CLOSING = 1
+global const VGUI_OPEN = 2
+global const VGUI_OPENING = 3
 
-global const TEAM_ICON_IMC              = $"ui/scoreboard_imc_logo"
-global const TEAM_ICON_MILITIA          = $"ui/scoreboard_mcorp_logo"
+global const TEAM_ICON_IMC = $"ui/scoreboard_imc_logo"
+global const TEAM_ICON_MILITIA = $"ui/scoreboard_mcorp_logo"
 
 const float OFFHAND_ALERT_ICON_ANIMRATE = 0.35
-const float OFFHAND_ALERT_ICON_SCALE    = 4.5
+const float OFFHAND_ALERT_ICON_SCALE = 4.5
 
 const bool ALWAYS_SHOW_BOOST_MOBILITY_BAR = true
-
-global string CHAT_TEXT
 
 
 struct HudVisibilityStatus
@@ -49,7 +47,7 @@ struct
 
 	int iconIdx = 0
 
-	var  rodeoRUI //Primarily because cl_rodeo_titan needs to update the rodeo rui
+	var  rodeoRUI //
 	bool trackingDoF = false
 } file
 
@@ -202,7 +200,7 @@ void function UpdatePilotDamageAmpFX( entity player )
 
 	if ( cockpit.s.pilotDamageAmpFXHandle && EffectDoesExist( cockpit.s.pilotDamageAmpFXHandle ) )
 	{
-		EffectStop( cockpit.s.pilotDamageAmpFXHandle, false, true ) // stop particles, play end cap
+		EffectStop( cockpit.s.pilotDamageAmpFXHandle, false, true ) //
 	}
 
 	if ( StatusEffect_GetSeverity( player, eStatusEffect.damageAmpFXOnly ) > 0 )
@@ -229,7 +227,7 @@ void function UpdateTitanDamageAmpFX( entity player )
 
 	if ( cockpit.s.titanDamageAmpFXHandle && EffectDoesExist( cockpit.s.titanDamageAmpFXHandle ) )
 	{
-		EffectStop( cockpit.s.titanDamageAmpFXHandle, false, true ) // stop particles, play end cap
+		EffectStop( cockpit.s.titanDamageAmpFXHandle, false, true ) //
 	}
 
 	entity soul = player.GetTitanSoul()
@@ -294,7 +292,7 @@ void function UpdateCoreFX( entity player )
 
 	if ( cockpit.s.coreFXHandle && EffectDoesExist( cockpit.s.coreFXHandle ) )
 	{
-		EffectStop( cockpit.s.coreFXHandle, false, true ) // stop particles, play end cap
+		EffectStop( cockpit.s.coreFXHandle, false, true ) //
 	}
 }
 
@@ -424,7 +422,7 @@ void function UpdateMainHudVisibility( entity player, float duration = 0.0 )
 	}
 	else if ( !isVisible && shouldBeVisible )
 	{
-		//printt( "turn on" )
+		//
 		table warpSettings = expect table( mainVGUI.s.warpSettings )
 
 		if ( duration <= 0 )
@@ -458,12 +456,12 @@ void function MainHud_TurnOn( entity vgui, float duration, float xWarp, float xS
 
 	vgui.s.enabledState = VGUI_OPENING
 
-	//vgui.s.panel.WarpGlobalSettings( xWarp, xScale, yWarp, yScale, viewDist )
+	//
 
 	if ( !IsWatchingReplay() )
 	{
 		vgui.s.panel.WarpGlobalSettings( xWarp, 0, yWarp, 0, viewDist )
-		//vgui.SetSize( vgui.s.baseSize[0] * 0.001, vgui.s.baseSize[1] * 0.001 )
+		//
 
 		float xTimeScale = 0
 		float yTimeScale = 0
@@ -474,18 +472,19 @@ void function MainHud_TurnOn( entity vgui, float duration, float xWarp, float xS
 			xTimeScale = expect float( Anim_EaseIn( GraphCapped( Time() - startTime, 0.0, duration / 2, 0.0, 1.0 ) ) )
 			yTimeScale = expect float( Anim_EaseIn( GraphCapped( Time() - startTime, duration / 4, duration, 0.01, 1.0 ) ) )
 
-			//vector scaledSize = <vgui.s.baseSize[0] * xTimeScale, vgui.s.baseSize[1] * yTimeScale, 0>
-			//vgui.SetAttachOffsetOrigin( vgui.s.baseOrigin )
-			//vgui.SetSize( scaledSize.x, scaleSize.y )
+			//
+			//
+			//
 			vgui.s.panel.WarpGlobalSettings( xWarp, xScale * xTimeScale, yWarp, yScale * yTimeScale, viewDist )
 			WaitFrame()
 		}
 	}
 
-	//vgui.SetSize( vgui.s.baseSize[0], vgui.s.baseSize[1] )
+	//
 	vgui.s.panel.WarpGlobalSettings( xWarp, xScale, yWarp, yScale, viewDist )
 	vgui.s.enabledState = VGUI_OPEN
 }
+
 
 void function MainHud_TurnOn_RUI( bool instant = false )
 {
@@ -493,7 +492,7 @@ void function MainHud_TurnOn_RUI( bool instant = false )
 	clGlobal.levelEnt.EndSignal( "MainHud_TurnOn" )
 	clGlobal.levelEnt.EndSignal( "MainHud_TurnOff" )
 
-	UpdateFullscreenTopology( clGlobal.topoFullscreenHud, true, true )
+	UpdateFullscreenTopology( clGlobal.topoFullscreenHud, true )
 }
 
 
@@ -511,7 +510,7 @@ void function MainHud_TurnOff( entity vgui, float duration, float xWarp, float x
 	vgui.s.enabledState = VGUI_CLOSING
 
 	vgui.s.panel.WarpGlobalSettings( xWarp, xScale, yWarp, yScale, viewDist )
-	//vgui.SetSize( vgui.s.baseSize[0], vgui.s.baseSize[1] )
+	//
 
 	float xTimeScale = 1.0
 	float yTimeScale = 1.0
@@ -522,12 +521,12 @@ void function MainHud_TurnOff( entity vgui, float duration, float xWarp, float x
 		xTimeScale = expect float( Anim_EaseOut( GraphCapped( Time() - startTime, duration * 0.1, duration, 1.0, 0.0 ) ) )
 		yTimeScale = expect float( Anim_EaseOut( GraphCapped( Time() - startTime, 0.0, duration * 0.5, 1.0, 0.01 ) ) )
 
-		//vgui.SetSize( vgui.s.baseSize[0] * xTimeScale, vgui.s.baseSize[1] * yTimeScale )
+		//
 		vgui.s.panel.WarpGlobalSettings( xWarp, xScale * xTimeScale, yWarp, yScale * yTimeScale, viewDist )
 		WaitFrame()
 	}
 
-	//vgui.SetSize( vgui.s.baseSize[0] * 0.001, vgui.s.baseSize[1] * 0.001 )
+	//
 	vgui.s.panel.WarpGlobalSettings( xWarp, 0, yWarp, 0, viewDist )
 
 	vgui.s.enabledState = VGUI_CLOSED
@@ -587,7 +586,7 @@ void function HidePermanentHudTopo()
 
 void function ShowPermanentHudTopo()
 {
-	UpdateFullscreenTopology( clGlobal.topoFullscreenHudPermanent, true, true )
+	UpdateFullscreenTopology( clGlobal.topoFullscreenHudPermanent, true )
 }
 
 void function HideTargetInfoHudTopo()
@@ -604,8 +603,8 @@ void function ShowTargetInfoHudTopo()
 
 void function InitCrosshair()
 {
-	// The number of priority levels should not get huge. Will depend on how many different places in script want control at the same time.
-	// All menus for example should show and clear from one place to avoid unneccessary priority levels.
+	//
+	//
 	file.crosshairPriorityOrder.append( crosshairPriorityLevel.ROUND_WINNING_KILL_REPLAY )
 	file.crosshairPriorityOrder.append( crosshairPriorityLevel.MENU )
 	file.crosshairPriorityOrder.append( crosshairPriorityLevel.PREMATCH )
@@ -615,7 +614,7 @@ void function InitCrosshair()
 	foreach ( priority in file.crosshairPriorityOrder )
 		file.crosshairPriorityLevel[priority] <- null
 
-	// Fallback default
+	//
 	file.crosshairPriorityLevel[crosshairPriorityLevel.DEFAULT] = CROSSHAIR_STATE_SHOW_ALL
 	UpdateCrosshairState()
 }
@@ -694,35 +693,46 @@ void function ClientHudInit( entity player )
 {
 	Assert( player == GetLocalClientPlayer() )
 
-	#if R5DEV
+	#if(DEV)
 		HudElement( "Dev_Info1" ).Hide()
 		HudElement( "Dev_Info2" ).Hide()
 		HudElement( "Dev_Info3" ).Hide()
-		{
-			if ( IsTestMap() )
-			{
-				var elem = HudElement( "Dev_Info3" )
-				Hud_SetText( elem, "Test Map" )
-				Hud_Show( elem )
+		#if(false)
 
-				/*switch( GetMapName() )
+
+
+
+
+
+
+
+#else
+			{
+				if ( IsTestMap() )
 				{
-					case "sp_danger_room":
-					case "sp_script_samples":
-					case "sp_enemies":
-					case "sp_grunt_battle":
-					case "mp_rr_box":
-					case "mp_box":
-					case "mp_test_engagement_range":
-						// blessed calm, like a smooth ocean
-						break
-					default:
-						thread DrawAttentionToTestMap( elem )
-						break
-				}*/
+					var elem = HudElement( "Dev_Info3" )
+					Hud_SetText( elem, "Test Map" )
+					Hud_Show( elem )
+
+					/*
+
+
+
+
+
+
+
+
+
+
+
+
+
+*/
+				}
 			}
-		}
-	#endif // DEV
+		#endif
+	#endif //
 }
 
 
@@ -733,14 +743,14 @@ void function CinematicEventUpdateDoF( entity player )
 
 	if ( ShouldHaveFarDoF( player ) )
 	{
-		// DoF_LerpFarDepth( 1000, 1500, 0.5 )
+		//
 		if ( !file.trackingDoF )
 			thread TrackDoF( player )
 	}
 	else
 	{
 		player.Signal( "ClearDoF" )
-		// DoF_LerpFarDepthToDefault( 1.0 )
+		//
 	}
 }
 
@@ -890,7 +900,7 @@ bool function ShouldMainHudBeVisible( entity player )
 			return false
 	}
 
-	#if R5DEV
+	#if(DEV)
 		if ( IsModelViewerActive() )
 			return false
 	#endif
@@ -918,7 +928,7 @@ bool function ShouldPermanentHudBeVisible( entity player )
 	if ( IsViewingSquadSummary() || IsViewingDeathRecap() )
 		return false
 
-	// this hud contains the minimap, unintframes and overhead names etc.
+	//
 	int gameState = GetGameState()
 	switch( gameState )
 	{
@@ -947,7 +957,7 @@ bool function ShouldPermanentHudBeVisible( entity player )
 	{
 		int ceFlags = player.GetCinematicEventFlags()
 
-		// hide during execution
+		//
 		if ( ceFlags & CE_FLAG_TITAN_3P_CAM )
 			return false
 	}
@@ -955,7 +965,7 @@ bool function ShouldPermanentHudBeVisible( entity player )
 	if ( (!player.IsObserver() || player.GetObserverTarget() == player || player.GetObserverTarget() == null) && !IsAlive( player ) )
 		return false
 
-	#if R5DEV
+	#if(DEV)
 		if ( IsModelViewerActive() )
 			return false
 	#endif
@@ -982,11 +992,6 @@ void function InitChatHUD()
 void function UpdateChatHUDVisibility()
 {
 	local chat = HudElement( "IngameTextChat" )
-
-	//Saves what you typed to a global string
-	//used for all chat if they want to implement it into their gamemode
-	var chatTextEntry = Hud_GetChild( Hud_GetChild( chat, "ChatInputLine" ), "ChatInputTextEntry" )
-    CHAT_TEXT = Hud_GetUTF8Text(chatTextEntry)
 
 	Hud_SetAboveBlur( chat, true )
 

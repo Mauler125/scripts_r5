@@ -9,7 +9,6 @@ WeaponData
 	"menu_icon"										""
 	"hud_icon"										""
 
-	"weapon_type_flags"								"WPT_ULTIMATE"
 	"weaponClass" 									"human"
 	"weaponType"									"shoulder"
 	"fire_mode"   									"offhand"
@@ -24,7 +23,7 @@ WeaponData
 
 	"fire_in_real_world_while_phased"				"1"
 
-	"OnWeaponAttemptOffhandSwitch"					"OnWeaponAttemptOffhandSwitch_Never"
+    "OnWeaponAttemptOffhandSwitch"					"OnWeaponAttemptOffhandSwitch_Never"
 	"OnProjectileCollision"							"OnProjectileCollision_WeaponDefensiveBombardmentExplosion"
 
 
@@ -35,14 +34,14 @@ WeaponData
 
 	MP_BASE
 	{
-		"enable_highlight_networking_on_creation"		"<KEEP_DEFAULT>"
+        "enable_highlight_networking_on_creation"		"<KEEP_DEFAULT>"
 	}
 
 	// Models
 	"projectilemodel" 								"mdl/dev/empty_model.rmdl"
 
 	// Effects
-	"bounce_effect_table"							"none"
+	"bounce_effect_table"							"bounce_small"
 	"impact_effect_table"							"none"
 	"marker_effect"                                 "P_ar_artillery_marker"
 	"projectile_trail_effect_0" 					"P_projectile_artillery_plasma"

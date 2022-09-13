@@ -195,8 +195,10 @@ void function CreateTeamUnitFrame( entity player )
 
 asset function GetUnitFrameAssetForGameMode()
 {
-	if ( IsFallLTM() || GetCurrentPlaylistVarBool( "minified_unitframes_enabled", false ) )
+
+	if ( IsFallLTM() )
 		return $"ui/unitframe_shadow_squad.rpak"
+
 
 	return $"ui/unitframe_survival_v3.rpak"
 }
@@ -238,7 +240,7 @@ void function SetUnitFrameDataFromOwner( var rui, entity ent, bool forceUpdate =
 	RuiTrackBool( rui, "isJumpmaster", ent, RUI_TRACK_SCRIPT_NETWORK_VAR_BOOL, GetNetworkedVariableIndex( "isJumpmaster" ) )
 	RuiTrackInt( rui, "respawnStatus", ent, RUI_TRACK_SCRIPT_NETWORK_VAR_INT, GetNetworkedVariableIndex( "respawnStatus" ) )
 	RuiTrackFloat( rui, "respawnStatusEndTime", ent, RUI_TRACK_SCRIPT_NETWORK_VAR, GetNetworkedVariableIndex( "respawnStatusEndTime" ) )
-	RuiTrackFloat( rui, "cameraViewFrac", ent, RUI_TRACK_STATUS_EFFECT_SEVERITY, eStatusEffect.camera_view ) //
+	//RuiTrackFloat( rui, "cameraViewFrac", ent, RUI_TRACK_STATUS_EFFECT_SEVERITY, eStatusEffect.camera_view ) //
 
 	RuiSetBool( rui, "disconnected", false )
 	RuiSetImage( rui, "healTypeIcon", $"" )

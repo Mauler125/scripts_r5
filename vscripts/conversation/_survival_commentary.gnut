@@ -1,4 +1,5 @@
-global function SurvivalCommentary_Init
+// stub script
+
 global function SurvivalCommentary_GetKillLeaderEEH
 global function SurvivalCommentary_GetChampionTeam
 global function SurvivalCommentary_GetChampionEEH
@@ -7,27 +8,9 @@ global function SurvivalCommentary_InitThreatChatterForPlayer
 global function SurvivalCommentary_OnThreatActivationBombardment
 global function SurvivalCommentary_OnThreatActivationGrenade
 
-struct {
-	int currentKillLeaderKillAmount = 0
-	entity currentKillLeader = null
-} file
-
-void function SurvivalCommentary_Init()
-{
-	ShSurvivalCommentary_Init()
-
-	if ( !IsFiringRangeGameMode() )
-		AddCallback_OnPlayerKilled( OnPlayerKilled )
-
-	FlagInit( "SurvivalCommentary_FirstBloodReached", false )
-}
-
 int function SurvivalCommentary_GetKillLeaderEEH()
 {
-	if ( file.currentKillLeader == null || !IsValid( file.currentKillLeader ) )
-		return EncodedEHandle_null
-
-	return file.currentKillLeader.GetEncodedEHandle()
+	return GetPlayerArray()[0].GetEncodedEHandle()
 }
 
 int function SurvivalCommentary_GetChampionTeam()
@@ -38,76 +21,6 @@ int function SurvivalCommentary_GetChampionTeam()
 int function SurvivalCommentary_GetChampionEEH()
 {
 	return 0
-}
-
-void function SetKillLeader( entity killLeader, int numKills )
-{
-	wait 1.0
-
-	file.currentKillLeader = killLeader
-	file.currentKillLeaderKillAmount = numKills
-
-	int killLeaderTeam = killLeader.GetTeam()
-
-	foreach ( player in GetPlayerArray() )
-		Remote_CallFunction_NonReplay( player, "ServerCallback_Survival_NewKillLeader", killLeader, numKills )
-
-	int maxTeams = GetCurrentPlaylistVarInt( "max_teams", MAX_TEAMS )
-	for ( int i = TEAM_MULTITEAM_FIRST; i < TEAM_MULTITEAM_FIRST + maxTeams; ++i )
-	{
-		if ( i == killLeaderTeam )
-			continue
-
-		entity speakingPlayer = TryFindSpeakingPlayerOnTeam( i )
-		if ( speakingPlayer != null )
-			PlayBattleChatterLineToSpeakerAndTeam( speakingPlayer, "bc_killLeaderNew" )
-	}
-
-	thread PlayDialogueForPlayer( "bc_iBecomeKillLeader", killLeader, killLeader )
-
-	array<entity> teamMembers = GetPlayerArrayOfTeam( killLeaderTeam )
-	teamMembers.fastremovebyvalue( killLeader )
-
-	foreach ( teamMember in teamMembers )
-		thread PlayDialogueForPlayer( "bc_squadmateBecomesKillLeader", teamMember, teamMember )
-}
-
-int function GetMinKillsForKillLeader()
-{
-	return GetCurrentPlaylistVarInt( "survival_commentary_kill_leader_min_kills", 3 )
-}
-
-void function OnPlayerKilled( entity victim, entity attacker, var damageInfo )
-{
-	if ( !IsValid( victim ) || !IsValid( attacker ) || !victim.IsPlayer() || !attacker.IsPlayer() )
-		return
-
-	if ( GetCurrentPlaylistVarBool( "survival_commentary_kill_leader_enabled", true ) )
-	{
-		if ( victim == file.currentKillLeader )
-		{
-			PlayBattleChatterLineToSpeakerAndTeam( attacker, "bc_weKilledKillLeader" )
-
-			foreach ( player in GetPlayerArray() )
-				Remote_CallFunction_NonReplay( player, "ServerCallback_Survival_HighlightedPlayerKilled", victim, attacker, eSurvivalCommentaryPlayerType.KILLLEADER )
-		}
-
-		int attackerKills = attacker.GetPlayerNetInt( "kills" )
-		if ( attackerKills > file.currentKillLeaderKillAmount 
-				&& attacker != file.currentKillLeader 
-				&& attackerKills >= GetMinKillsForKillLeader()
-			)
-			thread SetKillLeader( attacker, attackerKills )
-	}
-
-	if ( GetCurrentPlaylistVarBool( "survival_commentary_first_blood_enabled", true ) )
-	{
-		if ( !Flag( "SurvivalCommentary_FirstBloodReached" ) )
-		{
-			FlagSet( "SurvivalCommentary_FirstBloodReached" )
-			PlayBattleChatterLineToSpeakerAndTeam( attacker, "bc_weTookFirstBlood" )
-		}
-	}
 }
 
 //  eSurvivalEventType
@@ -154,49 +67,17 @@ void function AddSurvivalCommentaryEvent ( int event )
 	printt( FUNC_NAME(), "eSurvivalEventType:", enumString, event )
 	#endif
 
-
-	if ( GetMapName() == "mp_rr_canyonlands_mu1_night" || GetMapName() == "mp_rr_desertlands_64k_x_64k_nx" )
-	{	
-		switch( event )
-		{
-			case eSurvivalEventType.CIRCLE_MOVING:
-			//GetAnyDialogueAliasFromName( PickCommentaryLineFromBucket( eSurvivalCommentaryBucket.CIRCLE_MOVING ) )
-				thread SurvivalCommentary_PlaySoundForAllPlayers( SurvivalCommentary_GetAlternativeSound( "diag_ap_nocNotify_circleMoving_01_01_3p", 2))
-				break
-			case eSurvivalEventType.ROUND_TIMER_STARTED:
-				thread SurvivalCommentary_PlaySoundForAllPlayers( "diag_ap_nocNotify_circleTimerStartRound" + SURVIVAL_GetCurrentRoundString() + "_01_01_3p" )
-				break
-			case eSurvivalEventType.FIRST_BLOOD:
-				thread SurvivalCommentary_PlaySoundForAllPlayers( "diag_ap_nocNotify_diedFirst_01_01_3p" )
-				break
-            case eSurvivalEventType.CARE_PACKAGE_DROPPING:
-                thread SurvivalCommentary_PlaySoundForAllPlayers( "diag_ap_nocNotify_droppingCarePack_01_01_3p")
-                break;
-		}
-	}
-
-	else
+	switch( event )
 	{
-		switch( event )
-		{
-			case eSurvivalEventType.CIRCLE_MOVING:
-				thread SurvivalCommentary_PlaySoundForAllPlayers( SurvivalCommentary_GetAlternativeSound( "diag_ap_aiNotify_circleMoving", 2))
-				break
-			case eSurvivalEventType.ROUND_TIMER_STARTED:
-				thread SurvivalCommentary_PlaySoundForAllPlayers( "diag_ap_aiNotify_circleTimerStartRound" + SURVIVAL_GetCurrentRoundString() )
-				break
-			case eSurvivalEventType.CIRCLE_MOVES_10SEC:
-				thread SurvivalCommentary_PlaySoundForAllPlayers( SurvivalCommentary_GetAlternativeSound( "diag_ap_aiNotify_circleMoves10sec", 2))
-				break
-            case eSurvivalEventType.CARE_PACKAGE_DROPPING:
-                thread SurvivalCommentary_PlaySoundForAllPlayers( "diag_ap_aiNotify_droppingCarePack_01")
-                break;
-		}
+		case eSurvivalEventType.CIRCLE_MOVING:
+			thread SurvivalCommentary_PlaySoundForAllPlayers( SurvivalCommentary_GetAlternativeSound( "diag_ap_aiNotify_circleMoving", 2))
+			break
+		case eSurvivalEventType.ROUND_TIMER_STARTED:
+			thread SurvivalCommentary_PlaySoundForAllPlayers( "diag_ap_aiNotify_circleTimerStartRound" + SURVIVAL_GetCurrentRoundString() )
+			break
+			
 	}
-
-
 }
-
 
 string function SurvivalCommentary_GetAlternativeSound( string sound, int max, int min = 0 )
 {

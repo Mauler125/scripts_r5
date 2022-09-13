@@ -1,7 +1,6 @@
 global function MpAbilityPhaseWalk_Init
 
 global function OnWeaponActivate_ability_phase_walk
-global function OnWeaponDeactivate_ability_phase_walk
 global function OnWeaponPrimaryAttack_ability_phase_walk
 global function OnWeaponChargeBegin_ability_phase_walk
 global function OnWeaponChargeEnd_ability_phase_walk
@@ -26,11 +25,6 @@ void function OnWeaponActivate_ability_phase_walk( entity weapon )
 	#endif
 }
 
-void function OnWeaponDeactivate_ability_phase_walk( entity weapon )
-{
-	#if SERVER
-	#endif
-}
 
 var function OnWeaponPrimaryAttack_ability_phase_walk( entity weapon, WeaponPrimaryAttackParams attackParams )
 {

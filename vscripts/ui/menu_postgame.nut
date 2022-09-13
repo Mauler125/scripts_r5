@@ -3,8 +3,6 @@ global function IsPostGameMenuValid
 global function OpenPostGameMenu
 global function ClosePostGameMenu
 
-global function InitXPEarnedDisplay
-
 const PROGRESS_BAR_FILL_TIME = 2.0
 const REWARD_AWARD_TIME = 2
 const POSTGAME_DATA_EXPIRATION_TIME = 5 * SECONDS_PER_MINUTE
@@ -44,7 +42,7 @@ struct
 	var decorationRui
 	var menuHeaderRui
 
-	bool wasPartyMember = false
+	bool wasPartyMember = false //
 	bool disableNavigateBack = false
 
 	bool skippableWaitSkipped = false
@@ -54,6 +52,7 @@ struct
 } file
 
 void function InitPostGameMenu( var newMenuArg )
+//
 {
 	RegisterSignal( "PGDisplay" )
 
@@ -113,35 +112,36 @@ void function InitSquadDataDisplay( var squadDataRui )
 	}
 }
 
-array< array< int > > xpDisplayGroups = [
-	[
-		XP_TYPE.WIN_MATCH,
-		XP_TYPE.TOP_FIVE,
-		XP_TYPE.SURVIVAL_DURATION,
-		XP_TYPE.KILL,
-		XP_TYPE.DOWN,
-		XP_TYPE.DAMAGE_DEALT,
-		XP_TYPE.REVIVE_ALLY,
-		XP_TYPE.RESPAWN_ALLY,
-	],
 
-	[
-		XP_TYPE.BONUS_FIRST_GAME,
-		XP_TYPE.BONUS_FIRST_KILL,
-		XP_TYPE.KILL_CHAMPION_MEMBER,
-		XP_TYPE.KILL_LEADER,
-		XP_TYPE.BONUS_CHAMPION,
-		XP_TYPE.BONUS_FRIEND,
-	],
-
-	[
-		XP_TYPE.TOTAL_MATCH,
-		XP_TYPE.BONUS_FRIEND_BOOST,
-		XP_TYPE.BONUS_FIRST_KILL_AS,
-		XP_TYPE.BONUS_FIRST_TOP_FIVE,
-		XP_TYPE.CHALLENGE_COMPLETED,
-	],
-]
+//array< array< int > > xpDisplayGroups = [
+//	[
+//		XP_TYPE.WIN_MATCH,
+//		XP_TYPE.TOP_FIVE,
+//		XP_TYPE.SURVIVAL_DURATION,
+//		XP_TYPE.KILL,
+//		XP_TYPE.DOWN,
+//		XP_TYPE.DAMAGE_DEALT,
+//		XP_TYPE.REVIVE_ALLY,
+//		XP_TYPE.RESPAWN_ALLY,
+//	],
+//
+//	[
+//		XP_TYPE.BONUS_FIRST_GAME,
+//		XP_TYPE.BONUS_FIRST_KILL,
+//		XP_TYPE.KILL_CHAMPION_MEMBER,
+//		XP_TYPE.KILL_LEADER,
+//		XP_TYPE.BONUS_CHAMPION,
+//		XP_TYPE.BONUS_FRIEND,
+//	],
+//
+//	[
+//		XP_TYPE.TOTAL_MATCH,
+//		XP_TYPE.BONUS_FRIEND_BOOST,
+//		XP_TYPE.BONUS_FIRST_KILL_AS,
+//		XP_TYPE.BONUS_FIRST_TOP_FIVE,
+//		XP_TYPE.CHALLENGE_COMPLETED,
+//	],
+//]
 
 int function InitXPEarnedDisplay( var xpEarnedRui, array<int> xpTypes, string headerText, string subHeaderText, bool isBattlePass, vector sectionColor )
 {
@@ -156,7 +156,7 @@ int function InitXPEarnedDisplay( var xpEarnedRui, array<int> xpTypes, string he
 	int lineIndex = 0
 	foreach ( index, xpType in xpTypes )
 	{
-		int eventValue = isBattlePass ? 1 : GetXPEventValue( player, xpType )
+		int eventValue = isBattlePass ? 0 : GetXPEventValue( player, xpType )
 		if ( XpEventTypeData_DisplayEmpty( xpType ) || eventValue > 0 )
 		{
 			lineIndex++
@@ -174,7 +174,7 @@ int function InitXPEarnedDisplay( var xpEarnedRui, array<int> xpTypes, string he
 
 	int numDisplayedLines = lineIndex
 
-	RuiSetInt( xpEarnedRui, "numLines", lineIndex )
+//	RuiSetInt( xpEarnedRui, "numLines", lineIndex )
 
 	for ( lineIndex++ ; lineIndex <= MAX_XP_LINES; lineIndex++ )
 	{
@@ -230,7 +230,7 @@ bool function SkippableWait( float waitTime, string uiSound = "" )
 
 void function UpdatePostGameSummaryDisplayData()
 {
-	UpdateXPEvents()
+	//UpdateXPEvents()
 }
 
 
@@ -248,7 +248,7 @@ var function DisplayPostGameSummary( bool isFirstTime )
 	Hud_SetVisible( Hud_GetChild( file.menu, "ContinueButton" ), false )
 
 	bool showRankedSummary = GetPersistentVarAsInt( "showRankedSummary" ) != 0
-	if ( GetActiveBattlePass() == null && !showRankedSummary && isFirstTime && TryOpenSurvey( eSurveyType.POSTGAME ) )
+	if ( !showRankedSummary && isFirstTime && TryOpenSurvey( eSurveyType.POSTGAME ) )
 	{
 		while ( IsDialog( GetActiveMenu() ) )
 			WaitFrame()
@@ -265,11 +265,23 @@ var function DisplayPostGameSummary( bool isFirstTime )
 	if ( !player )
 		return
 
+	ItemFlavor ornull activeBattlePass
+	if ( IsBattlePassEnabled() )
+		activeBattlePass = GetPlayerActiveBattlePass( WaitForLocalClientEHI() )
+
+	ItemFlavor progressBarChallengeFlav
+	if ( activeBattlePass != null )
+	{
+		progressBarChallengeFlav = GetItemFlavorByHumanReadableRef( "challenge_season_2_recurring_3" )
+		while ( !DoesPlayerHaveChallenge( player, progressBarChallengeFlav ) )
+			WaitFrame()
+	}
+
 	EmitUISound( "UI_Menu_MatchSummary_Appear" )
 	UpdatePostGameSummaryDisplayData()
 
 	Hud_SetVisible( file.continueButton, isFirstTime )
-	Hud_SetVisible( file.combinedCard, true ) //
+	Hud_SetVisible( file.combinedCard, isFirstTime || activeBattlePass == null )
 
 	file.disableNavigateBack = isFirstTime
 	ResetSkippableWait()
@@ -281,8 +293,8 @@ var function DisplayPostGameSummary( bool isFirstTime )
 		}
 	)
 
-	// Update the pilot model to be the character the player used in the last match
-	int characterPDefEnumIndex = player.GetPersistentVarAsInt( "characterForXP" ) // todo(dw): fix this
+	//
+	int characterPDefEnumIndex = player.GetPersistentVarAsInt( "characterForXP" ) //
 	Assert( characterPDefEnumIndex >= 0 && characterPDefEnumIndex < PersistenceGetEnumCount( "eCharacterFlavor" ) )
 	string characterGUIDString = PersistenceGetEnumItemNameForIndex( "eCharacterFlavor", characterPDefEnumIndex )
 
@@ -307,6 +319,7 @@ var function DisplayPostGameSummary( bool isFirstTime )
 		Ranked_SetupMenuGladCard( player )
 	}
 
+	//
 	int previousAccountXP = GetPersistentVarAsInt( "previousXP" )
 	int currentAccountXP  = GetPersistentVarAsInt( "xp" )
 	int totalXP           = currentAccountXP - previousAccountXP
@@ -314,25 +327,28 @@ var function DisplayPostGameSummary( bool isFirstTime )
 	var matchRankRui = Hud_GetRui( Hud_GetChild( file.menu, "MatchRank" ) )
 	var squadDataRui = Hud_GetRui( Hud_GetChild( file.menu, "SquadSummary" ) )
 
-	//################
-	// MATCH PLACEMENT
-	//################
+	//
+	//
+	//
+
 	RuiSetInt( matchRankRui, "squadRank", GetPersistentVarAsInt( "lastGameRank" ) )
 	RuiSetInt( matchRankRui, "totalPlayers", GetPersistentVarAsInt( "lastGameSquads" ) )
 	int elapsedTime = GetUnixTimestamp() - GetPersistentVarAsInt( "lastGameTime" )
 
 	RuiSetString( matchRankRui, "lastPlayedText", Localize( "#EOG_LAST_PLAYED", GetFormattedIntByType( elapsedTime, eNumericDisplayType.TIME_MINUTES_LONG ) ) )
 
-	//################
-	// SQUAD DATA
-	//################
+	//
+	//
+	//
 	InitSquadDataDisplay( squadDataRui )
 
-	//################
-	// XP EARNED
-	//################
+	//
+	//
+	//
+
 	const vector COLOR_MATCH = <255, 255, 255> / 255.0
 	const vector COLOR_BONUS = <142, 250, 255> / 255.0
+	//
 	vector COLOR_BP_PREMIUM               = SrgbToLinear( <255, 90, 40> / 255.0 )
 	vector COLOR_BP_PINNED_CHALLENGE      = SrgbToLinear( <255, 215, 55> / 255.0 )
 	vector COLOR_BP_PINNED_CHALLENGE_TEXT = SrgbToLinear( <254, 227, 113> / 255.0 )
@@ -353,102 +369,104 @@ var function DisplayPostGameSummary( bool isFirstTime )
 	while ( !Hud_IsVisible( file.menu ) )
 		WaitFrame()
 
-	if ( character != null && isFirstTime )
-	{
-		table<ItemFlavor, GladCardBadgeTierData> unlockedBadgeMap
+	#if(false)
 
-		expect ItemFlavor( character )
-		array<ItemFlavor> allBadges = GetAllItemFlavorsOfType( eItemType.gladiator_card_badge )
-		foreach ( badge in allBadges )
-		{
-			bool isCharacterBadge = GladiatorCardBadge_IsCharacterBadge( badge )
-			if ( isCharacterBadge && character != GladiatorCardBadge_GetCharacterFlavor( badge ) )
-				continue
 
-			string unlockStatRef = GladiatorCardBadge_GetUnlockStatRef( badge, GladiatorCardBadge_GetCharacterFlavor( badge ) )
-			if ( !IsValidStatEntryRef( unlockStatRef ) )
-				continue
 
-			array<GladCardBadgeTierData> tierDataList = GladiatorCardBadge_GetTierDataList( badge )
-			foreach ( tierData in tierDataList )
-			{
-				StatEntry se = GetStatEntryByRef( unlockStatRef )
-				switch ( se.type )
-				{
-					case eStatType.INT:
-						int currentVal = GetStat_Int( GetUIPlayer(), se, eStatGetWhen.CURRENT )
-						if ( currentVal < tierData.unlocksAt )
-							continue
 
-						int previousVal = GetStat_Int( GetUIPlayer(), se, eStatGetWhen.START_OF_PREVIOUS_MATCH )
-						if ( previousVal >= tierData.unlocksAt )
-							continue
 
-						if ( currentVal >= tierData.unlocksAt && previousVal < tierData.unlocksAt )
-						{
-							unlockedBadgeMap[badge] <- tierData
-						}
-						break
 
-					case eStatType.FLOAT:
-						float currentVal = GetStat_Float( GetUIPlayer(), se, eStatGetWhen.CURRENT )
-						if ( currentVal < tierData.unlocksAt )
-							continue
 
-						float previousVal = GetStat_Float( GetUIPlayer(), se, eStatGetWhen.START_OF_PREVIOUS_MATCH )
-						if ( previousVal >= tierData.unlocksAt )
-							continue
 
-						if ( currentVal >= tierData.unlocksAt && previousVal < tierData.unlocksAt )
-						{
-							unlockedBadgeMap[badge] <- tierData
-						}
-						break
-				}
-			}
-		}
 
-		if ( unlockedBadgeMap.len() > 0 )
-		{
-			baseDelay = 0.0
-			wait 0.5
-		}
 
-		const float BADGE_CEREMONY_DURATION = 4.0
-		var badgeRui = Hud_GetRui( Hud_GetChild( file.menu, "BadgeEarned" ) )
-		foreach ( badge, tierData in unlockedBadgeMap )
-		{
-			RuiDestroyNestedIfAlive( badgeRui, "badgeHandle" )
-			CreateNestedGladiatorCardBadge( badgeRui, "badgeHandle", ToEHI( player ), badge, 0, character )
 
-			RuiSetString( badgeRui, "badgeName", ItemFlavor_GetLongName( badge ) )
 
-			string badgeType = GladiatorCardBadge_IsCharacterBadge( badge ) ? Localize( "#CHARACTER_BADGE", Localize( ItemFlavor_GetLongName( character ) ) ) : "#ACCOUNT_BADGE"
-			RuiSetString( badgeRui, "badgeType", badgeType )
 
-			array<GladCardBadgeTierData> tierDataList = GladiatorCardBadge_GetTierDataList( badge )
-			float unlockRequirement                   = tierData.unlocksAt
-			if ( tierDataList.len() > 1 )
-				RuiSetString( badgeRui, "badgeDesc", Localize( ItemFlavor_GetShortDescription( badge ), format( "`2%s`0", string(unlockRequirement) ) ) )
-			else
-				RuiSetString( badgeRui, "badgeDesc", ItemFlavor_GetShortDescription( badge ) )
 
-			RuiSetGameTime( badgeRui, "displayStartTime", Time() )
-			RuiSetFloat( badgeRui, "displayDuration", BADGE_CEREMONY_DURATION )
 
-			EmitUISound( "UI_Menu_Badge_Earned" )
 
-			Hud_SetVisible( Hud_GetChild( file.menu, "BadgeEarned" ), true )
 
-			ResetSkippableWait()
-			SkippableWait( BADGE_CEREMONY_DURATION )
 
-			StopUISound( "UI_Menu_Badge_Earned" )
-		}
 
-		Hud_SetVisible( Hud_GetChild( file.menu, "BadgeEarned" ), false )
-		wait 0.25
-	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#endif
 
 	{
 		var xpEarned1Rui = Hud_GetRui( Hud_GetChild( file.menu, "XPEarned1" ) )
@@ -460,13 +478,18 @@ var function DisplayPostGameSummary( bool isFirstTime )
 		Hud_SetVisible( Hud_GetChild( file.menu, "ContinueButton" ), true )
 
 		RuiSetFloat( xpEarned1Rui, "startDelay", baseDelay )
-		int numLines = InitXPEarnedDisplay( xpEarned1Rui, xpDisplayGroups[0], "#EOG_MATCH_XP", "", false, COLOR_MATCH )
+		//int numLines = InitXPEarnedDisplay( xpEarned1Rui, xpDisplayGroups[0], "#EOG_MATCH_XP", "", false, COLOR_MATCH )
 		RuiSetFloat( xpEarned1Rui, "lineDisplayTime", LINE_DISPLAY_TIME )
 
-		RuiSetFloat( xpEarned2Rui, "startDelay", baseDelay + (numLines * LINE_DISPLAY_TIME) )
-		numLines += InitXPEarnedDisplay( xpEarned2Rui, xpDisplayGroups[1], "", "", false, COLOR_BONUS )
+		//RuiSetFloat( xpEarned2Rui, "startDelay", baseDelay + (numLines * LINE_DISPLAY_TIME) )
+	//	numLines += InitXPEarnedDisplay( xpEarned2Rui, xpDisplayGroups[1], "", "", false, COLOR_BONUS )
 		RuiSetFloat( xpEarned2Rui, "lineDisplayTime", LINE_DISPLAY_TIME )
 
+		//
+		//
+		//
+
+		//
 		int start_accountLevel = GetAccountLevelForXP( previousAccountXP )
 		Assert( start_accountLevel >= 0 )
 		int start_accountXP          = GetTotalXPToCompleteAccountLevel( start_accountLevel - 1 )
@@ -476,6 +499,7 @@ var function DisplayPostGameSummary( bool isFirstTime )
 
 		float start_accountLevelFrac = GraphCapped( previousAccountXP, start_accountXP, start_nextAccountLevelXP, 0.0, 1.0 )
 
+		//
 		int ending_accountLevel       = GetAccountLevelForXP( currentAccountXP )
 		int ending_accountXP          = GetTotalXPToCompleteAccountLevel( ending_accountLevel - 1 )
 		int ending_nextAccountLevelXP = GetTotalXPToCompleteAccountLevel( ending_accountLevel )
@@ -483,6 +507,7 @@ var function DisplayPostGameSummary( bool isFirstTime )
 		Assert( currentAccountXP < ending_nextAccountLevelXP )
 		float ending_accountLevelFrac = GraphCapped( currentAccountXP, ending_accountXP, ending_nextAccountLevelXP, 0.0, 1.0 )
 
+		//
 		var accountProgressRUI = Hud_GetRui( Hud_GetChild( file.menu, "XPProgressBarAccount" ) )
 		RuiSetString( accountProgressRUI, "displayName", GetPlayerName() )
 		RuiSetColorAlpha( accountProgressRUI, "oldProgressColor", <196 / 255.0, 151 / 255.0, 41 / 255.0>, 1 )
@@ -514,13 +539,13 @@ var function DisplayPostGameSummary( bool isFirstTime )
 		ResetSkippableWait()
 		SkippableWait( baseDelay )
 
-		for ( int lineIndex = 0; lineIndex < numLines; lineIndex++ )
-		{
-			if ( IsSkippableWaitSkipped() )
-				continue
+	//	for ( int lineIndex = 0; lineIndex < numLines; lineIndex++ )
+		//{
+	//		if ( IsSkippableWaitSkipped() )
+	//			continue
 
-			SkippableWait( LINE_DISPLAY_TIME, POSTGAME_LINE_ITEM )
-		}
+	//		SkippableWait( LINE_DISPLAY_TIME, POSTGAME_LINE_ITEM )
+	//	}
 
 		RuiSetFloat( xpEarned1Rui, "startDelay", -50.0 )
 		RuiSetGameTime( xpEarned1Rui, "startTime", Time() - 50.0 )
@@ -564,6 +589,7 @@ var function DisplayPostGameSummary( bool isFirstTime )
 			float waitTime = startDelay + (PROGRESS_BAR_FILL_TIME * (endXPFrac - startXPFrac))
 
 			RuiSetGameTime( accountProgressRUI, "startTime", Time() )
+			//
 			SkippableWait( waitTime, "UI_Menu_MatchSummary_XPBar" )
 			StopUISoundByName( "UI_Menu_MatchSummary_XPBar" )
 			RuiSetGameTime( accountProgressRUI, "startTime", -50.0 )
@@ -660,7 +686,7 @@ void function UpdateXPAndStarsProgress( entity player, ItemFlavor activeBattlePa
 
 		if ( needsReset || progressEndValue == currentGoalValue )
 		{
-			EmitUISound( GetGlobalSettingsString( ItemFlavor_GetAsset( activeBattlePass ), "levelUpSound" ) )
+			EmitUISound( "UI_Menu_BattlePass_LevelUp_Season2" )
 
 			xpChallengeData.challengesCompleted++
 			xpChallengeData.battlePassLevelsEarned++

@@ -1,11 +1,15 @@
 global function ClientCodeCallback_MapInit
 global function MinimapLabelsCanyonlandsMU1
 
+//#if HAS_HALLOWEEN
+	const asset FX_LEVIATHAN_EYE_GLOW = $"draconis_coolant_glow" //P_wpn_meteor_exp_trail //env_star_red_dwarf //draconis_coolant_glow //P_tday_draconis_side_coolant //P_wpn_arcball_trail
+	const asset FX_LEVIATHAN_FIRE = $"shipFire_LG_fire_loop_LG_1" // //fire_loop_main_XL //P_ship_fire_large //shipFire_LG_fire_loop_LG_1
+	const asset FX_LEVIATHAN_FIRE_END = $"P_ship_fire_large" // //fire_loop_main_XL //P_ship_fire_large //shipFire_LG_fire_loop_LG_1
+//#endif
+
 struct
 {
-	bool teaseDronePropSpawned = false
-	entity teasePointLight
-	entity teaseSpotLight
+
 }
 file
 
@@ -18,34 +22,19 @@ void function ClientCodeCallback_MapInit()
 		MapZones_RegisterDataTable( $"datatable/map_zones/zones_mp_rr_canyonlands_mu1.rpak" )
 		MinimapLabelsCanyonlandsMU1()
 		AddTargetNameCreateCallback( "leviathan_staging", OnLeviathanMarkerCreated )
-		AddTargetNameCreateCallback( "leviathan_zone_6", AddAirdropTraceIgnoreEnt )
-		AddTargetNameCreateCallback( "leviathan_zone_9", AddAirdropTraceIgnoreEnt )
+		//AddTargetNameCreateCallback( "leviathan_zone_6", AddAirdropTraceIgnoreEnt ) // TODO: Change compilation order
+		//AddTargetNameCreateCallback( "leviathan_zone_9", AddAirdropTraceIgnoreEnt ) // TODO: Change compilation order
 	#endif
-	RegisterSignal( "RoarStop" ) //needed for anim callbacks in not-yet-shipped DFS scripts
-	AddCallback_GameStateEnter( eGameState.WinnerDetermined, MU1_OnWinnerDetermined )
-
-	AddCreateCallback( "prop_dynamic", OnTeaseDronePropSpawned )
-	AddCallback_EntitiesDidLoad( EntitiesDidLoad )
-}
-
-void function EntitiesDidLoad()
-{
-	array<entity> pointLightArr = GetEntArrayByScriptName( "tvtease_pointlight_01" )
-	array<entity> spotLightArr = GetEntArrayByScriptName( "tvtease_spotlight_01" )
-
-	if ( pointLightArr.len() == 0 || spotLightArr.len() == 0 )
+	RegisterSignal( "StopBreathingFire" )
+	if ( EvilLeviathansEnabled() )
 	{
-		Warning( "!!! Warning !!! No tease tweak lights found!" )
-		return
+		AddTargetNameCreateCallback( "leviathan_zone_6", OnEvilLeviathanCreated )
+		AddTargetNameCreateCallback( "leviathan_zone_9", OnEvilLeviathanCreated )
+		AddGlobalAnimEvent( "leviathan_breathes_fire_start", OnLeviathanBreathesFire )
+		PrecacheParticleSystem( FX_LEVIATHAN_EYE_GLOW )
+		PrecacheParticleSystem( FX_LEVIATHAN_FIRE )
+		PrecacheParticleSystem( FX_LEVIATHAN_FIRE_END )
 	}
-
-	file.teasePointLight = pointLightArr.top()
-	file.teaseSpotLight = spotLightArr.top()
-
-	if ( GetCurrentPlaylistVarInt( "wtt_side_room_active", 0 ) == 1 )
-		thread Thread_TweakLightFlicker()
-	else
-		thread Thread_TurnOffTweakLights()
 }
 
 void function MinimapLabelsCanyonlandsMU1()
@@ -55,7 +44,6 @@ void function MinimapLabelsCanyonlandsMU1()
 
 	//INDUSTRIAL
 	SURVIVAL_AddMinimapLevelLabel( GetZoneMiniMapNameForZoneId( MapZones_GetZoneIdForTriggerName( "Z_04_A" ) ), 0.79, 0.62, 0.6 ) //Hydro Dam
-	SURVIVAL_AddMinimapLevelLabel( GetZoneMiniMapNameForZoneId( MapZones_GetZoneIdForTriggerName( "Z_03_B" ) ), 0.81, 0.51, 0.6 ) //Labs
 	SURVIVAL_AddMinimapLevelLabel( GetZoneMiniMapNameForZoneId( MapZones_GetZoneIdForTriggerName( "Z_11_A" ) ), 0.56, 0.91, 0.6 ) //Water Treatment
 	//SURVIVAL_AddMinimapLevelLabel( "Windmills", 0.46, 0.77, 0.4 )
 	SURVIVAL_AddMinimapLevelLabel( GetZoneMiniMapNameForZoneId( MapZones_GetZoneIdForTriggerName( "Z_14_RUNOFF" ) ), 0.13, 0.40, 0.6 ) //Runoff
@@ -97,19 +85,8 @@ void function MinimapLabelsCanyonlandsMU1()
 	//SURVIVAL_AddMinimapLevelLabel( "Hilltop Town", 0.22, 0.51, 0.4 )
 	SURVIVAL_AddMinimapLevelLabel( GetZoneMiniMapNameForZoneId( MapZones_GetZoneIdForTriggerName( "Z_16_MALL" ) ), 0.49, 0.68, 0.6 ) //"Market"
 	SURVIVAL_AddMinimapLevelLabel( GetZoneMiniMapNameForZoneId( MapZones_GetZoneIdForTriggerName( "Z_16_SKULLTOWN" ) ), 0.32, 0.74, 0.6 )//"Skull Town"
-	SURVIVAL_AddMinimapLevelLabel( GetZoneMiniMapNameForZoneId( MapZones_GetZoneIdForTriggerName( "Z_18_A" ) ), 0.16, 0.7, 0.6 )//"Gauntlet"
 	//SURVIVAL_AddMinimapLevelLabel( "Pitstop", 0.35, 0.63, 0.4 )
 	//SURVIVAL_AddMinimapLevelLabel( "Scorch City", 0.32, 0.9, 0.4 )
-
-	// Tease
-	ModelFX_BeginData( "thrusters_tease_foe", $"mdl/props/crypto_drone/crypto_drone.rmdl", "foe", false )
-		ModelFX_AddTagSpawnFX( "handle_t_fx", $"P_drone_exhaust_T" )
-		ModelFX_AddTagSpawnFX( "frame_b_fx", $"P_drone_exhaust_B" )
-		ModelFX_AddTagSpawnFX( "arm_l_fx", $"P_drone_exhaust_L" )
-		ModelFX_AddTagSpawnFX( "arm_r_fx", $"P_drone_exhaust_R" )
-		//ModelFX_AddTagSpawnFX( "__illumPosition", $"P_crypto_drone_shield" )
-		ModelFX_AddTagSpawnFX( "LENS", $"P_drone_camera" )
-	ModelFX_EndData()
 }
 
 
@@ -143,64 +120,96 @@ void function LeviathanThink( entity marker, entity leviathan, bool stagingOnly 
 	WaitForever()
 }
 
-
-void function MU1_OnWinnerDetermined()
+//#if HAS_HALLOWEEN
+void function OnLeviathanBreathesFire( entity ent )
 {
-	array<entity> portalFXArray = GetEntArrayByScriptName( "wraith_tt_portal_fx" )
-
-	if ( portalFXArray.len() == 0 )
-	{
-		Warning( "Warning! Incorrect number of portal FX entities found for destruction!" )
+	if ( !GetCurrentPlaylistVarBool( "evil_leviathans", false ) )
 		return
+
+	thread LeviathanBreathesFire( ent )
+
+}
+//#endif //#if HAS_HALLOWEEN
+
+//#if HAS_HALLOWEEN
+void function LeviathanBreathesFire( entity ent )
+{
+	if ( !IsValid( ent ) )
+		return
+
+	ent.EndSignal( "OnDestroy" )
+	ent.EndSignal( "StopBreathingFire" )
+
+	int fxid = GetParticleSystemIndex( FX_LEVIATHAN_FIRE )
+	int attachId = ent.LookupAttachment( "FX_ROAR" )
+	vector attachmentOrigin = ent.GetAttachmentOrigin( attachId )
+	vector attachmentAngles = ent.GetAttachmentAngles( attachId )
+
+	int numberOfFireballs = 4
+	array <entity> dummies
+	array <int> fxHandles
+	float offset = 550
+	float previousOffset = 0
+	for( int i = 0; i < numberOfFireballs; i++ )
+	{
+		float newOffset = offset + previousOffset
+		entity dummy = CreateClientSidePropDynamic( attachmentOrigin, attachmentAngles, $"mdl/dev/empty_model.rmdl" )
+		vector originOffset = PositionOffsetFromOriginAngles( attachmentOrigin, attachmentAngles, newOffset, 0, 0 )
+		vector anglesOffset = AnglesCompose( attachmentAngles, <0, 0, 0> )
+		previousOffset = newOffset
+		dummy.SetOrigin( originOffset )
+		dummy.SetAngles( anglesOffset )
+		dummy.SetParent( ent, "FX_ROAR", true )
+		dummies.append( dummy )
+		int fxIndex
+		if ( i == numberOfFireballs - 1 )
+			fxIndex = GetParticleSystemIndex( FX_LEVIATHAN_FIRE_END )
+		else
+			fxIndex = GetParticleSystemIndex( FX_LEVIATHAN_FIRE )
+		fxHandles.append( StartParticleEffectOnEntity( dummy, fxIndex, FX_PATTACH_POINT_FOLLOW, dummy.LookupAttachment( "REF" ) ) )
 	}
 
-	foreach( entity fx in portalFXArray )
-		fx.Destroy()
-}
-
-void function OnTeaseDronePropSpawned( entity prop )
-{
-	if ( file.teaseDronePropSpawned )
-		return
-
-	if ( prop.GetScriptName() != "tease_drone_prop_01" )
-		return
-
-	ModelFX_EnableGroup( prop, "thrusters_tease_foe" )
-	file.teaseDronePropSpawned = true
-
-	thread Thread_TurnOffTweakLights()
-}
-
-void function Thread_TweakLightFlicker()
-{
-	float origPointLightBrightness = 0.25
-	float origSpotLightBrightness = 0.3
-
-	bool lightsOn = true
-
-	// Make sure to leave lights in default on state
-	OnThreadEnd(
-		function() : ( origPointLightBrightness, origSpotLightBrightness )
+	OnThreadEnd( void function() : ( ent, fxHandles, dummies ) {
+		foreach ( fxHandle in fxHandles )
 		{
-			file.teasePointLight.SetTweakLightBrightness( origPointLightBrightness )
-			file.teaseSpotLight.SetTweakLightBrightness( origSpotLightBrightness )
+			if ( EffectDoesExist( fxHandle ) )
+				EffectStop( fxHandle, false, true )
 		}
-	)
+		foreach ( dummy in dummies )
+		{
+			if ( IsValid( dummy ) )
+				dummy.Destroy()
+		}
+	} )
 
-	while ( !file.teaseDronePropSpawned )
-	{
-		wait RandomFloatRange( 0.5, 4 )
-
-		file.teasePointLight.SetTweakLightBrightness( origPointLightBrightness * RandomFloatRange( 0.3, 1.2 ) )
-		file.teaseSpotLight.SetTweakLightBrightness( origSpotLightBrightness * RandomFloatRange( 0.3, 1.2 )  )
-	}
+	WaitForever()
 }
+//#endif //#if HAS_HALLOWEEN
 
-void function Thread_TurnOffTweakLights()
+
+//#if HAS_HALLOWEEN
+void function OnEvilLeviathanCreated( entity ent )
 {
-	wait 4.8
+	///////////////////
+	// Eye glows
+	///////////////////
+	entity leviathan = ent
+	array <string> eyeGlowAttachments
+	eyeGlowAttachments.append( "EYE_L" )
+	eyeGlowAttachments.append( "EYE_R" )
+	int fxIndex = GetParticleSystemIndex( FX_LEVIATHAN_EYE_GLOW )
+	foreach( eyeGlowAttachment in eyeGlowAttachments )
+		StartParticleEffectOnEntity( leviathan, fxIndex, FX_PATTACH_POINT_FOLLOW, leviathan.LookupAttachment( eyeGlowAttachment ) )
 
-	file.teasePointLight.SetTweakLightBrightness( 0.05 )
-	file.teaseSpotLight.SetTweakLightBrightness( 0.0 )
+}
+//#endif //#if HAS_HALLOWEEN
+
+bool function EvilLeviathansEnabled()
+{
+	//#if HAS_HALLOWEEN
+		if ( GetCurrentPlaylistVarBool( "evil_leviathans", false ) )
+			return true
+	//#endif
+
+	return false
 }

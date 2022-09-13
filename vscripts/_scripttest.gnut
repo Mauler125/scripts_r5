@@ -544,12 +544,12 @@ bool function testboolfunc( entity player )
 #endif
 
 struct footData {
-	float footSize = 1.0
+   float footSize = 1.0
 }
 
 struct cat {
-	string name = "Harry"
-	array<footData> feet
+   string name = "Harry"
+   array<footData> feet
 }
 
 int function TestArrayTypes()

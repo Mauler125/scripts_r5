@@ -3,7 +3,7 @@
 global function InitRewardCeremonyMenu
 global function ShowRewardCeremonyDialog
 
-#if R5DEV
+#if(DEV)
 global function DEV_TestRewardCeremonyDialog
 #endif
 
@@ -45,7 +45,7 @@ void function InitRewardCeremonyMenu( var newMenuArg )
 }
 
 
-void function ShowRewardCeremonyDialog( string headerText, string titleText, string descText, array<BattlePassReward> awards, bool isForBattlePass, bool playSound )
+void function ShowRewardCeremonyDialog( string headerText, string titleText, string descText, array<BattlePassReward> awards, bool isForBattlePass )
 {
 	file.headerText = headerText
 	file.titleText = titleText
@@ -53,20 +53,10 @@ void function ShowRewardCeremonyDialog( string headerText, string titleText, str
 	file.displayAwards = clone awards
 	file.isForBattlePass = isForBattlePass
 	AdvanceMenu( GetMenu( "RewardCeremonyMenu" ) )
-
-	if ( playSound )
-	{
-		ItemFlavor ornull activeBattlePass = GetActiveBattlePass()
-		if ( activeBattlePass != null )
-		{
-			expect ItemFlavor( activeBattlePass )
-			EmitUISound( GetGlobalSettingsString( ItemFlavor_GetAsset( activeBattlePass ), "levelUpSound" ) )
-		}
-	}
 }
 
 
-#if R5DEV
+#if(DEV)
 void function DEV_TestRewardCeremonyDialog( string itemRef, string headerText = "HEADER", string titleText = "TITLE", string descText = "DESC" )
 {
 	BattlePassReward rewardInfo
@@ -78,9 +68,7 @@ void function DEV_TestRewardCeremonyDialog( string itemRef, string headerText = 
 		titleText,
 		descText,
 		[rewardInfo],
-		false,
-		true
-	)
+		false )
 }
 #endif
 
@@ -106,6 +94,8 @@ void function PassAwardsDialog_OnOpen()
 	RegisterButtonPressedCallback( KEY_SPACE, ContinueButton_OnActivate )
 
 	PassAwardsDialog_UpdateAwards()
+
+	EmitUISound( "UI_Menu_BattlePass_LevelUp_Season2" )
 }
 
 
@@ -170,15 +160,13 @@ void function PassAwardsDialog_UpdateAwards()
 			HudElem_SetRuiArg( awardButton, "itemCountString", string( bpReward.quantity ) )
 		}
 		HudElem_SetRuiArg( awardButton, "rarity", rarity )
-		RuiSetImage( Hud_GetRui( awardButton ), "buttonImage", CustomizeMenu_GetRewardButtonImage( bpReward.flav ) )
+		RuiSetImage( Hud_GetRui( awardButton ), "buttonImage", GetImageForBattlePassReward( bpReward ) )
 
 		if ( ItemFlavor_GetType( bpReward.flav ) == eItemType.account_pack )
 			HudElem_SetRuiArg( awardButton, "isLootBox", true )
 
-		BattlePass_PopulateRewardButton( bpReward, awardButton, true, false )
 
 		Hud_AddEventHandler( awardButton, UIE_GET_FOCUS, PassAward_OnFocusAward )
-
 
 		if ( index == 0 )
 			PassAward_OnFocusAward( awardButton )
@@ -196,8 +184,8 @@ void function PassAward_OnFocusAward( var button )
 
 void function PresentItem( ItemFlavor item, int level )
 {
-	bool showLow = !file.isForBattlePass || Battlepass_ShouldShowLow( item )
-	RunClientScript( "UIToClient_ItemPresentation", ItemFlavor_GetGUID( item ), level, 1.21, showLow, Hud_GetChild( file.menu, "LoadscreenImage" ), true, "battlepass_center_ref" )
+	bool showLow = !file.isForBattlePass
+	RunClientScript( "UIToClient_ItemPresentation", ItemFlavor_GetGUID( item ), level, showLow, Hud_GetChild( file.menu, "LoadscreenImage" ), true )
 }
 
 

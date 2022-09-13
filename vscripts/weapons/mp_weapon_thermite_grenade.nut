@@ -18,7 +18,6 @@ struct SegmentData
 	vector endPos
 	vector angles
 	string sound
-	entity moveParent
 }
 
 void function MpWeaponThermiteGrenade_Init()

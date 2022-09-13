@@ -15,8 +15,6 @@ struct {
 
 	var closeButton
 
-	array<string> reasons
-
 	table<var, string> buttonToReason
 
 	string selectedReportReason = ""
@@ -27,7 +25,7 @@ struct {
 	string friendlyOrEnemy = "friendly"
 } file
 
-void function InitReportPlayerDialog( var newMenuArg )
+void function InitReportPlayerDialog( var newMenuArg ) //
 {
 	var menu = GetMenu( "ReportPlayerDialog" )
 	file.menu = menu
@@ -43,10 +41,15 @@ void function InitReportPlayerDialog( var newMenuArg )
 
 	var panel = Hud_GetChild( file.menu, "FooterButtons" )
 
+	//
+
 	AddMenuEventHandler( menu, eUIEvent.MENU_OPEN, ReportPlayerDialog_OnOpen )
 
 	AddMenuFooterOption( menu, LEFT, BUTTON_A, true, "#A_BUTTON_REPORT", "#A_BUTTON_REPORT", ReportPlayerDialog_Yes )
 	AddMenuFooterOption( menu, LEFT, BUTTON_B, true, "#B_BUTTON_CANCEL", "#B_BUTTON_CANCEL", ReportPlayerDialog_No )
+
+	//
+	//
 }
 
 
@@ -121,9 +124,7 @@ void function ReportReasonButton_OnActivate( var button )
 
 void function ReportCheatButton_OnActivate( var button )
 {
-	file.reasons = GetCheatReportReasons()
-
-	Hud_SetVisible( file.reportReasonButton, GetCheatReportReasons().len() > 0 )
+	Hud_SetVisible( file.reportReasonButton, GetReportReasons( file.friendlyOrEnemy ).len() > 0 )
 
 	Hud_SetVisible( file.reportCheatButton, false )
 	Hud_SetVisible( file.reportOtherButton, false )
@@ -131,69 +132,32 @@ void function ReportCheatButton_OnActivate( var button )
 
 void function ReportOtherButton_OnActivate( var button )
 {
-	#if(PC_PROG)
-/*
-*/
-		if ( file.friendlyOrEnemy == "friendly" )
-		{
-			file.reasons = GetHarassmentReportReasons()
-			Hud_SetVisible( file.reportReasonButton, GetHarassmentReportReasons().len() > 0 )
-			Hud_SetVisible( file.reportCheatButton, false )
-			Hud_SetVisible( file.reportOtherButton, false )
-		}
-		else
-		{
-			CloseActiveMenu( true, true )
-
-			if ( !Origin_IsOverlayAvailable() )
-			{
-				ConfirmDialogData dialogData
-				dialogData.headerText = ""
-				dialogData.messageText = "#ORIGIN_INGAME_REQUIRED"
-				dialogData.contextImage = $"ui/menu/common/dialog_notice"
-
-				OpenOKDialogFromData( dialogData )
-			}
-			ShowPlayerProfileCardForUID( file.reportPlayerUID )
-		}
-	#else
-		CloseActiveMenu( true, true )
-		ShowPlayerProfileCardForUID( file.reportPlayerUID )
-	#endif
-}
-
-array<string> function GetCheatReportReasons()
-{
-	array<string> prefixes
-	array<string> reportReasons = []
+	CloseActiveMenu( true, true )
 
 	#if(PC_PROG)
-		prefixes.append( "report_player_reason_pc_cheat_" )
-	#else
-		prefixes.append( "report_player_reason_console_cheat_" )
-	#endif
-
-	foreach ( playlistVarPrefix in prefixes )
+	if ( !Origin_IsOverlayAvailable() )
 	{
-		int numReasons = GetCurrentPlaylistVarInt( playlistVarPrefix + "count", 0 )
-		for ( int index = 0; index < numReasons; index++ )
-		{
-			reportReasons.append( GetCurrentPlaylistVarString( playlistVarPrefix + (index + 1), "#UNAVAILABLE" ) )
-		}
-	}
+		ConfirmDialogData dialogData
+		dialogData.headerText = ""
+		dialogData.messageText = "#ORIGIN_INGAME_REQUIRED"
+		dialogData.contextImage = $"ui/menu/common/dialog_notice"
 
-	return reportReasons
+		OpenOKDialogFromData( dialogData )
+	}
+	#endif
+
+	ShowPlayerProfileCardForUID( file.reportPlayerUID )
 }
 
-array<string> function GetHarassmentReportReasons()
+array<string> function GetReportReasons( string friendlyOrEnemy )
 {
 	array<string> prefixes
 	array<string> reportReasons = []
 
 	#if(PC_PROG)
-		prefixes.append( "report_player_reason_pc_other_" )
+		prefixes.append( "report_player_reason_pc_" + friendlyOrEnemy + "_" )
 	#else
-		prefixes.append( "report_player_reason_console_other_" )
+		prefixes.append( "report_player_reason_console_" + friendlyOrEnemy + "_" )
 	#endif
 
 	foreach ( playlistVarPrefix in prefixes )
@@ -209,7 +173,7 @@ array<string> function GetHarassmentReportReasons()
 }
 
 
-void function InitReportReasonPopup( var newMenuArg )
+void function InitReportReasonPopup( var newMenuArg ) //
 {
 	var reportReasonMenu = GetMenu( "ReportPlayerReasonPopup" )
 	file.reportReasonMenu = reportReasonMenu
@@ -248,7 +212,7 @@ void function OnOpenReportPlayerDialog()
 	UIPos ownerPos   = REPLACEHud_GetAbsPos( ownerButton )
 	UISize ownerSize = REPLACEHud_GetSize( ownerButton )
 
-	array<string> reasons = file.reasons
+	array<string> reasons = GetReportReasons( file.friendlyOrEnemy )
 
 	if ( reasons.len() == 0 )
 		return

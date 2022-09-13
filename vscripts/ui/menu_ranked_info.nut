@@ -3,7 +3,7 @@ global function OpenRankedInfoPage
 global function InitRankedScoreBarRui
 global function InitRankedScoreBarRuiForDoubleBadge
 
-#if R5DEV
+#if(DEV)
 global function TestScoreBar
 #endif
 
@@ -34,13 +34,13 @@ void function OpenRankedInfoPage( var button )
 
 void function OnRankedInfoMenu_Open()
 {
-	UI_SetPresentationType( ePresentationType.WEAPON_CATEGORY )
+/*	UI_SetPresentationType( ePresentationType.WEAPON_CATEGORY )
 
 	int currentScore                   = GetPlayerRankScore( GetUIPlayer() )
-	array<RankedTierData> divisions    = Ranked_GetTiers()
+	array<RankedTierData> divisions    = Ranked_GetDivisions()
 	RankedDivisionData currentRank     = GetCurrentRankedDivisionFromScore( currentScore )
 	RankedTierData currentDivision     = currentRank.tier
-	RankedTierData ornull nextDivision = Ranked_GetNextTierData( currentRank.tier )
+	RankedTierData ornull nextDivision = Ranked_GetNextDivisionData( currentRank.tier )
 
 	array< RankedDivisionData > divisionData = Ranked_GetRankedDivisionDataForTier( currentRank.tier )
 
@@ -57,6 +57,12 @@ void function OnRankedInfoMenu_Open()
 	RuiSetBool( mainRui, "inSeason", IsRankedInSeason() )
 	RuiSetString( mainRui, "currentRankString", currentRank.divisionName )
 
+	RuiSetInt( mainRui, "killScore", Ranked_GetPointsForKills( currentRank, 1 ) )
+	RuiSetInt( mainRui, "placementScoreTop10", Ranked_GetPointsForPlacement( currentRank, 10 ) )
+	RuiSetInt( mainRui, "placementScoreTop5", Ranked_GetPointsForPlacement( currentRank, 5 ) )
+	RuiSetInt( mainRui, "placementScoreTop3", Ranked_GetPointsForPlacement( currentRank, 3 ) )
+	RuiSetInt( mainRui, "placementScoreWin", Ranked_GetPointsForPlacement( currentRank, 1 ) )
+	RuiSetInt( mainRui, "killScoreCap", Ranked_GetKillScoreCap() )
 
 	var scoringRui = Hud_GetRui( Hud_GetChild( file.menu, "InfoScoring" ) )
 	RuiSetFloat( scoringRui, "lineDisplayTime", 0.01 )
@@ -75,33 +81,44 @@ void function OnRankedInfoMenu_Open()
 		RuiSetInt( mainRui, "entryFee" + i, d.entryCost )
 	}
 
+	var pointsRui = Hud_GetRui( Hud_GetChild( file.menu, "InfoPoints" ) )
+	RuiSetFloat( pointsRui, "lineDisplayTime", 0.01 )
+	RuiSetFloat( pointsRui, "startDelay", 0.0 )
+	RuiSetGameTime( pointsRui, "startTime", 0 )
+	RuiSetInt( pointsRui, "numLines", 6 )
+
+	RuiSetString( pointsRui, "line1KeyString", "#RANKED_POINTS_KILL" )
+	RuiSetString( pointsRui, "line1ValueString", Localize( "#RANKED_POINTS_GENERIC", Ranked_GetPointsForKills( currentRank, 1 ) ) )
+	RuiSetColorAlpha( pointsRui, "line1Color", <1,1,1>, 1 )
+
+	RuiSetString( pointsRui, "line2KeyString", "" )
+	RuiSetString( pointsRui, "line2ValueString", "" )
+	RuiSetColorAlpha( pointsRui, "line2Color", <1,1,1>, 1 )
+
+	RuiSetString( pointsRui, "line3KeyString", "#RANKED_POINTS_TOP10" )
+	RuiSetString( pointsRui, "line3ValueString", Localize( "#RANKED_POINTS_GENERIC", Ranked_GetPointsForPlacement( currentRank, 10 ) ) )
+	RuiSetColorAlpha( pointsRui, "line3Color", <1,1,1>, 1 )
+
+	RuiSetString( pointsRui, "line4KeyString", "#RANKED_POINTS_TOP5" )
+	RuiSetString( pointsRui, "line4ValueString", Localize( "#RANKED_POINTS_GENERIC", Ranked_GetPointsForPlacement( currentRank, 5 ) ) )
+	RuiSetColorAlpha( pointsRui, "line4Color", <1,1,1>, 1 )
+
+	RuiSetString( pointsRui, "line5KeyString", "#RANKED_POINTS_TOP3" )
+	RuiSetString( pointsRui, "line5ValueString", Localize( "#RANKED_POINTS_GENERIC", Ranked_GetPointsForPlacement( currentRank, 3 ) ) )
+	RuiSetColorAlpha( pointsRui, "line5Color", <1,1,1>, 1 )
+
+	RuiSetString( pointsRui, "line6KeyString", "#RANKED_POINTS_WIN" )
+	RuiSetString( pointsRui, "line6ValueString", Localize( "#RANKED_POINTS_GENERIC", Ranked_GetPointsForPlacement( currentRank, 1 ) ) )
+	RuiSetColorAlpha( pointsRui, "line6Color", <1,1,1>, 1 )
+
 	var scoreBarRui = Hud_GetRui( Hud_GetChild( file.menu, "RankedProgressBar" ) )
-	InitRankedScoreBarRui( scoreBarRui, currentScore, Ranked_GetDisplayNumberForRuiBadge( GetUIPlayer() ) )
-
-	var rankedScoringTableRui = Hud_GetRui( Hud_GetChild( file.menu, "RankedScoringTable" ) )
-	RuiSetInt( rankedScoringTableRui, "eleventhPlaceRP", Ranked_GetPointsForPlacement( 11 ) )
-	RuiSetInt( rankedScoringTableRui, "tenthPlaceRP", Ranked_GetPointsForPlacement( 10 ) )
-	RuiSetInt( rankedScoringTableRui, "eighthPlaceRP", Ranked_GetPointsForPlacement( 8 ) )
-	RuiSetInt( rankedScoringTableRui, "sixthPlaceRP", Ranked_GetPointsForPlacement( 6 ) )
-	RuiSetInt( rankedScoringTableRui, "fourthPlaceRP", Ranked_GetPointsForPlacement( 4 ) )
-	RuiSetInt( rankedScoringTableRui, "secondPlaceRP", Ranked_GetPointsForPlacement( 2 ) )
-	RuiSetInt( rankedScoringTableRui, "firstPlaceRP", Ranked_GetPointsForPlacement( 1 ) )
-
-	RuiSetInt( rankedScoringTableRui, "eleventhPlaceKillAssistMultiplier", Ranked_GetPointsPerKillForPlacement( 11 ) )
-	RuiSetInt( rankedScoringTableRui, "tenthPlaceKillAssistMultiplier", Ranked_GetPointsPerKillForPlacement( 10 ) )
-	RuiSetInt( rankedScoringTableRui, "fifthPlaceKillAssistMultiplier", Ranked_GetPointsPerKillForPlacement( 5 ) )
-	RuiSetInt( rankedScoringTableRui, "thirdPlaceKillAssistMultiplier", Ranked_GetPointsPerKillForPlacement( 3 ) )
-	RuiSetInt( rankedScoringTableRui, "firstPlaceKillAssistMultiplier", Ranked_GetPointsPerKillForPlacement( 1 ) )
-
-	int maxKills = Ranked_GetKillsAndAssistsPointCap( 1 ) / Ranked_GetPointsPerKillForPlacement( 1 )
-
-	RuiSetInt( rankedScoringTableRui, "killAndAssistsCap", maxKills )
+	InitRankedScoreBarRui( scoreBarRui, currentScore, Ranked_GetDisplayNumberForRuiBadge( GetUIPlayer() ) )*/
 
 }
 
 void function InitRankedScoreBarRuiForDoubleBadge( var rui, int score, int ladderPosition )
 {
-	for ( int i=0; i<5; i++ )
+	/*for ( int i=0; i<5; i++ )
 	{
 		RuiDestroyNestedIfAlive( rui, "rankedBadgeHandle" + i )
 	}
@@ -146,15 +163,15 @@ void function InitRankedScoreBarRuiForDoubleBadge( var rui, int score, int ladde
 		RuiSetImage( rui, "icon4", nextDivision.icon )
 		RuiSetInt( rui, "forcedNextDivisionIdx", nextDivision.index )
 		CreateNestedRankedRui( rui, nextRank.tier, "rankedBadgeHandle4" )
-	}
+	}*/
 }
 
 void function InitRankedScoreBarRui( var rui, int score, int ladderPosition )
 {
-	array<RankedTierData> divisions = Ranked_GetTiers()
+	/*array<RankedTierData> divisions = Ranked_GetDivisions()
 	RankedDivisionData currentRank  = GetCurrentRankedDivisionFromScore( score )
 	RankedTierData currentTier      = currentRank.tier
-	RankedTierData ornull nextTier  = Ranked_GetNextTierData( currentRank.tier )
+	RankedTierData ornull nextTier  = Ranked_GetNextDivisionData( currentRank.tier )
 
 	array< RankedDivisionData > divisionData = Ranked_GetRankedDivisionDataForTier( currentRank.tier )
 
@@ -193,7 +210,7 @@ void function InitRankedScoreBarRui( var rui, int score, int ladderPosition )
 
 	RuiSetString( rui, "currentRankString", currentRank.divisionName )
 
-	RuiSetBool( rui, "showSingleBadge", divisionData.len() == 1 )
+	RuiSetBool( rui, "showSingleBadge", divisionData.len() == 1 )*/
 }
 
 void function InitRankedInfoPanel( var panel, array<RankedTierData> tiers )

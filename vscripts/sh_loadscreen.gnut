@@ -44,8 +44,6 @@ void function ShLoadscreen_LevelInit()
 
 	AddCallback_RegisterRootItemFlavors( OnRegisterRootItemFlavors )
 
-	RegisterSignal( "Loadscreen_SetCustomLoadscreen" )
-
 	#if UI
 		RegisterSignal( "SetEquppedLoadscreenAsActive" )
 	#endif
@@ -117,12 +115,13 @@ string function Loadscreen_GetRPakName( ItemFlavor flavor )
 {
 	Assert( ItemFlavor_GetType( flavor ) == eItemType.loadscreen )
 
-	asset imageAsset         = Loadscreen_GetLoadscreenImageAsset( flavor )
-	array<string> assetStrParts = split( string(imageAsset), "/" )
-	Assert( assetStrParts.len() == 3 ) //
-	Assert( assetStrParts[0] == "loadscreens" )
-	Assert( assetStrParts[1] == "custom" )
-	return assetStrParts[2] //
+	asset materialAsset         = Loadscreen_GetLoadscreenImageAsset( flavor )
+	array<string> assetStrParts = split( string(materialAsset), "/" )
+	Assert( assetStrParts.len() == 4 ) //
+	Assert( assetStrParts[0] == "material" )
+	Assert( assetStrParts[1] == "loadscreens" )
+	Assert( assetStrParts[2] == "custom" )
+	return assetStrParts[3] //
 }
 
 string function Loadscreen_GetImageOverlayText( ItemFlavor flavor )
@@ -145,54 +144,16 @@ void function Loadscreen_SetEquppedLoadscreenAsActive()
 
 	Assert( ItemFlavor_GetType( flavor ) == eItemType.loadscreen )
 
-	thread Loadscreen_SetCustomLoadscreen( flavor )
+	Loadscreen_SetCustomLoadscreen( flavor )
 }
 #endif
 
 #if UI
 void function Loadscreen_SetCustomLoadscreen( ItemFlavor flavor )
 {
-	Signal( uiGlobal.signalDummy, "Loadscreen_SetCustomLoadscreen" )
-	EndSignal( uiGlobal.signalDummy, "Loadscreen_SetCustomLoadscreen" )
-
 	Assert( ItemFlavor_GetType( flavor ) == eItemType.loadscreen )
+	asset image = Loadscreen_GetLoadscreenImageAsset( flavor )
 
-	ItemFlavor flavToUse = flavor
-
-	if ( ItemFlavor_IsTheRandom( flavor ) )
-	{
-		entity player = GetUIPlayer()
-
-		EndSignal( player, "OnDestroy" )
-
-		LoadoutEntry loadscreenSlot = Loadout_Loadscreen()
-		array<ItemFlavor> items = clone GetValidItemFlavorsForLoadoutSlot( LocalClientEHI(), loadscreenSlot )
-
-		while ( !GRX_IsInventoryReady( player ) )
-			WaitFrame()
-
-		foreach ( item in clone items )
-		{
-			if (
-					( ItemFlavor_GetGRXMode( item ) != GRX_ITEMFLAVORMODE_NONE && !GRX_IsItemOwnedByPlayer( item, player ) )
-					|| ItemFlavor_IsTheRandom( item )
-				)
-				items.fastremovebyvalue( item )
-		}
-
-		if ( items.len() > 0 )
-		{
-			flavToUse = items.getrandom()
-		}
-	}
-
-	if ( ItemFlavor_IsTheDefault( flavor ) )
-	{
-		SetCustomLoadScreen( $"" )
-		return
-	}
-
-	asset image = Loadscreen_GetLoadscreenImageAsset( flavToUse )
 	SetCustomLoadScreen( image )
 }
 #endif
