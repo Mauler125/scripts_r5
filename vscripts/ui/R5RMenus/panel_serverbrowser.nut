@@ -170,7 +170,7 @@ void function RefreshServerListing(bool refresh = true)
 	// Setup Buttons and labels
 	for( int i=0; i < m_vServerList.len() && i < SB_MAX_SERVER_PER_PAGE; i++ )
 	{
-		Hud_SetText( Hud_GetChild( file.panel, "ServerName" + i ), ReplaceNameColors(m_vServerList[i].svServerName))
+		Hud_SetText( Hud_GetChild( file.panel, "ServerName" + i ), m_vServerList[i].svServerName)
 		Hud_SetText( Hud_GetChild( file.panel, "Playlist" + i ), GetUIPlaylistName(m_vServerList[i].svPlaylist))
 		Hud_SetText( Hud_GetChild( file.panel, "Map" + i ), GetUIMapName(m_vServerList[i].svMapName))
 		Hud_SetText( Hud_GetChild( file.panel, "PlayerCount" + i ), m_vServerList[i].svCurrentPlayers + "/" + m_vServerList[i].svMaxPlayers)
