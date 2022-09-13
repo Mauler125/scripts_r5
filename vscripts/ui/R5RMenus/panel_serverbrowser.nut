@@ -170,7 +170,7 @@ void function RefreshServerListing(bool refresh = true)
 	// Setup Buttons and labels
 	for( int i=0; i < m_vServerList.len() && i < SB_MAX_SERVER_PER_PAGE; i++ )
 	{
-		Hud_SetText( Hud_GetChild( file.panel, "ServerName" + i ), m_vServerList[i].svServerName)
+		Hud_SetText( Hud_GetChild( file.panel, "ServerName" + i ), ReplaceNameColors(m_vServerList[i].svServerName))
 		Hud_SetText( Hud_GetChild( file.panel, "Playlist" + i ), GetUIPlaylistName(m_vServerList[i].svPlaylist))
 		Hud_SetText( Hud_GetChild( file.panel, "Map" + i ), GetUIMapName(m_vServerList[i].svMapName))
 		Hud_SetText( Hud_GetChild( file.panel, "PlayerCount" + i ), m_vServerList[i].svCurrentPlayers + "/" + m_vServerList[i].svMaxPlayers)
@@ -184,6 +184,20 @@ void function RefreshServerListing(bool refresh = true)
 	Hud_SetText( Hud_GetChild( file.panel, "PlayersCount"), "Players: " + m_vAllPlayers)
 	Hud_SetText( Hud_GetChild( file.panel, "ServersCount"), "Servers: " + svServerCount)
 	Hud_SetText (Hud_GetChild( file.panel, "Pages" ), "  Page: 1/" + (m_vPages.pAmount + 1) + "  ")
+}
+
+string function ReplaceNameColors(string name)
+{
+	string coloredname
+
+	coloredname = StringReplace( coloredname, "-RED-", "^FF000000" )
+	coloredname = StringReplace( coloredname, "-GREEN-", "^00A80000" )
+	coloredname = StringReplace( coloredname, "-BLUE-", "^0000FF00" )
+	coloredname = StringReplace( coloredname, "-CYAN-", "^00FFFF00" )
+	coloredname = StringReplace( coloredname, "-YELLOW-", "^FFFF0000" )
+	coloredname = StringReplace( coloredname, "-WHITE-", "^FFFF0000" )
+
+	return coloredname
 }
 
 void function NextPage(var button)
