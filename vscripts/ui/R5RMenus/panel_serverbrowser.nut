@@ -190,12 +190,7 @@ string function ReplaceNameColors(string name)
 {
 	string coloredname
 
-	coloredname = StringReplace( coloredname, "-RED-", "^FF000000" )
-	coloredname = StringReplace( coloredname, "-GREEN-", "^00A80000" )
-	coloredname = StringReplace( coloredname, "-BLUE-", "^0000FF00" )
-	coloredname = StringReplace( coloredname, "-CYAN-", "^00FFFF00" )
-	coloredname = StringReplace( coloredname, "-YELLOW-", "^FFFF0000" )
-	coloredname = StringReplace( coloredname, "-WHITE-", "^FFFF0000" )
+	coloredname = StringReplace( name, "--", "^" )
 
 	return coloredname
 }
