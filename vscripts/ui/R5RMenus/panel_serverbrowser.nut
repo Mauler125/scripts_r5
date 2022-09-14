@@ -186,6 +186,15 @@ void function RefreshServerListing(bool refresh = true)
 	Hud_SetText (Hud_GetChild( file.panel, "Pages" ), "  Page: 1/" + (m_vPages.pAmount + 1) + "  ")
 }
 
+string function ReplaceNameColors(string name)
+{
+	string coloredname
+
+	coloredname = StringReplace( name, "--", "^" )
+
+	return coloredname
+}
+
 void function NextPage(var button)
 {
 	//If Pages is 0 then return
