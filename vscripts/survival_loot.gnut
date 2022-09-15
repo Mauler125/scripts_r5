@@ -424,7 +424,16 @@ bool function ClientCommand_PickupSurvivalItem( entity player, array<string> arg
 	Survival_PickupItem( lootEnt, player, pickupFlags, deathBox )
 
 	if ( deathBox.GetLinkEntArray().len() == 0 )
+	{
 		deathBox.Dissolve( ENTITY_DISSOLVE_CORE, <0, 0, 0>, 500 )
+
+		thread function() : ( deathBox )
+		{
+			wait 3.0
+			if ( IsValid( deathBox ) )
+				deathBox.Destroy()
+		}()
+	}
 	else
 		UpdateDeathBoxHighlight( deathBox )
 
