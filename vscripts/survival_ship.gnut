@@ -171,8 +171,8 @@ bool function Survival_DropPlayerFromPlane( entity player, bool fromUseCallback 
 	{
 		if ( fromUseCallback )
 		{
-			int ornull funcPos = player.e.onPlayerUseButtonPressed.find( Survival_DropPlayerFromPlane_UseCallback )
-			if ( funcPos != null )
+			int funcPos = player.e.onPlayerUseButtonPressed.find( Survival_DropPlayerFromPlane_UseCallback )
+			if ( funcPos != -1 )
 				RemoveCallback_OnUseButtonPressed( player, Survival_DropPlayerFromPlane_UseCallback )
 		}
 
@@ -191,17 +191,14 @@ bool function Survival_DropPlayerFromPlane( entity player, bool fromUseCallback 
 
 	player.UnforceCrouch()
 
-	TakeAllWeapons( player )
-	DecideRespawnPlayer( player )
-
 	array<entity> squadPlayers = [ player ]
 	if ( player.GetPlayerNetBool( "isJumpmaster" ) )
 		squadPlayers = GetPlayerArrayOfTeam_Alive( player.GetTeam() )
 	
 	if ( fromUseCallback )
 	{
-		int ornull funcPos = player.e.onPlayerUseButtonPressed.find( Survival_DropPlayerFromPlane_UseCallback )
-		if ( funcPos != null )
+		int funcPos = player.e.onPlayerUseButtonPressed.find( Survival_DropPlayerFromPlane_UseCallback )
+		if ( funcPos != -1 )
 			RemoveCallback_OnUseButtonPressed( player, Survival_DropPlayerFromPlane_UseCallback )
 	}
 
@@ -220,6 +217,9 @@ bool function Survival_DropPlayerFromPlane( entity player, bool fromUseCallback 
 
 			squadPlayer.ClearParent()
 		}
+
+		TakeAllWeapons( player )
+		DecideRespawnPlayer( player )
 
 		squadPlayer.Show()
 

@@ -288,7 +288,7 @@ bool function IsValidMeleeAttackTarget( entity attacker, entity inputWeaponOrNul
 		return false
 
 	if ( IsFriendlyTeam( attacker.GetTeam(), target.GetTeam() ) )
-		return false
+		return true
 
 	if ( !attacker.DoesShareRealms( target ) )
 		return false
@@ -618,7 +618,7 @@ void function CodeCallback_OnMeleeAttackAnimEvent( entity attacker, entity melee
 		attackerKnockBackVelocity *= 0.5
 		if ( LengthSqr( attackerKnockBackVelocity ) > 0.0 && !isAttackingGround )
 		{
-			attacker.KnockBack( attackerKnockBackVelocity, 0.25 )
+			attacker.KnockBack( attackerKnockBackVelocity + attacker.GetVelocity(), 0.25 )
 		}
 
 		attacker.GrappleDetach()

@@ -606,12 +606,6 @@ string function RespawnDNA_TextOverride( entity ent )
 
 float function GetRespawnStationUseTime( entity ent )
 {
-	// switch( ent.GetTargetName() )
-	// {
-	// 	default:
-	// 		return RESPAWN_BEACON_RESPAWN_TIME
-	// }
-
 	return RESPAWN_BEACON_RESPAWN_TIME
 }
 
@@ -1041,6 +1035,7 @@ void function RespawnBeacon_PutPlayerInDropship( entity player, entity ship, int
 	player.p.respawnPod = ship
 	player.StartObserverMode( OBS_MODE_CHASE )
 	player.SetObserverTarget( ship )
+	player.SetPlayerCanToggleObserverMode(false)
 
 	ScreenFadeFromBlack( player, 1.0, 1.0 )
 
@@ -1274,8 +1269,6 @@ bool function IsRespawnStationPingType( int pingType )
 	{
 		case ePingType.RESPAWN_STATION:
 			return true
-#if false
-#endif
 	}
 
 	return false
