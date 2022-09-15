@@ -218,8 +218,8 @@ bool function Survival_DropPlayerFromPlane( entity player, bool fromUseCallback 
 			}
 		}
 
-		TakeAllWeapons( player )
-		DecideRespawnPlayer( player )
+		TakeAllWeapons( squadPlayer )
+		DecideRespawnPlayer( squadPlayer )
 
 		squadPlayer.Show()
 
