@@ -83,6 +83,7 @@ void function RespawnPlayerInDropship( entity player )
 
 	player.ForceCrouch()
 	player.Hide()
+	player.NotSolid()
 
 	player.SetPlayerNetBool( "isJumpingWithSquad", true )
 	player.SetPlayerNetBool( "playerInPlane", true )
@@ -161,6 +162,7 @@ void function Sequence_Playing()
 		Sur_SetPlaneEnt( dropship )
 
 		entity minimapPlaneEnt = CreatePropScript_NoDispatchSpawn( $"mdl/dev/empty_model.rmdl", dropship.GetOrigin(), dropship.GetAngles() )
+		minimapPlaneEnt.NotSolid()
 		minimapPlaneEnt.SetParent( dropship )
 		minimapPlaneEnt.Minimap_AlwaysShow( 0, null )
 		SetTargetName( minimapPlaneEnt, "planeEnt" )
