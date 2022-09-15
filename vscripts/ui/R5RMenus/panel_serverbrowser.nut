@@ -16,6 +16,8 @@ struct
 	var menu
 	var panel
 	var connectingpanel
+
+	bool IsFiltered = false
 } file
 
 //Struct for page system
@@ -52,6 +54,7 @@ struct ServerListing
 
 //Array for server listing
 array<ServerListing> m_vServerList
+array<ServerListing> m_vFilteredServerList
 //Used for what server you selected
 SelectedServerInfo m_vSelectedServer
 //Used for all player count
@@ -74,6 +77,8 @@ void function InitR5RServerBrowserPanel( var panel )
 	Hud_AddEventHandler( Hud_GetChild( file.panel, "ConnectButton" ), UIE_CLICK, ConnectToServer )
 	//Setup Refresh Button
 	Hud_AddEventHandler( Hud_GetChild( file.panel, "RefreshServers" ), UIE_CLICK, RefreshServersClick )
+
+	AddButtonEventHandler( Hud_GetChild( file.panel, "BtnFilterServers"), UIE_CHANGE, FilterListTextChanged )
 
 	//Add event handlers for the server buttons
 	//Clear buttontext
@@ -114,6 +119,19 @@ void function RefreshServersForEveryone()
 	RunClientScript("UICallback_RefreshServer")
 }
 
+void function FilterListTextChanged( var button )
+{
+	string text = Hud_GetUTF8Text( Hud_GetChild( file.panel, "BtnFilterServers" ) )
+
+	if(text != "") {
+		file.IsFiltered = true
+		FilterServerList(text)
+	} else {
+		file.IsFiltered = false
+		RefreshServerListing(false)
+	}
+}
+
 void function ConnectToServer(var button)
 {
 	//If server isnt selected return
@@ -131,7 +149,64 @@ void function SelectServer(var button)
 	//Get the button id and add it to the pageoffset to get the correct server id
 	int finalid = Hud_GetScriptID( button ).tointeger() + m_vPages.pOffset
 
-	SetSelectedServer(finalid, m_vServerList[finalid].svServerName, m_vServerList[finalid].svMapName, m_vServerList[finalid].svPlaylist, m_vServerList[finalid].svDescription)
+	if(file.IsFiltered)
+		SetSelectedServer(m_vFilteredServerList[finalid].svServerID, m_vFilteredServerList[finalid].svServerName, m_vFilteredServerList[finalid].svMapName, m_vFilteredServerList[finalid].svPlaylist, m_vFilteredServerList[finalid].svDescription)
+	else
+		SetSelectedServer(m_vServerList[finalid].svServerID, m_vServerList[finalid].svServerName, m_vServerList[finalid].svMapName, m_vServerList[finalid].svPlaylist, m_vServerList[finalid].svDescription)
+}
+
+void function FilterServerList(string filter)
+{
+	m_vFilteredServerList.clear()
+
+	for( int i=0; i < m_vServerList.len() && i < SB_MAX_SERVER_PER_PAGE; i++ )
+	{
+		if(m_vServerList[i].svServerName.find( filter ) >= 0)
+			m_vFilteredServerList.append(m_vServerList[i])
+	}
+
+	//Clear Server List Text, Hide no servers found ui, Reset pages
+	ResetServerLabels()
+	ShowNoServersFound(false)
+	m_vPages.pAmount = 0
+
+	// Get Server Count
+	int svServerCount = m_vFilteredServerList.len()
+
+	// If no servers then set no servers found ui and return
+	if(svServerCount == 0) {
+		// Show no servers found ui
+		ShowNoServersFound(true)
+
+		// Set selected server to none
+		SetSelectedServer(-1, "", "", "", "")
+
+		// Set servercount, playercount, pages to none
+		Hud_SetText( Hud_GetChild( file.panel, "PlayersCount"), "Players: 0")
+		Hud_SetText( Hud_GetChild( file.panel, "ServersCount"), "Servers: 0")
+		Hud_SetText (Hud_GetChild( file.panel, "Pages" ), "  Page: 0/0  ")
+
+		// Return as it dosnt need togo past this if no servers are found
+		return
+	}
+
+	// Setup Buttons and labels
+	for( int i=0; i < m_vFilteredServerList.len() && i < SB_MAX_SERVER_PER_PAGE; i++ )
+	{
+		Hud_SetText( Hud_GetChild( file.panel, "ServerName" + i ), m_vFilteredServerList[i].svServerName)
+		Hud_SetText( Hud_GetChild( file.panel, "Playlist" + i ), GetUIPlaylistName(m_vFilteredServerList[i].svPlaylist))
+		Hud_SetText( Hud_GetChild( file.panel, "Map" + i ), GetUIMapName(m_vFilteredServerList[i].svMapName))
+		Hud_SetText( Hud_GetChild( file.panel, "PlayerCount" + i ), m_vFilteredServerList[i].svCurrentPlayers + "/" + m_vFilteredServerList[i].svMaxPlayers)
+		Hud_SetVisible(Hud_GetChild( file.panel, "ServerButton" + i ), true)
+	}
+
+	// Select first server in the list
+	SetSelectedServer(m_vFilteredServerList[0].svServerID, m_vFilteredServerList[0].svServerName, m_vFilteredServerList[0].svMapName, m_vFilteredServerList[0].svPlaylist, m_vFilteredServerList[0].svDescription)
+
+	// Set UI Labels
+	Hud_SetText( Hud_GetChild( file.panel, "PlayersCount"), "Players: " + m_vAllPlayers)
+	Hud_SetText( Hud_GetChild( file.panel, "ServersCount"), "Servers: " + m_vServerList.len())
+	Hud_SetText (Hud_GetChild( file.panel, "Pages" ), "  Page: 1/" + (m_vPages.pAmount + 1) + "  ")
 }
 
 void function RefreshServerListing(bool refresh = true)
@@ -143,6 +218,7 @@ void function RefreshServerListing(bool refresh = true)
 	ResetServerLabels()
 	ShowNoServersFound(false)
 	m_vPages.pAmount = 0
+	m_vAllPlayers = 0
 
 	// Get Server Count
 	int svServerCount = GetServerCount()
@@ -175,15 +251,23 @@ void function RefreshServerListing(bool refresh = true)
 		Hud_SetText( Hud_GetChild( file.panel, "Map" + i ), GetUIMapName(m_vServerList[i].svMapName))
 		Hud_SetText( Hud_GetChild( file.panel, "PlayerCount" + i ), m_vServerList[i].svCurrentPlayers + "/" + m_vServerList[i].svMaxPlayers)
 		Hud_SetVisible(Hud_GetChild( file.panel, "ServerButton" + i ), true)
+
+		m_vAllPlayers += m_vServerList[i].svCurrentPlayers
 	}
 
 	// Select first server in the list
-	SetSelectedServer(0, m_vServerList[0].svServerName, m_vServerList[0].svMapName, m_vServerList[0].svPlaylist, m_vServerList[0].svDescription)
+	SetSelectedServer(m_vServerList[0].svServerID, m_vServerList[0].svServerName, m_vServerList[0].svMapName, m_vServerList[0].svPlaylist, m_vServerList[0].svDescription)
 
 	// Set UI Labels
 	Hud_SetText( Hud_GetChild( file.panel, "PlayersCount"), "Players: " + m_vAllPlayers)
 	Hud_SetText( Hud_GetChild( file.panel, "ServersCount"), "Servers: " + svServerCount)
 	Hud_SetText (Hud_GetChild( file.panel, "Pages" ), "  Page: 1/" + (m_vPages.pAmount + 1) + "  ")
+
+	string text = Hud_GetUTF8Text( Hud_GetChild( file.panel, "BtnFilterServers" ) )
+	if(text != "") {
+		file.IsFiltered = true
+		FilterServerList(Hud_GetUTF8Text( Hud_GetChild( file.panel, "BtnFilterServers" ) ))
+	}
 }
 
 string function ReplaceNameColors(string name)
