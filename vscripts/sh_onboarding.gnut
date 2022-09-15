@@ -242,7 +242,7 @@ wait CharSelect_GetOutroTransitionDuration()
 				EmitSoundOnEntityOnlyToPlayer( player, player, skydiveMusicID )
 			}
 
-		wait CharSelect_GetOutroSquadPresentDuration() - CharSelect_GetOutroSceneChangeDuration() / 3.5
+		wait CharSelect_GetOutroSquadPresentDuration()
 	}
 
 	thread Sequence_Prematch()
