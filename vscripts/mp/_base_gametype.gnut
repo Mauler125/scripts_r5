@@ -2044,7 +2044,7 @@ void function ClearPlayerEliminated( entity player )
 
 bool function IsPlayerEliminated( entity player )
 {
-	printt("CHECKING IF PLAYER IS ELIMINATED " + player.GetPlayerName() + " - " + player.GetPlatformUID())
+	// printt("CHECKING IF PLAYER IS ELIMINATED " + player.GetPlayerName() + " - " + player.GetPlatformUID())
 	foreach(playername, id in EliminatedPlayers)
 		if(player.GetPlayerName() == playername || id == player.GetPlatformUID())
 			return true

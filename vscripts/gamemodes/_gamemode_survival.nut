@@ -537,6 +537,10 @@ void function OnPlayerKilled( entity victim, entity attacker, var damageInfo )
 	if ( teamEliminated )
 		HandleSquadElimination( victim.GetTeam() )
 
+	// Restore weapons for deathbox
+	if ( victim.p.storedWeapons.len() > 0 )
+		RetrievePilotWeapons( victim )
+
 	int droppableItems = GetAllDroppableItems( victim ).len()
 
 	if ( canPlayerBeRespawned || droppableItems > 0 )
