@@ -398,23 +398,6 @@ void function ServerBrowser_NoServers(bool show)
 	Hud_SetVisible(Hud_GetChild( file.panel, "NoServersLbl" ), show )
 }
 
-void function ServerBrowser_JoinServer(int id)
-{
-	thread ServerBrowser_StartConnection(id)
-}
-
-void function ServerBrowser_StartConnection(int id)
-{
-	Hud_SetVisible(Hud_GetChild( file.menu, "R5RConnectingPanel"), true)
-	Hud_SetText(Hud_GetChild( GetPanel( "R5RConnectingPanel" ), "ServerName" ), m_vServerList[id].svServerName )
-
-	wait 2
-
-	Hud_SetVisible(Hud_GetChild( file.menu, "R5RConnectingPanel"), false)
-
-	SetEncKeyAndConnect(id)
-}
-
 void function ServerBrowser_SelectServer(int id, string name, string map, string playlist, string desc)
 {
 	//Set selected server info
@@ -477,4 +460,21 @@ void function ServerBrowser_EnableRefreshButton( bool show)
 {
 	Hud_SetVisible(Hud_GetChild( file.panel, "RefreshServers" ), show)
 	Hud_SetVisible(Hud_GetChild( file.panel, "RefreshServersText" ), show)
+}
+
+void function ServerBrowser_JoinServer(int id)
+{
+	thread ServerBrowser_StartConnection(id)
+}
+
+void function ServerBrowser_StartConnection(int id)
+{
+	Hud_SetVisible(Hud_GetChild( file.menu, "R5RConnectingPanel"), true)
+	Hud_SetText(Hud_GetChild( GetPanel( "R5RConnectingPanel" ), "ServerName" ), m_vServerList[id].svServerName )
+
+	wait 2
+
+	Hud_SetVisible(Hud_GetChild( file.menu, "R5RConnectingPanel"), false)
+
+	SetEncKeyAndConnect(id)
 }
