@@ -215,9 +215,6 @@ void function ServerBrowser_RefreshServerListing(bool refresh = true)
 	if (refresh)
 		RefreshServerList()
 
-	if (!IsLobby())
-		return
-
 	//Clear Server List Text, Hide no servers found ui, Reset pages
 	ServerBrowser_ResetLabels()
 	ServerBrowser_NoServers(false)

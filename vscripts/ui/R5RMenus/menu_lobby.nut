@@ -182,7 +182,7 @@ void function ShowSelectedPanel(var panel, var button)
 
 string function GetUIPlaylistName(string playlist)
 {
-	if(!IsLobby())
+	if(!IsLobby() || !IsConnected())
 		return ""
 
 	return GetPlaylistVarString( playlist, "name", playlist )
