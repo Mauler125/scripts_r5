@@ -774,8 +774,7 @@ bool function ClientCommand_Sur_EquipAttachment( entity player, array<string> ar
 	}
 
 	string modToRemove = SURVIVAL_GetModToRemoveForAttachment( player, weapon, ref )
-	if ( AttachToWeapon( player, weapon, ref, modToRemove, true, true, false, null ) )
-		SURVIVAL_RemoveFromPlayerInventory( player, ref, 1 )
+	AttachToWeapon( player, weapon, ref, modToRemove, true, true, false, null )
 
 	Remote_CallFunction_Replay( player, "ServerCallback_RefreshInventoryAndWeaponInfo" )
 
@@ -1099,7 +1098,11 @@ void function EquipAttachments_Internal( entity player, entity weapon, string it
 				AddToDeathBox( modLoot, deathBox )
 			}
 			else
-				SURVIVAL_AddToPlayerInventory( player, modToRemove, 1 )
+			{
+				bool isInventoryFull = SURVIVAL_AddToPlayerInventory( player, modToRemove, 1 ) == 0
+				if ( isInventoryFull )
+					PlayerThrowLoot( player, modToRemove )
+			}
 		}
 		else
 			PlayerThrowLoot( player, modToRemove )
