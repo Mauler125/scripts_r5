@@ -137,9 +137,11 @@ void function Bleedout_StartPlayerBleedout( entity player, entity attacker )
 
 void function Bleedout_DeathProtection( entity player )
 {
-	MakeInvincible(player)
+	if (IsValid(player))
+		MakeInvincible(player)
 	wait 1.05
-	ClearInvincible(player)
+	if (IsValid(player))
+		ClearInvincible(player)
 }
 
 void function PlayerDying( entity player )
