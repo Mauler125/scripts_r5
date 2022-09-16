@@ -1327,7 +1327,7 @@ void function SURVIVAL_GiveMainWeapon( entity player, entity pickup, entity acti
 
 vector function GetThrowOrigin( entity player )
 {
-	return player.CameraPosition()
+	return player.EyePosition() + player.GetViewVector() * 10
 }
 
 entity function SpawnGenericLoot( string ref, vector origin, vector angles, int count )
@@ -1340,6 +1340,7 @@ entity function SpawnGenericLoot( string ref, vector origin, vector angles, int 
 
 	//loot.kv.solid = SOLID_VPHYSICS
 
+	loot.NotSolid()
 	loot.SetUsable()
 	loot.SetFadeDistance( 20000 )
 	loot.AddUsableValue( USABLE_CUSTOM_HINTS | USABLE_BY_OWNER | USABLE_BY_PILOTS | USABLE_BY_ENEMIES )
@@ -1498,12 +1499,14 @@ void function FakePhysicsThrow( entity player, entity drop, vector forward, bool
 	drop.SetParent( physics )
 
 	physics.Hide()
+	physics.NotSolid()
 
 	physics.SetVelocity( forward )
 
 	thread function () : ( drop, physics )
 	{
-		wait 5.0
+		while ( IsValid( drop ) && IsValid( physics ) && !physics.IsOnGround() )
+			wait 0.1
 
 		if ( IsValid( drop ) )
 			drop.ClearParent()
