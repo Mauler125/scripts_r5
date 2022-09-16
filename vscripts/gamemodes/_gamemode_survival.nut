@@ -589,8 +589,11 @@ void function OnClientConnected( entity player )
 					PlayerStartSpectating( player, null )
 				else
 				{
-					array<entity> respawnCandidates = isAlone ? GetPlayerArray_AliveConnected() : playerTeam
+					array<entity> respawnCandidates = isAlone ? [ GetEnt( "info_player_start" ) ] : playerTeam
 					respawnCandidates.fastremovebyvalue( player )
+
+					if ( isAlone && !IsValid( respawnCandidates[0] ) )
+						respawnCandidates = GetPlayerArray_AliveConnected()
 
 					if ( respawnCandidates.len() == 0 )
 						break
