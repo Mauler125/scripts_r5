@@ -89,6 +89,7 @@ void function SV_Survival_Loot_Init()
 	AddClientCommandCallback( "Sur_EquipOrdnance", ClientCommand_Sur_EquipOrdnance )
 
 	AddClientCommandCallback( "PickupSurvivalItem", ClientCommand_PickupSurvivalItem )
+	AddClientCommandCallback( "SwapSurvivalItem", ClientCommand_SwapSurvivalItem )
 
 	SetCallback_OnPlayerReload( OnWeaponReload )
 	AddCallback_OnWeaponAttack( OnWeaponAttack_OrdnanceControl )
@@ -112,17 +113,18 @@ void function LoadLootZonesForMap()
 {
 	array<entity> lzEnts = GetEntArrayByClass_Expensive( "script_ref" )
 
-	foreach( lzEnt in lzEnts )
+	foreach ( lzEnt in lzEnts )
 	{
-		if( GetEditorClass( lzEnt ) != "info_survival_loot_zone" )
+		if ( GetEditorClass( lzEnt ) != "info_survival_loot_zone" )
 			continue
 
 		LootZone zone
 		zone.origin = lzEnt.GetOrigin()
-				zone.radius = float(lzEnt.kv.script_radius)
-				zone.height = float(lzEnt.kv.script_height)
-				zone.ref = string(lzEnt.kv.zone_class)
-		switch( lzEnt.kv.zone_class )
+		zone.radius = float(lzEnt.kv.script_radius)
+		zone.height = float(lzEnt.kv.script_height)
+		zone.ref = string(lzEnt.kv.zone_class)
+
+		switch ( lzEnt.kv.zone_class )
 		{
 			case "zone_hotzone":
 				zone.zoneClass = eLootZoneClass.ZONE_HOTZONE
@@ -140,27 +142,28 @@ void function LoadLootZonesForMap()
 			default:
 				zone.zoneClass = eLootZoneClass.ZONE_NONE
 		}
+
 		file.lootZones.append( zone )
 	}
 
-	if(file.lootZones.len() == 0)
+	if ( file.lootZones.len() == 0 )
 	{
-			FlagSet( "Survival_LootZonesLoaded" )
-			return
+		FlagSet( "Survival_LootZonesLoaded" )
+		return
 	}
 
 	if ( !GetCurrentPlaylistVarBool( "ground_loot_enable", true ) || !GetCurrentPlaylistVarBool( "hot_zone_enable", true ) )
 	{
-			FlagSet( "Survival_LootZonesLoaded" )
-			return
+		FlagSet( "Survival_LootZonesLoaded" )
+		return
 	}
 	array<LootZone> hotZones
 
 	lzEnts = GetEntArrayByClass_Expensive( "script_ref" )
 
-	foreach( lzEnt in lzEnts )
+	foreach ( lzEnt in lzEnts )
 	{
-		if( GetEditorClass( lzEnt ) != "info_survival_loot_hotzone" )
+		if ( GetEditorClass( lzEnt ) != "info_survival_loot_hotzone" )
 			continue
 
 		LootZone zone
@@ -169,16 +172,16 @@ void function LoadLootZonesForMap()
 		zone.height = float(lzEnt.kv.script_height)
 		zone.zoneClass = eLootZoneClass.ZONE_HOTZONE
 
-	hotZones.append( zone )
+		hotZones.append( zone )
 	}
 
-	if(hotZones.len() == 0)
+	if ( hotZones.len() == 0 )
 	{
 		FlagSet( "Survival_LootZonesLoaded" )
 		return
 	}
 
-	//The hotzone
+	// The hotzone
 	LootZone hotZone = hotZones.getrandom()
 
 	file.hotZone.origin = hotZone.origin
@@ -423,10 +426,107 @@ bool function ClientCommand_PickupSurvivalItem( entity player, array<string> arg
 
 	Survival_PickupItem( lootEnt, player, pickupFlags, deathBox )
 
-	if ( deathBox.GetLinkEntArray().len() == 0 )
-		deathBox.Dissolve( ENTITY_DISSOLVE_CORE, <0, 0, 0>, 500 )
+	if ( deathBox != null )
+	{
+		if ( deathBox.GetLinkEntArray().len() == 0 )
+		{
+			deathBox.Dissolve( ENTITY_DISSOLVE_CORE, <0, 0, 0>, 500 )
+
+			thread function() : ( deathBox )
+			{
+				wait 3.0
+				if ( IsValid( deathBox ) )
+					deathBox.Destroy()
+			}()
+		}
+		else
+			UpdateDeathBoxHighlight( deathBox )
+	}
+
+	Remote_CallFunction_Replay( player, "ServerCallback_RefreshInventoryAndWeaponInfo" )
+
+	return true
+}
+
+bool function ClientCommand_SwapSurvivalItem( entity player, array<string> args )
+{
+	if ( !IsValid( player ) || !IsAlive( player ) )
+		return true
+
+	if ( args.len() < 2 )
+		return true
+
+	int backpackSlot = int( args[0] )
+	if ( backpackSlot < 0 )
+		return true
+
+	array<ConsumableInventoryItem> playerInventory = player.ConsumableInventory_Get()
+	if ( playerInventory.len() <= backpackSlot )
+		return true
+
+	ConsumableInventoryItem itemToThrow = playerInventory[backpackSlot]
+	LootData itemToThrowData = SURVIVAL_Loot_GetLootDataByIndex( itemToThrow.type )
+
+	int lootEntEEH = int( args[1] )
+	if ( lootEntEEH == -1 )
+		return true
+
+	entity lootEnt = GetEntityFromEncodedEHandle( lootEntEEH )
+	if ( !IsValid( lootEnt ) )
+		return true
+
+	if ( lootEnt.GetNetworkedClassName() != "prop_survival" )
+		return true
+
+	if ( !SURVIVAL_CanPlayerPickup( player, lootEnt ) )
+		return true
+
+	entity deathBox = null
+	if ( args.len() > 2 )
+	{
+		int deathBoxEEH = int( args[2] )
+		if ( deathBoxEEH  == -1 )
+			return true
+
+		deathBox = GetEntityFromEncodedEHandle( deathBoxEEH )
+		if ( !IsValid( deathBox ) )
+			return true
+
+		if ( deathBox.GetNetworkedClassName() != "prop_death_box" )
+			return true
+
+		if ( !deathBox.GetLinkEntArray().contains( lootEnt ) )
+			return true
+	}
+
+	if ( deathBox != null )
+	{
+		SURVIVAL_RemoveFromPlayerInventory( player, itemToThrowData.ref, itemToThrow.count )
+
+		entity modLoot = SpawnGenericLoot( itemToThrowData.ref, deathBox.GetOrigin(), deathBox.GetAngles(), itemToThrow.count )
+		AddToDeathBox( modLoot, deathBox )
+	}
 	else
-		UpdateDeathBoxHighlight( deathBox )
+		SURVIVAL_DropBackpackItem( player, itemToThrowData.ref, itemToThrow.count )
+
+	Survival_PickupItem( lootEnt, player, 0, deathBox )
+
+	if ( deathBox != null )
+	{
+		if ( deathBox.GetLinkEntArray().len() == 0 )
+		{
+			deathBox.Dissolve( ENTITY_DISSOLVE_CORE, <0, 0, 0>, 500 )
+
+			thread function() : ( deathBox )
+			{
+				wait 3.0
+				if ( IsValid( deathBox ) )
+					deathBox.Destroy()
+			}()
+		}
+		else
+			UpdateDeathBoxHighlight( deathBox )
+	}
 
 	Remote_CallFunction_Replay( player, "ServerCallback_RefreshInventoryAndWeaponInfo" )
 
@@ -763,8 +863,7 @@ bool function ClientCommand_Sur_EquipAttachment( entity player, array<string> ar
 	}
 
 	string modToRemove = SURVIVAL_GetModToRemoveForAttachment( player, weapon, ref )
-	if ( AttachToWeapon( player, weapon, ref, modToRemove, true, true, false, null ) )
-		SURVIVAL_RemoveFromPlayerInventory( player, ref, 1 )
+	AttachToWeapon( player, weapon, ref, modToRemove, true, true, false, null )
 
 	Remote_CallFunction_Replay( player, "ServerCallback_RefreshInventoryAndWeaponInfo" )
 
@@ -1088,7 +1187,11 @@ void function EquipAttachments_Internal( entity player, entity weapon, string it
 				AddToDeathBox( modLoot, deathBox )
 			}
 			else
-				SURVIVAL_AddToPlayerInventory( player, modToRemove, 1 )
+			{
+				bool isInventoryFull = SURVIVAL_AddToPlayerInventory( player, modToRemove, 1 ) == 0
+				if ( isInventoryFull )
+					PlayerThrowLoot( player, modToRemove )
+			}
 		}
 		else
 			PlayerThrowLoot( player, modToRemove )
@@ -1318,7 +1421,7 @@ void function SURVIVAL_GiveMainWeapon( entity player, entity pickup, entity acti
 
 vector function GetThrowOrigin( entity player )
 {
-	return player.CameraPosition()
+	return player.EyePosition() + player.GetViewVector() * 10
 }
 
 entity function SpawnGenericLoot( string ref, vector origin, vector angles, int count )
@@ -1331,6 +1434,7 @@ entity function SpawnGenericLoot( string ref, vector origin, vector angles, int 
 
 	//loot.kv.solid = SOLID_VPHYSICS
 
+	loot.NotSolid()
 	loot.SetUsable()
 	loot.SetFadeDistance( 20000 )
 	loot.AddUsableValue( USABLE_CUSTOM_HINTS | USABLE_BY_OWNER | USABLE_BY_PILOTS | USABLE_BY_ENEMIES )
@@ -1490,18 +1594,21 @@ void function FakePhysicsThrow( entity player, entity drop, vector forward, bool
 
 	physics.Hide()
 
+	drop.NotSolid()
+	physics.NotSolid()
+
 	physics.SetVelocity( forward )
 
-	thread function () : ( drop, physics )
+	/*thread function () : ( drop, physics )
 	{
-		wait 5.0
+		wait 2.0
 
 		if ( IsValid( drop ) )
 			drop.ClearParent()
 
 		if ( IsValid( physics ) )
 			physics.Destroy()
-	}()
+	}()*/
 }
 
 void function SURVIVAL_GivePlayerEquipment( entity player, string newEquip, int value )

@@ -1538,6 +1538,17 @@ void function MapConVar_Init()
 			SetConVarFloat( "mat_sun_scale", 1.0 )
 			SetConVarString( "mat_sun_color", "1.0 1.5 2.0 1.0" )
 			break
+		case "mp_rr_desertlands_64k_x_64k_tt":
+			SetConVarFloat( "mat_autoexposure_max", 1.0 )
+			SetConVarFloat( "mat_autoexposure_max_multiplier", 0.6 )
+			SetConVarFloat( "mat_autoexposure_min", 0.1 )
+			SetConVarFloat( "mat_autoexposure_min_multiplier", 1.0 )
+
+			SetConVarFloat( "mat_sky_scale", 1.0 )
+			SetConVarString( "mat_sky_color", "2.1 1.8 1.5 1" )
+			SetConVarFloat( "mat_sun_scale", 2.0 )
+			SetConVarString( "mat_sun_color", "1.1 0.8 0.5 1" )
+			break
 		default:
 			SetConVarToDefault( "mat_autoexposure_max" )
 			SetConVarToDefault( "mat_autoexposure_max_multiplier" )

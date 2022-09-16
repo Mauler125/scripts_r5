@@ -83,6 +83,7 @@ void function RespawnPlayerInDropship( entity player )
 
 	player.ForceCrouch()
 	player.Hide()
+	player.NotSolid()
 
 	player.SetPlayerNetBool( "isJumpingWithSquad", true )
 	player.SetPlayerNetBool( "playerInPlane", true )
@@ -161,6 +162,7 @@ void function Sequence_Playing()
 		Sur_SetPlaneEnt( dropship )
 
 		entity minimapPlaneEnt = CreatePropScript_NoDispatchSpawn( $"mdl/dev/empty_model.rmdl", dropship.GetOrigin(), dropship.GetAngles() )
+		minimapPlaneEnt.NotSolid()
 		minimapPlaneEnt.SetParent( dropship )
 		minimapPlaneEnt.Minimap_AlwaysShow( 0, null )
 		SetTargetName( minimapPlaneEnt, "planeEnt" )
@@ -537,6 +539,10 @@ void function OnPlayerKilled( entity victim, entity attacker, var damageInfo )
 	if ( teamEliminated )
 		HandleSquadElimination( victim.GetTeam() )
 
+	// Restore weapons for deathbox
+	if ( victim.p.storedWeapons.len() > 0 )
+		RetrievePilotWeapons( victim )
+
 	int droppableItems = GetAllDroppableItems( victim ).len()
 
 	if ( canPlayerBeRespawned || droppableItems > 0 )
@@ -583,8 +589,11 @@ void function OnClientConnected( entity player )
 					PlayerStartSpectating( player, null )
 				else
 				{
-					array<entity> respawnCandidates = isAlone ? GetPlayerArray_AliveConnected() : playerTeam
+					array<entity> respawnCandidates = isAlone ? [ GetEnt( "info_player_start" ) ] : playerTeam
 					respawnCandidates.fastremovebyvalue( player )
+
+					if ( isAlone && !IsValid( respawnCandidates[0] ) )
+						respawnCandidates = GetPlayerArray_AliveConnected()
 
 					if ( respawnCandidates.len() == 0 )
 						break

@@ -9,6 +9,7 @@ global function Bleedout_AddCallback_OnPlayerGotFirstAid // dump
 global function Bleedout_GetBleedoutAttacker
 global function Bleedout_GetBleedoutDamageInfo
 
+global table<string, string> EliminatedPlayers = {}
 const asset FX_BLOODTRAIL = $"skit_blood_decal_LG"
 const float BLEEDOUT_MAX_USE_DIST2_MOD = 64 * 64
 
@@ -108,7 +109,7 @@ void function Bleedout_StartPlayerBleedout( entity player, entity attacker )
 	file.lastAttacker[ player ] = attacker
 
 	thread Bleedout_DeathProtection( player )
-
+	SetPlayerEliminated( player )
 	player.SetPlayerNetInt( "bleedoutType", EquipmentSlot_GetEquipmentTier( player, "incapshield" ) )
 	player.SetHealth( 100 )
 
@@ -136,9 +137,11 @@ void function Bleedout_StartPlayerBleedout( entity player, entity attacker )
 
 void function Bleedout_DeathProtection( entity player )
 {
-	MakeInvincible(player)
+	if (IsValid(player))
+		MakeInvincible(player)
 	wait 1.05
-	ClearInvincible(player)
+	if (IsValid(player))
+		ClearInvincible(player)
 }
 
 void function PlayerDying( entity player )
@@ -163,7 +166,6 @@ void function PlayerDying( entity player )
 	player.SetUseDoomedAnims(true)
 	player.ForceCrouch()
 	player.SetOneHandedWeaponUsageOn()
-
 	BleedoutState_SetPlayerBleedoutState( player, BS_BLEEDING_OUT )
 
 	float bleedoutEndTime = Time() + bleedoutTime
@@ -262,11 +264,6 @@ void function EnablePlayerRes( entity player )
 	player.EndSignal( "OnDeath" )
 	player.EndSignal( "BleedOut_OnStartDying" )
 	player.EndSignal( "BleedOut_OnRevive" )
-
-	//Highlight_SetFriendlyHighlight( player, "interact_object_los_line" )
-
-	if ( IsPilotEliminationBased() )
-		SetPlayerEliminated( player )
 
 	OnThreadEnd(
 	function() : ( player )
@@ -526,7 +523,7 @@ void function PlayerAttemptRes( entity playerHealer, entity playerToRes )
 	reviverSequence.useAnimatedRefAttachment = false
 	reviverSequence.thirdPersonCameraAttachments = ["VDU"]
 	reviverSequence.thirdPersonCameraVisibilityChecks = true
-	reviverSequence.playerPushable = true
+	reviverSequence.playerPushable = false
 	reviverSequence.snapPlayerFeetToEyes = false
 
 	FirstPersonSequenceStruct toResSequence
@@ -629,7 +626,7 @@ void function CheckForTeamBleedout( int team )
 	array<entity> teamPlayers = GetPlayerArrayOfTeam( team )
 	foreach ( entity teamPlayer in teamPlayers )
 	{
-		if ( IsAlive( teamPlayer ) && !file.isBleeding[ teamPlayer ] )
+		if ( IsAlive( teamPlayer ) && !file.isBleeding[ teamPlayer ] || Bleedout_GetSelfResEnabled( teamPlayer ) )
 			return
 	}
 

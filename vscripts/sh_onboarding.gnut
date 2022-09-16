@@ -160,7 +160,7 @@ void function Sequence_PickLoadout()
 			string skydiveMusicID = MusicPack_GetSkydiveMusic( musicPack )
 			StopMusicOnPlayer( player, skydiveMusicID )
 
-			CharacterSelect_TryAssignCharacterCandidatesToPlayer( player, [] ) // No candidates to force it to pick a random legend.
+			if(GameRules_GetGameMode() != "custom_tdm"){CharacterSelect_TryAssignCharacterCandidatesToPlayer( player, [] ) }// No candidates to force it to pick a random legend.
 		}
 
 		thread Sequence_Prematch()
@@ -195,7 +195,7 @@ void function Sequence_PickLoadout()
 	{
 		float startTime = Time()
 
-		float timeSpentOnSelection = Survival_GetCharacterSelectDuration( pickIndex ) + CharSelect_GetPickingDelayAfterEachLock()
+		float timeSpentOnSelection = Survival_GetCharacterSelectDuration( pickIndex )
 		if ( pickIndex == 0 )
 			timeSpentOnSelection += CharSelect_GetPickingDelayOnFirst()
 
@@ -219,6 +219,8 @@ void function Sequence_PickLoadout()
 					ItemFlavor_GetGUID( selectedCharacter ) // Currently selected loadout character
 				] )
 		}
+
+		wait CharSelect_GetPickingDelayAfterEachLock()
 	}
 
 	// Reset selection step to lock all character selection loadout slots
@@ -325,41 +327,53 @@ void function TakeLoadoutRelatedWeapons( entity player )
 	ItemFlavor character = LoadoutSlot_GetItemFlavor( ToEHI( player ), Loadout_CharacterClass() )
 
 	// Shared
-	player.TakeOffhandWeapon( OFFHAND_SLOT_FOR_CONSUMABLES )
+	if(IsValid(player.GetOffhandWeapon( OFFHAND_SLOT_FOR_CONSUMABLES )))
+		player.TakeOffhandWeapon( OFFHAND_SLOT_FOR_CONSUMABLES )
 
 	// Loadout meleeskin
-	player.TakeNormalWeaponByIndexNow( WEAPON_INVENTORY_SLOT_PRIMARY_2 )
-	player.TakeOffhandWeapon( OFFHAND_MELEE )
+	if(IsValid(player.GetNormalWeapon( WEAPON_INVENTORY_SLOT_PRIMARY_2 )))
+		player.TakeNormalWeaponByIndexNow( WEAPON_INVENTORY_SLOT_PRIMARY_2 )
+	
+	if(IsValid(player.GetOffhandWeapon( OFFHAND_SLOT_FOR_CONSUMABLES )))
+		player.TakeOffhandWeapon( OFFHAND_MELEE )
 
 	// Character related
-	player.TakeOffhandWeapon( OFFHAND_TACTICAL )
-	player.TakeOffhandWeapon( OFFHAND_ULTIMATE )
+	if(IsValid(player.GetOffhandWeapon( OFFHAND_TACTICAL )))
+		player.TakeOffhandWeapon( OFFHAND_TACTICAL )
+	if(IsValid(player.GetOffhandWeapon( OFFHAND_ULTIMATE )))
+		player.TakeOffhandWeapon( OFFHAND_ULTIMATE )
 
 	ItemFlavor passiveAbility = CharacterClass_GetPassiveAbility( character )
-	TakePassive( player, CharacterAbility_GetPassiveIndex( passiveAbility ) )
+	if(GameRules_GetGameMode() == SURVIVAL)
+		TakePassive( player, CharacterAbility_GetPassiveIndex( passiveAbility ) )
 }
 
 void function GiveLoadoutRelatedWeapons( entity player )
 {
+	TakeLoadoutRelatedWeapons(player)
+	
 	ItemFlavor character = LoadoutSlot_GetItemFlavor( ToEHI( player ), Loadout_CharacterClass() )
-
-	// Shared
+	ItemFlavor tactical = CharacterClass_GetTacticalAbility( character )
+	ItemFlavor ultimate = CharacterClass_GetUltimateAbility( character )
+	ItemFlavor passive = CharacterClass_GetPassiveAbility( character )
+	
 	player.GiveOffhandWeapon( CONSUMABLE_WEAPON_NAME, OFFHAND_SLOT_FOR_CONSUMABLES, [] )
-
-	// Loadout meleeskin
-	ItemFlavor meleeSkin = LoadoutSlot_GetItemFlavor( ToEHI( player ), Loadout_MeleeSkin( character ) )
-	player.GiveWeapon( MeleeSkin_GetMainWeaponClassname( meleeSkin ), WEAPON_INVENTORY_SLOT_PRIMARY_2, [] )
-	player.GiveOffhandWeapon( MeleeSkin_GetOffhandWeaponClassname( meleeSkin ), OFFHAND_MELEE, [] )
-
-	// Character related
-	ItemFlavor tacticalAbility = CharacterClass_GetTacticalAbility( character )
-	player.GiveOffhandWeapon( CharacterAbility_GetWeaponClassname( tacticalAbility ), OFFHAND_TACTICAL, [] )
-
-	ItemFlavor ultimateAbility = CharacterClass_GetUltimateAbility( character )
-	player.GiveOffhandWeapon( CharacterAbility_GetWeaponClassname( ultimateAbility ), OFFHAND_ULTIMATE, [] )
-
-	ItemFlavor passiveAbility = CharacterClass_GetPassiveAbility( character )
-	GivePassive( player, CharacterAbility_GetPassiveIndex( passiveAbility ) )
+	player.GiveOffhandWeapon( CharacterAbility_GetWeaponClassname( tactical ), OFFHAND_TACTICAL, [] )
+	player.GiveOffhandWeapon( CharacterAbility_GetWeaponClassname( ultimate ), OFFHAND_ULTIMATE, [] )
+	
+	if(GameRules_GetGameMode() == SURVIVAL)
+		GivePassive( player, CharacterAbility_GetPassiveIndex( passive ) )
+	
+	if(GetCurrentPlaylistVarBool( "enable_bolo_heirloom", false ))
+	{
+		player.GiveWeapon( "mp_weapon_bolo_sword_primary", WEAPON_INVENTORY_SLOT_PRIMARY_2, [] )
+		player.GiveOffhandWeapon( "melee_bolo_sword", OFFHAND_MELEE, [] )
+	}
+	else
+	{
+		player.GiveWeapon( "mp_weapon_melee_survival", WEAPON_INVENTORY_SLOT_PRIMARY_2, [] )
+		player.GiveOffhandWeapon( "melee_pilot_emptyhanded", OFFHAND_MELEE, [] )
+	}
 }
 
 void function DecideRespawnPlayer( entity player, bool giveLoadoutWeapons = true )
@@ -379,12 +393,14 @@ void function DecideRespawnPlayer( entity player, bool giveLoadoutWeapons = true
 		if ( GetCurrentPlaylistVarBool( playlistVar, false ) )
 			enabledMods.append( modName )
 
+	DoRespawnPlayer( player, null )
+
 	ItemFlavor playerCharacter = LoadoutSlot_GetItemFlavor( ToEHI( player ), Loadout_CharacterClass() )
 	asset characterSetFile = CharacterClass_GetSetFile( playerCharacter )
 
 	player.SetPlayerSettingsWithMods( characterSetFile, enabledMods )
 
-	DoRespawnPlayer( player, null )
+	Remote_CallFunction_NonReplay( player, "ServerCallback_YouRespawned" )
 
 	PlayerStopSpectating( player )
 
@@ -399,7 +415,9 @@ void function DecideRespawnPlayer( entity player, bool giveLoadoutWeapons = true
 	player.SetPlayerNetInt( "respawnStatus", eRespawnStatus.NONE )
 
 	player.SetPlayerNetBool( "pingEnabled", true )
-	player.SetHealth( 100 )
+	player.SetHealth( player.GetMaxHealth() )
+
+	UpdatePlayerCounts()
 }
 #endif
 
@@ -484,8 +502,10 @@ void function OnPlayerKilled( entity victim, entity attacker, var damageInfo )
 
 	UpdatePlayerCounts()
 
-	if ( attacker.IsPlayer() && victim.IsPlayer() )
+	if ( attacker.IsPlayer() && victim.IsPlayer() && attacker != victim )
 		attacker.SetPlayerNetInt( "kills", attacker.GetPlayerNetInt( "kills" ) + 1 )
+
+	Remote_CallFunction_NonReplay( victim, "ServerCallback_YouDied", attacker, GetHealthFrac( victim ), DamageInfo_GetDamageSourceIdentifier( damageInfo ), DamageInfo_GetDamage( damageInfo ) )
 }
 
 void function OnClientConnected( entity player )
@@ -550,8 +570,16 @@ void function OnCharacterSkinChanged( EHI playerEHI, ItemFlavor flavor )
 
 void function UpdatePlayerCounts()
 {
-	SetGlobalNetInt( "livingPlayerCount", GetPlayerArray_AliveConnected().len() )
-	SetGlobalNetInt( "squadsRemainingCount", GetNumTeamsRemaining() )
+	string currGameMode = GameRules_GetGameMode()
+	if(currGameMode == "custom_tdm"){
+		array<entity> connectedPlayers = GetPlayerArray_ConnectedNotSpectatorTeam()
+		SetGlobalNetInt( "livingPlayerCount", GetPlayerArray().len() )
+		SetGlobalNetInt( "squadsRemainingCount", GetPlayerArray().len() )
+	
+	} else {
+		SetGlobalNetInt( "livingPlayerCount", GetPlayerArray_AliveConnected().len() )
+		SetGlobalNetInt( "squadsRemainingCount", GetNumTeamsRemaining() )
+	}
 }
 #endif
 
