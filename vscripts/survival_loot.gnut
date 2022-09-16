@@ -112,17 +112,18 @@ void function LoadLootZonesForMap()
 {
 	array<entity> lzEnts = GetEntArrayByClass_Expensive( "script_ref" )
 
-	foreach( lzEnt in lzEnts )
+	foreach ( lzEnt in lzEnts )
 	{
-		if( GetEditorClass( lzEnt ) != "info_survival_loot_zone" )
+		if ( GetEditorClass( lzEnt ) != "info_survival_loot_zone" )
 			continue
 
 		LootZone zone
 		zone.origin = lzEnt.GetOrigin()
-				zone.radius = float(lzEnt.kv.script_radius)
-				zone.height = float(lzEnt.kv.script_height)
-				zone.ref = string(lzEnt.kv.zone_class)
-		switch( lzEnt.kv.zone_class )
+		zone.radius = float(lzEnt.kv.script_radius)
+		zone.height = float(lzEnt.kv.script_height)
+		zone.ref = string(lzEnt.kv.zone_class)
+
+		switch ( lzEnt.kv.zone_class )
 		{
 			case "zone_hotzone":
 				zone.zoneClass = eLootZoneClass.ZONE_HOTZONE
@@ -140,27 +141,28 @@ void function LoadLootZonesForMap()
 			default:
 				zone.zoneClass = eLootZoneClass.ZONE_NONE
 		}
+
 		file.lootZones.append( zone )
 	}
 
-	if(file.lootZones.len() == 0)
+	if ( file.lootZones.len() == 0 )
 	{
-			FlagSet( "Survival_LootZonesLoaded" )
-			return
+		FlagSet( "Survival_LootZonesLoaded" )
+		return
 	}
 
 	if ( !GetCurrentPlaylistVarBool( "ground_loot_enable", true ) || !GetCurrentPlaylistVarBool( "hot_zone_enable", true ) )
 	{
-			FlagSet( "Survival_LootZonesLoaded" )
-			return
+		FlagSet( "Survival_LootZonesLoaded" )
+		return
 	}
 	array<LootZone> hotZones
 
 	lzEnts = GetEntArrayByClass_Expensive( "script_ref" )
 
-	foreach( lzEnt in lzEnts )
+	foreach ( lzEnt in lzEnts )
 	{
-		if( GetEditorClass( lzEnt ) != "info_survival_loot_hotzone" )
+		if ( GetEditorClass( lzEnt ) != "info_survival_loot_hotzone" )
 			continue
 
 		LootZone zone
@@ -169,16 +171,16 @@ void function LoadLootZonesForMap()
 		zone.height = float(lzEnt.kv.script_height)
 		zone.zoneClass = eLootZoneClass.ZONE_HOTZONE
 
-	hotZones.append( zone )
+		hotZones.append( zone )
 	}
 
-	if(hotZones.len() == 0)
+	if ( hotZones.len() == 0 )
 	{
 		FlagSet( "Survival_LootZonesLoaded" )
 		return
 	}
 
-	//The hotzone
+	// The hotzone
 	LootZone hotZone = hotZones.getrandom()
 
 	file.hotZone.origin = hotZone.origin
@@ -1499,11 +1501,13 @@ void function FakePhysicsThrow( entity player, entity drop, vector forward, bool
 	drop.SetParent( physics )
 
 	physics.Hide()
+
+	drop.NotSolid()
 	physics.NotSolid()
 
 	physics.SetVelocity( forward )
 
-	thread function () : ( drop, physics )
+	/*thread function () : ( drop, physics )
 	{
 		wait 2.0
 
@@ -1512,7 +1516,7 @@ void function FakePhysicsThrow( entity player, entity drop, vector forward, bool
 
 		if ( IsValid( physics ) )
 			physics.Destroy()
-	}()
+	}()*/
 }
 
 void function SURVIVAL_GivePlayerEquipment( entity player, string newEquip, int value )
