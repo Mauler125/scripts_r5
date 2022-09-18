@@ -4561,18 +4561,18 @@ bool function PlayerIsInADS( entity player )
 	return activeWeapon.IsWeaponAdsButtonPressed() || activeWeapon.IsWeaponInAds()
 }
 
-//bool function PlayerIsInMeleeBlockingADS( entity player )
-//{
-//	entity activeWeapon = player.GetActiveWeapon( eActiveInventorySlot.mainHand )
-//
-//	if ( !IsValid( activeWeapon ) )
-//		return false
-//
-//	if ( activeWeapon.GetWeaponSettingBool( eWeaponVar.attack_button_presses_melee ) )
-//		return false
-//
-//	return activeWeapon.IsWeaponAdsButtonPressed() || activeWeapon.IsWeaponInAds()
-//}
+bool function PlayerIsInMeleeBlockingADS( entity player )
+{
+	entity activeWeapon = player.GetActiveWeapon( eActiveInventorySlot.mainHand )
+
+	if ( !IsValid( activeWeapon ) )
+		return false
+
+	if ( activeWeapon.GetWeaponSettingBool( eWeaponVar.attack_button_presses_melee ) )
+		return false
+
+	return activeWeapon.IsWeaponAdsButtonPressed() || activeWeapon.IsWeaponInAds()
+}
 
 
 //////

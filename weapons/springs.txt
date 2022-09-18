@@ -1108,6 +1108,39 @@ WeaponSprings
 		"ADS_roll_damping"				"20"
 	}
 
+    dragon_lmg_vkp
+    {
+        "hipfire_pitch_springConstant"	"70.0"
+        "hipfire_pitch_damping"			"20.0"
+        "hipfire_yaw_springConstant"	"75.0"
+        "hipfire_yaw_damping"			"17.0"
+        "hipfire_roll_springConstant"	"400.0"
+        "hipfire_roll_damping"			"16.0"
+
+        "ADS_pitch_springConstant"		"85.0"
+        "ADS_pitch_damping"				"13.0"
+        "ADS_yaw_springConstant"		"50.0"
+        "ADS_yaw_damping"				"13.0"
+        "ADS_roll_springConstant"		"400.0"
+        "ADS_roll_damping"				"16.0"
+    }
+    dragon_lmg_vkp_hot
+    {
+        "hipfire_pitch_springConstant"	"0.0"
+        "hipfire_pitch_damping"			"30.0"
+        "hipfire_yaw_springConstant"	"0.0"
+        "hipfire_yaw_damping"			"30.0"
+        "hipfire_roll_springConstant"	"20000.0"
+        "hipfire_roll_damping"			"16.0"
+
+        "ADS_pitch_springConstant"		"0.0"
+        "ADS_pitch_damping"				"35.0"
+        "ADS_yaw_springConstant"		"0.0"
+        "ADS_yaw_damping"				"40.0"
+        "ADS_roll_springConstant"		"20000.0"
+        "ADS_roll_damping"				"16.0"
+    }
+
 	shotgun
 	{
 		"hipfire_pitch_springConstant"	"350.0"

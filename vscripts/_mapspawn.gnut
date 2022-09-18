@@ -175,7 +175,7 @@ void function CodeCallback_MapSpawn() // original script entry point
 {
 	ShWeapons_LevelInit()
 	//seterrorhandler(void function() {})
-	ScriptCompilerTest()
+	//ScriptCompilerTest()
 	LoadDiamond()
 	MapTriggers_Init()
 
@@ -269,6 +269,7 @@ void function CodeCallback_MapSpawn() // original script entry point
 	PrecacheWeapon( $"mp_weapon_g2" )
 	PrecacheWeapon( $"mp_weapon_grenade_bangalore" )
 	PrecacheWeapon( $"mp_weapon_car" )
+	PrecacheWeapon( $"mp_weapon_dragon_lmg" )
 	PrecacheWeapon( $"mp_weapon_incap_shield" )
 	PrecacheWeapon( $"mp_ability_care_package" )
 	PrecacheWeapon( $"mp_ability_hunt_mode" )
