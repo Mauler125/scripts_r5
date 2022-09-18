@@ -37,8 +37,8 @@ void function SetupRUI()
 	var statusRui = Hud_GetRui( Hud_GetChild( file.panel, "Status" ) )
 
 	// setup StatusDetails ui
-	RuiSetString( statusDetailsRui, "details", "Press Enter to continue" )
-	RuiSetBool( statusDetailsRui, "isVisible", true )
+	// RuiSetString( statusDetailsRui, "details", "Press Enter to continue" )
+	// RuiSetBool( statusDetailsRui, "isVisible", true )
 	RuiSetGameTime( statusDetailsRui, "initTime", Time() )
 
 	// setup Status ui
