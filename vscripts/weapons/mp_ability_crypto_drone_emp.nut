@@ -174,13 +174,6 @@ void function DroneFireEMP_Thread( entity weapon, entity camera, array<entity> t
 
 	foreach(entity target in GetTargets(pos, EMP_RADIUS))
 	{
-		if ( target.GetScriptName() == "domeOfProtection" )
-			DestroyBubbleShield( target )
-			StopSoundOnEntity( target, "Gibraltar_BubbleShield_Sustain" )
-			EmitSoundOnEntity( target, "Gibraltar_BubbleShield_Ending" )
-
-		if ( target.GetScriptName() == "deployable_medic" )
-			target.Signal( "DeployableMedic_HealDepleated" )
 
 		if ( target.GetScriptName() == "gas_trap")
 			target.Signal( "DirtyBomb_Disarmed" )
@@ -188,7 +181,7 @@ void function DroneFireEMP_Thread( entity weapon, entity camera, array<entity> t
 		if (target.GetScriptName() == "jump_pad")
 			target.Signal("OnDestroy")
 
-		if (!(target.GetScriptName() == "gas_trap" || target.GetScriptName() == "deployable_medic" || target.GetScriptName() == "domeOfProtection"))
+		if (!(target.GetScriptName() == "gas_trap"))
 			target.Destroy()
 	}
 
@@ -223,7 +216,7 @@ array<entity> function GetTargets(vector origin, float radius){
 		if (target.GetScriptName() == "pylon" || target.GetScriptName() == "fence_node" || target.GetScriptName() == "gas_trap")
 			validTargets.append( target )
 
-		if ( target.GetScriptName() == "jump_pad" || target.GetScriptName() == "jump_pad_p" || target.GetScriptName() == "domeOfProtection" || target.GetScriptName() == "deployable_medic" )
+		if ( target.GetScriptName() == "jump_pad")
 			validTargets.append( target )
 			continue
 
