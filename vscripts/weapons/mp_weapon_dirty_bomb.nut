@@ -238,6 +238,7 @@ void function DeployCausticTrap( entity owner, DirtyBombPlacementInfo placementI
 	canisterProxy.SetTakeDamageType( DAMAGE_NO )
 	canisterProxy.NotSolid()
 	canisterProxy.SetPhysics( MOVETYPE_FLY ) // doesn't actually make it move, but allows pushers to interact with it
+	canisterProxy.SetScriptName("gas_trap")
 	Highlight_SetOwnedHighlight( canisterProxy, "sp_friendly_hero" )
 	Highlight_SetFriendlyHighlight( canisterProxy, "sp_friendly_hero" )
 
@@ -563,7 +564,7 @@ void function OnDirtyBombCanisterDamaged( entity canisterProxy, var damageInfo )
 {
 	if(canisterProxy.e.isBusy)
 		return
-	
+
 	//HACK - Should use damage flags, but we might be capped?
 	int damageSourceID = DamageInfo_GetDamageSourceIdentifier( damageInfo )
 	switch ( damageSourceID )
@@ -586,7 +587,7 @@ void function OnDirtyBombCanisterDamaged( entity canisterProxy, var damageInfo )
 	entity attacker = DamageInfo_GetAttacker( damageInfo )
 	if( !IsValid( attacker ) )
 		return
-	
+
 	canisterProxy.e.isBusy = true
 
 	if ( hitBox > 0 ) //Normal Hit
@@ -636,7 +637,7 @@ void function DetonateDirtyBombCanister( entity canisterProxy )
 {
 	if ( !IsValid( canisterProxy ) )
 		return
-	
+
 	canisterProxy.e.isBusy = true
 
 	Assert( IsNewThread(), "Must be threaded off." )

@@ -70,7 +70,7 @@ const int statusEffect = eStatusEffect.placing_trophy_system
 const vector TROPHY_INTERSECTION_BOUND_MINS = <-16,-16,0>
 const vector TROPHY_INTERSECTION_BOUND_MAXS = <16,16,32>
 
-// 
+//
 const float TROPHY_ANGLE_LIMIT = 0.74
 const float TROPHY_DEPLOY_DELAY = 1.0
 
@@ -83,7 +83,7 @@ const float TROPHY_INTERCEPT_PROJECTILE_RANGE = 512.0
 const float TROPHY_INTERCEPT_PROJECTILE_RANGE_MIN = 256.0 //
 const float TROPHY_INTERCEPT_PROJECTILE_RANGE_MIN_SQR = TROPHY_INTERCEPT_PROJECTILE_RANGE_MIN * TROPHY_INTERCEPT_PROJECTILE_RANGE_MIN
 
-// 
+//
 const float TROPHY_ARC_SCREEN_EFFECT_RADIUS = TROPHY_INTERCEPT_PROJECTILE_RANGE
 const float WATTSON_TROPHY_CHARGE_POPUP_COOLDOWN = 3.5
 
@@ -211,7 +211,7 @@ void function OnWeaponDeactivate_weapon_trophy_defense_system( entity weapon )
 		if ( !InPrediction() ) //
 			return
 	#endif
-	
+
 	StatusEffect_StopAllOfType( ownerPlayer, statusEffect )
 }
 
@@ -472,7 +472,7 @@ void function Trophy_PlacementProxy( entity player, asset model )
 
 	int fxHandle = StartParticleEffectOnEntity( proxy, GetParticleSystemIndex( TROPHY_PLACEMENT_RADIUS_FX ), FX_PATTACH_POINT_FOLLOW, proxy.LookupAttachment( "REF" ) )
 	printl("particle " + fxHandle)
-	
+
 	var placementRui        = CreateCockpitPostFXRui( $"ui/trophy_placement.rpak", RuiCalculateDistanceSortKey( player.EyePosition(), proxy.GetOrigin() ) )
 
 	int placementAttachment = proxy.LookupAttachment( "REF" )
@@ -574,6 +574,7 @@ void function WeaponMakesDefenseSystem( entity weapon, asset model, TrophyPlacem
 	pylon.SetOwner(owner)
 	pylon.e.pylonhealth = TROPHY_HEALTH_AMOUNT
 	pylon.EndSignal( "OnDestroy" )
+	pylon.SetScriptName("pylon")
 
 	// can be detected by sonar
 	pylon.Highlight_Enable()
@@ -582,7 +583,7 @@ void function WeaponMakesDefenseSystem( entity weapon, asset model, TrophyPlacem
 	TrackingVision_CreatePOI( eTrackingVisionNetworkedPOITypes.PLAYER_ABILITY_TROPHY_SYSTEM, owner, pylon.GetOrigin(), owner.GetTeam(), owner )
 
 	TrophyDeathSetup( pylon )
-	
+
 	thread Trophy_Anims( pylon )
 	thread RadiusReminderFX( pylon )
 	waitthread Trophy_CreateTriggerArea( owner, pylon )
@@ -598,7 +599,7 @@ void function Trophy_Anims( entity pylon ) {
 	EmitSoundOnEntity(pylon, TROPHY_EXPAND_SOUND)
 	StartParticleEffectOnEntity( pylon, GetParticleSystemIndex( TROPHY_START_FX ), FX_PATTACH_ABSORIGIN_FOLLOW, 0 )
 	thread PlayAnim( pylon, EXPAND )
-	
+
 	wait 0.88
 
 	//Pylon Idle FX and sound
@@ -607,7 +608,7 @@ void function Trophy_Anims( entity pylon ) {
 	thread PlayAnim( pylon, IDLE_OPEN )
 }
 
-// Creates the active area 
+// Creates the active area
 // based on the code i'm copying (deployable_medic.nut), this is team agnostic
 // Intercepts projectiles, charges shields
 void function Trophy_CreateTriggerArea( entity owner, entity pylon ) {
@@ -811,7 +812,7 @@ void function ProjectileTrigger(entity pylon, entity trigger)
 		//get all projectiles that enter the radius
 		array<entity> projectilegrenades
 		projectilegrenades.extend( GetProjectileArrayEx( "grenade", TEAM_ANY, TEAM_ANY, pylon.GetOrigin(), TROPHY_INTERCEPT_PROJECTILE_RANGE ) )
-		
+
 		//Get pylon owner
 		entity pylonowner = pylon.GetOwner()
 
@@ -819,7 +820,7 @@ void function ProjectileTrigger(entity pylon, entity trigger)
 		{
 			if( !IsValid( ent ) )
 				continue
-			
+
 			//If TROPHY_DESTROY_FRIENDLY_PROJECTILES is set to false dont destroy teammates projectiles
 			if(!TROPHY_DESTROY_FRIENDLY_PROJECTILES)
 			{
@@ -860,7 +861,7 @@ void function ProjectileTrigger(entity pylon, entity trigger)
 				case "mp_weapon_bubble_bunker":
 					//Sound for zap
 					EmitSoundOnEntity( pylon, TROPHY_INTERCEPT_SMALL )
-			
+
 					//Effects for zap
 					entity zap = StartParticleEffectInWorld_ReturnEntity( GetParticleSystemIndex( TROPHY_INTERCEPT_PROJECTILE_CLOSE_FX ), ent.GetOrigin(), ent.GetAngles() )
 					vector pyloncenter = pylon.GetOrigin() + <0, 0, 60>
@@ -917,7 +918,7 @@ void function TrophyDeathSetup( entity pylon )
 
 			//subtract damage from current pylon health
 			pylon.e.pylonhealth = pylon.e.pylonhealth - damage
-			
+
 			// makes damage numbers appear
 			if ( attacker.IsPlayer() )
 			{
@@ -925,12 +926,12 @@ void function TrophyDeathSetup( entity pylon )
 				(
 					pylon,
 					DamageInfo_GetHitBox( damageInfo ),
-					DamageInfo_GetDamagePosition( damageInfo ), 
+					DamageInfo_GetDamagePosition( damageInfo ),
 					0,
 					DamageInfo_GetDamage( damageInfo ),
-					DamageInfo_GetDamageFlags( damageInfo ), 
+					DamageInfo_GetDamageFlags( damageInfo ),
 					DamageInfo_GetHitGroup( damageInfo ),
-					DamageInfo_GetWeapon( damageInfo ), 
+					DamageInfo_GetWeapon( damageInfo ),
 					DamageInfo_GetDistFromAttackOrigin( damageInfo )
 				)
 			}
@@ -942,7 +943,7 @@ void function TrophyDeathSetup( entity pylon )
 			else if ( pylon.e.pylonhealth <= 0 )
 			{
 				StartParticleEffectInWorld( GetParticleSystemIndex( TROPHY_DESTROY_FX ), pylon.GetOrigin(), VectorToAngles( pylon.GetForwardVector() ) )
-								
+
 				pylon.e.isDisabled = true
 
 				EmitSoundAtPosition( TEAM_ANY, pylon.GetOrigin(), TROPHY_DESTROY_SOUND )
@@ -951,7 +952,7 @@ void function TrophyDeathSetup( entity pylon )
 				int attach_id = pylon.LookupAttachment( "REF" )
 				vector effectOrigin = pylon.GetAttachmentOrigin( attach_id )
 				vector effectAngles = pylon.GetAttachmentAngles( attach_id )
-				
+
 				pylon.Destroy()
 			}
 		}

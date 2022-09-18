@@ -4805,3 +4805,18 @@ void function SetRandomStagingPositionForPlayer( entity player )
 	player.SetOrigin( randomSpawnPoint.GetOrigin() )
 	player.SetAngles( randomSpawnPoint.GetAngles() )
 }
+
+array<entity> function ArrayEntSphere(vector origin, float radius) {
+    array<entity> entities
+    entity ent = Entities_FindInSphere( null, origin, radius )
+
+    for ( ;; )
+    {
+        if ( ent == null )
+            break
+		entities.append( ent )
+		printt(ent.GetTargetName())
+        ent = Entities_FindInSphere( ent, origin, radius)
+    }
+    return entities
+}
