@@ -101,7 +101,7 @@ void function _ChallengesByColombia_Init()
 	AddDeathCallback( "player", OnPlayerDeathCallback )
 	
 	//add basic aim trainer locations for maps //todo: move this to a datatable
-	if (GetMapName() == "mp_rr_desertlands_64k_x_64k" || GetMapName() == "mp_rr_desertlands_64k_x_64k_nx")
+	if (GetMapName() == "mp_rr_desertlands_64k_x_64k" || GetMapName() == "mp_rr_desertlands_64k_x_64k_nx" || GetMapName() == "mp_rr_desertlands_64k_x_64k_tt")
 	{
 		floorLocation = <-10020.1543, -8643.02832, 5189.92578>
 		onGroundLocationPos = <12891.2783, -2391.77124, -3121.60132>
