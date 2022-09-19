@@ -33,6 +33,7 @@ global const asset FIRINGRANGE_QUARRY_BLOCK_ASSET = $"mdl/rocks/thunderdome_quar
 // To be used outside if needed
 global int firingrange_infinite_ammo = 0
 global function CreateFRButton
+global function CreateFRProp
 #endif
 
 #if CLIENT
@@ -74,15 +75,15 @@ struct {
 
 void function FiringRangeGameMode_Init()
 {
-	if ( !IsFiringRangeGameMode() )
-		return
-
-	Remote_RegisterClientFunction( "SCB_BroadcastFriendlyFireChange", "entity" )
-
 	PrecacheModel( FIRINGRANGE_BLUE_STAND_ASSET )
 	PrecacheModel( FIRINGRANGE_FLICK_TARGET_ASSET )
 	PrecacheParticleSystem( FIRINGRANGE_FLICK_TARGET_PARTICLE_HIT )
 	PrecacheParticleSystem( FIRINGRANGE_ITEM_RESPAWN_PARTICLE )
+
+	if ( !IsFiringRangeGameMode() || GetCurrentPlaylistVarBool( "r5reloaded_aimtrainer", false ))
+		return
+
+	Remote_RegisterClientFunction( "SCB_BroadcastFriendlyFireChange", "entity" )
 
 	#if SERVER
 		AddCallback_EntitiesDidLoad( OnEntitiesDidLoad )

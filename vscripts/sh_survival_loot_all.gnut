@@ -11,6 +11,7 @@ global function SURVIVAL_Loot_GetLootTypeFromString
 global function SURVIVAL_Loot_GetByTier
 
 global function SURVIVAL_Loot_IsUniqueAmmoWeapon
+global function GetCustomHopupArray
 
 #if CLIENT
 global function GetRarityColor
@@ -23,6 +24,7 @@ global function DiffKeyColors
 
 global function GetFXRarityColorForTier // use this for in game loot
 global function GetFXRarityColorForUnlockable
+global function IsCustomAttachment
 
 global enum eLootTier
 {
@@ -34,6 +36,20 @@ global enum eLootTier
 	HEIRLOOM
 
 	_count
+}
+
+global struct CustomHopupData
+{
+	string className,
+	string displayName,
+	string desc,
+	int tier,
+	asset icon,
+	asset model = $"mdl/weapons_r5/loot/_master/w_loot_wep_mods_chip.rmdl",
+	string attachmentSlot = "hopup",
+	float lowWeight = 5.0,
+	float medWeight = 10.0,
+	float highWeight = 25.0
 }
 
 global struct LootData
@@ -141,6 +157,7 @@ struct
 	bool                      initialized
 	array<string>             disabledRefs
 	array<string>             uniqueAmmoWeaponRefs
+	array<CustomHopupData>	  customHopups = []
 
 	#if(true)
 		table<EHI, array< OverrideDeathBoxRUI_NetworkOptimizedStruct > > EHIToOverrideDeathBoxRUIProfilesTable
@@ -159,6 +176,10 @@ struct
 
 array<string> attachmentSortOrder = ["barrel", "mag", "sight", "grip", "hopup"]
 
+array<CustomHopupData> function GetCustomHopupArray()
+{
+	return file.customHopups
+} 
 
 string function GetLootTableString( string ref, var datatable, int rowIndex, string columnName )
 {
@@ -211,6 +232,7 @@ void function SURVIVAL_Loot_All_InitShared()
 	string disabledRefs = GetCurrentPlaylistVarString( "survival_disabled_loot", " " )
 	file.disabledRefs = split( disabledRefs, " " )
 
+	array<string> icons = []
 	int numRows = GetDatatableRowCount( dt )
 	for ( int i = 0; i < numRows; i++ )
 	{
@@ -240,6 +262,7 @@ void function SURVIVAL_Loot_All_InitShared()
 		}
 
 		data.fakeAmmoIcon = GetLootTableAsset( data.ref, dt, i, "fakeAmmoIcon" )
+		if (data.fakeAmmoIcon != "") printt("Fake ammo icon for", data.ref, "-", data.fakeAmmoIcon)
 
 		data.baseMods = split( GetLootTableString( data.ref, dt, i, "baseMods" ), " " )
 
@@ -313,6 +336,7 @@ void function SURVIVAL_Loot_All_InitShared()
 		{
 			case eLootType.MAINWEAPON:
 				RegisterWeaponForUse( data.baseWeapon )
+				RegisterCustomAttachments(GetCustomHopupsForWeapon(data.baseWeapon))
 				data.pickupString = GetWeaponInfoFileKeyField_GlobalString( data.baseWeapon, "printName" )
 				data.desc = GetWeaponInfoFileKeyField_GlobalString( data.baseWeapon, "description" )
 				data.hudIcon = GetWeaponInfoFileKeyFieldAsset_Global( data.baseWeapon, "hud_icon" )
@@ -406,8 +430,119 @@ void function SURVIVAL_Loot_All_InitShared()
 	#endif
 
 	file.initialized = true
-    
-}  
+}
+struct CustomWeaponData
+{
+	string className,
+	int tier,
+	array<string> baseMods,
+	array<string> supportedAttachments,
+	string pickupSound1p,
+	string pickupSound3p,
+	string weaponType,
+	float lowWeaponChance,
+	float medWeaponChance,
+	float highWeaponChance,
+	bool isCP
+}
+
+bool function IsCustomAttachment(LootData data)
+{
+	printt(data.ref)
+	foreach (CustomHopupData d in file.customHopups)
+	{
+		if (d.className == data.ref) return true
+	}
+	return false
+}
+
+void function RegisterCustomAttachments(array<string> refs)
+{
+	foreach(string className in refs){
+		CustomHopupData data
+		// class name - the name of the mod to be added to a weapon once this hopup is equipped.
+		data.className = className
+		// display name - the name displayed on pop-ups of this hop-up.
+		data.displayName = GetCurrentPlaylistVarString(className + "_name", "Custom Hopup")
+		// description.
+		data.desc = GetCurrentPlaylistVarString(className + "_desc", "Hop up desc")
+		// Tier - the displayed rarity of the hop-up
+		data.tier = GetCurrentPlaylistVarInt(className + "_tier", 1)
+		// icon - the icon of the hop-up. defaults to the Choke Hop-up Icon.
+		#if !UI
+		data.icon = CastStringToAsset(GetCurrentPlaylistVarString(className + "_icon", "rui/pilot_loadout/mods/hopup_em_choke"))
+		// model - the appearance of the hop-up on the ground.
+		data.model = CastStringToAsset(GetCurrentPlaylistVarString(className + "_model", "mdl/weapons_r5/loot/_master/w_loot_wep_mods_chip.rmdl"))
+		#endif
+		// The weight of the hop-up in Basic Tier Loot areas
+		data.lowWeight = GetCurrentPlaylistVarFloat(className + "_low_chance", 5.0)
+		// The weight of the hop-up in Mid Tier Loot areas
+		data.medWeight = GetCurrentPlaylistVarFloat(className + "_med_chance", 10.0)
+		// The weight of the hop-up in High Tier Loot areas
+		data.highWeight = GetCurrentPlaylistVarFloat(className + "_high_chance", 25.0)
+		// slot
+		data.attachmentSlot = GetCurrentPlaylistVarString(className + "_slot", "hopup")
+		// create the hopup...
+		CreateCustomHopup(data)
+	}
+}
+
+array<string> function GetCustomHopupsForWeapon(string className)
+{
+	array<string> result = []
+	foreach(string mod in GetWeaponMods_Global(className))
+	{
+		if (SURVIVAL_Loot_IsRefValid(mod)) continue;
+
+		if (GetCurrentPlaylistVarString(mod + "_slot", "") == "") continue;
+		result.append(mod)
+	}
+	return result
+}
+
+#if !UI
+// used for conversion shit
+asset function CastStringToAsset( string val )
+{
+	return GetKeyValueAsAsset( { kn = val }, "kn" )
+}
+#endif
+
+void function CreateCustomHopup(CustomHopupData hopupData)
+{
+	LootData data
+
+	data.ref = hopupData.className
+	data.pickupString = hopupData.displayName
+	data.desc = hopupData.desc
+	data.hudIcon = hopupData.icon
+	data.model = hopupData.model
+	data.tier = hopupData.tier
+
+	// can be hardcoded since this is an attachment, no need for custom pickup sounds.
+	data.pickupSound_1p = "survival_loot_pickup_attachments"
+	data.pickupSound_3p = "survival_loot_pickup_3p_attachments"
+
+	// needs to be setup, otherwise you won't be able to pick up the attachment
+	data.countPerDrop = 1
+	data.inventorySlotCount = 1
+	data.attachmentStyle = "hopup"
+
+	data.lootTags = []
+	data.lootType = eLootType.ATTACHMENT
+
+	data.index = file.lootIndexToString.len()
+	file.lootIndexToString.append( data.ref )
+	file.lootData[ data.ref ] <- data
+
+	#if !UI
+		// add custom item to loot pool.
+		AddCustomItemToLootPool(data.ref, "attachment_low", hopupData.lowWeight)
+		AddCustomItemToLootPool(data.ref, "attachment_medium", hopupData.medWeight)
+		AddCustomItemToLootPool(data.ref, "attachment_high", hopupData.highWeight)
+	#endif
+	file.customHopups.append(hopupData)
+}
 
 table< string, LootData > function SURVIVAL_Loot_GetLootDataTable()
 {
@@ -533,7 +668,23 @@ int function SURVIVAL_Loot_GetLootTypeFromString( string lootTypeString )
 
 LootData function SURVIVAL_Loot_GetLootDataByIndex( int index )
 {
+	#if CLIENT
+	try
+	{
+		return file.lootData[ file.lootIndexToString[ index ] ]
+	}
+	catch (error)
+	{
+		RunUIScript("OpenErrorDialog", "Client loot table out of sync (code:items)\n\nMake sure you have the custom weapon framework installed and your weapon files match.")
+		GetLocalClientPlayer().ClientCommand("disconnect")
+		printt(error)
+		return file.lootData[ file.lootIndexToString[0] ]
+	}
+	unreachable
+	#else
+	// Server is always right, therefore this must exist.
 	return file.lootData[ file.lootIndexToString[ index ] ]
+	#endif
 }
 bool function SURVIVAL_Loot_IsLootIndexValid( int index )
 {

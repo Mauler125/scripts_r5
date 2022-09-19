@@ -19,12 +19,13 @@ WeaponData
 	"leveled_pickup"								"1"
 	"dev_menu_type"									"offhand"
 	"show_grenade_indicator"						"1"
-	"hide_when_holstered"							"1"
+	"show_grenade_indicator_to_owner"				"1"
+    "hide_when_holstered"							"1"
 
-	"does_not_interrupt_cloak"						"1"
-	"ads_dof_disable"								"1"
-	"allow_gibraltar_shield"                        "0"
-	"activitymodifier"								"ordnance"
+    "does_not_interrupt_cloak"						"1"
+    "ads_dof_disable"								"1"
+    "allow_gibraltar_shield"                        "0"
+    "activitymodifier"								"ordnance"
 
 	"OnWeaponTossReleaseAnimEvent"					"Grenade_OnWeaponTossReleaseAnimEvent"
 	"OnWeaponTossPrep"								"Grenade_OnWeaponTossPrep"
@@ -170,6 +171,8 @@ WeaponData
 	"grenade_bounce_randomness"						"0.2"
 	"grenade_bounce_extra_vertical_randomness"		"0.2"
 	"grenade_roll_vel_frac_per_second"				"0.1"
+	"grenade_touch_triggers_on_impact"				"1"
+
 	"aimassist_disable_hipfire"						"1"
 	"aimassist_disable_ads"							"1"
 
@@ -321,7 +324,26 @@ WeaponData
 	//"sprintcycle_time"								".55"
 
 	Mods
-	{
+	{	
+		challenges_infinite_arcstars
+		{
+			"ammo_stockpile_max"							"1"
+			"ammo_clip_size"   								"1"
+			"ammo_default_total"							"1"
+			"ammo_per_shot"									"1"
+			"ammo_min_to_fire"								"1"
+
+			// Regen Ammo
+			"regen_ammo_refill_rate"						"2"
+			"regen_ammo_refill_start_delay"					"0.0"
+			"fire_rate"   									"2"
+			"explosion_damage"								"0"
+			"damage_near_value"   							"10"
+			"damage_far_value"								"10"
+			"damage_near_value_titanarmor"					"10"
+			"damage_far_value_titanarmor" 					"10"
+		}
+		
 		sp_disable_arc_indicator
 		{
 			grenade_arc_indicator_bounce_count				"0"

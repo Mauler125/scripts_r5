@@ -344,8 +344,8 @@ bool function AttackerCanStartMelee( entity attacker, entity inputWeaponOrNull, 
 	if ( attacker.IsWeaponSlotDisabled( eActiveInventorySlot.mainHand ) ) // Covers bleedout
 		return false
 
-	//if ( PlayerIsInMeleeBlockingADS( attacker ) )
-	//	return false
+	if ( PlayerIsInMeleeBlockingADS( attacker ) )
+		return false
 	
 	if ( attacker.IsPhaseShifted() )
     {

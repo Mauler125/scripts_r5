@@ -81,6 +81,7 @@ void function Canyonlands_MapInit_Common()
 	printt( "Canyonlands_MapInit_Common" )
 
 	PrecacheModel( LEVIATHAN_MODEL )
+	PrecacheModel( FIRINGRANGE_256x256_ASSET )
 	//PrecacheModel( FLYER_SWARM_MODEL )
 
 	SetVictorySequencePlatformModel( $"mdl/rocks/victory_platform.rmdl", < 0, 0, -10 >, < 0, 0, 0 > )

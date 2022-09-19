@@ -797,8 +797,22 @@ Scripts:
 	ui/menu_about_game_mode.nut
 	ui/menu_reward_ceremony.nut
 	ui/menu_loadscreen_preview.nut
-
+	
+	//CTF
 	ui/CTFMenus/menu_ctf_respawn.nut
+	//FR Challenges
+	ui/FRChallenges/menu_frchallenges.nut
+	ui/FRChallenges/mainmenu_challenges.nut
+	ui/FRChallenges/mainmenu_history.nut
+	ui/FRChallenges/mainmenu_settings.nut
+	ui/FRChallenges/mainmenu_settings_weaponselector.nut
+	ui/FRChallenges/panel_buymenu1.nut
+	ui/FRChallenges/panel_buymenu2.nut
+	ui/FRChallenges/panel_buymenu3.nut
+	ui/FRChallenges/panel_buymenu4.nut
+	ui/FRChallenges/panel_buymenu5.nut
+
+	//KillReplay
 	ui/KillReplay/menu_killreplay.nut
 
 	//R5RUI
@@ -898,7 +912,7 @@ Scripts:
 
 	gamemodes/custom_ctf/sh_gamemode_custom_ctf.nut
 	gamemodes/custom_ctf/custom_ctf_settings.nut
-
+	gamemodes/custom_aimtrainer/sh_aimtrainer.nut
 	lobby/lobbyvm/sh_lobbyvm.nut
 ]
 
@@ -909,6 +923,7 @@ Scripts:
 
 	gamemodes/custom_ctf/_gamemode_custom_ctf.nut
 
+	gamemodes/custom_aimtrainer/_aimtrainer.nut
 	lobby/lobbyvm/_lobbyvm.nut
 ]
 
@@ -918,7 +933,7 @@ Scripts:
 	gamemodes/custom_tdm/cl_gamemode_custom_tdm.nut
 
 	gamemodes/custom_ctf/cl_gamemode_custom_ctf.nut
-
+	gamemodes/custom_aimtrainer/cl_aimtrainer.nut
 	lobby/lobbyvm/cl_lobbyvm.nut
 ]
 
