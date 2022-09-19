@@ -6,10 +6,10 @@
 WeaponData
 {
 	// General
-	"printname"   									"#WPN_CAR"
-	"shortprintname"   								"#WPN_CAR_SHORT"
-	"description" 									"#WPN_CAR_DESC"
-	"longdesc"										"#WPN_CAR_LONGDESC"
+	"printname"   									"C.A.R. SMG"
+	"shortprintname"   								"CAR"
+	"description" 									"Adaptable SMG. Uses light and heavy ammo."
+	"longdesc"										"Adaptable SMG that swaps between light and heavy ammo.\nTakes light or heavy mags."
 
 	"weapon_type_flags"								"WPT_PRIMARY"
 	"ammo_pool_type"								"highcal"

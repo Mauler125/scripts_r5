@@ -2732,6 +2732,13 @@ bool function CC_MenuGiveAimTrainerWeapon( entity player, array<string> args )
 						
 					weaponent = player.GiveWeapon( weapon, WEAPON_INVENTORY_SLOT_PRIMARY_0, finalargs)
 					break
+				case "marksman3":
+					if(args[1] != "none") finalargs.append(args[1])
+					if(args[3] != "none") finalargs.append(args[3])
+					if(args[6] != "none") finalargs.append(args[6])	
+					
+					weaponent = player.GiveWeapon( weapon, WEAPON_INVENTORY_SLOT_PRIMARY_0, finalargs)
+					break
 				case "sniper":
 					if(args[1] != "none") finalargs.append(args[1])
 					if(args[2] != "none") finalargs.append(args[2])

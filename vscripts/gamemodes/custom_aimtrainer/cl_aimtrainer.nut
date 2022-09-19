@@ -998,7 +998,7 @@ void function UIToClient_MenuGiveWeaponWithAttachments( string weapon, int desir
 				break
 		}
 	
-	if( weapontype == "sniper" || weapontype == "sniper2" || weapontype == "marksman" || weapontype == "marksman2")
+	if( weapontype == "sniper" || weapontype == "sniper2" || weapontype == "marksman" || weapontype == "marksman2" || weapontype == "marksman3")
 		switch(desiredstock){
 			case 0:
 				stock = "none"
@@ -1061,7 +1061,7 @@ void function UIToClient_MenuGiveWeaponWithAttachments( string weapon, int desir
 		}			
 	}
 	
-	if(weapontype == "ar" || weapontype == "ar2" || weapontype == "lmg" || weapontype == "lmg2" || weapontype == "sniper" || weapontype == "sniper2" || weapontype == "marksman" || weapontype == "marksman2")
+	if(weapontype == "ar" || weapontype == "ar2" || weapontype == "lmg" || weapontype == "lmg2" || weapontype == "sniper" || weapontype == "sniper2" || weapontype == "marksman" || weapontype == "marksman2" || weapontype == "marksman3")
 	switch(desiredoptic){
 		case 0:
 			optic = "none"
