@@ -102,17 +102,18 @@ void function OnJumpPadPlanted( entity projectile )
 	projectile.Destroy()
 
 	newProjectile.kv.solid = 6
-	newProjectile.SetTakeDamageType( DAMAGE_YES )
-	newProjectile.SetMaxHealth( 100 )
-	newProjectile.SetHealth( 100 )
+		newProjectile.SetTakeDamageType( DAMAGE_YES )
+		newProjectile.SetMaxHealth( 100 )
+		newProjectile.SetHealth( 100 )
 	SetVisibleEntitiesInConeQueriableEnabled( newProjectile, true )
 
 	newProjectile.SetOwner( owner )
 
 	//Dispatch the spawn after our settings are done
 	DispatchSpawn( newProjectile )
+	newProjectile.SetScriptName("jump_pad")
 
-	thread TrapDestroyOnRoundEnd( owner, newProjectile )
+		thread TrapDestroyOnRoundEnd( owner, newProjectile )
 
 	if ( IsValid( traceResult.hitEnt ) )
 	{
