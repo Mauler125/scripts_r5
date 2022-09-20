@@ -20,7 +20,7 @@ void function LootTicks_Init()
 
     #if SERVER
     if(GetCurrentPlaylistVarBool("loot_ticks_enabled", true))
-        AddCallback_EntitiesDidLoad( SpawnMultipleLootTicksForMap )\
+        AddCallback_EntitiesDidLoad( SpawnMultipleLootTicksForMap )
     #endif
 }
 
