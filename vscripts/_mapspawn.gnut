@@ -178,6 +178,7 @@ void function CodeCallback_MapSpawn() // original script entry point
 	//ScriptCompilerTest()
 	LoadDiamond()
 	MapTriggers_Init()
+	LootTicks_Init()
 
 	RegisterSignal( "CleanupFXAndSoundsForDecoy" )
 	RegisterSignal( "MirageSpotted" )
@@ -394,7 +395,7 @@ entity function CreateWallTrigger( vector origin , float radius = 30000 , bool k
 		trigger.SetScriptName("WallTrigger_Killzone")
 		trigger.SetAboveHeight( 350 )
 	}
-	
+
     if (oob_timer)
 	{
 		trigger.SetScriptName("WallTrigger_oob_timer")
@@ -422,12 +423,12 @@ void function WallTriggerEnter( entity trigger , entity ent )
 			if (trigger.GetScriptName() == "WallTrigger_Killzone") // Check if it's a killzone
 			{
 				ent.TakeDamage(ent.GetMaxHealth() + 1, null, null, { damageSourceId=damagedef_suicide, scriptType=DF_BYPASS_SHIELD })
-			} 
+			}
 			else if (trigger.GetScriptName() == "WallTrigger_oob_timer") // Check if it's only out of bounds timer
 			{
 				EntityOutOfBounds( trigger, ent, null, null )
 			}
-			else 
+			else
 			{
 				EntityOutOfBounds( trigger, ent, null, null )
 				ent.DisableWeapon()
