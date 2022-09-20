@@ -87,7 +87,7 @@ WeaponData
 		"grapple_maxLength"								"850"
 		"grapple_maxLengthVert"							"850"
 		"ammo_clip_size"								"150"
-		"ammo_default_total"							"0"
+		"ammo_default_total"							"150"
 		"ammo_display"									"count"
 		"ammo_min_to_fire"								"150"
 		"ammo_per_shot"									"150"
