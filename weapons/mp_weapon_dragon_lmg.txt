@@ -8,9 +8,9 @@ WeaponData
 {
 	// General
 	"printname"   									"Rampage LMG"
-	"shortprintname"								"Rampage LMG"
-	"description" 									"Rampage LMG"
-	"longdesc"										"Rampage LMG"
+	"shortprintname"								"Rampage"
+	"description" 									"Fire Powered LMG. Charge with Thermites."
+	"longdesc"										"Fire Powered LMG. Charge with Thermites to increase rate of fire."
 
 	"weapon_type_flags"								"WPT_PRIMARY"
 	"ammo_pool_type"								"highcal"

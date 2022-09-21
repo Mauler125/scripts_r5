@@ -77,7 +77,7 @@ void function DroneFireEMP( entity weapon )
 {
 	entity owner = weapon.GetWeaponOwner()
 	entity camera = GetPlayerCamera( owner )
-	
+
 	// Shouldn't have happened, give their ult charge back!
 	if( !IsValid( camera ) )
 	{
@@ -89,7 +89,7 @@ void function DroneFireEMP( entity weapon )
 
 	camera.Anim_Play( "drone_EMP" )
 
-	
+
 	// TODO: Fix particles not displaying correctly, glow shows from chargeFX, radius doesn't seem to do anything
 	// Likely params for them are missing, need to check in
 	entity chargeFX = StartParticleEffectOnEntity_ReturnEntity( camera, GetParticleSystemIndex( EMP_CHARGE_UP_FX ), FX_PATTACH_ABSORIGIN_FOLLOW, -1 )
@@ -139,7 +139,7 @@ void function OnEMPWarningTriggerLeave( entity trigger, entity ent )
 {
 	if ( !ent.IsPlayer() && !ent.IsNPC() )
 		return
-		
+
 	StatusEffect_StopAllOfType( ent, eStatusEffect.crypto_emp_warning )
 }
 
@@ -164,14 +164,27 @@ void function DroneFireEMP_Thread( entity weapon, entity camera, array<entity> t
 
 	foreach(entity target in GetPlayersNpcsInRadius(pos, EMP_RADIUS))
 	{
-		target.TakeDamage( MAX_SHIELD_DAMAGE, owner, weapon, 
-		{ 
-			scriptType = DF_SHIELD_DAMAGE, 
-			damageSourceId = eDamageSourceId.mp_ability_crypto_drone_emp 
+		target.TakeDamage( MAX_SHIELD_DAMAGE, owner, weapon,
+		{
+			scriptType = DF_SHIELD_DAMAGE,
+			damageSourceId = eDamageSourceId.mp_ability_crypto_drone_emp
 		})
 		StatusEffect_StopAllOfType( target, eStatusEffect.crypto_emp_warning )
 	}
-	
+
+	foreach(entity target in GetTargets(pos, EMP_RADIUS))
+	{
+
+		if ( target.GetScriptName() == "gas_trap")
+			target.Signal( "DirtyBomb_Disarmed" )
+
+		if (target.GetScriptName() == "jump_pad")
+			target.Signal("OnDestroy")
+
+		if (target.GetScriptName() == "pylon" || target.GetScriptName() == "fence_node")
+			target.TakeDamage( target.GetMaxHealth() + 1, owner, weapon, { damageSourceId=eDamageSourceId.mp_ability_crypto_drone_emp } )
+	}
+
 	camera.Anim_Play( "drone_active_twitch" )
 }
 array<entity> function GetPlayersNpcsInRadius(vector origin, float radius)
@@ -187,6 +200,26 @@ array<entity> function GetPlayersNpcsInRadius(vector origin, float radius)
 
 		if( Distance( target.GetOrigin(), origin ) < radius )
 			validTargets.append( target )
+	}
+	return validTargets
+}
+
+array<entity> function GetTargets(vector origin, float radius){
+	array<entity> targets = ArrayEntSphere(origin, radius)
+
+	array<entity> validTargets = []
+	foreach(entity target in targets)
+	{
+		if( target.IsPlayer() || target.IsNPC() || target.IsPlayerDecoy() || target.GetScriptName() == "crypto_camera")
+			continue
+
+		if (target.GetScriptName() == "pylon" || target.GetScriptName() == "fence_node" || target.GetScriptName() == "gas_trap")
+			validTargets.append( target )
+
+		if ( target.GetScriptName() == "jump_pad")
+			validTargets.append( target )
+			continue
+
 	}
 	return validTargets
 }

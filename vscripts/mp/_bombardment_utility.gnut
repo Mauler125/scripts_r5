@@ -24,6 +24,9 @@ void function Bombardment_MortarBarrageFocused( entity weapon, asset effect, vec
 {
 	wait delay
 	
+	if(!IsValid(weapon))
+		return
+	
 	entity owner = weapon.GetOwner()
 	
 	if(!IsValid(owner))
@@ -60,6 +63,9 @@ void function Bombardment_MortarBarrageFocused( entity weapon, asset effect, vec
 		
 		entity projectile = weapon.FireWeaponGrenade( fireGrenadeParams )
 		
+		if(!IsValid(projectile))
+			return
+		
 		if (isFirst)
 		{
 			EmitSoundOnEntity( projectile, fire_sound_1_player_3p )
@@ -93,6 +99,9 @@ void function Bombardment_MortarBarrageFocused( entity weapon, asset effect, vec
 void function Bombardment_MortarBarrageDetCord( entity weapon, asset effect, vector direction, vector origin, vector projectileOrigin, float width, float perStep, int count, float interval, float delay )
 {
 	wait delay
+	
+	if(!IsValid(weapon))
+		return
 	
 	entity owner = weapon.GetOwner()
 	
