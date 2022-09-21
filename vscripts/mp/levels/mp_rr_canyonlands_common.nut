@@ -112,7 +112,6 @@ void function Canyonlands_MapInit_Common()
 
 	#if SERVER
 		InitWaterLeviathans()
-		LootTicks_Init()
 
 		FlagSet( "DisableDropships" )
 
@@ -137,8 +136,8 @@ void function Canyonlands_MapInit_Common()
 		SURVIVAL_SetMapCenter( <0, 0, 0> )
         SURVIVAL_SetMapDelta( 4900 )
 
-        AddSpawnCallbackEditorClass( "prop_dynamic", "script_survival_pvpcurrency_container", OnPvpCurrencyContainerSpawned )    
-        AddSpawnCallbackEditorClass( "prop_dynamic", "script_survival_upgrade_station", OnSurvivalUpgradeStationSpawned )  
+        AddSpawnCallbackEditorClass( "prop_dynamic", "script_survival_pvpcurrency_container", OnPvpCurrencyContainerSpawned )
+        AddSpawnCallbackEditorClass( "prop_dynamic", "script_survival_upgrade_station", OnSurvivalUpgradeStationSpawned )
 		if ( GetMapName() == "mp_rr_canyonlands_staging" )
 		{
 			// adjust skybox for staging area
@@ -183,7 +182,7 @@ void function Canyonlands_MapInit_Common()
 
 #if SERVER
 void function OnPvpCurrencyContainerSpawned(entity ent)
-{	
+{
     if( GameRules_GetGameMode() != FREELANCE )
 	{
         if(IsValid(ent))
