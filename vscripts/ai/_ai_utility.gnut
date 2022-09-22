@@ -9,7 +9,7 @@ void function CreateGravitationalForce( )
 	point_push.kv.enabled = 1
 	point_push.kv.magnitude = 50
 	point_push.kv.radius = 150
-	point_push.SetOrigin( gp()[0].GetOrigin() )//+ gp()[0].GetForwardVector()*250 )
+	point_push.SetOrigin( GetPlayerArray()[0].GetOrigin() )//+ GetPlayerArray()[0].GetForwardVector()*250 )
 	DispatchSpawn( point_push )
 	point_push.Fire( "Enable" )
 	// point_push.Fire( "Kill", "", 0.2 )
