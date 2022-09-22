@@ -148,7 +148,7 @@ void function OnPlayerKilled( entity victim, entity attacker, var damageInfo )
 
 void function AddSurvivalCommentaryEvent ( int event )
 {
-	#if R5DEV
+	#if DEVELOPER
 	string enumString = GetEnumString( "eSurvivalEventType", event )
 	
 	printt( FUNC_NAME(), "eSurvivalEventType:", enumString, event )
@@ -207,7 +207,7 @@ string function SurvivalCommentary_GetAlternativeSound( string sound, int max, i
 
 void function SurvivalCommentary_PlaySoundForAllPlayers( string sound )
 {
-	#if R5DEV
+	#if DEVELOPER
 	printt( FUNC_NAME(), "playing sound:", sound, "to all players" )
 	#endif
 

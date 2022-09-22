@@ -2,11 +2,11 @@ global function BirdClusterSharedInit
 
 #if SERVER
 	global function BirdClusterManager
-	#if R5DEV
+	#if DEVELOPER
 		global function ClusterDebug
 		global function DEV_CreateBirdCluster
 		global function AddFakeCluster
-	#endif //DEV
+	#endif // DEVELOPER
 #endif //SERVER
 #if CLIENT
 	global function BirdClusterPointSpawned
@@ -63,9 +63,9 @@ struct
 {
 	#if SERVER
 		array< BirdCluster > birdClusterArray
-		#if R5DEV
+		#if DEVELOPER
 			array<WaypointClusterInfo> fakeClusters
-		#endif //DEV
+		#endif // DEVELOPER
 	#endif //SERVER
 	#if CLIENT
 		array< BirdClusterInfo > birdClusterInfoArray
@@ -93,7 +93,7 @@ void function BirdClusterSharedInit()
 void function BirdCluster_OnGameStateEnter_WaitingForPlayers()
 {
 	thread BirdClusterManager()
-	#if R5DEV
+	#if DEVELOPER
 		thread ClusterDebug()
 	#endif
 }
@@ -159,7 +159,7 @@ array<WaypointClusterInfo> function GetNewWaypointClusters( entity player, int m
 	array<WaypointClusterInfo> clusterArray
 
 	array<WaypointClusterInfo> waypointClusterArray = GetServerWaypointClusters( playerOrigin, CLUSTER_MAX_DIST, minCount, player.GetTeam() )
-	#if R5DEV
+	#if DEVELOPER
 	if ( CLUSTER_USE_FAKE )
 		waypointClusterArray = file.fakeClusters
 	#endif
@@ -387,14 +387,14 @@ vector function GetFlightAngles( vector perchPosition, entity player )
 		TraceResults result = TraceLine( perchPosition, traceOrigin, null, TRACE_MASK_SOLID, TRACE_COLLISION_GROUP_NONE )
 		frac = result.fraction
 
-		#if R5DEV
+		#if DEVELOPER
 			if ( CLUSTER_DEBUG_CLUSTER && player == GP() )
 			{
 				DebugDrawText( traceOrigin, string( trace ), false, 3 )
 				DebugDrawLine( perchPosition, result.endPos, 0,255,0, true, 3 )
 				DebugDrawLine( result.endPos, traceOrigin, 255,0,0, true, 3 )
 			}
-		#endif //DEV
+		#endif // DEVELOPER
 
 		if ( frac == 1 )
 		{
@@ -517,7 +517,7 @@ int function GetNumberOfBirdClustersBirds()
 }
 #endif //SERVER
 
-#if R5DEV && SERVER
+#if DEVELOPER && SERVER
 void function DEV_CreateBirdCluster( entity owner = null )
 {
 	entity viewPlayer = GP()
@@ -551,7 +551,7 @@ void function ClusterDebug()
 	{
 		// get more or less all clusters in the map
 		array<WaypointClusterInfo> waypointClusterArray = GetServerWaypointClusters( <0,0,0>, 50000, 1, TEAM_UNASSIGNED )
-		#if R5DEV
+		#if DEVELOPER
 		if ( CLUSTER_USE_FAKE )
 			waypointClusterArray = file.fakeClusters
 		#endif
@@ -614,7 +614,7 @@ void function AddFakeCluster()
 	cluster.numPointsNear = 5
 	file.fakeClusters.append( cluster )
 }
-#endif //DEV && SERVER
+#endif // DEVELOPER && SERVER
 
 #if CLIENT
 void function BirdClusterPointSpawned( entity info_target )

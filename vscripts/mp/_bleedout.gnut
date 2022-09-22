@@ -618,7 +618,7 @@ void function PlayerDiesFromBleedout( entity player, entity attacker )
 //If all the players are dead/bleeding out, it kills the surviving team players.
 void function CheckForTeamBleedout( int team )
 {
-#if R5DEV
+#if DEVELOPER
 	if ( !GetCurrentPlaylistVarBool( "match_ending_enabled", true ) )
 		return
 #endif

@@ -71,7 +71,7 @@ const asset FX_FLYER_GLOW = $"P_flyer_glow"
 //////////////////////
 //////////////////////
 
-#if R5DEV
+#if DEVELOPER
 struct TestFlyerSpawnDataStruct
 {
 	vector origin

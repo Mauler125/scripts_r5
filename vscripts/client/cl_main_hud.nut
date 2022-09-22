@@ -694,7 +694,7 @@ void function ClientHudInit( entity player )
 {
 	Assert( player == GetLocalClientPlayer() )
 
-	#if R5DEV
+	#if DEVELOPER
 		HudElement( "Dev_Info1" ).Hide()
 		HudElement( "Dev_Info2" ).Hide()
 		HudElement( "Dev_Info3" ).Hide()
@@ -722,7 +722,7 @@ void function ClientHudInit( entity player )
 				}*/
 			}
 		}
-	#endif // DEV
+	#endif // DEVELOPER
 }
 
 
@@ -890,7 +890,7 @@ bool function ShouldMainHudBeVisible( entity player )
 			return false
 	}
 
-	#if R5DEV
+	#if DEVELOPER
 		if ( IsModelViewerActive() )
 			return false
 	#endif
@@ -955,7 +955,7 @@ bool function ShouldPermanentHudBeVisible( entity player )
 	if ( (!player.IsObserver() || player.GetObserverTarget() == player || player.GetObserverTarget() == null) && !IsAlive( player ) )
 		return false
 
-	#if R5DEV
+	#if DEVELOPER
 		if ( IsModelViewerActive() )
 			return false
 	#endif

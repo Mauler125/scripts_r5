@@ -33,9 +33,9 @@ global function GetNextAccountLevel
 #if SERVER
 global function InitXP
 global function XP_GameStartedPlaying
-#if R5DEV
+#if DEVELOPER
 global function DEV_PopulatePostGame
-#endif //DEV
+#endif // DEVELOPER
 #else
 global const asset PLAYER_LEVELUP_FX = $"P_levelup_screen"
 #endif
@@ -147,7 +147,7 @@ int function GetPlayerAccountXPProgress( EHI playerEHI )
 		Assert( playerEHI == LocalClientEHI() )
 	#endif
 
-	#if R5DEV
+	#if DEVELOPER
 		if ( DEV_ShouldIgnorePersistence_Local() )
 			return 0
 	#endif
@@ -161,7 +161,7 @@ int function GetPlayerAccountXPPreviousProgress( EHI playerEHI )
 		Assert( playerEHI == LocalClientEHI() )
 	#endif
 
-	#if R5DEV
+	#if DEVELOPER
 		if ( DEV_ShouldIgnorePersistence_Local() )
 			return 0
 	#endif
@@ -199,7 +199,7 @@ void function InitXP( entity player )
 
 void function XP_GameStartedPlaying()
 {
-	#if R5DEV
+	#if DEVELOPER
 		if ( DEV_ShouldIgnorePersistence_Local() )
 			return
 	#endif
@@ -335,7 +335,7 @@ var function CreateNestedAccountDisplayBadge( var parentRui, string arg, int lev
 }
 #endif //UI
 
-#if SERVER && R5DEV
+#if SERVER && DEVELOPER
 void function AddXP( entity player, int xpType, ... )
 {
 	//
@@ -402,7 +402,7 @@ void function DEV_PopulatePostGame( entity player, int level = -1 )
 
 	g_trackXP = true
 }
-#endif //DEV
+#endif // DEVELOPER
 
 array<RewardData> function GetRewardsForAccountLevel( int levelIndex )
 {

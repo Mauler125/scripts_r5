@@ -434,7 +434,7 @@ void function UICallback_BackpackOpened()
 
 void function UICallback_BackpackClosed()
 {
-	#if R5DEV
+	#if DEVELOPER
 		if ( !IsValidSignal( "BackpackClosed" ) ) //
 			return
 	#endif
