@@ -95,6 +95,7 @@ global enum eDamageSourceId
 	mp_weapon_softball
 	mp_weapon_warmachine
 	mp_weapon_car
+	mp_weapon_3030
 	mp_weapon_dragon_lmg
 	//
 	melee_pilot_emptyhanded
@@ -555,6 +556,7 @@ void function DamageTypes_Init()
 		[ eDamageSourceId.mp_weapon_bolo_sword_primary ] 			= "Bolo Sword Melee",
 		[ eDamageSourceId.mp_weapon_volt_smg ] 						= "#WPN_VOLT_SMG",
 		[ eDamageSourceId.mp_weapon_car ] 							= "Car SMG",
+		[ eDamageSourceId.mp_weapon_3030 ] 							= "30-30 Repeater",
 		[ eDamageSourceId.mp_weapon_dragon_lmg ] 					= "Rampage LMG",
 		[ eDamageSourceId.mp_ability_octane_stim ] 					= "#WPN_OCTANE_STIM_SHORT",
 
