@@ -1148,7 +1148,7 @@ void function StartTileFrenzyChallenge(entity player)
 	}
 	WaitFrame()
 	player.SetOrigin(player.GetOrigin() + Vector(0,0,100))
-	ChallengesEntities.props.append(CreateFRProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl", player.GetOrigin(), <0,0,0>) )
+	ChallengesEntities.props.append(CreateFRProp( FIRINGRANGE_256x256_ASSET, player.GetOrigin(), <0,0,0>) )
 	PutEntityInSafeSpot( player, null, null, player.GetOrigin() + player.GetUpVector()*128, player.GetOrigin() )
 	locationsForTiles.randomize()
 	
@@ -2336,7 +2336,7 @@ array<entity> function CreateFloorAtOrigin(vector origin, int width, int length)
 	{
 		for(j = x; j <= x + (width * 256); j += 256)
 		{
-			arr.append( CreateFRProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl", <j, i, z>, <0,0,0>) )
+			arr.append( CreateFRProp( FIRINGRANGE_256x256_ASSET, <j, i, z>, <0,0,0>) )
 		}
     }
 	return arr

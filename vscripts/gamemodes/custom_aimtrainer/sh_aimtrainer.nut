@@ -43,4 +43,5 @@ void function Sh_ChallengesByColombia_Init()
 	RegisterSignal("ChallengeTimeOver")
 	RegisterSignal("ForceResultsEnd_SkipButton")
 	PrecacheParticleSystem($"P_wpn_lasercannon_aim_short_blue")
+	PrecacheModel( FIRINGRANGE_256x256_ASSET )
 }
