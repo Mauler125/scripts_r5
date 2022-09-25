@@ -554,7 +554,7 @@ void function SetButtonSettings( entity panel )
 	panel.UnsetUsable()
 	panel.SetSkin(1)
 	wait 0.01
-	StartParticleEffectInWorld( PrecacheParticleSystem( $"P_xo_exp_nuke_3P" ), <-24279,-4883,-2015>, <0,0,0> )
+	//StartParticleEffectInWorld( PrecacheParticleSystem( $"P_xo_exp_nuke_3P" ), <-24279,-4883,-2015>, <0,0,0> )
 	
 	wait 21
 	
