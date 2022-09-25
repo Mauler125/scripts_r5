@@ -669,6 +669,10 @@ global struct ServerPlayerStruct
 	float playerDamageDealt
 	int respawnsGiven
 	int revivesGiven
+	// This is for Octane's ability chatter
+	float lastStimChatterTime = -30
+	float lastJumpPadChatterTime = -30
+	
 	//Strafer dummy challenge
 	int challengeName = 0
 	bool isChallengeActivated

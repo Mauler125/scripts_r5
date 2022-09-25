@@ -84,7 +84,8 @@ void function _ChallengesByColombia_Init()
 	
 	//on weapon attack callback so we can calculate stats for live stats and results menu
 	AddCallback_OnWeaponAttack( OnWeaponAttackChallenges )
-		
+	AddCallback_OnClientConnected( StartFRChallenges )
+
 	//arc stars on damage callback for arc stars practice challenge
 	AddDamageCallbackSourceID( eDamageSourceId.damagedef_ticky_arc_blast, Arcstar_OnStick )
 	AddDamageCallbackSourceID( eDamageSourceId.mp_weapon_grenade_emp, Arcstar_OnStick )
@@ -137,8 +138,8 @@ void function _ChallengesByColombia_Init()
 
 void function StartFRChallenges(entity player)
 {
-	wait 1
-	if(!IsValid(player)) return
+	while( !IsValid( player ) )
+		WaitFrame()
 
 	Remote_CallFunction_NonReplay(player, "ServerCallback_SetDefaultMenuSettings")
 	Survival_SetInventoryEnabled( player, false )
@@ -1014,7 +1015,7 @@ void function ForceToBeInLiftForChallenge( entity player )
 	while(IsValid(player) && !player.p.isRestartingLevel)
 	{
 		player.SetVelocity(Vector(0,0,0))
-		wait 5
+		wait 5.5
 		foreach(entity dummy in ChallengesEntities.dummies)
 			if(IsValid(dummy)) dummy.Destroy()
 		ChallengesEntities.dummies.clear()
@@ -2288,8 +2289,15 @@ thread OnPlayerDeathCallbackThread(player)
 void function OnPlayerDeathCallbackThread(entity player)
 {
 	entity weapon = player.GetNormalWeapon(WEAPON_INVENTORY_SLOT_PRIMARY_0)
-	array<string> mods = weapon.GetMods()
-	string weaponname = weapon.GetWeaponClassName()
+	array<string> mods
+	string weaponname
+	if( IsValid( weapon ) )
+	{
+		mods = weapon.GetMods()
+		weaponname = weapon.GetWeaponClassName()
+	} else {
+		weaponname = "mp_weapon_wingman"
+	}
 
 	wait 1
 
