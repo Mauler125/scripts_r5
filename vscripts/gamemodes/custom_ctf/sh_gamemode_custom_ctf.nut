@@ -547,6 +547,7 @@ void function Sh_CustomCTF_Init()
 
         case "mp_rr_desertlands_64k_x_64k":
         case "mp_rr_desertlands_64k_x_64k_nx":
+		case "mp_rr_desertlands_64k_x_64k_tt":
             Shared_RegisterLocation(
                 NewCTFLocationSettings(
                     "Overlook",
