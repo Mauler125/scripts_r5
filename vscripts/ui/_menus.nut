@@ -132,9 +132,13 @@ global function OpenXboxPartyApp
 global function OpenXboxHelp
 #endif // DURANGO_PROG
 
-#if DEV
+#if true
 global function OpenDevMenu
 #endif // DEV
+
+#if R5DEV
+global function OpenTestMenu
+#endif
 
 struct
 {
@@ -425,7 +429,7 @@ void function UICodeCallback_LevelInit( string levelname )
 	//	}
 	//}
 
-	#if DEV
+	#if R5DEV
 		ShDevUtility_Init()
 	#endif
 	ShDevWeapons_Init()
@@ -463,7 +467,7 @@ void function UICodeCallback_LevelInit( string levelname )
 	//ShWeaponXP_Init()
 	//ShFactionXP_Init()
 
-	#if DEV
+	#if R5DEV
 		UpdatePrecachedSPWeapons()
 	#endif
 
@@ -1284,7 +1288,7 @@ void function InitMenus()
 	AddMenu( "SurvivalGroundListMenu", $"resource/ui/menus/survival_ground_list.menu", InitGroundListMenu )
 	AddMenu( "SurvivalQuickSwapMenu", $"resource/ui/menus/survival_quick_swap.menu", InitQuickSwapMenu )
 
-	#if(false)
+	#if false
 
 
 #endif
@@ -1294,7 +1298,7 @@ void function InitMenus()
 	AddMenu( "Notifications", $"resource/ui/menus/notifications.menu", InitNotificationsMenu )
 
 	AddMenu( "InGameMPMenu", $"resource/ui/menus/ingame_mp.menu", InitInGameMPMenu )
-	#if(false)
+	#if false
 
 #endif
 
@@ -1330,7 +1334,7 @@ void function InitMenus()
 	AddPanel( controlsAdvancedLookMenu, "AdvancedLookControlsPanel", InitAdvancedLookControlsPanel )
 	AddMenu( "GamepadLayoutMenu", $"resource/ui/menus/gamepadlayout.menu", InitGamepadLayoutMenu )
 
-	#if(false)
+	#if false
 
 #endif
 	//
@@ -1341,6 +1345,7 @@ void function InitMenus()
 	AddMenu( "InspectMenu", $"resource/ui/menus/inspect.menu", InitInspectMenu )
 
 	AddMenu( "DevMenu", $"resource/ui/menus/dev.menu", InitDevMenu, "Dev" )
+	AddMenu( "TestMenu", $"resource/ui/menus/test.menu", InitTestMenu, "Test" )
 
 	InitTabs()
 
@@ -2049,12 +2054,19 @@ void function OpenXboxHelp( var button )
 }
 #endif // DURANGO_PROG
 
-#if DEV
+#if true
 void function OpenDevMenu( var button )
 {
 	AdvanceMenu( GetMenu( "DevMenu" ) )
 }
 #endif // DEV
+
+#if R5DEV
+void function OpenTestMenu( var button )
+{
+	AdvanceMenu( GetMenu( "TestMenu" ) )
+}
+#endif
 
 void function SetDialog( var menu, bool val )
 {

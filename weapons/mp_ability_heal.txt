@@ -38,6 +38,7 @@ WeaponData
 	"charge_effect_1p"								"stim_window_viscous"
 	"charge_effect_attachment"						"FX_IMPACT"
 	"OnWeaponPrimaryAttack"							"OnWeaponPrimaryAttack_ability_heal"
+	"OnWeaponAttemptOffhandSwitch"					"OnWeaponAttemptOffhandSwitch_ability_heal"
 	"OnWeaponChargeBegin"							"OnWeaponChargeBegin_ability_heal"
 	"OnWeaponChargeEnd"								"OnWeaponChargeEnd_ability_heal"
 	"OnWeaponRegenEnd"                              "OnWeaponRegenEndGeneric"
@@ -239,7 +240,7 @@ WeaponData
 
 		dev_mod_low_recharge
 		{
-			"regen_ammo_refill_rate"			"600"
+			"regen_ammo_refill_rate"			"0"
 		}
 		spree_lvl1_heal
 		{

@@ -208,6 +208,7 @@ Scripts:
 	sh_playermatchstate.gnut
 	sh_flightpath.gnut
 	sh_flightpath_utility.gnut
+	sh_paths_preprocess.gnut //
 	sh_flyers.gnut
 	sh_highlight.gnut
 	sh_minimap.gnut
@@ -235,10 +236,14 @@ Scripts:
 	weapons/mp_ability_heal.nut
 	weapons/mp_ability_sonar.nut
 	weapons/mp_weapon_basic_bolt.nut
+	weapons/mp_weapon_grenade_electric_smoke.nut
+	weapons/mp_weapon_deployable_cover.nut
 
 	weapons/mp_weapon_dmr.nut
 	weapons/mp_weapon_doubletake.nut
 	weapons/mp_weapon_shotgun_pistol.nut
+	
+	weapons/mp_ability_laser_trip.nut
 
 	weapons/mp_weapon_grenade_emp.nut
 	weapons/mp_weapon_lmg.nut
@@ -251,16 +256,25 @@ Scripts:
 	weapons/mp_weapon_shotgun.nut
 	weapons/mp_weapon_sniper.nut
 	weapons/mp_weapon_thermite_grenade.nut
+	weapons/mp_weapon_smr.nut
 	weapons/mp_weapon_zipline.nut
 	weapons/mp_weapon_alternator_smg.nut
 	weapons/mp_weapon_softball.nut
-
+	weapons/mp_weapon_smart_pistol.nut
+	weapons/mp_weapon_defender.nut
+	weapons/mp_weapon_mdlspawner.nut
+	weapons/mp_weapon_rocket_launcher.nut
 	weapons/sh_deployable.gnut
+	weapons/sh_deployable_wall.gnut
 	weapons/sh_phase_shift.gnut
 	weapons/sh_smart_ammo.gnut
 	weapons/sh_sonar.gnut
 	weapons/sh_stim.gnut
 	weapons/mp_weapon_energy_shotgun.nut
+	weapons/mp_weapon_grenade_sonar.nut
+	weapons/mp_weapon_grenade_gravity.nut
+	weapons/mp_weapon_satchel.nut
+	weapons/mp_weapon_proximity_mine.nut
 ]
 
 When: "SERVER || CLIENT"
@@ -286,6 +300,7 @@ Scripts:
 	mp/sh_comms_menu.nut
 	sh_mp_utility.gnut
 	sh_score.gnut
+	mp/sh_revive.gnut
 
 	gamemodes/sh_gamemode_tdm.nut
 	gamemodes/sh_gamemode_recruit.nut
@@ -317,6 +332,7 @@ Scripts:
 	mp/sh_lootbin.gnut
 	mp/_sh_tutorial.gnut
 	mp/sh_survival_training.gnut
+    mp/sh_supply_ship.gnut
 
 	_ultimates.gnut
 ]
@@ -379,6 +395,7 @@ Scripts:
 	mp/_goblin_dropship.nut
 	//mp/_loadout_crate.nut
 	mp/_music.gnut
+	mp/_revive.gnut
 	mp/_threat_detection.gnut
 	mp/_sniper_spectres.nut
 	mp/_spawn_functions.nut
@@ -477,6 +494,9 @@ Scripts:
 	sh_character_select.gnut
 	sh_character_select_new.gnut
 	sh_social.gnut
+
+	// abilities/loba_tactical_translocation.nut //
+	// abilities/loba_passive_eye_for_quality.nut //
 ]
 
 When: "CLIENT || UI"
@@ -522,6 +542,7 @@ Scripts:
 	pilot/cl_pilot_tracking_vision.gnut
 	pilot/cl_pilot_passive_adrenaline.gnut
 	client/cl_bleedout.gnut
+	client/cl_revive.gnut
 	mp/cl_jump_pads.gnut
 ]
 

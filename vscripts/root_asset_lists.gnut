@@ -3,12 +3,12 @@
 //
 
 
-#if(false)
+#if false
 
 #endif
 
 //
-#if(false)
+#if false
 
 #endif
 
@@ -39,103 +39,103 @@ array<asset> function WORKAROUND_GetAllCharacterFlavorAssets()
 	out.append( $"settings/itemflav/character/wraith.rpak" ) //
 
 	//
-	#if(false)
+	#if false
 //
 #endif
-	#if(false)
+	#if false
 //
 #endif
-	#if(false)
+	#if false
 //
 #endif
-	#if(false)
+	#if false
 //
 #endif
-	#if(false)
+	#if false
 //
 #endif
-	#if(false)
+	#if false
 //
 #endif
-	#if(false)
+	#if false
 //
 #endif
-	#if(false)
+	#if false
 //
 #endif
-	#if(false)
+	#if false
 //
 #endif
-	#if(false)
+	#if false
 //
 #endif
-	#if(false)
+	#if false
 //
 #endif
-	#if(false)
+	#if false
 //
 #endif
-	#if(false)
+	#if false
 //
 #endif
-	#if(false)
+	#if false
 //
 #endif
-	#if(false)
+	#if false
 //
 #endif
-	#if(false)
+	#if false
 //
 #endif
-	#if(false)
+	#if false
 
 #endif
-	#if(false)
+	#if false
 
 #endif
-	#if(false)
+	#if false
 
 #endif
-	#if(false)
+	#if false
 
 #endif
-	#if(false)
+	#if false
 
 #endif
-	#if(false)
+	#if false
 
 #endif
-	#if(false)
+	#if false
 
 #endif
-	#if(false)
+	#if false
 
 #endif
-	#if(false)
+	#if false
 
 #endif
-	#if(false)
+	#if false
 
 #endif
-	#if(false)
+	#if false
 
 #endif
-	#if(false)
+	#if false
 
 #endif
-	#if(false)
+	#if false
 
 #endif
-	#if(false)
+	#if false
 
 #endif
-	#if(false)
+	#if false
 
 #endif
-	#if(false)
+	#if false
 
 #endif
-	#if(false)
+	#if false
 
 #endif
 
@@ -173,37 +173,37 @@ array<asset> function WORKAROUND_GetAllLootMainWeaponFlavorAssets()
 	out.append( $"settings/itemflav/loot/main_weapon/lstar.rpak" )
 
 	//
-	#if(false)
+	#if false
 
 #endif
-	#if(false)
+	#if false
 
 #endif
-	#if(false)
+	#if false
 
 #endif
-	#if(false)
+	#if false
 
 #endif
-	#if(false)
+	#if false
 
 #endif
-	#if(false)
+	#if false
 
 #endif
-	#if(false)
+	#if false
 
 #endif
-	#if(false)
+	#if false
 
 #endif
-	#if(false)
+	#if false
 
 #endif
-	#if(false)
+	#if false
 
 #endif
-	#if(false)
+	#if false
 
 #endif
 

@@ -22,9 +22,7 @@ void function MpWeaponGrenadeGas_Init()
 
 void function OnWeaponReadyToFire_weapon_grenade_gas( entity weapon )
 {
-
 	weapon.PlayWeaponEffect( GAS_GRENADE_FX_GLOW_FP, GAS_GRENADE_FX_GLOW_3P, "FX_TRAIL" )
-
 }
 
 void function OnWeaponDeactivate_weapon_grenade_gas( entity weapon )

@@ -1580,6 +1580,10 @@ void function GroundItemUpdate( entity player, array<entity> loot )
 	}
 
 	RunUIScript( "SurvivalGroundItem_SetGroundItemCount", file.filteredGroundItems.len() )
+	foreach ( index, item in file.filteredGroundItems )
+	{
+		RunUIScript( "SurvivalGroundItem_SetGroundItemHeader", index, item.isHeader )
+	}
 	RunUIScript( "SurvivalGroundItem_EndUpdate" )
 }
 

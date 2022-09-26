@@ -8,6 +8,8 @@ global function printl
 global function Msg
 global function CodeCallback_Precompile
 
+global const bool R5DEV = true // enables r5dev directives
+
 global struct EchoTestStruct
 {
 	int test1
@@ -586,7 +588,7 @@ void function Msg( var text )
 
 void function CodeCallback_Precompile()
 {
-#if DEV
+#if R5DEV
 	// save the const table for later printing when documenting code consts
 	//if ( Dev_CommandLineHasParm( "-scriptdocs" ) )
 		getroottable().originalConstTable <- clone getconsttable()

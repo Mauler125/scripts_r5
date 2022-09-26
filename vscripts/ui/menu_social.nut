@@ -849,7 +849,7 @@ void function PreviewFriendCosmetics( bool isForLocalPlayer, CommunityUserInfo o
 	else
 	{
 		CommunityUserInfo userInfo = expect CommunityUserInfo(userInfoOrNull)
-		#if DEV
+		#if R5DEV
 			DEV_PrintUserInfo( userInfo )
 		#endif
 

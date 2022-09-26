@@ -150,7 +150,7 @@ void function OnInputModeChanged( bool controllerModeActive )
 void function CustomizeButton_UpdateAndMarkForUpdating( var button, LoadoutEntry loadoutEntry, ItemFlavor itemFlavor, void functionref( ItemFlavor ) previewItemCb, int functionref( ItemFlavor ) getItemCanEquipCanBuyStatusFunc, bool useShortName = false )
 {
 	Assert( !(button in fileLevel.activeCustomizeButtons) )
-	#if DEV
+	#if R5DEV
 		foreach ( var buttonIter, CustomizeButtonContext cbcIter in fileLevel.activeCustomizeButtons )
 		{
 			Assert( Hud_GetParent( button ) == Hud_GetParent( buttonIter ), "Customize buttons from different parents were active at the same time!" )
@@ -241,6 +241,7 @@ bool function CustomizeMenus_IsFocusedItem()
 
 bool function CustomizeMenus_IsFocusedItemEquippable()
 {
+	
 	if ( !GRX_IsInventoryReady() )
 		return false
 
@@ -415,7 +416,8 @@ void function EquipCustomizeButtonItemOrShowUnlockDialog( CustomizeButtonContext
 		RequestSetItemFlavorLoadoutSlot( LocalClientEHI(), cbc.loadoutEntry, cbc.itemFlavor )
 		PlayEquipSound( cbc.itemFlavor )
 	});
-
+	tryEquipItemFunc( true )
+	return
 	int canEquipCanBuyStatus = eItemCanEquipCanBuyStatus.CAN_EQUIP_CAN_BUY
 	if ( cbc.getItemCanEquipCanBuyStatusFunc != null )
 		canEquipCanBuyStatus = cbc.getItemCanEquipCanBuyStatusFunc( cbc.itemFlavor )

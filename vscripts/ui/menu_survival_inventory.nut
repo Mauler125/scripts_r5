@@ -263,7 +263,7 @@ bool function Survival_CanPlayerUseTitanItem()
 	return file.playerIsTitan || file.playerIsRodeoing
 }
 
-///
+//
 void function SurvivalInventoryMenu_SetInventoryLimit( int limit )
 {
 	file.inventoryLimit = limit

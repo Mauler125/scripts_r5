@@ -191,7 +191,7 @@ void function InitInventoryFooter( var panel )
 	AddPanelFooterOption( panel, LEFT, BUTTON_Y, false, "", "", SurvivalMenuSwapWeapon, IsSurvivalMenuEnabled )
 	AddPanelFooterOption( panel, LEFT, BUTTON_DPAD_RIGHT, false, "", "", SurvivalMenuSwapToOrdnance, IsSurvivalMenuEnabled )
 
-	AddPanelFooterOption( panel, LEFT, KEY_F2, false, "", "", TryChangeCharacters, ShowChangeCharactersOption )
+	AddPanelFooterOption( panel, LEFT, KEY_F2, true, "", "", TryChangeCharacters, ShowChangeCharactersOption )
 
 	AddPanelFooterOption( panel, LEFT, BUTTON_BACK, false, "", "", TryToggleMap )
 
@@ -202,8 +202,9 @@ void function InitInventoryFooter( var panel )
 	AddPanelFooterOption( panel, RIGHT, BUTTON_START, true, "#HINT_SYSTEM_MENU_GAMEPAD", "#HINT_SYSTEM_MENU_KB", TryOpenSystemMenu )
 	AddPanelFooterOption( panel, RIGHT, BUTTON_DPAD_UP, true, "#UP_BUTTON_CHARACTER_CHANGE", "#UP_BUTTON_CHARACTER_CHANGE", TryChangeCharacters, ShowChangeCharactersOption )
 
-	#if DEV
+	#if R5DEV
 		AddPanelFooterOption( panel, LEFT, BUTTON_DPAD_DOWN, true, "#DOWN_BUTTON_DEV_MENU", "#DEV_MENU", OpenDevMenu )
+		//AddPanelFooterOption( panel, LEFT, BUTTON_DPAD_LEFT, true, "test menu", "test menu", OpenTestMenu )
 	#endif
 }
 
@@ -752,8 +753,6 @@ void function TryChangeCharacters( var button )
 
 bool function ShowChangeCharactersOption()
 {
-	if ( GetGlobalNetInt( "gameState" ) >= eGameState.PickLoadout || IsSurvivalTraining() )
-		return false
 	return true
 }
 

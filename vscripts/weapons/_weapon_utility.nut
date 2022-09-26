@@ -49,6 +49,12 @@ global function FireBallisticRoundWithDrop
 global function DoesModExist
 global function DoesModExistFromWeaponClassName
 global function IsModActive
+global function ChargeBall_Precache
+global function ChargeBall_FireProjectile
+global function ChargeBall_ChargeBegin
+global function ChargeBall_ChargeEnd
+global function ChargeBall_StopChargeEffects
+global function ChargeBall_GetChargeTime
 global function PlayerUsedOffhand
 global function GetDistanceString
 global function IsWeaponInSingleShotMode
@@ -73,14 +79,15 @@ global function WeaponHasCosmetics
 
 #if CLIENT
 global function ServerCallback_SetWeaponPreviewState
+global function ServerCallback_GuidedMissileDestroyed
 #endif
 
 global function GetRadiusDamageDataFromProjectile
 global function OnWeaponAttemptOffhandSwitch_Never
 
-#if DEV
+#if R5DEV
 global function DevPrintAllStatusEffectsOnEnt
-#endif // #if DEV
+#endif // #if R5DEV
 
 #if SERVER
 global function PassThroughDamage
@@ -127,7 +134,7 @@ global function TryApplyingBurnDamage
 global function AddEntityBurnDamageStack
 global function ApplyBurnDamageTick
 
-#if DEV
+#if R5DEV
 global function ToggleZeroingMode
 #endif
 
@@ -240,7 +247,7 @@ struct
 
 		table<string, array<void functionref( entity, string, bool )> > weaponModChangedCallbacks
 
-		#if DEV
+		#if R5DEV
 			bool inZeroingMode = false
 		#endif
 
@@ -1512,7 +1519,7 @@ void function SatchelThink( entity satchel, entity player )
 	int satchelHealth = 15
 	thread TrapExplodeOnDamage( satchel, satchelHealth )
 
-	#if DEV
+	#if R5DEV
 		// temp HACK for FX to use to figure out the size of the particle to play
 		if ( Flag( "ShowExplosionRadius" ) )
 			thread ShowExplosionRadiusOnExplode( satchel )
@@ -1603,7 +1610,7 @@ void function PROTO_ExplodeAfterDelay( entity satchel, float delay )
 }
 #endif // SERVER
 
-#if DEV
+#if R5DEV
 void function ShowExplosionRadiusOnExplode( entity ent )
 {
 	ent.WaitSignal( "OnDestroy" )
@@ -2319,6 +2326,33 @@ bool function CanWeaponShootWhileRunning( entity weapon )
 }
 
 #if CLIENT
+void function ServerCallback_GuidedMissileDestroyed()
+{
+	entity player = GetLocalViewPlayer()
+
+	// guided missiles has not been updated to work with replays. added this if statement defensively just in case. - Roger
+	if ( !( "missileInFlight" in player.s ) )
+		return
+
+	player.s.missileInFlight = false
+}
+
+function ServerCallback_AirburstIconUpdate( toggle )
+{
+	entity player = GetLocalViewPlayer()
+	entity cockpit = player.GetCockpit()
+	if ( cockpit )
+	{
+		entity mainVGUI = cockpit.e.mainVGUI
+		if ( mainVGUI )
+		{
+			if ( toggle )
+				cockpit.s.offhandHud[OFFHAND_RIGHT].icon.SetImage( $"vgui/HUD/dpad_airburst_activate" )
+			else
+				cockpit.s.offhandHud[OFFHAND_RIGHT].icon.SetImage( $"vgui/HUD/dpad_airburst" )
+		}
+	}
+}
 
 bool function IsOwnerViewPlayerFullyADSed( entity weapon )
 {
@@ -2824,7 +2858,7 @@ void function GiveEMPStunStatusEffects( entity ent, float duration, float fadeou
 	#endif
 }
 
-#if DEV
+#if R5DEV
 string ornull function FindEnumNameForValue( table searchTable, int searchVal )
 {
 	foreach ( string keyname, int value in searchTable )
@@ -2854,7 +2888,7 @@ void function DevPrintAllStatusEffectsOnEnt( entity ent )
 	}
 	printt( found + " effects active.\n" )
 }
-#endif // #if DEV
+#endif // #if R5DEV
 
 entity function GetMeleeWeapon( entity player )
 {
@@ -2930,6 +2964,161 @@ entity function GetPlayerFromTitanWeapon( entity weapon )
 		player = titan
 
 	return player
+}
+
+
+const asset CHARGE_SHOT_PROJECTILE = $"models/weapons/bullets/temp_triple_threat_projectile_large.mdl"
+
+const asset CHARGE_EFFECT_1P = $"P_ordnance_charge_st_FP" // $"P_wpn_defender_charge_FP"
+const asset CHARGE_EFFECT_3P = $"P_ordnance_charge_st" // $"P_wpn_defender_charge"
+const asset CHARGE_EFFECT_DLIGHT = $"defender_charge_CH_dlight"
+
+const string CHARGE_SOUND_WINDUP_1P = "Weapon_ChargeRifle_WindUp_1P"
+const string CHARGE_SOUND_WINDUP_3P = "Weapon_ChargeRifle_WindUp_3P"
+const string CHARGE_SOUND_WINDDOWN_1P = "Weapon_ChargeRifle_WindDown_1P"
+const string CHARGE_SOUND_WINDDOWN_3P = "Weapon_ChargeRifle_WindDown_3P"
+
+void function ChargeBall_Precache()
+{
+#if SERVER
+	PrecacheModel( CHARGE_SHOT_PROJECTILE )
+	PrecacheEffect( CHARGE_EFFECT_1P )
+	PrecacheEffect( CHARGE_EFFECT_3P )
+#endif // #if SERVER
+}
+
+void function ChargeBall_FireProjectile( entity weapon, vector position, vector direction, bool shouldPredict )
+{
+	weapon.EmitWeaponNpcSound( LOUD_WEAPON_AI_SOUND_RADIUS_MP, 0.2 )
+
+	entity owner = weapon.GetWeaponOwner()
+	const float MISSILE_SPEED = 1200.0
+	const int CONTACT_DAMAGE_TYPES = (damageTypes.projectileImpact | DF_DOOM_FATALITY)
+	const int EXPLOSION_DAMAGE_TYPES = damageTypes.explosive
+	const bool DO_POPUP = false
+
+	if ( shouldPredict )
+	{
+	WeaponFireMissileParams fireMissileParams
+	fireMissileParams.speed = 1
+	fireMissileParams.scriptTouchDamageType = damageTypes.largeCaliberExp
+	fireMissileParams.scriptExplosionDamageType = damageTypes.largeCaliberExp
+	fireMissileParams.doRandomVelocAndThinkVars = false
+	fireMissileParams.clientPredicted = false
+	entity missile = weapon.FireWeaponMissile( fireMissileParams )
+		if ( missile )
+		{
+			EmitSoundOnEntity( owner, "ShoulderRocket_Cluster_Fire_3P" )
+			missile.SetModel( CHARGE_SHOT_PROJECTILE )
+#if CLIENT
+			const ROCKETEER_MISSILE_EXPLOSION = $"xo_exp_death"
+			const ROCKETEER_MISSILE_SHOULDER_FX = $"wpn_mflash_xo_rocket_shoulder_FP"
+			//entity owner = weapon.GetWeaponOwner()
+			vector origin = owner.OffsetPositionFromView( Vector(0, 0, 0), Vector(25, -25, 15) )
+			vector angles = owner.CameraAngles()
+			StartParticleEffectOnEntityWithPos( owner, GetParticleSystemIndex( ROCKETEER_MISSILE_SHOULDER_FX ), FX_PATTACH_EYES_FOLLOW, -1, origin, angles )
+#else // #if CLIENT
+			missile.SetProjectileImpactDamageOverride( 1440 )
+			missile.kv.damageSourceId = eDamageSourceId.charge_ball
+#endif // #else // #if CLIENT
+		}
+	}
+}
+
+bool function ChargeBall_ChargeBegin( entity weapon, string tagName )
+{
+#if CLIENT
+	if ( InPrediction() && !IsFirstTimePredicted() )
+		return true
+#endif // #if CLIENT
+
+	weapon.w.statusEffects.append( StatusEffect_AddEndless( weapon.GetWeaponOwner(), eStatusEffect.move_slow, 0.6 ) )
+	weapon.w.statusEffects.append( StatusEffect_AddEndless( weapon.GetWeaponOwner(), eStatusEffect.turn_slow, 0.35 ) )
+
+	weapon.PlayWeaponEffect( CHARGE_EFFECT_1P, CHARGE_EFFECT_3P, tagName )
+	weapon.PlayWeaponEffect( $"", CHARGE_EFFECT_DLIGHT, tagName )
+
+#if SERVER
+	StopSoundOnEntity( weapon, CHARGE_SOUND_WINDDOWN_3P )
+	entity weaponOwner = weapon.GetWeaponOwner()
+	if ( IsValid( weaponOwner ) )
+	{
+		if ( weaponOwner.IsPlayer() )
+			EmitSoundOnEntityExceptToPlayer( weapon, weaponOwner, CHARGE_SOUND_WINDUP_3P )
+		else
+			EmitSoundOnEntity( weapon, CHARGE_SOUND_WINDUP_3P )
+	}
+#else
+	StopSoundOnEntity( weapon, CHARGE_SOUND_WINDDOWN_1P )
+	EmitSoundOnEntity( weapon, CHARGE_SOUND_WINDUP_1P )
+#endif
+
+	return true
+}
+
+void function ChargeBall_ChargeEnd( entity weapon )
+{
+#if CLIENT
+	if ( InPrediction() && !IsFirstTimePredicted() )
+		return
+#endif
+
+	if ( IsValid( weapon.GetWeaponOwner() ) )
+	{
+		#if CLIENT
+		if ( InPrediction() && IsFirstTimePredicted() )
+		{
+		#endif
+
+			foreach ( effect in weapon.w.statusEffects )
+			{
+				StatusEffect_Stop( weapon.GetWeaponOwner(), effect )
+			}
+
+		#if CLIENT
+		}
+		#endif
+	}
+
+#if SERVER
+	StopSoundOnEntity( weapon, CHARGE_SOUND_WINDUP_3P )
+	entity weaponOwner = weapon.GetWeaponOwner()
+	if ( IsValid( weaponOwner ) )
+	{
+		if ( weaponOwner.IsPlayer() )
+			EmitSoundOnEntityExceptToPlayer( weapon, weaponOwner, CHARGE_SOUND_WINDDOWN_3P )
+		else
+			EmitSoundOnEntity( weapon, CHARGE_SOUND_WINDDOWN_3P )
+	}
+#else
+	StopSoundOnEntity( weapon, CHARGE_SOUND_WINDUP_1P )
+	EmitSoundOnEntity( weapon, CHARGE_SOUND_WINDDOWN_1P )
+#endif
+
+	ChargeBall_StopChargeEffects( weapon )
+}
+
+void function ChargeBall_StopChargeEffects( entity weapon )
+{
+	Assert( IsValid( weapon ) )
+	// weapon.StopWeaponEffect( CHARGE_EFFECT_1P, CHARGE_EFFECT_3P )
+	// weapon.StopWeaponEffect( CHARGE_EFFECT_3P, CHARGE_EFFECT_1P )
+	// weapon.StopWeaponEffect( CHARGE_EFFECT_DLIGHT, CHARGE_EFFECT_DLIGHT )
+	thread HACK_Deplayed_ChargeBall_StopChargeEffects( weapon )
+}
+
+void function HACK_Deplayed_ChargeBall_StopChargeEffects( entity weapon )
+{
+	weapon.EndSignal( "OnDestroy" )
+	wait 0.2
+	weapon.StopWeaponEffect( CHARGE_EFFECT_1P, CHARGE_EFFECT_3P )
+	weapon.StopWeaponEffect( CHARGE_EFFECT_3P, CHARGE_EFFECT_1P )
+	weapon.StopWeaponEffect( CHARGE_EFFECT_DLIGHT, CHARGE_EFFECT_DLIGHT )
+}
+
+float function ChargeBall_GetChargeTime()
+{
+	return 1.05
 }
 
 #if SERVER
@@ -4565,7 +4754,7 @@ void function AddEntityBurnDamageStack( entity ent, entity owner, entity inflict
 	else if ( ent.IsNPC() )
 		ent.ai.burnDamageStacks.append( stack )
 
-	#if DEV && DEBUG_BURN_DAMAGE
+	#if R5DEV && DEBUG_BURN_DAMAGE
 		printt( "tickInterval:", stack.tickInterval )
 		printt( "numIntervals:", numIntervals )
 		printt( "damagePerTick:", stack.damagePerTick )
@@ -4583,7 +4772,7 @@ void function RemoveEntityBurnDamageStack( entity ent, int stackIdx )
 	else
 		ent.ai.burnDamageStacks.remove( stackIdx )
 
-	#if DEV && DEBUG_BURN_DAMAGE
+	#if R5DEV && DEBUG_BURN_DAMAGE
 		printt( "burn stack removed, num stacks is now:", GetEntityBurnDamageStackCount( ent ) )
 	#endif
 }
@@ -4597,7 +4786,7 @@ void function EntityBurnDamageThread( entity ent )
 	OnThreadEnd(
 		function () : ( ent )
 		{
-			#if DEV && DEBUG_BURN_DAMAGE
+			#if R5DEV && DEBUG_BURN_DAMAGE
 				printt( "EntityBurnDamageThread ended" )
 			#endif
 
@@ -4626,7 +4815,7 @@ void function EntityBurnDamageThread( entity ent )
 					dmgThisTick += remainderDmg
 					stack.damageDealt += remainderDmg
 
-					#if DEV && DEBUG_BURN_DAMAGE
+					#if R5DEV && DEBUG_BURN_DAMAGE
 						printt( "applying", remainderDmg, "burn damage remainder, total damage dealt:", stack.damageDealt )
 					#endif
 				}
@@ -4637,7 +4826,7 @@ void function EntityBurnDamageThread( entity ent )
 				stack.damageDealt += stack.damagePerTick
 				stack.lastDamageTime = Time()
 
-				#if DEV && DEBUG_BURN_DAMAGE
+				#if R5DEV && DEBUG_BURN_DAMAGE
 					printt( "applying", stack.damagePerTick, "burn damage, total damage dealt:", stack.damageDealt )
 				#endif
 			}
@@ -4708,7 +4897,7 @@ void function SetEntityIsBurning( entity ent, bool isBurning )
 }
 
 
-#if DEV
+#if R5DEV
 void function ToggleZeroingMode()
 {
 	if ( !GetPlayerArray().len() )
@@ -4822,7 +5011,7 @@ bool function OnWeaponAttemptOffhandSwitch_Never( entity weapon )
 #if CLIENT
 void function ServerCallback_SetWeaponPreviewState( bool newState )
 {
-	#if DEV
+	#if R5DEV
 		entity player = GetLocalClientPlayer()
 
 		if ( newState )

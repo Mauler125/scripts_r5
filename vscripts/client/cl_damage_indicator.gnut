@@ -587,6 +587,9 @@ void function GrenadeArrowThink( entity player, entity grenade, float damageRadi
 
 		if ( shouldBeVisible )
 		{
+			if ( grenade instanceof C_PlayerWaypoint )
+				damageRadius = grenade.GetWaypointFloat( 0 )
+
 			if ( Distance( player.GetOrigin(), grenade.GetOrigin() ) > damageRadius || !cockpit )
 			{
 				shouldBeVisible = false
@@ -708,7 +711,7 @@ void function SCB_AddGrenadeIndicatorForEntity( int team, int ownerHandle, int e
 	if ( !level.grenadeIndicatorEnabled )
 		return
 
-	#if DEV
+	#if R5DEV
 		if ( !level.clientScriptInitialized )
 			return
 	#endif
@@ -728,7 +731,7 @@ void function SCB_AddGrenadeIndicatorForEntity( int team, int ownerHandle, int e
 
 void function TryAddGrenadeIndicator( entity grenade )
 {
-	#if DEV
+	#if R5DEV
 		if ( !level.clientScriptInitialized )
 			return
 	#endif

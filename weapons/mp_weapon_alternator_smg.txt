@@ -296,15 +296,16 @@ WeaponData
 
 	Mods
 	{
-		survival_finite_ammo
+		//survival_finite_ammo
+		sia
         {
-            "ammo_default_total"							"0"
-            "ammo_stockpile_max"							"24"
-            "ammo_no_remove_from_stockpile"					"0"
+            "ammo_default_total"							"500"
+            "ammo_stockpile_max"							"500"
+            "ammo_no_remove_from_stockpile"					"1"
+			"fire_rate"   									"18"
+			"ammo_clip_size"   								"27"
 
-            "low_ammo_fraction" 							"0.3"
-
-	   		"uses_ammo_pool"								"1"
+	   		"uses_ammo_pool"								"0"
         }
 
         optic_cq_hcog_classic

@@ -4,7 +4,7 @@
 global function ShPassPanel_LevelInit
 #endif
 
-#if(CLIENT)
+#if CLIENT
 global function UIToClient_StartBattlePassScene
 global function UIToClient_StopBattlePassScene
 global function UIToClient_ItemPresentation
@@ -58,7 +58,7 @@ struct RewardPanelData
 
 struct FileStruct_LifetimeLevel
 {
-	#if(CLIENT)
+	#if CLIENT
 		bool                       isBattlePassSceneThreadActive = false
 		vector                     sceneRefOrigin
 		vector                     sceneRefAngles
@@ -123,7 +123,7 @@ const int REWARDS_PER_PAGE = 14
 #if CLIENT || UI 
 void function ShPassPanel_LevelInit()
 {
-	#if(CLIENT)
+	#if CLIENT
 		RegisterSignal( "StopBattlePassSceneThread" )
 		RegisterButtonPressedCallback( MOUSE_WHEEL_UP, OnMouseWheelUp )
 		RegisterButtonPressedCallback( MOUSE_WHEEL_DOWN, OnMouseWheelDown )
@@ -1429,7 +1429,7 @@ void function ShowRewardTable( var button )
 #endif
 
 
-#if(CLIENT)
+#if CLIENT
 void function UIToClient_StartBattlePassScene( var panel )
 {
 	//
@@ -1438,7 +1438,7 @@ void function UIToClient_StartBattlePassScene( var panel )
 #endif
 
 
-#if(CLIENT)
+#if CLIENT
 void function UIToClient_StopBattlePassScene()
 {
 	//
@@ -1448,7 +1448,7 @@ void function UIToClient_StopBattlePassScene()
 #endif
 
 
-#if(CLIENT)
+#if CLIENT
 //
 //
 //
@@ -1472,7 +1472,6 @@ struct CarouselColumnState
 
 void function BattlePassScene_Thread( var panel )
 {
-	Signal( fileLevel.signalDummy, "StopBattlePassSceneThread" ) //
 	EndSignal( fileLevel.signalDummy, "StopBattlePassSceneThread" )
 
 	fileLevel.isBattlePassSceneThreadActive = true
@@ -1510,7 +1509,7 @@ void function BattlePassScene_Thread( var panel )
 #endif
 
 
-#if(CLIENT)
+#if CLIENT
 void function OnMouseWheelUp( entity unused )
 {
 	//
@@ -1518,7 +1517,7 @@ void function OnMouseWheelUp( entity unused )
 #endif
 
 
-#if(CLIENT)
+#if CLIENT
 void function OnMouseWheelDown( entity unused )
 {
 	//
@@ -1959,7 +1958,7 @@ GRXScriptOffer ornull function GetBattlePassXPPurchaseOffer()
 #endif
 
 
-#if(CLIENT)
+#if CLIENT
 void function UIToClient_ItemPresentation( SettingsAssetGUID itemFlavorGUID, int level )
 {
 	entity sceneRef = GetEntByScriptName( "battlepass_ref" )
@@ -2037,7 +2036,7 @@ void function ShowBattlepassItem( ItemFlavor item, int level )
 }
 #endif //
 
-#if(CLIENT)
+#if CLIENT
 const float BATTLEPASS_MODEL_ROTATE_SPEED = 15.0
 
 void function ClearBattlePassItem()

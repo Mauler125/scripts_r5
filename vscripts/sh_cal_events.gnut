@@ -97,7 +97,7 @@ void function ShCalEvent_LevelInit()
 	FileStruct_LifetimeLevel newFileLevel
 	fileLevel = newFileLevel
 
-	#if(false)
+	#if false
 
 
 
@@ -393,7 +393,7 @@ ItemFlavor function BattlePass_GetSeason( ItemFlavor flav ) //
 //
 //
 
-#if(false)
+#if false
 
 
 

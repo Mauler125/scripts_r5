@@ -2,7 +2,7 @@ global function Sh_ArenaDeathField_Init
 global function GetDeathFieldStage
 global function SURVIVAL_GetDeathField
 
-#if SERVER && DEV
+#if SERVER && R5DEV
 global function DEV_DrawCircleLocations
 global function DEV_SimulateFinalLocations
 global function DEV_ResetSurveyZones
@@ -140,7 +140,7 @@ void function Sh_ArenaDeathField_Init()
 	RegisterSignal( "DeathField_ShrinkNow" )
 
 	FlagInit( "AllowDeathFieldUpdate", true )
-	FlagInit( "DeathFieldPaused", GetCurrentPlaylistVarBool( "sur_circle_start_paused", false ) )
+	FlagInit( "DeathFieldPaused", (GetCurrentPlaylistVarBool( "sur_circle_start_paused", false ) || IsSurvivalTraining()) )
 	FlagInit( "DoneCreatingDeathFieldPosition" )
 	FlagInit( "SUR_DeathFieldShrinking" )
 
@@ -277,7 +277,7 @@ void function SURVIVAL_AddCallback_OnDeathFieldStopShrink( void functionref( Dea
 
 void function DeathFieldCircleWait( float waitTime )
 {
-	#if DEV
+	#if R5DEV
 		svGlobal.levelEnt.EndSignal( "DeathField_ShrinkNow" )
 	#endif
 
@@ -287,7 +287,7 @@ void function DeathFieldCircleWait( float waitTime )
 
 void function DeathFieldShrinkThink( DeathFieldData data, entity deathField )
 {
-	#if DEV
+	#if R5DEV
 		svGlobal.levelEnt.EndSignal( "DeathField_ShrinkNow" )
 	#endif
 
@@ -440,7 +440,7 @@ void function SURVIVAL_RunArenaDeathField()
 			waitthread DeathFieldCircleWait( stage.preShrinkDuration )
 
 			// only change these settings if we dev-skipped the previous circle since it will send an unwated message
-			#if DEV
+			#if R5DEV
 				if ( fabs( Time() + MARGIN_WAIT_TIME - data.startTime ) > 1.0 )
 				{
 					printt( "reset net time" )
@@ -503,7 +503,7 @@ void function SURVIVAL_RunArenaDeathField()
 		data.center = mover.GetOrigin()
 
 		// only change these settings if we dev-skipped the previous circle since it will send an unwated message
-		#if DEV
+		#if R5DEV
 			if ( Time() < GetGlobalNetTime( "nextCircleStartTime" ) + MARGIN_WAIT_TIME + stage.shrinkDuration - 1.0 )
 			{
 				SetGlobalNetTime( "nextCircleStartTime", Time() - (stage.shrinkDuration + stage.preShrinkDuration) )
@@ -675,7 +675,7 @@ bool function ClientCommand_UpdateCirclePos( entity player, array<string> args )
 	float argY    = float( args[1] )
 	vector newPos = <argX, argY, 0>
 
-	#if DEV
+	#if R5DEV
 		thread DEV_ForceDeathFieldPosition( newPos )
 		return true
 	#endif
@@ -683,7 +683,7 @@ bool function ClientCommand_UpdateCirclePos( entity player, array<string> args )
 	return false
 }
 
-#if DEV
+#if R5DEV
 void function DEV_ForceDeathFieldPosition( vector endPos )
 {
 	if ( !SURVIVAL_IsValidCircleLocation( endPos ) )
@@ -733,7 +733,7 @@ void function DEV_ResetSurveyZones()
 
 void function SURVIVAL_AddOverrideCircleLocation( vector origin, float radius )
 {
-	#if DEV
+	#if R5DEV
 		file.overrideCircleEndPos[ origin ] <- radius
 	#endif
 }
@@ -1271,11 +1271,16 @@ void function UpdateSurveyBeaconHint()
 
 void function OnPropDynamicCreated( entity prop )
 {
-	if ( prop.GetModelName() == SURVEY_BEACON_MODEL )
+	string modelName = prop.GetModelName()
+	if ( modelName == SURVEY_BEACON_MODEL )
 	{
 		CreateCallback_Panel( prop )
 		ClearCallback_CanUseEntityCallback( prop )
 		SetCallback_CanUseEntityCallback( prop, SurveyBeacon_CanUseFunction )
+	}
+	else if ( modelName == "mdl/fx/bb_shield.rmdl" )
+	{
+		Chroma_OnBubbleShieldCreated( prop )
 	}
 }
 
@@ -1706,12 +1711,16 @@ void function TrackDeathfieldDistance_Internal( entity cockpit, entity player )
 	player.EndSignal( "OnDestroy" )
 	cockpit.EndSignal( "OnDestroy" )
 
-	bool wasOutside = false
+	bool wasShowingDeathFieldFx = false
 	int screenFx
 
 	OnThreadEnd(
-		function() : ( screenFx )
+		function() : ( screenFx, player )
 		{
+			//
+			ColorCorrection_SetWeight( file.colorCorrection, 0.0 )
+			Chroma_EnteredRing()
+
 			if ( EffectDoesExist( screenFx ) )
 			{
 				EffectStop( screenFx, true, true )
@@ -1723,11 +1732,11 @@ void function TrackDeathfieldDistance_Internal( entity cockpit, entity player )
 
 	while ( 1 )
 	{
-		bool isOutside = DeathField_PointDistanceFromFrontier( player.GetOrigin() ) < 0
+		bool shouldShowDeathFieldFx = ShouldShowDeathFieldEffects( player ) //
 
-		if ( wasOutside != isOutside )
+		if ( wasShowingDeathFieldFx != shouldShowDeathFieldFx )
 		{
-			if ( isOutside )
+			if ( shouldShowDeathFieldFx )
 			{
 				Callback_OnPlayerEnteredDeathfield( player )
 
@@ -1738,6 +1747,8 @@ void function TrackDeathfieldDistance_Internal( entity cockpit, entity player )
 				}
 
 				ColorCorrection_SetWeight( file.colorCorrection, 1.0 )
+
+				Chroma_LeftRing()
 			}
 			else
 			{
@@ -1749,13 +1760,33 @@ void function TrackDeathfieldDistance_Internal( entity cockpit, entity player )
 				}
 
 				ColorCorrection_SetWeight( file.colorCorrection, 0.0 )
+
+				Chroma_EnteredRing()
 			}
-			wasOutside = isOutside
+			wasShowingDeathFieldFx = shouldShowDeathFieldFx
 		}
 
 		WaitFrame()
 	}
 }
+
+
+bool function ShouldShowDeathFieldEffects( entity player )
+{
+	bool shouldShow = true
+
+	if ( DeathField_PointDistanceFromFrontier( player.GetOrigin() ) >= 0 )
+		shouldShow = false
+
+	if ( !IsAlive( player ) )
+		shouldShow = false
+
+	if ( IsViewingSquadSummary() )
+		shouldShow = false
+
+	return shouldShow
+}
+
 
 void function Callback_OnPlayerEnteredDeathfield( entity player )
 {

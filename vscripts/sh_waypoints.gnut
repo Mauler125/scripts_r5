@@ -1532,7 +1532,7 @@ bool function IsRepingablePingType( int pingType )
 {
 	switch ( pingType )
 	{
-		//case ePingType.MAP_WAYPOINT:
+		// case ePingType.MAP_WAYPOINT:
 		case ePingType.ENEMY_SPECIFIC:
 		case ePingType.ENEMY_GENERAL:
 			return false
@@ -1551,13 +1551,13 @@ entity function GetAnyValidLocPingForReuse( entity player, int pingType, entity 
 	if ( !IsRepingablePingType( pingType ) )
 		return null
 
-	// if ( player.p.pings.locations.len() == 0 )
-	// 	return null
+	if ( player.p.pings.locations.len() == 0 )
+		return null
 
-	entity wp           = null//player.p.pings.locations.top()
-	//float timeSincePing = Waypoint_GetWaypointAge( wp )
-	//if ( timeSincePing >= PING_REUSE_TIME )
-	return null
+	entity wp           = player.p.pings.locations.top()
+	float timeSincePing = Waypoint_GetWaypointAge( wp )
+	if ( timeSincePing >= PING_REUSE_TIME )
+		return null
 
 	int topPingType = Waypoint_GetPingTypeForWaypoint( wp )
 	if ( topPingType != pingType )
@@ -1733,10 +1733,9 @@ float function GetDefaultTimeoutForPingType( entity player, int pingType )
 
 entity function CreateWaypoint_Ping_Location( entity player, int pingType, entity pingEnt, vector position, int ticketID, bool forceNew )
 {
+	printt( VM_NAME(), FUNC_NAME(), FUNC_NAME(1), "(", player.GetPlayerName(), ")", "pingType:", pingType, "pos:", position, "ticketID:", ticketID, "pingEnt", pingEnt )
 	if ( GetCurrentPlaylistVarBool( "use_new_ping", true ) )
 		position += <0, 0, 72>
-
-	forceNew = true
 
 	entity wp = forceNew ? null : GetAnyValidLocPingForReuse( player, pingType, pingEnt, position )
 	if ( wp == null )
@@ -1764,8 +1763,10 @@ entity function CreateWaypoint_Ping_Location( entity player, int pingType, entit
 
 	if ( pingType in file.pingCallbackFunctions )
 	{
-		foreach( func in file.pingCallbackFunctions[ pingType ] )
+		foreach( func in file.pingCallbackFunctions[ pingType ] ) 
+		{
 			func( player, wp, pingEnt, pingType )
+		}
 	}
 
 	int team = player.GetTeam()

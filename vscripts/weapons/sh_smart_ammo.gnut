@@ -99,6 +99,7 @@ int function SmartAmmo_FireWeapon( entity weapon, WeaponPrimaryAttackParams atta
 
 	if ( !weapon.SmartAmmo_IsEnabled() )
 	{
+		printt("not enabled")
 		if ( !SmartAmmo_GetAllowUnlockedFiring( weapon ) )
 		{
 			SmartAmmo_SetWeaponFireFailedTime( weapon )
@@ -290,68 +291,35 @@ int function SmartAmmo_FireWeapon_HomingMissile( entity weapon, WeaponPrimaryAtt
 	entity player = weapon.GetWeaponOwner()
 	vector attackPos = attackParams.pos
 	vector attackDir = attackParams.dir
+	
 	float missileSpeed = SmartAmmo_GetMissileSpeed( weapon )
-	bool doPopup = SmartAmmo_GetMissileShouldDropKick( weapon )
-
-	if ( SmartAmmo_GetMissileAimAtCursor( weapon ) )
-		attackDir = GetVectorFromPositionToCrosshair( player, attackPos )
-
-	local homingSpeed = SmartAmmo_GetMissileHomingSpeed( weapon )
+	local homingSpeed = SmartAmmo_GetMissileHomingSpeed( weapon )*2
+	
+	printt("homing speed " + homingSpeed.tostring())
+	
 	local missileSpeedLimit = SmartAmmo_GetMissileSpeedLimit( weapon )
 
-	array<entity> firedMissiles
-	table missileFlightData = SmartAmmo_GetExpandContract( weapon )
-
-	if ( missileFlightData.isValid )
-	{
-		firedMissiles = FireExpandContractMissiles( weapon, attackParams, attackPos, attackDir, damageType, explosionDamageType, shouldPredict, expect int( missileFlightData.numRocketsPerShot ), missileSpeed, missileFlightData.launchOutAng, missileFlightData.launchOutTime, missileFlightData.launchInAng, missileFlightData.launchInTime, missileFlightData.launchInLerpTime, missileFlightData.launchStraightLerpTime, missileFlightData.applyRandSpread, weapon.GetWeaponBurstFireCount() )
-	}
-	else
-	{
 		WeaponFireMissileParams fireMissileParams
 		fireMissileParams.pos = attackPos
 		fireMissileParams.dir = attackDir
 		fireMissileParams.speed = missileSpeed
 		fireMissileParams.scriptTouchDamageType = damageType
 		fireMissileParams.scriptExplosionDamageType = explosionDamageType
-		fireMissileParams.doRandomVelocAndThinkVars = doPopup
-		fireMissileParams.clientPredicted = shouldPredict
+		fireMissileParams.doRandomVelocAndThinkVars = true
+		fireMissileParams.clientPredicted = true
+		
 		entity missile = weapon.FireWeaponMissile( fireMissileParams )
-		if ( missile )
-		{
-			//InitMissileForRandomDrift( missile, attackPos, attackDir )
-			missile.InitMissileForRandomDriftFromWeaponSettings( attackPos, attackDir )
-			firedMissiles.append( missile )
-		}
-	}
 
-	foreach ( missile in firedMissiles )
-	{
-		missile.kv.lifetime = 10
-
-		#if SERVER
+		SetTeam( missile, player.GetTeam() )
+		missile.SetHomingSpeeds( homingSpeed, homingSpeed )
+		SmartAmmo_SetMissileTarget( missile, target )
+	#if SERVER
 			missile.SetOwner( player )
 			EmitSoundOnEntity( missile, HOMING_SFX_LOOP )
-		#endif
-
-		missile.SetProjectileSpeed( missileSpeed )
-		missile.SetHomingSpeeds( homingSpeed, homingSpeed )
-		SetTeam( missile, player.GetTeam() )
-
-		if ( target )
-		{
-			if ( SmartAmmo_GetShouldTrackPosition( weapon ) )
-				SmartAmmo_SetMissileTargetPosition( missile, target )
-			else
-				SmartAmmo_SetMissileTarget( missile, target )
-		}
-
-		if ( "missileThinkThread" in weapon.s )
-			thread weapon.s.missileThinkThread( weapon, missile )
-	}
-
-	return firedMissiles.len()
+	#endif
+	return 1
 }
+
 
 /******************************************/
 /* 	 GLOBAL - WEAPON SETTINGS OVERRIDES   */

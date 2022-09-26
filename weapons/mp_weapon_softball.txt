@@ -1,10 +1,10 @@
 WeaponData
 {
 	// General
-	"printname"   									"#WPN_SOFTBALL"
-	"shortprintname"								"#WPN_SOFTBALL_SHORT"
-	"description" 									"#WPN_SOFTBALL_DESC"
-	"longdesc"										"#WPN_SOFTBALL_LONGDESC"
+	"printname"   									"SOFTBALL"
+	"shortprintname"								"SOFTBALL"
+	"description" 									"SOFTBALL"
+	"longdesc"										"SOFTBALL"
 
 	"ammo_pool_type"								"boomjuice"
 
@@ -175,18 +175,18 @@ WeaponData
     "projectile_lifetime"                           "10"  // failsafe time after which grenade explodes
 	"grenade_ignition_time"							"0.0"
 
-	"grenade_bounce_vel_frac_shallow"				"0.6"
-	"grenade_bounce_vel_frac_sharp"					"0.58"
-	"grenade_bounce_vel_frac_along_normal"			"0.65"
-	"grenade_roll_vel_frac_per_second"				"0.00000035" // stop = 0... mmm dat scale
-	"grenade_bounce_randomness"						"0.1"
-	"grenade_bounce_extra_vertical_randomness"		"0.05"
+	"grenade_bounce_vel_frac_shallow"				"0.47"
+	"grenade_bounce_vel_frac_sharp"					"0.28"
+	"grenade_bounce_vel_frac_along_normal"			"0.5"
+	//"grenade_roll_vel_frac_per_second"				"0.00000035" // stop = 0... mmm dat scale
+	"grenade_roll_vel_frac_per_second"				"0.1"
+	"grenade_bounce_extra_vertical_randomness"		"0.2"
 
-	"projectile_launch_speed"						"3500"
+	"projectile_launch_speed"						"2500"
     "projectile_launch_pitch_offset"                "9.5"
     "projectile_gravity_scale"                      "0.6"
-	"projectile_first_person_offset_fraction"		"1"
-	"projectile_inherit_owner_velocity_scale"		"1.5"
+	"projectile_first_person_offset_fraction"		"2"
+	"projectile_inherit_owner_velocity_scale"		"1"
 
 	"aimassist_disable_hipfire"						"0"
 	"aimassist_disable_ads"							"0"
@@ -226,7 +226,7 @@ WeaponData
 	"spread_decay_delay"  							"0.1"
 
 	// View Kick
-	"viewkick_spring" 								"softball"
+	"viewkick_spring" 								"launcher"
 	"viewkick_spring_cooldown_holdtime"             "0.1"
     "viewkick_spring_cooldown_fadetime"             "0.25"
 
@@ -427,8 +427,8 @@ WeaponData
 	    launcher_mag_fast
 	    {
 	        "reload_is_segmented"           "0"
-	        "reload_time" 					"2.3"
-	        "reloadempty_time"              "2.3"
+	        "reload_time" 					"0.1"
+	        "reloadempty_time"              "0.1"
 	    }
 	}
 

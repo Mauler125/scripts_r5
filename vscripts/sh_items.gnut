@@ -209,7 +209,7 @@ struct FileStruct_LifetimeLevel
 
 	bool isItemRegistrationFinished = false
 
-	#if DEV
+	#if R5DEV
 		bool DEV_hasItemRegistrationStarted = false
 	#endif
 }
@@ -230,7 +230,7 @@ void function ShItems_LevelInit_Begin()
 	FileStruct_LifetimeLevel newFileLevel
 	fileLevel = newFileLevel
 
-	#if DEV
+	#if R5DEV
 		#if SERVER
 			AddClientCommandCallback( "itemflavors_dump", ClientCommand_itemflavors_dump )
 		#endif
@@ -546,7 +546,7 @@ string function ItemFlavor_GetLongName( ItemFlavor flavor )
 	Assert( IsItemFlavorStructValid( flavor, eValidation.ASSERT ) )
 
 	string localizationKey = GetGlobalSettingsString( flavor._____INTERNAL_settingsAsset, "localizationKey_NAME" )
-	#if DEV
+	#if R5DEV
 		if ( localizationKey == "" )
 			localizationKey = format( "%s !UNLOCALIZED!", ItemFlavor_GetHumanReadableRef( flavor ) )
 		else if ( localizationKey.slice( 0, 1 ) != "#" )
@@ -563,7 +563,7 @@ string function ItemFlavor_GetShortName( ItemFlavor flavor )
 	Assert( IsItemFlavorStructValid( flavor, eValidation.ASSERT ) )
 
 	string localizationKey = GetGlobalSettingsString( flavor._____INTERNAL_settingsAsset, "localizationKey_NAME_SHORT" )
-	#if DEV
+	#if R5DEV
 		if ( localizationKey == "" )
 			localizationKey = format( "%s !UNLOCALIZED!", ItemFlavor_GetHumanReadableRef( flavor ) )
 		else if ( localizationKey.slice( 0, 1 ) != "#" )
@@ -580,7 +580,7 @@ string function ItemFlavor_GetLongDescription( ItemFlavor flavor )
 	Assert( IsItemFlavorStructValid( flavor, eValidation.ASSERT ) )
 
 	string localizationKey = GetGlobalSettingsString( flavor._____INTERNAL_settingsAsset, "localizationKey_DESCRIPTION_LONG" )
-	#if DEV
+	#if R5DEV
 		if ( localizationKey == "" )
 			localizationKey = format( "%s !UNLOCALIZED!", ItemFlavor_GetHumanReadableRef( flavor ) )
 		else if ( localizationKey.slice( 0, 1 ) != "#" )
@@ -597,7 +597,7 @@ string function ItemFlavor_GetShortDescription( ItemFlavor flavor )
 	Assert( IsItemFlavorStructValid( flavor, eValidation.ASSERT ) )
 
 	string localizationKey = GetGlobalSettingsString( flavor._____INTERNAL_settingsAsset, "localizationKey_DESCRIPTION_SHORT" )
-	#if DEV
+	#if R5DEV
 		if ( localizationKey == "" )
 			localizationKey = format( "%s !UNLOCALIZED!", ItemFlavor_GetHumanReadableRef( flavor ) )
 		else if ( localizationKey.slice( 0, 1 ) != "#" )
@@ -934,7 +934,7 @@ table<ItemFlavor, bool> function MakeItemFlavorSet( array<ItemFlavor> list, tabl
 const string itemSettingsPathPattern = "^settings/itemflav/([^.]+)\\.rpak$"
 ItemFlavor ornull function RegisterItemFlavorFromSettingsAsset( asset settingsAsset )
 {
-	#if DEV
+	#if R5DEV
 		fileLevel.DEV_hasItemRegistrationStarted = true
 	#endif
 
@@ -1033,7 +1033,7 @@ ItemFlavor ornull function RegisterItemFlavorFromSettingsAsset( asset settingsAs
 //// Internals ////
 ///////////////////
 ///////////////////
-#if SERVER && DEV
+#if SERVER && R5DEV
 bool function ClientCommand_itemflavors_dump( entity player, array<string> args )
 {
 	// inv_dump
@@ -1082,8 +1082,8 @@ bool function ItemFlavor_HasUnlockFunc( ItemFlavor flavor )
 
 bool function ItemFlavor_PassesUnlockFunc( ItemFlavor flavor, entity player )
 {
-	#if DEV
-		if ( EverythingUnlockedConVarEnabled() || GetCurrentPlaylistVarBool( "dev_force_everything_unlocked", false ) )
+	#if SERVER
+		//if ( EverythingUnlockedConVarEnabled() || GetCurrentPlaylistVarBool( "dev_force_everything_unlocked", false ) )
 			return true
 	#endif
 
@@ -1107,7 +1107,7 @@ bool function PlayerIsOnPC( entity player )
 		#if SERVER
 			return ( player.GetPlayerPlatformName().tolower() == "pc" || player.GetPlayerPlatformName().tolower() == "pc_origin" )
 		#endif
-		#if ( UI || CLIENT )
+		#if  UI || CLIENT 
 			#if PC_PROG
 			return true
 			#else
@@ -1121,7 +1121,7 @@ bool function PlayerIsOnXbox( entity player )
 		#if SERVER
 			return player.GetPlayerPlatformName().tolower() == "x1"
 		#endif
-		#if ( UI || CLIENT )
+		#if  UI || CLIENT 
 			#if DURANGO_PROG
 				return true
 			#else
@@ -1135,7 +1135,7 @@ bool function PlayerHasTwitchPrimeRewards( entity player )
 		#if SERVER
 			return player.HasTwitchPrimeRewards() ? true : false
 		#endif
-		#if ( UI || CLIENT )
+		#if  UI || CLIENT 
 			return GetConVarInt( "twitch_prime_linked" ) == 1
 		#endif
 }
@@ -1159,7 +1159,7 @@ bool function PlayerHasStarterPack( entity player )
 		Assert( player != null )
 		return player.HasEntitlement( STARTER_PACK ) || player.HasEntitlement( STARTER_PACK_DURABLE )
 	#endif
-	#if ( UI || CLIENT )
+	#if  UI || CLIENT 
 		return LocalPlayerHasEntitlement( STARTER_PACK ) || LocalPlayerHasEntitlement( STARTER_PACK_DURABLE )
 	#endif
 }
@@ -1170,7 +1170,7 @@ bool function PlayerHasFoundersPack( entity player )
 		Assert( player != null )
 		return player.HasEntitlement( FOUNDERS_PACK ) || player.HasEntitlement( FOUNDERS_PACKAGE_DURABLE )
 	#endif
-	#if ( UI || CLIENT )
+	#if  UI || CLIENT 
 		return LocalPlayerHasEntitlement( FOUNDERS_PACK ) || LocalPlayerHasEntitlement( FOUNDERS_PACKAGE_DURABLE )
 	#endif
 }

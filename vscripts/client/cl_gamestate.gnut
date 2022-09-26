@@ -123,6 +123,9 @@ void function CreateScoreRUI()
 		RuiSetBool( rui, "shouldDisplayLivingPlayerCount", true )
 		RuiSetString( rui, "squadsRemainingText", "#SURVIVAL_SQUADS_REMAIN" )
 	}
+
+	RuiSetBool( rui, "disableScoreDisplay", GetCurrentPlaylistVarBool( "disable_hud_score_display", false ) )
+
 	// temp fix for rui bug R5DEV-59803
 	UISize screenSize = GetCurrentVirtualScreenSize( true )
 	float aspectRatio = screenSize.width / float( screenSize.height )

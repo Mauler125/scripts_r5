@@ -255,11 +255,14 @@ WeaponData
 
 	Mods
 	{
-		survival_finite_ammo
+		//survival_infinite_ammo
+		sia
         {
-            "ammo_default_total"							"0"
-            "ammo_stockpile_max"							"36"
+			"ammo_clip_size"   								"800"
+            "ammo_default_total"							"800"
+            "ammo_stockpile_max"							"800"
             "ammo_no_remove_from_stockpile"					"0"
+        	"fire_rate"   									"240"
 
             "low_ammo_fraction" 							"0.3"
 	   		"uses_ammo_pool"								"1"

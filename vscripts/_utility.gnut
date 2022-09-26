@@ -64,7 +64,7 @@ void function Utility_Init()
 	RegisterSignal( "InventoryChanged" )
 
 	AddClientCommandCallback( "OnDevnetBugScreenshot", ClientCommand_OnDevnetBugScreenshot )
-	#if DEV
+	#if R5DEV
 		FlagInit( "AimAssistSwitchTest_Enabled" )
 		AddClientCommandCallback( "DoomTitan", ClientCommand_DoomTitan )
 	#endif
@@ -99,7 +99,7 @@ void function GiveAllTitans()
 	}
 }
 
-#if DEV
+#if R5DEV
 
 void function KillAllBadguys()
 {
@@ -2503,7 +2503,7 @@ void function EmitSoundOnEntityToTeamExceptPlayer( entity ent, string sound, int
 	}
 }
 
-#if DEV
+#if R5DEV
 // DEV function to toggle player view between the skybox and the real world.
 void function ToggleSkyboxView( float scale = 0.001 )
 {
@@ -2829,7 +2829,7 @@ void function __SetSignalDelayedThread( entity ent, string signal, float delay )
 		Signal( ent, signal )
 }
 
-#if DEV
+#if R5DEV
 table function GetPlayerPos( entity player = null )
 {
 	if ( !player )
@@ -2916,7 +2916,7 @@ void function UpdateBadRepPresent()
 
 void function Dev_PrintMessage( entity player, string text, string subText = "", float duration = 7.0, string soundAlias = "" )
 {
-	#if DEV
+	#if R5DEV
 	// Build the message on the client
 	string sendMessage
 	for ( int textType = 0 ; textType < 2 ; textType++ )
@@ -3245,7 +3245,7 @@ void function ShowCrit( entity ent )
 }
 
 
-#if DEV
+#if R5DEV
 void function TeleportEnemyBotToView()
 {
 	entity player = gp()[0]
@@ -3496,7 +3496,8 @@ void function PushEntWithVelocity( entity ent, vector velocity )
 
 bool function IsPlayerFemale( entity player )
 {
-	return player.Dev_GetPlayerSettingByKeyField( "raceOrSex" ) == "race_human_female"
+	return false
+	//return player.Dev_GetPlayerSettingByKeyField( "raceOrSex" ) == "race_human_female"
 }
 
 bool function IsPlayerMalePilot( entity player )
@@ -4140,7 +4141,7 @@ int function GameScore_GetWinningTeam_ThisRound()
 	return TEAM_UNASSIGNED
 }
 
-#if DEV
+#if R5DEV
 void function KillIMC()
 {
 	array<entity> enemies = GetNPCArrayOfTeam( TEAM_IMC )
@@ -4244,7 +4245,7 @@ bool function IsFastPilot( entity player )
 
 void function KillPlayer( entity player, int damageSource )
 {
-	#if DEV
+	#if R5DEV
 	printt( "Played Killed from script: " )
 	DumpStack()
 	#endif
@@ -4419,7 +4420,13 @@ void function PlayBattleChatterLineToTeamButNotSpeaker ( entity player, string s
 
 void function UpdateDamageState( entity ent, var damageInfo )
 {
-	//stub
+	if(ent.IsPlayer())
+		return
+
+  float hp = ent.GetHealth() - DamageInfo_GetDamage( damageInfo )
+  if(hp < 0)
+    hp = 0.0
+  ent.SetHealth(hp)
 }
 
 void function DisableMantle( entity player )
@@ -4444,7 +4451,8 @@ void function UnlockWeaponsAndMelee( entity player )
 
 void function DelayedDestroy( entity mover, float lifetime )
 {
-	//stub
+	wait lifetime
+	mover.Destroy()
 }
 
 void function SwapToLastEquippedPrimary( entity player )

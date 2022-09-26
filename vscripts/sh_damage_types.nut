@@ -59,6 +59,7 @@ global enum eDamageSourceId
 
 	//---------------------------
 
+	mp_weapon_grenade_electric_smoke
 	// Pilot Weapons
 	mp_weapon_hemlok
 	mp_weapon_lmg
@@ -66,8 +67,13 @@ global enum eDamageSourceId
 	mp_weapon_vinson
 	mp_weapon_lstar
 	mp_weapon_g2
+	mp_weapon_smart_pistol
 	mp_weapon_r97
+	mp_weapon_epg
+	mp_weapon_defender
+	mp_weapon_smr
 	mp_weapon_dmr
+	mp_weapon_softball
 	mp_weapon_wingman
 	mp_weapon_semipistol
 	mp_weapon_autopistol
@@ -88,6 +94,7 @@ global enum eDamageSourceId
 	mp_weapon_melee_survival
 	mp_weapon_pdw
 	mp_weapon_energy_ar
+	mp_ability_laser_trip
 	//
 	melee_pilot_emptyhanded
 	melee_pilot_arena
@@ -108,7 +115,8 @@ global enum eDamageSourceId
 
 	melee_wraith_kunai
 	mp_weapon_wraith_kunai_primary
-
+	
+	//
 
 	// Turret Weapons
 	mp_weapon_yh803
@@ -217,6 +225,9 @@ global enum eDamageSourceId
 	mp_titancore_upgrade
 	mp_titanweapon_xo16_vanguard
 	mp_weapon_arc_trap
+	mp_weapon_emp
+	mp_weapon_rocket_launcher
+	mp_weapon_mgl
 	mp_weapon_arc_launcher
 	core_overload
 	mp_titanweapon_stasis
@@ -386,7 +397,7 @@ void function DamageTypes_Init()
 
 	PrecacheWeapon( $"mp_weapon_rspn101" ) // used by npc_soldier ><
 
-#if DEV
+#if R5DEV
 
 	int numDamageDefs = DamageDef_GetCount()
 	table damageSourceIdEnum = expect table( getconsttable().eDamageSourceId )
@@ -406,6 +417,7 @@ void function DamageTypes_Init()
 		//mp
 		[ eDamageSourceId.mp_extreme_environment ] 					= "#DAMAGE_EXTREME_ENVIRONMENT",
 
+		[ eDamageSourceId.mp_weapon_grenade_electric_smoke ]		= "ELECTRIC SMOKE",
 		[ eDamageSourceId.mp_weapon_yh803 ] 						= "#WPN_LIGHT_TURRET",
 		[ eDamageSourceId.mp_weapon_yh803_bullet ]					= "#WPN_LIGHT_TURRET",
 		[ eDamageSourceId.mp_weapon_yh803_bullet_overcharged ]		= "#WPN_LIGHT_TURRET",
@@ -422,7 +434,7 @@ void function DamageTypes_Init()
 		[ eDamageSourceId.mp_weapon_gunship_launcher ] 				= "#WPN_GUNSHIP_LAUNCHER",
 		[ eDamageSourceId.mp_weapon_gunship_turret ]				= "#WPN_GUNSHIP_TURRET",
 		[ eDamageSourceId.mp_weapon_gunship_turret ]				= "#WPN_GUNSHIP_MISSILE",
-
+		[ eDamageSourceId.mp_ability_laser_trip ] 					= "LASER TRIP",
 		[ eDamageSourceId.mp_titanability_slow_trap ]				= "#DEATH_SLOW_TRAP",
 
 		[ eDamageSourceId.rodeo ] 									= "#DEATH_TITAN_RODEO",
@@ -499,6 +511,13 @@ void function DamageTypes_Init()
 		[ eDamageSourceId.melee_pilot_emptyhanded ] 				= "#DEATH_MELEE",
 		[ eDamageSourceId.melee_pilot_arena ]		 				= "#DEATH_MELEE",
 		[ eDamageSourceId.melee_pilot_sword ] 						= "#DEATH_SWORD",
+		// todo: move to localization
+		[ eDamageSourceId.mp_weapon_epg ] 							= "EPG",
+		[ eDamageSourceId.mp_weapon_softball ] 						= "Softball",
+		[ eDamageSourceId.mp_weapon_smart_pistol ] 					= "Smart Pistol",
+		[ eDamageSourceId.mp_weapon_smr ] 							= "SMR",
+		[ eDamageSourceId.mp_weapon_defender ] 						= "Charge Rifle",
+		[ eDamageSourceId.mp_weapon_rocket_launcher ] 				= "Archer",
 		[ eDamageSourceId.melee_titan_punch ] 						= "#DEATH_TITAN_MELEE",
 		[ eDamageSourceId.melee_titan_punch_ion ] 					= "#DEATH_TITAN_MELEE",
 		[ eDamageSourceId.melee_titan_punch_tone ] 					= "#DEATH_TITAN_MELEE",
@@ -516,7 +535,7 @@ void function DamageTypes_Init()
 		[ eDamageSourceId.mp_weapon_wraith_kunai_primary ] 			= "#DEATH_MELEE_WRAITH_KUNAI",
 	}
 
-	#if DEV
+	#if R5DEV
 		//development, with retail versions incase a rare bug happens we dont want to show developer text
 		file.damageSourceIDToName[ eDamageSourceId.damagedef_unknownBugIt ] 			= "UNKNOWN! BUG IT!"
 		file.damageSourceIDToName[ eDamageSourceId.damagedef_unknown ] 				= "Unknown"

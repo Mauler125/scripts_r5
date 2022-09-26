@@ -5,7 +5,7 @@ global function IsOriginTouchingSmokescreen
 global function IsRayTouchingSmokescreen
 global function GetFXCenterFromSmokescreen
 
-#if DEV
+#if R5DEV
 const bool SMOKESCREEN_DEBUG = false
 #endif
 
@@ -87,7 +87,6 @@ void function Smokescreen_Init()
 	PrecacheSprite( $"sprites/glow01.vmt" )
 
 #if SERVER
-	AddDamageCallbackSourceID( eDamageSourceId.mp_titanability_smoke, TitanElectricSmoke_DamagedPlayerOrNPC )
 	AddDamageCallbackSourceID( eDamageSourceId.mp_weapon_grenade_electric_smoke, GrenadeElectricSmoke_DamagedPlayerOrNPC )
 #endif
 }
@@ -111,7 +110,7 @@ void function Smokescreen( SmokescreenStruct smokescreen, entity player )
 	if ( smokescreen.blockLOS )
 		traceBlocker = Smokescreen_CreateTraceBlockerVol( smokescreen, fxInfo )
 
-#if DEV
+#if R5DEV
 	if ( SMOKESCREEN_DEBUG )
 		DebugDrawCircle( fxInfo.center, <0,0,0>, fxInfo.radius + 240.0, 255, 255, 0, true, smokescreen.lifetime )
 #endif
@@ -225,7 +224,7 @@ void function SmokescreenAffectsEntitiesInArea( SmokescreenStruct smokescreen, S
 
 	while ( Time() - startTime <= smokescreen.lifetime )
 	{
-#if DEV
+#if R5DEV
 		if ( SMOKESCREEN_DEBUG )
 		{
 			DebugDrawCircle( fxInfo.center, <0,0,0>, smokescreen.damageInnerRadius, 255, 0, 0, true, tickRate )
@@ -260,7 +259,7 @@ entity function Smokescreen_CreateTraceBlockerVol( SmokescreenStruct smokescreen
 	DispatchSpawn( traceBlockerVol )
 	traceBlockerVol.SetBox( fxInfo.mins * 0.9, fxInfo.maxs * 0.9 )
 
-#if DEV
+#if R5DEV
 	if ( SMOKESCREEN_DEBUG )
 		DrawAngledBox( fxInfo.center, smokescreen.angles, fxInfo.mins, fxInfo.maxs, 255, 0, 0, true, smokescreen.lifetime - 0.6 )
 #endif
@@ -274,7 +273,7 @@ array<entity> function SmokescreenFX( SmokescreenStruct smokescreen, Smokescreen
 
 	foreach ( position in fxInfo.fxWorldPositions )
 	{
-#if DEV
+#if R5DEV
 		if ( SMOKESCREEN_DEBUG )
 			DebugDrawCircle( position, <0.0, 0.0, 0.0>, smokescreen.fxXYRadius, 0, 0, 255, true, smokescreen.lifetime )
 #endif

@@ -1,7 +1,7 @@
 untyped
 
 global function InitDevMenu
-#if DEV
+#if true
 global function DEV_InitLoadoutDevSubMenu
 global function SetupDevCommand // for dev
 global function SetupDevFunc // for dev
@@ -72,7 +72,7 @@ function Dummy_Untyped( param )
 
 void function InitDevMenu()
 {
-	#if DEV
+	#if true
 		var menu = GetMenu( "DevMenu" )
 
 		AddMenuEventHandler( menu, eUIEvent.MENU_OPEN, OnOpenDevMenu )
@@ -91,7 +91,7 @@ void function InitDevMenu()
 
 		AddMenuFooterOption( menu, LEFT, BUTTON_B, true, "%[B_BUTTON|]% Back", "Back" )
 		AddMenuEventHandler( menu, eUIEvent.MENU_NAVIGATE_BACK, BackOnePage_Activate )
-		AddMenuFooterOption( menu, LEFT, BUTTON_Y, true, "%[Y_BUTTON|]% Repeat Last Dev Command:", "Repeat Last Dev Command:", RepeatLastCommand_Activate )
+		AddMenuFooterOption( menu, LEFT, BUTTON_Y, true, "%[Y_BUTTON|]% Repeat Last Command", "Repeat Last Command:", RepeatLastCommand_Activate )
 		AddMenuFooterOption( menu, LEFT, BUTTON_BACK, true, "%[BACK|]% Bind Selection to Gamepad", "", BindCommandToGamepad_Activate )
 		file.footerHelpTxtLabel = GetElementsByClassname( menu, "FooterHelpTxt" )[0]
 
@@ -105,9 +105,9 @@ void function InitDevMenu()
 
 void function AddLevelDevCommand( string label, string command )
 {
-	#if DEV
+	#if true
 		string codeDevMenuAlias = DEV_MENU_NAME + "/" + label
-		DevMenu_Alias_DEV( codeDevMenuAlias, command )
+		//DevMenu_Alias_DEV( codeDevMenuAlias, command )
 
 		DevCommand cmd
 		cmd.label = label
@@ -116,7 +116,7 @@ void function AddLevelDevCommand( string label, string command )
 	#endif
 }
 
-#if DEV
+#if true
 void function OnOpenDevMenu()
 {
 	file.pageHistory.clear()
@@ -165,8 +165,8 @@ void function DEV_InitCodeDevMenu_Internal()
 	}
 
 	file.initializingCodeDevMenu = true
-	DevMenu_Alias_DEV( DEV_MENU_NAME, "" )
-	DevMenu_Rm_DEV( DEV_MENU_NAME )
+	//DevMenu_Alias_DEV( DEV_MENU_NAME, "" )
+	//DevMenu_Rm_DEV( DEV_MENU_NAME )
 	OnOpenDevMenu()
 	file.initializingCodeDevMenu = false
 }
@@ -174,16 +174,17 @@ void function DEV_InitCodeDevMenu_Internal()
 
 void function ClearCodeDevMenu()
 {
-	DevMenu_Alias_DEV( DEV_MENU_NAME, "" )
-	DevMenu_Rm_DEV( DEV_MENU_NAME )
+	//DevMenu_Alias_DEV( DEV_MENU_NAME, "" )
+	//DevMenu_Rm_DEV( DEV_MENU_NAME )
 }
 
 
 void function UpdateDevMenuButtons()
 {
 	file.devCommands.clear()
-	if ( developer() == 0 )
-		return
+	// removing this cos i want to
+	// if ( developer() == 0 )
+	// 	return
 
 	if ( file.initializingCodeDevMenu )
 		return
@@ -270,6 +271,8 @@ void function SetupDefaultDevCommandsMP()
 {
 	if ( IsSurvivalMenuEnabled() )
 	{
+		SetupDevMenu( "MDLSpawner", SetDevMenu_ModelSpawner )
+		SetupDevMenu( "Abilities", SetDevMenu_Abilities )
 		SetupDevMenu( "Change Character", SetDevMenu_SurvivalCharacter )
 		SetupDevMenu( "Alter Loadout", SetDevMenu_AlterLoadout )
 		SetupDevMenu( "Override Spawn Character", SetDevMenu_OverrideSpawnSurvivalCharacter )
@@ -365,6 +368,15 @@ void function SetupLevelDevCommands()
 	}
 }
 
+void function SetDevMenu_ModelSpawner( var _ )
+{
+	thread ChangeToThisMenu( SetupModelSpawner )
+}
+
+void function SetDevMenu_Abilities( var _ )
+{
+	thread ChangeToThisMenu( SetupAbilities )
+}
 
 void function SetDevMenu_SurvivalCharacter( var _ )
 {
@@ -381,7 +393,7 @@ void function DEV_InitLoadoutDevSubMenu()
 	//DevMenu_Rm_DEV( file.codeDevMenuPrefix )
 	//file.codeDevMenuPrefix += "/"
 	file.codeDevMenuPrefix += "Alter Loadout/"
-	DevMenu_Rm_DEV( file.codeDevMenuPrefix + "(Click to load this menu..)" )
+	//DevMenu_Rm_DEV( file.codeDevMenuPrefix + "(Click to load this menu..)" )
 	thread ChangeToThisMenu( SetupAlterLoadout )
 	file.codeDevMenuPrefix = codeDevMenuPrefix
 	file.initializingCodeDevMenu = false
@@ -393,7 +405,7 @@ void function SetDevMenu_AlterLoadout( var _ )
 	if ( file.initializingCodeDevMenu )
 	{
 		//return
-		DevMenu_Alias_DEV( file.codeDevMenuPrefix + "(Click to load this menu..)", "script_ui DEV_InitLoadoutDevSubMenu()" )
+		//DevMenu_Alias_DEV( file.codeDevMenuPrefix + "(Click to load this menu..)", "script_ui DEV_InitLoadoutDevSubMenu()" )
 	}
 	else
 	{
@@ -495,7 +507,7 @@ void function SetDevMenu_SurvivalLoot( var categories )
 
 void function SetDevMenu_SurvivalIncapShieldBots( var _ )
 {
-	thread ChangeToThisMenu( SetupSurvivalIncapShieldBot )
+	thread ChangeToThisMenu( SetupSurvivalIncapShieldBots )
 }
 
 
@@ -644,7 +656,7 @@ void function SetupDevCommand( string label, string command )
 {
 	DevCommand cmd
 	cmd.label = label
-	cmd.command = command
+	cmd.command = StringReplace( command, "\"", "'" )
 
 	file.devCommands.append( cmd )
 	if ( file.initializingCodeDevMenu )
@@ -652,7 +664,7 @@ void function SetupDevCommand( string label, string command )
 		string codeDevMenuAlias = file.codeDevMenuPrefix + label
 		//string codeDevMenuCommand = format( "script_ui RunCodeDevCommandByAlias( \"%s\" )", codeDevMenuAlias )
 		//file.codeDevMenuCommands[codeDevMenuAlias] <- cmd
-		DevMenu_Alias_DEV( codeDevMenuAlias, command )
+		//DevMenu_Alias_DEV( codeDevMenuAlias, command )
 	}
 }
 
@@ -670,7 +682,7 @@ void function SetupDevFunc( string label, void functionref( var ) func, var opPa
 		string codeDevMenuAlias   = file.codeDevMenuPrefix + label
 		string codeDevMenuCommand = format( "script_ui RunCodeDevCommandByAlias( \"%s\" )", codeDevMenuAlias )
 		file.codeDevMenuCommands[codeDevMenuAlias] <- cmd
-		DevMenu_Alias_DEV( codeDevMenuAlias, codeDevMenuCommand )
+		//DevMenu_Alias_DEV( codeDevMenuAlias, codeDevMenuCommand )
 	}
 }
 

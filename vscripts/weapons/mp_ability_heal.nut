@@ -1,6 +1,7 @@
 global function OnWeaponChargeBegin_ability_heal
 global function OnWeaponPrimaryAttack_ability_heal
 global function OnWeaponChargeEnd_ability_heal
+global function OnWeaponAttemptOffhandSwitch_ability_heal
 
 bool function OnWeaponChargeBegin_ability_heal( entity weapon )
 {
@@ -15,7 +16,7 @@ bool function OnWeaponChargeBegin_ability_heal( entity weapon )
 
 
 
-	#endif
+#endif
 	PlayerUsedOffhand( ownerPlayer, weapon )
 
 	#if SERVER
@@ -36,11 +37,11 @@ bool function OnWeaponChargeBegin_ability_heal( entity weapon )
 void function OnWeaponChargeEnd_ability_heal( entity weapon )
 {
 	entity player = weapon.GetWeaponOwner()
-	#if SERVER
-	//
-	//
+	#if false
+//
+//
 
-	#endif
+#endif
 }
 
 
@@ -51,3 +52,15 @@ var function OnWeaponPrimaryAttack_ability_heal( entity weapon, WeaponPrimaryAtt
 }
 
 
+bool function OnWeaponAttemptOffhandSwitch_ability_heal( entity weapon )
+{
+	entity player = weapon.GetWeaponOwner()
+
+	if ( !IsValid( player ) )
+		return false
+
+	if ( !player.IsPlayer() )
+		return false
+
+	return true
+}

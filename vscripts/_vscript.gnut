@@ -6,13 +6,6 @@ global function UniqueString
 global function EntFire
 global function __DumpScope
 
-// mmmm i am going to dump several functions here because i do not know where they should go
-global function GRX_GetUserInfo
-global function GRX_HasItem
-global function GRX_GetPackCount
-global function GRX_OpenPack
-global function GRX_GiveSequenceReward
-
 // r5 stuff
 
 global function MobilityExperiments_Init
@@ -95,33 +88,6 @@ void function __DumpScope( int depth, var Table )
 	}
 }
 
-// mmmm i am going to dump several functions here because i do not know where they should go
-
-GRXUserInfo function GRX_GetUserInfo( entity player )
-{
-	GRXUserInfo info
-	return info
-}
-
-bool function GRX_HasItem( ... )
-{
-	return false
-}
-
-int function GRX_GetPackCount( entity player, int grxIndex ) 
-{
-	return 0
-}
-
-void function GRX_OpenPack( entity player, int opId, int grxIndex )
-{
-
-}
-
-void function GRX_GiveSequenceReward( entity player, int queryScriptId, int queryGoal, string seqName, int nextSeqNum, array<int> grxIndices, array<int> currencyCounts )
-{
-
-}
 
 // r5 stuff
 void function MobilityExperiments_Init()

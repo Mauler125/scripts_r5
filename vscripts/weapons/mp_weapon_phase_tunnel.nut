@@ -725,8 +725,8 @@ void function PhaseTunnel_CreateTriggerArea( entity tunnelEnt, PhaseTunnelPortal
 	portalMarker.DisableHibernation()
 
 	entity traceBlocker = CreateTraceBlockerVolume( origin, 24.0, false, CONTENTS_NOGRAPPLE, tunnelEnt.GetTeam(), PHASETUNNEL_BLOCKER_SCRIPTNAME )
-	traceBlocker.RemoveFromAllRealms()
-	traceBlocker.AddToOtherEntitysRealms( tunnelEnt )
+	//traceBlocker.RemoveFromAllRealms()
+	//traceBlocker.AddToOtherEntitysRealms( tunnelEnt )
 
 	EmitSoundOnEntity( portalMarker, SOUND_PORTAL_OPEN )
 	EmitSoundOnEntity( portalMarker, SOUND_PORTAL_LOOP )
@@ -1450,8 +1450,8 @@ void function PhaseTunnel_StartTrackingPositions_Internal( entity player, PhaseT
 					shutdownArray.append( fx )
 
 					entity traceBlocker = CreateTraceBlockerVolume( fxOrigin, 24.0, false, CONTENTS_NOGRAPPLE, player.GetTeam(), PHASETUNNEL_PRE_BLOCKER_SCRIPTNAME )
-					traceBlocker.RemoveFromAllRealms()
-					traceBlocker.AddToOtherEntitysRealms( player )
+					//traceBlocker.RemoveFromAllRealms()
+					//traceBlocker.AddToOtherEntitysRealms( player )
 					shutdownArray.append( traceBlocker )
 				}
 

@@ -120,7 +120,6 @@ void function OnLobbyMenu_Show()
 {
 	thread LobbyMenuUpdate()
 	RegisterInputs()
-
 	Chroma_Lobby()
 }
 
@@ -149,7 +148,7 @@ void function OnGRXStateChanged()
 	array<var> panels = [
 		GetPanel( "CharactersPanel" ),
 		GetPanel( "ArmoryPanel" ),
-		//GetPanel( "PassPanel" ),
+		GetPanel( "PassPanel" ),
 		GetPanel( "StorePanel" ),
 		GetPanel( "LootPanel" ),
 		GetPanel( "ECPanel" ),
@@ -159,6 +158,14 @@ void function OnGRXStateChanged()
 
 	foreach ( var panel in panels )
 	{
+	// #if CLIENT
+	// printt(VM_NAME(), FUNC_NAME(), "creating new camera")
+	// vector origin = < 5120.02, 0, 56.3 >
+	// vector angles = < 0, 90, 0 >
+	// entity camera = CreateClientSidePointCamera( origin, angles, 17)
+	// GetLocalClientPlayer().SetMenuCameraEntity( camera )
+	// printt(VM_NAME(), FUNC_NAME(), "created new camera")
+	// #endif
 		if ( !Hud_IsVisible( panel ) )
 		{
 			if ( panel == GetPanel( "PassPanel" ) )

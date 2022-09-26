@@ -444,6 +444,12 @@ WeaponData
 			"dof_zoom_nearDepthStart"		"1.0"
             "dof_zoom_nearDepthEnd"			"12.3"
 		}
+		
+		bp
+		{
+			"viewmodel"   									"mdl/Weapons/beam_ar/ptpov_beam_ar_legendary_02.rmdl"
+			"playermodel" 									"mdl/Weapons/beam_ar/w_beam_ar_legendary_02.rmdl"
+		}
 
 	}
 

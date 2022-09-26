@@ -227,12 +227,20 @@ void function ActivateTab( TabData tabData, int tabIndex )
 	array<TabDef> tabDefs = tabData.tabDefs
 	int oldTabIndex       = tabData.tabIndex
 	tabData.tabIndex = tabIndex
-
 	UpdateMenuTabs()
 
 	var panel = tabDefs[ tabIndex ].panel
 	if ( panel == null )
 		return
+	if( Hud_GetParent( panel ) == GetMenu("LobbyMenu"))
+	{
+		// is lobby tab
+		if( tabIndex == 0 ) {
+			RunClientScript( "UICallback_PlayTabLobbyCamera")
+		} else {
+			RunClientScript( "UICallback_ChangeLobbyCameraPosition", tabIndex )
+		}
+	}
 
 	HideVisibleTabBodies( tabData )
 	ShowPanel( panel )

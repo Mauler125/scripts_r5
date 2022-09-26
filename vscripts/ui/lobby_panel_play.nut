@@ -19,7 +19,7 @@ global function CanInvite
 
 global function UpdateLootBoxButton
 
-#if DEV
+#if R5DEV
 global function DEV_PrintPartyInfo
 global function DEV_PrintUserInfo
 #endif
@@ -962,7 +962,7 @@ var function GetPartyMemberButton( string uid )
 	return null
 }
 
-#if DEV
+#if R5DEV
 void function DEV_PrintPartyInfo()
 {
 	Party party = GetParty()

@@ -48,18 +48,10 @@ struct
 
 void function WeaponReactiveEffects_Init()
 {
-	#if SERVER
-
-
-
-	#endif
 }
 
 void function OnWeaponActivate_ReactiveKillEffects( entity weapon )
 {
-	#if SERVER
-
-	#endif
 }
 
 void function OnWeaponDeactivate_ReactiveKillEffects( entity weapon )
@@ -77,10 +69,6 @@ void function OnWeaponDeactivate_ReactiveKillEffects( entity weapon )
 void function WeaponReactiveKillTracking_InitForWeapon( entity weapon )
 {
 	entity player = weapon.GetOwner()
-	if ( !IsValid( player ) || !player.IsPlayer() )
-		return
-
-	if ( !WeaponHasReactiveKillTrackingForCurrentSkin( weapon ) )
 		return
 
 	int numKills = WeaponReactiveKillTracking_GetKillsForPlayerWithWeapon( player, weapon )
@@ -98,10 +86,6 @@ void function WeaponReactiveKillTracking_InitForWeapon( entity weapon )
 
 bool function WeaponSkinHasReactiveKillTracking( ItemFlavor weaponSkin )
 {
-	if ( !IsItemFlavorStructValid( weaponSkin ) )
-		return false
-
-	if ( !WeaponSkin_DoesReactToKills( weaponSkin ) )
 		return false
 
 	return true
@@ -109,14 +93,6 @@ bool function WeaponSkinHasReactiveKillTracking( ItemFlavor weaponSkin )
 
 bool function WeaponHasReactiveKillTrackingForCurrentSkin( entity weapon )
 {
-	if ( !IsValid( weapon ) )
-		return false
-
-	if ( !IsValidItemFlavorNetworkIndex_DEPRECATED( weapon.GetGrade(), eValidation.DONT_ASSERT ) )
-		return false
-
-	ItemFlavor weaponSkin = GetItemFlavorByNetworkIndex_DEPRECATED( weapon.GetGrade() )
-	if ( !WeaponSkin_DoesReactToKills( weaponSkin ) )
 		return false
 
 	return true
@@ -124,7 +100,6 @@ bool function WeaponHasReactiveKillTrackingForCurrentSkin( entity weapon )
 
 int function WeaponReactiveKillTracking_GetKillsForPlayerWithWeapon( entity player, entity weapon )
 {
-	if ( !WeaponHasReactiveKillTrackingForCurrentSkin( weapon ) )
 		return -1
 
 	ItemFlavor weaponSkin = GetItemFlavorByNetworkIndex_DEPRECATED( weapon.GetGrade() )
@@ -148,11 +123,9 @@ void function SCB_UpdatePlayerWeaponReactiveEffects( entity weapon, int updateTy
 
 void function UpdatePlayerWeaponReactiveEffects( entity weapon, int updateType )
 {
-	if ( !WeaponHasReactiveKillTrackingForCurrentSkin( weapon ) )
 		return
 
 	entity player = weapon.GetOwner()
-	if ( !IsAlive( player ) || !player.IsPlayer() )
 		return
 
 	ItemFlavor weaponSkin = GetItemFlavorByNetworkIndex_DEPRECATED( weapon.GetGrade() )

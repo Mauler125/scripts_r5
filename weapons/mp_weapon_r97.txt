@@ -322,6 +322,11 @@ WeaponData
 			"viewmodel"   									"mdl/weapons/r97/ptpov_r97_legendary_01.rmdl"
 			"playermodel" 									"mdl/weapons/r97/w_r97_legendary_01.rmdl"
 		}
+		legendary2
+		{
+			"viewmodel"   									"mdl/weapons/r97/ptpov_r97_legendary_02.rmdl"
+			"playermodel" 									"mdl/weapons/r97/w_r97_legendary_02.rmdl"
+		}
 	}
 
 

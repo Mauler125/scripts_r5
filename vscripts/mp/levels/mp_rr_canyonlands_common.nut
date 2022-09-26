@@ -1,7 +1,7 @@
 
 global function Canyonlands_MapInit_Common
 
-#if SERVER && DEV
+#if SERVER && R5DEV
 	global function HoverTankTestPositions
 #endif
 
@@ -114,8 +114,9 @@ void function Canyonlands_MapInit_Common()
 		AddSpawnCallback_ScriptName( "leviathan_staging", LeviathanThink )
 
 		// adjust skybox for staging area
-		AddCallback_GameStateEnter( eGameState.WaitingForPlayers, StagingArea_MoveSkybox )
-		AddCallback_GameStateEnter( eGameState.PickLoadout, StagingArea_ResetSkybox )
+		// todo: add checks to these. pickloadout is never entered
+		// AddCallback_GameStateEnter( eGameState.WaitingForPlayers, StagingArea_MoveSkybox )
+		// AddCallback_GameStateEnter( eGameState.PickLoadout, StagingArea_ResetSkybox )
 	#endif
 
 	#if CLIENT
@@ -255,8 +256,12 @@ void function FlyHoverTanksIntoPosition( array<HoverTank> hoverTanks, int hoverT
 	{
 		CreateHoverTankMinimapIconForPlayers( hoverTank )
 
-		array<entity> nodeChain = GetEntityChainOfType( endNodes[ i ] )
+		entity tempNode = CreateEntity("info_target")
+		tempNode.SetOrigin( <25568.2, 6651.55, 4966.23> )
+		array<entity> nodeChain = [ //GetEntityChainOfType( endNodes[ i ] )
+			tempNode
 
+		]
 		HoverTankTeleportToPosition( hoverTank, startNodes[i].GetOrigin(), startNodes[i].GetAngles() )
 		//thread HoverTankDrawPathFX( hoverTank, nodeChain[ 0 ] )
 
@@ -322,6 +327,9 @@ void function TeleportHoverTanksIntoPosition( array<HoverTank> hoverTanks, int h
 
 void function HideUnusedHovertankSpecificGeo()
 {
+	//todo:
+	return
+
 	array<entity> hoverTankSpecificGeo
 	array<entity> unusedEndNodes = GetAllHoverTankEndNodes()
 
@@ -334,7 +342,7 @@ void function HideUnusedHovertankSpecificGeo()
 	foreach( entity node in unusedEndNodes )
 	{
 		entity lastNode = GetLastLinkedEntOfType( node )
-		array<entity> endNodeLinkedEnts = lastNode.GetLinkEntArray()
+		array<entity> endNodeLinkedEnts = lastNode.GetLinkEntArray() // [SERVER] Given object is not an entity (type = null)
 		foreach( linkedEnt in endNodeLinkedEnts )
 		{
 			if ( linkedEnt.GetClassName() == "func_brush_lightweight" )
@@ -763,7 +771,7 @@ void function HoverTank_DebugFlightPaths_Thread()
 	printt( "++++--------------------------------------------------------------------------------------------------------------------------++++" )
 }
 
-#if SERVER && DEV
+#if SERVER && R5DEV
 void function HoverTankTestPositions()
 {
 	entity player = GetPlayerArray()[0]

@@ -500,7 +500,7 @@ void function LeaveDialog()
 	dialogData.image = $"ui/menu/common/dialog_error"
 	dialogData.darkenBackground = true
 
-#if(false)
+#if false
 
 
 

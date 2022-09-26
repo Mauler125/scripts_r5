@@ -310,7 +310,7 @@ void function AddCallback_OnUpdateTooltip( int style, void functionref(int style
 {
 	Assert( !file.onUpdateTooltipCallbacks[ style ].contains( func ) )
 
-	file.onUpdateTooltipCallbacks[ style ].append( func )
+	//file.onUpdateTooltipCallbacks[ style ].append( func )
 }
 
 

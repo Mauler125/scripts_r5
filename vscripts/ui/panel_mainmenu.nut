@@ -157,7 +157,7 @@ void function PrelaunchValidation( bool autoContinue = false )
 		PrintLaunchDebugVal( "isOriginEnabled", isOriginEnabled )
 		if ( !isOriginEnabled )
 		{
-			#if DEV
+			#if R5DEV
 				if ( autoContinue )
 					LaunchMP()
 				else
@@ -408,7 +408,7 @@ void function PrelaunchValidation( bool autoContinue = false )
 	while ( true )
 	{
 		bool isAuthenticatedByStryder = IsStryderAuthenticated()
-		PrintLaunchDebugVal( "isAuthenticatedByStryder", isAuthenticatedByStryder )
+		//PrintLaunchDebugVal( "isAuthenticatedByStryder", isAuthenticatedByStryder ) // this spams every frame so i just commented it out --
 
 		if ( isAuthenticatedByStryder )
 			break
@@ -827,7 +827,7 @@ void function OnConfirmDialogResult( int result )
 
 void function PrintLaunchDebugVal( string name, bool val )
 {
-	#if DEV
+	#if R5DEV
 		printt( "*** PrelaunchValidation *** " + name + ": " + val )
 	#endif // DEV
 }
