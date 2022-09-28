@@ -28,6 +28,8 @@ void function MapModels()
 	vector startingorg = <0,0,0>
 
     //Props
+    CreateMapEditorProp( $"mdl/colony/farmland_wall_128x064x08_metal_01.rmdl", < 1113.1000, 3009.0000, 3074.8000 > + startingorg, < -90.0000, 0.0000, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/colony/farmland_wall_128x064x08_metal_01.rmdl", < 1145.8000, 3009.0000, 3075.3000 > + startingorg, < -90.0000, 0.0000, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/thunderdome_quarry_block_03_orange.rmdl", < -2677.6000, -1677.0000, 2670.0000 > + startingorg, < 0.0000, -89.8897, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/thunderdome_quarry_block_03_orange.rmdl", < 3222.0000, 117.0000, 2535.0000 > + startingorg, < 0.0000, 4.6131, 0.0000 >, true, 50000, -1, 2.5295);
     CreateMapEditorProp( $"mdl/rocks/thunderdome_quarry_block_03_orange.rmdl", < 2784.1000, -1643.3000, 2689.4000 > + startingorg, < 0.0000, 4.6131, 0.0000 >, true, 50000, -1, 1);
