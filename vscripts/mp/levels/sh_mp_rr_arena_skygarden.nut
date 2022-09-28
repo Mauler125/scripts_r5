@@ -28,6 +28,12 @@ void function MapModels()
 	vector startingorg = <0,0,0>
 
     //Props
+    CreateMapEditorProp( $"mdl/rocks/rock_desert_06.rmdl", < 2277.0000, 2604.0000, 2624.0000 > + startingorg, < 0.0000, -37.5460, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/thunderdome_quarry_block_01_orange.rmdl", < 1849.0000, 1983.0000, 2672.0000 > + startingorg, < 87.4847, 0.9855, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/thunderdome_quarry_block_03_orange.rmdl", < -1161.0000, 2872.9000, 2620.7000 > + startingorg, < -8.3668, 0.0000, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/thunderdome_quarry_block_03_orange.rmdl", < -1305.0000, 2872.9000, 2608.1000 > + startingorg, < 0.0000, 0.0000, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/thunderdome_quarry_block_03_orange.rmdl", < -1921.0000, 2284.0000, 2531.0000 > + startingorg, < 88.0392, 0.0000, 0.0000 >, true, 50000, -1, 4.043905);
+    CreateMapEditorProp( $"mdl/containers/underbelly_cargo_container_128_blue_02.rmdl", < -1355.3000, 2784.8000, 2688.6000 > + startingorg, < 88.7886, -179.9997, 90.0003 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/colony/farmland_wall_128x064x08_metal_01.rmdl", < 1113.1000, 3009.0000, 3074.8000 > + startingorg, < -90.0000, 0.0000, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/colony/farmland_wall_128x064x08_metal_01.rmdl", < 1145.8000, 3009.0000, 3075.3000 > + startingorg, < -90.0000, 0.0000, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/thunderdome_quarry_block_03_orange.rmdl", < -2677.6000, -1677.0000, 2670.0000 > + startingorg, < 0.0000, -89.8897, 0.0000 >, true, 50000, -1, 1);
@@ -182,8 +188,8 @@ void function MapModels()
     CreateMapEditorProp( $"mdl/rocks/thunderdome_quarry_block_03_orange.rmdl", < -3220.6000, -2049.4000, 2794.3000 > + startingorg, < 0.0000, -176.0021, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/thunderdome_quarry_block_03_orange.rmdl", < -3365.9000, -2059.6000, 2794.3000 > + startingorg, < 0.0000, -176.0021, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/thunderdome_quarry_block_03_orange.rmdl", < -3365.9000, -2059.6000, 2703.8000 > + startingorg, < 0.0000, -176.0021, 0.0000 >, true, 50000, -1, 1);
-    CreateMapEditorProp( $"mdl/rocks/thunderdome_quarry_block_03_orange.rmdl", < -3508.0000, -2121.7000, 2703.8000 > + startingorg, < 0.0000, -156.3867, 0.0000 >, true, 50000, -1, 1);
-    CreateMapEditorProp( $"mdl/rocks/thunderdome_quarry_block_03_orange.rmdl", < -3508.0000, -2121.7000, 2794.3000 > + startingorg, < 0.0000, -156.3867, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/thunderdome_quarry_block_03_orange.rmdl", < -3494.1000, -2115.6000, 2703.8000 > + startingorg, < 0.0000, -156.3867, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/thunderdome_quarry_block_03_orange.rmdl", < -3493.8000, -2115.5000, 2794.3000 > + startingorg, < 0.0000, -156.3867, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/thunderdome_quarry_block_03_orange.rmdl", < -3594.9000, -2189.8000, 2794.3000 > + startingorg, < 0.0000, -125.7339, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/thunderdome_quarry_block_03_orange.rmdl", < -3594.9000, -2189.8000, 2703.8000 > + startingorg, < 0.0000, -125.7339, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/thunderdome_quarry_block_03_orange.rmdl", < -3631.0000, -2292.0000, 2703.8000 > + startingorg, < 0.0000, -91.9636, 0.0000 >, true, 50000, -1, 1);
@@ -197,7 +203,7 @@ void function MapModels()
     CreateMapEditorProp( $"mdl/rocks/thunderdome_quarry_block_03_orange.rmdl", < -2401.2000, -2112.7000, 2794.3000 > + startingorg, < 0.0000, -29.8052, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/thunderdome_quarry_block_03_orange.rmdl", < -2401.2000, -2112.7000, 2703.8000 > + startingorg, < 0.0000, -29.8052, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/thunderdome_quarry_block_03_orange.rmdl", < -2922.0000, -1830.0000, 2549.0000 > + startingorg, < 0.0000, 0.0000, 0.0000 >, true, 50000, -1, 3.819124);
-    CreateMapEditorProp( $"mdl/rocks/thunderdome_quarry_block_stairs_01_orange.rmdl", < -2614.0000, -2207.0000, 2625.0000 > + startingorg, < 0.0000, 0.0000, 0.0000 >, true, 50000, -1, 3.160051);
+    CreateMapEditorProp( $"mdl/rocks/thunderdome_quarry_block_stairs_01_orange.rmdl", < -2588.0000, -2207.0000, 2596.0000 > + startingorg, < 0.0000, 0.0000, 0.0000 >, true, 50000, -1, 3.56081);
     CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_sand_modular_wallrun_02.rmdl", < -4917.3330, 656.5786, 3231.0000 > + startingorg, < -10.5974, -176.6226, -0.1441 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_sand_modular_wallrun_02.rmdl", < -4083.3330, -3771.4210, 3279.0000 > + startingorg, < 0.0000, -82.2026, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_sand_modular_wallrun_02.rmdl", < -4336.3330, -3785.4210, 3279.0000 > + startingorg, < 0.0000, -109.5080, 0.0000 >, true, 50000, -1, 1);
@@ -287,7 +293,7 @@ void function MapModels()
     CreateMapEditorProp( $"mdl/containers/underbelly_cargo_container_128_blue_02.rmdl", < 1670.0010, -2435.9720, 2917.8000 > + startingorg, < 0.0000, 90.0000, -90.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/thunderdome_quarry_block_01_orange.rmdl", < -879.0000, 2749.0000, 2861.0000 > + startingorg, < 0.0000, 0.9855, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_sand_modular_wallrun_02.rmdl", < 3480.0000, 3246.0000, 2866.0000 > + startingorg, < 0.0000, 94.9612, 0.0000 >, true, 50000, -1, 1);
-    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_wallrun_03.rmdl", < -2254.0000, 2418.0000, 2725.0000 > + startingorg, < -15.9589, -80.5459, -69.3590 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_wallrun_03.rmdl", < -2256.0000, 2454.0000, 2710.0000 > + startingorg, < -13.8096, -86.2242, -67.8990 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/thunderdome_quarry_block_03_orange.rmdl", < 1327.0000, 3049.0000, 2812.0000 > + startingorg, < -0.0233, -179.2278, 0.3253 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/thunderdome_quarry_block_03_orange.rmdl", < -2835.0000, 331.0000, 2700.0000 > + startingorg, < 0.0000, 89.9465, 0.0000 >, true, 50000, -1, 2.931668);
     CreateMapEditorProp( $"mdl/imc_base/generator_IMC_01.rmdl", < 2356.6000, -282.6000, 2597.6000 > + startingorg, < 0.0000, 0.0000, 0.0000 >, true, 50000, -1, 1);
@@ -471,7 +477,7 @@ void function MapModels()
     CreateMapEditorProp( $"mdl/thunderdome/thunderdome_cage_floor_64x64_01.rmdl", < 321.5000, 3294.3000, 3273.7000 > + startingorg, < 0.0000, 0.0000, 90.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_sand_modular_large_01.rmdl", < -5325.0000, 1975.0000, 2195.0000 > + startingorg, < 0.0000, 88.7982, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_flat_02.rmdl", < 3407.7640, 48.2383, 2660.0000 > + startingorg, < 0.0000, -83.8682, -20.7625 >, true, 50000, -1, 1);
-    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_wallrun_03.rmdl", < -2600.0000, 2357.0000, 2678.0000 > + startingorg, < -17.2322, -79.4572, -73.6604 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_wallrun_03.rmdl", < -2600.0000, 2357.0000, 2678.0000 > + startingorg, < -18.1942, -75.8889, -74.7464 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/thunderdome_quarry_block_01_orange.rmdl", < -1590.0000, 992.0000, 2691.0000 > + startingorg, < 0.0000, -88.1545, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_wallrun_03.rmdl", < 2007.0000, 2119.0000, 2722.0000 > + startingorg, < -3.2525, 84.5422, 93.9347 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/thunderdome_quarry_block_03_orange.rmdl", < 2956.9920, -234.5687, 2636.0000 > + startingorg, < 0.0000, -179.7706, 0.0000 >, true, 50000, -1, 1);
