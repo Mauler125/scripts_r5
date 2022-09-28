@@ -104,8 +104,8 @@ void function Sh_CustomTDM_Init()
             NewLocationSettings(
                 "Encore",
                 [
-                    NewLocPair(<0, -3560, -2883>, <0, 90, 0>),
-					NewLocPair(<0, 3190, -3010>, <0, -90, 0>)
+                    NewLocPair(<0, -3560, 2883>, <0, 90, 0>),
+					NewLocPair(<0, 3190, 3010>, <0, -90, 0>)
                 ],
                 <0, 0, 3000>
             )
