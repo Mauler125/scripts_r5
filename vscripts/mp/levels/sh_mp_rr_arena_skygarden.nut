@@ -1,4 +1,4 @@
-global function ShInit_ArenaComposite
+global function ShInit_Skygarden
 global function CodeCallback_MapInit
 
 void function CodeCallback_MapInit()
@@ -8,11 +8,11 @@ void function CodeCallback_MapInit()
 	#endif
 }
 
-void function ShInit_ArenaComposite()
+void function ShInit_Skygarden()
 {
 	SetVictorySequencePlatformModel( $"mdl/dev/empty_model.rmdl", < 0, 0, -10 >, < 0, 0, 0 > )
 	#if CLIENT
-	  SetVictorySequenceLocation(<1374, -4060, 418>, <0, 201.828598, 0> )
+	  SetVictorySequenceLocation(<2382.82422, -4059.49658, -3141.40796>, <0, 201.828598, 0> )
 	#endif
 }
 
