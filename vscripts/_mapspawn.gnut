@@ -364,7 +364,7 @@ void function MapTriggers_Init()
 		case "mp_rr_arena_skygarden":
 		{
 			CreateWallTrigger( <0, -250, 3490>, 10000 )
-			CreateWallTrigger( <0, -250, 3550>, 20000, true )
+			CreateWallTrigger( <0, -250, 3650>, 20000, true )
 			CreateWallTrigger( <0, -250, 1550>, 40000, true )
 			break
 		}

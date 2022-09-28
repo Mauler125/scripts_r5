@@ -28,6 +28,16 @@ void function MapModels()
 	vector startingorg = <0,0,0>
 
     //Props
+    CreateMapEditorProp( $"mdl/rocks/thunderdome_quarry_block_03_orange.rmdl", < -2677.6000, -1677.0000, 2670.0000 > + startingorg, < 0.0000, -89.8897, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/thunderdome_quarry_block_03_orange.rmdl", < 3222.0000, 117.0000, 2535.0000 > + startingorg, < 0.0000, 4.6131, 0.0000 >, true, 50000, -1, 2.5295);
+    CreateMapEditorProp( $"mdl/rocks/thunderdome_quarry_block_03_orange.rmdl", < 2784.1000, -1643.3000, 2689.4000 > + startingorg, < 0.0000, 4.6131, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/thunderdome_quarry_block_01_orange.rmdl", < 3641.9000, -2350.2000, 2736.7000 > + startingorg, < 86.1700, -177.4708, 180.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/homestead/homestead_floor_panel_cap_02.rmdl", < 1410.8000, 2870.0000, 2914.0000 > + startingorg, < 0.0000, 50.5770, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/colony/farmland_wall_128x128x16_metal_01b.rmdl", < 1055.8000, 3023.0000, 2924.8000 > + startingorg, < 14.5957, -89.8381, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/colony/farmland_wall_128x128x16_metal_01b.rmdl", < 1167.4000, 2943.1000, 2920.4000 > + startingorg, < -5.7997, -1.8649, 1.4345 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/colony/farmland_wall_128x128x16_metal_01b.rmdl", < -1192.7000, 2937.2000, 2925.4000 > + startingorg, < 8.9436, -2.4330, -2.2200 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/colony/farmland_wall_128x128x16_metal_01b.rmdl", < -1057.4000, 3022.1000, 2926.2000 > + startingorg, < 14.5957, -89.8381, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/colony/farmland_wall_128x064x08_metal_01.rmdl", < -1018.4000, 3009.0000, 3074.8000 > + startingorg, < -90.0000, 0.0000, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/thunderdome_quarry_block_03_orange.rmdl", < 3635.0000, -3144.0000, 2787.2000 > + startingorg, < 0.0000, -90.2070, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/thunderdome_quarry_block_03_orange.rmdl", < -3638.6000, -3136.7000, 2787.2000 > + startingorg, < 0.0000, -88.0249, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/thunderdome_quarry_block_01_orange.rmdl", < -1459.3000, 1645.6000, 2690.5000 > + startingorg, < -6.1864, -85.9944, 0.0000 >, true, 50000, -1, 1);
@@ -84,14 +94,7 @@ void function MapModels()
     CreateMapEditorProp( $"mdl/rocks/thunderdome_quarry_block_03_orange.rmdl", < 1385.1000, -2042.7000, 2794.3000 > + startingorg, < 0.0000, 117.1871, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/thunderdome_quarry_block_03_orange.rmdl", < 1450.9000, -2170.8000, 2794.3000 > + startingorg, < 0.0000, 117.1871, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/thunderdome_quarry_block_03_orange.rmdl", < 1450.9000, -2170.8000, 2703.8000 > + startingorg, < 0.0000, 117.1871, 0.0000 >, true, 50000, -1, 1);
-    CreateMapEditorProp( $"mdl/colony/farmland_wall_128x128x16_metal_01b.rmdl", < 1048.7000, 3036.0000, 2922.6000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1);
-    CreateMapEditorProp( $"mdl/colony/farmland_wall_128x064x08_metal_01.rmdl", < 1111.2000, 3004.4000, 2921.6000 > + startingorg, < 0.0000, 0.0000, 0.0000 >, true, 50000, -1, 1);
-    CreateMapEditorProp( $"mdl/colony/farmland_wall_128x064x08_metal_01.rmdl", < 1111.2000, 3004.4000, 3049.1000 > + startingorg, < 0.0000, 0.0000, 0.0000 >, true, 50000, -1, 1);
-    CreateMapEditorProp( $"mdl/colony/farmland_wall_128x128x16_metal_01b.rmdl", < 1048.7000, 3036.0000, 3050.4000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1);
-    CreateMapEditorProp( $"mdl/colony/farmland_wall_128x064x08_metal_01.rmdl", < -1123.2000, 3004.4000, 3049.1000 > + startingorg, < 0.0000, 0.0000, 0.0000 >, true, 50000, -1, 1);
-    CreateMapEditorProp( $"mdl/colony/farmland_wall_128x064x08_metal_01.rmdl", < -1123.2000, 3004.4000, 2921.6000 > + startingorg, < 0.0000, 0.0000, 0.0000 >, true, 50000, -1, 1);
-    CreateMapEditorProp( $"mdl/colony/farmland_wall_128x128x16_metal_01b.rmdl", < -1050.3000, 3036.0000, 3050.4000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1);
-    CreateMapEditorProp( $"mdl/colony/farmland_wall_128x128x16_metal_01b.rmdl", < -1050.3000, 3036.0000, 2922.6000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/colony/farmland_wall_128x064x08_metal_01.rmdl", < -985.7000, 3009.0000, 3075.3000 > + startingorg, < -90.0000, 0.0000, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_column01_40x128_dirty_a.rmdl", < 212.4000, 2979.6000, 2879.2000 > + startingorg, < 0.0000, 0.0000, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_column01_40x128_dirty_a.rmdl", < 151.4000, 2939.5000, 2879.2000 > + startingorg, < 0.0000, 0.0000, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_column01_40x128_dirty_a.rmdl", < 233.6000, 2977.3000, 2879.2000 > + startingorg, < 0.0000, 0.0000, 0.0000 >, true, 50000, -1, 1);
@@ -191,7 +194,7 @@ void function MapModels()
     CreateMapEditorProp( $"mdl/rocks/thunderdome_quarry_block_03_orange.rmdl", < -2518.9000, -2086.4000, 2794.3000 > + startingorg, < 0.0000, -0.5859, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/thunderdome_quarry_block_03_orange.rmdl", < -2401.2000, -2112.7000, 2794.3000 > + startingorg, < 0.0000, -29.8052, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/thunderdome_quarry_block_03_orange.rmdl", < -2401.2000, -2112.7000, 2703.8000 > + startingorg, < 0.0000, -29.8052, 0.0000 >, true, 50000, -1, 1);
-    CreateMapEditorProp( $"mdl/rocks/thunderdome_quarry_block_03_orange.rmdl", < -2922.0000, -1830.0000, 2533.0000 > + startingorg, < 0.0000, 0.0000, 0.0000 >, true, 50000, -1, 3.819124);
+    CreateMapEditorProp( $"mdl/rocks/thunderdome_quarry_block_03_orange.rmdl", < -2922.0000, -1830.0000, 2549.0000 > + startingorg, < 0.0000, 0.0000, 0.0000 >, true, 50000, -1, 3.819124);
     CreateMapEditorProp( $"mdl/rocks/thunderdome_quarry_block_stairs_01_orange.rmdl", < -2614.0000, -2207.0000, 2625.0000 > + startingorg, < 0.0000, 0.0000, 0.0000 >, true, 50000, -1, 3.160051);
     CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_sand_modular_wallrun_02.rmdl", < -4917.3330, 656.5786, 3231.0000 > + startingorg, < -10.5974, -176.6226, -0.1441 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_sand_modular_wallrun_02.rmdl", < -4083.3330, -3771.4210, 3279.0000 > + startingorg, < 0.0000, -82.2026, 0.0000 >, true, 50000, -1, 1);
@@ -256,7 +259,7 @@ void function MapModels()
     CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_sand_modular_large_01.rmdl", < 1431.0000, 4051.0000, 2151.0000 > + startingorg, < 0.0000, -10.9289, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_wallrun_03.rmdl", < -4911.0000, 1224.0000, 2609.0000 > + startingorg, < 0.0000, 0.0000, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_wallrun_03.rmdl", < -4867.0000, -961.0000, 2675.0000 > + startingorg, < 0.0000, 0.0000, 0.0000 >, true, 50000, -1, 1);
-    CreateMapEditorProp( $"mdl/thunderdome/thunderdome_cage_floor_32x64_01.rmdl", < 956.5000, 3185.6000, 2903.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/thunderdome/thunderdome_cage_floor_32x64_01.rmdl", < 956.5000, 3187.2000, 2905.7000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/thunderdome/thunderdome_cage_floor_32x64_01.rmdl", < -958.7000, 3185.6000, 2906.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/thunderdome/thunderdome_cage_floor_32x64_01.rmdl", < -1280.4000, 2847.5000, 2904.1000 > + startingorg, < 0.0000, 0.0000, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/thunderdome/thunderdome_cage_floor_32x64_01.rmdl", < 1281.7000, 2847.5000, 2904.3000 > + startingorg, < 0.0000, 0.0000, 0.0000 >, true, 50000, -1, 1);
@@ -268,10 +271,10 @@ void function MapModels()
     CreateMapEditorProp( $"mdl/desertlands/desertlands_lobby_double_doorframe_01.rmdl", < -979.6000, 3185.6000, 2922.1000 > + startingorg, < 0.0000, 90.0000, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/desertlands/desertlands_lobby_double_doorframe_01.rmdl", < -968.0000, 3185.6000, 2922.1000 > + startingorg, < 0.0000, 90.0000, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/desertlands/desertlands_lobby_double_doorframe_01.rmdl", < -985.2000, 3185.6000, 2922.1000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1);
-    CreateMapEditorProp( $"mdl/desertlands/desertlands_lobby_double_doorframe_01.rmdl", < 983.1000, 3185.6000, 2922.1000 > + startingorg, < 0.0000, 90.0000, 0.0000 >, true, 50000, -1, 1);
-    CreateMapEditorProp( $"mdl/desertlands/desertlands_lobby_double_doorframe_01.rmdl", < 965.9000, 3185.6000, 2922.1000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1);
-    CreateMapEditorProp( $"mdl/desertlands/desertlands_lobby_double_doorframe_01.rmdl", < 976.9000, 3185.6000, 2922.1000 > + startingorg, < 0.0000, 90.0000, 0.0000 >, true, 50000, -1, 1);
-    CreateMapEditorProp( $"mdl/desertlands/desertlands_lobby_double_doorframe_01.rmdl", < 971.5000, 3185.6000, 2922.1000 > + startingorg, < 0.0000, 90.0000, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/desertlands/desertlands_lobby_double_doorframe_01.rmdl", < 983.1000, 3185.6000, 2919.0000 > + startingorg, < 0.0000, 90.0000, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/desertlands/desertlands_lobby_double_doorframe_01.rmdl", < 965.9000, 3185.6000, 2919.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/desertlands/desertlands_lobby_double_doorframe_01.rmdl", < 976.9000, 3185.6000, 2919.0000 > + startingorg, < 0.0000, 90.0000, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/desertlands/desertlands_lobby_double_doorframe_01.rmdl", < 971.5000, 3185.6000, 2919.0000 > + startingorg, < 0.0000, 90.0000, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/desertlands/desertlands_lobby_double_doorframe_01.rmdl", < 1281.4000, 2860.4000, 2922.1000 > + startingorg, < 0.0000, 0.0000, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/desertlands/desertlands_lobby_double_doorframe_01.rmdl", < 1281.4000, 2864.8000, 2922.1000 > + startingorg, < 0.0000, 0.0000, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/thunderdome_quarry_block_03_orange.rmdl", < -1435.0000, 3383.2000, 2720.0000 > + startingorg, < 0.0000, 0.0000, 0.0000 >, true, 50000, -1, 1);
