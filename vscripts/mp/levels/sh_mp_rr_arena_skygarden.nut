@@ -28,6 +28,13 @@ void function MapModels()
 	vector startingorg = <0,0,0>
 
     //Props
+    CreateMapEditorProp( $"mdl/rocks/thunderdome_quarry_block_03_orange.rmdl", < 3635.0000, -3144.0000, 2787.2000 > + startingorg, < 0.0000, -90.2070, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/thunderdome_quarry_block_03_orange.rmdl", < -3638.6000, -3136.7000, 2787.2000 > + startingorg, < 0.0000, -88.0249, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/thunderdome_quarry_block_01_orange.rmdl", < -1459.3000, 1645.6000, 2690.5000 > + startingorg, < -6.1864, -85.9944, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_flat_02.rmdl", < -1238.0000, 1808.0000, 2772.0000 > + startingorg, < -89.1213, -27.2017, -63.1941 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_flat_02.rmdl", < -1156.0000, 1980.0000, 2788.6000 > + startingorg, < -89.1213, -27.2019, 28.4292 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_flat_02.rmdl", < 1218.8000, 1828.6000, 2766.2000 > + startingorg, < 83.4384, -164.8871, 107.6078 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_flat_02.rmdl", < 1123.1000, 1994.3000, 2745.8000 > + startingorg, < 83.7359, 173.9574, 176.6602 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/thunderdome/canyonland_thunderdome_rock_charred_orange_01.rmdl", < -4268.0000, 8909.0000, 3535.0000 > + startingorg, < -31.2685, -23.8250, 76.3422 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/thunderdome/canyonland_thunderdome_rock_charred_orange_01.rmdl", < 3209.0000, 7999.0000, 3165.0000 > + startingorg, < 29.5273, 17.3897, 80.1655 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/thunderdome/canyonland_thunderdome_rock_charred_orange_01.rmdl", < -10345.0000, 9696.0000, 3735.0000 > + startingorg, < 8.8077, 21.7202, 41.9969 >, true, 50000, -1, 1);
