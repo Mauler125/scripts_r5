@@ -79,7 +79,7 @@ void function InitLootDronePaths()
 		file.dronePaths.append( groupNodes )
 	}
 
-	printf( "DronePaths: found %i paths", file.dronePaths.len() )
+	//printf( "DronePaths: found %i paths", file.dronePaths.len() )
 
 	// Mark drone paths as initialized
 	FlagSet( "DronePathsInitialized" )

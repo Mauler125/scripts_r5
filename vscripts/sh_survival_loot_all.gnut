@@ -241,8 +241,8 @@ void function SURVIVAL_Loot_All_InitShared()
 		string featureFlagRef = GetLootTableString( data.ref, dt, i, "featureFlag" )
 		if ( featureFlagRef != "" && !GetFeatureFlagByString( featureFlagRef ) )
 		{
-			printf( "Skipping loot ref %s because feature flag %s is off.", data.ref, featureFlagRef )
-			printf( "Loot ref %s: feature flag %s is off", data.ref, featureFlagRef )
+			//printf( "Skipping loot ref %s because feature flag %s is off.", data.ref, featureFlagRef )
+			//printf( "Loot ref %s: feature flag %s is off", data.ref, featureFlagRef )
 			continue
 		}
 
@@ -262,7 +262,7 @@ void function SURVIVAL_Loot_All_InitShared()
 		}
 
 		data.fakeAmmoIcon = GetLootTableAsset( data.ref, dt, i, "fakeAmmoIcon" )
-		if (data.fakeAmmoIcon != "") printt("Fake ammo icon for", data.ref, "-", data.fakeAmmoIcon)
+		//if (data.fakeAmmoIcon != "") printt("Fake ammo icon for", data.ref, "-", data.fakeAmmoIcon)
 
 		data.baseMods = split( GetLootTableString( data.ref, dt, i, "baseMods" ), " " )
 
@@ -448,7 +448,7 @@ struct CustomWeaponData
 
 bool function IsCustomAttachment(LootData data)
 {
-	printt(data.ref)
+	//printt(data.ref)
 	foreach (CustomHopupData d in file.customHopups)
 	{
 		if (d.className == data.ref) return true
@@ -575,7 +575,7 @@ array<LootData> function SURVIVAL_Loot_GetByTier( int tier )
 		if ( SURVIVAL_Loot_IsRefDisabled( lootData.ref ) )
 			continue
 
-		printt( lootData.ref )
+		//printt( lootData.ref )
 
 		lootOfTier.append( lootData )
 	}
@@ -818,7 +818,7 @@ void function DumpModdedKeyColors( int colorID, float modVal )
 		color *= modVal
 		color = LinearToSrgb( color ) * 255.0
 
-		printt( index + ", ", int( color.x ) + " ", int( color.y ) + " ", int( color.z ) )
+		//printt( index + ", ", int( color.x ) + " ", int( color.y ) + " ", int( color.z ) )
 	}
 }
 #endif
@@ -840,7 +840,7 @@ void function DiffKeyColors( int baseColorID, int colorID )
 		vector deuterColor = GetDataTableVector( datatable, baseColorID + index, 3 )
 		vector tritanColor = GetDataTableVector( datatable, baseColorID + index, 4 )
 
-		printt( index + ", ", deltaX + " ", deltaY + " ", deltaZ )
+		//printt( index + ", ", deltaX + " ", deltaY + " ", deltaZ )
 	}
 }
 #endif

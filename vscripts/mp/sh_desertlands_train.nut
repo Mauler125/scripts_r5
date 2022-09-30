@@ -259,7 +259,7 @@ void function DesertlandsTrain_Init()
     int j = 0
 	foreach(entity car in cars)
 	{
-		printl(">>>> " + car)
+		//printl(">>>> " + car)
 		foreach(entity bin in lootBins)
 		{
 			if(bin.GetModelName().find("loot_bin_0") <= 0)

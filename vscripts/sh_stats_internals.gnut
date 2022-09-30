@@ -49,7 +49,7 @@ global function StatsInternals_UpdatePersistenceOnPurchase
 global function DEV_IncrementStat_Int // only global in dev for console commands (stats should never be incremented any where other than in this file)
 #endif
 
-const bool STATS_DEBUG_PRINT_SPAM = true
+const bool STATS_DEBUG_PRINT_SPAM = false
 
 
 //////////////////////

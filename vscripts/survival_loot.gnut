@@ -600,7 +600,7 @@ void function OnGroundLootSpawned( entity ent )
 		{
 			itemRef = SURVIVAL_GetWeightedItemFromGroup( zoneRef )
 		}
-		printt("Added item to Loot Vault: ", itemRef)
+		//printt("Added item to Loot Vault: ", itemRef)
 		alreadySpawnedLoot.push(itemRef)
 	}
 	else

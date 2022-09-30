@@ -26,7 +26,7 @@ struct {
 void function MDLSpawner_Init()
 {
 	#if SERVER
-	printt("adding mdlspawner ccc")
+	//printt("adding mdlspawner ccc")
 	AddClientCommandCallback( "SetMDLSpawnerModel", ClientCommand_SetMDLSpawnerModel )
 	#endif
 }
