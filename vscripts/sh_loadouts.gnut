@@ -1908,6 +1908,13 @@ bool function IsLoadoutSlotLocked( EHI playerEHI, LoadoutEntry entry )
 			return false
 	#endif
 
+	// Allow reselect to work without dev_loadout_changeable_at_any_time.
+	if ( entry.id == "character_selection" )
+	{
+		if ( GetCurrentPlaylistVarBool( "character_reselect_enabled", false ) )
+			return false
+	}
+
 	return entry.isSlotLocked( playerEHI )
 }
 
