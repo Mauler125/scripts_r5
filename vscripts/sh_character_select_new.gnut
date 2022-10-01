@@ -1158,7 +1158,7 @@ void function UpdateForFocusOnButtonIndex( int buttonIndex )
 		return
 
 	// If we have a character locked in we don't update the model
-	if ( GetLocalClientPlayer().GetPlayerNetBool( "hasLockedInCharacter" ) )
+	if ( !fileLevel.isBrowseMode && GetLocalClientPlayer().GetPlayerNetBool( "hasLockedInCharacter" ) )
 		return
 
 	foreach( func in file.Callbacks_OnCharacterFocused )
@@ -1218,7 +1218,7 @@ void function OnLoadoutButton_Activate( var button )
 		return
 
 	// We already have a character locked
-	if ( GetLocalClientPlayer().GetPlayerNetBool( "hasLockedInCharacter" ) )
+	if ( !fileLevel.isBrowseMode && GetLocalClientPlayer().GetPlayerNetBool( "hasLockedInCharacter" ) )
 		return
 
 	int buttonIndex      = fileLevel.characterButtons.find( button )
