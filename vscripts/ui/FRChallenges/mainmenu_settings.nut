@@ -34,7 +34,7 @@ void function InitFRChallengesSettings( var newMenuArg )
 	AddEventHandlerToButton( menu, "History", UIE_CLICK, HistoryButtonFunct )
 	
 	AddEventHandlerToButton( menu, "WeaponSelector", UIE_CLICK, WeaponSelectorOpenMenu )
-	//AddEventHandlerToButton( menu, "CharacterSelector", UIE_CLICK, LegendSelectOpen )
+	AddEventHandlerToButton( menu, "CharacterSelector", UIE_CLICK, LegendSelectOpen )
 	//RuiSetString( Hud_GetRui( Hud_GetChild( file.menu, "StatusDetails" ) ), "details", "Test" )
 	Hud_SetText( Hud_GetChild( file.menu, "DurationText" ), "60" )
 	AddButtonEventHandler( Hud_GetChild( file.menu, "ShieldSelectorButton"), UIE_CHANGE, ShieldSelectorButton )

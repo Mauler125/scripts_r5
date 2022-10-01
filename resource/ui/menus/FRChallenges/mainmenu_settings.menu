@@ -352,7 +352,7 @@ scripts/resource/ui/menus/FRChallenges/mainmenu_settings.menu
 		{
 			ControlName				Label
 			auto_wide_tocontents    1
-			labelText				"FIX THIS!!!"
+			labelText				"CHANGE LEGEND"
 			visible                 1
 			zpos 3
 			tall					60
