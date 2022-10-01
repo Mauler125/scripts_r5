@@ -1916,6 +1916,7 @@ bool function IsLoadoutSlotLocked( EHI playerEHI, LoadoutEntry entry )
 	#endif
 
 	// Allow reselect to work without dev_loadout_changeable_at_any_time.
+	#if SERVER
 	if ( entry.id == "character_selection" )
 	{
 		entity player = FromEHI( playerEHI )
@@ -1934,6 +1935,7 @@ bool function IsLoadoutSlotLocked( EHI playerEHI, LoadoutEntry entry )
 			}
 		}
 	}
+	#endif
 
 	return entry.isSlotLocked( playerEHI )
 }
