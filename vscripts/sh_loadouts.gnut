@@ -113,6 +113,13 @@ global enum eLoadoutEntryType
 	INTEGER,
 }
 
+global enum eCharacterReselect
+{
+	NONE,
+	ALLOWED,
+	DEAD_ONLY
+}
+
 global struct LoadoutEntry
 {
 	int    _____INTERNAL_entryIndex = -1
@@ -1911,8 +1918,21 @@ bool function IsLoadoutSlotLocked( EHI playerEHI, LoadoutEntry entry )
 	// Allow reselect to work without dev_loadout_changeable_at_any_time.
 	if ( entry.id == "character_selection" )
 	{
-		if ( GetCurrentPlaylistVarBool( "character_reselect_enabled", false ) )
-			return false
+		entity player = FromEHI( playerEHI )
+		if ( IsValid( player ) )
+		{
+			switch ( GetCurrentPlaylistVarInt( "character_reselect_enabled", eCharacterReselect.NONE ) )
+			{
+				case eCharacterReselect.ALLOWED:
+					return false
+				case eCharacterReselect.DEAD_ONLY:
+					if ( !IsAlive( player ) )
+						return false
+					break
+				default:
+					break
+			}
+		}
 	}
 
 	return entry.isSlotLocked( playerEHI )

@@ -4551,7 +4551,7 @@ void function UICallback_OpenCharacterSelectNewMenu()
 	if ( IsAlive( player ) && player.ContextAction_IsMeleeExecution() )
 		return
 
-	if ( ( GetGameState() < eGameState.PickLoadout && !IsSurvivalTraining() ) || GetCurrentPlaylistVarBool( "character_reselect_enabled", false ) )
+	if ( ( GetGameState() < eGameState.PickLoadout && !IsSurvivalTraining() ) || GetCurrentPlaylistVarInt( "character_reselect_enabled", eCharacterReselect.NONE ) > eCharacterReselect.NONE )
 	{
 		OpenCharacterSelectNewMenu( true )
 	}

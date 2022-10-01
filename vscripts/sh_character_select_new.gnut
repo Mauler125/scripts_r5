@@ -1123,7 +1123,7 @@ void function Client_UIScriptReset()
 	printt( "UI Script Reset" )
 	printt( "###############" )
 
-	if ( GetGameState() == eGameState.PickLoadout  || GetCurrentPlaylistVarBool( "character_reselect_enabled", false ))
+	if ( GetGameState() == eGameState.PickLoadout  || GetCurrentPlaylistVarInt( "character_reselect_enabled", eCharacterReselect.NONE ) > eCharacterReselect.NONE )
 		thread ReloadMenu()
 }
 
@@ -1131,13 +1131,13 @@ void function ReloadMenu()
 {
 	WaitFrame()
 
-	if ( GetGameState() != eGameState.PickLoadout || GetCurrentPlaylistVarBool( "character_reselect_enabled", false ))
+	if ( GetGameState() != eGameState.PickLoadout || GetCurrentPlaylistVarInt( "character_reselect_enabled", eCharacterReselect.NONE ) > eCharacterReselect.NONE )
 		return
 
 	CloseCharacterSelectNewMenu()
 	WaitFrame()
 
-	if ( GetGameState() != eGameState.PickLoadout || GetCurrentPlaylistVarBool( "character_reselect_enabled", false ))
+	if ( GetGameState() != eGameState.PickLoadout || GetCurrentPlaylistVarInt( "character_reselect_enabled", eCharacterReselect.NONE ) > eCharacterReselect.NONE )
 		return
 
 	OpenCharacterSelectNewMenu()
