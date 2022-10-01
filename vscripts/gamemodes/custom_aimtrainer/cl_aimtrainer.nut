@@ -109,9 +109,9 @@ void function Cl_ChallengesByColombia_Init()
 	SetConVarBool( "cl_showgpustats", false )
 	SetConVarBool( "cl_showsimstats", false )
 	SetConVarBool( "cl_showhoststats", false )
-	//SetConVarBool( "con_drawnotify", false )
+	SetConVarBool( "con_drawnotify", false )
 	SetConVarBool( "enable_debug_overlays", false )
-	SetConVarInt( "sq_showvmoutput", 3 )
+	SetConVarInt( "sq_showvmoutput", 1 )
 	SetConVarInt( "sq_showvmwarning", 2 )
 	
 	//main menu cameras thread end signal
@@ -590,7 +590,7 @@ void function RefreshHUD()
 	UpdateHudDataForMainWeapons( player, weapon )
 	
 	//refresh
-	InitSurvivalHealthBar()
+	thread InitSurvivalHealthBar()
 }
 
 void function ServerCallback_RestartChallenge(int challenge)

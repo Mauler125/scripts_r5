@@ -274,6 +274,7 @@ void function Sequence_WinnerDetermined()
 
 	foreach ( player in GetPlayerArray() )
 	{
+		MakeInvincible( player )
 		Remote_CallFunction_NonReplay( player, "ServerCallback_PlayMatchEndMusic" )
 		Remote_CallFunction_NonReplay( player, "ServerCallback_MatchEndAnnouncement", player.GetTeam() == GetWinningTeam(), GetWinningTeam() )
 	}
