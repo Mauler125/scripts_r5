@@ -381,6 +381,12 @@ void function MapTriggers_Init()
 			CreateWallTrigger( <-20857, 5702, -25746> )
 			break
 		}
+		case "mp_rr_party_crasher":
+		{
+			CreateWallTrigger( <811, 911, 2434>, 30000 )
+    		CreateWallTrigger( <811, 911, -537>, 30000, true )
+			break
+		}
 		default:
 			break
 	}
