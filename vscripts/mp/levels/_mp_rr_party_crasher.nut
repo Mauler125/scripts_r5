@@ -70,31 +70,87 @@ void function PartyCrasherOnEntitiesDidLoad()
     vector startingorg = <0,0,0>
 
 
+    
+
     //Props
-    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 3056.7740, 1508.1280, 703.0000 > + startingorg, < -90.0000, -58.9181, 0.0000 >, true, 50000, -1, 1);
-    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 3056.7740, 1508.1280, 710.0000 > + startingorg, < -90.0000, -58.9181, 0.0000 >, true, 50000, -1, 1);
-    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 2408.7740, 2590.1280, 703.0000 > + startingorg, < -90.0000, -58.9181, 0.0000 >, true, 50000, -1, 1);
-    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 2408.7740, 2590.1280, 710.0000 > + startingorg, < -90.0000, -58.9181, 0.0000 >, true, 50000, -1, 1);
-    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 3337.5240, 600.2608, 2127.0000 > + startingorg, < 0.0000, 26.8554, 0.0000 >, true, 50000, -1, 1);
-    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 3337.5240, 600.2608, 2065.0000 > + startingorg, < 0.0000, 26.8554, 0.0000 >, true, 50000, -1, 1);
-    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 3337.5240, 600.2608, 2004.0000 > + startingorg, < 0.0000, 26.8554, 0.0000 >, true, 50000, -1, 1);
-    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 3337.5240, 600.2608, 1941.0000 > + startingorg, < 0.0000, 26.8554, 0.0000 >, true, 50000, -1, 1);
-    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 3337.5240, 600.2608, 1878.0000 > + startingorg, < 0.0000, 26.8554, 0.0000 >, true, 50000, -1, 1);
-    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 3337.5240, 600.2608, 1815.0000 > + startingorg, < 0.0000, 26.8554, 0.0000 >, true, 50000, -1, 1);
-    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1649.9270, 494.8445, 1129.8380 > + startingorg, < -0.7399, -60.8484, -5.1692 >, true, 50000, -1, 1);
-    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1616.1390, 440.0866, 1130.8380 > + startingorg, < -0.7399, -60.8484, -5.1692 >, true, 50000, -1, 1);
-    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1641.2530, 498.9810, 1201.2850 > + startingorg, < 84.7783, -142.7255, -81.4594 >, true, 50000, -1, 1);
-    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1441.6140, 607.7581, 1180.9290 > + startingorg, < 84.7784, -142.7246, -82.0567 >, true, 50000, -1, 1);
-    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1548.0330, 550.0198, 1191.8640 > + startingorg, < 84.7783, -142.7255, -81.4594 >, true, 50000, -1, 1);
-    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1607.5160, 434.1960, 1201.5810 > + startingorg, < 5.1883, 30.7730, -90.5436 >, true, 50000, -1, 1);
-    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1523.8070, 491.0515, 1121.0560 > + startingorg, < -0.7399, -60.8484, -5.1692 >, true, 50000, -1, 1);
-    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1416.3600, 550.5212, 1109.9510 > + startingorg, < -0.7399, -60.8484, -5.1692 >, true, 50000, -1, 1);
-    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1450.5720, 605.7633, 1109.3490 > + startingorg, < -0.7399, -60.8484, -5.1692 >, true, 50000, -1, 1);
-    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1558.0190, 546.2936, 1120.4540 > + startingorg, < -0.7399, -60.8484, -5.1692 >, true, 50000, -1, 1);
-    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1304.6030, 601.7084, 1168.1840 > + startingorg, < 5.1883, 30.7730, -90.5436 >, true, 50000, -1, 1);
-    CreateMapEditorProp( $"mdl/domestic/corgi_doll.rmdl", < 2137.0740, 2872.5410, 4373.2300 > + startingorg, < 0.0000, -80.7770, 0.0000 >, true, 50000, -1, 1);
-    CreateMapEditorProp( $"mdl/domestic/nessy_doll.rmdl", < 1912.9040, 3086.6840, 4372.1720 > + startingorg, < 0.0000, 100.7376, 0.0000 >, true, 50000, -1, 1);
-    CreateMapEditorProp( $"mdl/containers/underbelly_cargo_container_128_red_02.rmdl", < -1607.3330, -1384.9200, 1182.9230 > + startingorg, < -10.8896, 114.4993, 3.5745 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl", < 3923.0000, -2427.0000, 547.0000 > + startingorg, < 0.0000, 0.0000, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_02.rmdl", < -1664.1480, -3430.7530, 1694.4220 > + startingorg, < 0.0000, 158.6911, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_02.rmdl", < -1735.1480, -3443.7530, 2061.9220 > + startingorg, < 0.0000, 158.6911, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -4229.6050, 2696.0540, 2121.0000 > + startingorg, < -90.0000, -65.3040, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -4340.6050, 2645.0540, 2121.0000 > + startingorg, < -90.0000, -65.3040, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -4313.6050, 2587.0540, 2121.0000 > + startingorg, < -90.0000, -65.3040, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -4175.6050, 2581.0540, 2121.0000 > + startingorg, < -90.0000, -65.3040, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -4234.6050, 2416.0540, 2121.0000 > + startingorg, < -90.0000, -65.3040, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -4150.6050, 2524.0540, 2121.0000 > + startingorg, < -90.0000, -65.3040, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -4012.1050, 2518.5540, 2121.0000 > + startingorg, < -90.0000, -65.3040, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -4286.6050, 2530.0540, 2121.0000 > + startingorg, < -90.0000, -65.3040, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -4202.6050, 2638.0540, 2121.0000 > + startingorg, < -90.0000, -65.3040, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -4064.6050, 2633.0540, 2121.0000 > + startingorg, < -90.0000, -65.3040, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -4261.6050, 2473.0540, 2121.0000 > + startingorg, < -90.0000, -65.3040, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -4123.6050, 2467.0540, 2121.0000 > + startingorg, < -90.0000, -65.3040, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -4039.1050, 2575.5540, 2121.0000 > + startingorg, < -90.0000, -65.3040, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -3930.0500, 2578.6650, 2112.0000 > + startingorg, < 0.0000, 25.3541, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -3930.0500, 2578.6650, 2049.0000 > + startingorg, < 0.0000, 25.3541, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -3930.0500, 2578.6650, 1986.0000 > + startingorg, < 0.0000, 25.3541, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -4150.5850, 2486.7490, 2112.0000 > + startingorg, < 0.0000, -65.3087, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -4256.5850, 2437.7490, 2112.0000 > + startingorg, < 0.0000, -65.3087, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -4039.5850, 2537.7490, 2112.0000 > + startingorg, < 0.0000, -65.3087, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -4256.5850, 2437.7490, 2049.0000 > + startingorg, < 0.0000, -65.3087, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -4039.5850, 2537.7490, 2049.0000 > + startingorg, < 0.0000, -65.3087, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -4150.5850, 2486.7490, 2049.0000 > + startingorg, < 0.0000, -65.3087, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -4256.5850, 2437.7490, 1986.0000 > + startingorg, < 0.0000, -65.3087, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -4150.5850, 2486.7490, 1986.0000 > + startingorg, < 0.0000, -65.3087, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -4039.5850, 2537.7490, 1986.0000 > + startingorg, < 0.0000, -65.3087, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_wallrun_03.rmdl", < -3743.0000, 415.0006, 1654.0000 > + startingorg, < 87.3338, 156.0671, 42.7757 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_wallrun_03.rmdl", < -1627.8790, -3725.3260, 2499.5000 > + startingorg, < 0.0000, 22.4678, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_02.rmdl", < -2115.6990, -2850.0790, 2490.4220 > + startingorg, < 0.0000, 45.1589, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_wallrun_02.rmdl", < -1505.1860, -3935.6320, 2536.0000 > + startingorg, < 0.0000, -151.9449, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_02.rmdl", < -1785.9560, -3598.3370, 2493.9220 > + startingorg, < 0.0000, 158.6911, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_wallrun_03.rmdl", < -1861.4770, -3296.6690, 2538.5000 > + startingorg, < 0.0000, 80.8703, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_02.rmdl", < -1934.0540, -3105.3080, 2493.9220 > + startingorg, < 0.0000, -17.3116, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_02.rmdl", < -1874.0540, -3105.3080, 2271.9220 > + startingorg, < 0.0000, -17.3116, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_wallrun_03.rmdl", < -1801.4770, -3296.6690, 2316.5000 > + startingorg, < 0.0000, -49.0691, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_02.rmdl", < -1725.9560, -3598.3370, 2271.9220 > + startingorg, < 0.0000, 158.6911, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_wallrun_02.rmdl", < -1445.1860, -3935.6320, 2314.0000 > + startingorg, < 0.0000, -151.9449, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_02.rmdl", < -2055.6990, -2850.0790, 2268.4220 > + startingorg, < 0.0000, 45.1589, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_wallrun_03.rmdl", < -1567.8790, -3725.3260, 2277.5000 > + startingorg, < 0.0000, 22.4678, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_wallrun_03.rmdl", < -1540.0000, -3725.3260, 2067.5000 > + startingorg, < 0.0000, 22.4678, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_02.rmdl", < -1942.3150, -2850.0790, 2058.4220 > + startingorg, < 0.0000, 45.1589, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_02.rmdl", < -1612.5720, -3598.3370, 2061.9220 > + startingorg, < 0.0000, 158.6911, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_wallrun_03.rmdl", < -1771.0000, -3232.0000, 2106.5000 > + startingorg, < 0.0000, 70.6413, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_02.rmdl", < -1837.8370, -3105.3080, 2061.9220 > + startingorg, < 0.0000, -17.3116, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_wallrun_02.rmdl", < -1395.0000, -3948.9990, 2104.0000 > + startingorg, < 0.0000, -6.9135, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_wallrun_02.rmdl", < -3748.0000, 231.9996, 2510.0000 > + startingorg, < 0.0000, -168.2323, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_02.rmdl", < -4193.8720, 822.5415, 2467.9220 > + startingorg, < 0.0000, 166.7606, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_wallrun_03.rmdl", < -4279.8570, 1008.2670, 2512.5000 > + startingorg, < 0.0000, 30.5374, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_02.rmdl", < -4409.7120, 1289.9000, 2467.9220 > + startingorg, < 0.0000, -9.2421, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_wallrun_03.rmdl", < -4590.8460, 1381.0370, 2473.5000 > + startingorg, < 0.0000, -145.4653, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_wallrun_02.rmdl", < -3868.5340, 527.9996, 2510.0000 > + startingorg, < 0.0000, -143.8754, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_wallrun_03.rmdl", < -4019.5340, 719.0002, 2473.5000 > + startingorg, < 0.0000, 30.5374, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_wallrun_02.rmdl", < -4754.7920, 1561.0480, 2510.0000 > + startingorg, < 0.0000, 40.1219, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_02.rmdl", < -4355.5930, 1069.9980, 2156.2720 > + startingorg, < 0.0000, -9.2421, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_wallrun_03.rmdl", < -3729.0000, 316.0007, 2311.0000 > + startingorg, < 57.8028, 16.8626, -85.8501 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_wallrun_02.rmdl", < -4700.6730, 1561.0480, 2198.3500 > + startingorg, < 0.0000, 40.1219, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_wallrun_03.rmdl", < -3965.4150, 719.0002, 2161.8500 > + startingorg, < 0.0000, 30.5374, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_wallrun_02.rmdl", < -3814.4150, 527.9996, 2198.3500 > + startingorg, < 0.0000, -143.8754, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_02.rmdl", < -4355.5930, 1289.9000, 2156.2720 > + startingorg, < 0.0000, -9.2421, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_wallrun_03.rmdl", < -4536.7270, 1381.0370, 2161.8500 > + startingorg, < 0.0000, -145.4653, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_wallrun_03.rmdl", < -4225.7380, 1008.2670, 2200.8500 > + startingorg, < 0.0000, 30.5374, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_02.rmdl", < -4139.7520, 822.5415, 2156.2720 > + startingorg, < 0.0000, 166.7606, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -4286.6050, 2530.0540, 1977.0000 > + startingorg, < -90.0000, -65.3040, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -4313.6050, 2587.0540, 1977.0000 > + startingorg, < -90.0000, -65.3040, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -4202.6050, 2638.0540, 1977.0000 > + startingorg, < -90.0000, -65.3040, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -4175.6050, 2581.0540, 1977.0000 > + startingorg, < -90.0000, -65.3040, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -4064.6050, 2633.0540, 1977.0000 > + startingorg, < -90.0000, -65.3040, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -4261.6050, 2473.0540, 1977.0000 > + startingorg, < -90.0000, -65.3040, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -4234.6050, 2416.0540, 1977.0000 > + startingorg, < -90.0000, -65.3040, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -4123.6050, 2467.0540, 1977.0000 > + startingorg, < -90.0000, -65.3040, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -4150.6050, 2524.0540, 1977.0000 > + startingorg, < -90.0000, -65.3040, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -4039.1050, 2575.5540, 1977.0000 > + startingorg, < -90.0000, -65.3040, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -4012.1050, 2518.5540, 1977.0000 > + startingorg, < -90.0000, -65.3040, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_02.rmdl", < -3351.5310, -1358.9700, 1624.8430 > + startingorg, < 78.1344, 77.0360, 127.1316 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_02.rmdl", < -3334.8770, -1255.7810, 1339.4220 > + startingorg, < 0.0000, -147.4711, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_02.rmdl", < -3139.2660, -1516.0830, 1339.4220 > + startingorg, < 0.0000, 42.1678, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/desertlands/construction_bldg_platform_04_corner.rmdl", < -210.8703, -1022.7400, 1260.1350 > + startingorg, < 4.1008, -17.7584, -2.7917 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 1280.5020, -2185.1360, 1197.5770 > + startingorg, < 0.0000, -99.7329, 90.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1214.2740, 2820.5010, 829.0771 > + startingorg, < 0.0000, -9.0903, 90.0000 >, true, 50000, -1, 1);
@@ -102,12 +158,14 @@ void function PartyCrasherOnEntitiesDidLoad()
     CreateMapEditorProp( $"mdl/slum_city/slumcity_column01_40x128_dirty_a.rmdl", < 839.0002, 975.0007, 826.0005 > + startingorg, < 0.0000, 30.5130, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 2052.8150, 2013.6260, 918.0005 > + startingorg, < 0.0000, -59.1546, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 1529.7260, -1940.4990, 1075.5770 > + startingorg, < 0.0000, -9.0903, 90.0000 >, true, 50000, -1, 1);
-    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_sand_modular_cap_02.rmdl", < -3750.0010, 394.1194, 2236.0000 > + startingorg, < -78.0303, -151.7497, 179.9999 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 1333.3830, 754.7301, 700.0771 > + startingorg, < 0.0000, -64.5558, 90.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/containers/underbelly_cargo_container_128_red_02.rmdl", < -1217.1240, 2327.8840, 834.9526 > + startingorg, < 0.0000, -49.0797, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 806.7003, 3110.4330, 790.0005 > + startingorg, < 0.0000, 42.5120, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 1333.3830, 754.7301, 823.0771 > + startingorg, < 0.0000, -64.5558, 90.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1558.0190, 546.2936, 1120.4540 > + startingorg, < -0.7399, -60.8484, -5.1692 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 2599.7710, -140.4068, 781.0005 > + startingorg, < 0.0000, 109.8747, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1548.0330, 550.0198, 1191.8640 > + startingorg, < 84.7783, -142.7255, -81.4594 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 3337.5240, 600.2608, 2004.0000 > + startingorg, < 0.0000, 26.8554, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/military_base/militaryfort_wall_rooftop_01.rmdl", < -1331.0030, 5048.0030, 543.0005 > + startingorg, < 0.0000, 0.0000, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1538.6500, 2590.2570, 1197.5770 > + startingorg, < 0.0000, -116.6361, 90.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1262.9110, 2677.7940, 829.0771 > + startingorg, < 0.0000, -44.8131, 90.0000 >, true, 50000, -1, 1);
@@ -152,13 +210,14 @@ void function PartyCrasherOnEntitiesDidLoad()
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1660.0360, 2679.8460, 1197.5770 > + startingorg, < 0.0000, -152.5263, 90.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_wallrun_03.rmdl", < -1249.0010, -4135.2310, 1906.5000 > + startingorg, < 0.0000, -148.6012, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/containers/underbelly_cargo_container_128_red_02.rmdl", < -2061.8760, -159.9306, 1097.9530 > + startingorg, < 0.0000, 129.8628, 0.0000 >, true, 50000, -1, 1);
-    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_sand_modular_cap_02.rmdl", < -1313.9620, -4073.3800, 2236.0000 > + startingorg, < -78.0303, -159.8192, 179.9999 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1607.5160, 434.1960, 1201.5810 > + startingorg, < 5.1883, 30.7730, -90.5436 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/military_base/militaryfort_wall_corner_cap_01_a.rmdl", < -371.5946, 4953.4920, 565.0004 > + startingorg, < 0.0000, 153.9872, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 1137.7180, -2135.1960, 706.0771 > + startingorg, < 0.0000, -135.0176, 90.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/rock_playback_04.rmdl", < -4504.1920, 1607.1660, 1674.9420 > + startingorg, < 10.6747, -147.8555, 0.4520 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 679.9241, 3308.1040, 860.0005 > + startingorg, < 0.0000, -46.7805, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1456.4660, 3067.3760, 1196.0770 > + startingorg, < 0.0000, 80.8143, 90.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/military_base/militaryfort_wall_rooftop_01.rmdl", < -4121.7260, 2012.6580, 1634.0000 > + startingorg, < 0.0000, 34.1100, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 3337.5240, 600.2608, 1878.0000 > + startingorg, < 0.0000, 26.8554, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 1529.7260, -1940.4990, 706.0771 > + startingorg, < 0.0000, -9.0903, 90.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/containers/underbelly_cargo_container_128_red_02.rmdl", < -1612.8990, 87.8900, 1069.9530 > + startingorg, < 0.0000, 29.8565, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 2405.3950, 2019.9580, 918.0005 > + startingorg, < 0.0000, 121.8182, 0.0000 >, true, 50000, -1, 1);
@@ -200,7 +259,7 @@ void function PartyCrasherOnEntitiesDidLoad()
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 1484.1110, -1796.3650, 829.0771 > + startingorg, < 0.0000, 26.9646, 90.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 1086.5680, -1792.5480, 1196.0770 > + startingorg, < 0.0000, 134.5260, 90.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1704.6040, 2825.5000, 706.0771 > + startingorg, < 0.0000, 171.1011, 90.0000 >, true, 50000, -1, 1);
-    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_02.rmdl", < -1760.6700, -3105.3080, 1861.9220 > + startingorg, < 0.0000, -17.3116, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_02.rmdl", < -1792.2830, -3104.2100, 1861.9220 > + startingorg, < 0.0000, 43.1949, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1225.9140, 2897.5030, 829.0771 > + startingorg, < 0.0000, 9.5296, 90.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 2300.2780, 1968.0370, 918.0005 > + startingorg, < 0.0000, -148.8894, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 1953.3510, 1616.8600, 976.0005 > + startingorg, < 0.0000, 30.9576, 0.0000 >, true, 50000, -1, 1);
@@ -248,7 +307,7 @@ void function PartyCrasherOnEntitiesDidLoad()
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 1518.0860, -1863.4970, 829.0771 > + startingorg, < 0.0000, 9.5296, 90.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/military_base/militaryfort_wall_rooftop_01.rmdl", < 5187.3000, -2430.8310, 702.0005 > + startingorg, < 0.0000, 44.0898, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 1137.7180, -2135.1960, 1197.5770 > + startingorg, < 0.0000, -135.0176, 90.0000 >, true, 50000, -1, 1);
-    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_wallrun_03.rmdl", < -1688.0930, -3296.6690, 1906.5000 > + startingorg, < 0.0000, -153.5348, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_wallrun_03.rmdl", < -1688.0930, -3296.6690, 1906.5000 > + startingorg, < 0.0000, 3.5108, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1456.4660, 3067.3760, 951.0771 > + startingorg, < 0.0000, 80.8143, 90.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/rock_playback_06.rmdl", < -244.4752, 1049.0810, 756.6836 > + startingorg, < 22.7059, -60.2699, -23.5879 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/military_base/militaryfort_wall_corner_cap_01_a.rmdl", < -2110.1250, 4306.2150, 1605.0000 > + startingorg, < 0.0000, -150.1494, 0.0000 >, true, 50000, -1, 1);
@@ -257,6 +316,7 @@ void function PartyCrasherOnEntitiesDidLoad()
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 2238.0420, 1466.8760, 976.0005 > + startingorg, < 0.0000, -59.1546, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 1481.0890, -2083.2070, 1197.5770 > + startingorg, < 0.0000, -44.8131, 90.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_large_01.rmdl", < -3294.8450, -2729.4820, 3755.0010 > + startingorg, < 0.0000, -75.4123, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 3337.5240, 600.2608, 1941.0000 > + startingorg, < 0.0000, 26.8554, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_large_01.rmdl", < -3806.4320, -2023.3580, 4284.3240 > + startingorg, < -36.4159, -146.5997, 93.9422 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/military_base/militaryfort_wall_rooftop_01.rmdl", < 3960.5730, -3876.8300, 555.0005 > + startingorg, < 0.0000, -64.1365, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/containers/underbelly_cargo_container_128_red_02.rmdl", < 982.8983, -1576.0610, 834.9526 > + startingorg, < 0.0000, -66.4237, 0.0000 >, true, 50000, -1, 1);
@@ -352,6 +412,7 @@ void function PartyCrasherOnEntitiesDidLoad()
     CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_wallrun_02.rmdl", < -1331.8020, -3935.6320, 1904.0000 > + startingorg, < 0.0000, -151.9449, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 738.7565, 3184.5780, 860.0005 > + startingorg, < 0.0000, 42.5120, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 2272.0420, 1414.3760, 976.0005 > + startingorg, < 0.0000, -59.1546, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 3056.7740, 1508.1280, 710.0000 > + startingorg, < -90.0000, -58.9181, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/military_base/militaryfort_wall_corner_cap_01_a.rmdl", < -801.0410, 5178.0110, 565.0004 > + startingorg, < 0.0000, 89.9699, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/pipes/slum_pipe_large_blue_256_01.rmdl", < 1284.0020, -1937.9950, 680.0023 > + startingorg, < 0.0000, 0.0000, 0.0000 >, true, 50000, -1, 5);
     CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_wallrun_03.rmdl", < -1402.0000, -3767.2290, 1525.0000 > + startingorg, < 0.0000, 20.2798, 0.0000 >, true, 50000, -1, 1);
@@ -361,6 +422,7 @@ void function PartyCrasherOnEntitiesDidLoad()
     CreateMapEditorProp( $"mdl/military_base/militaryfort_wall_corner_cap_01_a.rmdl", < -3028.8910, 3780.9000, 1576.0020 > + startingorg, < -86.9981, -70.0681, -80.7927 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/pipes/slum_pipe_large_blue_256_01.rmdl", < -1459.9980, 2823.0050, 680.0023 > + startingorg, < 0.0000, 0.0000, 0.0000 >, true, 50000, -1, 5);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 1517.1940, -2017.2570, 829.0771 > + startingorg, < 0.0000, -27.3782, 90.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1616.1390, 440.0866, 1130.8380 > + startingorg, < -0.7399, -60.8484, -5.1692 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 2422.6730, 2616.5600, 919.0002 > + startingorg, < 0.0000, -148.8894, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 1288.4980, -1693.2130, 829.0771 > + startingorg, < 0.0000, 80.8143, 90.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1657.4320, 2968.4520, 951.0771 > + startingorg, < 0.0000, 134.5260, 90.0000 >, true, 50000, -1, 1);
@@ -372,11 +434,11 @@ void function PartyCrasherOnEntitiesDidLoad()
     CreateMapEditorProp( $"mdl/military_base/militaryfort_wall_rooftop_01.rmdl", < 1168.7910, -4520.0300, 1154.0000 > + startingorg, < 0.0000, 4.2552, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1379.7290, 3054.7160, 1074.0770 > + startingorg, < 0.0000, 62.5265, 90.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/military_base/militaryfort_wall_corner_cap_01_a.rmdl", < -801.0410, 5178.0110, 851.0004 > + startingorg, < 0.0000, 89.9699, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 3337.5240, 600.2608, 2065.0000 > + startingorg, < 0.0000, 26.8554, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1704.6040, 2825.5000, 829.0771 > + startingorg, < 0.0000, 171.1011, 90.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_wallrun_03.rmdl", < -4025.1440, 577.3645, 1867.5000 > + startingorg, < 0.0000, -140.5318, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_large_01.rmdl", < -5373.6480, 144.1234, 4381.5010 > + startingorg, < 0.0000, -119.7670, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/military_base/militaryfort_wall_rooftop_01.rmdl", < 3122.4290, -4295.4550, 671.0005 > + startingorg, < 0.0000, -79.8756, 0.0000 >, true, 50000, -1, 1);
-    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_sand_modular_cap_02.rmdl", < -1806.0250, -3098.7770, 2155.0000 > + startingorg, < -79.0465, -18.0161, 39.1983 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 2543.6730, 1631.5600, 666.0002 > + startingorg, < 0.0000, -148.8894, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 2597.0880, -129.1846, 781.0005 > + startingorg, < 0.0000, -160.8329, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/containers/underbelly_cargo_container_128_red_02.rmdl", < -2061.8760, -159.9306, 1185.9530 > + startingorg, < 0.0000, 129.8628, 0.0000 >, true, 50000, -1, 1);
@@ -398,12 +460,13 @@ void function PartyCrasherOnEntitiesDidLoad()
     CreateMapEditorProp( $"mdl/military_base/militaryfort_wall_rooftop_01.rmdl", < 4698.3000, -2927.3310, 399.0005 > + startingorg, < 0.0000, 44.0898, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1385.1790, 2587.3470, 829.0771 > + startingorg, < 0.0000, -81.1128, 90.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 2635.1550, -360.9111, 851.0005 > + startingorg, < 0.0000, 109.8747, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 2408.7740, 2590.1280, 703.0000 > + startingorg, < -90.0000, -58.9181, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_column01_40x128_dirty_a.rmdl", < 871.0006, 967.0004, 827.0005 > + startingorg, < 0.0000, -14.1761, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 2635.1550, -360.9111, 781.0005 > + startingorg, < 0.0000, 109.8747, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/rock_playback_06.rmdl", < 97.8313, 614.7498, 819.6836 > + startingorg, < 22.7059, -104.7870, -23.5879 >, true, 50000, -1, 1);
-    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_sand_modular_cap_02.rmdl", < -1604.1560, -3555.6380, 2236.0000 > + startingorg, < -79.0465, 161.8461, 39.1982 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/military_base/militaryfort_wall_rooftop_01.rmdl", < -1331.0030, 5048.0030, 543.0005 > + startingorg, < 0.0000, 0.0000, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/rock_playback_06.rmdl", < -3144.4750, 421.0812, 1092.6840 > + startingorg, < 22.7059, -60.2699, -23.5879 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1416.3600, 550.5212, 1109.9510 > + startingorg, < -0.7399, -60.8484, -5.1692 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1385.1790, 2587.3470, 706.0771 > + startingorg, < 0.0000, -81.1128, 90.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/military_base/militaryfort_wall_rooftop_01.rmdl", < -4276.9250, 1737.2710, 682.0005 > + startingorg, < 0.0000, 35.1031, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_large_01.rmdl", < -4192.8190, -682.9636, 3659.0010 > + startingorg, < 0.0000, 36.4808, 0.0000 >, true, 50000, -1, 1);
@@ -411,14 +474,17 @@ void function PartyCrasherOnEntitiesDidLoad()
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 1417.5180, -2263.7650, 683.0005 > + startingorg, < 0.0000, 17.5165, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 1052.0990, -1859.8370, 951.0771 > + startingorg, < 0.0000, 153.1051, 90.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 1001.8740, 1611.1530, 823.0771 > + startingorg, < 0.0000, -55.5848, 90.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1523.8070, 491.0515, 1121.0560 > + startingorg, < -0.7399, -60.8484, -5.1692 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 1280.5020, -2185.1360, 952.5771 > + startingorg, < 0.0000, -99.7329, 90.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1385.1790, 2587.3470, 1197.5770 > + startingorg, < 0.0000, -81.1128, 90.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_column01_40x128_dirty_a.rmdl", < 871.0006, 967.0004, 702.0005 > + startingorg, < 0.0000, -14.1761, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/canyonlands/fabric_canopy_pole_256_01.rmdl", < 91.1489, 3749.0520, 668.6074 > + startingorg, < 0.0000, 0.0000, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/military_base/militaryfort_wall_rooftop_01.rmdl", < -315.8793, 5430.7950, 605.0781 > + startingorg, < 0.2777, 176.9451, -0.2050 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 778.0190, 462.3954, 823.0771 > + startingorg, < 0.0000, -59.6587, 90.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/domestic/corgi_doll.rmdl", < 2137.0740, 2872.5410, 4373.2300 > + startingorg, < 0.0000, -80.7770, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1606.2820, 2625.8040, 706.0771 > + startingorg, < 0.0000, -135.0176, 90.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_large_01.rmdl", < -4201.1180, -2721.6410, 5471.3240 > + startingorg, < -36.4160, 32.7230, 93.9422 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1641.2530, 498.9810, 1201.2850 > + startingorg, < 84.7783, -142.7255, -81.4594 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/military_base/militaryfort_wall_rooftop_01.rmdl", < -3936.9250, 2145.2710, 1172.0000 > + startingorg, < 0.0000, 35.1031, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_wallrun_03.rmdl", < -3971.0000, 672.0002, 1525.0000 > + startingorg, < 0.0000, 28.3493, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1657.4320, 2968.4520, 829.0771 > + startingorg, < 0.0000, 134.5260, 90.0000 >, true, 50000, -1, 1);
@@ -426,6 +492,7 @@ void function PartyCrasherOnEntitiesDidLoad()
     CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_large_01.rmdl", < -2496.8190, -3919.9640, 3604.0010 > + startingorg, < 0.0000, 36.4808, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/rock_playback_06.rmdl", < -961.8944, 1439.7230, 782.2115 > + startingorg, < 5.3266, 35.0645, -24.5932 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_large_01.rmdl", < -4422.8190, 50.9234, 3447.0010 > + startingorg, < 0.0000, 36.4808, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1649.9270, 494.8445, 1129.8380 > + startingorg, < -0.7399, -60.8484, -5.1692 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/military_base/militaryfort_wall_rooftop_01.rmdl", < -3936.9250, 2145.2710, 1793.0000 > + startingorg, < 0.0000, 35.1031, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 2630.0880, -224.1846, 781.0005 > + startingorg, < 0.0000, -160.8329, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1533.4870, 3055.8640, 951.0771 > + startingorg, < 0.0000, 99.4343, 90.0000 >, true, 50000, -1, 1);
@@ -433,6 +500,7 @@ void function PartyCrasherOnEntitiesDidLoad()
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 91.4323, 3742.4550, 759.0000 > + startingorg, < -90.0000, -48.0783, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1313.7580, 3018.5020, 829.0771 > + startingorg, < 0.0000, 45.0916, 90.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_large_01.rmdl", < -5457.8190, -603.6670, 4888.0010 > + startingorg, < 0.0000, 36.4808, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 2408.7740, 2590.1280, 710.0000 > + startingorg, < -90.0000, -58.9181, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_column01_40x128_dirty_a.rmdl", < 870.0002, 994.0007, 702.0005 > + startingorg, < 0.0000, 30.5130, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_02.rmdl", < -4804.9020, 1891.4290, 2612.1620 > + startingorg, < -18.8778, -46.4835, -95.3110 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 2597.0880, -129.1846, 851.0005 > + startingorg, < 0.0000, -160.8329, 0.0000 >, true, 50000, -1, 1);
@@ -447,6 +515,7 @@ void function PartyCrasherOnEntitiesDidLoad()
     CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_large_01.rmdl", < -4956.8190, 239.9576, 4269.3240 > + startingorg, < -36.4160, -2.3426, 93.9421 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/rock_playback_04.rmdl", < -4534.1920, 1647.1660, 1447.9420 > + startingorg, < 10.6747, -147.8555, 0.4520 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/military_base/militaryfort_wall_rooftop_01.rmdl", < 650.7903, -4555.0300, 511.0005 > + startingorg, < 0.0000, 4.2552, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1304.6030, 601.7084, 1168.1840 > + startingorg, < 5.1883, 30.7730, -90.5436 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/military_base/militaryfort_wall_rooftop_01.rmdl", < 4698.3000, -2921.8310, 702.0005 > + startingorg, < 0.0000, 44.0898, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 723.0190, 430.3954, 700.0771 > + startingorg, < 0.0000, -59.6587, 90.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/rock_playback_06.rmdl", < 339.5248, -245.9188, 709.6836 > + startingorg, < 22.7059, -60.2699, -23.5879 >, true, 50000, -1, 1);
@@ -455,7 +524,6 @@ void function PartyCrasherOnEntitiesDidLoad()
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 1205.3500, -2170.7430, 706.0771 > + startingorg, < 0.0000, -116.6361, 90.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/rock_playback_04.rmdl", < -4534.1920, 1647.1660, 1503.9420 > + startingorg, < 10.6747, -147.8555, 0.4520 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_column01_40x128_dirty_a.rmdl", < 804.0006, 984.0004, 827.0005 > + startingorg, < 0.0000, -14.1761, 0.0000 >, true, 50000, -1, 1);
-    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_sand_modular_cap_02.rmdl", < -4110.0000, 865.9998, 2236.0000 > + startingorg, < -79.0465, 169.9156, 39.1983 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/pipes/pipe_modular_painted_yellow_8.rmdl", < -1456.9850, 2822.0150, 1736.0000 > + startingorg, < 0.0000, 0.0000, 0.0000 >, true, 50000, -1, 28);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1691.9010, 2901.1640, 1196.0770 > + startingorg, < 0.0000, 153.1051, 90.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/military_base/militaryfort_wall_corner_cap_01_a.rmdl", < -1477.9610, 4921.1680, 1436.0000 > + startingorg, < 0.0000, -179.8721, 0.0000 >, true, 50000, -1, 1);
@@ -469,6 +537,7 @@ void function PartyCrasherOnEntitiesDidLoad()
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1704.6040, 2825.5000, 1075.5770 > + startingorg, < 0.0000, 171.1011, 90.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_wallrun_03.rmdl", < -3505.0000, 198.0002, 1897.0000 > + startingorg, < 0.0000, 28.3493, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/military_base/militaryfort_wall_rooftop_01.rmdl", < 1763.1430, -4402.0740, 2732.0000 > + startingorg, < 0.0000, -142.1790, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/domestic/nessy_doll.rmdl", < 1912.9040, 3086.6840, 4372.1720 > + startingorg, < 0.0000, 100.7376, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_large_01.rmdl", < -1862.8560, -3809.7440, 2475.0010 > + startingorg, < 0.0000, 52.1884, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/military_base/militaryfort_wall_corner_cap_01_a.rmdl", < -1305.9610, 4921.1680, 1436.0000 > + startingorg, < 0.0000, -179.8721, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/containers/underbelly_cargo_container_128_red_02.rmdl", < -2507.8850, -353.1250, 1188.9530 > + startingorg, < 0.0000, 46.4611, 0.0000 >, true, 50000, -1, 1);
@@ -526,7 +595,6 @@ void function PartyCrasherOnEntitiesDidLoad()
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 650.9488, 3280.9000, 726.0005 > + startingorg, < 0.0000, -46.7805, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/military_base/militaryfort_wall_corner_cap_01_a.rmdl", < 3156.9830, -3471.9850, 460.0004 > + startingorg, < 0.0000, -86.2436, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_large_01.rmdl", < -5457.8190, 588.0364, 3891.0010 > + startingorg, < 0.0000, 36.4808, 0.0000 >, true, 50000, -1, 1);
-    CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_sand_modular_cap_02.rmdl", < -4374.0000, 1290.0000, 2155.0000 > + startingorg, < -79.0465, -9.9466, 39.1983 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1691.9010, 2901.1640, 951.0771 > + startingorg, < 0.0000, 153.1051, 90.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 1083.9640, -2081.1540, 1197.5770 > + startingorg, < 0.0000, -152.5263, 90.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 1001.8740, 1611.1530, 700.0771 > + startingorg, < 0.0000, -55.5848, 90.0000 >, true, 50000, -1, 1);
@@ -547,6 +615,7 @@ void function PartyCrasherOnEntitiesDidLoad()
     CreateMapEditorProp( $"mdl/slum_city/slumcity_column01_40x128_dirty_a.rmdl", < 870.0002, 994.0007, 826.0005 > + startingorg, < 0.0000, 30.5130, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 1358.8210, -2173.6540, 706.0771 > + startingorg, < 0.0000, -81.1128, 90.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1259.8890, 2964.6350, 706.0771 > + startingorg, < 0.0000, 26.9646, 90.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1450.5720, 605.7633, 1109.3490 > + startingorg, < -0.7399, -60.8484, -5.1692 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_wallrun_02.rmdl", < -3787.0000, 527.9996, 1904.0000 > + startingorg, < 0.0000, -143.8754, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 2043.7060, 2153.7810, 666.0002 > + startingorg, < 0.0000, 121.8182, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1379.7290, 3054.7160, 706.0771 > + startingorg, < 0.0000, 62.5265, 90.0000 >, true, 50000, -1, 1);
@@ -614,6 +683,7 @@ void function PartyCrasherOnEntitiesDidLoad()
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 1484.1110, -1796.3650, 952.5771 > + startingorg, < 0.0000, 26.9646, 90.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/military_base/militaryfort_wall_rooftop_01.rmdl", < 1082.7910, -4516.5300, 832.0005 > + startingorg, < 0.0000, 4.2552, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 2159.0670, 2063.6070, 1044.8970 > + startingorg, < 0.0000, 32.5270, -89.9530 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1441.6140, 607.7581, 1180.9290 > + startingorg, < 84.7784, -142.7246, -82.0567 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 1280.5020, -2185.1360, 706.0771 > + startingorg, < 0.0000, -99.7329, 90.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_wallrun_03.rmdl", < -1454.4940, -3725.3260, 1867.5000 > + startingorg, < 0.0000, 22.4678, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_large_01.rmdl", < -5034.7340, -1471.6750, 5821.0010 > + startingorg, < 0.0000, -125.4285, 0.0000 >, true, 50000, -1, 1);
@@ -621,9 +691,11 @@ void function PartyCrasherOnEntitiesDidLoad()
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 2346.6030, 1528.8190, 1048.0000 > + startingorg, < 90.0000, -58.9408, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 1946.8150, 1950.6260, 976.0005 > + startingorg, < 0.0000, -59.1546, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 1518.0860, -1863.4970, 706.0771 > + startingorg, < 0.0000, 9.5296, 90.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 3056.7740, 1508.1280, 703.0000 > + startingorg, < -90.0000, -58.9181, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 896.6986, 1539.5000, 700.0771 > + startingorg, < 0.0000, -55.5848, 90.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 1142.3110, -1738.6440, 829.0771 > + startingorg, < 0.0000, 117.9073, 90.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 2978.6730, 1681.5600, 918.0002 > + startingorg, < 0.0000, -148.8894, 0.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/containers/underbelly_cargo_container_128_red_02.rmdl", < -1607.3330, -1384.9200, 1182.9230 > + startingorg, < -10.8896, 114.4993, 3.5745 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/canyonlands/fabric_canopy_pole_256_01.rmdl", < 101.1489, 3919.0520, 668.6074 > + startingorg, < 0.0000, 0.0000, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 1417.5180, -2263.7650, 734.0005 > + startingorg, < 0.0000, 17.5165, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_wallrun_03.rmdl", < -1479.0000, -3576.9600, 1533.5000 > + startingorg, < 0.0000, 22.4678, 0.0000 >, true, 50000, -1, 1);
@@ -636,6 +708,7 @@ void function PartyCrasherOnEntitiesDidLoad()
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 1210.5130, -1703.8560, 1196.0770 > + startingorg, < 0.0000, 99.4343, 90.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_large_01.rmdl", < -4861.8450, 1481.5180, 2373.0010 > + startingorg, < 0.0000, -75.4123, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1456.4660, 3067.3760, 706.0771 > + startingorg, < 0.0000, 80.8143, 90.0000 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 3337.5240, 600.2608, 1815.0000 > + startingorg, < 0.0000, 26.8554, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1226.8060, 2743.7440, 706.0771 > + startingorg, < 0.0000, -27.3782, 90.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1538.6500, 2590.2570, 952.5771 > + startingorg, < 0.0000, -116.6361, 90.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_wallrun_03.rmdl", < -4229.4570, 1110.6210, 1906.5000 > + startingorg, < 0.0000, -145.4653, 0.0000 >, true, 50000, -1, 1);
@@ -663,9 +736,11 @@ void function PartyCrasherOnEntitiesDidLoad()
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 363.0191, 1199.3950, 700.0771 > + startingorg, < 0.0000, -59.6587, 90.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 1427.3120, -2137.2460, 706.0771 > + startingorg, < 0.0000, -62.9401, 90.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/rocks/rock_white_chalk_modular_large_01.rmdl", < -3040.1900, -3141.5100, 4269.3240 > + startingorg, < -36.4160, 33.4547, 93.9421 >, true, 50000, -1, 1);
+    CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 3337.5240, 600.2608, 2127.0000 > + startingorg, < 0.0000, 26.8554, 0.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1313.8390, 3018.5020, 706.0771 > + startingorg, < 0.0000, 45.0916, 90.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < -1660.0360, 2679.8460, 952.5771 > + startingorg, < 0.0000, -152.5263, 90.0000 >, true, 50000, -1, 1);
     CreateMapEditorProp( $"mdl/slum_city/slumcity_fencewall_128x72_dirty.rmdl", < 2322.5040, 2554.2150, 919.0002 > + startingorg, < 0.0000, -148.8894, 0.0000 >, true, 50000, -1, 1);
+
 }
 
 array<entity> function PerfectZipline(vector startPos,vector endPos,bool pathfinder_model)
@@ -702,7 +777,7 @@ void function InitSpecialButtons()
 {
     file.button1 = CreateFRButton(<1353,4808,1860>, <0,40,0>, "Secret Button (1/3)")
     file.button2 = CreateFRButton(<3337,892,1870>, <0,30,0>, "Secret Button (2/3)")
-    file.button3 = CreateFRButton(<-4034,2586,1960>, <0,-100,0>, "Secret Button (3/3)")
+    file.button3 = CreateFRButton(<-4034,2586,1990>, <0,-100,0>, "Secret Button (3/3)")
 	AddCallback_OnUseEntity( file.button1, void function(entity panel, entity user, int input)
 	{
         if(file.button1pressed)
