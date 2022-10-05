@@ -356,6 +356,11 @@ void function _OnPlayerConnected(entity player)
 // purpose: internal function for handling player death
 void function _OnPlayerDied( entity victim, entity attacker, var damageInfo )
 {
+    if( victim.GetObserverTarget() != null )
+		victim.SetObserverTarget( null )
+
+	victim.StartObserverMode( OBS_MODE_DEATHCAM )
+    
     switch( GetGameState() )
     {
     case eGameState.Playing:

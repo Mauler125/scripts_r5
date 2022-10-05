@@ -144,6 +144,13 @@ void function Sequence_WaitingForPlayers()
 
 	wait PreGame_GetWaitingForPlayersCountdown() + (introCountdownEnabled ? 0.0 : CharSelect_GetIntroMusicStartTime())
 
+	// Set champion randomly from among all players
+	if ( GetCurrentPlaylistVarBool( "survival_commentary_champion_enabled", true ) )
+	{
+		entity champion = GetPlayerArray().getrandom()
+		SetChampion( champion )
+	}
+
 	if ( !introCountdownEnabled )
 		PlayPickLoadoutMusic( false )
 
