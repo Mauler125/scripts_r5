@@ -25,7 +25,7 @@ bool function ClientCommand_noclip( entity player, array<string> args )
 	if ( GetConVarInt( "sv_cheats" ) != 1 )
 		return true
 
-	if ( player.IsPhaseShifted() )
+	if ( IsValid( player.GetParent() ) )
 		return false
 
 	if ( player.IsNoclipping() )
