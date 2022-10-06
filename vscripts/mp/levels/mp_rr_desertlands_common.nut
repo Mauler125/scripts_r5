@@ -412,6 +412,9 @@ bool function Geyser_JumpPad_ShouldPushPlayerOrNPC( entity target )
 const string UPDRAFT_TRIGGER_SCRIPT_NAME = "skydive_dust_devil"
 void function Updrafts_Init()
 {
+	if ( GetMapName() == "mp_rr_desertlands_mu1" ) //TODO: Fix this trigger for desertlands mu1
+		return
+	
 	array<entity> triggers = GetEntArrayByScriptName( UPDRAFT_TRIGGER_SCRIPT_NAME )
 	foreach ( entity trigger in triggers )
 	{
