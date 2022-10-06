@@ -688,6 +688,8 @@ global struct ServerPlayerStruct
 	bool isRestartingLevel = false
 	int dummieKilled = 0
 	bool touchingTopTrigger = false
+	string weapon = "mp_weapon_wingman"
+	array<string> mods = ["optic_cq_hcog_classic"]
 }
 
 global struct ChallengeScore
