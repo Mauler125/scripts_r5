@@ -331,28 +331,31 @@ void function PlayPickLoadoutMusic( bool introCountdownEnabled )
 
 void function TakeLoadoutRelatedWeapons( entity player )
 {
-	ItemFlavor character = LoadoutSlot_GetItemFlavor( ToEHI( player ), Loadout_CharacterClass() )
+    ItemFlavor character = LoadoutSlot_GetItemFlavor( ToEHI( player ), Loadout_CharacterClass() )
 
-	// Shared
-	if(IsValid(player.GetOffhandWeapon( OFFHAND_SLOT_FOR_CONSUMABLES )))
-		player.TakeOffhandWeapon( OFFHAND_SLOT_FOR_CONSUMABLES )
+    // Shared
+    if(IsValid(player.GetOffhandWeapon( OFFHAND_SLOT_FOR_CONSUMABLES )))
+        player.TakeOffhandWeapon( OFFHAND_SLOT_FOR_CONSUMABLES )
 
-	// Loadout meleeskin
-	if(IsValid(player.GetNormalWeapon( WEAPON_INVENTORY_SLOT_PRIMARY_2 )))
-		player.TakeNormalWeaponByIndexNow( WEAPON_INVENTORY_SLOT_PRIMARY_2 )
-	
-	if(IsValid(player.GetOffhandWeapon( OFFHAND_SLOT_FOR_CONSUMABLES )))
-		player.TakeOffhandWeapon( OFFHAND_MELEE )
+    // Loadout meleeskin
+    if(IsValid(player.GetNormalWeapon( WEAPON_INVENTORY_SLOT_PRIMARY_2 )))
+        player.TakeNormalWeaponByIndexNow( WEAPON_INVENTORY_SLOT_PRIMARY_2 )
 
-	// Character related
-	if(IsValid(player.GetOffhandWeapon( OFFHAND_TACTICAL )))
-		player.TakeOffhandWeapon( OFFHAND_TACTICAL )
-	if(IsValid(player.GetOffhandWeapon( OFFHAND_ULTIMATE )))
-		player.TakeOffhandWeapon( OFFHAND_ULTIMATE )
+    if(IsValid(player.GetNormalWeapon( WEAPON_INVENTORY_SLOT_PRIMARY_3 )))
+        player.TakeNormalWeaponByIndexNow( WEAPON_INVENTORY_SLOT_PRIMARY_3 )
 
-	ItemFlavor passiveAbility = CharacterClass_GetPassiveAbility( character )
-	if(GameRules_GetGameMode() == SURVIVAL)
-		TakePassive( player, CharacterAbility_GetPassiveIndex( passiveAbility ) )
+    if(IsValid(player.GetOffhandWeapon( OFFHAND_MELEE )))
+        player.TakeOffhandWeapon( OFFHAND_MELEE )
+
+    // Character related
+    if(IsValid(player.GetOffhandWeapon( OFFHAND_TACTICAL )))
+        player.TakeOffhandWeapon( OFFHAND_TACTICAL )
+    if(IsValid(player.GetOffhandWeapon( OFFHAND_ULTIMATE )))
+        player.TakeOffhandWeapon( OFFHAND_ULTIMATE )
+
+    ItemFlavor passiveAbility = CharacterClass_GetPassiveAbility( character )
+    if(GameRules_GetGameMode() == SURVIVAL)
+        TakePassive( player, CharacterAbility_GetPassiveIndex( passiveAbility ) )
 }
 
 void function GiveLoadoutRelatedWeapons( entity player )
