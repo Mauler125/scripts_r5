@@ -802,6 +802,7 @@ void function HandleEvac( entity evac, vector origin, vector angles ) // entity 
 	evac.MakeVisible()
 
 	Signal( evac, "WarpedIn" )
+
 	EmitSoundOnEntity( evac, DROPSHIP_HOVER )
 	waitthread PlayAnim( evac, EVAC_START, origin, angles )
 	thread PlayAnim( evac, EVAC_IDLE, origin, angles )
