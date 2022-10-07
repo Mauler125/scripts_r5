@@ -16,7 +16,7 @@ WeaponData
 	
 	// Models
 	"viewmodel"   									"mdl/weapons/bolo_sword/ptpov_bolo_sword_ash.rmdl"
-	"playermodel" 									"mdl/weapons/combat_knife/w_combat_knife.rmdl"
+	"playermodel" 									"mdl/weapons/bolo_sword/w_bolo_sword.rmdl"
 	
 	// Effects, disabled because there isn't any good effect found yet
 	//"OnWeaponActivate"							"OnWeaponActivate_melee_bolo_sword"
