@@ -1595,6 +1595,12 @@ void function SetupSurvivalLoot( var categories )
 		return	
 	}
 
+	if (stringCats.contains("weapon_custom"))
+	{
+		SetupCustomLoot( "main_weapon" )
+		return	
+	}
+
 	// turn menu strings into real category enums
 	array<int> catTypes
 	foreach( string cat in stringCats )
@@ -1614,6 +1620,7 @@ void function SetupSurvivalLoot( var categories )
 			continue
 		
 		if (data.lootType == eLootType.ATTACHMENT && IsCustomAttachment(data)) continue
+		if (data.lootType == eLootType.MAINWEAPON && IsCustomWeapon(data)) continue
 
 		string displayString = CreateLootDisplayString( data )
 		RunUIScript( "SetupDevCommand", displayString, "script SpawnGenericLoot( \"" + data.ref + "\", gp()[0].GetOrigin(), <-1,-1,-1>, " + data.countPerDrop + " )" )
@@ -1640,6 +1647,7 @@ void function SetupCustomLoot( var categories )
 			continue
 		
 		if (data.lootType == eLootType.ATTACHMENT && !IsCustomAttachment(data)) continue
+		if (data.lootType == eLootType.MAINWEAPON && !IsCustomWeapon(data)) continue
 		
 		string displayString = CreateLootDisplayString( data )
 		RunUIScript( "SetupDevCommand", displayString, "script SpawnGenericLoot( \"" + data.ref + "\", gp()[0].GetOrigin(), <-1,-1,-1>, " + data.countPerDrop + " )" )
