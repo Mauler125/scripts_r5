@@ -782,3 +782,39 @@ function GetTeamDropshipSound( team, animation )
 
 	return file.dropshipSound[ team ][ animation ]
 }
+
+const string EVAC_TARGET_NAME             = "evac_ship"
+const string DROPSHIP_HOVER               = "goblin_imc_evac_hover"
+const string DROPSHIP_WARP_IN             = "dropship_warpin"
+const string DROPSHIP_FLYING_MOVE         = "dropship_classic_mp_flyin"
+const string EVAC_START                   = "dropship_VTOL_evac_start"
+const string EVAC_END                     = "dropship_VTOL_evac_end"
+const string EVAC_IDLE                    = "dropship_VTOL_evac_idle"
+
+void function HandleEvac( entity evac, vector origin, vector angles ) // entity should be prop_dynamic or custom npc.
+{
+	EndSignal( evac, "OnDestroy" )
+
+	Attachment attachResult = evac.Anim_GetAttachmentAtTime( DROPSHIP_FLYING_MOVE, "ORIGIN", 0.0 )
+
+	evac.MakeInvisible()
+	waitthread __WarpInEffectShared( attachResult.position, attachResult.angle, DROPSHIP_WARP_IN, 0.0 )
+	evac.MakeVisible()
+
+	Signal( evac, "WarpedIn" )
+	EmitSoundOnEntity( evac, DROPSHIP_HOVER )
+	waitthread PlayAnim( evac, EVAC_START, origin, angles )
+	thread PlayAnim( evac, EVAC_IDLE, origin, angles )
+
+    // Wait for correct time to warp out
+	wait evac.GetSequenceDuration( EVAC_IDLE )
+	
+	// End evac.
+	waitthread PlayAnim( evac, EVAC_END, origin, angles )
+
+	// Hide dropShip now and warpout.
+	evac.Hide()
+	__WarpOutEffectShared( evac )
+    
+	evac.Destroy()
+}
