@@ -807,7 +807,7 @@ void function HandleEvac( entity evac, vector origin, vector angles ) // entity 
 	waitthread PlayAnim( evac, EVAC_START, origin, angles )
 	thread PlayAnim( evac, EVAC_IDLE, origin, angles )
 
-    // Wait for correct time to warp out
+	// Wait for correct time to warp out
 	wait evac.GetSequenceDuration( EVAC_IDLE )
 	
 	// End evac.
