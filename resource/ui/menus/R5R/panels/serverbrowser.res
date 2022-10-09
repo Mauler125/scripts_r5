@@ -274,7 +274,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"ypos"					"0"
 		"zpos"					"6"
 		"textalignment"			"center"
-		"wide"					"130"
+		"wide"					"150"
 		"zpos" 					"4"
 		"fontHeight"			"35"
 		"tall"					"35"
