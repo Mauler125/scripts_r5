@@ -77,7 +77,7 @@ void function RemoteFunctions_Init_Begin()
 
 	Remote_RegisterClientFunction( "SCB_WattsonRechargeHint" )
 
-	// GAME STATE
+	// SHOULD PROBABLY BE CODE
 	RegisterServerVar( "gameStateChangeTime", null )
 	RegisterServerVar( "gameState", -1 )
 	RegisterServerVar( "gameStartTime", null )
@@ -86,11 +86,11 @@ void function RemoteFunctions_Init_Begin()
 	RegisterServerVar( "switchedSides", null )
 	RegisterServerVar( "replayDisabled", false )
 
-	// KILL REPLAY
+	// Round Winning Kill replay related
 	RegisterServerVar( "roundWinningKillReplayEnabled", false )
 	RegisterServerVar( "roundWinningKillReplayPlaying", false )
 	RegisterServerVar( "roundScoreLimitComplete", false )
-	RegisterServerVar( "roundWinningKillReplayEntHealthFrac", 0.0 ) //
+	RegisterServerVar( "roundWinningKillReplayEntHealthFrac", 0.0 ) //Using .nv because we need the non-rolled back value during round winning kill replay
 
 	RegisterServerVar( "badRepPresent", false )
 
@@ -103,10 +103,10 @@ void function RemoteFunctions_Init_Begin()
 
 	RegisterServerVar( "winningTeam", null )
 
-	//
+	// Attack/Defend based game modes
 	RegisterNetworkedVariable( "attackingTeam", SNDC_GLOBAL, SNVT_INT, TEAM_UNASSIGNED )
 
-	//
+	// Riffs
 	RegisterServerVar( "minimapState", -1 )
 
 	RegisterNetworkedVariable( "indicatorId", SNDC_PLAYER_EXCLUSIVE, SNVT_INT, 0 )
@@ -370,7 +370,7 @@ void function RemoteFunctions_Init_Begin()
 
 	Remote_RegisterClientFunction( "ServerCallback_PlayPassiveVoice", "int", 0, 50 )
 
-	//
+	// NEW INTRO SYSTEM ( _cl_spawnslot_system.nut )
 	Remote_RegisterUntypedFunction_deprecated( "ServerCallback_ResetEntSkyScale" )
 	Remote_RegisterUntypedFunction_deprecated( "ServerCallback_SetEntSkyScale" )
 	Remote_RegisterClientFunction( "ServerCallback_ResetMapSettings" )
@@ -390,14 +390,14 @@ void function RemoteFunctions_Init_Begin()
 	Remote_RegisterClientFunction( "ServerCallback_DataKnifeCancelLeech" )
 	Remote_RegisterUntypedFunction_deprecated( "ServerCallback_ControlPanelRefresh" )
 	Remote_RegisterUntypedFunction_deprecated( "ServerCallback_TurretRefresh" )
-	Remote_RegisterClientFunction( "ServerCallback_OnEntityKilled", "entity", "entity", "int", INT_MIN, INT_MAX, "int", -1, eDamageSourceId.len() ) //
+	Remote_RegisterClientFunction( "ServerCallback_OnEntityKilled", "entity", "entity", "int", INT_MIN, INT_MAX, "int", -1, eDamageSourceId.len() ) // handles obit and death recap
 	Remote_RegisterClientFunction( "ServerCallback_OnEnemyDowned", "entity", "entity", "int", INT_MIN, INT_MAX, "int", -1, eDamageSourceId.len() ) //
 	Remote_RegisterUntypedFunction_deprecated( "ServerCallback_PlayerConnectedOrDisconnected" )
 	Remote_RegisterUIFunction( "SCBUI_PlayerConnectedOrDisconnected", "bool" )
 	Remote_RegisterClientFunction( "ServerCallback_PlayerChangedTeams", "entity", "int", TEAM_INVALID, 126, "int", TEAM_INVALID, 126 ) //
 
-	//
-	Remote_RegisterUntypedFunction_deprecated( "ServerCallback_PlayerTookDamage" ) //
+	// IMPORTANT BUT MAYBE FINE AS A REMOTE CALL
+	Remote_RegisterUntypedFunction_deprecated( "ServerCallback_PlayerTookDamage" ) // should be converted into a code callback... similar to NotifyDidDamage
 	Remote_RegisterUntypedFunction_deprecated( "ServerCallback_ScreenShake" )
 	Remote_RegisterUntypedFunction_deprecated( "ServerCallback_UpdateOverheadIconForNPC" )
 
@@ -411,7 +411,7 @@ void function RemoteFunctions_Init_Begin()
 	Remote_RegisterClientFunction( "Bleedout_DisplayTrainingFirstAidProgressBar", "entity", "float", 0.0, 86400.0, 32, "float", 0.0, 86400.0, 32 )
 	Remote_RegisterClientFunction( "Bleedout_StopTrainingFirstAidProgressBar" )
 
-	//
+	// Rodeo Battery
 	RegisterNetworkedVariable( "offerRodeoBatteryLastUsedTime", SNDC_PLAYER_EXCLUSIVE, SNVT_TIME )
 	RegisterNetworkedVariable( "requestRodeoBatteryLastUsedTime", SNDC_PLAYER_EXCLUSIVE, SNVT_TIME )
 
@@ -435,6 +435,7 @@ void function RemoteFunctions_Init_Begin()
 	// %if HAS_DESERTLANDS_TRAIN
 	Remote_RegisterClientFunction( "ServerCallback_SetDesertlandsTrainAtStation", "bool" )
 
+	// LESS ESSENTIAL, CAN SHIP AS REMOTE FUNCTIONS
 	Remote_RegisterClientFunction( "ServerCallback_PlayScreenFXWarpJump" )
 	Remote_RegisterUntypedFunction_deprecated( "ServerCallback_Announcement" )
 	Remote_RegisterClientFunction( "ServerCallback_GameModeAnnouncement" )
@@ -449,37 +450,39 @@ void function RemoteFunctions_Init_Begin()
 	Remote_RegisterUntypedFunction_deprecated( "SCB_TitanDialogue" )
 
 	// Model Viewer
+	// DEV ONLY
 	Remote_RegisterUntypedFunction_deprecated( "ServerCallback_MVUpdateModelBounds" )
 	Remote_RegisterClientFunction_Optional( "ServerCallback_MVEnable" )
 	Remote_RegisterClientFunction_Optional( "ServerCallback_MVDisable" )
 
-	//
+	// SHOULD BE REMOVED
 	Remote_RegisterUntypedFunction_deprecated( "ServerCallback_SetClassicSkyScale" )
 	Remote_RegisterUntypedFunction_deprecated( "ServerCallback_ResetClassicSkyScale" )
 
-	//
+	// SHOULD PROBABLY BE CODE
 	Remote_RegisterClientFunction( "ServerCallback_ClientInitComplete" )
 	RegisterServerVar( "forcedDialogueOnly", false )
 
-	//
+	// SHOULD GO AWAY
 	Remote_RegisterUntypedFunction_deprecated( "ServerCallback_SetEntityVar" )
 	Remote_RegisterUntypedFunction_deprecated( "ServerCallback_SetServerVar" )
 
 
-	//
+	// POSSIBLY CAN STAY AS REMOTE FUNCTIONS
 	Remote_RegisterUntypedFunction_deprecated( "ServerCallback_PlayMusic" )
 
 	//
 	Remote_RegisterUntypedFunction_deprecated( "ServerCallback_OpenDevMenu" )
 
+	//  UI FUNCTIONS
 	Remote_RegisterUntypedFunction_deprecated( "ServerCallback_SetUIVar" )
 	Remote_RegisterUIFunction( "ServerCallback_OpenPilotLoadoutMenu" )
 
-	//
+	// Dev Only
 	Remote_RegisterUntypedFunction_deprecated( "Dev_PrintClientMessage" )
 	Remote_RegisterUntypedFunction_deprecated( "Dev_BuildClientMessage" )
 
-	//
+	// Class Functions
 	Remote_RegisterUntypedFunction_deprecated( "ServerCallback_AddArcConnectorToy" )
 
 	Dialog_RegisterNetworking()
