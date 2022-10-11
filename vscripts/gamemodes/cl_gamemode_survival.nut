@@ -3102,7 +3102,7 @@ void function Survival_RunCharacterSelection_Thread()
 
 	HideMapRui()
 
-	//
+	// We first need to close the menu before opening it here because the player may already have a browse mode version of the menu open
 	CloseCharacterSelectNewMenu()
 	WaitFrame()
 	OpenCharacterSelectNewMenu()
