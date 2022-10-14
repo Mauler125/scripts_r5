@@ -518,6 +518,7 @@ void function OnPlayerKilled( entity victim, entity attacker, var damageInfo )
 
 	victim.FreezeControlsOnServer()
 	victim.StartObserverMode( OBS_MODE_DEATHCAM )
+	victim.SetObserverTarget( null )
 }
 
 void function OnClientConnected( entity player )
