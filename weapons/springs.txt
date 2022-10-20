@@ -189,6 +189,42 @@ WeaponSprings
 		"ADS_roll_damping"				"15.0"
 	}
 
+                       
+	sentinel
+	{
+	    "hipfire_pitch_springConstant"	"90.0"
+        "hipfire_pitch_damping"			"15.0"
+        "hipfire_yaw_springConstant"	"70.0"
+        "hipfire_yaw_damping"			"15.0"
+        "hipfire_roll_springConstant"	"7500.0"
+        "hipfire_roll_damping"			"25.0"
+
+        "ADS_pitch_springConstant"		"190.0"
+        "ADS_pitch_damping"				"22.0"
+        "ADS_yaw_springConstant"		"145.0"
+        "ADS_yaw_damping"				"18.0"
+        "ADS_roll_springConstant"		"10000.0"
+        "ADS_roll_damping"				"25.0"
+	}
+
+	sentinel_fullscreen
+	{
+	    "hipfire_pitch_springConstant"	"90.0"
+        "hipfire_pitch_damping"			"15.0"
+        "hipfire_yaw_springConstant"	"70.0"
+        "hipfire_yaw_damping"			"15.0"
+        "hipfire_roll_springConstant"	"7500.0"
+        "hipfire_roll_damping"			"25.0"
+
+        "ADS_pitch_springConstant"		"110.0"
+        "ADS_pitch_damping"				"22.0"
+        "ADS_yaw_springConstant"		"90.0"
+        "ADS_yaw_damping"				"18.0"
+        "ADS_roll_springConstant"		"10000.0"
+        "ADS_roll_damping"				"25.0"
+	}
+                             
+
 	doubletake
 	{
 		"hipfire_pitch_springConstant"	"75.0"
