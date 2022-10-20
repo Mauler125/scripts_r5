@@ -20,6 +20,9 @@ void function ShInit_Skygarden()
 #if SERVER
 void function OnPlayerConnected( entity player )
 {
+	if ( GameRules_GetGameMode() == "custom_tdm" )
+		return
+
 	Dev_PrintMessage( player, "Welcome to Encore", "Ported by @KralRindo, please report us any bugs you encounter ", 5, "dropship_warpin" )
 }
 
