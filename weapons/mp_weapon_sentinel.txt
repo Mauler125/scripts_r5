@@ -1,5 +1,5 @@
 #base "_base_sniper.txt"
-#base "_base_sniper_optics.txt"
+#base "_base_sentinel_optics.txt"
 #base "_base_mags_heavy.txt"
 #base "_base_stocks_sniper.txt"
 
@@ -410,35 +410,13 @@
             "viewmodel_offset_zoom_frac_end"           "0.7"
         }
 
-
-		"optic_cq_hcog_bruiser"
-        {
-			"dof_zoom_nearDepthStart"                   "1.0"
-			"dof_zoom_nearDepthEnd"                     "10.5"
-        }
-
         "optic_cq_hcog_classic"
         {
 			"dof_zoom_nearDepthStart"                   "1.0"
 			"dof_zoom_nearDepthEnd"                     "6.5"
         }
 
-        "optic_cq_holosight"
-        {
-			"mod_activity_modifier"						"mid_zoom"
-        }
-
-        "optic_cq_holosight_variable"
-        {
-			"mod_activity_modifier"						"mid_zoom"
-        }
-
         "optic_ranged_aog_variable"
-        {
-			"mod_activity_modifier"						"high_zoom"
-        }
-
-        "optic_ranged_hcog"
         {
 			"mod_activity_modifier"						"high_zoom"
         }
