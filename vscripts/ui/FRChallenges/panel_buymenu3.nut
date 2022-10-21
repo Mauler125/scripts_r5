@@ -194,7 +194,6 @@ void function InitArenasBuyPanel3( var panel )
 	var Sentinel = Hud_GetChild( menu, "Sentinel" )
 	RuiSetImage( Hud_GetRui( Sentinel ), "basicImage", $"rui/weapon_icons/r5/weapon_sentinel" )
 	AddEventHandlerToButton( menu, "SentinelButton", UIE_CLICK, BuySentinel )	
-	AddEventHandlerToButton( menu, "SentinelButton", UIE_CLICKRIGHT, OpenAttachmentsBox )
 	file.weaponButtons.append(Hud_GetChild( menu, "SentinelButton" ))
 	
 	var chargerifle = Hud_GetChild( menu, "ChargeRifle" )
