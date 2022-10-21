@@ -73,6 +73,7 @@ global enum eDamageSourceId
 	mp_weapon_semipistol
 	mp_weapon_autopistol
 	mp_weapon_sniper
+	mp_weapon_sentinel
 	mp_weapon_shotgun
 	mp_weapon_mastiff
 	mp_weapon_frag_grenade
@@ -438,6 +439,7 @@ void function DamageTypes_Init()
 
 		file.damageSourceIDToImage[eDamageSourceId.melee_shadowsquad_hands] <- $"rui/gamemodes/shadow_squad/shadow_icon_small"
 		file.damageSourceIDToImage[eDamageSourceId.mp_weapon_volt_smg] <- $"rui/weapon_icons/r5/weapon_volt"
+		file.damageSourceIDToImage[eDamageSourceId.mp_weapon_sentinel] <- $"rui/weapon_icons/r5/weapon_sentinel"
 
 	file.damageSourceIDToName =
 	{
@@ -556,6 +558,7 @@ void function DamageTypes_Init()
 		[ eDamageSourceId.melee_bolo_sword ] 						= "Bolo Sword Melee",
 		[ eDamageSourceId.mp_weapon_bolo_sword_primary ] 			= "Bolo Sword Melee",
 		[ eDamageSourceId.mp_weapon_volt_smg ] 						= "#WPN_VOLT_SMG",
+		[ eDamageSourceId.mp_weapon_sentinel ] 						= "Sentinel",
 		[ eDamageSourceId.mp_weapon_car ] 							= "Car SMG",
 		[ eDamageSourceId.mp_weapon_3030 ] 							= "30-30 Repeater",
 		[ eDamageSourceId.mp_weapon_dragon_lmg ] 					= "Rampage LMG",
