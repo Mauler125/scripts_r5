@@ -369,7 +369,7 @@ scripts/resource/ui/menus/panels/buymenu3.res
 			pin_to_sibling_corner   BOTTOM_RIGHT
 		}
 		
-		RepeaterButton
+		SentinelButton
 		{
 			"ControlName"				"RuiButton"
 			"rui"						"ui/generic_friend_button.rpak"
@@ -386,7 +386,7 @@ scripts/resource/ui/menus/panels/buymenu3.res
 			pin_corner_to_sibling   TOP_LEFT
 			pin_to_sibling_corner   TOP_RIGHT
 		}
-		Repeater
+		Sentinel
 		{
 			ControlName 				 RuiPanel 
 			rui 						 ui/basic_image.rpak 
@@ -395,23 +395,23 @@ scripts/resource/ui/menus/panels/buymenu3.res
 			xpos                    0
 			ypos                    -10
 			zpos                    5
-			pin_to_sibling          RepeaterButton
+			pin_to_sibling          SentinelButton
 			pin_corner_to_sibling   CENTER
 			pin_to_sibling_corner   CENTER
 		}
 
-		Repeater_Name
+		Sentinel_Name
 		{
 			ControlName				Label
 			wide                    224
-			labelText				"30-30 Repeater"
+			labelText				"Sentinel"
 			visible                 1
 			zpos 5
 			fgcolor_override		"2 252 240 255"
 			ypos                                       20
-			xpos					50
+			xpos					90
 			fontHeight				35
-			pin_to_sibling          Repeater
+			pin_to_sibling          Sentinel
 			pin_corner_to_sibling   BOTTOM_RIGHT
 			pin_to_sibling_corner   BOTTOM_RIGHT
 		}

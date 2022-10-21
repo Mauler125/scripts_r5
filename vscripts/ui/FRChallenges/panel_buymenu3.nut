@@ -191,11 +191,11 @@ void function InitArenasBuyPanel3( var panel )
 	AddEventHandlerToButton( menu, "TripleTakeButton", UIE_CLICKRIGHT, OpenAttachmentsBox )
 	file.weaponButtons.append(Hud_GetChild( menu, "TripleTakeButton" ))
 	
-	var repeater = Hud_GetChild( menu, "repeater" )
-	RuiSetImage( Hud_GetRui( repeater ), "basicImage", $"rui/weapon_icons/r5/weapon_3030repeater" )
-	AddEventHandlerToButton( menu, "RepeaterButton", UIE_CLICK, Buy3030 )	
-	AddEventHandlerToButton( menu, "RepeaterButton", UIE_CLICKRIGHT, OpenAttachmentsBox )
-	file.weaponButtons.append(Hud_GetChild( menu, "RepeaterButton" ))
+	var Sentinel = Hud_GetChild( menu, "Sentinel" )
+	RuiSetImage( Hud_GetRui( Sentinel ), "basicImage", $"rui/weapon_icons/r5/weapon_sentinel" )
+	AddEventHandlerToButton( menu, "SentinelButton", UIE_CLICK, BuySentinel )	
+	AddEventHandlerToButton( menu, "SentinelButton", UIE_CLICKRIGHT, OpenAttachmentsBox )
+	file.weaponButtons.append(Hud_GetChild( menu, "SentinelButton" ))
 	
 	var chargerifle = Hud_GetChild( menu, "ChargeRifle" )
 	RuiSetImage( Hud_GetRui( chargerifle ), "basicImage", $"rui/weapon_icons/r5/weapon_charge_rifle" )
@@ -274,12 +274,12 @@ void function OpenAttachmentsBox( var button )
 		file.desiredweapon = "mp_weapon_sniper"
 		sniper = true
 		file.weapontype = "sniper3"
-	}else if(button == Hud_GetChild( file.menu, "RepeaterButton" ))
+	}else if(button == Hud_GetChild( file.menu, "SentinelButton" ))
 	{
-		file.desiredWeaponButtonToMark = Hud_GetChild( file.menu, "RepeaterButton" )
-		file.desiredweapon = "mp_weapon_3030"
+		file.desiredWeaponButtonToMark = Hud_GetChild( file.menu, "SentinelButton" )
+		file.desiredweapon = "mp_weapon_sentinel"
 		sniper = false
-		file.weapontype = "marksman3"
+		file.weapontype = "sniper3"
 	}
 	
 	vector mousePos = GetCursorPosition()
@@ -895,12 +895,12 @@ void function BuyChargeRifle(var button)
 	PlayerCurrentWeapon = GetWeaponNameForUI("mp_weapon_defender")
 }
 
-void function Buy3030(var button)
+void function BuySentinel(var button)
 {
 	CleanAllButtons()	
 	RuiSetInt( Hud_GetRui( button ), "status", eFriendStatus.ONLINE_INGAME )
-	RunClientScript( "UIToClient_MenuGiveWeapon", "mp_weapon_3030" )
-	PlayerCurrentWeapon = GetWeaponNameForUI("mp_weapon_3030")
+	RunClientScript( "UIToClient_MenuGiveWeapon", "mp_weapon_sentinel" )
+	PlayerCurrentWeapon = GetWeaponNameForUI("mp_weapon_sentinel")
 }
 
 void function BuyKraber(var button)

@@ -301,7 +301,6 @@ void function ServerCallback_HistoryUIAddNewChallenge(int NameInt, int Score, en
 {
 	if(!IsValid(Weapon)) 
 		return
-
 	RunUIScript( "HistoryUI_AddNewChallenge", ReturnChallengeName(NameInt), Score, Weapon.GetWeaponClassName(), Accuracy, dummiesKilled, Damage, totalshots, criticalshots, AimTrainer_CHALLENGE_DURATION)
 }
 
@@ -1001,7 +1000,7 @@ void function UIToClient_MenuGiveWeaponWithAttachments( string weapon, int desir
 				break
 		}
 	
-	if( weapontype == "sniper" || weapontype == "sniper2" || weapontype == "marksman" || weapontype == "marksman2" || weapontype == "marksman3")
+	if( weapontype == "sniper" || weapontype == "sniper2" || weapontype == "sniper3" || weapontype == "marksman" || weapontype == "marksman2")
 		switch(desiredstock){
 			case 0:
 				stock = "none"
@@ -1064,7 +1063,7 @@ void function UIToClient_MenuGiveWeaponWithAttachments( string weapon, int desir
 		}			
 	}
 	
-	if(weapontype == "ar" || weapontype == "ar2" || weapontype == "lmg" || weapontype == "lmg2" || weapontype == "sniper" || weapontype == "sniper2" || weapontype == "marksman" || weapontype == "marksman2" || weapontype == "marksman3")
+	if(weapontype == "ar" || weapontype == "ar2" || weapontype == "lmg" || weapontype == "lmg2" || weapontype == "sniper" || weapontype == "sniper2" || weapontype == "sniper3" || weapontype == "marksman" || weapontype == "marksman2")
 	switch(desiredoptic){
 		case 0:
 			optic = "none"

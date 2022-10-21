@@ -6,6 +6,7 @@ More credits:
 - Skeptation#4002 -- beta tester and coworker https://www.youtube.com/c/Skeptation
 - Amos#1368 & contributors -- sdk https://github.com/Mauler125/r5sdk/tree/indev
 - rexx#1287 & contributors -- repak tool https://github.com/r-ex/RePak
+- JustANormalUser#6809 -- custom weapons framework
 - Zee#6969 -- weapons buy menu example, history ui pages
 - Darkes#8647 -- beta tester
 - Rego#2848 -- beta tester
@@ -14,10 +15,13 @@ More credits:
 - (--__GimmYnkia__--)#2995 -- beta tester
 - oliver#1375 -- beta tester
 - Rin 暗#5862 -- beta tester
+- 暇人のEndergreen#7138 -- contributor, bugs fixes/code improvements
 */
 
 global function _ChallengesByColombia_Init
 global function StartFRChallenges
+global function CreateMovementMapDummie
+global function CreateMovementMapDummieFromMapLoad
 
 vector floorLocation
 vector floorCenterForPlayer
@@ -102,7 +106,7 @@ void function _ChallengesByColombia_Init()
 	AddDeathCallback( "player", OnPlayerDeathCallback )
 	
 	//add basic aim trainer locations for maps //todo: move this to a datatable
-	if (GetMapName() == "mp_rr_desertlands_64k_x_64k" || GetMapName() == "mp_rr_desertlands_64k_x_64k_nx" || GetMapName() == "mp_rr_desertlands_64k_x_64k_tt")
+	if (GetMapName() == "mp_rr_desertlands_64k_x_64k" || GetMapName() == "mp_rr_desertlands_64k_x_64k_nx" || GetMapName() == "mp_rr_desertlands_64k_x_64k_tt" )
 	{
 		floorLocation = <-10020.1543, -8643.02832, 5189.92578>
 		onGroundLocationPos = <12891.2783, -2391.77124, -3121.60132>
@@ -1452,6 +1456,156 @@ void function DummyTapyDuckStrafeMovement(entity dummy, entity player)
 	}
 }
 
+void function CreateMovementMapDummieFromMapLoad(vector pos, vector ang)
+{
+	FlagWait( "EntitiesDidLoad" )
+	CreateMovementMapDummie(pos, ang)
+}
+
+entity function CreateMovementMapDummie(vector pos, vector ang)
+{
+
+	// while(true){ //!FIXME find a way to end the while when the "prop" is deteled with map_editor delete mode
+		entity dummy = CreateNPC( "npc_dummie", 99, pos, ang )
+		StartParticleEffectInWorld( GetParticleSystemIndex( FIRINGRANGE_ITEM_RESPAWN_PARTICLE ), pos, ang )
+		SetSpawnOption_AISettings( dummy, "npc_dummie_combat_trainer" )
+		DispatchSpawn( dummy )
+		dummy.SetScriptName("editor_placed_prop")
+		dummy.SetBehaviorSelector( "behavior_dummy_empty" )
+		dummy.SetShieldHealthMax( 25 )
+		dummy.SetShieldHealth( 25 )
+		
+		dummy.SetMaxHealth( 60 )
+		dummy.SetHealth( 60 )
+		dummy.SetTakeDamageType( DAMAGE_YES )
+		dummy.SetDamageNotifications( true )
+		dummy.SetDeathNotifications( true )
+		dummy.SetValidHealthBarTarget( true )
+		SetObjectCanBeMeleed( dummy, true )
+		dummy.SetSkin(RandomIntRangeInclusive(1,4))
+		dummy.DisableHibernation()
+		
+		thread MovementMapDummyMovement(dummy)
+		
+		return dummy
+		// wait 0.5
+	// }
+}
+
+void function MovementMapDummyMovement(entity dummy)
+{
+//new script_mover version of the strafing dummy challenge, so we can spawn these dummies in the air (no navmesh)
+
+	EndSignal(dummy, "OnDeath")
+	vector angles2 = dummy.GetAngles()
+	
+	array<vector> circleLocations
+	array<vector> rightSteps
+	array<vector> leftSteps
+	
+	entity script_mover = CreateEntity( "script_mover" )
+	script_mover.kv.solid = 0
+	script_mover.SetValueForModelKey( $"mdl/dev/empty_model.rmdl" )
+	script_mover.kv.SpawnAsPhysicsMover = 0	
+	script_mover.SetOrigin( dummy.GetOrigin() )
+	script_mover.SetAngles( dummy.GetAngles() )
+	DispatchSpawn( script_mover )
+	dummy.SetParent(script_mover)
+	
+	OnThreadEnd(
+		function() : ( dummy, script_mover, circleLocations )
+		{
+			dummy.ClearParent()
+			if(IsValid(script_mover)) script_mover.Destroy()
+			if(IsValid(dummy)) dummy.Destroy()	
+		}
+	)	
+	
+	vector maxRightLocation = dummy.GetOrigin() + AnglesToRight( dummy.GetAngles() )*80
+	vector maxLeftLocation = dummy.GetOrigin() + AnglesToRight( dummy.GetAngles() )*-80
+	while(true){		
+		if(!IsValid(dummy)) break
+		dummy.Anim_Stop()
+		int morerandomness = 1
+		if(CoinFlip()) morerandomness = -1
+
+		int morerandomness3 = RandomIntRangeInclusive(1,10)
+		int morerandomness4 = RandomIntRangeInclusive(1,10)
+		vector dummyoldorigin = dummy.GetOrigin()
+		// if(morerandomness3 >= 1 && morerandomness3 <= 9) //75% chance
+		// {
+			if(morerandomness4 == 10) //10% chance
+			{
+				dummy.Anim_Stop()
+				script_mover.NonPhysicsStop()						
+				dummy.Anim_PlayOnly( "ACT_STAND" )
+				wait 0.15
+			}
+			else if(morerandomness4 >= 1 && morerandomness3 < 10)//90% chance
+			{
+				float duration = 0.25 //leave it like this in case we want to change it to a range, so it modifies mover duration and movement duration
+				dummy.Anim_Stop()
+				script_mover.NonPhysicsStop()
+				
+				if(CoinFlip() && Distance(dummy.GetOrigin(), maxRightLocation) > 10 )
+				{
+					dummy.Anim_PlayOnly( "ACT_RUN_RIGHT")
+					script_mover.NonPhysicsMoveTo( dummy.GetOrigin() + AnglesToRight( dummy.GetAngles() )*25, duration, 0.0, 0.0 )
+					wait duration
+				}
+				else if( Distance(dummy.GetOrigin(), maxLeftLocation) > 10 )
+				{
+					dummy.Anim_PlayOnly( "ACT_RUN_LEFT")
+					script_mover.NonPhysicsMoveTo( dummy.GetOrigin() + AnglesToRight( dummy.GetAngles() )*-25, duration, 0.0, 0.0 )
+					wait duration
+				}				
+			}
+		// }
+		// else if (morerandomness3 == 10)
+		// {
+			// int morerandomness2 = 1
+			// if(CoinFlip()) morerandomness2 = -1
+						
+			// // printt("Ras strafing??")
+			// thread DummyJumpAnimThreaded(dummy)
+			// float startTime = Time()
+			// float endTime = startTime + 0.28
+			// vector moveTo = dummyoldorigin + Normalize(dummy.GetRightVector())*10*morerandomness + Normalize(dummy.GetForwardVector())*-10 + Normalize(dummy.GetUpVector())*20
+			// int randomnessRasStrafe = 1
+			// if(CoinFlip()) randomnessRasStrafe = -1
+			// int curvedamount = 50
+			// float moveXFrom = moveTo.x+curvedamount*randomnessRasStrafe
+			// float moveZFrom = moveTo.z+30
+			// while(true)
+			// {
+				// if(endTime-Time() <= 0) 
+				// {
+					// script_mover.NonPhysicsStop()
+					// startTime = Time()
+					// endTime = startTime + 0.28
+					// moveTo = circleLocations[locationindex]
+					// moveXFrom = moveTo.x+curvedamount*-randomnessRasStrafe	
+					// moveZFrom = moveTo.z				
+					// while(endTime-Time() > 0)
+					// {
+						// script_mover.NonPhysicsMoveTo( Vector(GraphCapped( Time(), startTime, endTime, moveXFrom, moveTo.x ), moveTo.y, GraphCapped( Time(), startTime, endTime, moveZFrom, moveTo.z )), endTime-Time(), 0.0, 0.0 )
+						// WaitFrame()
+					// }
+					// script_mover.NonPhysicsStop()
+					// break
+				// }
+				// script_mover.NonPhysicsMoveTo( Vector(GraphCapped( Time(), startTime, endTime, moveXFrom, moveTo.x ), moveTo.y, GraphCapped( Time(), startTime, endTime, moveZFrom, moveTo.z )), endTime-Time(), 0.0, 0.0 )
+				// WaitFrame()
+			// }				
+			// script_mover.NonPhysicsStop()
+			// // printt("Ras strafing?? END")
+		// }
+		// angles2 = VectorToAngles( player.GetOrigin() - dummy.GetOrigin() )
+		// script_mover.SetAngles(angles2)
+		// dummy.SetAngles(angles2)
+	}
+}
+
 void function DummyJumpAnimThreaded(entity dummy)
 {
 	if(IsValid(dummy))
@@ -2265,11 +2419,6 @@ void function OnPlayerDeathCallback(entity player, var damageInfo)
 
 void function OnPlayerDeathCallbackThread(entity player)
 {
-	if( player.GetObserverTarget() != null )
-		player.SetObserverTarget( null )
-
-	player.StartObserverMode( OBS_MODE_DEATHCAM )
-
 	if( !player.p.isChallengeActivated )
 		return
 
@@ -2376,6 +2525,8 @@ void function PreChallengeStart(entity player, int challenge)
 
 	player.p.isChallengeActivated = true
 	Remote_CallFunction_NonReplay(player, "ServerCallback_SetChallengeActivated", true)
+
+	SetGameState( eGameState.WaitingForPlayers )
 }
 
 bool function CC_StartChallenge1( entity player, array<string> args )
@@ -2685,10 +2836,9 @@ bool function CC_MenuGiveAimTrainerWeapon( entity player, array<string> args )
 					if(args[4] != "." ) finalargs.append(args[4])
 					if(args[6] != "none") finalargs.append(args[6])
 					break
-				case "marksman3":
+				case "sniper3":
 					if(args[1] != "none") finalargs.append(args[1])
 					if(args[3] != "none") finalargs.append(args[3])
-					if(args[6] != "none") finalargs.append(args[6])	
 					break
 				case "sniper":
 					if(args[1] != "none") finalargs.append(args[1])
