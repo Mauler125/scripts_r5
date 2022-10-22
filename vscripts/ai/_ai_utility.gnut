@@ -381,7 +381,7 @@ void function DEV_SpawnProwlerAtCrosshair()
 
 	DispatchSpawn( prowler )
 	
-    prowler.SetSkin(RandomInt(5))
+    prowler.SetSkin(RandomInt(3))
 }
 
 void function DEV_SpawnMarvinAtCrosshair()
