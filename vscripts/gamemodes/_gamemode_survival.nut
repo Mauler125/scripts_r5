@@ -387,8 +387,6 @@ void function OnPlayerDamaged( entity victim, var damageInfo )
 	vector damagePosition = DamageInfo_GetDamagePosition( damageInfo )
 	int damageType = DamageInfo_GetCustomDamageType( damageInfo )
 
-	StoreDamageHistoryAndUpdate( victim, Time() + 30, damage, damagePosition, damageType, sourceId, attacker )
-
 	if ( currentHealth - damage <= 0 && PlayerRevivingEnabled() && !IsInstantDeath( damageInfo ) )
 	{
 		// Supposed to be bleeding
@@ -413,7 +411,6 @@ void function OnPlayerDamaged( entity victim, var damageInfo )
 		if( GetGameState() >= eGameState.Playing && attacker.IsPlayer() && attacker != victim )
 		{
 			ScoreEvent event = GetScoreEvent( "Sur_DownedPilot" )
-
 			Remote_CallFunction_NonReplay( attacker, "ServerCallback_ScoreEvent", event.eventId, event.pointValue, event.displayType, victim.GetEncodedEHandle(), GetTotalDamageTakenByPlayer( victim, attacker ), 0 )
 		}
 
