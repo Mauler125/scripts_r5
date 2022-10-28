@@ -1898,6 +1898,11 @@ bool function IsFiringRangeGameMode()
 	return GetCurrentPlaylistVarBool( "survival_firingrange", false )
 }
 
+bool function IsCharacterReselectEnabled()
+{
+	return GetCurrentPlaylistVarInt( "character_reselect_enabled", 0 ) > 0
+}
+
 bool function FiringRangeHasFriendlyFire()
 {
 	return GetCurrentPlaylistVarBool( "firingrange_has_friendlyfire", true )
