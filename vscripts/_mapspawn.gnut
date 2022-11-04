@@ -9,6 +9,7 @@ global function CodeCallback_MapSpawn
 global function CodeCallback_ClientCommand
 global function MapTriggers_Init
 global function CreateMapEditorProp
+global function MapEditorSpawnDoor
 global table _ClientCommandCallbacks = {}
 global entity _cc = null
 global entity _sc = null
@@ -506,4 +507,55 @@ entity function CreateMapEditorProp(asset a, vector pos, vector ang, bool mantle
     e.SetModelScale( scale )
     
 	return e
+}
+
+void function MapEditorSpawnDoor(vector org, vector ang, int type, bool doubledoor = false, bool gold = false)
+{
+    if(type == 0)
+    {
+        if(doubledoor)
+        {
+            entity ddl = CreateEntity("prop_door")
+            ddl.SetValueForModelKey($"mdl/door/canyonlands_door_single_02.rmdl")
+            ddl.SetAngles(ang)
+            ddl.SetOrigin(org + ddl.GetRightVector() * 60)
+            if(gold)
+                ddl.SetSkin( 1 )
+            DispatchSpawn(ddl)
+
+            entity ddr = CreateEntity("prop_door")
+            ddr.SetValueForModelKey($"mdl/door/canyonlands_door_single_02.rmdl")
+            ddr.SetAngles(ang + <0,180,0>)
+            ddr.SetOrigin(org + ddr.GetRightVector() * 60)
+            ddr.LinkToEnt( ddl )
+            if(gold)
+                ddr.SetSkin( 1 )
+            DispatchSpawn(ddr)
+        }
+        else
+        {
+            entity singleDoor = CreateEntity("prop_door")
+            singleDoor.SetValueForModelKey($"mdl/door/canyonlands_door_single_02.rmdl")
+            singleDoor.SetOrigin(org)
+            singleDoor.SetAngles(ang)
+            if(gold)
+                singleDoor.SetSkin( 1 )
+            DispatchSpawn(singleDoor)
+        }
+    }
+    else
+    {
+        entity singleDoor = CreateEntity("prop_dynamic")
+
+        if(doubledoor)
+            singleDoor.SetValueForModelKey($"mdl/door/door_256x256x8_elevatorstyle02_animated.rmdl")
+        else
+            singleDoor.SetValueForModelKey($"mdl/door/door_canyonlands_large_01_animated.rmdl")
+
+        singleDoor.SetScriptName("survival_door_sliding")
+        singleDoor.SetOrigin(org)
+        singleDoor.SetAngles(ang)
+        singleDoor.kv.solid = 6
+        DispatchSpawn(singleDoor)
+    }
 }
