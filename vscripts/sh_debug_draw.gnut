@@ -102,13 +102,12 @@ void function DebugDrawSphere( vector origin, float radius, int r, int g, int b,
 void function DebugDrawHemiSphere( vector origin, vector angles, float radius, int r, int g, int b, bool throughGeo, float time, int segments = 8 )
 {
 	bool firstLoop = true
+	float degrees =  360.0 / float( segments * 2 )
 
 	array<vector> start = [<0,0,0>, <0,0,0>, <0,0,0>, <0,0,0>]
 	array<vector> end = [<0,0,0>, <0,0,0>, <0,0,0>, <0,0,0>]
 	array<vector> forward = [<0,0,0>, <0,0,0>, <0,0,0>, <0,0,0>]
 	array<vector> composed = [<0,0,0>, <0,0,0>, <0,0,0>, <0,0,0>]
-
-	float degrees =  360.0 / float( segments * 2 )
 
 	for ( int i = 0; i < (segments + 1); i++ )
 	{
