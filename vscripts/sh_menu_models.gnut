@@ -563,8 +563,8 @@ void function InitPresentationData()
 		pd.fov = 15.5
 		pd.dofNearStart = DEFAULT_DOF_NEAR_START
 		pd.dofNearEnd = DEFAULT_DOF_NEAR_END
-		pd.dofFarStart = DEFAULT_DOF_FAR_START
-		pd.dofFarEnd = DEFAULT_DOF_FAR_END
+		pd.dofFarStart = 500.0
+		pd.dofFarEnd = 2000.0
 		pd.csmTexelScale1 = 0.22
 		pd.csmTexelScale2 = 0.55
 		pd.csmStartDistance = 70.0
@@ -2207,25 +2207,25 @@ void function SetMenuCamera( entity player, int presentationType, bool interpola
 	//EASING_BACK_INOUT
 
 	// TEMP: Disabled DOF until background is more final. It was causing visual artifacts with gladiator cards.
-	//float dofNearStart 	= file.presentationData[ presentationType ].dofNearStart
-	//float dofNearEnd 	= file.presentationData[ presentationType ].dofNearEnd
-	//float dofFarStart 	= file.presentationData[ presentationType ].dofFarStart
-	//float dofFarEnd 	= file.presentationData[ presentationType ].dofFarEnd
+	float dofNearStart 	= file.presentationData[ presentationType ].dofNearStart
+	float dofNearEnd 	= file.presentationData[ presentationType ].dofNearEnd
+	float dofFarStart 	= file.presentationData[ presentationType ].dofFarStart
+	float dofFarEnd 	= file.presentationData[ presentationType ].dofFarEnd
 
 	if ( interpolate )
 	{
 		printt( "Interpolating menu camera to:", GetEnumString( "ePresentationType", presentationType ) )
-		//DoF_LerpNearDepth( dofNearStart, dofNearEnd, TRANSITION_DURATION )
-		//DoF_LerpFarDepth( dofFarStart, dofFarEnd, TRANSITION_DURATION )
+		DoF_LerpNearDepth( dofNearStart, dofNearEnd, TRANSITION_DURATION )
+		DoF_LerpFarDepth( dofFarStart, dofFarEnd, TRANSITION_DURATION )
 	}
 	else
 	{
 		printt( "Snapping menu camera to:", GetEnumString( "ePresentationType", presentationType ) )
-		//DoF_SetNearDepth( dofNearStart, dofNearEnd )
-		//DoF_SetFarDepth( dofFarStart, dofFarEnd )
+		DoF_SetNearDepth( dofNearStart, dofNearEnd )
+		DoF_SetFarDepth( dofFarStart, dofFarEnd )
 	}
 
-	//DoFSetDilateInfocus( true ) // We want to reduce DoF aliasing around bright edges in the menus.
+	DoFSetDilateInfocus( true ) // We want to reduce DoF aliasing around bright edges in the menus.
 
 	#if CONSOLE_PROG
 		const float texelNorm = 2.0
