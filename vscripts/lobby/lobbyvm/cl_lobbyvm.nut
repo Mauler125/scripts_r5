@@ -108,6 +108,9 @@ void function ServerCallback_LobbyVM_StartingMatch()
 
 void function ServerCallback_LobbyVM_UpdateUI()
 {
+    DoF_SetFarDepth( 500.0, 2000.0 )
+	DoF_SetNearDepth( 16.0, 32.0 )
+    
     array<string> playernames
 
     RunUIScript( "ClearPlayerUIArray" )
