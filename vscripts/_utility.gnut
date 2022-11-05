@@ -3071,7 +3071,7 @@ entity function CreateZiplineNode(vector pos, string entitytype, string pointnam
     if(!end)
         rope.kv.NextKey = NextKey
 
-	rope.kv.MoveSpeed = 300
+	rope.kv.MoveSpeed = 64
 	rope.kv.Slack = 25
 	rope.kv.Subdiv = "2"
 	rope.kv.Width = "2"
