@@ -448,7 +448,6 @@ void function WallTriggerEnter( entity trigger , entity ent )
                 vector lookDir = ent.GetSmoothedVelocity()
                 vector pushBackVel = lookDir * 2.5
 
-                printl( LengthSqr( lookDir ) + " / " + ent.GetSmoothedVelocity() )
                 if( LengthSqr( lookDir ) >= 320000)
                     pushBackVel = lookDir / 1.5
 
