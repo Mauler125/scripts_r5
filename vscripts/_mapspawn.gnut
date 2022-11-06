@@ -10,6 +10,7 @@ global function CodeCallback_ClientCommand
 global function MapTriggers_Init
 global function CreateMapEditorProp
 global function MapEditorSpawnDoor
+global function MapEditorCreateTrigger
 global table _ClientCommandCallbacks = {}
 global entity _cc = null
 global entity _sc = null
@@ -558,4 +559,23 @@ void function MapEditorSpawnDoor(vector org, vector ang, int type, bool doubledo
         singleDoor.kv.solid = 6
         DispatchSpawn(singleDoor)
     }
+}
+
+entity function MapEditorCreateTrigger( vector origin, vector angles, float radius, float totalheight, bool debugdraw = false)
+{
+	// Set up the trigger
+    entity trigger = CreateEntity( "trigger_cylinder" )
+	trigger.SetRadius( radius )
+	trigger.SetAboveHeight( totalheight )
+	trigger.SetBelowHeight( totalheight )
+	trigger.SetOrigin( origin )
+	trigger.SetAngles( angles )
+
+	if (debugdraw) // draw trigger bounds if needed
+	{
+		DebugDrawCylinder( trigger.GetOrigin() , < -90, 0, 0 >, radius, totalheight, 0, 165, 255, true, 9999.9 )
+		DebugDrawCylinder( trigger.GetOrigin() , < -90, 0, 0 >, radius, -totalheight, 255, 90, 0, true, 9999.9 )
+	}
+
+    return trigger
 }
