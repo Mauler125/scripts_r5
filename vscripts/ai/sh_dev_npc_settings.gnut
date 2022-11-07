@@ -95,11 +95,10 @@ void function SetupWeapons()
 
 	// Dev
 	//SetupDevCommand( "Dev: Dev Tool", "give mp_weapon_mdlspawner" )
-	//SetupDevCommand( "Dev: Smart Pistol (disabled)", "give mp_weapon_smart_pistol" )
+	SetupDevCommand( "Dev: Smart Pistol", "give mp_weapon_smart_pistol" )
+	SetupDevCommand( "Dev: Flight Core", "give mp_titanweapon_flightcore_rockets" )
+	SetupDevCommand( "Dev: Sheila", "give mp_weapon_mobile_hmg" )
 	SetupDevCommand( "Dev: Dev Cubemap ", "give weapon_cubemap" )
-	SetupDevCommand( "Dev: Car SMG", "give mp_weapon_car" )
-	SetupDevCommand( "Dev: Rampage LMG", "give mp_weapon_dragon_lmg" )
-	SetupDevCommand( "Dev: 30-30 Repeater", "give mp_weapon_3030" )
 	#endif
 }
 
@@ -157,10 +156,11 @@ void function SetupAbilities()
 	SetupDevCommand( "Wraith Tactical", "give mp_ability_phase_walk" )
 	SetupDevCommand( "Wraith Ultimate", "give mp_weapon_phase_tunnel" )
 
-	SetupDevCommand( "3Dash Tactical", "give mp_ability_3dash" )
-	SetupDevCommand( "Pulse Blade", "give mp_weapon_grenade_sonar" )
-	SetupDevCommand( "Amped Wall", "give mp_weapon_deployable_cover" )
-	SetupDevCommand( "Electric Smoke", "give mp_weapon_grenade_electric_smoke" )
+	SetupDevCommand( "Dev: 3Dash Tactical", "give mp_ability_3dash" )
+	SetupDevCommand( "Dev: Pulse Blade", "give mp_weapon_grenade_sonar" )
+	SetupDevCommand( "Dev: Amped Wall", "give mp_weapon_deployable_cover" )
+	SetupDevCommand( "Dev: Electric Smoke", "give mp_weapon_grenade_electric_smoke" )
+	SetupDevCommand( "Dev: Satchel", "give mp_weapon_satchel" )
 	#endif
 }
 
