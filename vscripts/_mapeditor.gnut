@@ -198,12 +198,10 @@ void function MapEditor_SpawnDoor(vector org, vector ang, int type, bool gold = 
 			break;
 		case eMapEditorDoorType.Vertical:
 			entity d = CreateDoorEntity("prop_dynamic", $"mdl/door/door_canyonlands_large_01_animated.rmdl", "survival_door_sliding", org, ang)
-			d.kv.solid = 6
 			DispatchSpawn(d)
 			break;
 		case eMapEditorDoorType.Horizontal:
 			entity d = CreateDoorEntity("prop_dynamic", $"mdl/door/door_256x256x8_elevatorstyle02_animated.rmdl", "survival_door_sliding", org, ang)
-			d.kv.solid = 6
 			DispatchSpawn(d)
 			break;
 	}
@@ -216,11 +214,13 @@ entity function CreateDoorEntity(string type, asset model, string scriptName, ve
 	d.SetAngles(angles)
 	d.SetValueForModelKey(model)
 
-	if(scriptName != "")
+	if(scriptName != "") {
 		d.SetScriptName(scriptName)
+		d.kv.solid = 6
+	}
 
-	if(gold)
-        d.SetSkin( 1 )
+	if(gold) d.SetSkin( 1 )
+
 	return d
 }
 
@@ -290,6 +290,7 @@ entity function SetNodeRopeProperties( entity rope )
     rope.kv.Type = "0"
     rope.kv.TextureScale = "1"
     rope.kv.PositionInterpolator = 2
+	rope.kv.RopeMaterial = "cable/zipline.vmt"
     rope.kv.Zipline = "1"
     rope.kv.ZiplineAutoDetachDistance = "150"
     rope.kv.ZiplineSagEnable = "0"
