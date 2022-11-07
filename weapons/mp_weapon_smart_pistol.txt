@@ -3,10 +3,10 @@
 WeaponData
 {
 	// General
-	"printname"   									"Smart Pistol MK6"
-	"shortprintname"								"Smart Pistol MK6"
-	"description" 									"Locks onto nearby targets for guaranteed hits."
-	"longdesc"										"Locks onto nearby targets for guaranteed hits. Two 12 round magazines."
+	"printname"   									"#WPN_SMART_PISTOL"
+	"shortprintname"								"#WPN_SMART_PISTOL_SHORT"
+	"description" 									"#WPN_SMART_PISTOL_DESC"
+	"longdesc"										"#WPN_SMART_PISTOL_LONGDESC"
 
 	"fast_swap_to"									"1"
 
