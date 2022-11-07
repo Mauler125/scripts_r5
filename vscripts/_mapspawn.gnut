@@ -192,7 +192,8 @@ void function CodeCallback_MapSpawn() // original script entry point
 	_sc = CreateEntity( "point_servercommand" )
 	PrecacheEntity( "env_entity_dissolver" )
 
-	FlagInit("EntitiesDidLoad")
+	FlagInit( "EntitiesDidLoad" )
+	FlagInit( "ShowExplosionRadius" )  // temp HACK
 	svGlobal.levelEnt = GetEnt( "worldspawn" )
 
 	LevelVarInit()
@@ -281,7 +282,7 @@ void function CodeCallback_MapSpawn() // original script entry point
 	PrecacheWeapon( $"mp_weapon_rspn101" )
 	PrecacheWeapon( $"mp_weapon_defender" )
 	PrecacheWeapon( $"mp_weapon_jump_pad" )
-	PrecacheWeapon( $"mp_weapon_smart_pistol" ) //TODO: Fix This
+	PrecacheWeapon( $"mp_weapon_smart_pistol" )
 	PrecacheWeapon( $"mp_weapon_grenade_creeping_bombardment" )
 	PrecacheWeapon( $"mp_weapon_grenade_defensive_bombardment" )
 	PrecacheWeapon( $"mp_weapon_grenade_sonar" )
@@ -295,6 +296,9 @@ void function CodeCallback_MapSpawn() // original script entry point
 	PrecacheWeapon( $"mp_weapon_frag_drone" )
 	PrecacheWeapon( $"mp_weapon_clickweapon")
 	PrecacheWeapon( $"mp_weapon_clickweaponauto")
+	PrecacheWeapon( $"mp_weapon_satchel")
+	PrecacheWeapon( $"mp_weapon_mobile_hmg")
+	PrecacheWeapon( $"mp_titanweapon_flightcore_rockets")
 
 	//if ( GetMapName() == "mp_rr_canyonlands_staging" ) //Precache NPC Weapons For Firing Range
 	{

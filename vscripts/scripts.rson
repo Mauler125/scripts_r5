@@ -244,16 +244,20 @@ Scripts:
 	weapons/_weapon_dialogue.nut
 	weapons/_weapon_utility.nut
 	weapons/_weapon_reactive_effects.gnut
+	weapons/mp_weapon_satchel.nut
 	weapons/mp_ability_cloak.nut
 	weapons/mp_ability_grapple.nut
 	weapons/mp_ability_holopilot.nut
 	weapons/mp_weapon_smart_pistol.nut
+	weapons/mp_weapon_mobile_hmg.nut
 	weapons/mp_weapon_mdlspawner.nut
+	weapons/mp_titanweapon_flightcore_rockets.nut
 
 
 	weapons/mp_ability_heal.nut
 	weapons/mp_ability_sonar.nut
 	weapons/mp_weapon_basic_bolt.nut
+	//weapons/mp_weapon_grenade_electric_smoke.nut
 	weapons/mp_weapon_defender.nut
 	weapons/mp_weapon_defender_sustained.nut
 	weapons/mp_weapon_deployable_cover.nut
