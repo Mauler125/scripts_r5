@@ -2,7 +2,6 @@ global function ShWeaponRack_Init
 
 #if SERVER
 global function CreateWeaponRack
-global function CreateRespawnableWeaponRack
 global function SpawnWeaponOnRack
 global function GetWeaponFromRack
 #endif
@@ -64,24 +63,5 @@ entity function SpawnWeaponOnRack(entity rack, string weaponName)
 entity function GetWeaponFromRack(entity rack)
 {
 	return (rack.e.cpoint1 != null && IsValid(rack.e.cpoint1)) ? rack.e.cpoint1 : null
-}
-
-void function CreateRespawnableWeaponRack(vector pos, vector ang, string weaponName)
-{
-	entity rack = CreateWeaponRack(pos, ang, weaponName)
-	thread OnPickupFromRackThread(GetWeaponFromRack(rack), weaponName)
-}
-
-// When the weapon is grabbed from the rack -> respawn it
-void function OnPickupFromRackThread(entity item, string ref)
-{
-	entity rack = item.GetParent()
-	item.WaitSignal("OnItemPickup")
-
-	wait FIRINGRANGE_RACK_RESPAWN_TIME
-
-	entity newWeapon = SpawnWeaponOnRack(rack, ref)
-	StartParticleEffectInWorld( GetParticleSystemIndex( FIRINGRANGE_ITEM_RESPAWN_PARTICLE ), newWeapon.GetOrigin(), newWeapon.GetAngles() )
-	thread OnPickupFromRackThread(newWeapon, ref)
 }
 #endif

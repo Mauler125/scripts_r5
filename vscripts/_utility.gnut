@@ -3063,61 +3063,6 @@ void function CreateZipline( vector startPos, vector endPos )
 	DispatchSpawn( rope_end )
 }
 
-entity function CreateZiplineNode(vector pos, string entitytype, string pointname, string NextKey, bool end)
-{
-    entity rope = CreateEntity( entitytype )
-	SetTargetName( rope, pointname )
-    
-    if(!end)
-        rope.kv.NextKey = NextKey
-
-	rope.kv.MoveSpeed = 64
-	rope.kv.Slack = 25
-	rope.kv.Subdiv = "2"
-	rope.kv.Width = "2"
-	rope.kv.Type = "0"
-	rope.kv.TextureScale = "1"
-	rope.kv.RopeMaterial = "cable/zipline.vmt"
-	rope.kv.PositionInterpolator = 2
-	rope.kv.Zipline = "1"
-	rope.kv.ZiplineAutoDetachDistance = "150"
-	rope.kv.ZiplineSagEnable = "0"
-	rope.kv.ZiplineSagHeight = "50"
-	rope.SetOrigin( pos )
-
-    return rope
-}
-
-void function CreateLinkedZipline( array<vector> points )
-{
-    array<entity> ziplineents
-    array<string> ziplinesnames
-
-    for(int i = 0; i < points.len(); i++) {
-        string point = UniqueString( "rope_point_" + i )
-        ziplinesnames.append(point)
-    }
-
-    foreach(int i, vector pos in points) {
-        if(i == 0) {
-            entity zipline = CreateZiplineNode(pos, "move_rope", ziplinesnames[i], ziplinesnames[i + 1], false)
-            ziplineents.append(zipline)
-        }
-        else if(i < points.len() - 1) {
-            entity zipline = CreateZiplineNode(pos, "keyframe_rope", ziplinesnames[i], ziplinesnames[i + 1], false)
-            ziplineents.append(zipline)
-        }
-        else {
-            entity zipline = CreateZiplineNode(pos, "keyframe_rope", ziplinesnames[i], "", true)
-            ziplineents.append(zipline)
-        }
-    }
-
-	foreach(entity ent in ziplineents) {
-        DispatchSpawn( ent )
-    }
-}
-
 asset function GetNPCTitanSettingFile( entity titan )
 {
 	Assert( titan.IsTitan(), titan + " is not a titan" )

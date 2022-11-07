@@ -162,6 +162,7 @@ Scripts:
 	_networkvars.gnut
 	_vscript.gnut
 	_init.gnut
+	_mapeditor.gnut
 	class/CPlayer.nut
 	sh_anim_windows.gnut
 	sh_anim_events.gnut
