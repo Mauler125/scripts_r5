@@ -2601,7 +2601,7 @@ void function PROTO_InitTrackedProjectile( entity projectile )
 	int maxDeployed = projectile.GetProjectileWeaponSettingInt( eWeaponVar.projectile_max_deployed )
 	if ( maxDeployed != 0 )
 	{
-		AddToTrackedEnts( owner, projectile )
+		AddToScriptManagedEntArray( owner.s.activeTrapArrayId, projectile )
 
 		array<entity> traps = GetScriptManagedEntArray( owner.s.activeTrapArrayId )
 		array<entity> sameTypeTrapEnts
