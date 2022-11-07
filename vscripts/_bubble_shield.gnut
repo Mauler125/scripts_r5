@@ -10,6 +10,7 @@ global function CreateParentedBubbleShield
 global function WaitUntilTitanStandsOrDies
 global function DestroyBubbleShield
 global function CreateBubbleShieldWithSettings
+global function MapEditorCreateBubbleShieldWithSettings
 
 const float SHIELD_TITAN_DAMAGE_FLOOR = 0
 const float SHIELD_TITAN_DAMAGE_CEILING = 16000 //Some arbitrarily large number really
@@ -500,4 +501,35 @@ bool function TitanHasBubbleShieldWeapon( entity titan )
 		return true
 
 	return false
+}
+
+entity function MapEditorCreateBubbleShieldWithSettings( vector origin, vector angles, float scale, string color, asset collisionModel, bool fx = false )
+{
+	entity bubbleShield = CreateEntity( "prop_dynamic" )
+	bubbleShield.SetValueForModelKey( collisionModel ) // TODO: fix this for apex
+	bubbleShield.kv.solid = SOLID_VPHYSICS
+    bubbleShield.kv.rendercolor = color
+    bubbleShield.kv.contents = (int(bubbleShield.kv.contents) | CONTENTS_NOGRAPPLE)
+	bubbleShield.SetOrigin( origin )
+	bubbleShield.SetAngles( angles )
+	bubbleShield.SetModelScale( scale )
+    // Blocks bullets, projectiles but not players and not AI
+	bubbleShield.kv.CollisionGroup = TRACE_COLLISION_GROUP_BLOCK_WEAPONS
+	DispatchSpawn( bubbleShield )
+
+	if(fx)
+	{
+		array<entity> bubbleShieldFXs
+
+		vector coloredFXOrigin = origin + Vector( 0, 0, 25 )
+		table bubbleShieldDotS = expect table( bubbleShield.s )
+		
+		entity neutralColoredFX = StartParticleEffectInWorld_ReturnEntity( GetParticleSystemIndex(BUBBLE_BUNKER_SHIELD_FX), coloredFXOrigin, <0, 0, 0> )
+		bubbleShieldDotS.neutralColoredFX <- neutralColoredFX
+		bubbleShieldFXs.append( neutralColoredFX )
+	}
+
+	EmitSoundOnEntity( bubbleShield, "Gibraltar_BubbleShield_Sustain" )
+
+	return bubbleShield
 }
