@@ -176,7 +176,7 @@ void function CodeCallback_MapSpawn() // original script entry point
 	//seterrorhandler(void function() {})
 	//ScriptCompilerTest()
 	LoadDiamond()
-	MapTriggers_Init()
+	MapEditor_Init()
 	LootTicks_Init()
 
 	RegisterSignal( "CleanupFXAndSoundsForDecoy" )
