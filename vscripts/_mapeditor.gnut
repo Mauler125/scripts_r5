@@ -8,6 +8,7 @@ global function MapEditor_CreateTrigger
 global function MapEditor_CreateBubbleShieldWithSettings
 global function MapEditor_CreateRespawnableWeaponRack
 global function MapEditor_CreateLinkedZipline
+global function MapEditor_CreateLootBin
 
 global enum eMapEditorDoorType
 {
@@ -279,6 +280,21 @@ void function OnPickupFromRackThread(entity item, string ref, float spawnTime)
 	entity newWeapon = SpawnWeaponOnRack(rack, ref)
 	StartParticleEffectInWorld( GetParticleSystemIndex( FIRINGRANGE_ITEM_RESPAWN_PARTICLE ), newWeapon.GetOrigin(), newWeapon.GetAngles() )
 	thread OnPickupFromRackThread(newWeapon, ref, spawnTime)
+}
+
+entity function MapEditor_CreateLootBin( vector origin, vector angles, int skin = 0 )
+{
+	entity lootbin = CreateEntity( "prop_dynamic" )
+	lootbin.SetScriptName( LOOT_BIN_SCRIPTNAME )
+	lootbin.SetValueForModelKey( LOOT_BIN_MODEL )
+	lootbin.SetOrigin( origin )
+	lootbin.SetAngles( angles )
+	lootbin.kv.solid = SOLID_VPHYSICS
+
+	DispatchSpawn( lootbin )
+	lootbin.SetSkin(skin)
+
+	return lootbin
 }
 
 entity function SetNodeRopeProperties( entity rope )
