@@ -262,64 +262,63 @@ entity function MapEditor_CreateBubbleShieldWithSettings( vector origin, vector 
 	return bubbleShield
 }
 
-void function MapEditor_CreateRespawnableWeaponRack(vector pos, vector ang, string weaponName)
+void function MapEditor_CreateRespawnableWeaponRack(vector pos, vector ang, string weaponName, float spawnTime)
 {
 	entity rack = CreateWeaponRack(pos, ang, weaponName)
-	thread OnPickupFromRackThread(GetWeaponFromRack(rack), weaponName)
+	thread OnPickupFromRackThread(GetWeaponFromRack(rack), weaponName, spawnTime)
 }
 
 // When the weapon is grabbed from the rack -> respawn it
-void function OnPickupFromRackThread(entity item, string ref)
+void function OnPickupFromRackThread(entity item, string ref, float spawnTime)
 {
 	entity rack = item.GetParent()
 	item.WaitSignal("OnItemPickup")
 
-	wait FIRINGRANGE_RACK_RESPAWN_TIME
+	wait spawnTime
 
 	entity newWeapon = SpawnWeaponOnRack(rack, ref)
 	StartParticleEffectInWorld( GetParticleSystemIndex( FIRINGRANGE_ITEM_RESPAWN_PARTICLE ), newWeapon.GetOrigin(), newWeapon.GetAngles() )
-	thread OnPickupFromRackThread(newWeapon, ref)
+	thread OnPickupFromRackThread(newWeapon, ref, spawnTime)
 }
 
 entity function SetNodeRopeProperties( entity rope )
 {
-    rope.kv.MoveSpeed = 64
-    rope.kv.Slack = 25
-    rope.kv.Subdiv = "2"
-    rope.kv.Width = "2"
-    rope.kv.Type = "0"
-    rope.kv.TextureScale = "1"
-    rope.kv.PositionInterpolator = 2
+	rope.kv.MoveSpeed = 64
+	rope.kv.Slack = 25
+	rope.kv.Subdiv = "2"
+	rope.kv.Width = "2"
+	rope.kv.Type = "0"
+	rope.kv.TextureScale = "1"
+	rope.kv.PositionInterpolator = 2
 	rope.kv.RopeMaterial = "cable/zipline.vmt"
-    rope.kv.Zipline = "1"
-    rope.kv.ZiplineAutoDetachDistance = "150"
-    rope.kv.ZiplineSagEnable = "0"
-    rope.kv.ZiplineSagHeight = "50"
+	rope.kv.Zipline = "1"
+	rope.kv.ZiplineAutoDetachDistance = "150"
+	rope.kv.ZiplineSagEnable = "0"
+	rope.kv.ZiplineSagHeight = "50"
+	rope.kv.fadedist = "50000"
 
-    return rope
+	return rope
 }
 
 void function MapEditor_CreateLinkedZipline( array<vector> nodes )
 {
-    array<entity> ropes = [ SetNodeRopeProperties( CreateEntity( "move_rope" ) ) ]
-    ropes[0].SetOrigin( nodes[0] )
+	array<entity> ropes = [ SetNodeRopeProperties( CreateEntity( "move_rope" ) ) ]
+	ropes[0].SetOrigin( nodes[0] )
 
-    // create child ropes
-    for(int i = 1; i < nodes.len(); i++)
-    {
-        vector nodepos = nodes[i]
-        ropes.append( SetNodeRopeProperties( CreateEntity( "keyframe_rope" )  ) )
+	// create child ropes
+	for(int i = 1; i < nodes.len(); i++) {
+		vector nodepos = nodes[i]
+		ropes.append( SetNodeRopeProperties( CreateEntity( "keyframe_rope" )  ) )
         
-        ropes[i].SetOrigin( nodepos )
-    }
+		ropes[i].SetOrigin( nodepos )
+	}
 
     // link all nodes
-    for(int i = 0; i < ropes.len(); i++)
-    {
-        if(i + 1 < ropes.len())
-            ropes[i].LinkToEnt( ropes[i + 1]  )
-    }
+	for(int i = 0; i < ropes.len(); i++) {
+		if(i + 1 < ropes.len())
+			ropes[i].LinkToEnt( ropes[i + 1]  )
+	}
 
-    foreach(entity rope in ropes)
+	foreach(entity rope in ropes)
         DispatchSpawn( rope )
 }
