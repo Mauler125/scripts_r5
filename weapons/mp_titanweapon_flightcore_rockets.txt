@@ -61,12 +61,12 @@ WeaponData
 
 	MP_BASE
 	{
-		"damage_near_value"   							"300"
-		"damage_far_value"								"300"
-		"damage_near_value_titanarmor"					"300"
-		"damage_far_value_titanarmor" 					"300"
-		"explosion_damage"								"55" //"400"
-		"explosion_damage_heavy_armor"					"300"
+		"damage_near_value"   							"15"
+		"damage_far_value"								"15"
+		"damage_near_value_titanarmor"					"15"
+		"damage_far_value_titanarmor" 					"15"
+		"explosion_damage"								"15" //"400"
+		"explosion_damage_heavy_armor"					"15"
 
 		// Damage - When Used by NPCs
 		"npc_damage_near_value"   							"<KEEP_DEFAULT>"
