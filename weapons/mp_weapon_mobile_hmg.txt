@@ -593,55 +593,6 @@ WeaponData
         }
 	}
 
-	//"ui1_enable"		"1"
-	//"ui1_draw_cloaked"	"1"
-	//UiData1
-	//{
-	//	"ui"							"ui/rampart_turret_screen"
-	//	"mesh"							"models/weapons/attachments/rampart_turret_screen"
-	//	Args
-	//	{
-	//		vis							player_zoomfrac
-	//		ammo						weapon_ammo
-	//		clipSize					weapon_clipSize
-	//		centerOffset				weapon_ads_center_offset
-	//		eyeAngles					player_eye_angles
-	//		crossDist					distance_to_crosshair_target
-	//		altOffset					eWeaponVar.custom_bool_0
-	//	}
-	//}
-
-	"ui2_enable"		"1"
-	"ui2_draw_cloaked"	"1"
-	UiData2
-	{
-		"ui"							"ui/spitfire_crosshair"
-		"mesh"							"models/weapons/attachments/rampart_turret_reticle"
-		Args
-		{
-			isFiring					weapon_is_firing
-			clipAmmo					weapon_ammo
-			clipSize					weapon_clipSize
-		}
-	}
-//
-	//"ui3_enable"		"1"
-	//"ui3_draw_cloaked"	"1"
-	//UiData3
-	//{
-	//	"ui"							"ui/volt_ammo_counter"
-	//	"mesh"							"models/weapons/attachments/rampart_turret_ammo_counter"
-	//	Args
-	//	{
-	//		vis							player_zoomfrac
-	//		ammo						weapon_ammo
-	//		clipSize					weapon_clipSize
-	//		isReloading					weapon_is_reloading
-	//		isAmped						weapon_is_amped
-	//		spreadAmount				weapon_spread
-	//	}
-	//}
-
 	active_crosshair_count				"0"
 	rui_crosshair_index					"0"
 
