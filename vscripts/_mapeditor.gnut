@@ -311,7 +311,7 @@ entity function SetNodeRopeProperties( entity rope )
 	rope.kv.ZiplineAutoDetachDistance = "150"
 	rope.kv.ZiplineSagEnable = "0"
 	rope.kv.ZiplineSagHeight = "50"
-	rope.kv.fadedist = "50000"
+	rope.kv.fadedist = 50000
 
 	return rope
 }
