@@ -1,0 +1,229 @@
+untyped
+
+
+global function OnMapZipline_Init
+
+
+void function OnMapZipline_Init() // Explanation at the end of the file
+{
+    ZiplineUtility zipline
+
+    switch ( GetMapName() )
+    {
+        case "mp_rr_aqueduct":
+            break
+        case "mp_rr_aqueduct_night":
+            break
+        case "mp_rr_arena_composite":
+            break
+        case "mp_rr_arena_skygarden":
+            break
+        case "mp_rr_ashs_redemption":
+            break
+        case "mp_rr_canyonlands_64k_x_64k":
+            break
+        case "mp_rr_canyonlands_mu1":
+            break
+        case "mp_rr_canyonlands_mu1_night":
+            break
+        case "mp_rr_canyonlands_staging":
+            break
+        case "mp_rr_desertlands_64k_x_64k_nx":
+            break
+        case "mp_rr_desertlands_64k_x_64k_tt":
+            break
+        case "mp_rr_desertlands_64k_x_64k":
+            break
+        case "mp_rr_floppytown":
+            break
+        default: break
+    }
+
+    Zipline_InitAllRegisteredZiplineInScope()
+}
+
+
+/*
+    Function for create ziplines like retail with options
+
+    Credits : - Julefox ( Twitter: @Julefox_ | Discord: Julefox#0050 )
+
+    How to use:
+    - You don't need to put all the parameters, zipline has already defined parameters without having to change the values
+    - In OnMapZipline_Init() you don't have to declare each zipline with the "ZiplineUtility zipline =", you can just put "zipline ="
+
+
+    # Zipline_Register( string ziplineName, vector startEntityPos, vector startEntityAng, vector ornull endEntityPos = null, vector endEntityAng = < 0, 0, 0 > )
+    {
+        - This function is used to create the zipline
+        - If nothing is entered in "endEntityPos" then the zipline will be automatically considered as vertical
+    }
+
+    # Zipline_RegisterRopeOnly( string ziplineName, vector startEntityPos, vector startEntityAng, vector ornull endEntityPos = null, vector endEntityAng = < 0, 0, 0 >, bool isVertical = true )
+    {
+        - This function is used to create the zipline without the support, rope only
+        - If nothing is entered in "endEntityPos" then the zipline will be automatically considered as vertical
+    }
+
+        # Zipline_CreatePanel( ZiplineUtility zipline, vector pos, vector ang, int skin = ePanelSkinType.WALL )
+        {
+            - Create a panel linked to the zipline, you can destroy the zipline or recreate it at will ( random cooldown between 32 and 60 seconds )
+            - In "int skin" you can choose the skin type of the panel:
+                - ePanelSkinType.WALL  || 0
+                - ePanelSkinType.STAND || 1
+            /!\ ePanelSkinType.WALL is not available on KC, it will be replaced by ePanelSkinType.STAND
+        }
+
+        # Zipline_DisableVerticalZiplineOffset( ZiplineUtility zipline )
+        {
+            - VERTICAL ZIPLINE ONLY
+            - If set, the zipline will stop on the ground instead of having a space between the ground and the end of the zip ( 35.0 )
+        }
+
+        # Zipline_EnableRestPoint ( ZiplineUtility zipline )
+        {
+            - Enable rest point
+        }
+
+        # Zipline_SetFadeDistance( ZiplineUtility zipline, float fadeDistance )
+        {
+            - Defines the fade distance
+        }
+
+        # Zipline_SetHeightLimitFromTop( ZiplineUtility zipline, float heightLimit )
+        {
+            - VERTICAL ZIPLINE ONLY
+            - If set, the zipline will make the length of "heightLimit"
+        }
+
+        # Zipline_SetHeightLimitFromFloor( ZiplineUtility zipline, float heightLimit )
+        {
+            - VERTICAL ZIPLINE ONLY
+            - If set, the zipline will have a space between the ground and the end of the zipline defined by "heightLimit"
+        }
+
+        # Zipline_SetIsMoving( ZiplineUtility zipline )
+        {
+            - If set, the zipline will appear by moving
+        }
+
+        # Zipline_SetLengthScale( ZiplineUtility zipline, float lengthScale )
+        {
+            - Defines the length of the rope ( advisor between "0.90" and "1", on retail some can go to "0.8" or "0.5 )
+        }
+
+        # Zipline_SetMaterial( ZiplineUtility zipline, asset material )
+        {
+            - Change the type of material (if you find one that works please let me know )
+        }
+
+        # Zipline_SetPreserveVelocity( ZiplineUtility zipline )
+        {
+            - If set, the zipline preserves your velocity
+        }
+
+        # Zipline_SetScale( ZiplineUtility zipline, float scale )
+        {
+            - Defines the scale of the rope
+        }
+
+        # Zipline_SetSpeedScale( ZiplineUtility zipline, float speedScale )
+        {
+            - Defines the speed when you use it
+        }
+
+        # Zipline_SetWidth( ZiplineUtility zipline, float width )
+        {
+            - Defines the width of the rope
+        }
+
+        # Zipline_SetSkin( ZiplineUtility zipline, int setSkinStart, int setSkinEnd = eZiplineSkinType.ENTIRE )
+        {
+            - Choose the skin of your zipline support
+            - In "int setSkinStart" || "int setSkinEnd" you can choose the skin of your zipline support:
+                - eZiplineSkinType.ENTIRE    || 0
+                - eZiplineSkinType.ARM_ONLY  || 1
+                - eZiplineSkinType.INVISIBLE || 2
+        }
+
+        # Zipline_DisableDropToBottom( ZiplineUtility zipline )
+        {
+            - If set, disable drop to bottom
+        }
+
+        # Zipline_SetArmOffset( ZiplineUtility zipline, float startArmOffset, float endArmOffset = 0.0 )
+        {
+            - If the skin is set to "eZiplineSkinType.ENTIRE" choose the height of the support arm
+        }
+
+        # Zipline_SpawnSupportOnlyOnSpawn( ZiplineUtility zipline )
+        {
+            - Spawns the supports only ( without the zipline )
+        }
+
+        # Zipline_SetZiplineAngles( ZiplineUtility zipline, vector startZiplineAng, vector endZiplineAng = < 0, 0, 0 > )
+        {
+            - Defines the angle of the zipline (used for the vertical zipline to eject the player in the direction with Zipline_SetPushOffInDirectionX() )
+            - If the zipline is vertical, "endZiplineAng" is useless
+        }
+
+        # Zipline_SetAutoDetachDistance( ZiplineUtility zipline, float startAutoDetachDistance, float endAutoDetachDistance = 0.0 )
+        {
+            - Defines how far away the player is automatically unhooked
+            - If "endAutoDetachDistance" is not defined the script will automatically define the distance if the zipline is vertical or not
+        }
+
+        # Zipline_SetDetachEndOnUse_OnSpawn( ZiplineUtility zipline, int detachEndOnUse, int detachEndOnSpawn )
+        {
+            - If set, the end of the zipline is unhooked
+            - If "detachEndOnUse" in set on 1: the zipline unhooks when a player uses it
+            - If "detachEndOnSpawn" in set on 1: The zipline is unhooked at the spawn of the zip
+        }
+
+        # Zipline_SetPushOffInDirectionX( ZiplineUtility zipline, int PushOffInDirectionX )
+        {
+            - Defines if you want to eject the player in the direction of the zipline ( At the end of the stroke, natively set on 1 )
+        }
+
+        # Zipline_IsIndianaJonesMode( ZiplineUtility zipline, float floorOffset = ZIPLINE_OFFSET_FROM_FLOOR_DETACH_END )
+        {
+            - Have fun :)
+        }
+
+        // Panels
+        # Zipline_SetPanelTimer( ZiplineUtility zipline, float minTimer, float maxTimer = 0.0 )
+        {
+            - Change the cooldown of the panel
+            - Choose a random time between "minTimer" and "maxTimer"
+            - If maxTimer = 0.0, the cool down will always be equal to "minTimer"
+        }
+
+        # Zipline_PanelUsableLimit( ZiplineUtility zipline, int maxUse = 1 )
+        {
+            - Defines the number of times the panels can be used
+        }
+
+        # Zipline_DestroyZiplineSupportOnPanelEnd( ZiplineUtility zipline )
+        {
+            - Defines whether the support should be destroyed with the panels once the usage limit is reached
+        }
+
+    # RegisteredZipline_Init( ZiplineUtility zipline )
+    {
+        - Create the zipline once all the parameters are entered
+    }
+
+    # Zipline_InitAllRegisteredZiplineInScope()
+    {
+        - Create all ziplines in scope
+    }
+
+    Example: /!\ Values are for the example /!\
+    ZiplineUtility zipline
+    zipline = Zipline_Register( "ziplineName", < 0, 0, 0 >, < 0, 92, 0 >, < 0, 2000, 0 >, < 0, -40, 0 > )
+        Zipline_SetLengthScale( zipline, 0.96 )
+        Zipline_SetSkin( zipline, eZiplineSkinType.ENTIRE, eZiplineSkinType.INVISIBLE )
+        Zipline_EnableRestPoint ( zipline )
+        Zipline_CreatePanel( zipline, < 0, 60, 0 >, < 0, 38, 0 >, ePanelSkinType.STAND )
+    RegisteredZipline_Init( zipline )
+*/

@@ -1,0 +1,105 @@
+untyped
+
+
+global function CreateRandomZiplineOnClientConnected
+
+
+void function CreateRandomZiplineOnClientConnected( entity player )
+{
+    #if DEVELOPER
+        if ( player == gp()[0] )
+        {
+            thread ThreadCreateRandomZipline( player )
+        }
+    #endif // DEVELOPER
+}
+
+void function ThreadCreateRandomZipline( entity player )
+{
+    wait 1
+
+    vector origin
+    vector angles
+
+    switch ( GetMapName() )
+    {
+        case "mp_rr_canyonlands_staging":
+            origin = < 31931, -6148, -29070 >
+            angles = < 0, -90, 0 >
+            break
+        case "mp_rr_canyonlands_64k_x_64k":
+        case "mp_rr_canyonlands_mu1":
+        case "mp_rr_canyonlands_mu1_night":
+            origin = < 858, -10082, 3340 >
+            angles = < 0, -90, 0 >
+            break
+        case "mp_rr_desertlands_64k_x_64k":
+        case "mp_rr_desertlands_64k_x_64k_nx":
+        case "mp_rr_desertlands_64k_x_64k_tt":
+            origin = < 9485, 10022, -4329 >
+            angles = < 0, -90, 0 >
+            break
+        default:
+            origin = < 0, 0, 0 >
+            angles = < 0, -90, 0 >
+        break
+
+    }
+
+    player.SetOrigin( origin )
+    player.SetAngles( angles )
+
+    float heigth = 0.0 ; ZiplineUtility zipline
+
+    for ( int i = 0 ; i < 8 ; i++)
+    {
+        string randomZipline = "debug_zipline"
+        int startSkin = RandomIntRange( 0, 3 ) ; int endSkin = RandomIntRange( 0, 3 )
+        bool panel = CoinFlip() ; int panelSkin = RandomIntRange( 0, 2 )
+        bool moving = CoinFlip()
+        bool restPoint = CoinFlip()
+        bool verticalOffset = CoinFlip()
+        bool destroySupport = CoinFlip()
+        bool vel = CoinFlip()
+        bool bottom = CoinFlip()
+        int limit = RandomIntRange( 1, 10 )
+        float startAutoDetach = RandomFloatRange( 50, 400 )
+        float endAutoDetach = RandomFloatRange( 50, 400 )
+        float startOff = RandomFloatRange( 160, 280 ) ; float endOff = RandomFloatRange( 160, 280 )
+        float width = float( RandomIntRange( 2, 4 ) )
+        float speed = float( RandomIntRange( 1, 6 ) )
+        float scale = float( RandomIntRange( 1, 2 ) )
+        float length = RandomFloatRange( 0.90, 1.0 )
+        int detachOnUse = 0 /* RandomIntRange( 0, 2 ) */ ; int detachOnSpawn = 0 /* RandomIntRange( 0, 2 ) */
+        int dirX = RandomIntRange( 0, 2 )
+        int init = 1 // RandomIntRange( 0, 2 )
+
+        if ( i == 2 ) zipline = Zipline_Register( randomZipline, origin - < 0, 200, heigth >, < 0, RandomFloatRange( 0, 180 ), 0 > )
+        else if ( i == 5 )  zipline = Zipline_Register( randomZipline, origin - < 0, 1200, heigth >, < 0, RandomFloatRange( 0, -180 ), 0 > )
+        else  zipline = Zipline_Register( randomZipline, origin - < 0, 200, heigth >, < 0, RandomFloatRange( 0, -180 ), 0 >, origin - < 0, 1200, heigth >, < 0, RandomFloatRange( 0, 180 ), 0 > )
+
+            Zipline_SetSkin( zipline, startSkin, endSkin )
+            if ( panel == true ) Zipline_CreatePanel( zipline, origin - < 100, 200, heigth >, < 0, RandomFloatRange( 0, 180 ), 0 >, panelSkin )
+            if ( moving == true ) Zipline_SetIsMoving( zipline )
+            if ( restPoint == true ) Zipline_EnableRestPoint( zipline )
+            if ( verticalOffset == true ) Zipline_DisableVerticalZiplineOffset( zipline )
+            if ( destroySupport == true ) Zipline_DestroyZiplineSupportOnPanelEnd( zipline )
+            if ( vel == true ) Zipline_SetPreserveVelocity( zipline )
+            if ( bottom == true ) Zipline_DisableDropToBottom( zipline )
+            Zipline_PanelUsableLimit( zipline, limit )
+            Zipline_SetAutoDetachDistance( zipline, startAutoDetach, endAutoDetach )
+            Zipline_SetZiplineAngles( zipline, < 0, RandomFloatRange( 0, -180 ), 0 >, < 0, RandomFloatRange( 0, 180 ), 0 > )
+            Zipline_SetArmOffset( zipline, startOff, endOff )
+            Zipline_SetWidth( zipline, width )
+            Zipline_SetSpeedScale( zipline, speed )
+            Zipline_SetScale( zipline, scale )
+            Zipline_SetLengthScale( zipline, length )
+            Zipline_SetDetachEndOnUse_OnSpawn( zipline, detachOnUse, detachOnSpawn )
+            Zipline_SetPushOffInDirectionX( zipline, dirX )
+        if ( init == 1 ) RegisteredZipline_Init( zipline )
+
+        //printt( zipline.vars.ziplineName + " = restPoint: " + restPoint + " | moving: " + moving + " | limit: " + limit + " | S/E offset: " + startOff + " " + endOff + " | U/S Detach: " + DetachOnUse + " " + DetachOnSpawn )
+
+        heigth -= 450.0
+    }
+}

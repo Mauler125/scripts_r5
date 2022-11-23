@@ -1,0 +1,195 @@
+untyped
+
+
+global function ZiplineUtility_Init
+
+
+// Global const
+    global const       ZIPLINE_EXPLOSION                        = $"p_impact_exp_small_full"
+    global const       ZIPLINE_ERROR_FX                         = $"P_ar_hot_zone_far"
+
+// Global const assets
+    global const asset ZIPLINE_ARM                              = $"mdl/industrial/zipline_arm.rmdl"
+    global const asset ZIPLINE_PLANEL_WALL                      = $"mdl/props/global_access_panel_button/global_access_panel_button_wall.rmdl"
+    global const asset ZIPLINE_PLANEL_STAND                     = $"mdl/props/global_access_panel_button/global_access_panel_button_console_w_stand.rmdl"
+    global const asset ZIPLINE_SUPPORT                          = $"mdl/industrial/security_fence_post.rmdl"
+
+// Global const float
+    global const float  ARM_MAX_OFFSET                          = 280.0
+    global const float  ARM_MIN_OFFSET                          = 160.0
+    global const float  END_AUTO_DETACH_DISTANCE                = 50.0
+    global const float  HORIZONTAL_ARM_OFFSET                   = 160.0
+    global const float  HORIZONTAL_AUTO_DETACH_DISTANCE         = 150.0
+    global const float  START_AUTO_DETACH_DISTANCE              = 100.0
+    global const float  VERTICAL_ARM_OFFSET                     = 200.0
+    global const float  ZIPLINE_LENGTH_OFFSET_SAME_Z_POS        = 0.99
+    global const float  ZIPLINE_OFFSET_FROM_FLOOR_DETACH_END    = 120.0
+
+// Global const string
+    global const string HORIZONTAL_ZIPLINE_SCRIPT_NAME          = "IsNonVerticalZipline"
+    global const string VERTICAL_ZIPLINE_SCRIPT_NAME            = "IsVerticalZipline"
+    global const string TRIGGER_ZIPLINE_SCRIPT_NAME             = "ZiplineTrigger"
+    global const string ZIPLINE_END_SOUND                       = "explo_spectre"
+    global const string ZIPLINE_PANEL_LOCKED                    = "npe_player_fail"
+    global const string ZIPLINE_START_SOUND                     = "pathfinder_zipline_expand"
+
+// Global const string error
+    global const string DEV_PRINTMESSAGE_SUBTEXT                = "Please check console log"
+    global const string DEV_PRINTMESSAGE_TEXT_PLURAL            = "Ziplines are invalid"
+    global const string DEV_PRINTMESSAGE_TEXT_SINGULAR          = "Zipline is invalid"
+    global const string REASON_ROPE_HAVE_SAME_ORIGIN            = "The rope of the zipline [ Start / End ] has the same origin, change the origin of the end zipline or the angle"
+    global const string REASON_TOO_MANY_HEIGHT_LIMIT            = "You can declare only one of this functions: SetHeightLimitFromTop() || SetHeightLimitFromFloor() || DisableVerticalZiplineOffset() || Zipline_IsIndianaJonesMode() ( Because this function changes the height with SetHeightLimitFromFloor( 2nd parameter ) )"
+    global const string REASON_ZIPLINE_NAME_LINK_DOES_NOT_EXIST = "The link name of the zipline does not exist, please check the entered name"
+    global const string REASON_ZIPLINE_ENDPOINT_IS_NULL         = "This link name is an existing zipline but not initialized or null"
+    global const string REASON_PANEL_WRONG_CONFIGURATION        = "The panel cannot be created in this configuration"
+    global const string WALL_PANEL_MODEL_DOES_NOT_EXIST         = "Canyonlands does not have the wall panel model, the model has been replaced by the stand"
+
+// Global const vector
+    global const vector TRACE_RESULTS_OFFSET                    = < 0, 0, 80 >
+    global const vector ZIPLINE_OFFSET_FROM_FLOOR               = < 0, 0, 35 >
+
+
+global enum eZiplineSkinType
+{
+    ENTIRE,    // 0
+    ARM_ONLY,  // 1
+    INVISIBLE, // 2
+    _COUNT     // 3
+}
+
+global enum eZiplineEndPointType
+{
+    START,     // 0
+    END        // 1
+}
+
+global struct ZiplineState
+{
+    bool error                = false
+    bool errorMinor           = false
+    bool firstInit            = true
+    bool supportIsValid       = false
+    bool ziplineIsValid       = false
+    bool ziplineIsDestroyed   = true
+    array < string > errorReason
+    array < string > errorMinorReason
+}
+
+global struct KVFilesSettings
+{
+    // KV.Files vars start
+    bool isVertical
+    float fadeDistance              = -1.0
+    float lengthScale               = 1.0
+    float sagHeight                 = 0.0
+    float scale                     = 1.0
+    float speedScale                = 1.0
+    float startAutoDetachDistance
+    float width                     = 2.0
+    int detachEndOnSpawn            = 0
+    int detachEndOnUse              = 0
+    int dropToBottom                = 1
+    int enableSag                   = 0
+    int preserveVelocity            = 0
+    int startPushOffInDirectionX    = 1
+    int ziplineVersion              = 3
+    string material                 = "cable/zipline.vmt"
+
+    // KV.Files vars end
+    float endAutoDetachDistance
+    int endPushOffInDirectionX      = 1
+}
+
+global struct ZiplineVars
+{
+    bool boolHeightLimitByIndianaJonesMode    = false
+    bool boolHeightLimitFromFloor             = false
+    bool boolHeightLimitFromTop               = false
+    bool destroyAll                           = false
+    bool destroyZiplineSupportOnPanelEnd      = false
+    bool disableVerticalZiplineOffset         = false
+    bool isMoving                             = false
+    bool isRopeOnly                           = false
+    bool restPoint                            = false
+    bool spawnSupportOnly                     = false
+    float endArmOffset
+    float heightLimitFromFloor
+    float heightLimitFromTop                  = 10000.0
+    float startArmOffset
+    int heightLimitInt                        = 0
+    int setSkinEnd                            = eZiplineSkinType.ENTIRE
+    int setSkinStart                          = eZiplineSkinType.ENTIRE
+    string ziplineName
+}
+
+global struct ZiplinePanel
+{
+    array < entity > newPanel
+    bool panelUsableLimit   = false
+    float maxTimer          = 60.0
+    float minTimer          = 32.0
+    int panelMaxNumberUsed  = 0
+    int panelNumberUsed     = 1
+}
+
+global enum ePanelSkinType
+{
+    WALL,  // 0
+    STAND, // 1
+    _COUNT // 2
+}
+
+global enum ePanelState
+{
+    ENABLE, // 0
+    DISABLE // 1
+}
+
+global struct ZiplineUtility
+{
+    // Entities
+    entity endEntityZiplinePoint
+    entity startEntityZiplinePoint
+    array < entity > supportArray
+
+    // Vectors entities start / end
+    vector endEntityAng
+    vector endEntityPos
+    vector endZiplineAng
+    vector endZiplinePos
+    vector startEntityAng
+    vector startEntityPos
+    vector startZiplineAng
+    vector startZiplinePos
+
+    // Structs
+    KVFilesSettings     settings
+    ZiplineVars         vars
+    ZiplinePanel        panels
+    ZiplineState        state
+
+    // Array && Table
+    array < ZiplineUtility >            ziplineArray
+    table < string, ZiplineUtility >    zipline
+}
+global ZiplineUtility ziplineUtility
+
+
+void function ZiplineUtility_Init()
+{
+    ZiplinePrecache()
+    AddCallback_EntitiesDidLoad( EntitiesDidLoad )
+
+    #if ZIPLINE_DEBUG_SCRIPTS
+        AddCallback_OnClientConnected( ZiplineErrorOnClientConnected )
+    #endif // ZIPLINE_DEBUG_SCRIPTS
+}
+
+void function EntitiesDidLoad()
+{
+    OnMapZipline_Init()
+
+    #if ZIPLINE_DEBUG_SCRIPTS && DEBUG_RANDOM_ZIPLINE
+        AddCallback_OnClientConnected( CreateRandomZiplineOnClientConnected )
+    #endif // ZIPLINE_DEBUG_SCRIPTS && DEBUG_RANDOM_ZIPLINE
+}

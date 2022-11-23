@@ -1,0 +1,195 @@
+untyped
+
+
+globalize_all_functions
+
+
+void function Zipline_DisableVerticalZiplineOffset( ZiplineUtility zipline )
+{
+    ZiplineVars vars                    = zipline.vars
+    vars.disableVerticalZiplineOffset   = true
+    vars.heightLimitInt                 += 1
+}
+
+
+void function Zipline_EnableRestPoint( ZiplineUtility zipline )
+{
+    zipline.vars.restPoint = true
+}
+
+
+void function Zipline_SetFadeDistance( ZiplineUtility zipline, float fadeDistance )
+{
+    zipline.settings.fadeDistance = fadeDistance
+}
+
+
+void function Zipline_SetHeightLimitFromTop( ZiplineUtility zipline, float heightLimit )
+{
+    ZiplineVars vars              = zipline.vars
+    vars.heightLimitFromTop       = heightLimit
+    vars.heightLimitInt           += 1
+    vars.boolHeightLimitFromTop   = true
+}
+
+void function Zipline_SetHeightLimitFromFloor( ZiplineUtility zipline, float heightLimit )
+{
+    ZiplineVars vars                = zipline.vars
+    vars.heightLimitFromFloor       = heightLimit
+    vars.heightLimitInt             += 1
+    vars.boolHeightLimitFromFloor   = true
+}
+
+
+void function Zipline_SetIsMoving( ZiplineUtility zipline )
+{
+    zipline.vars.isMoving = true
+}
+
+
+void function Zipline_SetLengthScale( ZiplineUtility zipline, float lengthScale )
+{
+    zipline.settings.lengthScale = lengthScale
+}
+
+
+void function Zipline_SetMaterial( ZiplineUtility zipline, asset material )
+{
+    PrecacheMaterial( material ) ; PrecacheModel( material )
+    zipline.settings.material = string( material )
+}
+
+
+void function Zipline_SetPreserveVelocity( ZiplineUtility zipline )
+{
+    zipline.settings.preserveVelocity = 1
+}
+
+
+void function Zipline_SetScale( ZiplineUtility zipline, float scale )
+{
+    zipline.settings.scale = scale
+}
+
+
+void function Zipline_SetSpeedScale( ZiplineUtility zipline, float speedScale )
+{
+    zipline.settings.speedScale = speedScale
+}
+
+
+void function Zipline_SetWidth( ZiplineUtility zipline, float width )
+{
+    zipline.settings.width = width
+}
+
+
+void function Zipline_SetSkin( ZiplineUtility zipline, int setSkinStart, int setSkinEnd = eZiplineSkinType.ENTIRE )
+{
+    zipline.vars.setSkinStart = setSkinStart ; zipline.vars.setSkinEnd = setSkinEnd
+}
+
+
+void function Zipline_DisableDropToBottom( ZiplineUtility zipline )
+{
+    zipline.settings.dropToBottom = 0
+}
+
+
+void function Zipline_SetArmOffset( ZiplineUtility zipline, float startArmOffset, float endArmOffset = 0.0 )
+{
+    ZiplineVars vars            = zipline.vars
+    zipline.vars.startArmOffset = startArmOffset
+    zipline.vars.endArmOffset   = endArmOffset
+}
+
+
+void function Zipline_SpawnSupportOnlyOnSpawn( ZiplineUtility zipline )
+{
+    ZiplineVars vars        = zipline.vars
+    vars.spawnSupportOnly   = true
+}
+
+
+void function Zipline_SetZiplineAngles( ZiplineUtility zipline, vector startZiplineAng, vector endZiplineAng = < 0, 0, 0 > )
+{
+    KVFilesSettings settings = zipline.settings
+    switch ( settings.isVertical )
+    {
+        case true:
+            zipline.startZiplineAng   = startZiplineAng
+            zipline.endZiplineAng     = startZiplineAng
+            break
+        case false:
+            zipline.startZiplineAng   = startZiplineAng
+            zipline.endZiplineAng     = endZiplineAng
+            break
+        default:
+        break
+    }
+}
+
+
+void function Zipline_SetAutoDetachDistance( ZiplineUtility zipline, float startAutoDetachDistance, float endAutoDetachDistance = 0.0 )
+{
+    KVFilesSettings settings            = zipline.settings
+    settings.startAutoDetachDistance    = startAutoDetachDistance
+
+    if ( endAutoDetachDistance == 0.0 )
+    {
+        if ( IsZiplineVertical( zipline ) )
+        {
+            settings.endAutoDetachDistance    = END_AUTO_DETACH_DISTANCE
+        }
+        else settings.endAutoDetachDistance   = HORIZONTAL_AUTO_DETACH_DISTANCE
+    }   else settings.startAutoDetachDistance = endAutoDetachDistance
+}
+
+
+void function Zipline_SetDetachEndOnUse_OnSpawn( ZiplineUtility zipline, int detachEndOnUse, int detachEndOnSpawn )
+{
+    KVFilesSettings settings    = zipline.settings
+    settings.detachEndOnUse     = detachEndOnUse
+    settings.detachEndOnSpawn   = detachEndOnSpawn
+}
+
+
+void function Zipline_SetPushOffInDirectionX( ZiplineUtility zipline, int PushOffInDirectionX )
+{
+    KVFilesSettings settings            = zipline.settings
+    settings.startPushOffInDirectionX   = PushOffInDirectionX
+    settings.endPushOffInDirectionX     = PushOffInDirectionX
+}
+
+
+void function Zipline_IsIndianaJonesMode( ZiplineUtility zipline, float heightLimit = ZIPLINE_OFFSET_FROM_FLOOR_DETACH_END )
+{
+    ZiplineVars vars                          = zipline.vars
+    vars.heightLimitFromFloor                 = heightLimit
+    vars.heightLimitInt                       += 1
+    vars.boolHeightLimitByIndianaJonesMode    = true
+    zipline.settings.detachEndOnSpawn         = 1
+}
+
+
+// Panels
+void function Zipline_SetPanelTimer( ZiplineUtility zipline, float minTimer, float maxTimer = 0.0 )
+{
+    ZiplinePanel panels   = zipline.panels
+    panels.minTimer       = minTimer
+    if ( maxTimer == 0.0 ) panels.maxTimer = minTimer else panels.maxTimer = maxTimer
+}
+
+
+void function Zipline_PanelUsableLimit( ZiplineUtility zipline, int maxUse = 1 )
+{
+    ZiplinePanel panels         = zipline.panels
+    panels.panelMaxNumberUsed   = maxUse
+    panels.panelUsableLimit     = true
+}
+
+
+void function Zipline_DestroyZiplineSupportOnPanelEnd( ZiplineUtility zipline )
+{
+    zipline.vars.destroyZiplineSupportOnPanelEnd = true
+}
