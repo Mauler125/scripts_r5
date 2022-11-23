@@ -14,6 +14,7 @@ void function CreateRandomZiplineOnClientConnected( entity player )
     #endif // DEVELOPER
 }
 
+// Create random zipline to test the proper functioning
 void function ThreadCreateRandomZipline( entity player )
 {
     wait 1
@@ -21,6 +22,7 @@ void function ThreadCreateRandomZipline( entity player )
     vector origin
     vector angles
 
+    // Changes the position according to the map
     switch ( GetMapName() )
     {
         case "mp_rr_canyonlands_staging":
@@ -51,6 +53,7 @@ void function ThreadCreateRandomZipline( entity player )
 
     float heigth = 0.0 ; ZiplineUtility zipline
 
+    // Creation of ziplines
     for ( int i = 0 ; i < 8 ; i++)
     {
         string randomZipline = "debug_zipline"

@@ -89,7 +89,7 @@ void function Zipline_CreatePanel( ZiplineUtility zipline, vector pos, vector an
 {
     ZiplineState state = zipline.state ; ZiplinePanel panels = zipline.panels
 
-    #if ZIPLINE_DEBUG_SCRIPTS
+    #if ZIPLINE_DEBUG_SCRIPTS // If a bug is detected
         if ( IsCanyonlandsMap() && skin == ePanelSkinType.WALL )
             ZiplineAddErrorMinorReason( zipline, WALL_PANEL_MODEL_DOES_NOT_EXIST )
     #endif // ZIPLINE_DEBUG_SCRIPTS
@@ -621,32 +621,6 @@ void function ZiplineError( entity player )
         }
         printt( "//----------------------------------" )
     }
-}
-
-
-entity function CreateZiplinePath( ZiplineUtility zipline, vector origin, string entityType, string pointname, string NextKey, bool end )
-{
-    KVFilesSettings settings = zipline.settings
-
-    entity rope = CreateEntity( entityType )
-    SetTargetName( rope, pointname )
-    rope.kv.MoveSpeed                   = 64
-    rope.kv.Slack                       = 0
-    rope.kv.Subdiv                      = 0
-    rope.kv.Width                       = settings.width
-    rope.kv.Type                        = "0"
-    rope.kv.TextureScale                = "1"
-    rope.kv.RopeMaterial                = settings.material
-    rope.kv.PositionInterpolator        = 2
-    rope.kv.perfect_circular_rotation   = 1
-    rope.kv.Zipline                     = 1
-    rope.kv.ZiplineAutoDetachDistance   = settings.startAutoDetachDistance
-    rope.kv.ZiplineSagEnable            = settings.enableSag
-    rope.kv.ZiplineSagHeight            = settings.sagHeight
-    if( !end ) rope.kv.NextKey = NextKey
-    rope.SetOrigin( origin )
-
-    return rope
 }
 
 
