@@ -59,7 +59,9 @@ void function SetupHeirloom( bool dk = false, bool br = false)
 		{	player.GiveWeapon( "mp_weapon_bolo_sword_primary", WEAPON_INVENTORY_SLOT_PRIMARY_2 )
 			player.GiveOffhandWeapon( "melee_bolo_sword", OFFHAND_MELEE )	}
 		//Dev_PrintMessage( player, "R5RELOADED CUSTOM HEIRLOOM", "Ported by @KralRindo. Powered by REPAK", 4, "LootCeremony_LootHologram_Appear_Heirloom" )
-		}
+		player.SetActiveWeaponBySlot( eActiveInventorySlot.mainHand, WEAPON_INVENTORY_SLOT_PRIMARY_2)
+		EmitSoundOnEntity( player, "LootCeremony_LootHologram_Appear_Heirloom" )
+	}
 }
 #endif
 
