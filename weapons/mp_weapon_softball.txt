@@ -35,7 +35,7 @@ WeaponData
 
 	// Models
 	"viewmodel"   									"mdl/weapons/softball_at/ptpov_softball_at.rmdl"
-	"playermodel" 									"mdl/weapons/w1128/w_w1128.rmdl"
+	"playermodel" 									"mdl/weapons/softball_at/w_softball_at.rmdl"
 	"projectilemodel" 								"mdl/weapons/bullets/mgl_grenade.rmdl"
 	"holster_type"									"rifle"
 

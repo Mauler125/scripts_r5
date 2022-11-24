@@ -236,6 +236,7 @@ void function Server_Init()
 	TitanTether_Init()
 	AiSoldiers_Init()
 	Bleedout_Init()
+	MpWeaponGrenadeGravity_Init()
 	AiSpawn_Init()
 #if NPC_TITAN_PILOT_PROTOTYPE
 	AiPilots_Init()

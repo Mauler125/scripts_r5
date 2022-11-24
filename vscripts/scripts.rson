@@ -244,6 +244,7 @@ Scripts:
 	weapons/_weapon_dialogue.nut
 	weapons/_weapon_utility.nut
 	weapons/_weapon_reactive_effects.gnut
+	weapons/mp_weapon_grenade_gravity.nut
 	weapons/mp_weapon_satchel.nut
 	weapons/mp_ability_cloak.nut
 	weapons/mp_ability_grapple.nut
@@ -273,6 +274,7 @@ Scripts:
 	weapons/mp_weapon_lstar.nut
 	weapons/mp_weapon_energy_ar.nut
 	weapons/mp_weapon_softball.nut
+	weapons/mp_weapon_smr.nut
 	weapons/mp_weapon_rspn101.nut
 	weapons/mp_weapon_vinson.nut
 	weapons/mp_weapon_mastiff.nut
