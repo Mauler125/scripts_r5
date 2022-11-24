@@ -61,11 +61,9 @@ ZiplineUtility function Zipline_RegisterRopeOnly( string ziplineName, vector sta
     if ( IsZiplineHaveSameName( ziplineName ) ) ziplineName = UniqueZiplineString( ziplineName ) ; vars.ziplineName = ziplineName ; vars.isRopeOnly = true
 
     // Start Origin
-    zipline.startEntityPos = startEntityPos ; zipline.startEntityAng  = startEntityAng
     zipline.startZiplinePos = startEntityPos
 
     // End Origin
-    zipline.endEntityPos = endEntityPos ; zipline.endEntityAng = endEntityAng
     zipline.endZiplinePos = endEntityPos
 
     // Determine if is vertical
