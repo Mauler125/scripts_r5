@@ -92,12 +92,16 @@ void function SetupWeapons()
 	SetupDevCommand( "Grenade: Arc Star", "give mp_weapon_grenade_emp" )
 	SetupDevCommand( "Grenade: Frag", "give mp_weapon_frag_grenade" )
 	SetupDevCommand( "Grenade: Thermite", "give mp_weapon_thermite_grenade" )
+	
+	// Explosives
+	SetupDevCommand( "Launcher: Softball", "give mp_weapon_softball" )
 
 	// Dev
 	//SetupDevCommand( "Dev: Dev Tool", "give mp_weapon_mdlspawner" )
 	SetupDevCommand( "Dev: Smart Pistol", "give mp_weapon_smart_pistol" )
 	SetupDevCommand( "Dev: Flight Core", "give mp_titanweapon_flightcore_rockets" )
 	SetupDevCommand( "Dev: Sheila", "give mp_weapon_mobile_hmg" )
+	SetupDevCommand( "Dev: Throwing Knife", "give mp_weapon_mobile_hmg" )
 	SetupDevCommand( "Dev: Dev Cubemap ", "give weapon_cubemap" )
 	#endif
 }

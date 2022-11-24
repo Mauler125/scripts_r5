@@ -1,9 +1,16 @@
 untyped
 
+global function ThrowingKnife_Init
 global function OnProjectileCollision_weapon_throwingknife
 
 const int KNIFE_DESPAWN_TIME = 5
 const float FLT_EPSILON = 1.0e-6
+
+void function ThrowingKnife_Init()
+{
+    PrecacheModel( $"mdl/weapons/throwingknife/ptpov_throwing_knife.rmdl" )
+    PrecacheModel( $"mdl/weapons/throwingknife/w_throwing_knife.rmdl" )
+}
 
 void function OnProjectileCollision_weapon_throwingknife( entity projectile, vector pos, vector normal, entity hitEnt, int hitBox, bool isCritical )
 {
