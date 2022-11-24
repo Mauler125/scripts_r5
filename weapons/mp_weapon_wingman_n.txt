@@ -4,10 +4,10 @@
 WeaponData
 {
 	// General
-	"printname"   									"#WPN_WINGMAN_N"
-	"shortprintname"								"#WPN_WINGMAN_N_SHORT"
-	"description" 									"#WPN_WINGMAN_N_DESC"
-	"longdesc" 										"#WPN_WINGMAN_N_LONGDESC"
+	"printname"   									"Wingman Elite"
+	"shortprintname"								"Wingman Elite"
+	"description" 									"Extended range projectile pistol with stock scope."
+	"longdesc" 										"Extended range projectile pistol with stock scope."
 
 	"fast_swap_to"									"1"
 	"ammo_pool_type"								"highcal"
