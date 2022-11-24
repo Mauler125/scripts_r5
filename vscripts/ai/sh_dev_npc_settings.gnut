@@ -101,7 +101,7 @@ void function SetupWeapons()
 	SetupDevCommand( "Dev: Smart Pistol", "give mp_weapon_smart_pistol" )
 	SetupDevCommand( "Dev: Flight Core", "give mp_titanweapon_flightcore_rockets" )
 	SetupDevCommand( "Dev: Sheila", "give mp_weapon_mobile_hmg" )
-	SetupDevCommand( "Dev: Throwing Knife", "give mp_weapon_mobile_hmg" )
+	SetupDevCommand( "Dev: Throwing Knife", "give mp_weapon_throwingknife" )
 	SetupDevCommand( "Dev: Dev Cubemap ", "give weapon_cubemap" )
 	#endif
 }

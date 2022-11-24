@@ -6,8 +6,8 @@ WeaponData
 	"description" 									"Throwing Knife"
 	"longdesc" 										"Throwing Knife"
 
-	"menu_icon"										"rui/hud/loot/loot_swap_icon"
-	"hud_icon"										"rui/hud/loot/loot_swap_icon"
+	"menu_icon"										"rui/weapon_icons/r5/weapon_throwingknife"
+	"hud_icon"										"rui/weapon_icons/r5/weapon_throwingknife"
 
 	"weapon_type_flags"								"WPT_PRIMARY"
 	"is_toss_weapon"								"1"
