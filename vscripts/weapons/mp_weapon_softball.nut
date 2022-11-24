@@ -45,7 +45,7 @@ void function FireGrenade( entity weapon, WeaponPrimaryAttackParams attackParams
 	fireGrenadeParams.pos = attackParams.pos
 	fireGrenadeParams.vel = attackParams.dir
 	fireGrenadeParams.angVel = angularVelocity
-	fireGrenadeParams.fuseTime = 15.0
+	//fireGrenadeParams.fuseTime = 15.0
 	fireGrenadeParams.scriptTouchDamageType = damageType // when a grenade "bonks" something, that shouldn't count as explosive.explosive
 	fireGrenadeParams.scriptExplosionDamageType = damageType
 	fireGrenadeParams.clientPredicted = !isNPCFiring
@@ -59,26 +59,6 @@ void function FireGrenade( entity weapon, WeaponPrimaryAttackParams attackParams
 		#if SERVER
 			EmitSoundOnEntity( nade, "Weapon_softball_Grenade_Emitter" )
 			Grenade_Init( nade, weapon )
-
-			thread function () : ( nade )
-			{
-                while( IsValid( nade ) )
-				{
-					if( IsValid( nade ) && LengthSqr( nade.GetSmoothedVelocity() ) <= 6000 )
-					{
-						wait FUSE_TIME
-						if( IsValid( nade ) && LengthSqr( nade.GetSmoothedVelocity() ) <= 6000 )
-						    break
-					}
-
-                    WaitFrame()
-				}
-
-				wait FUSE_TIME
-				if ( IsValid( nade ) )
-					nade.GrenadeExplode( ZERO_VECTOR )
-
-			}()
 		#else
 			entity weaponOwner = weapon.GetWeaponOwner()
 			SetTeam( nade, weaponOwner.GetTeam() )
@@ -90,12 +70,12 @@ void function OnProjectileCollision_weapon_softball( entity projectile, vector p
 {
 	bool didStick = PlantSuperStickyGrenade( projectile, pos, normal, hitEnt, hitbox )
 
+	if ( !didStick )
+		return
+
 	#if SERVER
 	projectile.SetGrenadeTimer( FUSE_TIME )
 	#endif
-
-	if ( !didStick )
-		return
 
 	#if SERVER
 		if ( IsAlive( hitEnt ) && hitEnt.IsPlayer() )
