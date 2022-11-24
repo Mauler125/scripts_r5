@@ -1,0 +1,30 @@
+#base "mp_weapon_melee_survival.txt"
+
+// hello
+WeaponData
+{
+	// General
+	"printname"   									"Melee"
+	"shortprintname"								"Melee"
+	"description" 									"Description needed"
+	"longdesc"										"Description needed"
+	
+	"weapon_type_flags"								"WPT_MELEE"
+	
+	"holster_type"									"pistol"
+	"holster_offset"						    	"2 0 2"
+	"holster_angles_offset"						    "120 -10 -10"  // "pitch roll yaw"
+	
+	// Behavior
+	"deployfirst_time"								"1.9"
+
+	// Animation
+	"activitymodifier3P"							"kunai"
+
+	// Models
+	"viewmodel"   									"mdl/weapons/kunai/ptpov_data_knife.rmdl"
+	"playermodel" 									"mdl/weapons/data_knife/data_knife.rmdl"
+
+	//"OnWeaponActivate"								"OnWeaponActivate_weapon_wraith_kunai_primary"
+	//"OnWeaponDeactivate"							"OnWeaponDeactivate_weapon_wraith_kunai_primary"
+}

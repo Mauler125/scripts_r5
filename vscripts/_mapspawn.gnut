@@ -299,6 +299,9 @@ void function CodeCallback_MapSpawn() // original script entry point
 		
 		PrecacheWeapon( $"mp_weapon_melee_boxing_ring")
 		PrecacheWeapon( $"melee_boxing_ring")
+		
+		PrecacheWeapon( $"mp_weapon_dataknife_kunai_primary")
+		PrecacheWeapon( $"melee_dataknife_kunai")
 	}
 
 	//Unofficial s3 weapons section
