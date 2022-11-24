@@ -69,6 +69,7 @@ global enum eDamageSourceId
 	mp_weapon_r97
 	mp_weapon_dmr
 	mp_weapon_wingman
+	mp_weapon_wingman_n
 	mp_weapon_wingmanelite
 	mp_weapon_semipistol
 	mp_weapon_autopistol
@@ -442,10 +443,11 @@ void function DamageTypes_Init()
 	}
 
 	file.damageSourceIDToImage[eDamageSourceId.melee_shadowsquad_hands] <- $"rui/gamemodes/shadow_squad/shadow_icon_small"
-	file.damageSourceIDToImage[eDamageSourceId.mp_weapon_volt_smg] <- $"rui/weapon_icons/r5/weapon_volt"
-	file.damageSourceIDToImage[eDamageSourceId.mp_weapon_sentinel] <- $"rui/weapon_icons/r5/weapon_sentinel"
-	file.damageSourceIDToImage[eDamageSourceId.mp_weapon_softball] <- $"r2_ui/menus/loadout_icons/primary_weapon/primary_softball"
-	file.damageSourceIDToImage[eDamageSourceId.mp_weapon_mobile_hmg] <- $"rui/weapon_icons/r5/weapon_rampart_turret"
+	file.damageSourceIDToImage[eDamageSourceId.mp_weapon_volt_smg] 		<- $"rui/weapon_icons/r5/weapon_volt"
+	file.damageSourceIDToImage[eDamageSourceId.mp_weapon_sentinel] 		<- $"rui/weapon_icons/r5/weapon_sentinel"
+	file.damageSourceIDToImage[eDamageSourceId.mp_weapon_softball] 		<- $"r2_ui/menus/loadout_icons/primary_weapon/primary_softball"
+	file.damageSourceIDToImage[eDamageSourceId.mp_weapon_wingman_n]		<- $"r2_ui/menus/loadout_icons/primary_weapon/primary_wingman_elite"
+	file.damageSourceIDToImage[eDamageSourceId.mp_weapon_mobile_hmg]	<- $"rui/weapon_icons/r5/weapon_rampart_turret"
 
 	file.damageSourceIDToName =
 	{
@@ -586,7 +588,8 @@ void function DamageTypes_Init()
 		[ eDamageSourceId.melee_dataknife_kunai ] 					= "Dataknife Kunai",
 		[ eDamageSourceId.mp_weapon_dataknife_kunai_primary ] 		= "Dataknife Kunai",
 		[ eDamageSourceId.mp_weapon_throwingknife ] 				= "Throwing Knife",
-		[ eDamageSourceId.mp_weapon_satchel ] 	 					= "Satchel"
+		[ eDamageSourceId.mp_weapon_satchel ] 	 					= "Satchel",
+		[ eDamageSourceId.mp_weapon_wingman_n ] 	 					= "Wingman Elite"
 	}
 
 	#if DEVELOPER
