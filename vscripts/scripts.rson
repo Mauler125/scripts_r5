@@ -258,6 +258,7 @@ Scripts:
 	weapons/mp_ability_sonar.nut
 	weapons/mp_weapon_basic_bolt.nut
 	//weapons/mp_weapon_grenade_electric_smoke.nut
+	weapons/mp_weapon_throwingknife.nut
 	weapons/mp_weapon_defender.nut
 	weapons/mp_weapon_defender_sustained.nut
 	weapons/mp_weapon_deployable_cover.nut
@@ -271,6 +272,7 @@ Scripts:
 	weapons/mp_weapon_lmg.nut
 	weapons/mp_weapon_lstar.nut
 	weapons/mp_weapon_energy_ar.nut
+	weapons/mp_weapon_softball.nut
 	weapons/mp_weapon_rspn101.nut
 	weapons/mp_weapon_vinson.nut
 	weapons/mp_weapon_mastiff.nut

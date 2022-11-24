@@ -238,7 +238,6 @@ void function CodeCallback_MapSpawn() // original script entry point
 	//Weapons
 
 	PrecacheWeapon( $"mp_weapon_melee_survival" )
-	PrecacheWeapon( $"mp_weapon_mdlspawner" )
 	PrecacheWeapon( $"mp_weapon_alternator_smg" )
 	PrecacheWeapon( $"mp_weapon_bubble_bunker" )
 	PrecacheWeapon( $"mp_weapon_dmr" )
@@ -268,9 +267,6 @@ void function CodeCallback_MapSpawn() // original script entry point
 	PrecacheWeapon( $"mp_ability_consumable" )
 	PrecacheWeapon( $"mp_weapon_g2" )
 	PrecacheWeapon( $"mp_weapon_grenade_bangalore" )
-	PrecacheWeapon( $"mp_weapon_car" )
-	PrecacheWeapon( $"mp_weapon_dragon_lmg" )
-	PrecacheWeapon( $"mp_weapon_3030" )
 	PrecacheWeapon( $"mp_weapon_incap_shield" )
 	PrecacheWeapon( $"mp_ability_care_package" )
 	PrecacheWeapon( $"mp_ability_hunt_mode" )
@@ -282,23 +278,45 @@ void function CodeCallback_MapSpawn() // original script entry point
 	PrecacheWeapon( $"mp_weapon_rspn101" )
 	PrecacheWeapon( $"mp_weapon_defender" )
 	PrecacheWeapon( $"mp_weapon_jump_pad" )
-	PrecacheWeapon( $"mp_weapon_smart_pistol" )
+	
 	PrecacheWeapon( $"mp_weapon_grenade_creeping_bombardment" )
 	PrecacheWeapon( $"mp_weapon_grenade_defensive_bombardment" )
-	PrecacheWeapon( $"mp_weapon_grenade_sonar" )
-	PrecacheWeapon( $"mp_weapon_grenade_electric_smoke" )
-	PrecacheWeapon( $"mp_weapon_deployable_cover" )
-	PrecacheWeapon( $"melee_data_knife" )
-	PrecacheWeapon( $"melee_bolo_sword" )
-	PrecacheWeapon( $"mp_weapon_bolo_sword_primary" )
-	PrecacheWeapon( $"mp_weapon_volt_smg" )
-	PrecacheWeapon( $"mp_weapon_sentinel" )
-	PrecacheWeapon( $"mp_weapon_frag_drone" )
-	PrecacheWeapon( $"mp_weapon_clickweapon")
-	PrecacheWeapon( $"mp_weapon_clickweaponauto")
-	PrecacheWeapon( $"mp_weapon_satchel")
-	PrecacheWeapon( $"mp_weapon_mobile_hmg")
-	PrecacheWeapon( $"mp_titanweapon_flightcore_rockets")
+	
+	
+
+
+	//Ported weapons section
+	{
+		PrecacheWeapon( $"mp_weapon_satchel" )
+		PrecacheWeapon( $"mp_weapon_mobile_hmg" )
+		PrecacheWeapon( $"mp_titanweapon_flightcore_rockets" )
+		PrecacheWeapon( $"mp_weapon_softball" )
+		PrecacheWeapon( $"mp_weapon_sentinel" )
+		PrecacheWeapon( $"mp_weapon_throwingknife" )
+		
+		PrecacheWeapon( $"melee_bolo_sword" )
+		PrecacheWeapon( $"mp_weapon_bolo_sword_primary" )
+		
+		PrecacheWeapon( $"mp_weapon_melee_boxing_ring")
+		PrecacheWeapon( $"melee_boxing_ring")
+	}
+
+	//Unofficial s3 weapons section
+	{
+		PrecacheWeapon( $"mp_weapon_volt_smg" )
+		PrecacheWeapon( $"mp_weapon_frag_drone" )
+		PrecacheWeapon( $"mp_weapon_clickweapon")
+		PrecacheWeapon( $"mp_weapon_clickweaponauto")
+		PrecacheWeapon( $"mp_weapon_smart_pistol" )
+		PrecacheWeapon( $"mp_weapon_grenade_sonar" )
+		PrecacheWeapon( $"mp_weapon_grenade_electric_smoke" )
+		PrecacheWeapon( $"mp_weapon_deployable_cover" )
+		PrecacheWeapon( $"melee_data_knife" )
+		PrecacheWeapon( $"mp_weapon_mdlspawner" )
+		//PrecacheWeapon( $"mp_weapon_3030" )//Disabled til we get original models
+		//PrecacheWeapon( $"mp_weapon_car" )
+		//PrecacheWeapon( $"mp_weapon_dragon_lmg" )
+	}
 
 	//if ( GetMapName() == "mp_rr_canyonlands_staging" ) //Precache NPC Weapons For Firing Range
 	{
