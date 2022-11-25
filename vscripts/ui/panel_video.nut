@@ -281,13 +281,8 @@ void function UICodeCallback_ResolutionChanged( bool askForConfirmation )
 	foreach ( func in uiGlobal.resolutionChangedCallbacks )
 			func()
 
-	if(ISAIMTRAINER){
-		CloseAllMenus()
-		RunClientScript("ServerCallback_OpenFRChallengesMainMenu", PlayerKillsForChallengesUI)
-	} else {
-		CloseAllMenus()
-		AdvanceMenu( GetMenu( "MiscMenu" ) )
-	}
+	CloseAllMenus()
+	AdvanceMenu( GetMenu( "MiscMenu" ) )
 }
 
 
@@ -306,10 +301,6 @@ void function RevertVideoSettingsThread()
 	WaitFrame()
 	VideoOptions_FillInCurrent( file.videoPanel )
 	uiGlobal.videoSettingsChanged = false
-	if(ISAIMTRAINER){
-		CloseAllMenus()
-		RunClientScript("ServerCallback_OpenFRChallengesMainMenu", PlayerKillsForChallengesUI)
-	}
 }
 
 

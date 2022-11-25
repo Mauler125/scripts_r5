@@ -463,23 +463,6 @@ void function UpdateRUIWeaponData( entity player, var rui, entity weapon, int ta
 			RuiSetFloat3( rui, "ammoColor", <0.0, 0.0, 0.0> )
 		}
 	}
-	if(RGB_HUD)
-		thread RGBRui(rui)
-}
-
-void function RGBRui(var rui)
-{
-	entity player = GetLocalClientPlayer()
-	while(RGB_HUD)
-	{
-		int randomr = RandomInt(255)
-		int randomg = RandomInt(255) 
-		int randomb = RandomInt(255)	
-		RuiSetFloat3( rui, "ammoColor", SrgbToLinear( <randomr, randomg, randomb> / 255.0 ))
-		RuiSetFloat3( rui, "ammoColorTab0", SrgbToLinear( <randomr, randomg, randomb> / 255.0 ))
-		RuiSetFloat3( rui, "ammoColorTab1", SrgbToLinear( <randomr, randomg, randomb> / 255.0 ))
-		wait 0.1
-	}
 }
 
 void function PrimaryWeapon_UpdateFireSelectHUD( entity weapon )

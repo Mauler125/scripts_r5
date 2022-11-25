@@ -80,7 +80,7 @@ void function FiringRangeGameMode_Init()
 	PrecacheParticleSystem( FIRINGRANGE_FLICK_TARGET_PARTICLE_HIT )
 	PrecacheParticleSystem( FIRINGRANGE_ITEM_RESPAWN_PARTICLE )
 
-	if ( !IsFiringRangeGameMode() || GetCurrentPlaylistVarBool( "r5reloaded_aimtrainer", false ))
+	if ( !IsFiringRangeGameMode() )
 		return
 
 	Remote_RegisterClientFunction( "SCB_BroadcastFriendlyFireChange", "entity" )

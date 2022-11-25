@@ -402,29 +402,6 @@ void function CodeCallback_OnMeleePressed( entity attacker, entity meleeInputWea
 		if ( IsFallLTM() )
 			isShadowSquad = IsPlayerShadowSquad( attacker )
 
-	#if SERVER
-	if(GetCurrentPlaylistVarBool( "r5reloaded_aimtrainer", false ))
-	{
-		entity player = attacker
-		int basedamage = 30 //!FIXME
-		int ornull projectilespershot = 1 //!FIXME
-		int pellets = 1
-		if(projectilespershot != null)
-		{
-			pellets = expect int(projectilespershot)
-			player.p.totalPossibleDamage += (basedamage * pellets)
-		}
-		else 
-			player.p.totalPossibleDamage += basedamage
-
-		//add 1 hit to total hits
-		player.p.straferTotalShots += (1*pellets)
-
-		Remote_CallFunction_NonReplay(player, "ServerCallback_LiveStatsUIDamageViaWeaponAttack", basedamage, basedamage * pellets)
-		Remote_CallFunction_NonReplay(player, "ServerCallback_LiveStatsUIAccuracyViaTotalShots", pellets)
-	}
-	#endif
-
 		bool doorLungeEnabled = !isShadowSquad && GetCurrentPlaylistVarBool( "blockable_door_can_be_hurt_by_special_kick", true )
 		entity lungeTarget    = GetMeleeAttackLungeTarget( attacker, meleeAttackWeapon )
 

@@ -416,7 +416,7 @@ void function DEV_SpawnInfectedSoldierAtCrosshair()
 	vector angles = Vector( 0, 0, 0 )
 
 	entity Infected = CreateInfected( 99, origin, angles )
-
+	Infected.SetSkin(RandomInt(3))
 	DispatchSpawn( Infected )
 }
 

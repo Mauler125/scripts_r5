@@ -302,11 +302,9 @@ void function WeaponUtility_Init()
 	PrecacheImpactEffectTable( CLUSTER_ROCKET_FX_TABLE )
 
 	#if SERVER
-		if(!GetCurrentPlaylistVarBool( "r5reloaded_aimtrainer", false ))
-		{
-			AddDamageCallbackSourceID( eDamageSourceId.mp_weapon_grenade_emp, EMP_DamagedPlayerOrNPC )
-			AddDamageCallbackSourceID( eDamageSourceId.damagedef_ticky_arc_blast, EMP_DamagedPlayerOrNPC )
-		}
+		AddDamageCallbackSourceID( eDamageSourceId.mp_weapon_grenade_emp, EMP_DamagedPlayerOrNPC )
+		AddDamageCallbackSourceID( eDamageSourceId.damagedef_ticky_arc_blast, EMP_DamagedPlayerOrNPC )
+
 		AddCallback_OnPlayerRespawned( PROTO_TrackedProjectile_OnPlayerRespawned )
 		AddCallback_OnPlayerKilled( PAS_CooldownReduction_OnKill )
 		AddCallback_OnPlayerGetsNewPilotLoadout( OnPlayerGetsNewPilotLoadout )

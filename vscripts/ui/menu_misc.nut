@@ -70,10 +70,5 @@ void function OnMiscMenu_NavigateBack()
 
 	if ( IsLobby() )
 		UI_SetPresentationType( CurrentPresentationType )
-
-	if(ISAIMTRAINER){
-		CloseAllMenus()
-		RunClientScript("ServerCallback_OpenFRChallengesMainMenu", PlayerKillsForChallengesUI)
-	}
 }
 

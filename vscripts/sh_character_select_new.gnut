@@ -25,7 +25,6 @@ global function UI_InitCharacterSelectNewMenu
 global function UI_RunCharacterSelect
 global function UI_CloseCharacterSelect
 global function ClientToUI_UpdateSquadMute
-global function ResetCharacterSelectAimTrainer
 #endif
 
 #if CLIENT
@@ -806,13 +805,6 @@ void function UI_CloseCharacterSelect()
 	else if ( IsMenuInMenuStack( fileForever.menu ) )
 		RemoveFromMenuStack( fileForever.menu )
 }
-
-void function ResetCharacterSelectAimTrainer()
-{
-	CloseAllMenus()
-	RunClientScript("ServerCallback_OpenFRChallengesSettings")
-	RunClientScript("ServerCallback_CoolCameraOnMenu")
-}
 #endif //UI
 
 #if CLIENT
@@ -878,11 +870,6 @@ void function CloseCharacterSelectNewMenu()
 	fileLevel.menuEntsReady = false
 
 	OnCharacterSelectNewMenuClosed_RemoveCallbacks()
-	
-	if(GetCurrentPlaylistVarBool( "r5reloaded_aimtrainer", false ))
-	{
-		RunUIScript( "ResetCharacterSelectAimTrainer" )
-	}
 }
 
 void function OnCharacterSelectNewMenuClosed_RemoveCallbacks()

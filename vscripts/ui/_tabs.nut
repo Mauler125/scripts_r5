@@ -303,7 +303,7 @@ void function ShowPanel( var panel )
 
 	if ( IsMenuVisible( panel ) )
 		return
-	CloseAllAttachmentsBoxes()
+	
 	ShowPanelInternal( panel )
 }
 
