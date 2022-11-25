@@ -88,17 +88,17 @@ void function SetupWeapons()
 	SetupDevCommand( "Pistol: RE-45", "give mp_weapon_autopistol" )
 	SetupDevCommand( "Pistol: Wingman", "give mp_weapon_wingman" )
 	SetupDevCommand( "Pistol: Wingman Elite", "give mp_weapon_wingman_n" )
-
-	// Grenades
-	SetupDevCommand( "Grenade: Arc Star", "give mp_weapon_grenade_emp" )
-	SetupDevCommand( "Grenade: Frag", "give mp_weapon_frag_grenade" )
-	SetupDevCommand( "Grenade: Thermite", "give mp_weapon_thermite_grenade" )
 	
-	// Explosives
+	// Explosives/Launchers
 	SetupDevCommand( "Anti-Titan: Softball", "give mp_weapon_softball" )
 	SetupDevCommand( "Anti-Titan: Archer", "give mp_weapon_rocket_launcher" )
 	SetupDevCommand( "Anti-Titan: Sidewinder SMR", "give mp_weapon_smr" )
 	SetupDevCommand( "Anti-Titan: EPG", "give mp_weapon_epg" )
+	
+	// Grenades
+	SetupDevCommand( "Grenade: Arc Star", "give mp_weapon_grenade_emp" )
+	SetupDevCommand( "Grenade: Frag", "give mp_weapon_frag_grenade" )
+	SetupDevCommand( "Grenade: Thermite", "give mp_weapon_thermite_grenade" )
 
 	// Dev
 	//SetupDevCommand( "Dev: Dev Tool", "give mp_weapon_mdlspawner" )
