@@ -91,16 +91,18 @@ global enum eDamageSourceId
 	mp_weapon_wrecking_ball
 	mp_weapon_melee_survival
 	mp_weapon_pdw
-	mp_weapon_epg
 	mp_weapon_energy_ar
 	mp_weapon_volt_smg
 	mp_weapon_defender
-	mp_weapon_softball
 	mp_weapon_warmachine
 	mp_weapon_car
 	mp_weapon_3030
 	mp_weapon_dragon_lmg
 	mp_weapon_throwingknife
+	mp_weapon_softball
+	mp_weapon_epg
+	mp_weapon_smr
+	mp_weapon_rocket_launcher
 	//
 	melee_pilot_emptyhanded
 	melee_pilot_arena
@@ -442,12 +444,15 @@ void function DamageTypes_Init()
 	{
 	}
 
-	file.damageSourceIDToImage[eDamageSourceId.melee_shadowsquad_hands] <- $"rui/gamemodes/shadow_squad/shadow_icon_small"
-	file.damageSourceIDToImage[eDamageSourceId.mp_weapon_volt_smg] 		<- $"rui/weapon_icons/r5/weapon_volt"
-	file.damageSourceIDToImage[eDamageSourceId.mp_weapon_sentinel] 		<- $"rui/weapon_icons/r5/weapon_sentinel"
-	file.damageSourceIDToImage[eDamageSourceId.mp_weapon_softball] 		<- $"r2_ui/menus/loadout_icons/primary_weapon/primary_softball"
-	file.damageSourceIDToImage[eDamageSourceId.mp_weapon_wingman_n]		<- $"r2_ui/menus/loadout_icons/primary_weapon/primary_wingman_elite"
-	file.damageSourceIDToImage[eDamageSourceId.mp_weapon_mobile_hmg]	<- $"rui/weapon_icons/r5/weapon_rampart_turret"
+	file.damageSourceIDToImage[eDamageSourceId.melee_shadowsquad_hands] 	<- $"rui/gamemodes/shadow_squad/shadow_icon_small"
+	file.damageSourceIDToImage[eDamageSourceId.mp_weapon_volt_smg] 			<- $"rui/weapon_icons/r5/weapon_volt"
+	file.damageSourceIDToImage[eDamageSourceId.mp_weapon_sentinel] 			<- $"rui/weapon_icons/r5/weapon_sentinel"
+	file.damageSourceIDToImage[eDamageSourceId.mp_weapon_softball] 			<- $"r2_ui/menus/loadout_icons/primary_weapon/primary_softball"
+	file.damageSourceIDToImage[eDamageSourceId.mp_weapon_epg] 				<- $"r2_ui/menus/loadout_icons/primary_weapon/primary_epg1"
+	file.damageSourceIDToImage[eDamageSourceId.mp_weapon_rocket_launcher] 	<- $"r2_ui/menus/loadout_icons/anti_titan/at_archer"
+	file.damageSourceIDToImage[eDamageSourceId.mp_weapon_smr] 				<- $"r2_ui/menus/loadout_icons/anti_titan/at_sidewinder"
+	file.damageSourceIDToImage[eDamageSourceId.mp_weapon_wingman_n]			<- $"r2_ui/menus/loadout_icons/primary_weapon/primary_wingman_elite"
+	file.damageSourceIDToImage[eDamageSourceId.mp_weapon_mobile_hmg]		<- $"rui/weapon_icons/r5/weapon_rampart_turret"
 
 	file.damageSourceIDToName =
 	{
@@ -565,6 +570,9 @@ void function DamageTypes_Init()
 		[ eDamageSourceId.mp_weapon_sentinel ] 						= "Sentinel",
 		[ eDamageSourceId.mp_weapon_mobile_hmg ] 					= "Sheila",
 		[ eDamageSourceId.mp_weapon_softball ] 						= "Softball",
+		[ eDamageSourceId.mp_weapon_epg ] 							= "EPG",
+		[ eDamageSourceId.mp_weapon_smr ] 							= "Sidewinder SMR",
+		[ eDamageSourceId.mp_weapon_rocket_launcher ] 				= "Archer",
 		[ eDamageSourceId.mp_weapon_car ] 							= "Car SMG",
 		[ eDamageSourceId.mp_weapon_3030 ] 							= "30-30 Repeater",
 		[ eDamageSourceId.mp_weapon_dragon_lmg ] 					= "Rampage LMG",
