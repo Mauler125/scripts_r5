@@ -792,6 +792,10 @@ void function SetupPrototypesDevMenu()
 {
 	SetupDevCommand( "Toggle Akimbo With Current Weapon", "script DEV_ToggleAkimboWeapon(gp()[0])" )
 	SetupDevCommand( "Toggle Akimbo With Holstered Weapon", "script DEV_ToggleAkimboWeaponAlt(gp()[0])" )
+	SetupDevCommand( "Change Legend - R2 Pilot", "script BecomePilot(gp()[0])" )
+	//SetupDevCommand( "Change Legend - Revenant", "script BecomeRevenant(gp()[0])" )
+	SetupDevCommand( "Change Legend - Loba", "script BecomeLoba(gp()[0])" )
+	//SetupDevCommand( "Change Legend - Rampart", "script BecomeRampart(gp()[0])" )
 	// SetupDevCommand( "Change to Shadow Squad", "script Dev_ShadowFormEnable( GP() )" )
 }
 
