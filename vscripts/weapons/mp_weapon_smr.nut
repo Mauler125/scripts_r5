@@ -21,19 +21,19 @@ var function OnWeaponPrimaryAttack_weapon_smr( entity weapon, WeaponPrimaryAttac
 	weapon.EmitWeaponNpcSound( LOUD_WEAPON_AI_SOUND_RADIUS_MP, 0.2 )
 
 	entity weaponOwner = weapon.GetWeaponOwner()
-	//vector bulletVec = ApplyVectorSpread( attackParams.dir, weaponOwner.GetAttackSpreadAngle() - 1.0 )
-	//attackParams.dir = bulletVec
+	vector bulletVec = ApplyVectorSpread( attackParams.dir, weapon.GetAttackSpreadAngle() - 1.0 )
+	attackParams.dir = bulletVec
 
 	if ( IsServer() || weapon.ShouldPredictProjectiles() )
 	{
 		WeaponFireMissileParams fireMissileParams
 		fireMissileParams.pos = attackParams.pos
 		fireMissileParams.dir = attackParams.dir
-		fireMissileParams.speed = 1.5
-		fireMissileParams.scriptTouchDamageType = damageTypes.projectileImpact
-		fireMissileParams.scriptExplosionDamageType = damageTypes.explosive
+		fireMissileParams.speed = 1.0
+		fireMissileParams.scriptTouchDamageType = weapon.GetWeaponDamageFlags()
+		fireMissileParams.scriptExplosionDamageType = weapon.GetWeaponDamageFlags()
 		fireMissileParams.doRandomVelocAndThinkVars = false
-		fireMissileParams.clientPredicted = false
+		fireMissileParams.clientPredicted = true
 		entity missile = weapon.FireWeaponMissile( fireMissileParams )
 		if ( missile )
 		{
@@ -55,7 +55,7 @@ var function OnWeaponNpcPrimaryAttack_weapon_smr( entity weapon, WeaponPrimaryAt
 		WeaponFireMissileParams fireMissileParams
 		fireMissileParams.pos = attackParams.pos
 		fireMissileParams.dir = attackParams.dir
-		fireMissileParams.speed = 4600
+		fireMissileParams.speed = 1.0
 		fireMissileParams.scriptTouchDamageType = damageTypes.projectileImpact
 		fireMissileParams.scriptExplosionDamageType = damageTypes.explosive
 		fireMissileParams.doRandomVelocAndThinkVars = false
