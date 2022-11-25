@@ -68,10 +68,18 @@ void function FireGrenade( entity weapon, WeaponPrimaryAttackParams attackParams
 
 void function OnProjectileCollision_weapon_softball( entity projectile, vector pos, vector normal, entity hitEnt, int hitbox, bool isCritical )
 {
-	bool didStick = PlantSuperStickyGrenade( projectile, pos, normal, hitEnt, hitbox )
-	if ( !didStick )
-		return
+    table collisionParams =
+    {
+        pos = pos,
+        normal = normal,
+        hitEnt = hitEnt,
+        hitbox = hitbox
+    }
 
+    bool didStick = PlantStickyEntityThatBouncesOffWalls( projectile, collisionParams, 0.2 )
+    if ( !didStick )
+        return
+	
 	#if SERVER
 	projectile.SetGrenadeTimer( FUSE_TIME )
 	#endif
