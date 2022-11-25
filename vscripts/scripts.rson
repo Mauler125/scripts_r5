@@ -245,6 +245,7 @@ Scripts:
 	weapons/_weapon_utility.nut
 	weapons/_weapon_reactive_effects.gnut
 	weapons/mp_weapon_grenade_gravity.nut
+	weapons/mp_weapon_rocket_launcher.nut
 	weapons/mp_weapon_satchel.nut
 	weapons/mp_ability_cloak.nut
 	weapons/mp_ability_grapple.nut

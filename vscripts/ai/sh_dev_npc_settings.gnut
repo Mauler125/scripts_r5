@@ -95,7 +95,10 @@ void function SetupWeapons()
 	SetupDevCommand( "Grenade: Thermite", "give mp_weapon_thermite_grenade" )
 	
 	// Explosives
-	SetupDevCommand( "Launcher: Softball", "give mp_weapon_softball" )
+	SetupDevCommand( "Anti-Titan: Softball", "give mp_weapon_softball" )
+	SetupDevCommand( "Anti-Titan: Archer", "give mp_weapon_rocket_launcher" )
+	SetupDevCommand( "Anti-Titan: Sidewinder SMR", "give mp_weapon_smr" )
+	SetupDevCommand( "Anti-Titan: EPG", "give mp_weapon_epg" )
 
 	// Dev
 	//SetupDevCommand( "Dev: Dev Tool", "give mp_weapon_mdlspawner" )

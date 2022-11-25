@@ -295,6 +295,7 @@ void function CodeCallback_MapSpawn() // original script entry point
 		PrecacheWeapon( $"mp_weapon_throwingknife" )
 		PrecacheWeapon( $"mp_weapon_wingman_n" )
 		PrecacheWeapon( $"mp_weapon_smr" )
+		PrecacheWeapon( $"mp_weapon_rocket_launcher" )
 		
 		PrecacheWeapon( $"melee_bolo_sword" )
 		PrecacheWeapon( $"mp_weapon_bolo_sword_primary" )
