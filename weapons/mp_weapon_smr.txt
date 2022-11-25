@@ -400,6 +400,23 @@ WeaponData
 			"ui8_enable"		"1"
         	"bodygroup6_set"	"1"
         }
+
+		burn_mod_smr
+		{
+			"is_burn_mod"		"1"
+
+			"damage_near_value"   							"90"
+			"damage_far_value"								"90"
+			"damage_near_value_titanarmor"					"250"
+			"damage_far_value_titanarmor" 					"250"
+
+			//effects
+			"projectile_trail_effect_0" 					"Rocket_Smoke_SMR_burn"
+			"fx_muzzle_flash_view"							"P_wpn_muzzleflash_smr_fp_burn"
+			"fx_muzzle_flash_world"							"P_wpn_muzzleflash_smr_burn"
+
+
+		}
 	}
 
 	"ui1_enable"		"0"
@@ -415,7 +432,7 @@ WeaponData
 		}
 	}
 
-	"ui8_enable"		"1"
+	"ui8_enable"		"0"
 	UiData8
 	{
 		"ui"									"ui/pro_screen_panel"
