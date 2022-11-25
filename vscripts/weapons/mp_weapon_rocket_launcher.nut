@@ -6,7 +6,12 @@ global function OnWeaponActivate_weapon_rocket_launcher
 global function OnWeaponDeactivate_weapon_rocket_launcher
 global function OnWeaponPrimaryAttack_weapon_rocket_launcher
 global function OnWeaponOwnerChanged_weapon_rocket_launcher
-global function OnWeaponReload_weapon_rocket_launcher
+
+#if SERVER
+//global function OnWeaponNpcPrimaryAttack_weapon_rocket_launcher
+//global function OnWeaponNpcPrimaryAttack_S2S_weapon_rocket_launcher
+#endif // #if SERVER
+
 
 //14 //RUMBLE_FLAT_BOTH
 const LOCKON_RUMBLE_INDEX 	= 1 //RUMBLE_PISTOL
@@ -64,7 +69,11 @@ void function OnWeaponActivate_weapon_rocket_launcher( entity weapon )
 		SmartAmmo_SetAllowUnlockedFiring( weapon )
 		SmartAmmo_SetMissileSpeed( weapon, 1200 )
 		SmartAmmo_SetMissileHomingSpeed( weapon, 125 )
-		SmartAmmo_SetMissileSpeedLimit( weapon, 1400 )
+
+		if ( weapon.HasMod( "burn_mod_rocket_launcher" ) )
+			SmartAmmo_SetMissileSpeedLimit( weapon, 1300 )
+		else
+			SmartAmmo_SetMissileSpeedLimit( weapon, 1400 )
 		
 		SmartAmmo_SetMissileShouldDropKick( weapon, false )  // TODO set to true to see drop kick behavior issues
 		SmartAmmo_SetUnlockAfterBurst( weapon, true )
@@ -155,18 +164,51 @@ var function OnWeaponPrimaryAttack_weapon_rocket_launcher( entity weapon, Weapon
 	}
 }
 
-void function OnWeaponReload_weapon_rocket_launcher( entity weapon, int milestoneIndex )
+#if SERVER
+var function OnWeaponNpcPrimaryAttack_S2S_weapon_rocket_launcher( entity weapon, WeaponPrimaryAttackParams attackParams, entity target )
 {
-	thread MissingMaterialOnReloadHACK()
+	/*
+	entity weaponOwner = weapon.GetWeaponOwner()
+
+	bool shouldPredict = false
+	entity missile = weapon.FireWeaponMissile( attackParams.pos, attackParams.dir, S2S_MISSILE_SPEED, damageTypes.projectileImpact | DF_IMPACT, damageTypes.explosive, false, shouldPredict )
+
+	if ( missile )
+	{
+		missile.kv.lifetime = 20
+		missile.SetMissileTarget( target, < 0, 0, 0 > )
+		missile.SetHomingSpeeds( S2S_MISSILE_HOMING, 0 )
+	}*/
 }
 
-void function MissingMaterialOnReloadHACK()
+var function OnWeaponNpcPrimaryAttack_weapon_rocket_launcher( entity weapon, WeaponPrimaryAttackParams attackParams )
 {
-	//wait 0.5
-	//SetConVarBool( "r_drawparticles", false )
-	//wait 3 //reload time
-	//SetConVarBool( "r_drawparticles", true )
+	/*
+	// NPC can shoot the weapon at non-players, but when shooting at players it must be a titan
+	entity owner = weapon.GetWeaponOwner()
+	if ( IsValid( owner ) )
+	{
+		entity enemy = owner.GetEnemy()
+		if ( IsValid( enemy ) )
+		{
+			if ( enemy.IsPlayer() && !enemy.IsTitan() )
+				return
+		}
+	}
+	*/
+	/*
+	weapon.EmitWeaponNpcSound( LOUD_WEAPON_AI_SOUND_RADIUS_MP, 0.2 )
+	entity missile = weapon.FireWeaponMissile( attackParams.pos, attackParams.dir, 1800.0, damageTypes.projectileImpact, damageTypes.explosive, false, PROJECTILE_NOT_PREDICTED )
+	if ( missile )
+	{
+		missile.InitMissileForRandomDriftFromWeaponSettings( attackParams.pos, attackParams.dir )
+		if ( weapon.w.missileFiredCallback != null )
+		{
+			weapon.w.missileFiredCallback( missile, weapon.GetWeaponOwner() )
+		}
+	}*/
 }
+#endif // #if SERVER
 
 //GUIDED MISSILE FUNCTIONS
 function CalculateGuidancePoint( entity weapon, entity weaponOwner )

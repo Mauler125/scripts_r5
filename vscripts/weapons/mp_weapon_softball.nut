@@ -69,7 +69,6 @@ void function FireGrenade( entity weapon, WeaponPrimaryAttackParams attackParams
 void function OnProjectileCollision_weapon_softball( entity projectile, vector pos, vector normal, entity hitEnt, int hitbox, bool isCritical )
 {
 	bool didStick = PlantSuperStickyGrenade( projectile, pos, normal, hitEnt, hitbox )
-
 	if ( !didStick )
 		return
 
