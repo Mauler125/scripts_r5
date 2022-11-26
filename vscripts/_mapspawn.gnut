@@ -306,6 +306,9 @@ void function CodeCallback_MapSpawn() // original script entry point
 		
 		PrecacheWeapon( $"mp_weapon_dataknife_kunai_primary")
 		PrecacheWeapon( $"melee_dataknife_kunai")
+		
+		PrecacheModel( $"mdl/weapons_r5/loot/_master/w_loot_wep_ammo_sniper.rmdl" )
+		//PrecacheModel( $"mdl/weapons_r5/loot/_master/w_loot_wep_ammo_explosive.rmdl" )
 	}
 
 	//Unofficial s3 weapons section

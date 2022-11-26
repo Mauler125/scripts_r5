@@ -15,7 +15,7 @@ WeaponData
 	"body_type"										"heavy"
 	"aimassist_adspull_weaponclass"					"none"
 	"leveled_pickup"								"1"
-	"ammo_pool_type"								"special"
+	"ammo_pool_type"								"explosive"
 
 	"sound_pickup"									"wpn_pickup_MG_1P"
 

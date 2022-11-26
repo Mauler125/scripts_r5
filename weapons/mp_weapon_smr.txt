@@ -10,7 +10,7 @@ WeaponData
 	"menu_icon"										"r2_ui/menus/loadout_icons/anti_titan/at_sidewinder"
 	"hud_icon"										"r2_ui/menus/loadout_icons/anti_titan/at_sidewinder"
 	
-	"ammo_pool_type"								"highcal"
+	"ammo_pool_type"								"explosive"
 
 	"weaponClass" 									"human"
 	"pickup_hold_prompt"  							"Hold [USE] [WEAPONNAME]"
