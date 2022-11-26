@@ -22,7 +22,7 @@ WeaponData
 	"OnWeaponActivate"								"OnWeaponActivate_weapon_rocket_launcher"
 	"OnWeaponDeactivate"							"OnWeaponDeactivate_weapon_rocket_launcher"
 	"OnWeaponPrimaryAttack"							"OnWeaponPrimaryAttack_weapon_rocket_launcher"
-//	"OnWeaponNpcPrimaryAttack"						"OnWeaponNpcPrimaryAttack_weapon_rocket_launcher"
+	"OnWeaponNpcPrimaryAttack"						"OnWeaponNpcPrimaryAttack_weapon_rocket_launcher"
 	"OnWeaponOwnerChanged"                          "OnWeaponOwnerChanged_weapon_rocket_launcher"
 
 	// Menu
