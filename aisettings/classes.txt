@@ -16,4 +16,5 @@ classes
 	import npc_soldier_infected.txt
 	import npc_marvin.txt
 	import npc_prowler.txt
+	import npc_pilot_elite.txt
 }

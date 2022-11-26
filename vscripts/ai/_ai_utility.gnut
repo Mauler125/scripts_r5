@@ -396,6 +396,22 @@ void function DEV_SpawnMarvinAtCrosshair()
 	DispatchSpawn( marvin )
 }
 
+void function DEV_SpawnPilotAtCrosshair()
+{
+	entity player = GetPlayerArray()[ 0 ]
+
+	vector origin = GetPlayerCrosshairOrigin( player )
+	vector angles = Vector( 0, 0, 0 )
+
+	entity pilot = CreateElitePilot( 99, origin, angles )
+	
+	DispatchSpawn( pilot )
+	
+	array<string> weapons = ["npc_weapon_lstar", "npc_weapon_energy_shotgun", "npc_weapon_hemlok"] //We are giving them original firing range weapons, they are shooting better this way
+	string randomWeapon = weapons[RandomInt(weapons.len())]
+	pilot.GiveWeapon(randomWeapon, WEAPON_INVENTORY_SLOT_ANY)
+}
+
 void function DEV_SpawnSpiderAtCrosshair()
 {
 	entity player = GetPlayerArray()[ 0 ]
