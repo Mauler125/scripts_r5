@@ -174,7 +174,7 @@ WeaponData
 	"proficiency_very_good_spreadscale"   			"1.6"
 
 	"smart_ammo_allow_search_while_firing"			"0"
-	"smart_ammo_allow_ads_lock"						"1" // "0" is default
+	"smart_ammo_allow_ads_lock"						"0" // "0" is default
 
 	"npc_accuracy_multiplier_pilot"					"0.2"
 
