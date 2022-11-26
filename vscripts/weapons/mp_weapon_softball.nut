@@ -66,6 +66,23 @@ void function FireGrenade( entity weapon, WeaponPrimaryAttackParams attackParams
 	}
 }
 
+bool function PlantProjectileThatBouncesOffWalls( entity ent, table collisionParams, float bounceDot, vector angleOffset = <0, 0, 0> )
+{
+	// Satchel hit the world
+	float dot = expect vector( collisionParams.normal ).Dot( <0, 0, 1> )
+
+	var hitent = collisionParams.hitEnt
+    if(IsValid( hitent ) && hitent.IsNPC() || IsValid( hitent ) && hitent.IsPlayer())
+	{
+
+	}
+	else if ( dot < bounceDot )
+		return false
+
+
+	return PlantStickyEntity( ent, collisionParams, angleOffset )
+}
+
 void function OnProjectileCollision_weapon_softball( entity projectile, vector pos, vector normal, entity hitEnt, int hitbox, bool isCritical )
 {
     table collisionParams =
@@ -76,10 +93,10 @@ void function OnProjectileCollision_weapon_softball( entity projectile, vector p
         hitbox = hitbox
     }
 
-    bool didStick = PlantStickyEntityThatBouncesOffWalls( projectile, collisionParams, 0.2 )
+    bool didStick = PlantProjectileThatBouncesOffWalls( projectile, collisionParams, 0.2 )
     if ( !didStick )
         return
-	
+
 	#if SERVER
 	projectile.SetGrenadeTimer( FUSE_TIME )
 	#endif
