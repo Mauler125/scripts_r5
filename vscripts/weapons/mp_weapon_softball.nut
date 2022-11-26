@@ -72,10 +72,7 @@ bool function PlantProjectileThatBouncesOffWalls( entity ent, table collisionPar
 	float dot = expect vector( collisionParams.normal ).Dot( <0, 0, 1> )
 
 	var hitent = collisionParams.hitEnt
-    if(IsValid( hitent ) && hitent.IsNPC() || IsValid( hitent ) && hitent.IsPlayer())
-	{
-
-	}
+    if(IsValid( hitent ) && hitent.IsNPC() || IsValid( hitent ) && hitent.IsPlayer()) {}
 	else if ( dot < bounceDot )
 		return false
 
@@ -93,23 +90,31 @@ void function OnProjectileCollision_weapon_softball( entity projectile, vector p
         hitbox = hitbox
     }
 
-    bool didStick = PlantProjectileThatBouncesOffWalls( projectile, collisionParams, 0.2 )
-    if ( !didStick )
-        return
+	int bounceCount = projectile.GetProjectileWeaponSettingInt( eWeaponVar.grenade_arc_indicator_bounce_count )
+	if ( projectile.proj.projectileBounceCount >= bounceCount + 1)
+	{
+		projectile.GrenadeExplode( projectile.GetForwardVector() )
+		return
+	}
 
-	#if SERVER
-	projectile.SetGrenadeTimer( FUSE_TIME )
-	#endif
+	projectile.proj.projectileBounceCount++
 
-	#if SERVER
-		if ( IsAlive( hitEnt ) && hitEnt.IsPlayer() )
-		{
-			EmitSoundOnEntityOnlyToPlayer( projectile, hitEnt, "weapon_softball_grenade_attached_1P" )
-			EmitSoundOnEntityExceptToPlayer( projectile, hitEnt, "weapon_softball_grenade_attached_3P" )
-		}
-		else
-		{
-			EmitSoundOnEntity( projectile, "weapon_softball_grenade_attached_3P" )
-		}
-	#endif
+	if ( PlantProjectileThatBouncesOffWalls( projectile, collisionParams, 0.2 ) )
+	{
+	    #if SERVER
+	    projectile.SetGrenadeTimer( FUSE_TIME )
+	    #endif
+
+	    #if SERVER
+	    	if ( IsAlive( hitEnt ) && hitEnt.IsPlayer() )
+	    	{
+	    		EmitSoundOnEntityOnlyToPlayer( projectile, hitEnt, "weapon_softball_grenade_attached_1P" )
+	    		EmitSoundOnEntityExceptToPlayer( projectile, hitEnt, "weapon_softball_grenade_attached_3P" )
+	    	}
+	    	else
+	    	{
+	    		EmitSoundOnEntity( projectile, "weapon_softball_grenade_attached_3P" )
+	    	}
+	    #endif
+	}
 }
