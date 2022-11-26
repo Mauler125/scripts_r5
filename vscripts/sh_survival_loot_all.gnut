@@ -644,7 +644,7 @@ void function RegisterCustomAmmos()
 		sound3p = "survival_loot_pickup_3p_HeavyAmmo",
 		pingCommsAction = 0,
 		countPerDrop = 15,
-		stackSize = 15,
+		stackSize = 30,
 		chance = 10.0
 	}
 
