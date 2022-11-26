@@ -8,8 +8,7 @@ global function OnWeaponPrimaryAttack_weapon_rocket_launcher
 global function OnWeaponOwnerChanged_weapon_rocket_launcher
 
 #if SERVER
-//global function OnWeaponNpcPrimaryAttack_weapon_rocket_launcher
-//global function OnWeaponNpcPrimaryAttack_S2S_weapon_rocket_launcher
+global function OnWeaponNpcPrimaryAttack_weapon_rocket_launcher
 #endif // #if SERVER
 
 
@@ -74,7 +73,7 @@ void function OnWeaponActivate_weapon_rocket_launcher( entity weapon )
 			SmartAmmo_SetMissileSpeedLimit( weapon, 1300 )
 		else
 			SmartAmmo_SetMissileSpeedLimit( weapon, 1400 )
-		
+
 		SmartAmmo_SetMissileShouldDropKick( weapon, false )  // TODO set to true to see drop kick behavior issues
 		SmartAmmo_SetUnlockAfterBurst( weapon, true )
 	}
@@ -139,7 +138,7 @@ var function OnWeaponPrimaryAttack_weapon_rocket_launcher( entity weapon, Weapon
 			speed = 800.0
 
 		weapon.EmitWeaponNpcSound( LOUD_WEAPON_AI_SOUND_RADIUS_MP, 0.2 )
-		
+
 		//bool shouldPredict = true
 		WeaponFireMissileParams fireMissileParams
 		fireMissileParams.pos = attackParams.pos
@@ -150,7 +149,7 @@ var function OnWeaponPrimaryAttack_weapon_rocket_launcher( entity weapon, Weapon
 		fireMissileParams.doRandomVelocAndThinkVars = false
 		fireMissileParams.clientPredicted = false
 		entity missile = weapon.FireWeaponMissile( fireMissileParams )
-	
+
 		if ( missile )
 		{
 			if( "guidedMissileTarget" in weapon.s && IsValid( weapon.s.guidedMissileTarget ) )
@@ -165,40 +164,23 @@ var function OnWeaponPrimaryAttack_weapon_rocket_launcher( entity weapon, Weapon
 }
 
 #if SERVER
-var function OnWeaponNpcPrimaryAttack_S2S_weapon_rocket_launcher( entity weapon, WeaponPrimaryAttackParams attackParams, entity target )
-{
-	/*
-	entity weaponOwner = weapon.GetWeaponOwner()
-
-	bool shouldPredict = false
-	entity missile = weapon.FireWeaponMissile( attackParams.pos, attackParams.dir, S2S_MISSILE_SPEED, damageTypes.projectileImpact | DF_IMPACT, damageTypes.explosive, false, shouldPredict )
-
-	if ( missile )
-	{
-		missile.kv.lifetime = 20
-		missile.SetMissileTarget( target, < 0, 0, 0 > )
-		missile.SetHomingSpeeds( S2S_MISSILE_HOMING, 0 )
-	}*/
-}
-
 var function OnWeaponNpcPrimaryAttack_weapon_rocket_launcher( entity weapon, WeaponPrimaryAttackParams attackParams )
 {
-	/*
+    if( weapon.GetScriptInt0() )
+	    return
+
 	// NPC can shoot the weapon at non-players, but when shooting at players it must be a titan
-	entity owner = weapon.GetWeaponOwner()
-	if ( IsValid( owner ) )
-	{
-		entity enemy = owner.GetEnemy()
-		if ( IsValid( enemy ) )
-		{
-			if ( enemy.IsPlayer() && !enemy.IsTitan() )
-				return
-		}
-	}
-	*/
-	/*
+	WeaponFireMissileParams fireMissileParams
+	fireMissileParams.pos = attackParams.pos
+	fireMissileParams.dir = attackParams.dir
+	fireMissileParams.speed = 1800.0
+	fireMissileParams.scriptTouchDamageType = damageTypes.projectileImpact
+	fireMissileParams.scriptExplosionDamageType = damageTypes.explosive
+	fireMissileParams.doRandomVelocAndThinkVars = false
+	fireMissileParams.clientPredicted = PROJECTILE_NOT_PREDICTED
+
 	weapon.EmitWeaponNpcSound( LOUD_WEAPON_AI_SOUND_RADIUS_MP, 0.2 )
-	entity missile = weapon.FireWeaponMissile( attackParams.pos, attackParams.dir, 1800.0, damageTypes.projectileImpact, damageTypes.explosive, false, PROJECTILE_NOT_PREDICTED )
+	entity missile = weapon.FireWeaponMissile( fireMissileParams )
 	if ( missile )
 	{
 		missile.InitMissileForRandomDriftFromWeaponSettings( attackParams.pos, attackParams.dir )
@@ -206,7 +188,21 @@ var function OnWeaponNpcPrimaryAttack_weapon_rocket_launcher( entity weapon, Wea
 		{
 			weapon.w.missileFiredCallback( missile, weapon.GetWeaponOwner() )
 		}
-	}*/
+	}
+
+	thread function() : (weapon)
+	{
+		weapon.SetScriptInt0(1)
+		wait weapon.GetWeaponSettingFloat( eWeaponVar.reload_time )
+
+		if( IsValid(weapon) )
+			weapon.SetScriptInt0(0)
+	}()
+
+
+	//weapon.SetWeaponPrimaryClipCount(0)
+
+
 }
 #endif // #if SERVER
 
