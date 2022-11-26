@@ -154,11 +154,11 @@ void function Zipline_SetDetachEndOnUse_OnSpawn( ZiplineUtility zipline, int det
 }
 
 
-void function Zipline_SetPushOffInDirectionX( ZiplineUtility zipline, int PushOffInDirectionX )
+void function Zipline_SetPushOffInDirectionX( ZiplineUtility zipline, int pushOffInDirectionX )
 {
     KVFilesSettings settings            = zipline.settings
-    settings.startPushOffInDirectionX   = PushOffInDirectionX
-    settings.endPushOffInDirectionX     = PushOffInDirectionX
+    settings.startPushOffInDirectionX   = pushOffInDirectionX
+    settings.endPushOffInDirectionX     = pushOffInDirectionX
 }
 
 

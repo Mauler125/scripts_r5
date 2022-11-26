@@ -81,7 +81,6 @@ global struct KVFilesSettings
     bool isVertical
     float fadeDistance              = -1.0
     float lengthScale               = 1.0
-    float sagHeight                 = 0.0
     float scale                     = 1.0
     float speedScale                = 1.0
     float startAutoDetachDistance

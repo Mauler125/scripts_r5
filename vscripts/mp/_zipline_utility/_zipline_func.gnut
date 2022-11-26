@@ -4,6 +4,7 @@ untyped
 global function ZiplinePrecache
 global function Zipline_Register
 global function Zipline_RegisterRopeOnly
+global function CreateZiplineByUnityEditor
 global function Zipline_CreatePanel
 global function RegisteredZipline_Init
 global function Zipline_InitAllRegisteredZiplineInScope
@@ -78,6 +79,34 @@ ZiplineUtility function Zipline_RegisterRopeOnly( string ziplineName, vector sta
     ziplineUtility.zipline[ziplineName] <- zipline ; ziplineUtility.ziplineArray.append( zipline )
 
 return ziplineUtility.zipline[ziplineName] }
+
+
+void function CreateZiplineByUnityEditor( vector originStart, vector anglesStart, vector originEnd, vector anglesEnd, bool isVertical, float fadeDistance, float scale, float width, float speedScale,
+float lengthScale, bool preserveVelocity, bool disableDropToBottom, float startAutoDetachDistance, float endAutoDetachDistance, bool restPoint, bool pushOffInDirectionX, bool isMoving )
+{
+    ZiplineUtility zipline
+
+    string ziplineName = UniqueZiplineString( "UnityEditorZipline" )
+
+    zipline = Zipline_RegisterRopeOnly( ziplineName, originStart, anglesStart, originEnd, anglesEnd, isVertical )
+        Zipline_SetFadeDistance( zipline, fadeDistance ) // Preset: -1.0
+        Zipline_SetScale( zipline, scale ) // Preset: 1.0
+        Zipline_SetWidth( zipline, width ) // Preset: 1.0
+        Zipline_SetSpeedScale( zipline, speedScale ) // Preset: 1.0
+        Zipline_SetLengthScale( zipline, lengthScale ) // Preset: 1.0
+        if ( preserveVelocity ) Zipline_SetPreserveVelocity( zipline ) // Preset: false
+        if ( disableDropToBottom ) Zipline_DisableDropToBottom( zipline ) // Preset: true
+        Zipline_SetAutoDetachDistance( zipline, startAutoDetachDistance, endAutoDetachDistance ) // Preset: Vertical -> Start: 100.0 End: 50.0 | Non Vertical -> Start && End: 150.0
+        if ( restPoint ) Zipline_EnableRestPoint( zipline ) // Preset: false
+        if ( pushOffInDirectionX ) // Preset: 1
+        {
+            Zipline_SetPushOffInDirectionX( zipline, 1 )
+        } else {
+            Zipline_SetPushOffInDirectionX( zipline, 0 )
+        }
+        if ( isMoving ) Zipline_SetIsMoving( zipline ) // Preset: false
+    RegisteredZipline_Init( zipline )
+}
 
 
 ////////////////////////////////////////////////////////////
