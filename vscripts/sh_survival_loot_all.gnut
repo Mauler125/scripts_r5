@@ -193,7 +193,7 @@ global struct CustomAmmoData
 	string sound = "survival_loot_pickup_HeavyAmmo",
 	string sound3p = "survival_loot_pickup_3p_HeavyAmmo",
 	string printname = "Custom Ammo",
-    int pingCommsAction,
+    string pingCommsAction = "PING_AMMO_HIGHCAL",
 	string desc = "Custom Ammo Desc",
 	int countPerDrop = 80,
 	int stackSize = 80,
@@ -205,7 +205,7 @@ array<string> attachmentSortOrder = ["barrel", "mag", "sight", "grip", "hopup"]
 array<CustomHopupData> function GetCustomHopupArray()
 {
 	return file.customHopups
-} 
+}
 
 string function GetLootTableString( string ref, var datatable, int rowIndex, string columnName )
 {
@@ -509,7 +509,7 @@ void function RegisterCustomWeapons()
 		RegisterWeapon(data)
 		RegisterCustomAttachments(GetCustomHopupsForWeapon(className))
 	}
-	
+
 	array<string> customGrenadeClassNames = split(GetCurrentPlaylistVarString("custom_grenade_list", ""), " ")
 	foreach(string className in customGrenadeClassNames)
 	{
@@ -536,7 +536,7 @@ void function RegisterCustomWeapons()
 		data.carePackageChance = GetCurrentPlaylistVarFloat(className + "_cp_chance", 0)
 		RegisterCustomConsumable(data)
 	}
-	
+
 	#if SERVER
 		AddClientCommandCallback( "SetNextCustomConsumable", ClientCallback_SetNextCustomConsumable )
 	#endif
@@ -622,6 +622,10 @@ void function RegisterCustomAmmo(CustomAmmoData AmmoData)
 	data.pickupSound_1p = AmmoData.sound
 	data.pickupSound_3p = AmmoData.sound3p
 
+	#if SERVER || CLIENT
+	data.pingCommsAction = GetCommsActionForName( AmmoData.pingCommsAction )
+	#endif
+
 	data.index = file.lootIndexToString.len()
 	file.lootIndexToString.append( data.ref )
 	file.lootData[ data.ref ] <- data
@@ -642,7 +646,7 @@ void function RegisterCustomAmmos()
 		model = $"mdl/weapons_r5/loot/_master/w_loot_wep_ammo_sniper.rmdl",
 		sound = "survival_loot_pickup_HeavyAmmo",
 		sound3p = "survival_loot_pickup_3p_HeavyAmmo",
-		pingCommsAction = 0,
+		pingCommsAction = "BLANK",
 		countPerDrop = 15,
 		stackSize = 30,
 		chance = 10.0
@@ -657,7 +661,7 @@ void function RegisterCustomAmmos()
 		model = $"mdl/weapons_r5/loot/_master/w_loot_wep_ammo_shg.rmdl",
 		sound = "survival_loot_pickup_HeavyAmmo",
 		sound3p = "survival_loot_pickup_3p_HeavyAmmo",
-		pingCommsAction = 0,
+		pingCommsAction = "BLANK",
 		countPerDrop = 5,
 		stackSize = 10,
 		chance = 10.0
@@ -743,13 +747,13 @@ bool function ClientCallback_SetNextCustomConsumable( entity player, array<strin
 	if (SURVIVAL_CountItemsInInventory(player, args[0]) <= 0) return true
 
 	printt("setting next consumable: ", args[0])
-	
+
 	if (IsValid(player.GetOffhandWeapon(OFFHAND_EQUIPMENT)) && player.GetOffhandWeapon(OFFHAND_EQUIPMENT).GetWeaponClassName() != args[0])
 	{
 		player.TakeOffhandWeapon( OFFHAND_EQUIPMENT )
 		player.GiveOffhandWeapon( args[0], OFFHAND_EQUIPMENT )
 	}
-	else if (!IsValid(player.GetOffhandWeapon(OFFHAND_EQUIPMENT))) 
+	else if (!IsValid(player.GetOffhandWeapon(OFFHAND_EQUIPMENT)))
 	{
 		player.GiveOffhandWeapon( args[0], OFFHAND_EQUIPMENT )
 	}
@@ -768,7 +772,7 @@ asset function CastStringToAsset( string val )
 void function RegisterWeapon( CustomWeaponData weaponData )
 {
 	LootData data
-	
+
 	data.ref = weaponData.className
 	// have no idea why we do this, but it's needed.
 	data.baseWeapon = weaponData.className
@@ -794,7 +798,7 @@ void function RegisterWeapon( CustomWeaponData weaponData )
 	data.model = GetWeaponInfoFileKeyFieldAsset_Global( data.baseWeapon, "playermodel" )
 	data.countPerDrop = 1
 
-	// Pickup sounds. 
+	// Pickup sounds.
 	data.pickupSound_3p = weaponData.pickupSound3p
 	data.pickupSound_1p = weaponData.pickupSound1p
 	// Ammo type - also will FINALLY show up on HUD when you equip the weapon :D
@@ -804,7 +808,7 @@ void function RegisterWeapon( CustomWeaponData weaponData )
 	// loot tags is just weapon type in disguise.
 	data.lootTags = [ weaponData.weaponType ]
 	data.lootType = eLootType.MAINWEAPON
-	
+
 	// sort the attachments so it appears like vanilla and not messed up
 	// if it's typed incorrectly in playlists
 	weaponData.supportedAttachments.sort(
@@ -819,13 +823,13 @@ void function RegisterWeapon( CustomWeaponData weaponData )
 			return 0
 		}
 	)
-	
+
 
 
 	data.supportedAttachments = weaponData.supportedAttachments
 	// base mods, come with the weapon.
 	data.baseMods = weaponData.baseMods
-	
+
 	// index goes above 100 with custom items, this is why we extended the remote function.
 	data.index = file.lootIndexToString.len()
 	file.lootIndexToString.append( data.ref )
@@ -834,7 +838,7 @@ void function RegisterWeapon( CustomWeaponData weaponData )
 	#if SERVER
 		SURVIVAL_AddSpawnPointGroup( data.ref )
 	#endif
-	
+
 	#if !UI
 		if ( data.model != $"" )
 			PrecacheModel( data.model )
@@ -845,7 +849,7 @@ void function RegisterWeapon( CustomWeaponData weaponData )
 			AddCustomItemToLootPool(data.ref, "weapon_medium", weaponData.medWeaponChance)
 			AddCustomItemToLootPool(data.ref, "weapon_high", weaponData.highWeaponChance)
 		}
-		else 
+		else
 		{
 			AddCustomItemToLootPool(data.ref, "crate_weapons_earlygame", weaponData.lowWeaponChance)
 			AddCustomItemToLootPool(data.ref, "crate_weapons_midgame", weaponData.medWeaponChance)
