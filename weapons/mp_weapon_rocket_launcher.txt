@@ -174,7 +174,7 @@ WeaponData
 	"proficiency_very_good_spreadscale"   			"1.6"
 
 	"smart_ammo_allow_search_while_firing"			"0"
-	"smart_ammo_allow_ads_lock"						"0" // "0" is default
+	"smart_ammo_allow_ads_lock"						"1" // "0" is default
 
 	"npc_accuracy_multiplier_pilot"					"0.2"
 
@@ -388,7 +388,7 @@ WeaponData
 	
 	"smart_ammo_lock_type"							"small"
 	"smart_ammo_alert_npc_fraction"					"1.1" 	// unaware since lock on fraction will not go above 1
-	"smart_ammo_allow_hip_fire_lock"				"1"
+	"smart_ammo_allow_hip_fire_lock"				"0"
 	"smart_ammo_lock_effect_3p"						""
 	"smart_ammo_lock_effect_attachment"				"muzzle_flash"
 	"smart_ammo_player_targets_must_be_tracked"		"0"
