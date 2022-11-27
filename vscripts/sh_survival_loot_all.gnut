@@ -654,9 +654,9 @@ void function RegisterCustomAmmos()
 
 		desc = "",
 		icon = $"rui/hud/gametype_icons/survival/sur_ammo_explosive",
-		model = $"mdl/weapons_r5/loot/_master/w_loot_wep_ammo_shg.rmdl",
-		sound = "survival_loot_pickup_HeavyAmmo",
-		sound3p = "survival_loot_pickup_3p_HeavyAmmo",
+		model = $"mdl/weapons_r5/loot/_master/w_loot_wep_ammo_explosive.rmdl",
+		sound = "survival_loot_pickup_titan_ammo",
+		sound3p = "survival_loot_pickup_3p_titan_ammo",
 		pingCommsAction = "BLANK",
 		countPerDrop = 5,
 		stackSize = 10,
