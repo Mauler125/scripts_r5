@@ -35,52 +35,6 @@ void function OnMapZipline_Init() // Explanation at the end of the file
         case "mp_rr_desertlands_64k_x_64k":
             break
         case "mp_rr_floppytown":
-            vector originOffset = < 2000, 2000, 6000 >
-
-            var dataTable = GetDataTable( $"datatable/mp_rr_floppytown_zipline.rpak" )
-            int numRows = GetDatatableRowCount( dataTable )
-            printt( "numRows: " + numRows )
-
-            int originStartColumn = GetDataTableColumnByName( dataTable, "originStart" )
-            int anglesStartColumn = GetDataTableColumnByName( dataTable, "anglesStart" )
-            int originEndColumn = GetDataTableColumnByName( dataTable, "originEnd" )
-            int anglesEndColumn = GetDataTableColumnByName( dataTable, "anglesEnd" )
-            int isVerticalColumn = GetDataTableColumnByName( dataTable, "isVertical" )
-            int fadeDistanceColumn = GetDataTableColumnByName( dataTable, "fadeDistance" )
-            int scaleColumn = GetDataTableColumnByName( dataTable, "scale" )
-            int widthColumn = GetDataTableColumnByName( dataTable, "width" )
-            int speedScaleColumn = GetDataTableColumnByName( dataTable, "speedScale" )
-            int lengthScaleColumn = GetDataTableColumnByName( dataTable, "lengthScale" )
-            int preserveVelocityColumn = GetDataTableColumnByName( dataTable, "preserveVelocity" )
-            int disableDropToBottomColumn = GetDataTableColumnByName( dataTable, "disableDropToBottom" )
-            int startAutoDetachDistanceColumn = GetDataTableColumnByName( dataTable, "startAutoDetachDistance" )
-            int endAutoDetachDistanceColumn = GetDataTableColumnByName( dataTable, "endAutoDetachDistance" )
-            int restPointColumn = GetDataTableColumnByName( dataTable, "restPoint" )
-            int pushOffInDirectionXColumn = GetDataTableColumnByName( dataTable, "pushOffInDirectionX" )
-            int isMovingColumn = GetDataTableColumnByName( dataTable, "isMoving" )
-
-            for ( int i = 0 ; i < numRows; i++ )
-            {
-                vector originStart = GetDataTableVector( dataTable, i, originStartColumn )
-                vector anglesStart = GetDataTableVector( dataTable, i, anglesStartColumn )
-                vector originEnd = GetDataTableVector( dataTable, i, originEndColumn )
-                vector anglesEnd = GetDataTableVector( dataTable, i, anglesEndColumn )
-                bool isVertical = GetDataTableBool( dataTable, i, isVerticalColumn )
-                float fadeDistance = GetDataTableFloat( dataTable, i, fadeDistanceColumn )
-                float scale = GetDataTableFloat( dataTable, i, scaleColumn )
-                float width = GetDataTableFloat( dataTable, i, widthColumn )
-                float speedScale = GetDataTableFloat( dataTable, i, speedScaleColumn )
-                float lengthScale = GetDataTableFloat( dataTable, i, lengthScaleColumn )
-                bool preserveVelocity = GetDataTableBool( dataTable, i, preserveVelocityColumn )
-                bool disableDropToBottom = GetDataTableBool( dataTable, i, disableDropToBottomColumn )
-                float startAutoDetachDistance = GetDataTableFloat( dataTable, i, startAutoDetachDistanceColumn )
-                float endAutoDetachDistance = GetDataTableFloat( dataTable, i, endAutoDetachDistanceColumn )
-                bool restPoint = GetDataTableBool( dataTable, i, restPointColumn )
-                bool pushOffInDirectionX = GetDataTableBool( dataTable, i, pushOffInDirectionXColumn )
-                bool isMoving = GetDataTableBool( dataTable, i, isMovingColumn )
-
-                CreateZiplineByUnityEditor( originStart, anglesStart, originEnd, anglesEnd, isVertical, fadeDistance, scale, width, speedScale, lengthScale, preserveVelocity, disableDropToBottom, startAutoDetachDistance, endAutoDetachDistance, restPoint, pushOffInDirectionX, isMoving )
-            }
             break
         default: break
     }
