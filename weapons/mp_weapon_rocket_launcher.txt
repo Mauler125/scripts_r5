@@ -412,6 +412,13 @@ WeaponData
 			"ammo_default_total"						"9"
 		}
 		
+        pro_screen
+        {
+			"ui8_enable"		"1"
+        	"bodygroup1_set"	"0"
+        	"bodygroup6_set"	"1"
+        }
+		
 	    survival_finite_ammo
 	    {
             "ammo_default_total"					"0"
