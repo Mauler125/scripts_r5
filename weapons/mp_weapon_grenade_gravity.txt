@@ -13,7 +13,7 @@ WeaponData
 	"weaponType"									"anti_titan"
 	"offhand_toss"									"1"
 	"minimap_reveal_distance"						"32000"
-	"menu_category"									"ordnance"								
+	"menu_category"									"ordnance"
 	"does_not_interrupt_cloak"						"1"
 	"ads_dof_disable"								"1"
 	"allow_gibraltar_shield"                        "0"
@@ -275,6 +275,19 @@ WeaponData
 
 	Mods
 	{
+		survival_finite_ordnance
+		{
+			"ammo_clip_size"								"100"
+			"ammo_default_total"							"0"
+			"ammo_display"									"count"
+			"ammo_min_to_fire"								"1"
+			"ammo_per_shot"									"1"
+			"ammo_stockpile_max"							"0"
+			"regen_ammo_refill_rate"						"0"
+			"regen_ammo_refill_start_delay"					"0.0"
+			"ammo_no_remove_from_stockpile"					"1"
+		}
+
 		pas_ordnance_pack
 		{
 			"regen_ammo_refill_rate"   						"*1.6"
