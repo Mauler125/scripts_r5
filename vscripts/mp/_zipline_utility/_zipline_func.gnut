@@ -54,7 +54,7 @@ return ziplineUtility.zipline[ziplineName] }
 
 
 // Used for Zee's editor
-ZiplineUtility function Zipline_RegisterRopeOnly( string ziplineName, vector startEntityPos, vector startEntityAng, vector endEntityPos = < 0, 0, 0 >, vector endEntityAng = < 0, 0, 0 >, bool isVertical = true )
+ZiplineUtility function Zipline_RegisterRopeOnly( string ziplineName, vector startEntityPos, vector startEntityAng, vector endEntityPos, vector endEntityAng, bool isVertical )
 {
     ZiplineUtility zipline ; KVFilesSettings settings = zipline.settings ; ZiplineVars vars = zipline.vars ; ZiplineState state = zipline.state
 
@@ -105,6 +105,7 @@ float lengthScale, bool preserveVelocity, bool disableDropToBottom, float startA
             Zipline_SetPushOffInDirectionX( zipline, 0 )
         }
         if ( isMoving ) Zipline_SetIsMoving( zipline ) // Preset: false
+        zipline.vars.isUnityZipline = true
     RegisteredZipline_Init( zipline )
 }
 
@@ -261,24 +262,28 @@ array< entity > function Zipline_InitZipline( ZiplineUtility zipline )
     switch ( settings.isVertical )
     {
         case true:
-            vector offset         = startZiplinePos - TRACE_RESULTS_OFFSET
-            TraceResults result   = TraceLine( offset, offset + -vars.heightLimitFromTop * < 0, 0, 1 >, [], TRACE_MASK_SHOT, TRACE_COLLISION_GROUP_PLAYER )
-            startZiplineAng       = zipline.startZiplineAng ; endZiplineAng = zipline.endZiplineAng
-
-            if ( !vars.disableVerticalZiplineOffset )
+            if ( !vars.isUnityZipline )
             {
-                if ( vars.boolHeightLimitFromTop ) endZiplinePos = result.endPos
-                else if ( vars.boolHeightLimitFromFloor || vars.boolHeightLimitByIndianaJonesMode ) endZiplinePos = result.endPos + < 0, 0, vars.heightLimitFromFloor >
-                else { endZiplinePos = result.endPos + ZIPLINE_OFFSET_FROM_FLOOR }
-            }
-            else
-            {
-                endZiplinePos = result.endPos
-            }
+                vector offset         = startZiplinePos - TRACE_RESULTS_OFFSET
+                TraceResults result   = TraceLine( offset, offset + -vars.heightLimitFromTop * < 0, 0, 1 >, [], TRACE_MASK_SHOT, TRACE_COLLISION_GROUP_PLAYER )
+                startZiplineAng       = zipline.startZiplineAng ; endZiplineAng = zipline.endZiplineAng
 
-            if ( vars.heightLimitInt >= 2 ) ZiplineAddErrorReason( zipline, REASON_TOO_MANY_HEIGHT_LIMIT )
+                if ( !vars.disableVerticalZiplineOffset )
+                {
+                    if ( vars.boolHeightLimitFromTop ) endZiplinePos = result.endPos
+                    else if ( vars.boolHeightLimitFromFloor || vars.boolHeightLimitByIndianaJonesMode ) endZiplinePos = result.endPos + < 0, 0, vars.heightLimitFromFloor >
+                    else { endZiplinePos = result.endPos + ZIPLINE_OFFSET_FROM_FLOOR }
+                }
+                else
+                {
+                    endZiplinePos = result.endPos
+                }
 
-            zipline.endZiplinePos = endZiplinePos
+                if ( vars.heightLimitInt >= 2 ) ZiplineAddErrorReason( zipline, REASON_TOO_MANY_HEIGHT_LIMIT )
+
+                zipline.endZiplinePos = endZiplinePos
+            }
+            else {   endZiplinePos = zipline.endZiplinePos }
             break
         case false:
             startZiplineAng    = zipline.startZiplineAng ; endZiplineAng = zipline.endZiplineAng ; endZiplinePos = zipline.endZiplinePos
@@ -611,7 +616,7 @@ void function ZiplineError( entity player )
         if ( ziplines.state.error )
         {
             erronedZipline.append( ziplines ) ; count += 1
-            entity fx = StartParticleEffectInWorld_ReturnEntity( GetParticleSystemIndex( ZIPLINE_ERROR_FX ), ziplines.startEntityPos, < 90, 0, 0 > )
+            entity fx = StartParticleEffectInWorld_ReturnEntity( GetParticleSystemIndex( ZIPLINE_ERROR_FX ), ziplines.startEntityPos, < -90, 0, 0 > )
         }
 
         if ( ziplines.state.errorMinor )

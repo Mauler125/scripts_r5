@@ -6,7 +6,7 @@ global function ZiplineUtility_Init
 
 // Global const
     global const       ZIPLINE_EXPLOSION                        = $"p_impact_exp_small_full"
-    global const       ZIPLINE_ERROR_FX                         = $"P_ar_hot_zone_far"
+    global const       ZIPLINE_ERROR_FX                         = $"P_wpn_lasercannon_aim_short"
 
 // Global const assets
     global const asset ZIPLINE_ARM                              = $"mdl/industrial/zipline_arm.rmdl"
@@ -109,6 +109,7 @@ global struct ZiplineVars
     bool disableVerticalZiplineOffset         = false
     bool isMoving                             = false
     bool isRopeOnly                           = false
+    bool isUnityZipline                       = false
     bool restPoint                            = false
     bool spawnSupportOnly                     = false
     float endArmOffset
