@@ -262,28 +262,24 @@ array< entity > function Zipline_InitZipline( ZiplineUtility zipline )
     switch ( settings.isVertical )
     {
         case true:
-            if ( !vars.isUnityZipline )
+            vector offset         = startZiplinePos - TRACE_RESULTS_OFFSET
+            TraceResults result   = TraceLine( offset, offset + -vars.heightLimitFromTop * < 0, 0, 1 >, [], TRACE_MASK_SHOT, TRACE_COLLISION_GROUP_PLAYER )
+            startZiplineAng       = zipline.startZiplineAng ; endZiplineAng = zipline.endZiplineAng
+
+            if ( !vars.disableVerticalZiplineOffset )
             {
-                vector offset         = startZiplinePos - TRACE_RESULTS_OFFSET
-                TraceResults result   = TraceLine( offset, offset + -vars.heightLimitFromTop * < 0, 0, 1 >, [], TRACE_MASK_SHOT, TRACE_COLLISION_GROUP_PLAYER )
-                startZiplineAng       = zipline.startZiplineAng ; endZiplineAng = zipline.endZiplineAng
-
-                if ( !vars.disableVerticalZiplineOffset )
-                {
-                    if ( vars.boolHeightLimitFromTop ) endZiplinePos = result.endPos
-                    else if ( vars.boolHeightLimitFromFloor || vars.boolHeightLimitByIndianaJonesMode ) endZiplinePos = result.endPos + < 0, 0, vars.heightLimitFromFloor >
-                    else { endZiplinePos = result.endPos + ZIPLINE_OFFSET_FROM_FLOOR }
-                }
-                else
-                {
-                    endZiplinePos = result.endPos
-                }
-
-                if ( vars.heightLimitInt >= 2 ) ZiplineAddErrorReason( zipline, REASON_TOO_MANY_HEIGHT_LIMIT )
-
-                zipline.endZiplinePos = endZiplinePos
+                if ( vars.boolHeightLimitFromTop ) endZiplinePos = result.endPos
+                else if ( vars.boolHeightLimitFromFloor || vars.boolHeightLimitByIndianaJonesMode ) endZiplinePos = result.endPos + < 0, 0, vars.heightLimitFromFloor >
+                else { endZiplinePos = result.endPos + ZIPLINE_OFFSET_FROM_FLOOR }
             }
-            else {   endZiplinePos = zipline.endZiplinePos }
+            else
+            {
+                endZiplinePos = result.endPos
+            }
+
+            if ( vars.heightLimitInt >= 2 ) ZiplineAddErrorReason( zipline, REASON_TOO_MANY_HEIGHT_LIMIT )
+
+            if ( !vars.isUnityZipline ) zipline.endZiplinePos = endZiplinePos else endZiplinePos = zipline.endZiplinePos
             break
         case false:
             startZiplineAng    = zipline.startZiplineAng ; endZiplineAng = zipline.endZiplineAng ; endZiplinePos = zipline.endZiplinePos
