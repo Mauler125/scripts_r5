@@ -131,83 +131,9 @@ void function LoadCommsActionsFromDatatable()
 }
 
 
-void function RegisterCustomComs()
-{
-	// ammo
-	RegisterCustomCom( eCommsAction.PING_AMMO_SNIPER,           "ping_foundAmmo")
-	RegisterCustomCom( eCommsAction.INVENTORY_NEED_AMMO_SNIPER, "ping_needAmmo")
-	RegisterCustomCom( eCommsAction.PING_AMMO_EXPLOSIVE,            "ping_foundAmmoExp")
-	RegisterCustomCom( eCommsAction.INVENTORY_NEED_AMMO_EXPLOSIVE,  "ping_needAmmoExp")
-
-	// ordanace
-	RegisterCustomCom( eCommsAction.PING_OFFHAND_GRENADE_GRAV,  "ping_foundArcStar")
-
-	// weapons
-	RegisterCustomCom( eCommsAction.PING_WEAPON_VOLT,          "ping_foundVoltSmg")
-	RegisterCustomCom( eCommsAction.PING_WEAPON_ARCHER,        "ping_foundArcher")
-	RegisterCustomCom( eCommsAction.PING_WEAPON_SOFTBALL,      "ping_foundSoftball")
-	RegisterCustomCom( eCommsAction.PING_WEAPON_EPG,           "ping_foundEpg")
-	RegisterCustomCom( eCommsAction.PING_WEAPON_SMR,           "ping_foundRocketLauncher")
-	RegisterCustomCom( eCommsAction.PING_WEAPON_SHEILA_HMG,    "ping_foundLMG")
-	RegisterCustomCom( eCommsAction.PING_WEAPON_WINGMAN_ELITE, "ping_foundWingman")
-	RegisterCustomCom( eCommsAction.PING_WEAPON_SMART_PISTOL,  "ping_foundPistol")
-	RegisterCustomCom( eCommsAction.PING_WEAPON_SENTINEL,      "ping_foundSniper")
-	RegisterCustomCom( eCommsAction.PING_WEAPON_THROWINGKNIFE, "ping_foundWeapon")
-
-    // npcs
-
-	asset icon = $"rui/hud/ping/icon_ping_enemy"
-	asset iconasset = $"settings/itemflav/ping/ping_enemy.rpak"
-	string chattext = "#PING_ENEMY_SPOTTED_GENERAL"
-	string shorttext = "#PROMPT_PING_ENEMY_SPOTTED_GENERAL_SHORT"
-	string menutext = "#PROMPT_PING_ENEMY_SPOTTED_GENERAL"
-
-	// creatures
-	RegisterCustomCom( eCommsAction.PING_ENEMY_NPC_SPIDER, "ping_spotSpider", icon, iconasset, chattext, shorttext, menutext)
-	RegisterCustomCom( eCommsAction.PING_ENEMY_NPC_PROWLER, "ping_spotProwler", icon, iconasset, chattext, shorttext, menutext)
-	RegisterCustomCom( eCommsAction.PING_ENEMY_NPC_GOLIATH, "ping_spotGoliath", icon, iconasset, chattext, shorttext, menutext)
-
-	// robots
-	RegisterCustomCom( eCommsAction.PING_ENEMY_NPC_DRONE, "ping_spotDrone", icon, iconasset, chattext, shorttext, menutext )
-	RegisterCustomCom( eCommsAction.PING_ENEMY_NPC_TITAN, "ping_spotTitan", icon, iconasset, chattext, shorttext, menutext )
-	RegisterCustomCom( eCommsAction.PING_ENEMY_NPC_REAPER, "ping_spotReaper", icon, iconasset, chattext, shorttext, menutext )
-	RegisterCustomCom( eCommsAction.PING_ENEMY_NPC_SPECTRE, "ping_spotSpectre", icon, iconasset, chattext, shorttext, menutext )
-	RegisterCustomCom( eCommsAction.PING_ENEMY_NPC_TICK, "ping_spotTick", icon, iconasset, chattext, shorttext, menutext )
-	RegisterCustomCom( eCommsAction.PING_ENEMY_NPC_GUNSHIP, "ping_dropship", icon, iconasset, chattext, shorttext, menutext )
-
-	// generic
-	RegisterCustomCom( eCommsAction.PING_ENEMY_NPC_INFECTED, "ping_spotInfected", icon, iconasset, chattext, shorttext, menutext )
-	RegisterCustomCom( eCommsAction.PING_ENEMY_NPC_SNIPER, "ping_spotSniper", icon, iconasset, chattext, shorttext, menutext )
-}
-
-void function RegisterCustomCom( int index, string alias, asset icon = $"", asset pingAsset = $"", string chattext = "#PING_LOOT", string shorttext = "", string menutext = "")
-{
-	if(index in file.actions)
-	    return
-
-	if(pingAsset != $"")
-	    RegisterItemFlavorFromSettingsAsset( pingAsset )
-
-	CommsAction action
-	action.chatText = chattext
-	action.menuText = menutext
-	action.shortText = shorttext
-	action.chatText = chattext
-	action.defaultIcon = icon
-	action.aliasSubname = alias
-	action.hasCalm = true
-	action.hasUrgent = true
-	action.hasCalmFar = false
-	action.hasUrgentFar = false
-	action.index = index
-
-	file.actions[index] <- action
-}
-
 void function ShQuickchat_Init()
 {
 	AddCallback_RegisterRootItemFlavors( LoadCommsActionsFromDatatable )
-	RegisterCustomComs()
 
 	#if SERVER
 		AddClientCommandCallback( "ClientCommand_Quickchat", ClientCommand_Quickchat )
@@ -226,7 +152,6 @@ void function DEV_ReloadCommsTable()
 {
 	file.actions.clear()
 	LoadCommsActionsFromDatatable()
-	RegisterCustomComs()
 }
 
 #if CLIENT
@@ -237,7 +162,9 @@ void function Quickchat( entity player, int index, entity subject = null )
 
 	string add = ""
 	if ( IsValid( subject ) )
+	{
 		add = " " + eCommsFlags.NONE + " " + subject.GetEncodedEHandle()
+	}
 
 	player.ClientCommand( "ClientCommand_Quickchat " + index + add )
 }
@@ -249,7 +176,9 @@ void function QuickchatToLivingAndDead( entity player, int index, entity subject
 
 	string add = ""
 	if ( subject != null )
+	{
 		add = " " + subject.GetEncodedEHandle()
+	}
 
 	player.ClientCommand( "ClientCommand_Quickchat " + index + " " + eCommsFlags.INCLUDE_DEAD + add )
 }
@@ -259,7 +188,6 @@ vector function GetChatTitleColorForPlayer( entity player )
 	entity localPlayer = GetLocalClientPlayer()
 	if ( player == localPlayer )
 		return OBITUARY_COLOR_LOCALPLAYER
-
 	if ( IsPartyMember( player ) )
 		return OBITUARY_COLOR_PARTY
 
@@ -274,7 +202,6 @@ void function SetPlayerLastSaid( entity player, int actionIndex )
 {
 	if ( !(player in s_playerToActionTimesMap) )
 		s_playerToActionTimesMap[player] <- {}
-
 	if ( !(actionIndex in s_playerToActionTimesMap[player]) )
 		s_playerToActionTimesMap[player][actionIndex] <- 0.0
 
@@ -316,10 +243,10 @@ array<string> function GetSubjectNamesForCommsAction( int commsAction, entity su
 			{
 				array<string> possibleHopups = []
 				array<string> attachmentRefs = GetAttachmentsForPoint( "hopup", weaponClassName )
-
 				foreach ( string ref in attachmentRefs )
+				{
 					possibleHopups.append( SURVIVAL_Loot_GetLootDataByRef( ref ).pickupString )
-
+				}
 				return possibleHopups
 			}
 
@@ -332,7 +259,6 @@ array<string> function GetSubjectNamesForCommsAction( int commsAction, entity su
 		entity bossPlayer = subjectEnt.GetBossPlayer()
 		if ( IsValid( bossPlayer ) )
 			return [bossPlayer.GetPlayerName()]
-
 		return ["<decoyUnk:[" + subjectEnt + "]>"]
 	}
 
@@ -340,22 +266,28 @@ array<string> function GetSubjectNamesForCommsAction( int commsAction, entity su
 	{
 		if ( commsAction == eCommsAction.PING_NPC_LOOT_TICK )
 			return [Localize( "#NPC_LOOT_TICK_UI_TITLE" )]
-
 		return [format( "enemy [%s]", subjectEnt.GetTitleForUI() )]
 	}
 
 
 	if ( commsAction == eCommsAction.PING_LOOT_DRONE )
+	{
 		return [Localize( "#LOOT_DRONE_UI_TITLE" )]
+	}
+
+
 
 	if ( commsAction == eCommsAction.PING_LOOT_ROLLER )
+	{
 		return [Localize( "#LOOT_ROLLER_UI_TITLE" )]
+	}
 
-	if ( commsAction == eCommsAction.PING_LOOT_VAULT ||
-		commsAction == eCommsAction.PING_LOOT_VAULT_OPEN ||
-		commsAction == eCommsAction.PING_LOOT_VAULT_HAS_KEY_SQUAD ||
-		commsAction == eCommsAction.PING_LOOT_VAULT_HAS_KEY_SELF )
-		return [Localize( "#LOOT_VAULT_UI_TITLE" )]
+
+
+		if ( commsAction == eCommsAction.PING_LOOT_VAULT || commsAction == eCommsAction.PING_LOOT_VAULT_OPEN || commsAction == eCommsAction.PING_LOOT_VAULT_HAS_KEY_SQUAD || commsAction == eCommsAction.PING_LOOT_VAULT_HAS_KEY_SELF )
+		{
+			return [Localize( "#LOOT_VAULT_UI_TITLE" )]
+		}
 
 
 	return ["<subjectUnk:[" + subjectEnt + "]>"]
@@ -868,18 +800,18 @@ bool function ClientCommand_Quickchat( entity player, array<string> args )
 			{
 				if ( EquipmentSlot_IsAttachmentSlot( equipSlot ) )
 					equipSlot = EquipmentSlot_GetAttachmentWeaponSlot( equipSlot )
-
+	
 				if ( EquipmentSlot_IsMainWeaponSlot( equipSlot ) )
 				{
 					EquipmentSlot es = Survival_GetEquipmentSlotDataByRef( equipSlot )
 					subject = player.GetNormalWeapon( es.weaponSlot )
 				}
 			}
-
+	
 			if ( args.len() > 3 )
 			{
 				subject = GetEntityFromEncodedEHandle( int( args[3] ) )
-
+	
 				if ( !IsValid( subject ) )
 					return true
 			}

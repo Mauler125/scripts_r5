@@ -6,7 +6,7 @@ WeaponData
 	"description" 									"#WPN_SOFTBALL_DESC"
 	"longdesc"										"#WPN_SOFTBALL_LONGDESC"
 
-	"ammo_pool_type"								"explosive"
+	"ammo_pool_type"								"shotgun"
 
 	"menu_icon"										"r2_ui/menus/loadout_icons/primary_weapon/primary_softball"
 	"hud_icon"										"r2_ui/menus/loadout_icons/primary_weapon/primary_softball"
@@ -35,7 +35,7 @@ WeaponData
 
 	// Models
 	"viewmodel"   									"mdl/weapons/softball_at/ptpov_softball_at.rmdl"
-	"playermodel" 									"mdl/weapons/softball_at/w_softball_at.rmdl"
+	"playermodel" 									"mdl/weapons/w1128/w_w1128.rmdl"
 	"projectilemodel" 								"mdl/weapons/bullets/mgl_grenade.rmdl"
 	"holster_type"									"rifle"
 
@@ -437,18 +437,6 @@ WeaponData
 	        "reloadempty_time"              "0.1"
 	    }
 	}
-
-		burn_mod_softball
-		{
-
-			//FX
-			"projectile_trail_effect_0" 					"wpn_grenade_frag_softball_burn"
-
-			"is_burn_mod"		"1"
-
-			"explosion_damage"								"150"
-			"explosion_damage_heavy_armor"					"530"
-		}
 
 	"ui1_enable"		"1"
 	UiData1

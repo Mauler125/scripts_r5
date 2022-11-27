@@ -1598,7 +1598,7 @@ void function SURVIVAL_Loot_SetHighlightForLoot( entity prop, bool isSelected )
 	switch( lootType )
 	{
 		case eLootType.MAINWEAPON:
-			if (lootTier == 1)
+			if (lootTier == 1) 
 				highlight = "survival_item_weapon"
 			break
 
@@ -2824,9 +2824,6 @@ void function Dev_SpawnBotWithIncapShieldToView( int shieldTier )
 		case 4:
 			shieldType = "incapshield_pickup_lv4_selfrevive"
 			break
-		case 5:
-			shieldType = "incapshield_pickup_lv5"
-			break
 		default:
 			shieldType = "incapshield_pickup_lv1"
 			break
@@ -3375,21 +3372,15 @@ int function SURVIVAL_GetArmorShieldCapacity( int tier )
 {
 	switch ( tier )
 	{
-		case eLootTier.NONE:
+		case 0:
 			return 0
-
-		case eLootTier.COMMON:
+		case 1:
 			return 50
-
-		case eLootTier.RARE:
+		case 2:
 			return 75
-
-		case eLootTier.EPIC:
-		case eLootTier.LEGENDARY:
+		case 3:
+		case 4:
 			return 100
-
-		case eLootTier.HEIRLOOM:
-			return 125
 	}
 
 	return 0
@@ -3407,21 +3398,19 @@ int function SURVIVAL_GetCharacterShieldHealthMaxForArmor( entity player, LootDa
 
 	switch ( tier )
 	{
-		case eLootTier.NONE:
+		case 0:
 			shieldMaxHealth += 0
-
-		case eLootTier.COMMON:
+			break
+		case 1:
 			shieldMaxHealth += 50
-
-		case eLootTier.RARE:
+			break
+		case 2:
 			shieldMaxHealth += 75
-
-		case eLootTier.EPIC:
-		case eLootTier.LEGENDARY:
+			break
+		case 3:
+		case 4:
 			shieldMaxHealth += 100
-
-		case eLootTier.HEIRLOOM:
-			shieldMaxHealth += 125
+			break
 		default:
 			Assert( 0, "Invalid armor tier" )
 			shieldMaxHealth += 0

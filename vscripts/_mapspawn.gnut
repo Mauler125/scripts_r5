@@ -293,22 +293,12 @@ void function CodeCallback_MapSpawn() // original script entry point
 		PrecacheWeapon( $"mp_weapon_softball" )
 		PrecacheWeapon( $"mp_weapon_sentinel" )
 		PrecacheWeapon( $"mp_weapon_throwingknife" )
-		PrecacheWeapon( $"mp_weapon_wingman_n" )
-		PrecacheWeapon( $"mp_weapon_smr" )
-		PrecacheWeapon( $"mp_weapon_rocket_launcher" )
-		PrecacheWeapon( $"mp_weapon_epg" )
 		
 		PrecacheWeapon( $"melee_bolo_sword" )
 		PrecacheWeapon( $"mp_weapon_bolo_sword_primary" )
 		
 		PrecacheWeapon( $"mp_weapon_melee_boxing_ring")
 		PrecacheWeapon( $"melee_boxing_ring")
-		
-		PrecacheWeapon( $"mp_weapon_dataknife_kunai_primary")
-		PrecacheWeapon( $"melee_dataknife_kunai")
-		
-		PrecacheModel( $"mdl/weapons_r5/loot/_master/w_loot_wep_ammo_sniper.rmdl" )
-		//PrecacheModel( $"mdl/weapons_r5/loot/_master/w_loot_wep_ammo_explosive.rmdl" )
 	}
 
 	//Unofficial s3 weapons section
@@ -323,7 +313,6 @@ void function CodeCallback_MapSpawn() // original script entry point
 		PrecacheWeapon( $"mp_weapon_deployable_cover" )
 		PrecacheWeapon( $"melee_data_knife" )
 		PrecacheWeapon( $"mp_weapon_mdlspawner" )
-		PrecacheWeapon( $"mp_weapon_grenade_gravity" )
 		//PrecacheWeapon( $"mp_weapon_3030" )//Disabled til we get original models
 		//PrecacheWeapon( $"mp_weapon_car" )
 		//PrecacheWeapon( $"mp_weapon_dragon_lmg" )

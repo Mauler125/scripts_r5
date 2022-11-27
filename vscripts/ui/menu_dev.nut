@@ -351,6 +351,8 @@ void function SetupDefaultDevCommandsMP()
 	SetupDevCommand( "Toggle Skybox View", "script thread ToggleSkyboxView()" )
 	SetupDevCommand( "Toggle HUD", "ToggleHUD" )
 
+	SetupDevCommand( "Equip Custom Heirloom", "script thread SetupHeirloom()" )
+	SetupDevCommand( "Equip Custom Heirloom (All Players)", "script thread SetupHeirloom( true )" )
 	//SetupDevCommand( "Toggle Offhand Low Recharge", "ToggleOffhandLowRecharge" )
 	//SetupDevCommand( "Map Metrics Toggle", "script_client GetLocalClientPlayer().ClientCommand( \"toggle map_metrics 0 1 2 3\" )" )
 	//SetupDevCommand( "Toggle Pain Death sound debug", "script TogglePainDeathDebug()" )
@@ -364,7 +366,6 @@ void function SetupDefaultDevCommandsMP()
 	SetupDevCommand( "Toggle Third Person Mode", "ToggleThirdPerson" )
 
 	SetupDevMenu( "Prototypes", SetDevMenu_Prototypes )
-	SetupDevMenu( "Custom Heirlooms", SetDevMenu_Heirlooms )
 
 	// This adds CAPTURE MODE every time you load a level.
 	// Capture mode doesn't work, so I am commenting this out.
@@ -792,24 +793,9 @@ void function SetupPrototypesDevMenu()
 {
 	SetupDevCommand( "Toggle Akimbo With Current Weapon", "script DEV_ToggleAkimboWeapon(gp()[0])" )
 	SetupDevCommand( "Toggle Akimbo With Holstered Weapon", "script DEV_ToggleAkimboWeaponAlt(gp()[0])" )
-	SetupDevCommand( "Change Player Model - R2 Pilot", "script BecomePilot(gp()[0])" )
-	SetupDevCommand( "Change Player Model - Revenant", "script BecomeRevenant(gp()[0])" )
-	SetupDevCommand( "Change Player Model - Loba", "script BecomeLoba(gp()[0])" )
-	SetupDevCommand( "Change Player Model - Rampart", "script BecomeRampart(gp()[0])" )
 	// SetupDevCommand( "Change to Shadow Squad", "script Dev_ShadowFormEnable( GP() )" )
 }
 
-void function SetDevMenu_Heirlooms( var _ )
-{
-	thread ChangeToThisMenu( SetupHeirloomsDevMenu )
-}
-
-void function SetupHeirloomsDevMenu()
-{
-	SetupDevCommand( "Dataknife Kunai", "script thread SetupHeirloom(true)" )
-	SetupDevCommand( "Boxing Ring Gloves", "script thread SetupHeirloom(false,true)" )
-	SetupDevCommand( "Bolo Sword", "script thread SetupHeirloom()" )
-}
 
 void function RunCodeDevCommandByAlias( string alias )
 {

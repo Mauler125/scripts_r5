@@ -98,6 +98,9 @@ void function EntitiesDidLoad()
 		test_runmapchecks()
 	#endif
 
+	if( GetCurrentPlaylistVarBool( "r5reloaded_aimtrainer", false ) )
+		return
+
 	GeyserInit()
 	Updrafts_Init()
 

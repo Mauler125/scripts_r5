@@ -6,8 +6,8 @@ WeaponData
 	"description" 									"Throwing Knife"
 	"longdesc" 										"Throwing Knife"
 
-	"menu_icon"										"rui/weapon_icons/r5/weapon_throwingknife"
-	"hud_icon"										"rui/weapon_icons/r5/weapon_throwingknife"
+	"menu_icon"										"rui/hud/loot/loot_swap_icon"
+	"hud_icon"										"rui/hud/loot/loot_swap_icon"
 
 	"weapon_type_flags"								"WPT_PRIMARY"
 	"is_toss_weapon"								"1"
@@ -34,15 +34,15 @@ WeaponData
 	"OnWeaponTossPrep"								"Grenade_OnWeaponTossPrep"
 	"OnWeaponTossCancel"							"Grenade_OnWeaponTossCancelDrop"
 	"OnWeaponDeactivate"							"Grenade_OnWeaponDeactivate"
-	//"OnWeaponActivate"							"OnWeaponActivate_weapon_throwingknife"
+	//"OnWeaponActivate"							    "OnWeaponActivate_weapon_throwingknife"
 	"OnProjectileCollision"							"OnProjectileCollision_weapon_throwingknife"
 
 	// Menu Stats
 
 	// Models
-	"viewmodel"									    "mdl/weapons/throwingknife/ptpov_throwing_knife.rmdl"
-	"playermodel"									"mdl/weapons/throwingknife/w_throwing_knife.rmdl"
-	"projectilemodel"								"mdl/weapons/throwingknife/w_throwing_knife.rmdl"
+	"viewmodel"									    "mdl/weapons/ptpov_throwing_knife.rmdl"
+	"playermodel"									"mdl/weapons/w_throwing_knife.rmdl"
+	"projectilemodel"								"mdl/weapons/w_throwing_knife.rmdl"
 	"projectile_lifetime" 							"15"
 	//"grenade_mover_destroy_when_planted"            "1"
 

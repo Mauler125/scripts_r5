@@ -7,7 +7,7 @@ global function OnProjectileCollision_weapon_softball
 global function OnWeaponNpcPrimaryAttack_weapon_softball
 #endif // #if SERVER
 
-const FUSE_TIME = 0.5 //Applies once the grenade has stuck to a surface.
+const FUSE_TIME = 2.0 //Applies once the grenade has stuck to a surface.
 
 var function OnWeaponPrimaryAttack_weapon_softball( entity weapon, WeaponPrimaryAttackParams attackParams )
 {
@@ -35,24 +35,26 @@ var function OnWeaponNpcPrimaryAttack_weapon_softball( entity weapon, WeaponPrim
 }
 #endif // #if SERVER
 
-void function FireGrenade( entity weapon, WeaponPrimaryAttackParams attackParams, isNPCFiring = false )
+function FireGrenade( entity weapon, WeaponPrimaryAttackParams attackParams, isNPCFiring = false )
 {
 	vector angularVelocity = Vector( RandomFloatRange( -1200, 1200 ), 100, 0 )
 
 	int damageType = DF_RAGDOLL | DF_EXPLOSION
 
 	WeaponFireGrenadeParams fireGrenadeParams
-	fireGrenadeParams.pos = attackParams.pos
-	fireGrenadeParams.vel = attackParams.dir
-	fireGrenadeParams.angVel = angularVelocity
-	//fireGrenadeParams.fuseTime = 15.0
-	fireGrenadeParams.scriptTouchDamageType = damageType // when a grenade "bonks" something, that shouldn't count as explosive.explosive
-	fireGrenadeParams.scriptExplosionDamageType = damageType
-	fireGrenadeParams.clientPredicted = !isNPCFiring
-	fireGrenadeParams.lagCompensated = true
-	fireGrenadeParams.useScriptOnDamage = false
+	fireGrenadeParams.pos                   = attackParams.pos
+	fireGrenadeParams.vel                   = attackParams.dir
+	fireGrenadeParams.angVel                = angularVelocity
+	fireGrenadeParams.clientPredicted       = !isNPCFiring
+	fireGrenadeParams.lagCompensated        = true
+	fireGrenadeParams.useScriptOnDamage     = false
 
-	entity nade = weapon.FireWeaponGrenade( fireGrenadeParams )
+	int damageFlags = weapon.GetWeaponDamageFlags()
+	fireGrenadeParams.scriptTouchDamageType     = (damageFlags & ~DF_EXPLOSION)
+	fireGrenadeParams.scriptExplosionDamageType = damageFlags
+	fireGrenadeParams.fuseTime                  = weapon.GetWeaponSettingFloat( eWeaponVar.projectile_lifetime )
+	entity deployable                           = weapon.FireWeaponGrenade( fireGrenadeParams )
+    entity nade                                 = weapon.FireWeaponGrenade( fireGrenadeParams )
 
 	if ( nade )
 	{
@@ -66,55 +68,38 @@ void function FireGrenade( entity weapon, WeaponPrimaryAttackParams attackParams
 	}
 }
 
-bool function PlantProjectileThatBouncesOffWalls( entity ent, table collisionParams, float bounceDot, vector angleOffset = <0, 0, 0> )
-{
-	// Satchel hit the world
-	float dot = expect vector( collisionParams.normal ).Dot( <0, 0, 1> )
-
-	var hitent = collisionParams.hitEnt
-    if(IsValid( hitent ) && hitent.IsNPC() || IsValid( hitent ) && hitent.IsPlayer()) {}
-	else if ( dot < bounceDot )
-		return false
-
-
-	return PlantStickyEntity( ent, collisionParams, angleOffset )
-}
-
 void function OnProjectileCollision_weapon_softball( entity projectile, vector pos, vector normal, entity hitEnt, int hitbox, bool isCritical )
 {
-    table collisionParams =
+	bool didStick = PlantSuperStickyGrenade( projectile, pos, normal, hitEnt, hitbox )
+	if ( !didStick )
+		return
+
+	#if SERVER
+		if ( IsAlive( hitEnt ) && hitEnt.IsPlayer() )
+		{
+			EmitSoundOnEntityOnlyToPlayer( projectile, hitEnt, "weapon_softball_grenade_attached_1P" )
+			EmitSoundOnEntityExceptToPlayer( projectile, hitEnt, "weapon_softball_grenade_attached_3P" )
+            EmitSoundOnEntityOnlyToPlayer( projectile, hitEnt, "explo_softball_impact_1p" )
+			EmitSoundOnEntityExceptToPlayer( projectile, hitEnt, "explo_softball_impact_3p" )
+		}
+		else
+		{
+            EmitSoundOnEntity( projectile, "explo_softball_impact_3p" )
+			EmitSoundOnEntity( projectile, "weapon_softball_grenade_attached_3P" )
+		}
+		thread DetonateStickyAfterTime( projectile, FUSE_TIME, normal )
+	#endif
+}
+
+#if SERVER
+// need this so grenade can use the normal to explode
+void function DetonateStickyAfterTime( entity projectile, float delay, vector normal )
+{
+	wait delay
+	if ( IsValid( projectile ) )
     {
-        pos = pos,
-        normal = normal,
-        hitEnt = hitEnt,
-        hitbox = hitbox
+        projectile.GrenadeExplode( normal )
     }
 
-	int bounceCount = projectile.GetProjectileWeaponSettingInt( eWeaponVar.grenade_arc_indicator_bounce_count )
-	if ( projectile.proj.projectileBounceCount >= bounceCount + 1)
-	{
-		projectile.GrenadeExplode( projectile.GetForwardVector() )
-		return
-	}
-
-	projectile.proj.projectileBounceCount++
-
-	if ( PlantProjectileThatBouncesOffWalls( projectile, collisionParams, 0.2 ) )
-	{
-	    #if SERVER
-	    projectile.SetGrenadeTimer( FUSE_TIME )
-	    #endif
-
-	    #if SERVER
-	    	if ( IsAlive( hitEnt ) && hitEnt.IsPlayer() )
-	    	{
-	    		EmitSoundOnEntityOnlyToPlayer( projectile, hitEnt, "weapon_softball_grenade_attached_1P" )
-	    		EmitSoundOnEntityExceptToPlayer( projectile, hitEnt, "weapon_softball_grenade_attached_3P" )
-	    	}
-	    	else
-	    	{
-	    		EmitSoundOnEntity( projectile, "weapon_softball_grenade_attached_3P" )
-	    	}
-	    #endif
-	}
 }
+#endif

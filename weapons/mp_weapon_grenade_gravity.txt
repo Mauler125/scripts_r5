@@ -13,7 +13,7 @@ WeaponData
 	"weaponType"									"anti_titan"
 	"offhand_toss"									"1"
 	"minimap_reveal_distance"						"32000"
-	"menu_category"									"ordnance"
+	"menu_category"									"ordnance"								
 	"does_not_interrupt_cloak"						"1"
 	"ads_dof_disable"								"1"
 	"allow_gibraltar_shield"                        "0"
@@ -107,6 +107,7 @@ WeaponData
 		"grenade_arc_indicator_bounce_count"			"<KEEP_DEFAULT>"
 		"grenade_arc_indicator_effect"					"<KEEP_DEFAULT>"
 
+		"damage_heavyarmor_nontitan_scale"				"0.5"
 		"sound_weapon_ready"							"HUD_ordinance_meter_replenished_1P"
 	}
 
@@ -141,6 +142,7 @@ WeaponData
 		"grenade_arc_indicator_bounce_count"			"1"
 		"grenade_arc_indicator_effect"					"P_grenade_arc_proto"
 
+		"damage_heavyarmor_nontitan_scale"				"1"
 		"sound_weapon_ready"							"HUD_ordinance_meter_replenished_SP"
 	}
 
@@ -275,19 +277,6 @@ WeaponData
 
 	Mods
 	{
-		survival_finite_ordnance
-		{
-			"ammo_clip_size"								"100"
-			"ammo_default_total"							"0"
-			"ammo_display"									"count"
-			"ammo_min_to_fire"								"1"
-			"ammo_per_shot"									"1"
-			"ammo_stockpile_max"							"0"
-			"regen_ammo_refill_rate"						"0"
-			"regen_ammo_refill_start_delay"					"0.0"
-			"ammo_no_remove_from_stockpile"					"1"
-		}
-
 		pas_ordnance_pack
 		{
 			"regen_ammo_refill_rate"   						"*1.6"
@@ -299,15 +288,6 @@ WeaponData
 			active_crosshair_count				"1"
 			rui_crosshair_index					"1"
 		}
-
-	    survival_finite_ammo
-	    {
-            "ammo_default_total"					"0"
-            "ammo_stockpile_max"					"24"
-            "ammo_no_remove_from_stockpile"			"0"
-
-	   		"uses_ammo_pool"						"1"
-	    }
 
 		bc_frag_refill
 		{

@@ -244,8 +244,6 @@ Scripts:
 	weapons/_weapon_dialogue.nut
 	weapons/_weapon_utility.nut
 	weapons/_weapon_reactive_effects.gnut
-	weapons/mp_weapon_grenade_gravity.nut
-	weapons/mp_weapon_rocket_launcher.nut
 	weapons/mp_weapon_satchel.nut
 	weapons/mp_ability_cloak.nut
 	weapons/mp_ability_grapple.nut
@@ -275,7 +273,6 @@ Scripts:
 	weapons/mp_weapon_lstar.nut
 	weapons/mp_weapon_energy_ar.nut
 	weapons/mp_weapon_softball.nut
-	weapons/mp_weapon_smr.nut
 	weapons/mp_weapon_rspn101.nut
 	weapons/mp_weapon_vinson.nut
 	weapons/mp_weapon_mastiff.nut
@@ -811,6 +808,17 @@ Scripts:
 	
 	//CTF
 	ui/CTFMenus/menu_ctf_respawn.nut
+	//FR Challenges
+	ui/FRChallenges/menu_frchallenges.nut
+	ui/FRChallenges/mainmenu_challenges.nut
+	ui/FRChallenges/mainmenu_history.nut
+	ui/FRChallenges/mainmenu_settings.nut
+	ui/FRChallenges/mainmenu_settings_weaponselector.nut
+	ui/FRChallenges/panel_buymenu1.nut
+	ui/FRChallenges/panel_buymenu2.nut
+	ui/FRChallenges/panel_buymenu3.nut
+	ui/FRChallenges/panel_buymenu4.nut
+	ui/FRChallenges/panel_buymenu5.nut
 
 	//KillReplay
 	ui/KillReplay/menu_killreplay.nut
@@ -909,8 +917,10 @@ Scripts:
 [
 	gamemodes/custom_tdm/sh_gamemode_custom_tdm.nut
 	gamemodes/custom_tdm/custom_tdm_settings.nut
+
 	gamemodes/custom_ctf/sh_gamemode_custom_ctf.nut
 	gamemodes/custom_ctf/custom_ctf_settings.nut
+	gamemodes/custom_aimtrainer/sh_aimtrainer.nut
 	lobby/lobbyvm/sh_lobbyvm.nut
 ]
 
@@ -918,7 +928,10 @@ When: "SERVER"
 Scripts:
 [
 	gamemodes/custom_tdm/_gamemode_custom_tdm.nut
+
 	gamemodes/custom_ctf/_gamemode_custom_ctf.nut
+
+	gamemodes/custom_aimtrainer/_aimtrainer.nut
 	lobby/lobbyvm/_lobbyvm.nut
 ]
 
@@ -926,7 +939,9 @@ When: "CLIENT"
 Scripts:
 [
 	gamemodes/custom_tdm/cl_gamemode_custom_tdm.nut
+
 	gamemodes/custom_ctf/cl_gamemode_custom_ctf.nut
+	gamemodes/custom_aimtrainer/cl_aimtrainer.nut
 	lobby/lobbyvm/cl_lobbyvm.nut
 ]
 

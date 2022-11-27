@@ -69,7 +69,6 @@ global enum eDamageSourceId
 	mp_weapon_r97
 	mp_weapon_dmr
 	mp_weapon_wingman
-	mp_weapon_wingman_n
 	mp_weapon_wingmanelite
 	mp_weapon_semipistol
 	mp_weapon_autopistol
@@ -82,7 +81,6 @@ global enum eDamageSourceId
 	mp_weapon_arc_blast
 	mp_weapon_thermite_grenade
 	mp_weapon_nuke_satchel
-	mp_weapon_satchel
 	mp_extreme_environment
 	mp_weapon_shotgun_pistol
 	mp_weapon_doubletake
@@ -91,20 +89,15 @@ global enum eDamageSourceId
 	mp_weapon_wrecking_ball
 	mp_weapon_melee_survival
 	mp_weapon_pdw
+	mp_weapon_epg
 	mp_weapon_energy_ar
 	mp_weapon_volt_smg
 	mp_weapon_defender
+	mp_weapon_softball
 	mp_weapon_warmachine
 	mp_weapon_car
 	mp_weapon_3030
 	mp_weapon_dragon_lmg
-	mp_weapon_throwingknife
-	mp_weapon_softball
-	mp_weapon_epg
-	mp_weapon_smr
-	mp_weapon_rocket_launcher
-	mp_weapon_grenade_electric_smoke
-	mp_weapon_grenade_gravity
 	//
 	melee_pilot_emptyhanded
 	melee_pilot_arena
@@ -122,12 +115,6 @@ global enum eDamageSourceId
 	melee_titan_punch_drone
 	melee_titan_sword
 	melee_titan_sword_aoe
-	
-	melee_boxing_ring
-	mp_weapon_melee_boxing_ring
-	
-	melee_dataknife_kunai
-	mp_weapon_dataknife_kunai_primary
 
 	melee_wraith_kunai
 	mp_weapon_wraith_kunai_primary
@@ -157,8 +144,6 @@ global enum eDamageSourceId
 	mp_turretweapon_blaster
 	mp_turretweapon_plasma
 	mp_turretweapon_sentry
-	mp_weapon_mobile_hmg
-	mp_weapon_smart_pistol
 
 	//Character Abilities
 	mp_weapon_defensive_bombardment_weapon
@@ -445,18 +430,16 @@ void function DamageTypes_Init()
 
 	file.damageSourceIDToImage =
 	{
+		//
+		//
+		//
+		//
+		//
 	}
 
-	file.damageSourceIDToImage[eDamageSourceId.melee_shadowsquad_hands] 	<- $"rui/gamemodes/shadow_squad/shadow_icon_small"
-	file.damageSourceIDToImage[eDamageSourceId.mp_weapon_volt_smg] 			<- $"rui/weapon_icons/r5/weapon_volt"
-	file.damageSourceIDToImage[eDamageSourceId.mp_weapon_sentinel] 			<- $"rui/weapon_icons/r5/weapon_sentinel"
-	file.damageSourceIDToImage[eDamageSourceId.mp_weapon_softball] 			<- $"r2_ui/menus/loadout_icons/primary_weapon/primary_softball"
-	file.damageSourceIDToImage[eDamageSourceId.mp_weapon_epg] 				<- $"r2_ui/menus/loadout_icons/primary_weapon/primary_epg1"
-	file.damageSourceIDToImage[eDamageSourceId.mp_weapon_rocket_launcher] 	<- $"r2_ui/menus/loadout_icons/anti_titan/at_archer"
-	file.damageSourceIDToImage[eDamageSourceId.mp_weapon_smr] 				<- $"r2_ui/menus/loadout_icons/anti_titan/at_sidewinder"
-	file.damageSourceIDToImage[eDamageSourceId.mp_weapon_wingman_n]			<- $"r2_ui/menus/loadout_icons/primary_weapon/primary_wingman_elite"
-	file.damageSourceIDToImage[eDamageSourceId.mp_weapon_mobile_hmg]		<- $"rui/weapon_icons/r5/weapon_rampart_turret"
-	file.damageSourceIDToImage[eDamageSourceId.mp_weapon_smart_pistol]		<- $"rui/weapon_icons/r5/weapon_smart_pistol"
+		file.damageSourceIDToImage[eDamageSourceId.melee_shadowsquad_hands] <- $"rui/gamemodes/shadow_squad/shadow_icon_small"
+		file.damageSourceIDToImage[eDamageSourceId.mp_weapon_volt_smg] <- $"rui/weapon_icons/r5/weapon_volt"
+		file.damageSourceIDToImage[eDamageSourceId.mp_weapon_sentinel] <- $"rui/weapon_icons/r5/weapon_sentinel"
 
 	file.damageSourceIDToName =
 	{
@@ -570,41 +553,29 @@ void function DamageTypes_Init()
 		[ eDamageSourceId.melee_titan_punch_drone ] 				= "#DEATH_TITAN_MELEE",
 		[ eDamageSourceId.melee_titan_sword ]						= "#DEATH_TITAN_SWORD",
 		[ eDamageSourceId.melee_titan_sword_aoe ]					= "#DEATH_TITAN_SWORD",
+		[ eDamageSourceId.melee_wraith_kunai ] 						= "#DEATH_MELEE_WRAITH_KUNAI",
+		[ eDamageSourceId.mp_weapon_wraith_kunai_primary ] 			= "#DEATH_MELEE_WRAITH_KUNAI",
+		[ eDamageSourceId.melee_bolo_sword ] 						= "Bolo Sword Melee",
+		[ eDamageSourceId.mp_weapon_bolo_sword_primary ] 			= "Bolo Sword Melee",
 		[ eDamageSourceId.mp_weapon_volt_smg ] 						= "#WPN_VOLT_SMG",
 		[ eDamageSourceId.mp_weapon_sentinel ] 						= "Sentinel",
-		[ eDamageSourceId.mp_weapon_mobile_hmg ] 					= "Sheila",
-		[ eDamageSourceId.mp_weapon_softball ] 						= "Softball",
-		[ eDamageSourceId.mp_weapon_epg ] 							= "EPG",
-		[ eDamageSourceId.mp_weapon_smr ] 							= "Sidewinder SMR",
-		[ eDamageSourceId.mp_weapon_rocket_launcher ] 				= "Archer",
 		[ eDamageSourceId.mp_weapon_car ] 							= "Car SMG",
 		[ eDamageSourceId.mp_weapon_3030 ] 							= "30-30 Repeater",
 		[ eDamageSourceId.mp_weapon_dragon_lmg ] 					= "Rampage LMG",
 		[ eDamageSourceId.mp_ability_octane_stim ] 					= "#WPN_OCTANE_STIM_SHORT",
-		[ eDamageSourceId.mp_weapon_tesla_trap ] 					= "#DEATH_TESLA_TRAP",
-		[ eDamageSourceId.mp_ability_crypto_drone_emp ]				= "#WPN_DRONE_EMP",
-		[ eDamageSourceId.mp_ability_crypto_drone_emp_trap ]		= "#WPN_DRONE_EMP",
 
-		[ eDamageSourceId.melee_wraith_kunai ] 						= "#DEATH_MELEE_WRAITH_KUNAI",
-		[ eDamageSourceId.mp_weapon_wraith_kunai_primary ] 			= "#DEATH_MELEE_WRAITH_KUNAI",
-		[ eDamageSourceId.melee_bloodhound_axe ] 					= "#DEATH_MELEE_BLOODHOUND_AXE",
-		[ eDamageSourceId.mp_weapon_bloodhound_axe_primary ] 		= "#DEATH_MELEE_BLOODHOUND_AXE",
-		[ eDamageSourceId.melee_lifeline_baton ]					= "#DEATH_MELEE_LIFELINE_BATON",
-		[ eDamageSourceId.mp_weapon_lifeline_baton_primary ]		= "#DEATH_MELEE_LIFELINE_BATON",
-		[ eDamageSourceId.melee_shadowsquad_hands ] 				= "#DEATH_MELEE_SHADOWSQUAD_HANDS",
-		[ eDamageSourceId.mp_weapon_shadow_squad_hands_primary ] 	= "#DEATH_MELEE_SHADOWSQUAD_HANDS",
-		[ eDamageSourceId.melee_bolo_sword ] 						= "Bolo Sword Melee",
-		[ eDamageSourceId.mp_weapon_bolo_sword_primary ] 			= "Bolo Sword Melee",
-		[ eDamageSourceId.melee_boxing_ring ] 						= "Honorable Fisticuffs",
-		[ eDamageSourceId.mp_weapon_melee_boxing_ring ] 			= "Honorable Fisticuffs",
-		[ eDamageSourceId.melee_dataknife_kunai ] 					= "Dataknife Kunai",
-		[ eDamageSourceId.mp_weapon_dataknife_kunai_primary ] 		= "Dataknife Kunai",
-		[ eDamageSourceId.mp_weapon_throwingknife ] 				= "Throwing Knife",
-		[ eDamageSourceId.mp_weapon_satchel ] 	 					= "Satchel",
-		[ eDamageSourceId.mp_weapon_wingman_n ] 	 				= "Wingman Elite",
-		[ eDamageSourceId.mp_weapon_smart_pistol ] 	 				= "Smart Pistol",
-		[ eDamageSourceId.mp_weapon_grenade_electric_smoke ] 	 	= "Electric Smoke",
-		[ eDamageSourceId.mp_weapon_grenade_gravity ] 	 			= "Gravity Star"
+		[ eDamageSourceId.mp_weapon_tesla_trap ] 					= "#DEATH_TESLA_TRAP"
+
+		,[ eDamageSourceId.mp_ability_crypto_drone_emp ]			= "#WPN_DRONE_EMP" //
+		,[ eDamageSourceId.mp_ability_crypto_drone_emp_trap ]		= "#WPN_DRONE_EMP"
+
+		,[ eDamageSourceId.melee_bloodhound_axe ] 				= "#DEATH_MELEE_BLOODHOUND_AXE"
+		,[ eDamageSourceId.mp_weapon_bloodhound_axe_primary ] 	= "#DEATH_MELEE_BLOODHOUND_AXE"
+
+		,[ eDamageSourceId.melee_lifeline_baton ]				= "#DEATH_MELEE_LIFELINE_BATON"
+		,[ eDamageSourceId.mp_weapon_lifeline_baton_primary ]	= "#DEATH_MELEE_LIFELINE_BATON"
+		,[ eDamageSourceId.melee_shadowsquad_hands ] 				= "#DEATH_MELEE_SHADOWSQUAD_HANDS"
+		,[ eDamageSourceId.mp_weapon_shadow_squad_hands_primary ] 	= "#DEATH_MELEE_SHADOWSQUAD_HANDS"
 	}
 
 	#if DEVELOPER
