@@ -60,8 +60,8 @@ npc_pilot_elite
 	aimassist_adspull_headshotAttachmentName	"HEADSHOT"
 	aimassist_adspull_headshotRadius			13.0
 
-	MeleeDamageMin					70
-	MeleeDamageMax					80
+	MeleeDamageMin					30
+	MeleeDamageMax					30
 	MeleeDamageRadius				32
 	MeleeRange						80
 	MeleeCosAngleRange				0.2
