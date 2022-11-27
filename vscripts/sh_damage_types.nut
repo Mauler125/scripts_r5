@@ -103,6 +103,8 @@ global enum eDamageSourceId
 	mp_weapon_epg
 	mp_weapon_smr
 	mp_weapon_rocket_launcher
+	mp_weapon_grenade_electric_smoke
+	mp_weapon_grenade_gravity
 	//
 	melee_pilot_emptyhanded
 	melee_pilot_arena
@@ -600,7 +602,9 @@ void function DamageTypes_Init()
 		[ eDamageSourceId.mp_weapon_throwingknife ] 				= "Throwing Knife",
 		[ eDamageSourceId.mp_weapon_satchel ] 	 					= "Satchel",
 		[ eDamageSourceId.mp_weapon_wingman_n ] 	 				= "Wingman Elite",
-		[ eDamageSourceId.mp_weapon_smart_pistol ] 	 				= "Smart Pistol"
+		[ eDamageSourceId.mp_weapon_smart_pistol ] 	 				= "Smart Pistol",
+		[ eDamageSourceId.mp_weapon_grenade_electric_smoke ] 	 	= "Electric Smoke",
+		[ eDamageSourceId.mp_weapon_grenade_gravity ] 	 			= "Gravity Star"
 	}
 
 	#if DEVELOPER
