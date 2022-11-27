@@ -795,7 +795,7 @@ void function SetupPrototypesDevMenu()
 	SetupDevCommand( "Change Legend - R2 Pilot", "script BecomePilot(gp()[0])" )
 	//SetupDevCommand( "Change Legend - Revenant", "script BecomeRevenant(gp()[0])" )
 	SetupDevCommand( "Change Legend - Loba", "script BecomeLoba(gp()[0])" )
-	//SetupDevCommand( "Change Legend - Rampart", "script BecomeRampart(gp()[0])" )
+	SetupDevCommand( "Change Legend - Rampart", "script BecomeRampart(gp()[0])" )
 	// SetupDevCommand( "Change to Shadow Squad", "script Dev_ShadowFormEnable( GP() )" )
 }
 

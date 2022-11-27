@@ -27,8 +27,9 @@ void function ShDevWeapons_Init()
 		PrecacheModel( $"mdl/Weapons/arms/pov_pilot_medium_loba.rmdl" )
 		PrecacheModel( $"mdl/humans/pilots/pilot_medium_reaper_m.rmdl" )
 		PrecacheModel( $"mdl/humans/pilots/pov_pilot_medium_reaper_m.rmdl" )
-		//PrecacheModel( $"mdl/Humans/class/medium/pilot_medium_rampart.rmdl" )
-		//PrecacheModel( $"mdl/props/rampart_gum/rampart_bubblegum.rmdl" )
+		PrecacheModel( $"mdl/Humans/class/medium/pilot_medium_rampart.rmdl" )
+		PrecacheModel( $"mdl/Weapons/arms/pov_pilot_medium_rampart.rmdl" )
+		PrecacheModel( $"mdl/props/rampart_gum/rampart_bubblegum.rmdl" )
 		PrecacheModel( $"mdl/props/loba_loot_stick/loba_loot_stick.rmdl" )
 	#endif
 
@@ -60,8 +61,8 @@ void function BecomeRampart(entity player)
 	if(!IsValid(player))
 		return
 
-	/*player.SetBodyModelOverride($"mdl/Humans/class/medium/pilot_medium_rampart.rmdl" )
-	player.SetArmsModelOverride($"mdl/Weapons/arms/pov_pilot_medium_rampart.rmdl" )*/
+	player.SetBodyModelOverride($"mdl/Humans/class/medium/pilot_medium_rampart.rmdl" )
+	player.SetArmsModelOverride($"mdl/Weapons/arms/pov_pilot_medium_rampart.rmdl" )
 }
 
 void function BecomeRevenant(entity player)
