@@ -21,8 +21,8 @@ void function ShDevWeapons_Init()
 		PrecacheWeapon( "melee_shadowsquad_hands" )
 		PrecacheWeapon( "mp_weapon_shadow_squad_hands_primary" )
 		
-		//PrecacheModel( $"mdl/humans/class/heavy/pilot_heavy_revenant.rmdl" )
-		//PrecacheModel( $"mdl/Weapons/arms/pov_pilot_heavy_revenant.rmdl" )
+		PrecacheModel( $"mdl/humans/class/heavy/pilot_heavy_revenant.rmdl" )
+		PrecacheModel( $"mdl/Weapons/arms/pov_pilot_heavy_revenant.rmdl" )
 		PrecacheModel( $"mdl/Humans/class/medium/pilot_medium_loba.rmdl" )
 		PrecacheModel( $"mdl/Weapons/arms/pov_pilot_medium_loba.rmdl" )
 		PrecacheModel( $"mdl/humans/pilots/pilot_medium_reaper_m.rmdl" )
@@ -70,8 +70,8 @@ void function BecomeRevenant(entity player)
 	if(!IsValid(player))
 		return
 
-	/*player.SetBodyModelOverride($"mdl/humans/class/heavy/pilot_heavy_revenant.rmdl" )
-	player.SetArmsModelOverride($"mdl/Weapons/arms/pov_pilot_heavy_revenant.rmdl" )*/
+	player.SetBodyModelOverride($"mdl/humans/class/heavy/pilot_heavy_revenant.rmdl" )
+	player.SetArmsModelOverride($"mdl/Weapons/arms/pov_pilot_heavy_revenant.rmdl" )
 }
 
 void function DEV_ToggleAkimboWeapon(entity player)
