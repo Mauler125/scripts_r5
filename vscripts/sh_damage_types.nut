@@ -156,6 +156,7 @@ global enum eDamageSourceId
 	mp_turretweapon_plasma
 	mp_turretweapon_sentry
 	mp_weapon_mobile_hmg
+	mp_weapon_smart_pistol
 
 	//Character Abilities
 	mp_weapon_defensive_bombardment_weapon
@@ -453,6 +454,7 @@ void function DamageTypes_Init()
 	file.damageSourceIDToImage[eDamageSourceId.mp_weapon_smr] 				<- $"r2_ui/menus/loadout_icons/anti_titan/at_sidewinder"
 	file.damageSourceIDToImage[eDamageSourceId.mp_weapon_wingman_n]			<- $"r2_ui/menus/loadout_icons/primary_weapon/primary_wingman_elite"
 	file.damageSourceIDToImage[eDamageSourceId.mp_weapon_mobile_hmg]		<- $"rui/weapon_icons/r5/weapon_rampart_turret"
+	file.damageSourceIDToImage[eDamageSourceId.mp_weapon_smart_pistol]		<- $"rui/weapon_icons/r5/weapon_smart_pistol"
 
 	file.damageSourceIDToName =
 	{
@@ -597,7 +599,8 @@ void function DamageTypes_Init()
 		[ eDamageSourceId.mp_weapon_dataknife_kunai_primary ] 		= "Dataknife Kunai",
 		[ eDamageSourceId.mp_weapon_throwingknife ] 				= "Throwing Knife",
 		[ eDamageSourceId.mp_weapon_satchel ] 	 					= "Satchel",
-		[ eDamageSourceId.mp_weapon_wingman_n ] 	 					= "Wingman Elite"
+		[ eDamageSourceId.mp_weapon_wingman_n ] 	 				= "Wingman Elite",
+		[ eDamageSourceId.mp_weapon_smart_pistol ] 	 				= "Smart Pistol"
 	}
 
 	#if DEVELOPER
