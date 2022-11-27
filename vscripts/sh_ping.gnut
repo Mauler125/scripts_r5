@@ -551,9 +551,9 @@ PingTraceResults function DoPingTrace( entity player )
 #if SERVER || CLIENT
 vector function SanitizePingTraceEndPos(vector endPos)
 {
-	float posX = Clamp( endPos.x, -64000, 64000  )                                                                                                                                                                     
-	float posY = Clamp( endPos.y, -64000, 64000  )                                                                                                                                                                     
-	float posZ = Clamp( endPos.z, -64000, 64000  )                                                                                                                                                                     
+	float posX = Clamp( endPos.x, -64000, 64000  )
+	float posY = Clamp( endPos.y, -64000, 64000  )
+	float posZ = Clamp( endPos.z, -64000, 64000  )
 	return <posX, posY, posZ>
 }
 #endif
@@ -1903,7 +1903,7 @@ PingCommandParams function GetPingParamsForHitEnt( entity hitEnt, entity player,
 		entity doorEnt = GetDoorForHitEnt( processedHitEnt )
 		if ( IsValid( doorEnt ) )
 		{
-		
+
 				if ( HACK_IsVaultDoor( doorEnt ) )
 				{
 					entity vaultPanel = GetVaultPanelFromDoor( doorEnt )
@@ -2247,20 +2247,28 @@ int function GetEnemyPingCommsAction( int pingType, entity pingedEnt )
 			case "npc_boss_guts":
 			case "npc_training_dummy":
 			case "npc_dummie_combat":
-			case "npc_spider":
-			case "npc_soldier_infected":
-			case "npc_prowler":
 			case "npc_marvin":
-				// no specific callouts for these
-				break;
+				return eCommsAction.PING_ENEMY_SPOTTED_GENERAL
 
-				// Infantry:
-
+			// Infantry:
 			case "npc_soldier_spcore_sniper":
 				return eCommsAction.PING_ENEMY_NPC_SNIPER
 
-				// Robots:
+			case "npc_soldier_infected":
+				return eCommsAction.PING_ENEMY_NPC_INFECTED
 
+			// npc pilots:
+			case "npc_pilot_elite":
+            case "npc_pilot_elite_assassin":
+            case "npc_pilot_elite_assassin_cqb":
+				return eCommsAction.PING_ENEMY_SPOTTED_GENERAL
+            case "npc_pilot_elite_assassin_sniper":
+				return eCommsAction.PING_ENEMY_NPC_SNIPER
+
+			// Robots:
+
+			case "npc_spectre":
+			case "npc_spectre_mortar":
 			case "npc_spectre_outlands":
 				return eCommsAction.PING_ENEMY_NPC_SPECTRE
 
@@ -2270,22 +2278,119 @@ int function GetEnemyPingCommsAction( int pingType, entity pingedEnt )
 			case "npc_super_spectre_melee":
 				return eCommsAction.PING_ENEMY_NPC_REAPER
 
+			case "npc_drone":
+			case "npc_drone_beam":
+			case "npc_drone_cloaked":
 			case "npc_drone_plasma":
+			case "npc_drone_plasma_fast":
+			case "npc_drone_plasma_fd":
+			case "npc_drone_rocket":
+			case "npc_drone_rocket_fast":
+			case "npc_drone_shield":
+			case "npc_drone_worker":
+			case "npc_drone_worker_fast":
 				return eCommsAction.PING_ENEMY_NPC_DRONE
 
+			case "npc_frag_drone":
+			case "npc_frag_drone_fd":
+			case "npc_frag_drone_throwable":
 			case "npc_frag_drone_outlands":
 				return eCommsAction.PING_ENEMY_NPC_TICK
 
-			case "npc_titan_outlands":
-				return eCommsAction.PING_ENEMY_NPC_TITAN
+			// Creatures:
 
-				// Creatures:
-
+			case "npc_spider":
+				return eCommsAction.PING_ENEMY_NPC_SPIDER
+			case "npc_prowler":
+				return eCommsAction.PING_ENEMY_NPC_PROWLER
 			case "npc_goliath":
 				return eCommsAction.PING_ENEMY_NPC_GOLIATH
 
+			case "npc_gunship":
+			    return eCommsAction.PING_ENEMY_NPC_GUNSHIP
+
+			// titans
+
+			case "npc_titan_outlands":
+			case "npc_titan":
+			case "npc_titan_arc":
+			case "npc_titan_atlas":
+			case "npc_titan_atlas_ion_prime_bounty":
+			case "npc_titan_atlas_stickybomb":
+			case "npc_titan_atlas_stickybomb_boss_fd":
+			case "npc_titan_atlas_stickybomb_bounty":
+			case "npc_titan_atlas_tracker":
+			case "npc_titan_atlas_tracker_boss_fd":
+			case "npc_titan_atlas_tracker_bounty":
+			case "npc_titan_atlas_tracker_fd_sniper":
+			case "npc_titan_atlas_tracker_mortar":
+			case "npc_titan_atlas_vanguard":
+			case "npc_titan_atlas_vanguard_boss_fd":
+			case "npc_titan_atlas_vanguard_bounty":
+			case "npc_titan_auto":
+			case "npc_titan_auto_atlas":
+			case "npc_titan_auto_atlas_ion_prime":
+			case "npc_titan_auto_atlas_rocketeer":
+			case "npc_titan_auto_atlas_stickybomb":
+			case "npc_titan_auto_atlas_tone_prime":
+			case "npc_titan_auto_atlas_tracker":
+			case "npc_titan_auto_atlas_vanguard":
+			case "npc_titan_auto_ogre":
+			case "npc_titan_auto_ogre_fighter":
+			case "npc_titan_auto_ogre_legion_prime":
+			case "npc_titan_auto_ogre_meteor":
+			case "npc_titan_auto_ogre_minigun":
+			case "npc_titan_auto_ogre_scorch_prime":
+			case "npc_titan_auto_stryder":
+			case "npc_titan_auto_stryder_arc":
+			case "npc_titan_auto_stryder_leadwall":
+			case "npc_titan_auto_stryder_northstar_prime":
+			case "npc_titan_auto_stryder_ronin_prime":
+			case "npc_titan_auto_stryder_sniper":
+			case "npc_titan_buddy":
+			case "npc_titan_buddy_s2s":
+			case "npc_titan_buddy_skyway":
+			case "npc_titan_mortar":
+			case "npc_titan_nuke":
+			case "npc_titan_ogre":
+			case "npc_titan_ogre_fighter":
+			case "npc_titan_ogre_fighter_berserker_core":
+			case "npc_titan_ogre_legion_prime_bounty":
+			case "npc_titan_ogre_meteor":
+			case "npc_titan_ogre_meteor_boss_fd":
+			case "npc_titan_ogre_meteor_bounty":
+			case "npc_titan_ogre_meteor_nuke":
+			case "npc_titan_ogre_minigun":
+			case "npc_titan_ogre_minigun_boss_fd":
+			case "npc_titan_ogre_minigun_bounty":
+			case "npc_titan_ogre_minigun_nuke":
+			case "npc_titan_ogre_scorch_prime_bounty":
+			case "npc_titan_proto_stasisgun":
+			case "npc_titan_sarah":
+			case "npc_titan_sniper":
+			case "npc_titan_stryder":
+			case "npc_titan_stryder_arc":
+			case "npc_titan_stryder_leadwall":
+			case "npc_titan_stryder_leadwall_arc":
+			case "npc_titan_stryder_leadwall_boss_fd":
+			case "npc_titan_stryder_leadwall_bounty":
+			case "npc_titan_stryder_leadwall_shift_core":
+			case "npc_titan_stryder_northstar_prime_bounty":
+			case "npc_titan_stryder_rocketeer":
+			case "npc_titan_stryder_rocketeer_dash_core":
+			case "npc_titan_stryder_sniper":
+			case "npc_titan_stryder_sniper_boss_fd":
+			case "npc_titan_stryder_sniper_bounty":
+			case "npc_titan_stryder_sniper_fd":
+			case "npc_titan_vanguard":
+				return eCommsAction.PING_ENEMY_NPC_TITAN
+
 			default:
+			{
 				Warning( "%s() - Unhandled npc type '%s'.", FUNC_NAME(), settingsName )
+				return eCommsAction.PING_ENEMY_SPOTTED_GENERAL
+			}
+
 		}
 	}
 
@@ -2412,7 +2517,7 @@ int function GetCommsActionForPing( entity pingingPlayer, int pingType, entity p
 
 		case ePingType.ENEMY_LOOTSOURCE:
 			return eCommsAction.PING_NPC_LOOT_TICK
-			
+
 		case ePingType.ENEMY_SUSPECTED:
 			return eCommsAction.PING_ENEMY_SUSPECTED
 
