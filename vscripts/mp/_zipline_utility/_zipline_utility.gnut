@@ -57,12 +57,6 @@ global enum eZiplineSkinType
     _COUNT     // 3
 }
 
-global enum eZiplineEndPointType
-{
-    START,     // 0
-    END        // 1
-}
-
 global struct ZiplineState
 {
     bool error                = false
