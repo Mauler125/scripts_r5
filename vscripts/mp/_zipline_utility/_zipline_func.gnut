@@ -81,8 +81,9 @@ ZiplineUtility function Zipline_RegisterRopeOnly( string ziplineName, vector sta
 return ziplineUtility.zipline[ziplineName] }
 
 
-void function CreateZiplineByUnityEditor( vector originStart, vector anglesStart, vector originEnd, vector anglesEnd, bool isVertical, float fadeDistance, float scale, float width, float speedScale,
-float lengthScale, bool preserveVelocity, bool disableDropToBottom, float startAutoDetachDistance, float endAutoDetachDistance, bool restPoint, bool pushOffInDirectionX, bool isMoving )
+ZiplineUtility function CreateZiplineByUnityEditor( vector originStart, vector anglesStart, vector originEnd, vector anglesEnd, bool isVertical, float fadeDistance, float scale, float width, float speedScale,
+float lengthScale, bool preserveVelocity, bool disableDropToBottom, float startAutoDetachDistance, float endAutoDetachDistance, bool restPoint, bool pushOffInDirectionX, bool isMoving,
+array< vector > optionalPanelsOrigin = [], array< vector > optionalPanelsAngles = [], array< int > optionalPanelsSkin = [] )
 {
     ZiplineUtility zipline
 
@@ -94,20 +95,38 @@ float lengthScale, bool preserveVelocity, bool disableDropToBottom, float startA
         Zipline_SetWidth( zipline, width ) // Preset: 1.0
         Zipline_SetSpeedScale( zipline, speedScale ) // Preset: 1.0
         Zipline_SetLengthScale( zipline, lengthScale ) // Preset: 1.0
-        if ( preserveVelocity ) Zipline_SetPreserveVelocity( zipline ) // Preset: false
-        if ( disableDropToBottom ) Zipline_DisableDropToBottom( zipline ) // Preset: true
+        if ( preserveVelocity )
+        Zipline_SetPreserveVelocity( zipline ) // Preset: false
+        if ( disableDropToBottom )
+        Zipline_DisableDropToBottom( zipline ) // Preset: true
         Zipline_SetAutoDetachDistance( zipline, startAutoDetachDistance, endAutoDetachDistance ) // Preset: Vertical -> Start: 100.0 End: 50.0 | Non Vertical -> Start && End: 150.0
-        if ( restPoint ) Zipline_EnableRestPoint( zipline ) // Preset: false
-        if ( pushOffInDirectionX ) // Preset: 1
-        {
-            Zipline_SetPushOffInDirectionX( zipline, 1 )
-        } else {
-            Zipline_SetPushOffInDirectionX( zipline, 0 )
-        }
-        if ( isMoving ) Zipline_SetIsMoving( zipline ) // Preset: false
+        if ( restPoint )
+        Zipline_EnableRestPoint( zipline ) // Preset: false
+        if ( !pushOffInDirectionX )
+        Zipline_SetPushOffInDirectionX( zipline, 0 ) // Preset: 1
+        if ( isMoving )
+        Zipline_SetIsMoving( zipline ) // Preset: false
+
+        // Panels
+            bool verify = false
+            int o = optionalPanelsOrigin.len()
+            int a = optionalPanelsAngles.len()
+            int s = optionalPanelsSkin.len()
+
+            if ( o != 0 && o == a && o == s ) verify = true
+
+            if ( verify )
+            {
+                for ( int i = 0 ; i < o ; i++ )
+                Zipline_CreatePanel( zipline, optionalPanelsOrigin[i], optionalPanelsAngles[i], optionalPanelsSkin[i] )
+            }
+        //
+
         zipline.vars.isUnityZipline = true
+
     RegisteredZipline_Init( zipline )
-}
+
+return zipline }
 
 
 ////////////////////////////////////////////////////////////
