@@ -2,6 +2,7 @@ untyped
 
 
 global function CreateRandomZiplineOnClientConnected
+global function ClientCommand_GetZiplineInfo
 
 
 void function CreateRandomZiplineOnClientConnected( entity player )
@@ -26,83 +27,267 @@ void function ThreadCreateRandomZipline( entity player )
     switch ( GetMapName() )
     {
         case "mp_rr_canyonlands_staging":
-            origin = < 31931, -6148, -29070 >
-            angles = < 0, -90, 0 >
+            origin = < 32000, -6000, -27500 >
+            angles = < 0, 0, 0 >
             break
         case "mp_rr_canyonlands_64k_x_64k":
         case "mp_rr_canyonlands_mu1":
         case "mp_rr_canyonlands_mu1_night":
-            origin = < 858, -10082, 3340 >
-            angles = < 0, -90, 0 >
+            origin = < -2500, -12500, 5000 >
+            angles = < 0, 0, 0 >
             break
         case "mp_rr_desertlands_64k_x_64k":
         case "mp_rr_desertlands_64k_x_64k_nx":
         case "mp_rr_desertlands_64k_x_64k_tt":
-            origin = < 9485, 10022, -4329 >
-            angles = < 0, -90, 0 >
+            origin = < 1700, 5000, -1500 >
+            angles = < 0, 0, 0 >
             break
         default:
             origin = < 0, 0, 0 >
-            angles = < 0, -90, 0 >
+            angles = < 0, 0, 0 >
         break
 
     }
 
-    player.SetOrigin( origin )
+    ZiplinePlatformInit( origin )
+
+    player.SetOrigin( origin + < 0, 0, 96 > )
     player.SetAngles( angles )
+    player.SetVelocity( < 0, 0, 0 > )
 
-    float heigth = 0.0 ; ZiplineUtility zipline
+    int entire = eZiplineSkinType.ENTIRE
+    int arm_only = eZiplineSkinType.ARM_ONLY
+    int invisible = eZiplineSkinType.INVISIBLE
 
-    // Creation of ziplines
-    for ( int i = 0 ; i < 8 ; i++)
+    // Non vertical
+    array< vector > startZipPos = [
+    < 255.9991, -1024.0430, 16.0000 >,
+    < 255.9991, -768.0442, 16.0000 >,
+    < 255.9994, 768.0325, 16.0000 >,
+    < 255.9994, 1024.0430, 16.0000 > ]
+
+    array< vector > endZipPos = [
+    < 1400.0000, -1024.0220, 160.0000 >,
+    < 1400.0000, -768.0226, 160.0000 >,
+    < 1400.0000, 768.0540, 160.0000 >,
+    < 1400.0000, 1024.0650, 160.0000 > ]
+
+
+    array< int > startZipSkin = [
+    entire,
+    entire,
+    entire,
+    entire ]
+
+    array< int > endZipSkin = [
+    arm_only,
+    arm_only,
+    arm_only,
+    arm_only  ]
+
+
+    array< vector > panelPos = [
+    < 0, 0, 0 >,
+    < 0, 0, 0 >,
+    < 0, 0, 0 >,
+    < 0, 0, 0 >, ]
+
+    array< vector > panelAng = [
+    < 0, 0, 0 >,
+    < 0, 0, 0 >,
+    < 0, 0, 0 >,
+    < 0, 0, 0 >, ]
+
+
+    ZiplineUtility zipline
+
+    // Create non vertical ziplines
+    for ( int i = 0 ; i < startZipPos.len() ; i++ )
     {
-        string randomZipline = "debug_zipline"
-        int startSkin = RandomIntRange( 0, 3 ) ; int endSkin = RandomIntRange( 0, 3 )
-        bool panel = CoinFlip() ; int panelSkin = RandomIntRange( 0, 2 )
-        bool moving = CoinFlip()
-        bool restPoint = CoinFlip()
-        bool verticalOffset = CoinFlip()
-        bool destroySupport = CoinFlip()
-        bool vel = CoinFlip()
-        bool bottom = CoinFlip()
-        int limit = RandomIntRange( 1, 10 )
-        float startAutoDetach = RandomFloatRange( 50, 400 )
-        float endAutoDetach = RandomFloatRange( 50, 400 )
-        float startOff = RandomFloatRange( 160, 280 ) ; float endOff = RandomFloatRange( 160, 280 )
-        float width = float( RandomIntRange( 2, 4 ) )
-        float speed = float( RandomIntRange( 1, 6 ) )
-        float scale = float( RandomIntRange( 1, 2 ) )
-        float length = RandomFloatRange( 0.90, 1.0 )
-        int detachOnUse = 0 /* RandomIntRange( 0, 2 ) */ ; int detachOnSpawn = 0 /* RandomIntRange( 0, 2 ) */
-        int dirX = RandomIntRange( 0, 2 )
-        int init = 1 // RandomIntRange( 0, 2 )
+        vector panelAngReform = panelAng[i]
+        panelAngReform.x    = panelAngReform.x % 180.0
+        panelAngReform.y    = panelAngReform.y % 180.0
+        panelAngReform.z    = panelAngReform.z % 180.0
 
-        if ( i == 2 ) zipline = Zipline_Register( randomZipline, origin - < 0, 200, heigth >, < 0, RandomFloatRange( 0, 180 ), 0 > )
-        else if ( i == 5 )  zipline = Zipline_Register( randomZipline, origin - < 0, 1200, heigth >, < 0, RandomFloatRange( 0, -180 ), 0 > )
-        else  zipline = Zipline_Register( randomZipline, origin - < 0, 200, heigth >, < 0, RandomFloatRange( 0, -180 ), 0 >, origin - < 0, 1200, heigth >, < 0, RandomFloatRange( 0, 180 ), 0 > )
-
-            Zipline_SetSkin( zipline, startSkin, endSkin )
-            if ( panel == true ) Zipline_CreatePanel( zipline, origin - < 100, 200, heigth >, < 0, RandomFloatRange( 0, 180 ), 0 >, panelSkin )
-            if ( moving == true ) Zipline_SetIsMoving( zipline )
-            if ( restPoint == true ) Zipline_EnableRestPoint( zipline )
-            if ( verticalOffset == true ) Zipline_DisableVerticalZiplineOffset( zipline )
-            if ( destroySupport == true ) Zipline_DestroyZiplineSupportOnPanelEnd( zipline )
-            if ( vel == true ) Zipline_SetPreserveVelocity( zipline )
-            if ( bottom == true ) Zipline_DisableDropToBottom( zipline )
-            Zipline_PanelUsableLimit( zipline, limit )
-            Zipline_SetAutoDetachDistance( zipline, startAutoDetach, endAutoDetach )
-            Zipline_SetZiplineAngles( zipline, < 0, RandomFloatRange( 0, -180 ), 0 >, < 0, RandomFloatRange( 0, 180 ), 0 > )
-            Zipline_SetArmOffset( zipline, startOff, endOff )
-            Zipline_SetWidth( zipline, width )
-            Zipline_SetSpeedScale( zipline, speed )
-            Zipline_SetScale( zipline, scale )
-            Zipline_SetLengthScale( zipline, length )
-            Zipline_SetDetachEndOnUse_OnSpawn( zipline, detachOnUse, detachOnSpawn )
-            Zipline_SetPushOffInDirectionX( zipline, dirX )
-        if ( init == 1 ) RegisteredZipline_Init( zipline )
-
-        //printt( zipline.vars.ziplineName + " = restPoint: " + restPoint + " | moving: " + moving + " | limit: " + limit + " | S/E offset: " + startOff + " " + endOff + " | U/S Detach: " + DetachOnUse + " " + DetachOnSpawn )
-
-        heigth -= 450.0
+        zipline = Zipline_Register( "debug_zipline", startZipPos[i] + origin, < 0, RandomFloatRange( 90, -90 ), 0 >, endZipPos[i] + origin, < 0, RandomFloatRange(  90, -90 ) - 180.0, 0 > )
+            Zipline_SetSkin( zipline, startZipSkin[i], endZipSkin[i] )
+            if ( CoinFlip() ) Zipline_CreatePanel( zipline, panelPos[i] + origin, panelAngReform, ePanelSkinType.STAND )
+            if ( CoinFlip() ) Zipline_SetIsMoving( zipline )
+            if ( CoinFlip() ) Zipline_EnableRestPoint( zipline )
+            if ( CoinFlip() ) Zipline_DisableVerticalZiplineOffset( zipline )
+            if ( CoinFlip() ) Zipline_DestroyZiplineSupportOnPanelEnd( zipline )
+            if ( CoinFlip() ) Zipline_SetPreserveVelocity( zipline )
+            if ( CoinFlip() ) Zipline_DisableDropToBottom( zipline )
+            Zipline_PanelUsableLimit( zipline, RandomIntRangeInclusive( 2, 14 ) )
+            Zipline_SetAutoDetachDistance( zipline, RandomFloatRange( 150.0, 400.0 ), RandomFloatRange( 150.0, 400.0 ) )
+            Zipline_SetArmOffset( zipline, RandomFloatRange( 160, 280 ) )
+            Zipline_SetWidth( zipline, float( RandomIntRange( 2, 4 ) ) )
+            Zipline_SetSpeedScale( zipline, float( RandomIntRangeInclusive( 1, 2 ) ) )
+            Zipline_SetScale( zipline, float( RandomIntRange( 1, 2 ) ) )
+            Zipline_SetLengthScale( zipline, RandomFloatRange( 0.90, 1.0 ) )
+            Zipline_SetPushOffInDirectionX( zipline, RandomIntRangeInclusive( 0, 1 ) )
+            //Zipline_SetDetachEndOnUse_OnSpawn( zipline, RandomIntRangeInclusive( 0, 1 ), RandomIntRangeInclusive( 0, 1 ) )
+        if ( CoinFlip() ) RegisteredZipline_Init( zipline )
+        else DestoryAllPanelsInZiplineStruct( zipline )
     }
+
+    // Vertical
+    array< vector > zipPos = [
+        < -192.1001, -255.3216, 1414.0000 >,
+        < -192.1001, 257.9858, 1414.0000 >,
+        < -255.9993, -1025.3600, 1384.6360 >,
+        < -255.9993, -768.6908, 1384.6360 >,
+        < -255.9991, 771.3236, 1384.6360 >,
+        < -255.9991, 1027.9930, 1384.6360 >,
+        < -202.0001, -512.0216, 1016.0000 >,
+        < -202.0000, 1.3166, 1016.0000 >,
+        < -201.9999, 514.6545, 1016.0000 > ]
+
+    array< vector > zipAng = [
+        < 0, 0, 0 >,
+        < 0, 0, 0 >,
+        < 0, 0, 0 >,
+        < 0, 0, 0 >,
+        < 0, 0, 0 >,
+        < 0, 0, 0 >,
+        < 0, 0, 0 >,
+        < 0, 0, 0 >,
+        < 0, 0, 0 > ]
+
+    array< int > zipSkin = [
+        arm_only,
+        arm_only,
+        invisible,
+        invisible,
+        invisible,
+        invisible,
+        entire,
+        entire,
+        entire ]
+
+    array< vector > panelVerticalPos = [
+        < -204.0001, -383.7216, 1016.0000 >,
+        < -204.0000, 130.3785, 1016.0000 >,
+        < -146.9001, -936.0380, 1012.8000 >,
+        < -146.9001, -856.0380, 1012.8000 >,
+        < -146.8999, 856.0375, 1012.8000 >,
+        < -146.8999, 936.0375, 1012.8000 >,
+        < -204.0001, -634.5216, 1016.0000 >,
+        < -204.0000, -127.0216, 1016.0000 >,
+        < -203.9999, 386.0785, 1016.0000 > ]
+
+    array< vector > panelVerticalAng = [
+        < 0, 166.5, 0 >,
+        < 0, 166.5, 0 >,
+        < 0, 167.0, 0 >,
+        < 0, -167.0, 0 >,
+        < 0, 167.0, 0 >,
+        < 0, -167.0, 0 >,
+        < 0, 166.5, 0 >,
+        < 0, 166.5, 0 >,
+        < 0, 166.5, 0 > ]
+
+    // Create vertical ziplines
+    for ( int i = 0 ; i < zipPos.len() ; i++ )
+    {
+
+        vector panelAngReform = panelVerticalAng[i]
+        panelAngReform.x    = panelAngReform.x % 180.0
+        panelAngReform.y    = panelAngReform.y % 180.0
+        panelAngReform.z    = panelAngReform.z % 180.0
+
+        zipline = Zipline_Register( "debug_zipline", zipPos[i] + origin, zipAng[i] )
+            Zipline_SetSkin( zipline, zipSkin[i] )
+            if ( CoinFlip() ) Zipline_CreatePanel( zipline, panelVerticalPos[i] + origin, panelAngReform, ePanelSkinType.STAND )
+            if ( CoinFlip() ) Zipline_SetIsMoving( zipline )
+            if ( CoinFlip() ) Zipline_DisableVerticalZiplineOffset( zipline )
+            if ( CoinFlip() ) Zipline_DestroyZiplineSupportOnPanelEnd( zipline )
+            if ( CoinFlip() ) Zipline_SetPreserveVelocity( zipline )
+            if ( CoinFlip() ) Zipline_DisableDropToBottom( zipline )
+            Zipline_PanelUsableLimit( zipline, RandomIntRangeInclusive( 2, 14 ) )
+            Zipline_SetAutoDetachDistance( zipline, RandomFloatRange( 100.0, 400.0 ), 50.0 )
+            Zipline_SetZiplineAngles( zipline, < 0, RandomFloatRange( 0, 360 ), 0 > )
+            Zipline_SetArmOffset( zipline, RandomFloatRange( 160, 280 ) )
+            Zipline_SetWidth( zipline, float( RandomIntRangeInclusive( 2, 4 ) ) )
+            Zipline_SetSpeedScale( zipline, float( RandomIntRangeInclusive( 1, 2 ) ) )
+            Zipline_SetScale( zipline, float( RandomIntRangeInclusive( 1, 2 ) ) )
+            Zipline_SetLengthScale( zipline, RandomFloatRange( 0.90, 1.0 ) )
+            Zipline_SetPushOffInDirectionX( zipline, RandomIntRangeInclusive( 0, 1 ) )
+            //Zipline_SetDetachEndOnUse_OnSpawn( zipline, RandomIntRangeInclusive( 0, 1 ), RandomIntRangeInclusive( 0, 1 ) )
+        if ( CoinFlip() ) RegisteredZipline_Init( zipline )
+        else DestoryAllPanelsInZiplineStruct( zipline )
+    }
+
+}
+
+
+bool function ClientCommand_GetZiplineInfo( entity player, array<string> args )
+{
+
+	return true
+}
+
+
+void function ZiplinePlatformInit( vector startingorg )
+{
+    //Props
+    MapEditor_CreateProp( $"mdl/containers/underbelly_cargo_container_128_red_02.rmdl", < -234.1000, 257.9785, 1384.6360 > + startingorg, < 0.0000, -180.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/containers/underbelly_cargo_container_128_blue_02.rmdl", < -234.1001, -255.3598, 1384.6360 > + startingorg, < 0.0000, -180.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_wall_256x256_01.rmdl", < 1408.0010, -512.0335, 16.0000 > + startingorg, < 0.0000, 90.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_wall_256x256_01.rmdl", < 1406.4550, 512.0333, 16.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl", < 1279.9960, 256.0107, 0.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x128_06.rmdl", < -255.9992, 1.3166, 1000.0000 > + startingorg, < 0.0000, -180.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_05.rmdl", < -255.9993, -1024.0570, 1000.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl", < -0.0001, -1024.0430, 0.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl", < 1279.9960, -768.0327, 0.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x128_06.rmdl", < -255.9993, -255.3525, 1000.0000 > + startingorg, < 0.0000, -180.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_05.rmdl", < -255.9993, -768.0393, 1000.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl", < 1279.9960, -256.0110, 0.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl", < 1279.9960, -0.0001, 0.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x128_06.rmdl", < -255.9991, 771.3236, 1384.6360 > + startingorg, < 0.0000, -180.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl", < -255.9991, 1024.0430, 0.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_wall_256x256_01.rmdl", < 1406.4550, -1024.0430, 16.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x128_06.rmdl", < -255.9993, -1025.3600, 1384.6360 > + startingorg, < 0.0000, -180.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl", < -255.9993, -1024.0430, 0.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl", < -255.9993, -256.0108, 0.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl", < 255.9992, -256.0109, 0.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl", < 0.0000, 256.0108, 0.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl", < 255.9992, 0.0000, 0.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl", < 1279.9960, -1024.0430, 0.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x128_06.rmdl", < -255.9993, -512.0216, 1000.0000 > + startingorg, < 0.0000, -180.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_05.rmdl", < -255.9991, 1027.3410, 1000.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl", < 0.0001, 768.0323, 0.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_screen_tower_01.rmdl", < 127.9998, 896.0380, 16.0000 > + startingorg, < 0.0000, 90.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl", < 1279.9960, 512.0215, 0.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl", < -255.9993, -768.0325, 0.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl", < 1279.9960, 768.0322, 0.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl", < -255.9992, 0.0000, 0.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl", < -255.9991, 768.0323, 0.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl", < 1279.9960, -512.0218, 0.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl", < 0.0001, 1024.0430, 0.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl", < -255.9993, -512.0216, 0.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_wall_256x256_01.rmdl", < 1406.4550, 768.0323, 16.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl", < 255.9991, -1024.0430, 0.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl", < 255.9992, -512.0217, 0.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl", < 0.0000, -256.0108, 0.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl", < 0.0000, 0.0000, 0.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x128_06.rmdl", < -255.9993, -768.6908, 1384.6360 > + startingorg, < 0.0000, -180.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_screen_tower_01.rmdl", < 127.9995, -896.0380, 16.0000 > + startingorg, < 0.0000, 90.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x128_06.rmdl", < -255.9991, 1027.9930, 1384.6360 > + startingorg, < 0.0000, -180.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl", < -0.0001, -512.0217, 0.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl", < -255.9992, 256.0109, 0.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x128_06.rmdl", < -255.9991, 514.6549, 1000.0000 > + startingorg, < 0.0000, -180.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_wall_256x256_01.rmdl", < 1408.0010, -768.0327, 16.0000 > + startingorg, < 0.0000, 90.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x128_06.rmdl", < -255.9992, 257.9858, 1000.0000 > + startingorg, < 0.0000, -180.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl", < 0.0001, 512.0217, 0.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl", < 255.9994, 1024.0430, 0.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl", < 1279.9960, 1024.0430, 0.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl", < -0.0001, -768.0325, 0.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl", < -255.9991, 512.0217, 0.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl", < 255.9993, 256.0108, 0.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl", < 255.9994, 768.0323, 0.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_wall_256x256_01.rmdl", < 1408.0020, 1024.0430, 16.0000 > + startingorg, < 0.0000, 90.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_05.rmdl", < -255.9991, 771.3236, 1000.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl", < 255.9993, 512.0216, 0.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl", < 255.9991, -768.0326, 0.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1 )
 }
