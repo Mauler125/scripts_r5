@@ -405,8 +405,7 @@ void function ZiplinePrecache()
     PrecacheModel( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_05.rmdl" )
     PrecacheModel( $"mdl/thunderdome/thunderdome_cage_ceiling_256x128_06.rmdl" )
     PrecacheModel( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl" )
-    PrecacheModel( $"mdl/containers/underbelly_cargo_container_128_red_02.rmdl" )
-    PrecacheModel( $"mdl/containers/underbelly_cargo_container_128_blue_02.rmdl" )
+    PrecacheModel( $"mdl/thunderdome/thunderdome_gantry_01.rmdl" )
     PrecacheModel( $"mdl/thunderdome/thunderdome_screen_tower_01.rmdl" )
 }
 
