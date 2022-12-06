@@ -176,7 +176,6 @@ void function ZiplineUtility_Init()
 
     #if ZIPLINE_DEBUG_SCRIPTS
         AddCallback_OnClientConnected( ZiplineErrorOnClientConnected )
-        AddClientCommandCallback( "GetZiplineInfo", ClientCommand_GetZiplineInfo )
     #endif // ZIPLINE_DEBUG_SCRIPTS
 }
 

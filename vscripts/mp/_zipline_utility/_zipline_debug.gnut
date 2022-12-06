@@ -2,7 +2,6 @@ untyped
 
 
 global function CreateRandomZiplineOnClientConnected
-global function ClientCommand_GetZiplineInfo
 
 
 void function CreateRandomZiplineOnClientConnected( entity player )
@@ -50,134 +49,35 @@ void function ThreadCreateRandomZipline( entity player )
     }
 
     ZiplinePlatformInit( origin )
+    ZiplinesInit( origin )
 
     player.SetOrigin( origin + < 0, 0, 96 > )
     player.SetAngles( angles )
     player.SetVelocity( < 0, 0, 0 > )
 
-    int entire = eZiplineSkinType.ENTIRE
-    int arm_only = eZiplineSkinType.ARM_ONLY
-    int invisible = eZiplineSkinType.INVISIBLE
-
-    array< vector > startZipPos = [
-        < -442.9893, -776.0219, 1917.9000 >,
-        < -442.9890, -3.0216, 1917.9000 >,
-        < -442.9891, 763.9783, 1917.9000 >,
-        < -386.6894, -387.9218, 2044.7000 >,
-        < -386.9891, 380.9782, 2044.7000 >
-    ]
-    array< vector ornull > endZipPos = [
-        null,
-        null,
-        null,
-        null,
-        null
-    ]
-
-    array< vector > startZipAng = [
-        < 0, 0, 0 >,
-        < 0, 0, 0 >,
-        < 0, 0, 0 >,
-        < 0, 0, 0 >,
-        < 0, 0, 0 >
-    ]
-    array< vector > endZipAng = [
-        < 0, 0, 0 >,
-        < 0, 0, 0 >,
-        < 0, 0, 0 >,
-        < 0, 0, 0 >,
-        < 0, 0, 0 >
-    ]
-
-    array< int > startZipSkin = [
-        arm_only,
-        arm_only,
-        arm_only,
-        invisible,
-        invisible
-    ]
-    array< int ornull > endZipSkin = [
-        null,
-        null,
-        null,
-        null,
-        null
-    ]
-
-    array< vector ornull > panelPos = [
-        < -294.3893, -776.0220, 994.6000 >,
-        < -294.3890, -3.0216, 994.6000 >,
-        < -294.3891, 763.9783, 994.6000 >,
-        null,
-        null
-    ]
-    array< vector > panelAng = [
-        < 0, 180, 0 >,
-        < 0, 180, 0 >,
-        < 0, 180, 0 >,
-        < 0, 0, 0 >,
-        < 0, 0, 0 >
-    ]
-
-
-    ZiplineUtility zipline
-
-    for ( int i = 0 ; i < startZipPos.len() ; i++ )
-    {
-        int endZipSkinReform = 0
-
-        if ( endZipPos[i] != null ) endZipPos[i] = expect vector( endZipPos[i] ) + origin else endZipPos[i] = null
-        if ( endZipSkin[i] != null ) endZipSkinReform = expect int( endZipSkin[i] )
-
-        zipline = Zipline_Register( "debug_zipline", startZipPos[i] + origin, startZipAng[i], endZipPos[i], endZipAng[i] )
-            Zipline_SetSkin( zipline, startZipSkin[i], endZipSkinReform )
-            if ( CoinFlip() && panelPos[i] != null ) Zipline_CreatePanel( zipline, expect vector( panelPos[i] ) + origin, panelAng[i], ePanelSkinType.STAND )
-            if ( CoinFlip() ) Zipline_SetIsMoving( zipline )
-            if ( CoinFlip() ) Zipline_EnableRestPoint( zipline )
-            if ( CoinFlip() ) Zipline_DisableVerticalZiplineOffset( zipline )
-            if ( CoinFlip() ) Zipline_DestroyZiplineSupportOnPanelEnd( zipline )
-            if ( CoinFlip() ) Zipline_SetPreserveVelocity( zipline )
-            if ( CoinFlip() ) Zipline_DisableDropToBottom( zipline )
-            Zipline_SetZiplineAngles( zipline, < 0, RandomFloatRange( 0.0, 360.0 ), 0 >, < 0, RandomFloatRange( 0.0, 360.0 ), 0 > )
-            Zipline_PanelUsableLimit( zipline, RandomIntRangeInclusive( 2, 14 ) )
-            Zipline_SetAutoDetachDistance( zipline, RandomFloatRange( 150.0, 400.0 ), RandomFloatRange( 150.0, 400.0 ) )
-            Zipline_SetArmOffset( zipline, RandomFloatRange( 160, 280 ) )
-            Zipline_SetWidth( zipline, float( RandomIntRange( 2, 4 ) ) )
-            Zipline_SetSpeedScale( zipline, float( RandomIntRangeInclusive( 1, 2 ) ) )
-            Zipline_SetScale( zipline, float( RandomIntRange( 1, 2 ) ) )
-            Zipline_SetLengthScale( zipline, RandomFloatRange( 0.90, 1.0 ) )
-            Zipline_SetPushOffInDirectionX( zipline, RandomIntRangeInclusive( 0, 1 ) )
-            //Zipline_SetDetachEndOnUse_OnSpawn( zipline, RandomIntRangeInclusive( 0, 1 ), RandomIntRangeInclusive( 0, 1 ) )
-        RegisteredZipline_Init( zipline )//if ( CoinFlip() ) RegisteredZipline_Init( zipline ) else DestoryAllPanelsInZiplineStruct( zipline )
-    }
-
-    //zipline = Zipline_RegisterRopeOnly( "debug_zipline_ropeOnly_0", < -1679.9900, -742.3214, 242.0000 > + origin, < 0, 0, 0 >, < -381.3892, 742.0785, 242.0000 > + origin, < 0, 0, 0 >, false )
-    //zipline = Zipline_RegisterRopeOnly( "debug_zipline_ropeOnly_1", < -1678.1890, 743.9787, 242.0000 > + origin, < 0, 0, 0 >, < -384.6893, -742.7216, 242.0000 > + origin, < 0, 0, 0 >, false )
-    //zipline = Zipline_RegisterRopeOnly( "debug_zipline_ropeOnly_2",  + origin, < 0, 0, 0 >,  + origin, < 0, 0, 0 >, false )
-    //zipline = Zipline_RegisterRopeOnly( "debug_zipline_ropeOnly_3",  + origin, < 0, 0, 0 >,  + origin, < 0, 0, 0 >, false )
-    //zipline = Zipline_RegisterRopeOnly( "debug_zipline_ropeOnly_4",  + origin, < 0, 0, 0 >,  + origin, < 0, 0, 0 >, false )
-    Zipline_InitAllRegisteredZiplineInScope()
-
 }
 
 
-bool function ClientCommand_GetZiplineInfo( entity player, array<string> args )
+void function ZiplinesInit( vector startingorg )
 {
-    if ( args.len() == 0 )
-    {
-        printt( "please enter at least one argument" )
-        return true
-    }
+    //ZipLines 
+    CreateZiplineByUnityEditor( < 185.3358, -869.6994, 1159.2000 > + startingorg, < 0.0000, -169.1000, 0.0000 >, < 183.9684, -868.9443, 36.2000 > + startingorg, < 0.0000, -169.1000, 0.0000 >, true, -1, 1, 1, 1, 1, false, true, 100, 50, false, true, false )
+    CreateZiplineByUnityEditor( < -278.2893, -898.0217, 148.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, < 226.3095, 621.6804, 1160.1000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, false, -1, 1, 1, 1, 1, false, true, 150, 150, false, true, false )
+    CreateZiplineByUnityEditor( < 523.1740, -706.1046, 184.0000 > + startingorg, < 0.0000, -19.2300, 0.0000 >, < 1666.5110, -783.3220, 217.0000 > + startingorg, < 0.0000, -19.2300, 0.0000 >, false, -1, 1, 1, 1, 1, false, true, 150, 400, false, true, false )
+    CreateZiplineByUnityEditor( < -1604.6900, -891.0215, 1138.6000 > + startingorg, < 0.0000, -154.7000, 0.0000 >, < -1603.4900, -892.0215, 34.6000 > + startingorg, < 0.0000, -154.7000, 0.0000 >, true, -1, 1, 1, 1, 1, false, true, 100, 50, false, true, false )
+    CreateZiplineByUnityEditor( < -1679.3890, -742.0214, 240.0000 > + startingorg, < 0.0000, -180.0000, 0.0000 >, < -384.6890, 741.7784, 240.0000 > + startingorg, < 0.0000, -180.0000, 0.0000 >, false, -1, 1, 1, 1, 1, false, true, 400, 400, false, true, false )
+    CreateZiplineByUnityEditor( < -383.9893, -741.5216, 240.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, < -1677.7900, 742.8787, 240.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, false, -1, 1, 1, 1, 1, false, true, 400, 400, false, true, false )
 
-    if ( !IsZiplineHaveSameName( args[0] ) )
-    {
-        printt( "invalid zipline name" )
-        return true
-    }
-
-    ZiplineUtility zipline = GZFZN( args[0] )
-
-	return true
+    //Props 
+    MapEditor_CreateProp( $"mdl/industrial/zipline_arm.rmdl", < 239.0781, -855.2767, 1171.2000 > + startingorg, < 0.0000, 100.9000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/industrial/security_fence_post.rmdl", < 237.7107, -854.5217, 991.2000 > + startingorg, < 0.0000, 10.9000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/industrial/zipline_arm.rmdl", < 279.7932, 606.3263, 1172.1000 > + startingorg, < 0.0000, 69.8601, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/industrial/security_fence_post.rmdl", < 279.0109, 607.6783, 992.1000 > + startingorg, < 0.0000, -20.1400, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/industrial/zipline_arm.rmdl", < -333.7893, -902.0217, 160.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/industrial/zipline_arm.rmdl", < 508.6714, -759.8254, 196.0000 > + startingorg, < 0.0000, -19.2300, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/industrial/security_fence_post.rmdl", < 510.0108, -759.0217, 16.0000 > + startingorg, < 0.0000, -109.2300, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/industrial/zipline_arm.rmdl", < -1660.1900, -895.0215, 1150.6000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/industrial/security_fence_post.rmdl", < -1658.9900, -896.0215, 970.6000 > + startingorg, < 0.0000, -180.0000, 0.0000 >, true, 50000, -1, 1 )
 }
 
 

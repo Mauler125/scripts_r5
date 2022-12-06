@@ -142,7 +142,7 @@ void function Zipline_SetAutoDetachDistance( ZiplineUtility zipline, float start
             settings.endAutoDetachDistance    = END_AUTO_DETACH_DISTANCE
         }
         else settings.endAutoDetachDistance   = HORIZONTAL_AUTO_DETACH_DISTANCE
-    }   else settings.startAutoDetachDistance = endAutoDetachDistance
+    }   else settings.endAutoDetachDistance = endAutoDetachDistance
 }
 
 
