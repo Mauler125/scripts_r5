@@ -7,8 +7,8 @@
 // If "true" prints scripts debug on the console -- Developer mode required
     global const bool ZIPLINE_DEBUG_SCRIPTS = false
 
-// If "true" create randoms ziplines for debuging -- Developer mode required
-    global const bool DEBUG_RANDOM_ZIPLINE = false
+// If "true" create a platform with ziplines for debuging -- Developer mode required
+    global const bool DEBUG_ZIPLINE_PLATFORM = false
 
 // If "true" panels have no timer
     global const bool PANEL_DEBUG_NO_TIMER = false

@@ -183,7 +183,7 @@ void function EntitiesDidLoad()
 {
     OnMapZipline_Init()
 
-    #if ZIPLINE_DEBUG_SCRIPTS && DEBUG_RANDOM_ZIPLINE
+    #if ZIPLINE_DEBUG_SCRIPTS && DEBUG_ZIPLINE_PLATFORM
         AddCallback_OnClientConnected( CreateRandomZiplineOnClientConnected )
-    #endif // ZIPLINE_DEBUG_SCRIPTS && DEBUG_RANDOM_ZIPLINE
+    #endif // ZIPLINE_DEBUG_SCRIPTS && DEBUG_ZIPLINE_PLATFORM
 }
