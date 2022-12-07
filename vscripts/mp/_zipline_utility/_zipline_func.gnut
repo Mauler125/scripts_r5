@@ -4,7 +4,7 @@ untyped
 global function ZiplinePrecache
 global function Zipline_Register
 global function Zipline_RegisterRopeOnly
-global function CreateZiplineByUnityEditor
+global function MapEditor_CreateZiplineFromUnity
 global function Zipline_CreatePanel
 global function RegisteredZipline_Init
 global function Zipline_InitAllRegisteredZiplineInScope
@@ -81,7 +81,7 @@ ZiplineUtility function Zipline_RegisterRopeOnly( string ziplineName, vector sta
 return ziplineUtility.zipline[ziplineName] }
 
 
-ZiplineUtility function CreateZiplineByUnityEditor( vector originStart, vector anglesStart, vector originEnd, vector anglesEnd, bool isVertical, float fadeDistance, float scale, float width, float speedScale,
+ZiplineUtility function MapEditor_CreateZiplineFromUnity( vector originStart, vector anglesStart, vector originEnd, vector anglesEnd, bool isVertical, float fadeDistance, float scale, float width, float speedScale,
 float lengthScale, bool preserveVelocity, bool disableDropToBottom, float startAutoDetachDistance, float endAutoDetachDistance, bool restPoint, bool pushOffInDirectionX, bool isMoving,
 array< vector > optionalPanelsOrigin = [], array< vector > optionalPanelsAngles = [], array< int > optionalPanelsSkin = [] )
 {
