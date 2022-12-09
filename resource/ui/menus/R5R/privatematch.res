@@ -132,7 +132,7 @@
 
 			destination				    "global"
 			hideInputBox			0
-			visible                    1
+			visible                    0
 			teamChat                   0
 			stopMessageModeOnFocusLoss 1
 			menuModeWithFade           0
@@ -159,7 +159,7 @@
 			xpos			0
 			fillColor		"195 29 38 200"
 			drawColor		"195 29 38 200"
-			visible					1
+			visible					0
 			zpos					0
 			pin_to_sibling				LobbyChatBox
 			pin_corner_to_sibling		BOTTOM
@@ -178,6 +178,7 @@
 			xpos					0
 			ypos					0
 			"fgcolor_override"		"255 255 255 255"
+			visible					0
 
 			pin_to_sibling ChatTopLine
 			pin_corner_to_sibling CENTER

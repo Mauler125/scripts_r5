@@ -75,8 +75,9 @@ void function InitR5RLobbyMenu( var newMenuArg )
 	file.menu = menu
 
 	//Add menu event handlers
-    AddMenuEventHandler( menu, eUIEvent.MENU_SHOW, OnR5RLobby_Open )
+    AddMenuEventHandler( menu, eUIEvent.MENU_SHOW, OnR5RLobby_Show )
 	AddMenuEventHandler( menu, eUIEvent.MENU_OPEN, OnR5RLobby_Open )
+	AddMenuEventHandler( menu, eUIEvent.MENU_CLOSE, OnR5RLobby_Close )
 	AddMenuEventHandler( menu, eUIEvent.MENU_NAVIGATE_BACK, OnR5RLobby_Back )
 
 	//Button event handlers
@@ -134,7 +135,12 @@ void function QuitPressed(var button)
 	OpenConfirmExitToDesktopDialog()
 }
 
-void function OnR5RLobby_Open()
+void function OnR5RLobby_Close()
+{
+	UnRegisterServerBrowserButtonPressedCallbacks()
+}
+
+void function OnR5RLobby_Show()
 {
 	//needed on both show and open
 	SetupLobby()
@@ -150,6 +156,11 @@ void function OnR5RLobby_Open()
 	server_host_name = ""
 
 	RunClientScript("UICallback_SetHostName", GetPlayerName() + "'s Lobby")
+}
+
+void function OnR5RLobby_Open()
+{
+	RegisterServerBrowserButtonPressedCallbacks()
 }
 
 void function SetupLobby()
