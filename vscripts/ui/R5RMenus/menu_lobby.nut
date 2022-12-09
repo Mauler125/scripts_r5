@@ -116,7 +116,6 @@ void function OpenSelectedPanel(var button)
 			CurrentPresentationType = ePresentationType.CHARACTER_SELECT
 			break;
 		case 2:
-			//thread ServerBrowser_RefreshServersForEveryone()
 			UI_SetPresentationType( ePresentationType.COLLECTION_EVENT )
 			CurrentPresentationType = ePresentationType.COLLECTION_EVENT
 			break;

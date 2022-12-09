@@ -127,66 +127,6 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"pin_to_sibling_corner"	"CENTER"
 	}
 
-	"BtnServerListRightArrow"
-	{
-		"ControlName" 			"RuiButton"
-		"rui"					"ui/footer_button.rpak"
-		"wide" 					"100"
-		"tall" 					"35"
-		"xpos" 					"0"
-		"ypos" 					"0"
-		"zpos" 					"6"
-
-		ruiArgs
-		{
-			buttonText ">>>"
-		}
-
-		"pin_to_sibling"		"Pages"
-		"pin_corner_to_sibling"	"LEFT"
-		"pin_to_sibling_corner"	"RIGHT"
-	}
-
-	"Pages"
-	{
-		"ControlName"			"Label"
-		"labelText"				"  Page: 0/0  "
-		"font"					"DefaultBold_41"
-		"allcaps"				"1"
-		"wide"					"120"
-		"zpos" 					"7"
-		"fontHeight"			"25"
-		"xpos"					"25"
-		"ypos"					"0"
-		"fgcolor_override"		"255 255 255 255"
-		"textalignment"			"center"
-		"auto_wide_tocontents"  "1"
-
-		"pin_to_sibling"		"ServerBrowserBGBottom"
-		"pin_corner_to_sibling"	"CENTER"
-		"pin_to_sibling_corner"	"CENTER"
-	}
-
-	"BtnServerListLeftArrow"
-	{
-		"ControlName" 			"RuiButton"
-		"rui"					"ui/footer_button.rpak"
-		"wide" 					"100"
-		"tall" 					"35"
-		"xpos" 					"0"
-		"ypos" 					"0"
-		"zpos" 					"6"
-
-		ruiArgs
-		{
-			buttonText "<<<"
-		}
-
-		"pin_to_sibling"		"Pages"
-		"pin_corner_to_sibling"	"RIGHT"
-		"pin_to_sibling_corner"	"LEFT"
-	}
-
 	"RefreshServers"
 	{
 		"ControlName"				"RuiButton"
@@ -209,6 +149,78 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"pin_to_sibling"			"ServerBrowserBGBottom"
 		"pin_corner_to_sibling"		"LEFT"
 		"pin_to_sibling_corner"		"LEFT"
+	}
+
+	"ListSliderBG"
+	{
+		"ControlName"			"ImagePanel"
+		wide 32
+		tall 809
+		xpos 0
+		ypos 50
+		zpos 90
+		fillColor		"195 29 38 100"
+        drawColor		"195 29 38 100"
+		"visible"				"1"
+
+		pin_to_sibling ServersBG
+		pin_corner_to_sibling TOP_RIGHT
+		pin_to_sibling_corner TOP_LEFT
+	}
+
+	BtnServerListSlider
+	{
+		ControlName RuiButton
+		InheritProperties RuiSmallButton
+		//labelText "V"
+		wide 30
+		tall 760
+		xpos 0
+		ypos 0
+		zpos 0
+
+		image "vgui/hud/white"
+		drawColor "255 255 255 255"
+
+		pin_to_sibling ServersBG
+		pin_corner_to_sibling TOP_RIGHT
+		pin_to_sibling_corner TOP_LEFT
+	}
+
+	BtnServerListSliderPanel
+	{
+		ControlName RuiPanel
+		wide 30
+		tall 760
+		xpos 0
+		ypos 0
+		zpos 100
+
+		rui "ui/control_options_description.rpak"
+
+		visible 1
+		zpos -1
+
+		pin_to_sibling ServersBG
+		pin_corner_to_sibling TOP_RIGHT
+		pin_to_sibling_corner TOP_LEFT
+	}
+
+	// sh_menu_models.gnut has a global function which gets called when
+	// left mouse button gets called while hovering and has mouse
+	// deltaX; deltaY which we can yoink for ourselfes
+	MouseMovementCapture
+	{
+			ControlName CMouseMovementCapturePanel
+			wide 30
+			tall 760
+			xpos 0
+			ypos 1
+			zpos 100
+
+			pin_to_sibling ServersBG
+			pin_corner_to_sibling TOP_RIGHT
+			pin_to_sibling_corner TOP_LEFT
 	}
 
 	"RefreshServersText"
@@ -674,6 +686,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"classname"					"ServBtn"
 		"wide"						"1395"
 		"tall"						"40"
+		"doubleClickEvents"       	"1"
 		"visible"					"1"
 		"enabled"					"1"
 		"style"						"RuiButton"
@@ -695,6 +708,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"classname"					"ServBtn"
 		"wide"						"1395"
 		"tall"						"40"
+		"doubleClickEvents"       	"1"
 		"visible"					"1"
 		"enabled"					"1"
 		"style"						"RuiButton"
@@ -715,6 +729,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"classname"					"ServBtn"
 		"wide"						"1395"
 		"tall"						"40"
+		"doubleClickEvents"       	"1"
 		"visible"					"1"
 		"enabled"					"1"
 		"style"						"RuiButton"
@@ -735,6 +750,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"classname"					"ServBtn"
 		"wide"						"1395"
 		"tall"						"40"
+		"doubleClickEvents"       	"1"
 		"visible"					"1"
 		"enabled"					"1"
 		"style"						"RuiButton"
@@ -755,6 +771,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"classname"					"ServBtn"
 		"wide"						"1395"
 		"tall"						"40"
+		"doubleClickEvents"       	"1"
 		"visible"					"1"
 		"enabled"					"1"
 		"style"						"RuiButton"
@@ -775,6 +792,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"classname"					"ServBtn"
 		"wide"						"1395"
 		"tall"						"40"
+		"doubleClickEvents"       	"1"
 		"visible"					"1"
 		"enabled"					"1"
 		"style"						"RuiButton"
@@ -795,6 +813,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"classname"					"ServBtn"
 		"wide"						"1395"
 		"tall"						"40"
+		"doubleClickEvents"       	"1"
 		"visible"					"1"
 		"enabled"					"1"
 		"style"						"RuiButton"
@@ -815,6 +834,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"classname"					"ServBtn"
 		"wide"						"1395"
 		"tall"						"40"
+		"doubleClickEvents"       	"1"
 		"visible"					"1"
 		"enabled"					"1"
 		"style"						"RuiButton"
@@ -835,6 +855,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"classname"					"ServBtn"
 		"wide"						"1395"
 		"tall"						"40"
+		"doubleClickEvents"       	"1"
 		"visible"					"1"
 		"enabled"					"1"
 		"style"						"RuiButton"
@@ -855,6 +876,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"classname"					"ServBtn"
 		"wide"						"1395"
 		"tall"						"40"
+		"doubleClickEvents"       	"1"
 		"visible"					"1"
 		"enabled"					"1"
 		"style"						"RuiButton"
@@ -875,6 +897,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"classname"					"ServBtn"
 		"wide"						"1395"
 		"tall"						"40"
+		"doubleClickEvents"       	"1"
 		"visible"					"1"
 		"enabled"					"1"
 		"style"						"RuiButton"
@@ -895,6 +918,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"classname"					"ServBtn"
 		"wide"						"1395"
 		"tall"						"40"
+		"doubleClickEvents"       	"1"
 		"visible"					"1"
 		"enabled"					"1"
 		"style"						"RuiButton"
@@ -915,6 +939,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"classname"					"ServBtn"
 		"wide"						"1395"
 		"tall"						"40"
+		"doubleClickEvents"       	"1"
 		"visible"					"1"
 		"enabled"					"1"
 		"style"						"RuiButton"
@@ -935,6 +960,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"classname"					"ServBtn"
 		"wide"						"1395"
 		"tall"						"40"
+		"doubleClickEvents"       	"1"
 		"visible"					"1"
 		"enabled"					"1"
 		"style"						"RuiButton"
@@ -955,6 +981,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"classname"					"ServBtn"
 		"wide"						"1395"
 		"tall"						"40"
+		"doubleClickEvents"       	"1"
 		"visible"					"1"
 		"enabled"					"1"
 		"style"						"RuiButton"
@@ -975,6 +1002,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"classname"					"ServBtn"
 		"wide"						"1395"
 		"tall"						"40"
+		"doubleClickEvents"       	"1"
 		"visible"					"1"
 		"enabled"					"1"
 		"style"						"RuiButton"
@@ -995,6 +1023,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"classname"					"ServBtn"
 		"wide"						"1395"
 		"tall"						"40"
+		"doubleClickEvents"       	"1"
 		"visible"					"1"
 		"enabled"					"1"
 		"style"						"RuiButton"
@@ -1015,6 +1044,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"classname"					"ServBtn"
 		"wide"						"1395"
 		"tall"						"40"
+		"doubleClickEvents"       	"1"
 		"visible"					"1"
 		"enabled"					"1"
 		"style"						"RuiButton"
@@ -1035,6 +1065,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"classname"					"ServBtn"
 		"wide"						"1395"
 		"tall"						"40"
+		"doubleClickEvents"       	"1"
 		"visible"					"1"
 		"enabled"					"1"
 		"style"						"RuiButton"

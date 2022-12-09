@@ -1,3 +1,6 @@
+untyped
+// Only way to get Hud_GetPos(sliderButton) working was to use untyped
+
 global function InitR5RServerBrowserPanel
 global function InitR5RConnectingPanel
 
@@ -11,6 +14,12 @@ global function ServerBrowser_RefreshServersForEveryone
 //So keep at 19
 const SB_MAX_SERVER_PER_PAGE = 19
 
+// Stores mouse delta used for scroll bar
+struct {
+	int deltaX = 0
+	int deltaY = 0
+} mouseDeltaBuffer
+
 struct
 {
 	var menu
@@ -20,15 +29,12 @@ struct
 	bool IsFiltered = false
 } file
 
-//Struct for page system
 struct
 {
-	int pAmount
-	int pCurrent
-	int pOffset
-	int pStart
-	int pEnd
-} m_vPages
+	int Offset = 0
+	int Start = 0
+	int End = 0
+} m_vScroll
 
 //Struct for selected server
 struct SelectedServerInfo
@@ -70,9 +76,8 @@ void function InitR5RServerBrowserPanel( var panel )
 	file.panel = panel
 	file.menu = GetParentMenu( file.panel )
 
-	//Setup Page Nav Buttons
-	Hud_AddEventHandler( Hud_GetChild( file.panel, "BtnServerListRightArrow" ), UIE_CLICK, ServerBrowser_NextPage )
-	Hud_AddEventHandler( Hud_GetChild( file.panel, "BtnServerListLeftArrow" ), UIE_CLICK, ServerBrowser_PrevPage )
+	AddMouseMovementCaptureHandler( Hud_GetChild(file.panel, "MouseMovementCapture"), UpdateMouseDeltaBuffer )
+
 	//Setup Connect Button
 	Hud_AddEventHandler( Hud_GetChild( file.panel, "ConnectButton" ), UIE_CLICK, ServerBrowser_ConnectBtnClicked )
 	//Setup Refresh Button
@@ -87,6 +92,7 @@ void function InitR5RServerBrowserPanel( var panel )
 	foreach ( var elem in serverbuttons ) {
 		RuiSetString( Hud_GetRui( elem ), "buttonText", "")
 		Hud_AddEventHandler( elem, UIE_CLICK, ServerBrowser_ServerBtnClicked )
+		Hud_AddEventHandler( elem, UIE_DOUBLECLICK, ServerBrowser_ServerBtnDoubleClicked )
 	}
 
 	//Reset Server Panel
@@ -94,13 +100,15 @@ void function InitR5RServerBrowserPanel( var panel )
 	ServerBrowser_SelectServer(-1, "", "", "", "")
 	ServerBrowser_ResetLabels()
 
-	// Set servercount, playercount, pages to none
+	// Set servercount, playercount
 	Hud_SetText( Hud_GetChild( file.panel, "PlayersCount"), "Players: 0")
 	Hud_SetText( Hud_GetChild( file.panel, "ServersCount"), "Servers: 0")
-	Hud_SetText (Hud_GetChild( file.panel, "Pages" ), "  Page: 0/0  ")
 
 	Hud_SetText(Hud_GetChild( file.panel, "ServerCurrentPlaylist" ), "" )
 	Hud_SetText(Hud_GetChild( file.panel, "ServerCurrentMap" ), "" )
+
+	RegisterButtonPressedCallback( MOUSE_WHEEL_UP , OnScrollUp )
+	RegisterButtonPressedCallback( MOUSE_WHEEL_DOWN , OnScrollDown )
 }
 
 ////////////////////////////////////
@@ -141,13 +149,26 @@ void function ServerBrowser_ConnectBtnClicked(var button)
 
 void function ServerBrowser_ServerBtnClicked(var button)
 {
-	//Get the button id and add it to the pageoffset to get the correct server id
-	int id = Hud_GetScriptID( button ).tointeger() + m_vPages.pOffset
+	//Get the button id and add it to the scroll offset to get the correct server id
+	int id = Hud_GetScriptID( button ).tointeger() + m_vScroll.Offset
 
 	if(file.IsFiltered)
 		ServerBrowser_SelectServer(m_vFilteredServerList[id].svServerID, m_vFilteredServerList[id].svServerName, m_vFilteredServerList[id].svMapName, m_vFilteredServerList[id].svPlaylist, m_vFilteredServerList[id].svDescription)
 	else
 		ServerBrowser_SelectServer(m_vServerList[id].svServerID, m_vServerList[id].svServerName, m_vServerList[id].svMapName, m_vServerList[id].svPlaylist, m_vServerList[id].svDescription)
+}
+
+void function ServerBrowser_ServerBtnDoubleClicked(var button)
+{
+	//Get the button id and add it to the scroll offset to get the correct server id
+	int id = Hud_GetScriptID( button ).tointeger() + m_vScroll.Offset
+
+	if(file.IsFiltered)
+		ServerBrowser_SelectServer(m_vFilteredServerList[id].svServerID, m_vFilteredServerList[id].svServerName, m_vFilteredServerList[id].svMapName, m_vFilteredServerList[id].svPlaylist, m_vFilteredServerList[id].svDescription)
+	else
+		ServerBrowser_SelectServer(m_vServerList[id].svServerID, m_vServerList[id].svServerName, m_vServerList[id].svMapName, m_vServerList[id].svPlaylist, m_vServerList[id].svDescription)
+
+	ServerBrowser_JoinServer(id)
 }
 
 ////////////////////////////////////
@@ -169,7 +190,7 @@ void function ServerBrowser_FilterServerList(string filter)
 	//Clear Server List Text, Hide no servers found ui, Reset pages
 	ServerBrowser_ResetLabels()
 	ServerBrowser_NoServers(false)
-	m_vPages.pAmount = 0
+	m_vScroll.Offset = 0
 
 	// Get Server Count
 	int svServerCount = m_vFilteredServerList.len()
@@ -185,7 +206,6 @@ void function ServerBrowser_FilterServerList(string filter)
 		// Set servercount, playercount, pages to none
 		Hud_SetText( Hud_GetChild( file.panel, "PlayersCount"), "Players: 0")
 		Hud_SetText( Hud_GetChild( file.panel, "ServersCount"), "Servers: 0")
-		Hud_SetText (Hud_GetChild( file.panel, "Pages" ), "  Page: 0/0  ")
 
 		// Return as it dosnt need togo past this if no servers are found
 		return
@@ -204,10 +224,11 @@ void function ServerBrowser_FilterServerList(string filter)
 	// Select first server in the list
 	ServerBrowser_SelectServer(m_vFilteredServerList[0].svServerID, m_vFilteredServerList[0].svServerName, m_vFilteredServerList[0].svMapName, m_vFilteredServerList[0].svPlaylist, m_vFilteredServerList[0].svDescription)
 
+	UpdateListSliderHeight( float( m_vFilteredServerList.len() ) )
+	UpdateListSliderPosition( m_vFilteredServerList.len() )
 	// Set UI Labels
 	Hud_SetText( Hud_GetChild( file.panel, "PlayersCount"), "Players: " + m_vAllPlayers)
 	Hud_SetText( Hud_GetChild( file.panel, "ServersCount"), "Servers: " + m_vServerList.len())
-	Hud_SetText (Hud_GetChild( file.panel, "Pages" ), "  Page: 1/" + (m_vPages.pAmount + 1) + "  ")
 }
 
 void function ServerBrowser_RefreshServerListing(bool refresh = true)
@@ -215,11 +236,11 @@ void function ServerBrowser_RefreshServerListing(bool refresh = true)
 	if (refresh)
 		RefreshServerList()
 
-	//Clear Server List Text, Hide no servers found ui, Reset pages
+	//Clear Server List Text, Hide no servers found ui
 	ServerBrowser_ResetLabels()
 	ServerBrowser_NoServers(false)
-	m_vPages.pAmount = 0
 	m_vAllPlayers = 0
+	m_vScroll.Offset = 0
 
 	// Get Server Count
 	int svServerCount = GetServerCount()
@@ -232,10 +253,9 @@ void function ServerBrowser_RefreshServerListing(bool refresh = true)
 		// Set selected server to none
 		ServerBrowser_SelectServer(-1, "", "", "", "")
 
-		// Set servercount, playercount, pages to none
+		// Set servercount, playercount
 		Hud_SetText( Hud_GetChild( file.panel, "PlayersCount"), "Players: 0")
 		Hud_SetText( Hud_GetChild( file.panel, "ServersCount"), "Servers: 0")
-		Hud_SetText (Hud_GetChild( file.panel, "Pages" ), "  Page: 0/0  ")
 
 		// Return as it dosnt need togo past this if no servers are found
 		return
@@ -243,6 +263,9 @@ void function ServerBrowser_RefreshServerListing(bool refresh = true)
 
 	// Get Server Array
 	m_vServerList = ServerBrowser_GetArray(svServerCount)
+
+	UpdateListSliderHeight( float( m_vServerList.len() ) )
+	UpdateListSliderPosition( m_vServerList.len() )
 
 	// Setup Buttons and labels
 	for( int i=0; i < m_vServerList.len() && i < SB_MAX_SERVER_PER_PAGE; i++ )
@@ -262,7 +285,6 @@ void function ServerBrowser_RefreshServerListing(bool refresh = true)
 	// Set UI Labels
 	Hud_SetText( Hud_GetChild( file.panel, "PlayersCount"), "Players: " + m_vAllPlayers)
 	Hud_SetText( Hud_GetChild( file.panel, "ServersCount"), "Servers: " + svServerCount)
-	Hud_SetText (Hud_GetChild( file.panel, "Pages" ), "  Page: 1/" + (m_vPages.pAmount + 1) + "  ")
 
 	string filter = Hud_GetUTF8Text( Hud_GetChild( file.panel, "BtnFilterServers" ) )
 	if(filter != "") {
@@ -271,88 +293,165 @@ void function ServerBrowser_RefreshServerListing(bool refresh = true)
 	}
 }
 
-void function ServerBrowser_NextPage(var button)
+//Used scroll code from northstar.
+void function OnScrollDown( var button )
 {
-	//If Pages is 0 then return
-	//or if is on the last page
-	if(m_vPages.pAmount == 0 || m_vPages.pCurrent == m_vPages.pAmount )
-		return
+	array<ServerListing> PageServerList = m_vServerList
+	if(file.IsFiltered)
+		PageServerList = m_vFilteredServerList
 
-	// Reset Server Labels
-	ServerBrowser_ResetLabels()
-
-	// Set current page to next page
-	m_vPages.pCurrent++
-
-	// If current page is greater then last page set to last page
-	if(m_vPages.pCurrent > m_vPages.pAmount)
-		m_vPages.pCurrent = m_vPages.pAmount
-
-	//Set Start ID / End ID / and ID Offset
-	m_vPages.pStart = m_vPages.pCurrent * SB_MAX_SERVER_PER_PAGE
-	m_vPages.pEnd = m_vPages.pStart + SB_MAX_SERVER_PER_PAGE
-	m_vPages.pOffset = m_vPages.pCurrent * SB_MAX_SERVER_PER_PAGE
-
-	// Check if m_vPages.pEnd is greater then actual amount of servers
-	if(m_vPages.pEnd > m_vServerList.len())
-		m_vPages.pEnd = m_vServerList.len()
-
-	// "id" is diffrent from "i" and is used for setting UI elements
-	// "i" is used for server id
-	int id = 0
-	for( int i=m_vPages.pStart; i < m_vPages.pEnd; i++ ) {
-		Hud_SetText( Hud_GetChild( file.panel, "ServerName" + id ), m_vServerList[i].svServerName)
-		Hud_SetText( Hud_GetChild( file.panel, "Playlist" + id ), GetUIPlaylistName(m_vServerList[i].svPlaylist))
-		Hud_SetText( Hud_GetChild( file.panel, "Map" + id ), GetUIMapName(m_vServerList[i].svMapName))
-		Hud_SetText( Hud_GetChild( file.panel, "PlayerCount" + id ), m_vServerList[i].svCurrentPlayers + "/" + m_vServerList[i].svMaxPlayers)
-		Hud_SetVisible(Hud_GetChild( file.panel, "ServerButton" + id ), true)
-		id++
+	m_vScroll.Offset += 1
+	if (m_vScroll.Offset + SB_MAX_SERVER_PER_PAGE > PageServerList.len()) {
+		m_vScroll.Offset = PageServerList.len() - SB_MAX_SERVER_PER_PAGE
 	}
 
-	// Set current page ui
-	Hud_SetText(Hud_GetChild( file.panel, "Pages" ), "  Page:" + (m_vPages.pCurrent + 1) + "/" + (m_vPages.pAmount + 1) + "  ")
+	if ( m_vScroll.Offset < 0 ) {
+		m_vScroll.Offset = 0
+	}
+
+	UpdateShownPage()
+	UpdateListSliderPosition( PageServerList.len() )
 }
 
-void function ServerBrowser_PrevPage(var button)
+void function OnScrollUp( var button )
 {
-	//If Pages is 0 then return
-	//or if is one the first page
-	if(m_vPages.pAmount == 0 || m_vPages.pCurrent == 0)
+	array<ServerListing> PageServerList = m_vServerList
+	if(file.IsFiltered)
+		PageServerList = m_vFilteredServerList
+
+	m_vScroll.Offset -= 1
+	if ( m_vScroll.Offset < 0 ) {
+		m_vScroll.Offset = 0
+	}
+
+	UpdateShownPage()
+	UpdateListSliderPosition( PageServerList.len() )
+}
+
+void function UpdateShownPage()
+{
+	array<ServerListing> PageServerList = m_vServerList
+	if(file.IsFiltered)
+		PageServerList = m_vFilteredServerList
+
+	if(PageServerList.len() == 0)
 		return
 
 	// Reset Server Labels
 	ServerBrowser_ResetLabels()
 
-	// Set current page to prev page
-	m_vPages.pCurrent--
+	m_vScroll.End = m_vScroll.Offset + SB_MAX_SERVER_PER_PAGE
 
-	// If current page is less then first page set to first page
-	if(m_vPages.pCurrent < 0)
-		m_vPages.pCurrent = 0
-
-	//Set Start ID / End ID / and ID Offset
-	m_vPages.pStart = m_vPages.pCurrent * SB_MAX_SERVER_PER_PAGE
-	m_vPages.pEnd = m_vPages.pStart + SB_MAX_SERVER_PER_PAGE
-	m_vPages.pOffset = m_vPages.pCurrent * SB_MAX_SERVER_PER_PAGE
-
-	// Check if m_vPages.pEnd is greater then actual amount of servers
-	if(m_vPages.pEnd > m_vServerList.len())
-		m_vPages.pEnd = m_vServerList.len()
+	if(PageServerList.len() < SB_MAX_SERVER_PER_PAGE)
+		m_vScroll.End = PageServerList.len()
 
 	// "id" is diffrent from "i" and is used for setting UI elements
 	// "i" is used for server id
 	int id = 0
-	for( int i=m_vPages.pStart; i < m_vPages.pEnd; i++ ) {
-		Hud_SetText( Hud_GetChild( file.panel, "ServerName" + id ), m_vServerList[i].svServerName)
-		Hud_SetText( Hud_GetChild( file.panel, "Playlist" + id ), GetUIPlaylistName(m_vServerList[i].svPlaylist))
-		Hud_SetText( Hud_GetChild( file.panel, "Map" + id ), GetUIMapName(m_vServerList[i].svMapName))
-		Hud_SetText( Hud_GetChild( file.panel, "PlayerCount" + id ), m_vServerList[i].svCurrentPlayers + "/" + m_vServerList[i].svMaxPlayers)
+	for( int i=m_vScroll.Offset; i < m_vScroll.End; i++ ) {
+		Hud_SetText( Hud_GetChild( file.panel, "ServerName" + id ), PageServerList[i].svServerName)
+		Hud_SetText( Hud_GetChild( file.panel, "Playlist" + id ), GetUIPlaylistName(PageServerList[i].svPlaylist))
+		Hud_SetText( Hud_GetChild( file.panel, "Map" + id ), GetUIMapName(PageServerList[i].svMapName))
+		Hud_SetText( Hud_GetChild( file.panel, "PlayerCount" + id ), PageServerList[i].svCurrentPlayers + "/" + PageServerList[i].svMaxPlayers)
 		Hud_SetVisible(Hud_GetChild( file.panel, "ServerButton" + id ), true)
 		id++
 	}
 
-	// Set current page ui
-	Hud_SetText(Hud_GetChild( file.panel, "Pages" ), "  Page:" + (m_vPages.pCurrent + 1) + "/" + (m_vPages.pAmount + 1) + "  ")
+	UpdateListSliderHeight( float( PageServerList.len() ) )
+}
+
+void function UpdateListSliderPosition( int servers )
+{
+	var sliderButton = Hud_GetChild( file.panel , "BtnServerListSlider" )
+	var sliderPanel = Hud_GetChild( file.panel , "BtnServerListSliderPanel" )
+	var movementCapture = Hud_GetChild( file.panel , "MouseMovementCapture" )
+
+	float minYPos = 0.0 * ( GetScreenSize().height / 1080.0 )
+	float useableSpace = (760.0 * ( GetScreenSize().height / 1080.0 ) - Hud_GetHeight( sliderPanel ) )
+
+	float jump = minYPos - ( useableSpace / ( float( servers ) - SB_MAX_SERVER_PER_PAGE ) * m_vScroll.Offset )
+
+	if ( jump > minYPos ) jump = minYPos
+
+	Hud_SetPos( sliderButton , -1, jump )
+	Hud_SetPos( sliderPanel , -1, jump )
+	Hud_SetPos( movementCapture , -1, jump )
+}
+
+
+void function UpdateListSliderHeight( float servers )
+{
+	var sliderButton = Hud_GetChild( file.panel , "BtnServerListSlider" )
+	var sliderPanel = Hud_GetChild( file.panel , "BtnServerListSliderPanel" )
+	var movementCapture = Hud_GetChild( file.panel , "MouseMovementCapture" )
+
+	float maxHeight = 760.0 * ( GetScreenSize().height / 1080.0 )
+	float minHeight = 80.0 * ( GetScreenSize().height / 1080.0 )
+
+	float height = maxHeight * ( SB_MAX_SERVER_PER_PAGE / servers )
+
+	if ( height > maxHeight ) height = maxHeight
+	if ( height < minHeight ) height = minHeight
+
+	Hud_SetHeight( sliderButton , height )
+	Hud_SetHeight( sliderPanel , height )
+	Hud_SetHeight( movementCapture , height )
+}
+
+void function UpdateMouseDeltaBuffer( int x, int y )
+{
+	mouseDeltaBuffer.deltaX += x
+	mouseDeltaBuffer.deltaY += y
+
+	SliderBarUpdate()
+}
+
+void function FlushMouseDeltaBuffer()
+{
+	mouseDeltaBuffer.deltaX = 0
+	mouseDeltaBuffer.deltaY = 0
+}
+
+
+void function SliderBarUpdate()
+{
+	array<ServerListing> PageServerList = m_vServerList
+	if(file.IsFiltered)
+		PageServerList = m_vFilteredServerList
+
+	if ( PageServerList.len() <= SB_MAX_SERVER_PER_PAGE )
+	{
+		FlushMouseDeltaBuffer()
+		return
+	}
+
+	var sliderButton = Hud_GetChild( file.panel , "BtnServerListSlider" )
+	var sliderPanel = Hud_GetChild( file.panel , "BtnServerListSliderPanel" )
+	var movementCapture = Hud_GetChild( file.panel , "MouseMovementCapture" )
+
+	Hud_SetFocused( sliderButton )
+
+	float minYPos = 0.0 * ( GetScreenSize().height / 1080.0 )
+	float maxHeight = 760.0  * ( GetScreenSize().height / 1080.0 )
+	float maxYPos = minYPos - ( maxHeight - Hud_GetHeight( sliderPanel ) )
+	float useableSpace = ( maxHeight - Hud_GetHeight( sliderPanel ) )
+
+	float jump = minYPos - ( useableSpace / ( float( PageServerList.len() ) ) )
+
+	// got local from official respaw scripts, without untyped throws an error
+	local pos =	Hud_GetPos( sliderButton )[1]
+	local newPos = pos - mouseDeltaBuffer.deltaY
+	FlushMouseDeltaBuffer()
+
+	if ( newPos < maxYPos ) newPos = maxYPos
+	if ( newPos > minYPos ) newPos = minYPos
+
+	Hud_SetPos( sliderButton , 0, newPos )
+	Hud_SetPos( sliderPanel , 0, newPos )
+	Hud_SetPos( movementCapture , 0, newPos )
+
+	m_vScroll.Offset = -int( ( ( newPos - minYPos ) / useableSpace ) * ( PageServerList.len() - SB_MAX_SERVER_PER_PAGE ) )
+	UpdateShownPage()
 }
 
 array<ServerListing> function ServerBrowser_GetArray(int svServerCount)
@@ -364,29 +463,14 @@ array<ServerListing> function ServerBrowser_GetArray(int svServerCount)
 	if(svServerCount == 0)
 		return ServerList
 
-	//Set on first row
-	int m_vCurrentRow = 0
-
 	// Add each server to the array
 	for( int i=0; i < svServerCount; i++ ) {
 		//Add Server to array
 		ServerBrowser_AddServerToArray(i, GetServerName(i), GetServerPlaylist(i), GetServerMap(i), GetServerDescription(i), GetServerMaxPlayers(i), GetServerCurrentPlayers(i), ServerList)
-
-		// If server is on final row add a new page
-		if(m_vCurrentRow == SB_MAX_SERVER_PER_PAGE) {
-			m_vPages.pAmount++
-			m_vCurrentRow = 0
-		}
-		m_vCurrentRow++
 	}
 
 	//Return Server Listing
 	return ServerList
-}
-
-string function ServerBrowser_NameColored(string name)
-{
-	return StringReplace( name, "--", "^" )
 }
 
 void function ServerBrowser_NoServers(bool show)
