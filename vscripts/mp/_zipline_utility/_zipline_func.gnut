@@ -1,0 +1,690 @@
+untyped
+
+
+global function ZiplinePrecache
+global function Zipline_Register
+global function Zipline_RegisterRopeOnly
+global function MapEditor_CreateZiplineFromUnity
+global function Zipline_CreatePanel
+global function RegisteredZipline_Init
+global function Zipline_InitAllRegisteredZiplineInScope
+
+global function GetZiplineArray
+global function ChooseZiplineSkinByTraceResults
+global function IsZiplineHaveSameName
+global function IsZiplineVertical
+global function IsZiplineDestroyed
+global function IsCanyonlandsMap
+global function ChooseZiplineTravelTime
+global function GZFEP
+global function GZFZN
+global function Zipline_CreateProp
+global function ZiplineErrorOnClientConnected
+global function ZiplineAddErrorReason
+
+
+////////////////////////////////////////////////////////////
+//  Initialize zipline
+////////////////////////////////////////////////////////////
+ZiplineUtility function Zipline_Register( string ziplineName, vector startEntityPos, vector startEntityAng, vector ornull endEntityPos = null, vector endEntityAng = < 0, 0, 0 > )
+{
+    ZiplineUtility zipline ; KVFilesSettings settings = zipline.settings ; ZiplineVars vars = zipline.vars ; ZiplineState state = zipline.state
+
+    // Name
+    if ( IsZiplineHaveSameName( ziplineName ) ) ziplineName = UniqueZiplineString( ziplineName ) ; vars.ziplineName = ziplineName
+
+    // Start Origin
+    zipline.startEntityPos = startEntityPos ; zipline.startEntityAng  = startEntityAng
+
+    // End Origin
+    if ( endEntityPos ) zipline.endEntityPos = expect vector( endEntityPos ) ; zipline.endEntityAng = endEntityAng
+
+    // Determine if is vertical
+    settings.isVertical = endEntityPos == null ? true : false
+
+    ZiplinePreProcess( zipline ) ; Zipline_SetZiplineAngles( zipline, startEntityAng, endEntityAng )
+
+    #if PANEL_DEBUG_NO_TIMER
+        Zipline_SetPanelTimer( zipline, 0.0 )
+    #endif // PANEL_DEBUG_NO_TIMER
+
+    ziplineUtility.zipline[ziplineName] <- zipline ; ziplineUtility.ziplineArray.append( zipline )
+
+return ziplineUtility.zipline[ziplineName] }
+
+
+// Used for Zee's editor
+ZiplineUtility function Zipline_RegisterRopeOnly( string ziplineName, vector startEntityPos, vector startEntityAng, vector endEntityPos, vector endEntityAng, bool isVertical )
+{
+    ZiplineUtility zipline ; KVFilesSettings settings = zipline.settings ; ZiplineVars vars = zipline.vars ; ZiplineState state = zipline.state
+
+    // Name
+    if ( IsZiplineHaveSameName( ziplineName ) ) ziplineName = UniqueZiplineString( ziplineName ) ; vars.ziplineName = ziplineName ; vars.isRopeOnly = true
+
+    // Start Origin
+    zipline.startZiplinePos = startEntityPos
+
+    // End Origin
+    zipline.endZiplinePos = endEntityPos
+
+    // Determine if is vertical
+    settings.isVertical = isVertical
+
+    ZiplinePreProcess( zipline ) ; Zipline_SetZiplineAngles( zipline, startEntityAng, endEntityAng )
+
+    #if PANEL_DEBUG_NO_TIMER
+        Zipline_SetPanelTimer( zipline, 0.0 )
+    #endif // PANEL_DEBUG_NO_TIMER
+
+    ziplineUtility.zipline[ziplineName] <- zipline ; ziplineUtility.ziplineArray.append( zipline )
+
+return ziplineUtility.zipline[ziplineName] }
+
+
+ZiplineUtility function MapEditor_CreateZiplineFromUnity( vector originStart, vector anglesStart, vector originEnd, vector anglesEnd, bool isVertical, float fadeDistance, float scale, float width, float speedScale,
+float lengthScale, bool preserveVelocity, bool disableDropToBottom, float startAutoDetachDistance, float endAutoDetachDistance, bool restPoint, bool pushOffInDirectionX, bool isMoving,
+array< vector > optionalPanelsOrigin = [], array< vector > optionalPanelsAngles = [], array< int > optionalPanelsSkin = [] )
+{
+    ZiplineUtility zipline
+
+    string ziplineName = UniqueZiplineString( "UnityEditorZipline" )
+
+    zipline = Zipline_RegisterRopeOnly( ziplineName, originStart, anglesStart, originEnd, anglesEnd, isVertical )
+        Zipline_SetFadeDistance( zipline, fadeDistance ) // Preset: -1.0
+        Zipline_SetScale( zipline, scale ) // Preset: 1.0
+        Zipline_SetWidth( zipline, width ) // Preset: 1.0
+        Zipline_SetSpeedScale( zipline, speedScale ) // Preset: 1.0
+        Zipline_SetLengthScale( zipline, lengthScale ) // Preset: 1.0
+        if ( preserveVelocity )
+        Zipline_SetPreserveVelocity( zipline ) // Preset: false
+        if ( disableDropToBottom )
+        Zipline_DisableDropToBottom( zipline ) // Preset: true
+        Zipline_SetAutoDetachDistance( zipline, startAutoDetachDistance, endAutoDetachDistance ) // Preset: Vertical -> Start: 100.0 End: 50.0 | Non Vertical -> Start && End: 150.0
+        if ( restPoint )
+        Zipline_EnableRestPoint( zipline ) // Preset: false
+        if ( !pushOffInDirectionX )
+        Zipline_SetPushOffInDirectionX( zipline, 0 ) // Preset: 1
+        if ( isMoving )
+        Zipline_SetIsMoving( zipline ) // Preset: false
+
+        // Panels
+            bool verify = false
+            int o = optionalPanelsOrigin.len()
+            int a = optionalPanelsAngles.len()
+            int s = optionalPanelsSkin.len()
+
+            if ( o != 0 && o == a && o == s ) verify = true
+
+            if ( verify )
+            {
+                for ( int i = 0 ; i < o ; i++ )
+                Zipline_CreatePanel( zipline, optionalPanelsOrigin[i], optionalPanelsAngles[i], optionalPanelsSkin[i] )
+            }
+        //
+
+        zipline.vars.isUnityZipline = true
+
+    RegisteredZipline_Init( zipline )
+
+return zipline }
+
+
+////////////////////////////////////////////////////////////
+//  Create panel for ziplines
+////////////////////////////////////////////////////////////
+void function Zipline_CreatePanel( ZiplineUtility zipline, vector pos, vector ang, int skin = ePanelSkinType.WALL )
+{
+    ZiplineState state = zipline.state ; ZiplinePanel panels = zipline.panels
+
+    #if ZIPLINE_DEBUG_SCRIPTS // If a bug is detected
+        if ( IsCanyonlandsMap() && skin == ePanelSkinType.WALL )
+            ZiplineAddErrorMinorReason( zipline, WALL_PANEL_MODEL_DOES_NOT_EXIST )
+    #endif // ZIPLINE_DEBUG_SCRIPTS
+
+    entity panel = CreateUsablePanel( DecidePanelModel( skin ), pos, ang )
+    panel.SetSkin( ePanelState.ENABLE )
+
+    if ( state.firstInit ) thread UpdatePanelForFirstTimeInited( zipline )
+    panels.newPanel.append( panel )
+}
+
+
+////////////////////////////////////////////////////////////
+//  Create zipline
+////////////////////////////////////////////////////////////
+void function RegisteredZipline_Init( ZiplineUtility zipline )
+{
+    ZiplineVars vars = zipline.vars ; ZiplineState state = zipline.state
+
+    if ( !state.supportIsValid && !vars.isRopeOnly ) Zipline_InitSupport( zipline )
+    if ( !state.ziplineIsValid && !vars.spawnSupportOnly ) Zipline_InitZipline( zipline )
+    UpdatePanelsPrompts( zipline )
+
+    vars.spawnSupportOnly   = false
+    state.firstInit         = false
+}
+
+
+void function Zipline_InitAllRegisteredZiplineInScope()
+{
+    foreach ( ziplines in GetZiplineArray() )
+    {
+        ZiplineState state = ziplines.state
+        if ( state.firstInit ) RegisteredZipline_Init( ziplines )
+    }
+}
+
+
+////////////////////////////////////////////////////////////
+//  Function used after RegisteredZipline_Init()
+///////////////////////////////////////////////////////////
+array< entity > function Zipline_InitSupport( ZiplineUtility zipline )
+{
+    KVFilesSettings settings = zipline.settings ; ZiplineVars vars = zipline.vars ; ZiplineState state = zipline.state
+
+    // Entities Declaration
+    array< entity > entityArray = [ ] ; entity startSupport ; entity startArm ; entity midSupport ; entity midArm ; entity endSupport ; entity endArm
+
+    // Offset for arm heigth | locked between 160.0 (min) / 280.0 (max)
+    float minOffset = ARM_MIN_OFFSET ; float maxOffset = ARM_MAX_OFFSET
+    float startArmOffset = vars.startArmOffset ; float endArmOffset = vars.endArmOffset
+    if ( startArmOffset < minOffset ) startArmOffset = minOffset else if ( startArmOffset > maxOffset ) startArmOffset = maxOffset
+    if ( endArmOffset   < minOffset ) endArmOffset   = minOffset else if ( endArmOffset   > maxOffset ) endArmOffset   = maxOffset
+
+    // Temporary angle for the right position | Position offsets calculation
+    vector startEntityPos = zipline.startEntityPos ; vector startEntityAng = zipline.startEntityAng ; vector endEntityPos = zipline.endEntityPos ; vector endEntityAng = zipline.endEntityAng
+    vector startEntityPosArm = startEntityPos + < -1, -2, startArmOffset > ; vector endEntityPosArm = endEntityPos + < -1, -2, endArmOffset >
+    vector angOffset = < 0, 90, 0 > ; vector tempAng = < 0, 0, 0 > ; vector tempAngForSupport = < 0, 90, 0 >
+    vector startArmAng = startEntityAng - angOffset ; vector endArmAng = endEntityAng - angOffset
+
+    switch ( vars.setSkinStart ) // With / Without support selection
+    {
+        case eZiplineSkinType.ENTIRE: // With support
+            startSupport    = Zipline_CreateProp( ZIPLINE_SUPPORT, startEntityPos, tempAngForSupport )
+            startArm        = Zipline_CreateProp( ZIPLINE_ARM, startEntityPosArm, tempAng )
+            startArm.SetParent( startSupport ) ; startSupport.SetAngles( startEntityAng )
+            entityArray.append( startSupport ) // Add to array for return
+            break
+        case eZiplineSkinType.ARM_ONLY: // Without support
+            startArm        = Zipline_CreateProp( ZIPLINE_ARM, startEntityPos, startArmAng )
+            break
+        case eZiplineSkinType.INVISIBLE: // Invisible model
+            startArm        = Zipline_CreateProp( EMPTY_MODEL, startEntityPos, startArmAng )
+        default: break
+
+    }
+
+    entityArray.append( startArm ) // Add to array for return
+
+    // Return origin point of the zipline
+    if ( vars.setSkinStart != eZiplineSkinType.INVISIBLE ) zipline.startZiplinePos = PositionOffsetFromEnt( startArm, -4, -55.5, -12 ) else zipline.startZiplinePos = startEntityPos
+
+    if ( !IsZiplineVertical( zipline ) ) // If vertical
+    {
+        switch ( vars.setSkinEnd ) // With / Without support selection
+        {
+            case eZiplineSkinType.ENTIRE: // With support
+                endSupport    = Zipline_CreateProp( ZIPLINE_SUPPORT, endEntityPos, tempAngForSupport )
+                endArm        = Zipline_CreateProp( ZIPLINE_ARM, endEntityPosArm, tempAng )
+                endArm.SetParent( endSupport ) ; endSupport.SetAngles( endEntityAng )
+                entityArray.append( endSupport )  // Add to array for return
+                break
+            case eZiplineSkinType.ARM_ONLY: // Without support
+                endArm        = Zipline_CreateProp( ZIPLINE_ARM, endEntityPos, endArmAng )
+                break
+            case eZiplineSkinType.INVISIBLE: // Invisible model
+                endArm        = Zipline_CreateProp( EMPTY_MODEL, endEntityPos, endArmAng )
+                break
+            default: break
+        }
+
+        entityArray.append( endArm ) // Add to array for return
+    }
+
+    ArrayRemoveInvalid( entityArray ) // Remove invalid ents
+
+    // Return origin point of the zipline
+    if ( vars.setSkinEnd != eZiplineSkinType.INVISIBLE && IsValid( endArm ) ) zipline.endZiplinePos = PositionOffsetFromEnt( endArm, -4, -55.5, -12 ) else zipline.endZiplinePos = endEntityPos
+
+    // Set script name and target
+    foreach ( ents in entityArray )
+    {
+        
+        if ( !IsZiplineVertical( zipline ) ) ents.SetScriptName( HORIZONTAL_ZIPLINE_SCRIPT_NAME )
+        else
+        {
+            ents.SetScriptName( VERTICAL_ZIPLINE_SCRIPT_NAME )
+            SetTargetName( ents, vars.ziplineName )
+        }
+
+    }
+
+    if ( !IsZiplineVertical( zipline ) )
+    {
+        if ( IsValid( startSupport ) ) SetTargetName( startSupport, vars.ziplineName + "_start" ) ; SetTargetName( startArm, vars.ziplineName + "_start" )
+        if ( IsValid( endSupport ) )   SetTargetName( endSupport,   vars.ziplineName + "_end" )   ; SetTargetName( endArm,   vars.ziplineName + "_end" )
+    }
+
+
+    state.supportIsValid = true ; zipline.supportArray.extend( entityArray )
+
+return entityArray }
+
+
+array< entity > function Zipline_InitZipline( ZiplineUtility zipline )
+{
+    KVFilesSettings settings = zipline.settings ; ZiplineVars vars = zipline.vars ; ZiplinePanel panels = zipline.panels ; ZiplineState state = zipline.state
+
+    // Calculation part
+    vector startZiplinePos = zipline.startZiplinePos ; vector endZiplinePos ; vector startZiplineAng ; vector endZiplineAng ; array < entity > returnedEntity
+    
+    switch ( settings.isVertical )
+    {
+        case true:
+            vector offset         = startZiplinePos - TRACE_RESULTS_OFFSET
+            TraceResults result   = TraceLine( offset, offset + -vars.heightLimitFromTop * < 0, 0, 1 >, [], TRACE_MASK_SHOT, TRACE_COLLISION_GROUP_PLAYER )
+            startZiplineAng       = zipline.startZiplineAng ; endZiplineAng = zipline.endZiplineAng
+
+            if ( !vars.disableVerticalZiplineOffset )
+            {
+                if ( vars.boolHeightLimitFromTop ) endZiplinePos = result.endPos
+                else if ( vars.boolHeightLimitFromFloor || vars.boolHeightLimitByIndianaJonesMode ) endZiplinePos = result.endPos + < 0, 0, vars.heightLimitFromFloor >
+                else { endZiplinePos = result.endPos + ZIPLINE_OFFSET_FROM_FLOOR }
+            }
+            else
+            {
+                endZiplinePos = result.endPos
+            }
+
+            if ( vars.heightLimitInt >= 2 ) ZiplineAddErrorReason( zipline, REASON_TOO_MANY_HEIGHT_LIMIT )
+
+            if ( !vars.isUnityZipline ) zipline.endZiplinePos = endZiplinePos else endZiplinePos = zipline.endZiplinePos
+            break
+        case false:
+            startZiplineAng    = zipline.startZiplineAng ; endZiplineAng = zipline.endZiplineAng ; endZiplinePos = zipline.endZiplinePos
+
+            startZiplineAng    = VectorToAngles( Normalize( endZiplinePos - startZiplinePos ) )
+            startZiplineAng.x  = startZiplineAng.x % 180.0
+            startZiplineAng.y  = startZiplineAng.y % 180.0
+            startZiplineAng.z  = startZiplineAng.z % 180.0
+
+            endZiplineAng      = VectorToAngles( Normalize( startZiplinePos - endZiplinePos ) )
+            endZiplineAng.x    = endZiplineAng.x % 180.0
+            endZiplineAng.y    = endZiplineAng.y % 180.0
+            endZiplineAng.z    = endZiplineAng.z % 180.0
+            break
+        default: break
+    }
+
+    if ( vars.isMoving )
+        endZiplinePos = startZiplinePos - < 0, 0, 0.1 >
+
+    if ( startZiplinePos == endZiplinePos )
+        ZiplineAddErrorReason( zipline, REASON_ROPE_HAVE_SAME_ORIGIN )
+
+    // If an error is detected do not create the zip
+    if ( state.error ) return []
+
+    // Create start point
+    entity startEntityZiplinePoint = CreateEntity( "zipline" )
+
+    startEntityZiplinePoint.kv.DetachEndOnSpawn             = settings.detachEndOnSpawn
+    startEntityZiplinePoint.kv.DetachEndOnUse               = settings.detachEndOnUse
+    startEntityZiplinePoint.kv.Material                     = settings.material
+    startEntityZiplinePoint.kv.scale                        = settings.scale
+    startEntityZiplinePoint.kv.Width                        = settings.width
+    startEntityZiplinePoint.kv.ZiplineAutoDetachDistance    = settings.startAutoDetachDistance
+    startEntityZiplinePoint.kv.ZiplineDropToBottom          = settings.dropToBottom
+    startEntityZiplinePoint.kv.ZiplineFadeDistance          = settings.fadeDistance
+    startEntityZiplinePoint.kv.ZiplineLengthScale           = settings.lengthScale
+    startEntityZiplinePoint.kv.ZiplinePreserveVelocity      = settings.preserveVelocity
+    startEntityZiplinePoint.kv.ZiplinePushOffInDirectionX   = settings.startPushOffInDirectionX
+    startEntityZiplinePoint.kv.ZiplineSpeedScale            = settings.speedScale
+    startEntityZiplinePoint.kv.ZiplineVersion               = settings.ziplineVersion
+    startEntityZiplinePoint.kv.ZiplineVertical              = settings.isVertical
+
+    if ( vars.restPoint && !vars.isMoving )
+    {
+        startEntityZiplinePoint.kv._zipline_rest_point_0    = startZiplinePos.x + " " + startZiplinePos.y  + " " + startZiplinePos.z
+        startEntityZiplinePoint.kv._zipline_rest_point_1    = endZiplinePos.x   + " " + endZiplinePos.y    + " " + endZiplinePos.z
+    }
+
+    startEntityZiplinePoint.SetAngles( startZiplineAng )
+    startEntityZiplinePoint.SetOrigin( startZiplinePos )
+
+    // Create end point
+    entity endEntityZiplinePoint
+
+    endEntityZiplinePoint = CreateEntity( "zipline_end" )
+
+    endEntityZiplinePoint.kv.ZiplineAutoDetachDistance    = settings.endAutoDetachDistance
+    endEntityZiplinePoint.kv.ZiplinePushOffInDirectionX   = settings.endPushOffInDirectionX
+
+    endEntityZiplinePoint.SetAngles( endZiplineAng )
+    endEntityZiplinePoint.SetOrigin( endZiplinePos )
+    
+    startEntityZiplinePoint.LinkToEnt( endEntityZiplinePoint )
+
+    DispatchSpawn( startEntityZiplinePoint ) ; DispatchSpawn( endEntityZiplinePoint )
+
+    zipline.startEntityZiplinePoint = startEntityZiplinePoint
+    zipline.endEntityZiplinePoint   = endEntityZiplinePoint
+
+    EmitSoundOnEntity( startEntityZiplinePoint, ZIPLINE_START_SOUND ) ; EmitSoundOnEntity( endEntityZiplinePoint, ZIPLINE_START_SOUND )
+
+    if ( vars.isMoving )
+        thread Zipline_Mover( zipline )
+
+    returnedEntity.extend( [ startEntityZiplinePoint, endEntityZiplinePoint ] )
+
+    state.ziplineIsValid     = true
+    state.ziplineIsDestroyed = false
+
+return returnedEntity }
+
+
+////////////////////////////////////////////////////////////
+//  Utility
+////////////////////////////////////////////////////////////
+void function ZiplinePrecache()
+{
+    PrecacheModel( ZIPLINE_ARM )
+    PrecacheModel( ZIPLINE_PLANEL_STAND )
+    PrecacheModel( ZIPLINE_SUPPORT )
+
+    if ( !IsCanyonlandsMap() ) PrecacheModel( ZIPLINE_PLANEL_WALL )
+
+    PrecacheParticleSystem( ZIPLINE_EXPLOSION )
+
+    #if ZIPLINE_DEBUG_SCRIPTS
+        PrecacheParticleSystem( ZIPLINE_ERROR_FX )
+    #endif // ZIPLINE_DEBUG_SCRIPTS
+
+    // Debug zipline platform
+    PrecacheModel( $"mdl/thunderdome/thunderdome_cage_wall_256x256_01.rmdl" )
+    PrecacheModel( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_05.rmdl" )
+    PrecacheModel( $"mdl/thunderdome/thunderdome_cage_ceiling_256x128_06.rmdl" )
+    PrecacheModel( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl" )
+    PrecacheModel( $"mdl/thunderdome/thunderdome_gantry_01.rmdl" )
+    PrecacheModel( $"mdl/thunderdome/thunderdome_screen_tower_01.rmdl" )
+}
+
+
+function ZiplinePreProcess( ZiplineUtility zipline )
+{
+    KVFilesSettings settings = zipline.settings ; ZiplineVars vars = zipline.vars
+    switch ( settings.isVertical )
+    {
+        case true:
+            settings.endAutoDetachDistance    = END_AUTO_DETACH_DISTANCE
+            settings.startAutoDetachDistance  = START_AUTO_DETACH_DISTANCE
+            vars.endArmOffset                 = VERTICAL_ARM_OFFSET
+            vars.startArmOffset               = VERTICAL_ARM_OFFSET
+            break
+        case false:
+            settings.endAutoDetachDistance    = HORIZONTAL_AUTO_DETACH_DISTANCE
+            settings.startAutoDetachDistance  = HORIZONTAL_AUTO_DETACH_DISTANCE
+            vars.endArmOffset                 = HORIZONTAL_ARM_OFFSET
+            vars.startArmOffset               = HORIZONTAL_ARM_OFFSET
+
+            if ( zipline.startEntityPos.z == zipline.endEntityPos.z ) settings.lengthScale = ZIPLINE_LENGTH_OFFSET_SAME_Z_POS
+            break
+        default: break
+    }
+}
+
+
+function Zipline_Mover( ZiplineUtility zipline )
+{
+    KVFilesSettings settings = zipline.settings ; ZiplineVars vars = zipline.vars ; ZiplinePanel panels = zipline.panels ; ZiplineState state = zipline.state
+
+    entity startPoint = zipline.startEntityZiplinePoint
+    entity endPoint   = zipline.endEntityZiplinePoint
+    array< entity > panelArray = panels.newPanel
+
+    startPoint.Zipline_Disable()
+
+    entity mover = CreateOwnedScriptMover( endPoint )
+    endPoint.SetParent( mover )
+
+    OnThreadEnd( function() : ( startPoint, endPoint, mover )
+    {
+        if ( IsValid( endPoint ) ) endPoint.ClearParent()
+        if ( IsValid( endPoint ) ) { if ( IsValid( mover ) && endPoint.GetParent() == null ) mover.Destroy() }
+        if ( IsValid( startPoint) ) startPoint.Zipline_Enable()
+    })
+
+    float travelTime = ChooseZiplineTravelTime( zipline ) ; float travelTimeDivised
+
+    if ( state.firstInit ) travelTime = 1.0
+
+    travelTimeDivised = travelTime / 2
+
+    mover.MoveTo( zipline.endZiplinePos, travelTime, travelTimeDivised, travelTimeDivised )
+
+    wait travelTime
+}
+
+
+array< ZiplineUtility > function GetZiplineArray()
+{
+    return ziplineUtility.ziplineArray
+}
+
+
+float function ChooseZiplineTravelTime( ZiplineUtility zipline )
+{
+    float travelTime
+    if ( IsZiplineVertical( zipline ) ) { travelTime = 6.0 } else { travelTime = 2.0 }
+
+    #if ZIPLINE_DEBUG_SCRIPTS
+        travelTime = 1.0
+    #endif // ZIPLINE_DEBUG_SCRIPTS
+
+    return travelTime
+}
+
+
+int function ChooseZiplineSkinByTraceResults( vector vec )
+{
+    int skin
+
+    if( vec.x || vec.y != 0.0 )
+        skin = eZiplineSkinType.ARM_ONLY
+    
+    else if ( vec.z >= 0.0 )
+        skin = eZiplineSkinType.ENTIRE
+    
+    else if ( vec.z <= 0.0 )
+        skin = eZiplineSkinType.INVISIBLE
+
+    return skin
+}
+
+
+bool function IsZiplineHaveSameName( string ziplineName )
+{
+    foreach ( ziplines in GetZiplineArray() )
+    {
+        if ( ziplines.vars.ziplineName == ziplineName )
+            return true
+    }
+return false }
+
+
+bool function IsZiplineVertical( ZiplineUtility zipline )
+{
+    if ( zipline.settings.isVertical )
+        return true
+
+return false }
+
+
+bool function IsZiplineDestroyed( ZiplineUtility zipline )
+{
+    if ( zipline.state.ziplineIsDestroyed )
+        return true
+
+return false }
+
+
+bool function IsCanyonlandsMap() // Used as mp_rr_canyonlands does not have ZIPLINE_PLANEL_WALL model
+{
+    bool isCanyonlandsMap
+
+    switch ( GetMapName() )
+    {
+        case "mp_rr_canyonlands_staging":
+        case "mp_rr_canyonlands_64k_x_64k":
+        case "mp_rr_canyonlands_mu1":
+        case "mp_rr_canyonlands_mu1_night":
+            isCanyonlandsMap = true
+        break
+        
+        default: 
+            isCanyonlandsMap = false
+        break
+    }
+    return isCanyonlandsMap
+}
+
+
+int uniqueZiplineId = 0
+string function UniqueZiplineString( string str = "" )
+{
+	return str + "_" + uniqueZiplineId++
+}
+
+
+ZiplineUtility function GZFEP( entity panel )
+{
+    ZiplineUtility zipline = GetZiplineFromEntityPanel( panel )
+    return zipline
+}
+
+
+ZiplineUtility function GZFZN( string ziplineName )
+{
+    ZiplineUtility zipline = GetZiplineFromZiplineName( ziplineName )
+    return zipline
+}
+
+
+ZiplineUtility function GetZiplineFromEntityPanel( entity panel )
+{
+    ZiplineUtility zipline
+
+    foreach ( ziplines in GetZiplineArray() )
+    {
+        if ( ziplines.panels.newPanel.contains( panel ) )
+            zipline = ziplines
+    }
+
+return zipline }
+
+
+ZiplineUtility function GetZiplineFromZiplineName( string ziplineName )
+{
+    ZiplineUtility zipline
+
+    foreach ( ziplines in GetZiplineArray() )
+    {
+        if ( ziplines.vars.ziplineName == ziplineName )
+            zipline = ziplines
+    }
+
+return zipline }
+
+
+void function ZiplineErrorOnClientConnected( entity player )
+{    
+    #if DEVELOPER
+        if ( player != gp()[0] )
+            return
+
+        thread ZiplineError( player )
+    #endif // DEVELOPER
+}
+
+
+void function ZiplineAddErrorReason( ZiplineUtility zipline, string reason )
+{
+    ZiplineState state = zipline.state
+    state.error = true
+    state.errorReason.append( reason )
+}
+
+
+void function ZiplineAddErrorMinorReason( ZiplineUtility zipline, string reason )
+{
+    ZiplineState state = zipline.state
+    state.errorMinor = true
+    state.errorMinorReason.append( reason )
+}
+
+
+void function ZiplineError( entity player )
+{
+    array< ZiplineUtility > erronedZipline        = []
+    bool errorDetected                            = false
+    int count                                     = 0
+    int countMinor                                = 0
+    int reasonMinorNum                            = 1
+    int reasonNum                                 = 1
+
+        wait 1.0 // wait ClientConnected
+
+    foreach( ziplines in GetZiplineArray() )
+    {
+        if ( ziplines.state.error )
+        {
+            erronedZipline.append( ziplines ) ; count += 1
+            entity fx = StartParticleEffectInWorld_ReturnEntity( GetParticleSystemIndex( ZIPLINE_ERROR_FX ), ziplines.startEntityPos, < -90, 0, 0 > )
+        }
+
+        if ( ziplines.state.errorMinor )
+        {
+            if ( !erronedZipline.contains( ziplines ) ) erronedZipline.append( ziplines ) ; countMinor += 1
+        }
+    }
+
+    if ( count != 0 || countMinor != 0 ) errorDetected = true
+
+    if ( errorDetected )
+    {
+        if ( count != 0 )
+        {
+            if ( count == 1 ) Dev_PrintMessage( player, count + " " + DEV_PRINTMESSAGE_TEXT_SINGULAR, DEV_PRINTMESSAGE_SUBTEXT )
+            else Dev_PrintMessage( player, count + " " + DEV_PRINTMESSAGE_TEXT_PLURAL, DEV_PRINTMESSAGE_SUBTEXT )
+        }
+
+        printt( "//----------------------------------" )
+        foreach( ziplines in erronedZipline )
+        {
+            printt( "// Error detected on: "  + ziplines.vars.ziplineName )
+            foreach( reasons in ziplines.state.errorReason )
+            {
+                if ( ziplines.state.errorReason.len() == 1 ) printt( "// Reason         : " + reasons )
+                else printt( "// Reasons       "  + reasonNum++ + ": " + reasons )
+            }
+            foreach( reasons in ziplines.state.errorMinorReason )
+            {
+                if ( ziplines.state.errorMinorReason.len() == 1 ) printt( "// Minor reason   : " + reasons )
+                else printt( "// Minor reasons "  + reasonMinorNum++ + ": " + reasons )
+            }
+            printt( "//" ) ; reasonNum = 1 ; reasonMinorNum = 1
+        }
+        printt( "//----------------------------------" )
+    }
+}
+
+
+entity function Zipline_CreateProp( asset a, vector pos, vector ang )
+{
+    entity prop = CreatePropDynamic( a, pos, ang, SOLID_VPHYSICS, 20000 )
+    prop.AllowMantle()
+    int realm = -1
+    if ( realm > -1 ) { prop.RemoveFromAllRealms() ; prop.AddToRealm( realm ) }
+    prop.e.gameModeId = realm
+
+return prop }
