@@ -158,9 +158,9 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		tall 809
 		xpos 0
 		ypos 50
-		zpos 90
-		fillColor		"195 29 38 100"
-        drawColor		"195 29 38 100"
+		zpos 0
+        "fillColor"				"195 29 38 150"
+		scaleImage				1
 		"visible"				"1"
 
 		pin_to_sibling ServersBG
@@ -174,7 +174,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		InheritProperties RuiSmallButton
 		//labelText "V"
 		wide 30
-		tall 760
+		tall 710
 		xpos 0
 		ypos 0
 		zpos 0
@@ -191,7 +191,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	{
 		ControlName RuiPanel
 		wide 30
-		tall 760
+		tall 710
 		xpos 0
 		ypos 0
 		zpos 100
@@ -213,7 +213,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	{
 			ControlName CMouseMovementCapturePanel
 			wide 30
-			tall 760
+			tall 710
 			xpos 0
 			ypos 1
 			zpos 100
@@ -221,6 +221,80 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 			pin_to_sibling ServersBG
 			pin_corner_to_sibling TOP_RIGHT
 			pin_to_sibling_corner TOP_LEFT
+	}
+
+	BtnServerListUpArrow
+	{
+		ControlName RuiButton
+		InheritProperties RuiSmallButton
+		//labelText "A"
+		wide 30
+		tall 45
+		xpos -1
+		ypos 0
+		zpos 5
+
+		image "vgui/hud/white"
+		drawColor "255 255 255 128"
+
+		pin_to_sibling ListSliderBG
+		pin_corner_to_sibling TOP_LEFT
+		pin_to_sibling_corner TOP_LEFT
+	}
+
+	BtnServerListUpArrowPanel
+	{
+		ControlName RuiPanel
+		wide 30
+		tall 45
+		xpos -1
+		ypos 0
+
+		rui "ui/control_options_description.rpak"
+
+		visible 1
+		zpos 4
+
+		pin_to_sibling ListSliderBG
+		pin_corner_to_sibling TOP_LEFT
+		pin_to_sibling_corner TOP_LEFT
+	}
+
+	BtnServerListDownArrow
+	{
+		ControlName RuiButton
+		InheritProperties RuiSmallButton
+		//labelText "A"
+		wide 30
+		tall 45
+		xpos -1
+		ypos 0
+		zpos 5
+
+		image "vgui/hud/white"
+		drawColor "255 255 255 128"
+
+		pin_to_sibling ListSliderBG
+		pin_corner_to_sibling BOTTOM_LEFT
+		pin_to_sibling_corner BOTTOM_LEFT
+	}
+
+	BtnServerListDownArrowPanel
+	{
+		ControlName RuiPanel
+		wide 30
+		tall 45
+		xpos -1
+		ypos 0
+
+		rui "ui/control_options_description.rpak"
+
+		visible 1
+		zpos 4
+
+		pin_to_sibling ListSliderBG
+		pin_corner_to_sibling BOTTOM_LEFT
+		pin_to_sibling_corner BOTTOM_LEFT
 	}
 
 	"RefreshServersText"

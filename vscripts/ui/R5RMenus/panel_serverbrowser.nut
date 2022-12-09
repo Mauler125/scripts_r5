@@ -77,6 +77,8 @@ void function InitR5RServerBrowserPanel( var panel )
 	AddMouseMovementCaptureHandler( Hud_GetChild(file.panel, "MouseMovementCapture"), UpdateMouseDeltaBuffer )
 	Hud_AddEventHandler( Hud_GetChild( file.panel, "ConnectButton" ), UIE_CLICK, ServerBrowser_ConnectBtnClicked )
 	Hud_AddEventHandler( Hud_GetChild( file.panel, "RefreshServers" ), UIE_CLICK, ServerBrowser_RefreshBtnClicked )
+	Hud_AddEventHandler( Hud_GetChild( file.panel, "BtnServerListDownArrow" ), UIE_CLICK, OnScrollDown )
+	Hud_AddEventHandler( Hud_GetChild( file.panel, "BtnServerListUpArrow" ), UIE_CLICK, OnScrollUp )
 	AddButtonEventHandler( Hud_GetChild( file.panel, "BtnFilterServers"), UIE_CHANGE, ServerBrowser_FilterTextChanged )
 
 	//Add event handlers for the server buttons
@@ -362,7 +364,7 @@ void function UpdateListSliderHeight( float servers )
 	var sliderPanel = Hud_GetChild( file.panel , "BtnServerListSliderPanel" )
 	var movementCapture = Hud_GetChild( file.panel , "MouseMovementCapture" )
 
-	float maxHeight = 760.0 * ( GetScreenSize().height / 1080.0 )
+	float maxHeight = 710.0 * ( GetScreenSize().height / 1080.0 )
 	float minHeight = 80.0 * ( GetScreenSize().height / 1080.0 )
 
 	float height = maxHeight * ( SB_MAX_SERVER_PER_PAGE / servers )
@@ -407,7 +409,7 @@ void function SliderBarUpdate()
 	Hud_SetFocused( sliderButton )
 
 	float minYPos = 0.0 * ( GetScreenSize().height / 1080.0 )
-	float maxHeight = 760.0  * ( GetScreenSize().height / 1080.0 )
+	float maxHeight = 710.0  * ( GetScreenSize().height / 1080.0 )
 	float maxYPos = minYPos - ( maxHeight - Hud_GetHeight( sliderPanel ) )
 	float useableSpace = ( maxHeight - Hud_GetHeight( sliderPanel ) )
 
