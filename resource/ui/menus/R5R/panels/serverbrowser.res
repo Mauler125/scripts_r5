@@ -130,22 +130,6 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 			buttonText "Playlist Filter"
 		}
 
-		list
-		{
-			"Any"  0
-			"survival_firingrange"   1
-			"survival"   2
-			"FallLTM"   3
-			"duos"   4
-			"custom_tdm"   5
-			"custom_ctf"   6
-			"tdm_gg"   7
-			"tdm_gg_double"   8
-			"survival_dev"  9
-			"shadowfall_dev"   10
-			"flowstate_official"   11
-		}
-
 		pin_to_sibling BtnSearchLabel
 		pin_corner_to_sibling TOP_LEFT
 		pin_to_sibling_corner BOTTOM_LEFT
@@ -166,24 +150,6 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		ruiArgs
 		{
 			buttonText "Map Filter"
-		}
-
-		list
-		{
-			"Any"  0
-			"mp_rr_canyonlands_staging"   1
-			"mp_rr_aqueduct"   2
-			"mp_rr_aqueduct_night"   3
-			"mp_rr_ashs_redemption"   4
-			"mp_rr_canyonlands_64k_x_64k"   5
-			"mp_rr_canyonlands_mu1"   6
-			"mp_rr_canyonlands_mu1_night"   7
-			"mp_rr_desertlands_64k_x_64k"   8
-			"mp_rr_desertlands_64k_x_64k_nx"   9
-			"mp_rr_desertlands_64k_x_64k_tt"   10
-			"mp_rr_arena_composite"   11
-			"mp_rr_arena_skygarden"   12
-			"mp_rr_party_crasher"   13
 		}
 
 		pin_to_sibling SwtBtnSelectGamemode
@@ -1223,27 +1189,6 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"pin_to_sibling_corner"		"BOTTOM_LEFT"
 	}
 
-	"ServerButton15"
-	{
-		"ControlName"				"RuiButton"
-		"classname"					"ServBtn"
-		"wide"						"1395"
-		"tall"						"40"
-		"doubleClickEvents"       	"1"
-		"visible"					"1"
-		"enabled"					"1"
-		"style"						"RuiButton"
-        "rui"						"ui/tab_button.rpak"
-		"labelText"					""
-		"cursorVelocityModifier"  	"0.7"
-		"zpos"						"1"
-		"scriptID"					"15"
-
-		"pin_to_sibling"			"ServerButton14"
-		"pin_corner_to_sibling"		"TOP_LEFT"
-		"pin_to_sibling_corner"		"BOTTOM_LEFT"
-	}
-
 	"ServerName0"
 	{
 		"ControlName"				"Label"
@@ -1510,24 +1455,6 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton14"
-		"pin_corner_to_sibling"		"LEFT"
-		"pin_to_sibling_corner"		"LEFT"
-	}
-
-	"ServerName15"
-	{
-		"ControlName"				"Label"
-		"labelText"					""
-		"xpos"						"-15"
-		"ypos"						"0"
-		"zpos"						"0"
-		"wide"						"630"
-		"zpos" 						"4"
-		"fontHeight"				"30"
-		"tall"						"30"
-		"classname"					"ServerLabels"
-
-		"pin_to_sibling"			"ServerButton15"
 		"pin_corner_to_sibling"		"LEFT"
 		"pin_to_sibling_corner"		"LEFT"
 	}
@@ -1817,25 +1744,6 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"pin_to_sibling_corner"		"LEFT"
 	}
 
-	"Playlist15"
-	{
-		"ControlName"				"Label"
-		"labelText"					""
-		"xpos"						"-800"
-		"ypos"						"0"
-		"zpos"						"0"
-		"textalignment"				"center"
-		"wide"						"230"
-		"zpos" 						"4"
-		"fontHeight"				"30"
-		"tall"						"30"
-		"classname"					"ServerLabels"
-
-		"pin_to_sibling"			"ServerButton15"
-		"pin_corner_to_sibling"		"LEFT"
-		"pin_to_sibling_corner"		"LEFT"
-	}
-
 	"PlayerCount0"
 	{
 		"ControlName"				"Label"
@@ -2121,25 +2029,6 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"pin_to_sibling_corner"		"LEFT"
 	}
 
-	"PlayerCount15"
-	{
-		"ControlName"				"Label"
-		"labelText"					""
-		"xpos"						"-670"
-		"ypos"						"0"
-		"zpos"						"0"
-		"textalignment"				"center"
-		"wide"						"110"
-		"zpos" 						"4"
-		"fontHeight"				"30"
-		"tall"						"30"
-		"classname"					"ServerLabels"
-
-		"pin_to_sibling"			"ServerButton15"
-		"pin_corner_to_sibling"		"LEFT"
-		"pin_to_sibling_corner"		"LEFT"
-	}
-
 	"Map0"
 	{
 		"ControlName"				"Label"
@@ -2420,25 +2309,6 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton14"
-		"pin_corner_to_sibling"		"LEFT"
-		"pin_to_sibling_corner"		"LEFT"
-	}
-
-	"Map15"
-	{
-		"ControlName"				"Label"
-		"labelText"					""
-		"xpos"						"-1050"
-		"ypos"						"0"
-		"zpos"						"0"
-		"textalignment"				"center"
-		"wide"						"330"
-		"zpos" 						"4"
-		"fontHeight"				"30"
-		"tall"						"30"
-		"classname"					"ServerLabels"
-
-		"pin_to_sibling"			"ServerButton15"
 		"pin_corner_to_sibling"		"LEFT"
 		"pin_to_sibling_corner"		"LEFT"
 	}

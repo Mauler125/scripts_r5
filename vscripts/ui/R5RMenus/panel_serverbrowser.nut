@@ -7,6 +7,7 @@ global function InitR5RConnectingPanel
 global function ServerBrowser_RefreshServerListing
 global function RegisterServerBrowserButtonPressedCallbacks
 global function UnRegisterServerBrowserButtonPressedCallbacks
+global function ServerBrowser_UpdateFilterLists
 
 //Used for max items for page
 //Changing this requires a bit of work to get more to show correctly
@@ -52,9 +53,9 @@ struct {
 	bool hideEmpty = false
 	bool useSearch = false
 	string searchTerm
-	array<string> filterMaps = ["Any", "mp_rr_canyonlands_staging", "mp_rr_aqueduct", "mp_rr_aqueduct_night", "mp_rr_ashs_redemption", "mp_rr_canyonlands_64k_x_64k", "mp_rr_canyonlands_mu1", "mp_rr_canyonlands_mu1_night", "mp_rr_desertlands_64k_x_64k", "mp_rr_desertlands_64k_x_64k_nx", "mp_rr_desertlands_64k_x_64k_tt", "mp_rr_arena_composite", "mp_rr_arena_skygarden", "mp_rr_party_crasher"]
+	array<string> filterMaps
 	string filterMap = "Any"
-	array<string> filterGamemodes = ["Any", "survival_firingrange", "survival", "FallLTM", "duos", "custom_tdm", "custom_ctf", "tdm_gg", "tdm_gg_double", "survival_dev", "shadowfall_dev", "flowstate_official"]
+	array<string> filterGamemodes
 	string filterGamemode = "Any"
 } filterArguments
 
@@ -122,6 +123,7 @@ void function InitR5RServerBrowserPanel( var panel )
 	ServerBrowser_UpdateSelectedServerUI()
 	ServerBrowser_UpdateServerPlayerCount()
 
+	ServerBrowser_UpdateFilterLists()
 	OnBtnFiltersClear()
 }
 
@@ -135,6 +137,56 @@ void function UnRegisterServerBrowserButtonPressedCallbacks()
 {
 	DeregisterButtonPressedCallback( MOUSE_WHEEL_UP , OnScrollUp )
 	DeregisterButtonPressedCallback( MOUSE_WHEEL_DOWN , OnScrollDown )
+}
+
+void function ServerBrowser_UpdateFilterLists()
+{
+	if(!IsLobby())
+		return
+
+	if(Hud_GetDialogListItemCount(Hud_GetChild( file.panel, "SwtBtnSelectMap" )) == 0)
+	{
+		array<string> maps = ["Any"]
+		maps.extend(GetAvailableMaps())
+		filterArguments.filterMaps = maps
+		int id = 0
+		foreach ( string map in maps )
+		{
+			Hud_DialogList_AddListItem( Hud_GetChild( file.panel, "SwtBtnSelectMap" ) , map, string( id ) )
+			id++
+		}
+	}
+
+	if(Hud_GetDialogListItemCount(Hud_GetChild( file.panel, "SwtBtnSelectGamemode" )) == 0)
+	{
+		array<string> playlists = ["Any"]
+		playlists.extend(GetVisiblePlaylists())
+		filterArguments.filterGamemodes = playlists
+		int id = 0
+		foreach( string mode in playlists )
+		{
+			Hud_DialogList_AddListItem( Hud_GetChild( file.panel, "SwtBtnSelectGamemode" ) , mode, string( id ) )
+			id++
+		}
+	}
+}
+
+array<string> function GetVisiblePlaylists()
+{
+	array<string> m_vPlaylists
+
+	//Setup available playlists array
+	foreach( string playlist in GetAvailablePlaylists())
+	{
+		//Check playlist visibility
+		if(!GetPlaylistVarBool( playlist, "visible", false ))
+			continue
+
+		//Add playlist to the array
+		m_vPlaylists.append(playlist)
+	}
+
+	return m_vPlaylists
 }
 
 void function OnBtnFiltersClear()
@@ -177,16 +229,6 @@ void function ServerBrowser_RefreshBtnClicked(var button)
 void function ServerBrowser_FilterTextChanged( var button )
 {
 	string filter = Hud_GetUTF8Text( Hud_GetChild( file.panel, "BtnServerSearch" ) )
-
-	/*if(filter != "") {
-		filterArguments.useSearch = true
-		filterArguments.searchTerm = filter
-		ServerBrowser_FilterServerList()
-	} else {
-		filterArguments.useSearch  = false
-		filterArguments.searchTerm = ""
-		ServerBrowser_RefreshServerListing(false)
-	}*/
 
 	if(filter != "")
 		filterArguments.useSearch = true
@@ -236,6 +278,9 @@ void function ServerBrowser_ServerBtnDoubleClicked(var button)
 
 void function ServerBrowser_FilterServerList()
 {
+	if(!IsLobby())
+		return
+
 	wait 0.1
 
 	filterArguments.hideEmpty = GetConVarBool( "grx_hasUnknownItems" )
@@ -262,7 +307,9 @@ void function ServerBrowser_FilterServerList()
 			array<string> sName
 			sName.append( file.m_vServerList[i].svServerName.tolower() )
 			sName.append( file.m_vServerList[i].svMapName.tolower() )
+			sName.append( GetUIMapName(file.m_vServerList[i].svMapName).tolower() )
 			sName.append( file.m_vServerList[i].svPlaylist.tolower() )
+			sName.append( GetUIPlaylistName(file.m_vServerList[i].svPlaylist).tolower() )
 
 			string sTerm = filterArguments.searchTerm.tolower()
 			
@@ -358,8 +405,8 @@ void function ServerBrowser_RefreshServerListing(bool refresh = true)
 	ServerBrowser_SelectServer(file.m_vServerList[0].svServerID)
 	ServerBrowser_UpdateServerPlayerCount()
 
+	ServerBrowser_UpdateFilterLists()
 	OnBtnFiltersClear()
-
 	thread ServerBrowser_FilterServerList()
 }
 

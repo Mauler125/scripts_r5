@@ -144,6 +144,7 @@ void function OnR5RLobby_Show()
 {
 	//needed on both show and open
 	SetupLobby()
+	ServerBrowser_UpdateFilterLists()
 
 	//Show Home Panel
 	ShowSelectedPanel( file.panels[0], file.buttons[0] )
