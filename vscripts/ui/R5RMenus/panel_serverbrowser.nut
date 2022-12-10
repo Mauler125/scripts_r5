@@ -11,7 +11,7 @@ global function UnRegisterServerBrowserButtonPressedCallbacks
 //Used for max items for page
 //Changing this requires a bit of work to get more to show correctly
 //So keep at 19
-const SB_MAX_SERVER_PER_PAGE = 19
+const SB_MAX_SERVER_PER_PAGE = 15
 
 // Stores mouse delta used for scroll bar
 struct {
@@ -48,6 +48,16 @@ struct ServerListing
 	int svCurrentPlayers
 }
 
+struct {
+	bool hideEmpty = false
+	bool useSearch = false
+	string searchTerm
+	array<string> filterMaps = ["Any", "mp_rr_canyonlands_staging", "mp_rr_aqueduct", "mp_rr_aqueduct_night", "mp_rr_ashs_redemption", "mp_rr_canyonlands_64k_x_64k", "mp_rr_canyonlands_mu1", "mp_rr_canyonlands_mu1_night", "mp_rr_desertlands_64k_x_64k", "mp_rr_desertlands_64k_x_64k_nx", "mp_rr_desertlands_64k_x_64k_tt", "mp_rr_arena_composite", "mp_rr_arena_skygarden", "mp_rr_party_crasher"]
+	string filterMap = "Any"
+	array<string> filterGamemodes = ["Any", "survival_firingrange", "survival", "FallLTM", "duos", "custom_tdm", "custom_ctf", "tdm_gg", "tdm_gg_double", "survival_dev", "shadowfall_dev", "flowstate_official"]
+	string filterGamemode = "Any"
+} filterArguments
+
 struct
 {
 	var menu
@@ -77,9 +87,17 @@ void function InitR5RServerBrowserPanel( var panel )
 	AddMouseMovementCaptureHandler( Hud_GetChild(file.panel, "MouseMovementCapture"), UpdateMouseDeltaBuffer )
 	Hud_AddEventHandler( Hud_GetChild( file.panel, "ConnectButton" ), UIE_CLICK, ServerBrowser_ConnectBtnClicked )
 	Hud_AddEventHandler( Hud_GetChild( file.panel, "RefreshServers" ), UIE_CLICK, ServerBrowser_RefreshBtnClicked )
+	Hud_AddEventHandler( Hud_GetChild( file.panel, "ClearFliters" ), UIE_CLICK, FilterServer_Activate )
 	Hud_AddEventHandler( Hud_GetChild( file.panel, "BtnServerListDownArrow" ), UIE_CLICK, OnScrollDown )
 	Hud_AddEventHandler( Hud_GetChild( file.panel, "BtnServerListUpArrow" ), UIE_CLICK, OnScrollUp )
-	AddButtonEventHandler( Hud_GetChild( file.panel, "BtnFilterServers"), UIE_CHANGE, ServerBrowser_FilterTextChanged )
+	AddButtonEventHandler( Hud_GetChild( file.panel, "BtnServerSearch"), UIE_CHANGE, ServerBrowser_FilterTextChanged )
+
+	Hud_AddEventHandler( Hud_GetChild( Hud_GetChild( file.panel, "SwtBtnHideEmpty" ), "LeftButton" ), UIE_CLICK, FilterServer_Activate )
+	Hud_AddEventHandler( Hud_GetChild( Hud_GetChild( file.panel, "SwtBtnHideEmpty" ), "RightButton" ), UIE_CLICK, FilterServer_Activate )
+	Hud_AddEventHandler( Hud_GetChild( Hud_GetChild( file.panel, "SwtBtnSelectGamemode" ), "LeftButton" ), UIE_CLICK, FilterServer_Activate )
+	Hud_AddEventHandler( Hud_GetChild( Hud_GetChild( file.panel, "SwtBtnSelectGamemode" ), "RightButton" ), UIE_CLICK, FilterServer_Activate )
+	Hud_AddEventHandler( Hud_GetChild( Hud_GetChild( file.panel, "SwtBtnSelectMap" ), "LeftButton" ), UIE_CLICK, FilterServer_Activate )
+	Hud_AddEventHandler( Hud_GetChild( Hud_GetChild( file.panel, "SwtBtnSelectMap" ), "RightButton" ), UIE_CLICK, FilterServer_Activate )
 
 	//Add event handlers for the server buttons
 	//Clear buttontext
@@ -103,6 +121,8 @@ void function InitR5RServerBrowserPanel( var panel )
 	file.m_vSelectedServer.svDescription = ""
 	ServerBrowser_UpdateSelectedServerUI()
 	ServerBrowser_UpdateServerPlayerCount()
+
+	OnBtnFiltersClear()
 }
 
 void function RegisterServerBrowserButtonPressedCallbacks()
@@ -117,34 +137,64 @@ void function UnRegisterServerBrowserButtonPressedCallbacks()
 	DeregisterButtonPressedCallback( MOUSE_WHEEL_DOWN , OnScrollDown )
 }
 
+void function OnBtnFiltersClear()
+{
+	Hud_SetText( Hud_GetChild( file.panel, "BtnServerSearch" ), "" )
+	filterArguments.useSearch = false
+	filterArguments.searchTerm = ""
+	filterArguments.filterGamemode = "Any"
+	filterArguments.filterMap = "Any"
+	filterArguments.hideEmpty = false
+
+	SetConVarBool( "grx_hasUnknownItems", false )
+	SetConVarInt( "match_rankedSwitchETA", 0 )
+	SetConVarInt( "match_rankedMaxPing", 0 )
+}
+
 ////////////////////////////////////
 //
 //		Button Functions
 //
 ////////////////////////////////////
 
+void function FilterServer_Activate(var button)
+{
+	OnBtnFiltersClear()
+	thread ServerBrowser_FilterServerList()
+}
+
 void function ServerBrowser_RefreshBtnClicked(var button)
 {
 	ServerBrowser_RefreshServerListing()
 
-	string filter = Hud_GetUTF8Text( Hud_GetChild( file.panel, "BtnFilterServers" ) )
+	string filter = Hud_GetUTF8Text( Hud_GetChild( file.panel, "BtnServerSearch" ) )
 	if(filter != "") {
-		file.IsFiltered = true
-		ServerBrowser_FilterServerList(filter)
+		filterArguments.useSearch = true
+		thread ServerBrowser_FilterServerList()
 	}
 }
 
 void function ServerBrowser_FilterTextChanged( var button )
 {
-	string filter = Hud_GetUTF8Text( Hud_GetChild( file.panel, "BtnFilterServers" ) )
+	string filter = Hud_GetUTF8Text( Hud_GetChild( file.panel, "BtnServerSearch" ) )
 
-	if(filter != "") {
-		file.IsFiltered = true
-		ServerBrowser_FilterServerList(filter)
+	/*if(filter != "") {
+		filterArguments.useSearch = true
+		filterArguments.searchTerm = filter
+		ServerBrowser_FilterServerList()
 	} else {
-		file.IsFiltered = false
+		filterArguments.useSearch  = false
+		filterArguments.searchTerm = ""
 		ServerBrowser_RefreshServerListing(false)
-	}
+	}*/
+
+	if(filter != "")
+		filterArguments.useSearch = true
+	else
+		filterArguments.useSearch = false
+
+	filterArguments.searchTerm = filter
+	thread ServerBrowser_FilterServerList()
 }
 
 void function ServerBrowser_ConnectBtnClicked(var button)
@@ -184,14 +234,51 @@ void function ServerBrowser_ServerBtnDoubleClicked(var button)
 //
 ////////////////////////////////////
 
-void function ServerBrowser_FilterServerList(string filter)
+void function ServerBrowser_FilterServerList()
 {
+	wait 0.1
+
+	filterArguments.hideEmpty = GetConVarBool( "grx_hasUnknownItems" )
+	filterArguments.filterMap = filterArguments.filterMaps[GetConVarInt( "match_rankedMaxPing" )]
+	filterArguments.filterGamemode = filterArguments.filterGamemodes[GetConVarInt( "match_rankedSwitchETA" )]
+
 	file.m_vFilteredServerList.clear()
 
-	for( int i=0; i < file.m_vServerList.len() && i < SB_MAX_SERVER_PER_PAGE; i++ )
+	for ( int i = 0; i < file.m_vServerList.len(); i++ )
 	{
-		if(file.m_vServerList[i].svServerName.tolower().find( filter.tolower() ) >= 0)
-			file.m_vFilteredServerList.append(file.m_vServerList[i])
+		// Filters
+		if ( filterArguments.hideEmpty && file.m_vServerList[i].svCurrentPlayers == 0 )
+			continue;
+
+		if ( filterArguments.filterMap != "Any" && filterArguments.filterMap != file.m_vServerList[i].svMapName )
+			continue;
+
+		if ( filterArguments.filterGamemode != "Any" && filterArguments.filterGamemode != file.m_vServerList[i].svPlaylist )
+			continue;
+		
+		// Search
+		if ( filterArguments.useSearch )
+		{	
+			array<string> sName
+			sName.append( file.m_vServerList[i].svServerName.tolower() )
+			sName.append( file.m_vServerList[i].svMapName.tolower() )
+			sName.append( file.m_vServerList[i].svPlaylist.tolower() )
+
+			string sTerm = filterArguments.searchTerm.tolower()
+			
+			bool found = false
+			for( int j = 0; j < sName.len(); j++ )
+			{
+				if ( sName[j].find( sTerm ) >= 0 )
+					found = true
+			}
+			
+			if ( !found )
+				continue;
+		}
+		
+		// Server fits our requirements, add it to the list
+		file.m_vFilteredServerList.append(file.m_vServerList[i])
 	}
 
 	UpdateListSliderHeight( float( file.m_vFilteredServerList.len() ) )
@@ -271,11 +358,9 @@ void function ServerBrowser_RefreshServerListing(bool refresh = true)
 	ServerBrowser_SelectServer(file.m_vServerList[0].svServerID)
 	ServerBrowser_UpdateServerPlayerCount()
 
-	string filter = Hud_GetUTF8Text( Hud_GetChild( file.panel, "BtnFilterServers" ) )
-	if(filter != "") {
-		file.IsFiltered = true
-		ServerBrowser_FilterServerList(filter)
-	}
+	OnBtnFiltersClear()
+
+	thread ServerBrowser_FilterServerList()
 }
 
 //Used scroll code from northstar.
@@ -346,7 +431,7 @@ void function UpdateListSliderPosition( int servers )
 	var movementCapture = Hud_GetChild( file.panel , "MouseMovementCapture" )
 
 	float minYPos = 0.0 * ( GetScreenSize().height / 1080.0 )
-	float useableSpace = (760.0 * ( GetScreenSize().height / 1080.0 ) - Hud_GetHeight( sliderPanel ) )
+	float useableSpace = (550.0 * ( GetScreenSize().height / 1080.0 ) - Hud_GetHeight( sliderPanel ) )
 
 	float jump = minYPos - ( useableSpace / ( float( servers ) - SB_MAX_SERVER_PER_PAGE ) * m_vScroll.Offset )
 
@@ -364,7 +449,7 @@ void function UpdateListSliderHeight( float servers )
 	var sliderPanel = Hud_GetChild( file.panel , "BtnServerListSliderPanel" )
 	var movementCapture = Hud_GetChild( file.panel , "MouseMovementCapture" )
 
-	float maxHeight = 710.0 * ( GetScreenSize().height / 1080.0 )
+	float maxHeight = 550.0 * ( GetScreenSize().height / 1080.0 )
 	float minHeight = 80.0 * ( GetScreenSize().height / 1080.0 )
 
 	float height = maxHeight * ( SB_MAX_SERVER_PER_PAGE / servers )
@@ -409,7 +494,7 @@ void function SliderBarUpdate()
 	Hud_SetFocused( sliderButton )
 
 	float minYPos = 0.0 * ( GetScreenSize().height / 1080.0 )
-	float maxHeight = 710.0  * ( GetScreenSize().height / 1080.0 )
+	float maxHeight = 550.0  * ( GetScreenSize().height / 1080.0 )
 	float maxYPos = minYPos - ( maxHeight - Hud_GetHeight( sliderPanel ) )
 	float useableSpace = ( maxHeight - Hud_GetHeight( sliderPanel ) )
 
