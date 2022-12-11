@@ -71,7 +71,7 @@ void function SetAtMainMenu()
 	SetMainMenuBlackScreenVisible(false)
 
 	//Refresh Server Browser
-	ServerBrowser_RefreshServerListing(false)
+	thread ServerBrowser_RefreshServerListing(false)
 }
 
 void function SetMainMenuBlackScreenVisible(bool show)

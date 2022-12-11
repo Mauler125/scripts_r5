@@ -27,7 +27,6 @@ void function OnMainMenuPanel_Show( var panel )
 
 void function LaunchButton_OnActivate( var button )
 {
-	// create local lobby server
 	CreateServer("Lobby", "", "mp_lobby", "menufall", eServerVisibility.HIDDEN)
 }
 
@@ -36,17 +35,9 @@ void function SetupRUI()
 	var statusDetailsRui = Hud_GetRui( Hud_GetChild( file.panel, "StatusDetails" ) )
 	var statusRui = Hud_GetRui( Hud_GetChild( file.panel, "Status" ) )
 
-	// setup StatusDetails ui
-	// RuiSetString( statusDetailsRui, "details", "Press Enter to continue" )
-	// RuiSetBool( statusDetailsRui, "isVisible", true )
 	RuiSetGameTime( statusDetailsRui, "initTime", Time() )
-
-	// setup Status ui
 	RuiSetString( statusRui, "prompt", Localize("#MAINMENU_CONTINUE") )
 	RuiSetBool( statusRui, "showPrompt", true )
 	RuiSetBool( statusRui, "showSpinner", false )
-
-	// setup launch button
 	Hud_SetVisible( file.launchButton, true )
-
 }

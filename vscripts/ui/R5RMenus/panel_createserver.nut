@@ -82,7 +82,6 @@ void function InitR5RCreateServerPanel( var panel )
 	Hud_SetText(Hud_GetChild( file.panel, "PlaylistInfoEdit" ), GetUIPlaylistName(ServerSettings.svPlaylist))
 	RuiSetImage( Hud_GetRui( Hud_GetChild( file.panel, "ServerMapImg" ) ), "loadscreenImage", GetUIMapAsset( ServerSettings.svMapName ) )
 	Hud_SetText(Hud_GetChild( file.panel, "VisInfoEdit" ), GetUIVisibilityName(ServerSettings.svVisibility))
-
 	Hud_SetText(Hud_GetChild( file.panel, "MapServerNameInfoEdit" ), ServerSettings.svServerName)
 }
 
@@ -130,8 +129,7 @@ void function SetSelectedServerPlaylist( string playlist )
 	//Set the new playlist text
 	Hud_SetText(Hud_GetChild( file.panel, "PlaylistInfoEdit" ), GetUIPlaylistName( ServerSettings.svPlaylist ) )
 
-	//This should ever really be triggered but here just incase
-	//The way this would be triggered is if there are no maps in put in the selected playlist
+	//This should never really be triggered but here just incase
 	if(playlist_maps.len() == 0) {
 		SetSelectedServerMap("mp_rr_canyonlands_64k_x_64k")
 		RefreshUIMaps()

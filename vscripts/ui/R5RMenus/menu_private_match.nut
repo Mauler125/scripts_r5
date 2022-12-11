@@ -227,7 +227,7 @@ void function SetSelectedServerPlaylist( string playlist )
     RunClientScript("UICodeCallback_UpdateServerInfo", 2, playlist)
 
     array<string> playlist_maps = GetPlaylistMaps(ServerSettings.svPlaylist)
-	//This should ever really be triggered but here just incase
+	//This should never really be triggered but here just incase
 	if(playlist_maps.len() == 0) {
 		SetSelectedServerMap("mp_rr_canyonlands_64k_x_64k")
         RefreshUIMaps()

@@ -153,7 +153,6 @@ void function OnR5RLobby_Show()
 
 	//Set back to default for next time
 	g_isAtMainMenu = false
-
 	server_host_name = ""
 
 	RunClientScript("UICallback_SetHostName", GetPlayerName() + "'s Lobby")
