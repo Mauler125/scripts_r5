@@ -354,12 +354,10 @@ void function ServerBrowser_FilterServerList()
 	filterArguments.hideEmpty = GetConVarBool( "grx_hasUnknownItems" )
 	filterArguments.filterMap = filterArguments.filterMaps[GetConVarInt( "match_rankedMaxPing" )]
 	filterArguments.filterGamemode = filterArguments.filterGamemodes[GetConVarInt( "match_rankedSwitchETA" )]
+	filterArguments.searchTerm = Hud_GetUTF8Text( Hud_GetChild( file.panel, "BtnServerSearch" ) )
 
-	string filter = Hud_GetUTF8Text( Hud_GetChild( file.panel, "BtnServerSearch" ) )
-	if(filter != "") {
+	if(filterArguments.searchTerm != "")
 		filterArguments.useSearch = true
-		filterArguments.searchTerm = filter
-	}
 
 	file.m_vFilteredServerList.clear()
 
