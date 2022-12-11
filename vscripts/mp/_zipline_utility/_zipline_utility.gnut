@@ -81,13 +81,6 @@ global struct ZiplinePanel
     int panelNumberUsed     = 1
 }
 
-global enum ePanelSkinType
-{
-    WALL,  // 0
-    STAND, // 1
-    _COUNT // 2
-}
-
 global enum ePanelState
 {
     ENABLE, // 0
@@ -102,12 +95,8 @@ global struct ZiplineUtility
     array < entity > supportArray
 
     // Vectors entities start / end
-    vector endEntityAng
-    vector endEntityPos
     vector endZiplineAng
     vector endZiplinePos
-    vector startEntityAng
-    vector startEntityPos
     vector startZiplineAng
     vector startZiplinePos
 

@@ -451,7 +451,7 @@ void function ZiplineError( entity player )
         if ( ziplines.state.error )
         {
             erronedZipline.append( ziplines ) ; count += 1
-            entity fx = StartParticleEffectInWorld_ReturnEntity( GetParticleSystemIndex( ZIPLINE_ERROR_FX ), ziplines.startEntityPos, < -90, 0, 0 > )
+            entity fx = StartParticleEffectInWorld_ReturnEntity( GetParticleSystemIndex( ZIPLINE_ERROR_FX ), ziplines.startZiplinePos, < -90, 0, 0 > )
         }
 
         if ( ziplines.state.errorMinor )
