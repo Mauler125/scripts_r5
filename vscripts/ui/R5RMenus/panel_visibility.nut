@@ -19,10 +19,10 @@ void function InitR5RVisPanel( var panel )
 {
 	file.panel = panel
 	file.menu = GetPanel( "R5RPrivateMatchPanel" )
-
-	var scrollPanel = Hud_GetChild( file.listPanel, "ScrollPanel" )
 	file.listPanel = Hud_GetChild( panel, "VisList" )
 	
+	var scrollPanel = Hud_GetChild( file.listPanel, "ScrollPanel" )
+
 	Hud_InitGridButtons( file.listPanel, visibility.len() )
 	foreach ( int id, int vis in visibility )
 	{

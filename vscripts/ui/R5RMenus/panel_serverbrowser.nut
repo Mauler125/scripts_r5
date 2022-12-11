@@ -332,6 +332,8 @@ void function ServerBrowser_FilterServerList()
 	if(!IsLobby())
 		return
 
+	ServerBrowser_UpdateFilterLists()
+	
 	//Must wait for convars to actually set
 	wait 0.1
 
@@ -372,8 +374,8 @@ void function ServerBrowser_FilterServerList()
 			string sTerm = filterArguments.searchTerm.tolower()
 			
 			bool found = false
-			for( int l = 0, k = sName.len(); l < k; j++ )
-				if ( sName[j].find( sTerm ) >= 0 )
+			for( int l = 0, k = sName.len(); l < k; l++ )
+				if ( sName[l].find( sTerm ) >= 0 )
 					found = true
 			
 			if ( !found )
