@@ -16,7 +16,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"ServerBrowserBG"
 	{
 		"ControlName"			"ImagePanel"
-		"xpos"					"-235"
+		"xpos"					"-245"
 		"ypos"					"-40"
 		"tall"					"50"
 		"wide" 					"1395"
@@ -251,7 +251,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"style"						"RuiButton"
 		"wide"						"200"
 		"tall"						"35"
-		"xpos"						"-5"
+		"xpos"						"5"
 		"ypos"						"0"
 		"visible"					"1"
 		"enabled"					"1"
@@ -293,16 +293,16 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"ControlName"			"ImagePanel"
 		wide 32
 		tall 649
-		xpos 0
+		xpos 2
 		ypos 50
 		zpos 0
         "fillColor"				"195 29 38 150"
 		scaleImage				1
-		"visible"				"1"
+		"visible"				"0"
 
 		pin_to_sibling ServersBG
-		pin_corner_to_sibling TOP_RIGHT
-		pin_to_sibling_corner TOP_LEFT
+		pin_corner_to_sibling TOP_LEFT
+		pin_to_sibling_corner TOP_RIGHT
 	}
 
 	BtnServerListSlider
@@ -312,7 +312,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		//labelText "V"
 		wide 30
 		tall 550
-		xpos 0
+		xpos 2
 		ypos 0
 		zpos 0
 
@@ -320,8 +320,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		drawColor "255 255 255 255"
 
 		pin_to_sibling ServersBG
-		pin_corner_to_sibling TOP_RIGHT
-		pin_to_sibling_corner TOP_LEFT
+		pin_corner_to_sibling TOP_LEFT
+		pin_to_sibling_corner TOP_RIGHT
 	}
 
 	BtnServerListSliderPanel
@@ -329,7 +329,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		ControlName RuiPanel
 		wide 30
 		tall 550
-		xpos 0
+		xpos 2
 		ypos 0
 		zpos 100
 
@@ -339,8 +339,8 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		zpos -1
 
 		pin_to_sibling ServersBG
-		pin_corner_to_sibling TOP_RIGHT
-		pin_to_sibling_corner TOP_LEFT
+		pin_corner_to_sibling TOP_LEFT
+		pin_to_sibling_corner TOP_RIGHT
 	}
 
 	// sh_menu_models.gnut has a global function which gets called when
@@ -348,16 +348,16 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	// deltaX; deltaY which we can yoink for ourselfes
 	MouseMovementCapture
 	{
-			ControlName CMouseMovementCapturePanel
-			wide 30
-			tall 550
-			xpos 0
-			ypos 1
-			zpos 100
+		ControlName CMouseMovementCapturePanel
+		wide 30
+		tall 550
+		xpos 2
+		ypos 1
+		zpos 100
 
-			pin_to_sibling ServersBG
-			pin_corner_to_sibling TOP_RIGHT
-			pin_to_sibling_corner TOP_LEFT
+		pin_to_sibling ServersBG
+		pin_corner_to_sibling TOP_LEFT
+		pin_to_sibling_corner TOP_RIGHT
 	}
 
 	BtnServerListUpArrow
@@ -367,7 +367,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		//labelText "A"
 		wide 30
 		tall 45
-		xpos -1
+		xpos 0
 		ypos 0
 		zpos 5
 
@@ -384,7 +384,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		ControlName RuiPanel
 		wide 30
 		tall 45
-		xpos -1
+		xpos 0
 		ypos 0
 
 		rui "ui/control_options_description.rpak"
@@ -404,7 +404,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		//labelText "A"
 		wide 30
 		tall 45
-		xpos -1
+		xpos 0
 		ypos 0
 		zpos 5
 
@@ -421,7 +421,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		ControlName RuiPanel
 		wide 30
 		tall 45
-		xpos -1
+		xpos 0
 		ypos 0
 
 		rui "ui/control_options_description.rpak"
@@ -675,7 +675,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"visible"				"1"
 		"rui"           		"ui/custom_loadscreen_image.rpak"
 		"ypos" 					"0"
-		"xpos"					"27"
+		"xpos"					"40"
 		"zpos" 					"4"
 
 		"pin_to_sibling"		"ServerBrowserBG"

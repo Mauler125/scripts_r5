@@ -102,7 +102,7 @@
 			"InheritProperties"			"TabButtonSettings"
 			"classname" 				"TopButtons"
 			"zpos"						"3"
-			"xpos"                    	"-1200"
+			"xpos"                    	"-400"
 			"scriptID"					"0"
 
 			ruiArgs
@@ -112,8 +112,8 @@
 			}
 
 			"pin_to_sibling"			"MainButtonsFrame"
-			"pin_corner_to_sibling"		"RIGHT"
-			"pin_to_sibling_corner"		"RIGHT"
+			"pin_corner_to_sibling"		"CENTER"
+			"pin_to_sibling_corner"		"CENTER"
 		}
 
 		"CreateServerBtn"
