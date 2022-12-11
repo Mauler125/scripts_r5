@@ -60,27 +60,7 @@ void function ThreadCreateRandomZipline( entity player )
 
 void function ZiplinesInit( vector startingorg )
 {
-    //Props 
-    MapEditor_CreateProp( $"mdl/industrial/zipline_arm.rmdl", < -444.2101, 379.0000, 1929.6000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1 )
-    MapEditor_CreateProp( $"mdl/industrial/zipline_arm.rmdl", < -444.2101, -383.1873, 1929.6000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1 )
-    MapEditor_CreateProp( $"mdl/industrial/zipline_arm.rmdl", < -411.9796, 1095.8370, 2237.0000 > + startingorg, < 0.0000, -45.0000, 0.0000 >, true, 50000, -1, 1 )
-    MapEditor_CreateProp( $"mdl/industrial/security_fence_post.rmdl", < -406.6001, 1097.0000, 2057.0000 > + startingorg, < 0.0000, 45.0000, 0.0000 >, true, 50000, -1, 1 )
-    MapEditor_CreateProp( $"mdl/industrial/zipline_arm.rmdl", < 485.1070, 483.3456, 1171.4000 > + startingorg, < 0.0000, 135.0000, 0.0000 >, true, 50000, -1, 1 )
-    MapEditor_CreateProp( $"mdl/industrial/security_fence_post.rmdl", < 479.1001, 479.2001, 991.4000 > + startingorg, < 0.0000, -135.0000, 0.0000 >, true, 50000, -1, 1 )
-    MapEditor_CreateProp( $"mdl/industrial/zipline_arm.rmdl", < 1561.6640, 3.6782, 176.0000 > + startingorg, < 0.0000, -180.0000, 0.0000 >, true, 50000, -1, 1 )
-    MapEditor_CreateProp( $"mdl/industrial/security_fence_post.rmdl", < 1539.5000, 0.0000, 16.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1 )
-    MapEditor_CreateProp( $"mdl/industrial/zipline_arm.rmdl", < 512.3743, -1.0171, 176.0000 > + startingorg, < 0.0000, 0.0000, 0.0000 >, true, 50000, -1, 1 )
-    MapEditor_CreateProp( $"mdl/industrial/security_fence_post.rmdl", < 507.9001, 0.0000, 16.0000 > + startingorg, < 0.0000, 90.0000, 0.0000 >, true, 50000, -1, 1 )
-    MapEditor_CreateProp( $"mdl/industrial/zipline_arm.rmdl", < 1591.1930, -262.7899, 176.0000 > + startingorg, < 0.0000, 24.5600, 0.0000 >, true, 50000, -1, 1 )
-    MapEditor_CreateProp( $"mdl/industrial/security_fence_post.rmdl", < 1539.5010, -253.7101, 16.0000 > + startingorg, < 0.0000, 114.5600, 0.0000 >, true, 50000, -1, 1 )
-    MapEditor_CreateProp( $"mdl/industrial/zipline_arm.rmdl", < 513.1451, -257.5431, 176.0000 > + startingorg, < 0.0000, -42.1000, 0.0000 >, true, 50000, -1, 1 )
-    MapEditor_CreateProp( $"mdl/industrial/security_fence_post.rmdl", < 507.9001, -253.7101, 16.0000 > + startingorg, < 0.0000, 47.9000, 0.0000 >, true, 50000, -1, 1 )
-    MapEditor_CreateProp( $"mdl/industrial/zipline_arm.rmdl", < 1561.9320, 257.5367, 176.0000 > + startingorg, < 0.0000, 156.8000, 0.0000 >, true, 50000, -1, 1 )
-    MapEditor_CreateProp( $"mdl/industrial/security_fence_post.rmdl", < 1539.5000, 253.7101, 16.0000 > + startingorg, < 0.0000, -113.2000, 0.0000 >, true, 50000, -1, 1 )
-    MapEditor_CreateProp( $"mdl/industrial/zipline_arm.rmdl", < 512.1283, 255.6126, 176.0000 > + startingorg, < 0.0000, -18.5000, 0.0000 >, true, 50000, -1, 1 )
-    MapEditor_CreateProp( $"mdl/industrial/security_fence_post.rmdl", < 507.9001, 253.7101, 16.0000 > + startingorg, < 0.0000, 71.5000, 0.0000 >, true, 50000, -1, 1 )
-
-
+    
 }
 
 
