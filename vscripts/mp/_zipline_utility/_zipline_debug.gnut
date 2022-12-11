@@ -61,17 +61,19 @@ void function ThreadCreateRandomZipline( entity player )
 void function ZiplinesInit( vector startingorg )
 {
     //VerticalZipLines 
-    MapEditor_CreateZiplineFromUnity( < -388.7101, 383.2000, 1917.6000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, < -388.7102, 383.2000, 51.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, -1, 1, 2, 1, 1, false, true, 100, 50, false, true, false )
-    MapEditor_CreateZiplineFromUnity( < -388.7101, -378.9874, 1917.6000 > + startingorg, < 0.0000, 90.0000, 0.0000 >, < -388.7102, -378.9874, 51.0000 > + startingorg, < 0.0000, 90.0000, 0.0000 >, true, -1, 1, 2, 1, 1, false, true, 100, 50, false, true, false )
-    MapEditor_CreateZiplineFromUnity( < -375.7050, 1138.0510, 2225.0000 > + startingorg, < 0.0000, 0.0000, 0.0000 >, < -375.7050, 1138.0510, 51.0000 > + startingorg, < 0.0000, 0.0000, 0.0000 >, true, -1, 1, 2, 1, 1, false, true, 100, 50, false, true, false )
-    MapEditor_CreateZiplineFromUnity( < 448.8324, 441.1313, 1159.4000 > + startingorg, < 0.0000, 98.0000, 0.0000 >, < 448.8324, 441.1313, 51.0000 > + startingorg, < 0.0000, 98.0000, 0.0000 >, true, -1, 1, 2, 1, 1, false, true, 100, 50, false, true, false )
+    //MapEditor_CreateZiplineFromUnity( < -388.7101, 383.2000, 1917.6000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, < -388.7102, 383.2000, 51.0000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, -1, 1, 2, 1, 1, false, true, 100, 50, false, true, false )
+    //MapEditor_CreateZiplineFromUnity( < -388.7101, -378.9874, 1917.6000 > + startingorg, < 0.0000, 90.0000, 0.0000 >, < -388.7102, -378.9874, 51.0000 > + startingorg, < 0.0000, 90.0000, 0.0000 >, true, -1, 1, 2, 1, 1, false, true, 100, 50, false, true, false )
+    //MapEditor_CreateZiplineFromUnity( < -375.7050, 1138.0510, 2225.0000 > + startingorg, < 0.0000, 0.0000, 0.0000 >, < -375.7050, 1138.0510, 51.0000 > + startingorg, < 0.0000, 0.0000, 0.0000 >, true, -1, 1, 2, 1, 1, false, true, 100, 50, false, true, false )
+    //MapEditor_CreateZiplineFromUnity( < 448.8324, 441.1313, 1159.4000 > + startingorg, < 0.0000, 98.0000, 0.0000 >, < 448.8324, 441.1313, 51.0000 > + startingorg, < 0.0000, 98.0000, 0.0000 >, true, -1, 1, 2, 1, 1, false, true, 100, 50, false, true, true, [< 200, 0, 16 >+ startingorg], [< 0, -90, 0 >], [$"mdl/props/global_access_panel_button/global_access_panel_button_console_w_stand.rmdl"] )
 
     //NonVerticalZipLines 
-    MapEditor_CreateZiplineFromUnity( < -1638.6010, 808.9001, 176.0000 > + startingorg, < 0.0000, 0.0000, 0.0000 >, < -424.3000, -810.0008, 176.0000 > + startingorg, < 0.0000, 0.0000, 0.0000 >, false, -1, 1, 2, 1, 0.99, false, true, 280, 280, false, false, false )
-    MapEditor_CreateZiplineFromUnity( < -1638.6000, -810.0002, 176.0000 > + startingorg, < 0.0000, 0.0000, 0.0000 >, < -424.2999, 808.9008, 176.0000 > + startingorg, < 0.0000, 0.0000, 0.0000 >, false, -1, 1, 2, 1, 0.99, false, true, 280, 280, false, false, false )
-    MapEditor_CreateZiplineFromUnity( < 508.3743, 53.9829, 164.0000 > + startingorg, < 0.0000, 90.0000, 0.0000 >, < 1565.6640, -51.3218, 164.0000 > + startingorg, < 0.0000, 90.0000, 0.0000 >, false, -1, 1, 2, 1, 1, false, true, 150, 150, false, false, false )
-    MapEditor_CreateZiplineFromUnity( < 547.0508, -214.0527, 164.0000 > + startingorg, < 0.0000, 47.9000, 0.0000 >, < 1564.6950, -214.4285, 164.0000 > + startingorg, < 0.0000, 47.9000, 0.0000 >, false, -1, 1, 2, 1, 1, false, true, 150, 150, false, false, false )
-    MapEditor_CreateZiplineFromUnity( < 525.7867, 309.0396, 164.0000 > + startingorg, < 0.0000, 71.5000, 0.0000 >, < 1543.9420, 205.4084, 164.0000 > + startingorg, < 0.0000, 71.5000, 0.0000 >, false, -1, 1, 2, 1, 1, false, true, 150, 150, false, false, false )
+    //MapEditor_CreateZiplineFromUnity( < -1638.6010, 808.9001, 176.0000 > + startingorg, < 0.0000, 0.0000, 0.0000 >, < -424.3000, -810.0008, 176.0000 > + startingorg, < 0.0000, 0.0000, 0.0000 >, false, -1, 1, 2, 1, 0.99, false, true, 280, 280, false, false, false )
+    //MapEditor_CreateZiplineFromUnity( < -1638.6000, -810.0002, 176.0000 > + startingorg, < 0.0000, 0.0000, 0.0000 >, < -424.2999, 808.9008, 176.0000 > + startingorg, < 0.0000, 0.0000, 0.0000 >, false, -1, 1, 2, 1, 0.99, false, true, 280, 280, false, false, false )
+    //MapEditor_CreateZiplineFromUnity( < 508.3743, 53.9829, 164.0000 > + startingorg, < 0.0000, 90.0000, 0.0000 >, < 1565.6640, -51.3218, 164.0000 > + startingorg, < 0.0000, 90.0000, 0.0000 >, false, -1, 1, 2, 1, 1, false, true, 150, 150, false, false, false )
+    //MapEditor_CreateZiplineFromUnity( < 547.0508, -214.0527, 164.0000 > + startingorg, < 0.0000, 47.9000, 0.0000 >, < 1564.6950, -214.4285, 164.0000 > + startingorg, < 0.0000, 47.9000, 0.0000 >, false, -1, 1, 2, 1, 1, false, true, 150, 150, false, false, false )
+    //MapEditor_CreateZiplineFromUnity( < 525.7867, 309.0396, 164.0000 > + startingorg, < 0.0000, 71.5000, 0.0000 >, < 1543.9420, 205.4084, 164.0000 > + startingorg, < 0.0000, 71.5000, 0.0000 >, false, -1, 1, 2, 1, 1, false, true, 150, 150, false, false, false )
+    
+    MapEditor_CreateZiplineFromUnity( < 525.7867, 309.0396, 164.0000 > + startingorg, < 0.0000, 71.5000, 0.0000 >, < 1543.9420, 205.4084, 164.0000 > + startingorg, < 0.0000, 71.5000, 0.0000 >, false, -1, 1, 2, 1, 1, 0, 1, 150, 150, false, 0, true, 0, 0, [< 200, 0, 16 > + startingorg], [< 0, -90, 0 >], [$"mdl/props/global_access_panel_button/global_access_panel_button_console_w_stand.rmdl"] )
 
     //Props 
     MapEditor_CreateProp( $"mdl/industrial/zipline_arm.rmdl", < -444.2101, 379.0000, 1929.6000 > + startingorg, < 0.0000, -90.0000, 0.0000 >, true, 50000, -1, 1 )
