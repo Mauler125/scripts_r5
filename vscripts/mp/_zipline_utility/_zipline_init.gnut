@@ -34,8 +34,6 @@ void function OnMapZipline_Init() // Explanation at the end of the file
             break
         case "mp_rr_desertlands_64k_x_64k":
             break
-        case "mp_rr_floppytown":
-            break
         default: break
     }
 

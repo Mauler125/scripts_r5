@@ -128,7 +128,7 @@
         UsableButton.AllowMantle()
         UsableButton.SetScriptName( ZIPLINE_PANEL_SCRIPT_NAME )
         UsableButton.SetOrigin( pos )
-        UsableButton.SetAngles( ang + < 0, 90, 0 > ) // ang offset
+        UsableButton.SetAngles( ang )
         DispatchSpawn( UsableButton )
 
         UsableButton.SetUsable()
