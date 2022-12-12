@@ -42,10 +42,7 @@ void function LoadLobbyAfterLeave()
 
 	//Create lobby server
 	CreateServer("Lobby VM", "", "mp_lobby", "menufall", eServerVisibility.HIDDEN)
-
-	//Refresh Server Browser
-	ServerBrowser_RefreshServerListing()
-
+	
 	//No longer at main menu
 	g_isAtMainMenu = false
 }

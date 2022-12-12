@@ -142,7 +142,7 @@ void function OnR5RLobby_Close()
 
 void function OnR5RLobby_Show()
 {
-	//needed on both show and open
+	ServerBrowser_UpdateFilterLists()
 	SetupLobby()
 
 	//Show Home Panel
@@ -152,7 +152,6 @@ void function OnR5RLobby_Show()
 
 	//Set back to default for next time
 	g_isAtMainMenu = false
-
 	server_host_name = ""
 
 	RunClientScript("UICallback_SetHostName", GetPlayerName() + "'s Lobby")
