@@ -23,14 +23,15 @@ global function ZiplineAddErrorReason
 ////////////////////////////////////////////////////////////
 //  Initialize zipline
 ////////////////////////////////////////////////////////////
-ZiplineUtility function Zipline_Register( string ziplineName, vector startEntityPos, vector startEntityAng, vector endEntityPos, vector endEntityAng )
+ZiplineUtility function Zipline_Register( string ziplineName, vector startZiplinePos, vector startZiplineAng, vector endZiplinePos, vector endZiplineAng )
 {
     ZiplineUtility zipline ; KVFilesSettings settings = zipline.settings ; ZiplineVars vars = zipline.vars ; ZiplineState state = zipline.state
 
     // Name
     if ( IsZiplineHaveSameName( ziplineName ) ) ziplineName = UniqueZiplineString( ziplineName ) ; vars.ziplineName = ziplineName
 
-    zipline.startZiplinePos = startEntityPos ; zipline.endZiplinePos = endEntityPos
+    zipline.startZiplinePos = startZiplinePos ; zipline.endZiplinePos = endZiplinePos
+    zipline.startZiplineAng = startZiplineAng ; zipline.endZiplineAng = endZiplineAng
 
     ziplineUtility.zipline[ziplineName] <- zipline ; ziplineUtility.ziplineArray.append( zipline )
 
