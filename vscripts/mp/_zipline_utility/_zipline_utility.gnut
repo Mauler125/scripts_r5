@@ -14,10 +14,6 @@ global function ZiplineUtility_Init
     global const asset ZIPLINE_PLANEL_STAND                     = $"mdl/props/global_access_panel_button/global_access_panel_button_console_w_stand.rmdl"
     global const asset ZIPLINE_SUPPORT                          = $"mdl/industrial/security_fence_post.rmdl"
 
-// Global const float
-    global const float  END_AUTO_DETACH_DISTANCE                = 50.0
-    global const float  HORIZONTAL_AUTO_DETACH_DISTANCE         = 150.0
-
 // Global const string
     global const string ZIPLINE_END_SOUND                       = "explo_spectre"
     global const string ZIPLINE_PANEL_LOCKED                    = "npe_player_fail"
@@ -35,7 +31,6 @@ global struct ZiplineState
     bool error                = false
     bool errorMinor           = false
     bool firstInit            = true
-    bool supportIsValid       = false
     bool ziplineIsValid       = false
     bool ziplineIsDestroyed   = true
     array < string > errorReason
@@ -92,7 +87,6 @@ global struct ZiplineUtility
     // Entities
     entity endEntityZiplinePoint
     entity startEntityZiplinePoint
-    array < entity > supportArray
 
     // Vectors entities start / end
     vector endZiplineAng
