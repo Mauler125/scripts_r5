@@ -10,9 +10,10 @@
     global function UpdatePanelForFirstTimeInited
     global function CreateUsablePanel
     global function DecidingZipline
-    global function DecidePanelModel
     global function UpdatePanelsPrompts
     global function DestoryAllPanelsInZiplineStruct
+    global function Zipline_SetPanelTimer
+    global function Zipline_PanelUsableLimit
 #endif // SERVER
 
 #if SERVER || CLIENT // Const
@@ -128,7 +129,7 @@
         UsableButton.AllowMantle()
         UsableButton.SetScriptName( ZIPLINE_PANEL_SCRIPT_NAME )
         UsableButton.SetOrigin( pos )
-        UsableButton.SetAngles( ang + < 0, 90, 0 > ) // ang offset
+        UsableButton.SetAngles( ang )
         DispatchSpawn( UsableButton )
 
         UsableButton.SetUsable()
@@ -166,8 +167,7 @@
 
             thread DestoryPanelsAfterUsed( zipline )
 
-            if ( vars.destroyZiplineSupportOnPanelEnd ) DecidingZipline( zipline, true )
-            else DecidingZipline( zipline )
+            DecidingZipline( zipline )
         }
         else
         {
@@ -195,7 +195,7 @@
     }
 
 
-    void function DecidingZipline( ZiplineUtility zipline, bool destroyAll = false )
+    void function DecidingZipline( ZiplineUtility zipline )
     {
         switch ( IsZiplineDestroyed( zipline ) )
         {
@@ -203,7 +203,7 @@
                 RegisteredZipline_Init( zipline )
                 break
             case false:
-                Zipline_Destroy( zipline, destroyAll )
+                Zipline_Destroy( zipline )
                 break
             default: break
         }
@@ -291,25 +291,6 @@
     }
 
 
-    asset function DecidePanelModel( int skinType )
-    {
-        asset skin
-        switch ( skinType )
-        {
-            case ePanelSkinType.WALL:
-                skin = ZIPLINE_PLANEL_WALL ; break
-            case ePanelSkinType.STAND:
-                skin = ZIPLINE_PLANEL_STAND ; break
-            default:
-                skin = $""
-            break
-        }
-
-        if ( IsCanyonlandsMap() ) skin = ZIPLINE_PLANEL_STAND
-
-    return skin }
-
-
     array< entity > function GetZiplinePanelArray( ZiplineUtility zipline )
     {
         array< entity > panelArray = [] ; ZiplinePanel panels = zipline.panels
@@ -328,22 +309,28 @@
     }
 
 
-    void function Zipline_Destroy( ZiplineUtility zipline, bool destroyAll = false )
+    void function Zipline_SetPanelTimer( ZiplineUtility zipline, float minTimer, float maxTimer )
+    {
+        ZiplinePanel panels = zipline.panels
+        panels.minTimer = minTimer
+        panels.maxTimer = maxTimer
+    }
+
+
+    void function Zipline_PanelUsableLimit( ZiplineUtility zipline, int maxUse = 1 )
+    {
+        ZiplinePanel panels       = zipline.panels
+        panels.panelMaxNumberUsed = maxUse
+        panels.panelUsableLimit   = true
+    }
+
+
+    void function Zipline_Destroy( ZiplineUtility zipline )
     {
         ZiplineVars vars = zipline.vars ; ZiplineState state = zipline.state
 
-        entity startSkin = GetEnt( vars.ziplineName + "_start" )
-        entity endSkin   = GetEnt( vars.ziplineName + "_end" )
         entity startEntityZiplinePoint = zipline.startEntityZiplinePoint
         entity endEntityZiplinePoint   = zipline.endEntityZiplinePoint
-
-        if ( destroyAll ) vars.destroyAll = true
-
-        if ( vars.destroyAll && state.supportIsValid )
-        {
-            foreach( ents in zipline.supportArray ) if ( IsValid( ents ) ) ents.Dissolve( ENTITY_DISSOLVE_CORE, < 0, 0, 0 >, 2000 )
-            state.supportIsValid = false
-        }
 
         if ( IsValid( startEntityZiplinePoint ) ) Zipline_DestroyFX( startEntityZiplinePoint )
 
