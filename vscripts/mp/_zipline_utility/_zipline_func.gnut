@@ -254,13 +254,14 @@ void function ZiplinePrecache()
         PrecacheParticleSystem( ZIPLINE_ERROR_FX )
     #endif // ZIPLINE_DEBUG_SCRIPTS
 
-    // Debug zipline platform
-    PrecacheModel( $"mdl/thunderdome/thunderdome_cage_wall_256x256_01.rmdl" )
-    PrecacheModel( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_05.rmdl" )
-    PrecacheModel( $"mdl/thunderdome/thunderdome_cage_ceiling_256x128_06.rmdl" )
-    PrecacheModel( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl" )
-    PrecacheModel( $"mdl/thunderdome/thunderdome_gantry_01.rmdl" )
-    PrecacheModel( $"mdl/thunderdome/thunderdome_screen_tower_01.rmdl" )
+    #if ZIPLINE_DEBUG_SCRIPTS && DEBUG_ZIPLINE_PLATFORM // Debug zipline platform
+        PrecacheModel( $"mdl/thunderdome/thunderdome_cage_wall_256x256_01.rmdl" )
+        PrecacheModel( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_05.rmdl" )
+        PrecacheModel( $"mdl/thunderdome/thunderdome_cage_ceiling_256x128_06.rmdl" )
+        PrecacheModel( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl" )
+        PrecacheModel( $"mdl/thunderdome/thunderdome_gantry_01.rmdl" )
+        PrecacheModel( $"mdl/thunderdome/thunderdome_screen_tower_01.rmdl" )
+    #endif // ZIPLINE_DEBUG_SCRIPTS && DEBUG_ZIPLINE_PLATFORM
 }
 
 
