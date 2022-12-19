@@ -197,15 +197,13 @@
 
     void function DecidingZipline( ZiplineUtility zipline )
     {
-        switch ( IsZiplineDestroyed( zipline ) )
+        if ( IsZiplineDestroyed( zipline ) )
         {
-            case true:
-                RegisteredZipline_Init( zipline )
-                break
-            case false:
-                Zipline_Destroy( zipline )
-                break
-            default: break
+            RegisteredZipline_Init( zipline )
+        }
+        else
+        {
+            Zipline_Destroy( zipline )
         }
     }
 
@@ -218,15 +216,13 @@
 
         waitPanelState = RandomFloatRange( panels.minTimer, panels.maxTimer )
 
-        switch ( IsZiplineDestroyed( zipline ) )
+        if ( IsZiplineDestroyed( zipline ) )
         {
-            case true:
-                travelTime = 0
-                break
-            case false:
-                if ( vars.isMoving && !forceUsable ) travelTime = ChooseZiplineTravelTime( zipline ) else travelTime = 0
-                break
-            default: break
+            travelTime = 0
+        }
+        else
+        {
+            if ( vars.isMoving && !forceUsable ) travelTime = ChooseZiplineTravelTime( zipline ) else travelTime = 0
         }
 
         if ( forceUsable ) travelTime = 0

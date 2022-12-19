@@ -147,27 +147,25 @@ array< entity > function Zipline_InitZipline( ZiplineUtility zipline )
 
     // Calculation part
     vector startZiplinePos = zipline.startZiplinePos ; vector endZiplinePos ; vector startZiplineAng ; vector endZiplineAng ; array < entity > returnedEntity
-    
-    switch ( settings.isVertical )
+
+    if ( settings.isVertical )
     {
-        case true:
-            endZiplinePos = zipline.endZiplinePos
-            startZiplineAng = zipline.startZiplineAng ; endZiplineAng = zipline.endZiplineAng
-            break
-        case false:
-            startZiplineAng    = zipline.startZiplineAng ; endZiplineAng = zipline.endZiplineAng ; endZiplinePos = zipline.endZiplinePos
+        endZiplinePos = zipline.endZiplinePos
+        startZiplineAng = zipline.startZiplineAng ; endZiplineAng = zipline.endZiplineAng
+    }
+    else
+    {
+        startZiplineAng    = zipline.startZiplineAng ; endZiplineAng = zipline.endZiplineAng ; endZiplinePos = zipline.endZiplinePos
 
-            startZiplineAng    = VectorToAngles( Normalize( endZiplinePos - startZiplinePos ) )
-            startZiplineAng.x  = startZiplineAng.x % 180.0
-            startZiplineAng.y  = startZiplineAng.y % 180.0
-            startZiplineAng.z  = startZiplineAng.z % 180.0
+        startZiplineAng    = VectorToAngles( Normalize( endZiplinePos - startZiplinePos ) )
+        startZiplineAng.x  = startZiplineAng.x % 180.0
+        startZiplineAng.y  = startZiplineAng.y % 180.0
+        startZiplineAng.z  = startZiplineAng.z % 180.0
 
-            endZiplineAng      = VectorToAngles( Normalize( startZiplinePos - endZiplinePos ) )
-            endZiplineAng.x    = endZiplineAng.x % 180.0
-            endZiplineAng.y    = endZiplineAng.y % 180.0
-            endZiplineAng.z    = endZiplineAng.z % 180.0
-            break
-        default: break
+        endZiplineAng      = VectorToAngles( Normalize( startZiplinePos - endZiplinePos ) )
+        endZiplineAng.x    = endZiplineAng.x % 180.0
+        endZiplineAng.y    = endZiplineAng.y % 180.0
+        endZiplineAng.z    = endZiplineAng.z % 180.0
     }
 
     if ( vars.isMoving )
