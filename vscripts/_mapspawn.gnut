@@ -287,18 +287,18 @@ void function CodeCallback_MapSpawn() // original script entry point
 
 	//Ported weapons section
 	{
-		PrecacheWeapon( $"mp_weapon_satchel" )
-		PrecacheWeapon( $"mp_weapon_mobile_hmg" )
-		PrecacheWeapon( $"mp_titanweapon_flightcore_rockets" )
-		PrecacheWeapon( $"mp_weapon_softball" )
+		//PrecacheWeapon( $"mp_weapon_satchel" )
+		//PrecacheWeapon( $"mp_weapon_mobile_hmg" )
+		//PrecacheWeapon( $"mp_titanweapon_flightcore_rockets" )
+		//PrecacheWeapon( $"mp_weapon_softball" )
 		PrecacheWeapon( $"mp_weapon_sentinel" )
-		PrecacheWeapon( $"mp_weapon_throwingknife" )
+		//PrecacheWeapon( $"mp_weapon_throwingknife" )
 		
 		PrecacheWeapon( $"melee_bolo_sword" )
 		PrecacheWeapon( $"mp_weapon_bolo_sword_primary" )
 		
-		PrecacheWeapon( $"mp_weapon_melee_boxing_ring")
-		PrecacheWeapon( $"melee_boxing_ring")
+		//PrecacheWeapon( $"mp_weapon_melee_boxing_ring")
+		//PrecacheWeapon( $"melee_boxing_ring")
 	}
 
 	//Unofficial s3 weapons section
