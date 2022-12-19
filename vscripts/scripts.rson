@@ -240,6 +240,7 @@ Scripts:
 	titan/sh_ion_energy.gnut
 	weapons/_arc_cannon.nut
 	weapons/_grenade.nut
+	weapons/mp_weapon_grenade_gravity.nut
 	weapons/_vortex.nut
 	weapons/_weapon_dialogue.nut
 	weapons/_weapon_utility.nut
