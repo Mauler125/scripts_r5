@@ -46,13 +46,14 @@ void function MapTriggers_Init()
 		{
 			CreateWallTrigger( <5, 2587, -520>, 1, 30000)
 			CreateWallTrigger( <5, 5379, 860> , 0 )
-			//CreateWallTrigger( <0, 5600, -190>, 85, true)
-			//CreateWallTrigger( <0, 5600, -240>, 120)
+			CreateWallTrigger( <5, 5379, 1160> , 1 )
 			break
 		}
 		case "mp_rr_ashs_redemption":
 		{
 			CreateWallTrigger( <-20857, 5702, -25746> , 0 )
+			CreateWallTrigger( <-20857, 5702, -25246> , 1, 30000 )
+			CreateWallTrigger( <-20857, 5702, -28500> , 1, 30000 )
 			break
 		}
 		case "mp_rr_party_crasher":
