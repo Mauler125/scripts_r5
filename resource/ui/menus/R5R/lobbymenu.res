@@ -156,42 +156,6 @@
 			"pin_to_sibling_corner"		"BOTTOM_RIGHT"
 		}
 
-		"SettingsBtn"
-		{
-			"ControlName"				"RuiButton"
-			"InheritProperties"			"TabButtonSettings"
-			"zpos"						"3"
-			"xpos"                    	"-80"
-			
-			ruiArgs
-			{
-				isSelected 0
-				buttonText "Settings"
-			}
-
-			"pin_to_sibling"			"ServerBrowserBtn"
-			"pin_corner_to_sibling"		"BOTTOM_LEFT"
-			"pin_to_sibling_corner"		"BOTTOM_RIGHT"
-		}
-
-		"QuitBtn"
-		{
-			"ControlName"				"RuiButton"
-			"InheritProperties"			"TabButtonSettings"
-			"zpos"						"3"
-			"xpos"                    	"-80"
-			
-			ruiArgs
-			{
-				isSelected 0
-				buttonText "Quit"
-			}
-
-			"pin_to_sibling"			"SettingsBtn"
-			"pin_corner_to_sibling"		"BOTTOM_LEFT"
-			"pin_to_sibling_corner"		"BOTTOM_RIGHT"
-		}
-
 		"R5RHomePanel"
     	{
     	    "ControlName"				"CNestedPanel"

@@ -81,8 +81,6 @@ void function InitR5RLobbyMenu( var newMenuArg )
 	AddMenuEventHandler( menu, eUIEvent.MENU_NAVIGATE_BACK, OnR5RLobby_Back )
 
 	//Button event handlers
-	Hud_AddEventHandler( Hud_GetChild(menu, "SettingsBtn"), UIE_CLICK, SettingsPressed )
-	Hud_AddEventHandler( Hud_GetChild(menu, "QuitBtn"), UIE_CLICK, QuitPressed )
 	array<var> buttons = GetElementsByClassname( file.menu, "TopButtons" )
 	foreach ( var elem in buttons ) {
 		Hud_AddEventHandler( elem, UIE_CLICK, OpenSelectedPanel )
@@ -123,18 +121,6 @@ void function OpenSelectedPanel(var button)
 	}
 }
 
-void function SettingsPressed(var button)
-{
-	//Open Settings Menu
-	AdvanceMenu( GetMenu( "MiscMenu" ) )
-}
-
-void function QuitPressed(var button)
-{
-	//Open confirm exit diologe
-	OpenConfirmExitToDesktopDialog()
-}
-
 void function OnR5RLobby_Close()
 {
 	UnRegisterServerBrowserButtonPressedCallbacks()
@@ -154,7 +140,7 @@ void function OnR5RLobby_Show()
 	g_isAtMainMenu = false
 	server_host_name = ""
 
-	RunClientScript("UICallback_SetHostName", GetPlayerName() + "'s Lobby")
+	//RunClientScript("UICallback_SetHostName", GetPlayerName() + "'s Lobby")
 }
 
 void function OnR5RLobby_Open()
@@ -245,7 +231,10 @@ void function OnR5RLobby_Back()
         PMMenusOpen.name_open = false
         PMMenusOpen.desc_open = false
         PMMenusOpen.kick_open = false
+		return
     }
+
+	AdvanceMenu( GetMenu( "SystemMenu" ) )
 }
 
 void function InPlayersLobby(bool show, string host)

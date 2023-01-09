@@ -21,15 +21,15 @@
 		"tall"					"870"
 		"visible"				"1"
         "scaleImage"			"1"
-		"xpos"					"-30"
-		"ypos"					"-40"
+		"xpos"					"-25"
+		"ypos"					"-5"
 		"zpos"					"0"
         "fillColor"				"30 30 30 200"
         "drawColor"				"30 30 30 200"
 
 		"pin_to_sibling"		"DarkenBackground"
-		"pin_corner_to_sibling"	"TOP_LEFT"
-		"pin_to_sibling_corner"	"TOP_LEFT"
+		"pin_corner_to_sibling"	"TOP_RIGHT"
+		"pin_to_sibling_corner"	"TOP_RIGHT"
 	}
 
 	"InPlayersLobby"
@@ -143,6 +143,55 @@
 		"pin_to_sibling_corner"	"BOTTOM_RIGHT"
 	}
 
+	ReadyButton
+    {
+        ControlName				RuiButton
+        classname               "MenuButton MatchmakingStatusRui"
+        wide					367
+        tall					112
+        rui                     "ui/generic_ready_button.rpak"
+        labelText               ""
+        visible					1
+		cursorVelocityModifier  0.7
+		ypos					-150
+		xpos					-50
+
+		navUp                   ModeButton
+
+        proportionalToParent    1
+
+        pin_to_sibling			DarkenBackground
+        pin_corner_to_sibling	BOTTOM_LEFT
+        pin_to_sibling_corner	BOTTOM_LEFT
+
+        sound_focus             "UI_Menu_Focus_Large"
+    }
+
+	GamemodeSelectV2Button
+    {
+        ControlName				RuiButton
+        classname               "MenuButton MatchmakingStatusRui"
+        wide					367
+        tall					168
+        ypos                    13
+        zpos                    10
+        rui                     "ui/gamemode_select_v2_lobby_button.rpak"
+        labelText               ""
+        visible					1
+        cursorVelocityModifier  0.7
+        sound_accept            "UI_Menu_SelectMode_Extend"
+
+        navUp                   InviteFriendsButton0
+        navDown                 ReadyButton
+        navRight                InviteFriendsButton0
+
+        proportionalToParent    1
+
+        pin_to_sibling			ReadyButton
+        pin_corner_to_sibling	BOTTOM_LEFT
+        pin_to_sibling_corner	TOP_LEFT
+    }
+
 	SelfButton
     {
         ControlName				RuiButton
@@ -170,5 +219,18 @@
         pin_corner_to_sibling	TOP
         pin_to_sibling_corner	TOP
     }
+
+	GameMenuButton
+        {
+            ControlName				RuiButton
+            InheritProperties		CornerButton
+            zpos                    5
+			ypos					-125
+			xpos					-25
+
+            pin_to_sibling			DarkenBackground
+            pin_corner_to_sibling	BOTTOM_RIGHT
+            pin_to_sibling_corner	BOTTOM_RIGHT
+        }
 }
 
