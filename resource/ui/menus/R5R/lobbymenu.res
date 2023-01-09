@@ -108,7 +108,7 @@
 			ruiArgs
 			{
 				isSelected 1
-				buttonText "Home"
+				buttonText "#Play"
 			}
 
 			"pin_to_sibling"			"MainButtonsFrame"
