@@ -44,8 +44,6 @@ void function InitR5RHomePanel( var panel )
 	file.panel = panel
 	file.menu = GetParentMenu( file.panel )
 
-	RuiSetImage( Hud_GetRui( Hud_GetChild( file.panel, "R5RPicBox" ) ), "basicImage", $"rui/menu/home/bg" )
-
 	var gameMenuButton = Hud_GetChild( panel, "GameMenuButton" )
 	ToolTipData gameMenuToolTip
 	gameMenuToolTip.descText = "#GAME_MENU"
@@ -137,7 +135,6 @@ void function Play_UpdateCounts()
 
 void function Play_SetUIVersion()
 {
-	Hud_SetText( Hud_GetChild( file.panel, "VersionNumber" ), "#BETA_BUILD_WATERMARK" )
 	HudElem_SetRuiArg( Hud_GetChild( file.panel, "R5RVersionButton" ), "buttonText", Localize( "#BETA_BUILD_WATERMARK" ) )
 	RuiSetString( Hud_GetRui( Hud_GetChild( file.panel, "SelfButton" ) ), "playerName", GetPlayerName() )
 	RuiSetString( Hud_GetRui( Hud_GetChild( file.panel, "SelfButton" ) ), "accountLevel", GetAccountDisplayLevel( 100 ) )
@@ -172,8 +169,10 @@ void function StartMatchFinding(var button)
 	int i = 0;
 	while(!file.foundserver)
 	{
-		if(file.usercancled)
+		if(file.usercancled) {
 			file.foundserver = true
+			continue
+		}
 
 		switch (i)
 		{

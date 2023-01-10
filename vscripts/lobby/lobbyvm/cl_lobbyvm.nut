@@ -133,7 +133,7 @@ void function ServerCallback_LobbyVM_UpdateUI()
 
     RunUIScript( "UpdatePlayersList" )
 
-    RunUIScript( "InPlayersLobby" , GetPlayerArray()[0] != GetLocalClientPlayer() && GetPlayerArray().len() > 1, GetPlayerArray()[0].GetPlayerName())
+    //RunUIScript( "InPlayersLobby" , GetPlayerArray()[0] != GetLocalClientPlayer() && GetPlayerArray().len() > 1, GetPlayerArray()[0].GetPlayerName())
 }
 
 void function ServerCallback_LobbyVM_SelectionUpdated(int type)
