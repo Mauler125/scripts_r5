@@ -1,21 +1,15 @@
 global function InitR5RGamemodeSelectDialog
 global function GamemodeSelectV22_UpdateSelectButton
-global function GamemodeSelectV22_PlayVideo
-global function GamemodeSelectV22_PlaylistIsDefaultSlot
 
 struct {
 	var menu
 	var closeButton
 	var selectionPanel
 
-	int   videoChannel = -1
-	asset currentVideoAsset = $""
-
 	array<var>         modeSelectButtonList
 	table<var, string> selectButtonPlaylistNameMap
     table<var, asset> selectButtonPlaylistAssetMap
 } file
-
 
 const int MAX_DISPLAYED_MODES = 5
 
@@ -34,22 +28,6 @@ const table<string, asset> GAMEMODE_IMAGE_MAP = {
 	shotguns_and_snipers = $"rui/menu/gamemode/shotguns_and_snipers",
 	shadow_squad = $"rui/menu/gamemode/shadow_squad",
 	worlds_edge_after_dark = $"rui/menu/gamemode/shadow_squad",
-}
-
-const table<string, asset> GAMEMODE_BINK_MAP = {
-	play_apex = $"media/gamemodes/play_apex.bik",
-	apex_elite = $"media/gamemodes/apex_elite.bik",
-	training = $"media/gamemodes/training.bik",
-	generic_01 = $"media/gamemodes/generic_01.bik",
-	generic_02 = $"media/gamemodes/generic_02.bik",
-	ranked_1 = $"media/gamemodes/ranked_1.bik",
-	ranked_2 = $"media/gamemodes/ranked_2.bik",
-	solo_iron_crown = $"media/gamemodes/solo_iron_crown.bik",
-	duos = $"media/gamemodes/duos.bik",
-	worlds_edge = $"media/gamemodes/worlds_edge.bik",
-	shotguns_and_snipers = $"media/gamemodes/shotguns_and_snipers.bik",
-	shadow_squad = $"media/gamemodes/shadow_squad.bik",
-	worlds_edge_after_dark = $"media/gamemodes/wead.bik",
 }
 
 //
@@ -100,65 +78,6 @@ void function GamemodeSelectV22_UpdateSelectButton( var button, string playlistN
     file.selectButtonPlaylistAssetMap[button] <- imageAsset
 }
 
-
-void function GamemodeSelectV22_PlayVideo( var button, string playlistName )
-{
-	string videoKey         = GetPlaylistVarString( playlistName, "video", "" )
-	asset desiredVideoAsset = $""
-	if ( videoKey != "" )
-	{
-		if ( videoKey in GAMEMODE_BINK_MAP )
-			desiredVideoAsset = GAMEMODE_BINK_MAP[videoKey]
-		else
-			Warning( "Playlist '%s' has invalid value for 'video': %s", playlistName, videoKey )
-	}
-
-	if ( desiredVideoAsset != $"" )
-		file.currentVideoAsset = $"" //
-	Signal( uiGlobal.signalDummy, "GamemodeSelectV2_EndVideoStopThread" )
-	Assert( file.currentVideoAsset == $"" )
-
-	if ( desiredVideoAsset != $"" )
-	{
-		if ( file.videoChannel == -1 )
-			file.videoChannel = ReserveVideoChannel()
-
-		StartVideoOnChannel( file.videoChannel, desiredVideoAsset, true, 0.0 )
-		file.currentVideoAsset = desiredVideoAsset
-	}
-
-	var rui = Hud_GetRui( button )
-	RuiSetBool( rui, "hasVideo", videoKey != "" )
-	RuiSetInt( rui, "channel", file.videoChannel )
-	if ( file.currentVideoAsset != $"" )
-		thread VideoStopThread( button )
-}
-
-
-void function VideoStopThread( var button )
-{
-	EndSignal( uiGlobal.signalDummy, "GamemodeSelectV2_EndVideoStopThread" )
-
-	OnThreadEnd( function() : ( button ) {
-		if ( IsValid( button ) )
-		{
-			var rui = Hud_GetRui( button )
-			RuiSetInt( rui, "channel", -1 )
-		}
-		if ( file.currentVideoAsset != $"" )
-		{
-			StopVideoOnChannel( file.videoChannel )
-			file.currentVideoAsset = $""
-		}
-	} )
-
-	while ( GetFocus() == button )
-		WaitFrame()
-
-	wait 0.3
-}
-
-
 void function InitR5RGamemodeSelectDialog( var newMenuArg ) //
 {
 	var menu = GetMenu( "R5RGamemodeSelectV2Dialog" )
@@ -188,13 +107,6 @@ void function InitR5RGamemodeSelectDialog( var newMenuArg ) //
 
 	AddMenuFooterOption( menu, LEFT, BUTTON_B, true, "#B_BUTTON_CLOSE", "#CLOSE" )
 	AddMenuFooterOption( menu, LEFT, BUTTON_A, true, "#A_BUTTON_SELECT" )
-}
-
-const string DEFAULT_PLAYLIST_UI_SLOT_NAME = "regular_1"
-bool function GamemodeSelectV22_PlaylistIsDefaultSlot( string playlist )
-{
-	string uiSlot = GetPlaylistVarString( playlist, "ui_slot", "" )
-	return (uiSlot == DEFAULT_PLAYLIST_UI_SLOT_NAME)
 }
 
 void function OnOpenModeSelectDialog()
@@ -233,7 +145,6 @@ void function OnOpenModeSelectDialog()
     }
 }
 
-
 void function OnCloseModeSelectDialog()
 {
 	Hud_SetAboveBlur( GetMenu( "LobbyMenu" ), true )
@@ -244,7 +155,6 @@ void function OnCloseModeSelectDialog()
 
 	Lobby_OnGamemodeSelectV2Close()
 }
-
 
 void function GamemodeButton_Activate( var button )
 {
@@ -261,25 +171,17 @@ void function GamemodeButton_Activate( var button )
 	CloseAllDialogs()
 }
 
-
 void function GamemodeButton_OnGetFocus( var button )
 {
 	//
-
-	//string playlistName = file.selectButtonPlaylistNameMap[button]
-	//GamemodeSelectV2_PlayVideo( button, playlistName )
 }
-
 
 void function GamemodeButton_OnLoseFocus( var button )
 {
 	//
 }
 
-
 void function OnCloseButton_Activate( var button )
 {
 	CloseAllDialogs()
 }
-
-

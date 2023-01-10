@@ -242,7 +242,7 @@ void function UpdateSystemPanel( var panel )
 	if(GetCurrentPlaylistVarBool( "r5reloaded_aimtrainer", false ))
 		Hud_SetText( dataCenterElem, "Flowstate Aim Trainer by @CafeFPS")
 	else
-		Hud_SetText( dataCenterElem, Localize( "#SYSTEM_DATACENTER", GetDatacenterName(), GetDatacenterPing() ) )
+		Hud_SetText( dataCenterElem, Localize( "#SYSTEM_DATACENTER", "ms.r5reloaded.com", "0" ) )
 }
 
 void function SetButtonData( var panel, int buttonIndex, ButtonData buttonData )
