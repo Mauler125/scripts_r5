@@ -1,5 +1,6 @@
 global function InitR5RHomePanel
 global function Play_SetupUI
+global function R5RPlay_SetSelectedPlaylist
 
 struct ServerListing
 {
@@ -36,6 +37,8 @@ struct
 	SelectedServerInfo m_vSelectedServer
 	array<ServerListing> m_vServerList
 	array<ServerListing> m_vFilteredServerList
+
+	string selectedplaylist = "Random"
 
 	var gamemodeSelectV2Button
 } file
@@ -102,12 +105,14 @@ void function InitR5RHomePanel( var panel )
 	newsToolTip.descText = "#NEWS"
 	Hud_SetToolTipData( newsButton, newsToolTip )
 	HudElem_SetRuiArg( newsButton, "icon", $"rui/menu/lobby/news_icon" )
+	Hud_AddEventHandler( newsButton, UIE_CLICK, NewsPressed )
 
 	file.gamemodeSelectV2Button = Hud_GetChild( panel, "GamemodeSelectV2Button" )
-	RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeNameText", "Random Server" )
+	RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeNameText", "Random" )
 	RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Party not ready" )
 	RuiSetBool( Hud_GetRui( file.gamemodeSelectV2Button ), "alwaysShowDesc", true )
 	RuiSetImage( Hud_GetRui( file.gamemodeSelectV2Button ), "modeImage", $"rui/menu/gamemode/ranked_1" )
+	Hud_AddEventHandler( file.gamemodeSelectV2Button, UIE_CLICK, GamemodeSelect_OnActivate )
 
 	var readyButton = Hud_GetChild( panel, "ReadyButton" )
 	Hud_AddEventHandler( readyButton, UIE_CLICK, ReadyButton_OnActivate )
@@ -136,7 +141,7 @@ void function Play_SetupUI()
 	var playersButton = Hud_GetChild( file.panel, "PlayersButton" )
 	ToolTipData playersToolTip
 	playersToolTip.titleText = "Players Online"
-	playersToolTip.descText = MS_GetServerCount() + " Players Online"
+	playersToolTip.descText = MS_GetPlayerCount() + " Players Online"
 	Hud_SetToolTipData( playersButton, playersToolTip )
 	HudElem_SetRuiArg( playersButton, "buttonText", "" + MS_GetPlayerCount() )
 	Hud_SetWidth( playersButton, Hud_GetBaseWidth( playersButton ) * 2 )
@@ -150,14 +155,33 @@ void function Play_SetupUI()
 	Hud_SetWidth( serversButton, Hud_GetBaseWidth( serversButton ) * 2 )
 }
 
+void function GamemodeSelect_OnActivate(var button)
+{
+	AdvanceMenu( GetMenu( "R5RGamemodeSelectV2Dialog" ) )
+}
+
 void function SettingsPressed(var button)
 {
 	AdvanceMenu( GetMenu( "SystemMenu" ) )
 }
 
+void function NewsPressed(var button)
+{
+	AdvanceMenu( GetMenu( "R5RNews" ) )
+}
+
 // ====================================================================================================
 // Quick Play
 // ====================================================================================================
+
+void function R5RPlay_SetSelectedPlaylist(string playlist, asset img)
+{
+	RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeNameText", playlist )
+	RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Party not ready" )
+	RuiSetBool( Hud_GetRui( file.gamemodeSelectV2Button ), "alwaysShowDesc", true )
+	RuiSetImage( Hud_GetRui( file.gamemodeSelectV2Button ), "modeImage", img )
+}
+
 void function ReadyButton_OnActivate(var button)
 {
 	if(file.searching) {
@@ -182,6 +206,7 @@ void function StartMatchFinding(var button)
 	{
 		if(file.usercancled) {
 			file.foundserver = true
+			file.noservers = true
 			continue
 		}
 
@@ -201,27 +226,33 @@ void function UpdateQuickJoinButtons(var button)
 {
 	float waittime = 2
 
-	if(file.noservers)
-		RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "No servers found" )
-
-	if(!file.noservers)
-		RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", file.m_vSelectedServer.svServerName )
-
 	if(file.usercancled)
 	{
+		EmitUISound( "UI_Menu_Deny" )
 		file.noservers = true
 		RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Party not ready" )
 		waittime = 0
 	}
+	else if(file.noservers)
+	{
+		EmitUISound( "UI_Menu_Deny" )
+		RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "No servers found" )
+	}
+	else if(!file.noservers)
+	{
+		EmitUISound( "UI_Menu_Apex_Launch" )
+		RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Joining Match" )
+	}
 
 	wait waittime
+
+	if(!file.noservers) {
+		SetEncKeyAndConnect(file.m_vSelectedServer.svServerID)
+	}
 
 	RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Party not ready" )
 	HudElem_SetRuiArg( button, "buttonText", Localize( "#READY" ) )
 	RuiSetBool( Hud_GetRui( Hud_GetChild( file.panel, "SelfButton" ) ), "isReady", false )
-
-	if(!file.noservers)
-		SetEncKeyAndConnect(file.m_vSelectedServer.svServerID)
 
 	file.searching = false
 	file.noservers = false
@@ -259,6 +290,7 @@ void function FindServer(bool refresh = false)
 		file.m_vServerList.append(Server)
 	}
 
+	//First try non empty or full servers
 	file.m_vFilteredServerList.clear()
 	for ( int i = 0, j = file.m_vServerList.len(); i < j; i++ )
 	{
@@ -269,12 +301,29 @@ void function FindServer(bool refresh = false)
 		if ( file.m_vServerList[i].svCurrentPlayers == file.m_vServerList[i].svMaxPlayers )
 			continue;
 
+		if(file.m_vServerList[i].svPlaylist != file.selectedplaylist && file.selectedplaylist != "Random")
+			continue;
+
 		// Server fits our requirements, add it to the list
 		file.m_vFilteredServerList.append(file.m_vServerList[i])
 	}
 
 	if(file.m_vFilteredServerList.len() == 0)
-		file.m_vFilteredServerList = file.m_vServerList
+	{
+		//then do all servers if none are found
+		file.m_vFilteredServerList.clear()
+		for ( int i = 0, j = file.m_vServerList.len(); i < j; i++ )
+		{
+			if ( file.m_vServerList[i].svCurrentPlayers == file.m_vServerList[i].svMaxPlayers )
+				continue;
+
+			if(file.m_vServerList[i].svPlaylist != file.selectedplaylist && file.selectedplaylist != "Random")
+				continue;
+
+			// Server fits our requirements, add it to the list
+			file.m_vFilteredServerList.append(file.m_vServerList[i])
+		}
+	}
 
 	if(file.m_vFilteredServerList.len() == 0) {
 		file.noservers = true

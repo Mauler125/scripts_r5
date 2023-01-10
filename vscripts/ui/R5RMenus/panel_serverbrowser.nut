@@ -11,6 +11,7 @@ global function ServerBrowser_UpdateFilterLists
 
 global function MS_GetPlayerCount
 global function MS_GetServerCount
+global function Servers_GetActivePlaylists
 
 //Used for max items for page
 //Changing this requires a bit of work to get more to show correctly
@@ -601,4 +602,20 @@ int function MS_GetServerCount()
 		ServerBrowser_RefreshServerListing()
 
 	return file.m_vServerList.len()
+}
+
+array<string> function Servers_GetActivePlaylists()
+{
+	if(file.m_vServerList.len() == 0)
+		ServerBrowser_RefreshServerListing()
+
+	array<string> playlists
+
+	for (int i=0, j=GetServerCount(); i < j; i++) {
+		string playlist = GetServerPlaylist(i)
+		if (!playlists.contains(playlist))
+			playlists.append(playlist)
+	}
+
+	return playlists
 }

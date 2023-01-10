@@ -827,6 +827,8 @@ Scripts:
 	//R5RUI
 	ui/R5RMenus/menu_main.nut
 	ui/R5RMenus/menu_lobby.nut
+	ui/R5RMenus/menu_news.nut
+	ui/R5RMenus/menu_gamemodeselect.nut
 	ui/R5RMenus/menu_private_match.nut
 	ui/R5RMenus/panel_home.nut
 	ui/R5RMenus/panel_serverbrowser.nut

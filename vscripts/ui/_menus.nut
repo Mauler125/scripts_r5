@@ -1537,6 +1537,9 @@ void function InitMenus()
 	AddPanel( privatematchmenu, "R5RPlaylistPanel", InitR5RPlaylistPanel )
 	AddPanel( privatematchmenu, "R5RMapPanel", InitR5RMapPanel )
 	AddPanel( privatematchmenu, "R5RVisPanel", InitR5RVisPanel )
+
+	AddMenu( "R5RNews", $"scripts/resource/ui/menus/R5R/news.res", InitR5RNews )
+	AddMenu( "R5RGamemodeSelectV2Dialog", $"scripts/resource/ui/menus/R5R/gamemode_select.res", InitR5RGamemodeSelectDialog )
 	////////
 
 	//CTF UI
