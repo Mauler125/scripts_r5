@@ -72,7 +72,7 @@ void function InitR5RHomePanel( var panel )
 	RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeNameText", "Random Server" )
 	RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Party not ready" )
 	RuiSetBool( Hud_GetRui( file.gamemodeSelectV2Button ), "alwaysShowDesc", true )
-	RuiSetImage( Hud_GetRui( file.gamemodeSelectV2Button ), "modeImage", $"rui/menu/gamemode/play_apex" )
+	RuiSetImage( Hud_GetRui( file.gamemodeSelectV2Button ), "modeImage", $"rui/menu/gamemode/ranked_1" )
 
 	var readyButton = Hud_GetChild( panel, "ReadyButton" )
 	Hud_AddEventHandler( readyButton, UIE_CLICK, ReadyButton_OnActivate )
