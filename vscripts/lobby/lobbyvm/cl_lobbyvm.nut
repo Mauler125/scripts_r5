@@ -20,6 +20,8 @@ string tempstring = ""
 void function Cl_LobbyVM_Init()
 {
     AddClientCallback_OnResolutionChanged( OnResolutionChanged_UpdateClientUI )
+
+    PakHandle earlypak = RequestPakFile( "common_early" )
 }
 
 void function OnResolutionChanged_UpdateClientUI()

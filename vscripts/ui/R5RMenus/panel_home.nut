@@ -1,5 +1,6 @@
 global function InitR5RHomePanel
-global function SetUIVersion
+global function Play_SetUIVersion
+global function Play_UpdateCounts
 
 struct ServerListing
 {
@@ -53,6 +54,20 @@ void function InitR5RHomePanel( var panel )
 	HudElem_SetRuiArg( gameMenuButton, "shortcutText", "%[START|ESCAPE]%" )
 	Hud_AddEventHandler( gameMenuButton, UIE_CLICK, SettingsPressed )
 
+	var playersButton = Hud_GetChild( panel, "PlayersButton" )
+	HudElem_SetRuiArg( playersButton, "icon", $"rui/menu/lobby/friends_icon" )
+	HudElem_SetRuiArg( playersButton, "buttonText", "" )
+
+	var serversButton = Hud_GetChild( panel, "ServersButton" )
+	HudElem_SetRuiArg( serversButton, "icon", $"rui/hud/gamestate/net_latency" )
+	HudElem_SetRuiArg( serversButton, "buttonText", "" )
+
+	var newsButton = Hud_GetChild( panel, "NewsButton" )
+	ToolTipData newsToolTip
+	newsToolTip.descText = "#NEWS"
+	Hud_SetToolTipData( newsButton, newsToolTip )
+	HudElem_SetRuiArg( newsButton, "icon", $"rui/menu/lobby/news_icon" )
+
 	file.gamemodeSelectV2Button = Hud_GetChild( panel, "GamemodeSelectV2Button" )
 	RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeNameText", "Random Server" )
 	RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Party not ready" )
@@ -64,14 +79,69 @@ void function InitR5RHomePanel( var panel )
 	HudElem_SetRuiArg( readyButton, "isLeader", true ) // TEMP
 	HudElem_SetRuiArg( readyButton, "isReady", false )
 	HudElem_SetRuiArg( readyButton, "buttonText", Localize( "#READY" ) )
+
+	var miniPromo = Hud_GetChild( panel, "MiniPromo" )
+	RuiSetInt( Hud_GetRui( miniPromo ), "pageCount", 4 )
+
+	thread AutoAdvancePages()
 }
 
-void function SetUIVersion()
+void function AutoAdvancePages()
+{
+	int page = 0
+	while(true)
+	{
+		switch(page)
+		{
+			case 0:
+				SetPromoPage("discord.gg/r5reloaded", "Join us on discord!", $"rui/promo/S3_General_2", true, 0)
+				page = 1
+				break
+			case 1:
+				SetPromoPage("Text 2", "test", $"rui/promo/S3_General_4", true, 1)
+				page = 2
+				break
+			case 2:
+				SetPromoPage("Text 3", "test", $"rui/promo/S3_General_3", true, 2)
+				page = 3
+				break
+			case 3:
+				SetPromoPage("Text 4", "test", $"rui/promo/S3_General_2", true, 3)
+				page = 0
+				break
+		}
+		wait 10
+	}
+}
+
+void function SetPromoPage(string Text1, string Text2, asset ImageAsset, bool Format, int PageIndex)
+{
+	var miniPromo = Hud_GetChild( file.panel, "MiniPromo" )
+	RuiSetString( Hud_GetRui( miniPromo ), "lastText1", Text1 )
+	RuiSetString( Hud_GetRui( miniPromo ), "lastText2", Text2 )
+	RuiSetImage( Hud_GetRui( miniPromo ), "lastImageAsset", ImageAsset )
+	RuiSetBool( Hud_GetRui( miniPromo ), "lastFormat", Format )
+	RuiSetInt( Hud_GetRui( miniPromo ), "activePageIndex", PageIndex )
+}
+
+void function Play_UpdateCounts()
+{
+	var playersButton = Hud_GetChild( file.panel, "PlayersButton" )
+	HudElem_SetRuiArg( playersButton, "buttonText", "" + MS_GetPlayerCount() )
+	Hud_SetWidth( playersButton, Hud_GetBaseWidth( playersButton ) * 2 )
+
+	var serversButton = Hud_GetChild( file.panel, "ServersButton" )
+	HudElem_SetRuiArg( serversButton, "buttonText", "" + MS_GetServerCount() )
+	Hud_SetWidth( serversButton, Hud_GetBaseWidth( serversButton ) * 2 )
+}
+
+void function Play_SetUIVersion()
 {
 	Hud_SetText( Hud_GetChild( file.panel, "VersionNumber" ), "#BETA_BUILD_WATERMARK" )
+	HudElem_SetRuiArg( Hud_GetChild( file.panel, "R5RVersionButton" ), "buttonText", Localize( "#BETA_BUILD_WATERMARK" ) )
 	RuiSetString( Hud_GetRui( Hud_GetChild( file.panel, "SelfButton" ) ), "playerName", GetPlayerName() )
 	RuiSetString( Hud_GetRui( Hud_GetChild( file.panel, "SelfButton" ) ), "accountLevel", GetAccountDisplayLevel( 100 ) )
-	RuiSetImage( Hud_GetRui( Hud_GetChild( file.panel, "SelfButton" ) ), "accountBadge", $"rui/hud/custom_badges/r5r_badge" )
+	RuiSetImage( Hud_GetRui( Hud_GetChild( file.panel, "SelfButton" ) ), "accountBadge", $"rui/gladiator_cards/badges/account_t21" )
 	RuiSetFloat( Hud_GetRui( Hud_GetChild( file.panel, "SelfButton" ) ), "accountXPFrac", 1.0 )
 }
 

@@ -155,7 +155,8 @@ void function SetupLobby()
 	thread TryRunDialogFlowThread()
 
 	//Set Version
-	SetUIVersion()
+	Play_SetUIVersion()
+	Play_UpdateCounts()
 
 	//Set selected legend from playlist
 	ItemFlavor character = GetItemFlavorByHumanReadableRef( GetCurrentPlaylistVarString( "set_legend", "character_wraith" ) )

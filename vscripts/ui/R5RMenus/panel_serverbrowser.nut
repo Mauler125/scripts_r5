@@ -9,6 +9,9 @@ global function RegisterServerBrowserButtonPressedCallbacks
 global function UnRegisterServerBrowserButtonPressedCallbacks
 global function ServerBrowser_UpdateFilterLists
 
+global function MS_GetPlayerCount
+global function MS_GetServerCount
+
 //Used for max items for page
 //Changing this requires a bit of work to get more to show correctly
 //So keep at 19
@@ -577,4 +580,25 @@ void function SliderBarUpdate()
 
 	m_vScroll.Offset = -int( ( ( newPos - minYPos ) / useableSpace ) * ( file.m_vFilteredServerList.len() - SB_MAX_SERVER_PER_PAGE ) )
 	UpdateShownPage()
+}
+
+int function MS_GetPlayerCount()
+{
+	if(file.m_vServerList.len() == 0)
+		ServerBrowser_RefreshServerListing()
+
+	int count = 0
+	for (int i=0, j=GetServerCount(); i < j; i++) {
+		count += GetServerCurrentPlayers(i)
+	}
+
+	return count
+}
+
+int function MS_GetServerCount()
+{
+	if(file.m_vServerList.len() == 0)
+		ServerBrowser_RefreshServerListing()
+
+	return file.m_vServerList.len()
 }
