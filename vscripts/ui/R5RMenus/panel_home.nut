@@ -31,6 +31,8 @@ struct
 	bool foundserver = false
 	bool noservers = false
 	bool usercancled = false
+
+	bool navInputCallbacksRegistered = false
 	
 	SelectedServerInfo m_vSelectedServer
 	array<ServerListing> m_vServerList
@@ -38,6 +40,36 @@ struct
 
 	var gamemodeSelectV2Button
 } file
+
+struct
+{
+	int pageCount = 3
+	int currentPage = 0
+	bool shouldAutoAdvance = true
+} promo
+
+
+//THESE TABLES ARE TEMPORARY, THEY WILL BE REPLACED
+global table<int, asset> PromoAssets = {
+	[ 0 ] = $"rui/promo/S3_General_1",
+	[ 1 ] = $"rui/promo/S3_General_2",
+	[ 2 ] = $"rui/promo/S3_General_3",
+	[ 3 ] = $"rui/promo/S3_General_4"
+}
+
+global table<int, string> PromoText1 = {
+	[ 0 ] = "discord.gg/r5reloaded",
+	[ 1 ] = "Temp",
+	[ 2 ] = "Temp",
+	[ 3 ] = "Temp"
+}
+
+global table<int, string> PromoText2 = {
+	[ 0 ] = "Join us on discord!",
+	[ 1 ] = "Temp",
+	[ 2 ] = "Temp",
+	[ 3 ] = "Temp"
+}
 
 void function InitR5RHomePanel( var panel )
 {
@@ -79,36 +111,71 @@ void function InitR5RHomePanel( var panel )
 	HudElem_SetRuiArg( readyButton, "buttonText", Localize( "#READY" ) )
 
 	var miniPromo = Hud_GetChild( panel, "MiniPromo" )
-	RuiSetInt( Hud_GetRui( miniPromo ), "pageCount", 4 )
+	RuiSetInt( Hud_GetRui( miniPromo ), "pageCount", promo.pageCount + 1 )
 
+	Hud_AddEventHandler( miniPromo, UIE_GET_FOCUS, MiniPromoButton_OnGetFocus )
+	Hud_AddEventHandler( miniPromo, UIE_LOSE_FOCUS, MiniPromoButton_OnLoseFocus )
+
+	SetPromoPage(PromoText1[promo.currentPage], PromoText2[promo.currentPage], PromoAssets[promo.currentPage], true, promo.currentPage)
 	thread AutoAdvancePages()
+}
+
+void function MiniPromoButton_OnGetFocus( var button )
+{
+	if ( file.navInputCallbacksRegistered )
+		return
+
+	AddCallback_OnMouseWheelUp( ChangePromoPageToLeft )
+	AddCallback_OnMouseWheelDown( ChangePromoPageToRight )
+	file.navInputCallbacksRegistered = true
+	promo.shouldAutoAdvance = false
+}
+
+
+void function MiniPromoButton_OnLoseFocus( var button )
+{
+	if ( !file.navInputCallbacksRegistered )
+		return
+	
+	RemoveCallback_OnMouseWheelUp( ChangePromoPageToLeft )
+	RemoveCallback_OnMouseWheelDown( ChangePromoPageToRight )
+	file.navInputCallbacksRegistered = false
+	promo.shouldAutoAdvance = true
+	thread AutoAdvancePages()
+}
+
+void function ChangePromoPageToLeft()
+{
+	promo.currentPage--
+	if(promo.currentPage < 0)
+		promo.currentPage = promo.pageCount
+	
+	SetPromoPage(PromoText1[promo.currentPage], PromoText2[promo.currentPage], PromoAssets[promo.currentPage], true, promo.currentPage)
+}
+
+void function ChangePromoPageToRight()
+{
+	promo.currentPage++
+	if(promo.currentPage > promo.pageCount)
+		promo.currentPage = 0
+	
+	SetPromoPage(PromoText1[promo.currentPage], PromoText2[promo.currentPage], PromoAssets[promo.currentPage], true, promo.currentPage)
 }
 
 void function AutoAdvancePages()
 {
-	int page = 0
-	while(true)
+	while(promo.shouldAutoAdvance)
 	{
-		switch(page)
-		{
-			case 0:
-				SetPromoPage("discord.gg/r5reloaded", "Join us on discord!", $"rui/promo/S3_General_2", true, 0)
-				page = 1
-				break
-			case 1:
-				SetPromoPage("Text 2", "test", $"rui/promo/S3_General_4", true, 1)
-				page = 2
-				break
-			case 2:
-				SetPromoPage("Text 3", "test", $"rui/promo/S3_General_3", true, 2)
-				page = 3
-				break
-			case 3:
-				SetPromoPage("Text 4", "test", $"rui/promo/S3_General_2", true, 3)
-				page = 0
-				break
-		}
 		wait 10
+
+		if(!promo.shouldAutoAdvance)
+			continue
+		
+		promo.currentPage++
+		if(promo.currentPage > promo.pageCount)
+		promo.currentPage = 0
+	
+		SetPromoPage(PromoText1[promo.currentPage], PromoText2[promo.currentPage], PromoAssets[promo.currentPage], true, promo.currentPage)
 	}
 }
 
