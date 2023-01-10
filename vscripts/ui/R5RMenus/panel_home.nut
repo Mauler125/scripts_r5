@@ -348,18 +348,20 @@ void function ChangePromoPageToRight()
 
 void function AutoAdvancePages()
 {
+	int i = 0
 	while(promo.shouldAutoAdvance)
 	{
-		wait 10
+		wait 1
 
 		if(!promo.shouldAutoAdvance)
 			continue
 		
-		promo.currentPage++
-		if(promo.currentPage > promo.pageCount)
-		promo.currentPage = 0
-	
-		SetPromoPage(PromoText1[promo.currentPage], PromoText2[promo.currentPage], PromoAssets[promo.currentPage], true, promo.currentPage)
+		if(i >= 10) {
+			i = 0
+			ChangePromoPageToRight()
+		}
+
+		i++
 	}
 }
 
