@@ -1,6 +1,5 @@
 global function InitR5RHomePanel
-global function Play_SetUIVersion
-global function Play_UpdateCounts
+global function Play_SetupUI
 
 struct ServerListing
 {
@@ -47,6 +46,12 @@ struct
 	int currentPage = 0
 	bool shouldAutoAdvance = true
 } promo
+
+global table<int, string> SearchStages = {
+	[ 0 ] = "Searching.",
+	[ 1 ] = "Searching..",
+	[ 2 ] = "Searching..."
+}
 
 
 //THESE TABLES ARE TEMPORARY, THEY WILL BE REPLACED
@@ -120,6 +125,177 @@ void function InitR5RHomePanel( var panel )
 	thread AutoAdvancePages()
 }
 
+void function Play_SetupUI()
+{
+	HudElem_SetRuiArg( Hud_GetChild( file.panel, "R5RVersionButton" ), "buttonText", Localize( "#BETA_BUILD_WATERMARK" ) )
+	RuiSetString( Hud_GetRui( Hud_GetChild( file.panel, "SelfButton" ) ), "playerName", GetPlayerName() )
+	RuiSetString( Hud_GetRui( Hud_GetChild( file.panel, "SelfButton" ) ), "accountLevel", GetAccountDisplayLevel( 100 ) )
+	RuiSetImage( Hud_GetRui( Hud_GetChild( file.panel, "SelfButton" ) ), "accountBadge", $"rui/gladiator_cards/badges/account_t21" )
+	RuiSetFloat( Hud_GetRui( Hud_GetChild( file.panel, "SelfButton" ) ), "accountXPFrac", 1.0 )
+
+	var playersButton = Hud_GetChild( file.panel, "PlayersButton" )
+	HudElem_SetRuiArg( playersButton, "buttonText", "" + MS_GetPlayerCount() )
+	Hud_SetWidth( playersButton, Hud_GetBaseWidth( playersButton ) * 2 )
+
+	var serversButton = Hud_GetChild( file.panel, "ServersButton" )
+	HudElem_SetRuiArg( serversButton, "buttonText", "" + MS_GetServerCount() )
+	Hud_SetWidth( serversButton, Hud_GetBaseWidth( serversButton ) * 2 )
+}
+
+void function SettingsPressed(var button)
+{
+	AdvanceMenu( GetMenu( "SystemMenu" ) )
+}
+
+// ====================================================================================================
+// Quick Play
+// ====================================================================================================
+void function ReadyButton_OnActivate(var button)
+{
+	if(file.searching) {
+		file.usercancled = true
+		return;
+	}
+
+	file.searching = true
+	EmitUISound( "UI_Menu_ReadyUp_1P" )
+	RuiSetBool( Hud_GetRui( Hud_GetChild( file.panel, "SelfButton" ) ), "isReady", true )
+	thread StartMatchFinding( button )
+}
+
+void function StartMatchFinding(var button)
+{
+	HudElem_SetRuiArg( button, "buttonText", Localize( "#CANCEL" ) )
+
+	thread FindServer()
+
+	int i = 0;
+	while(!file.foundserver)
+	{
+		if(file.usercancled) {
+			file.foundserver = true
+			continue
+		}
+
+		RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", SearchStages[i] )
+
+		i++
+		if(i > 2)
+			i = 0
+		
+		wait 0.5
+	}
+	
+	UpdateQuickJoinButtons(button)
+}
+
+void function UpdateQuickJoinButtons(var button)
+{
+	float waittime = 2
+
+	if(file.noservers)
+		RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "No servers found" )
+
+	if(!file.noservers)
+		RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", file.m_vSelectedServer.svServerName )
+
+	if(file.usercancled)
+	{
+		file.noservers = true
+		RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Party not ready" )
+		waittime = 0
+	}
+
+	wait waittime
+
+	RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Party not ready" )
+	HudElem_SetRuiArg( button, "buttonText", Localize( "#READY" ) )
+	RuiSetBool( Hud_GetRui( Hud_GetChild( file.panel, "SelfButton" ) ), "isReady", false )
+
+	if(!file.noservers)
+		SetEncKeyAndConnect(file.m_vSelectedServer.svServerID)
+
+	file.searching = false
+	file.noservers = false
+	file.foundserver = false
+	file.usercancled = false
+}
+
+void function FindServer(bool refresh = false)
+{
+	wait 0.5
+
+	if(!file.searching)
+		return
+
+	if(refresh)
+		RefreshServerList()
+
+	file.m_vServerList.clear()
+	if(GetServerCount() == 0) {
+		file.noservers = true
+		file.foundserver = true
+		return
+	}
+
+	// Add each server to the array
+	for (int i=0, j=GetServerCount(); i < j; i++) {
+		ServerListing Server
+		Server.svServerID = i
+		Server.svServerName = GetServerName(i)
+		Server.svPlaylist = GetServerPlaylist(i)
+		Server.svMapName = GetServerMap(i)
+		Server.svDescription = GetServerDescription(i)
+		Server.svMaxPlayers = GetServerMaxPlayers(i)
+		Server.svCurrentPlayers = GetServerCurrentPlayers(i)
+		file.m_vServerList.append(Server)
+	}
+
+	file.m_vFilteredServerList.clear()
+	for ( int i = 0, j = file.m_vServerList.len(); i < j; i++ )
+	{
+		// Filters
+		if ( file.m_vServerList[i].svCurrentPlayers == 0 )
+			continue;
+
+		if ( file.m_vServerList[i].svCurrentPlayers == file.m_vServerList[i].svMaxPlayers )
+			continue;
+
+		// Server fits our requirements, add it to the list
+		file.m_vFilteredServerList.append(file.m_vServerList[i])
+	}
+
+	if(file.m_vFilteredServerList.len() == 0)
+		file.m_vFilteredServerList = file.m_vServerList
+
+	if(file.m_vFilteredServerList.len() == 0) {
+		file.noservers = true
+		file.foundserver = true
+		return
+	}
+
+	int randomserver = RandomIntRange( 0, file.m_vFilteredServerList.len() - 1 )
+	file.m_vSelectedServer.svServerID = file.m_vFilteredServerList[randomserver].svServerID
+	file.m_vSelectedServer.svServerName = file.m_vFilteredServerList[randomserver].svServerName
+	file.m_vSelectedServer.svMapName = file.m_vFilteredServerList[randomserver].svMapName
+	file.m_vSelectedServer.svPlaylist = file.m_vFilteredServerList[randomserver].svPlaylist
+	file.m_vSelectedServer.svDescription = file.m_vFilteredServerList[randomserver].svDescription
+
+	for(int i = 0; i < 4; i++)
+	{
+		wait 1
+
+		if(!file.searching)
+			return
+	}
+
+	file.foundserver = true
+}
+
+
+// =================================================================================================
+// Promos
+// =================================================================================================
 void function MiniPromoButton_OnGetFocus( var button )
 {
 	if ( file.navInputCallbacksRegistered )
@@ -188,180 +364,3 @@ void function SetPromoPage(string Text1, string Text2, asset ImageAsset, bool Fo
 	RuiSetBool( Hud_GetRui( miniPromo ), "lastFormat", Format )
 	RuiSetInt( Hud_GetRui( miniPromo ), "activePageIndex", PageIndex )
 }
-
-void function Play_UpdateCounts()
-{
-	var playersButton = Hud_GetChild( file.panel, "PlayersButton" )
-	HudElem_SetRuiArg( playersButton, "buttonText", "" + MS_GetPlayerCount() )
-	Hud_SetWidth( playersButton, Hud_GetBaseWidth( playersButton ) * 2 )
-
-	var serversButton = Hud_GetChild( file.panel, "ServersButton" )
-	HudElem_SetRuiArg( serversButton, "buttonText", "" + MS_GetServerCount() )
-	Hud_SetWidth( serversButton, Hud_GetBaseWidth( serversButton ) * 2 )
-}
-
-void function Play_SetUIVersion()
-{
-	HudElem_SetRuiArg( Hud_GetChild( file.panel, "R5RVersionButton" ), "buttonText", Localize( "#BETA_BUILD_WATERMARK" ) )
-	RuiSetString( Hud_GetRui( Hud_GetChild( file.panel, "SelfButton" ) ), "playerName", GetPlayerName() )
-	RuiSetString( Hud_GetRui( Hud_GetChild( file.panel, "SelfButton" ) ), "accountLevel", GetAccountDisplayLevel( 100 ) )
-	RuiSetImage( Hud_GetRui( Hud_GetChild( file.panel, "SelfButton" ) ), "accountBadge", $"rui/gladiator_cards/badges/account_t21" )
-	RuiSetFloat( Hud_GetRui( Hud_GetChild( file.panel, "SelfButton" ) ), "accountXPFrac", 1.0 )
-}
-
-void function SettingsPressed(var button)
-{
-	AdvanceMenu( GetMenu( "SystemMenu" ) )
-}
-
-void function ReadyButton_OnActivate(var button)
-{
-	if(file.searching) {
-		file.usercancled = true
-		return;
-	}
-
-	file.searching = true
-	EmitUISound( "UI_Menu_ReadyUp_1P" )
-	RuiSetBool( Hud_GetRui( Hud_GetChild( file.panel, "SelfButton" ) ), "isReady", true )
-	thread StartMatchFinding( button )
-}
-
-void function StartMatchFinding(var button)
-{
-	HudElem_SetRuiArg( button, "buttonText", Localize( "#CANCEL" ) )
-
-	thread FindServer()
-
-	int i = 0;
-	while(!file.foundserver)
-	{
-		if(file.usercancled) {
-			file.foundserver = true
-			continue
-		}
-
-		switch (i)
-		{
-			case 0:
-				RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Searching." )
-				i = 1
-				break;
-			case 1:
-				RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Searching.." )
-				i = 2
-				break;
-			case 2:
-				RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Searching..." )
-				i = 0
-				break;
-		}
-		
-		wait 0.5
-	}
-	
-	UpdateQuickJoinButtons(button)
-}
-
-void function UpdateQuickJoinButtons(var button)
-{
-	float waittime = 2
-
-	if(file.noservers)
-		RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "No servers found" )
-
-	if(!file.noservers)
-		RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", file.m_vSelectedServer.svServerName )
-
-	if(file.usercancled)
-	{
-		file.noservers = true
-		RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Party not ready" )
-		waittime = 0
-	}
-
-	wait waittime
-
-	RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Party not ready" )
-	HudElem_SetRuiArg( button, "buttonText", Localize( "#READY" ) )
-	RuiSetBool( Hud_GetRui( Hud_GetChild( file.panel, "SelfButton" ) ), "isReady", false )
-
-	if(!file.noservers)
-		SetEncKeyAndConnect(file.m_vSelectedServer.svServerID)
-
-	file.searching = false
-	file.noservers = false
-	file.foundserver = false
-	file.usercancled = false
-}
-
-void function FindServer()
-{
-	wait 0.5
-
-	if(!file.searching)
-		return
-
-	RefreshServerList()
-
-	file.m_vServerList.clear()
-	if(GetServerCount() == 0) {
-		file.noservers = true
-		file.foundserver = true
-		return
-	}
-
-	// Add each server to the array
-	for (int i=0, j=GetServerCount(); i < j; i++) {
-		ServerListing Server
-		Server.svServerID = i
-		Server.svServerName = GetServerName(i)
-		Server.svPlaylist = GetServerPlaylist(i)
-		Server.svMapName = GetServerMap(i)
-		Server.svDescription = GetServerDescription(i)
-		Server.svMaxPlayers = GetServerMaxPlayers(i)
-		Server.svCurrentPlayers = GetServerCurrentPlayers(i)
-		file.m_vServerList.append(Server)
-	}
-
-	file.m_vFilteredServerList.clear()
-	for ( int i = 0, j = file.m_vServerList.len(); i < j; i++ )
-	{
-		// Filters
-		if ( file.m_vServerList[i].svCurrentPlayers == 0 )
-			continue;
-
-		if ( file.m_vServerList[i].svCurrentPlayers == file.m_vServerList[i].svMaxPlayers )
-			continue;
-
-		// Server fits our requirements, add it to the list
-		file.m_vFilteredServerList.append(file.m_vServerList[i])
-	}
-
-	if(file.m_vFilteredServerList.len() == 0)
-		file.m_vFilteredServerList = file.m_vServerList
-
-	if(file.m_vFilteredServerList.len() == 0) {
-		file.noservers = true
-		file.foundserver = true
-		return
-	}
-
-	int randomserver = RandomIntRange( 0, file.m_vFilteredServerList.len() - 1 )
-	file.m_vSelectedServer.svServerID = file.m_vFilteredServerList[randomserver].svServerID
-	file.m_vSelectedServer.svServerName = file.m_vFilteredServerList[randomserver].svServerName
-	file.m_vSelectedServer.svMapName = file.m_vFilteredServerList[randomserver].svMapName
-	file.m_vSelectedServer.svPlaylist = file.m_vFilteredServerList[randomserver].svPlaylist
-	file.m_vSelectedServer.svDescription = file.m_vFilteredServerList[randomserver].svDescription
-
-	for(int i = 0; i < 4; i++)
-	{
-		if(!file.searching)
-			return
-		
-		wait 1
-	}
-
-	file.foundserver = true
-}
-
