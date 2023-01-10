@@ -90,10 +90,16 @@ void function InitR5RHomePanel( var panel )
 	Hud_AddEventHandler( gameMenuButton, UIE_CLICK, SettingsPressed )
 
 	var playersButton = Hud_GetChild( panel, "PlayersButton" )
+	ToolTipData playersToolTip
+	playersToolTip.descText = "Players Online"
+	Hud_SetToolTipData( playersButton, playersToolTip )
 	HudElem_SetRuiArg( playersButton, "icon", $"rui/menu/lobby/friends_icon" )
 	HudElem_SetRuiArg( playersButton, "buttonText", "" )
 
 	var serversButton = Hud_GetChild( panel, "ServersButton" )
+	ToolTipData serversToolTip
+	serversToolTip.descText = "Serves Online"
+	Hud_SetToolTipData( serversButton, serversToolTip )
 	HudElem_SetRuiArg( serversButton, "icon", $"rui/hud/gamestate/net_latency" )
 	HudElem_SetRuiArg( serversButton, "buttonText", "" )
 

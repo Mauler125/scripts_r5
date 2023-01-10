@@ -95,6 +95,8 @@ void function InitR5RLobbyMenu( var newMenuArg )
 	file.buttons.append(Hud_GetChild(menu, "HomeBtn"))
 	file.buttons.append(Hud_GetChild(menu, "CreateServerBtn"))
 	file.buttons.append(Hud_GetChild(menu, "ServerBrowserBtn"))
+
+	ToolTips_AddMenu( menu )
 }
 
 void function OpenSelectedPanel(var button)
@@ -124,6 +126,7 @@ void function OpenSelectedPanel(var button)
 
 void function OnR5RLobby_Close()
 {
+	ToolTips_MenuClosed( file.menu )
 	UnRegisterServerBrowserButtonPressedCallbacks()
 }
 
@@ -146,6 +149,7 @@ void function OnR5RLobby_Show()
 
 void function OnR5RLobby_Open()
 {
+	ToolTips_MenuOpened( file.menu )
 	RegisterServerBrowserButtonPressedCallbacks()
 }
 

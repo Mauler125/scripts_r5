@@ -280,5 +280,11 @@
 			"proportionalToParent"    	"1"
 			"zpos"                      "10"
 		}
+
+		ToolTip
+		{
+			ControlName				CNestedPanel
+			InheritProperties		ToolTip
+		}
 	}
 }
