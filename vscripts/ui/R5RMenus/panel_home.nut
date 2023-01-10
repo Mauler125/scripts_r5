@@ -90,16 +90,10 @@ void function InitR5RHomePanel( var panel )
 	Hud_AddEventHandler( gameMenuButton, UIE_CLICK, SettingsPressed )
 
 	var playersButton = Hud_GetChild( panel, "PlayersButton" )
-	ToolTipData playersToolTip
-	playersToolTip.descText = "Players Online"
-	Hud_SetToolTipData( playersButton, playersToolTip )
 	HudElem_SetRuiArg( playersButton, "icon", $"rui/menu/lobby/friends_icon" )
 	HudElem_SetRuiArg( playersButton, "buttonText", "" )
 
 	var serversButton = Hud_GetChild( panel, "ServersButton" )
-	ToolTipData serversToolTip
-	serversToolTip.descText = "Serves Online"
-	Hud_SetToolTipData( serversButton, serversToolTip )
 	HudElem_SetRuiArg( serversButton, "icon", $"rui/hud/gamestate/net_latency" )
 	HudElem_SetRuiArg( serversButton, "buttonText", "" )
 
@@ -140,10 +134,18 @@ void function Play_SetupUI()
 	RuiSetFloat( Hud_GetRui( Hud_GetChild( file.panel, "SelfButton" ) ), "accountXPFrac", 1.0 )
 
 	var playersButton = Hud_GetChild( file.panel, "PlayersButton" )
+	ToolTipData playersToolTip
+	playersToolTip.titleText = "Players Online"
+	playersToolTip.descText = MS_GetServerCount() + " Players Online"
+	Hud_SetToolTipData( playersButton, playersToolTip )
 	HudElem_SetRuiArg( playersButton, "buttonText", "" + MS_GetPlayerCount() )
 	Hud_SetWidth( playersButton, Hud_GetBaseWidth( playersButton ) * 2 )
 
 	var serversButton = Hud_GetChild( file.panel, "ServersButton" )
+	ToolTipData serversToolTip
+	serversToolTip.titleText = "Servers Running"
+	serversToolTip.descText = MS_GetServerCount() + " Servers Running"
+	Hud_SetToolTipData( serversButton, serversToolTip )
 	HudElem_SetRuiArg( serversButton, "buttonText", "" + MS_GetServerCount() )
 	Hud_SetWidth( serversButton, Hud_GetBaseWidth( serversButton ) * 2 )
 }
