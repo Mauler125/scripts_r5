@@ -223,14 +223,16 @@ resource/ui/menus/dialog.menu
 
 		NewsItem1
 		{
-			ControlName		RuiPanel
+			ControlName				RuiButton
+        	classname               "MenuButton MatchmakingStatusRui"
 			wide			256  
 			tall            144
 			visible			1
-			rui           	"ui/custom_loadscreen_image.rpak"
+			rui             "ui/gamemode_select_v2_lobby_button.rpak"
 			ypos			-100
 			xpos			0
 			zpos 2
+			"scriptID"					"0"
 
 			pin_to_sibling				DarkenBackground
 			pin_corner_to_sibling		BOTTOM
@@ -239,13 +241,15 @@ resource/ui/menus/dialog.menu
 
 		NewsItem2
 		{
-			ControlName		RuiPanel
+			ControlName				RuiButton
+        	classname               "MenuButton MatchmakingStatusRui"
 			wide			256  
 			tall            144
 			visible			1
-			rui           	"ui/custom_loadscreen_image.rpak"
+			rui             "ui/gamemode_select_v2_lobby_button.rpak"
 			xpos			10
 			zpos 2
+			"scriptID"					"1"
 
 			pin_to_sibling				NewsItem1
 			pin_corner_to_sibling		LEFT
@@ -254,13 +258,15 @@ resource/ui/menus/dialog.menu
 
 		NewsItem3
 		{
-			ControlName		RuiPanel
+			ControlName				RuiButton
+        	classname               "MenuButton MatchmakingStatusRui"
 			wide			256  
 			tall            144
 			visible			1
-			rui           	"ui/custom_loadscreen_image.rpak"
+			rui             "ui/gamemode_select_v2_lobby_button.rpak"
 			xpos			10
 			zpos 2
+			"scriptID"					"2"
 
 			pin_to_sibling				NewsItem2
 			pin_corner_to_sibling		LEFT
@@ -269,13 +275,15 @@ resource/ui/menus/dialog.menu
 
 		NewsItem4
 		{
-			ControlName		RuiPanel
+			ControlName				RuiButton
+        	classname               "MenuButton MatchmakingStatusRui"
 			wide			256  
 			tall            144
 			visible			1
-			rui           	"ui/custom_loadscreen_image.rpak"
+			rui             "ui/gamemode_select_v2_lobby_button.rpak"
 			xpos			10
 			zpos 2
+			"scriptID"					"3"
 
 			pin_to_sibling				NewsItem3
 			pin_corner_to_sibling		LEFT
@@ -284,13 +292,15 @@ resource/ui/menus/dialog.menu
 
 		NewsItem5
 		{
-			ControlName		RuiPanel
+			ControlName				RuiButton
+        	classname               "MenuButton MatchmakingStatusRui"
 			wide			256  
 			tall            144
 			visible			1
-			rui           	"ui/custom_loadscreen_image.rpak"
+			rui             "ui/gamemode_select_v2_lobby_button.rpak"
 			xpos			10
 			zpos 2
+			"scriptID"					"4"
 
 			pin_to_sibling				NewsItem4
 			pin_corner_to_sibling		LEFT
@@ -299,251 +309,19 @@ resource/ui/menus/dialog.menu
 
 		NewsItem6
 		{
-			ControlName		RuiPanel
+			ControlName				RuiButton
+        	classname               "MenuButton MatchmakingStatusRui"
 			wide			256  
 			tall            144
 			visible			1
-			rui           	"ui/custom_loadscreen_image.rpak"
+			rui             "ui/gamemode_select_v2_lobby_button.rpak"
 			xpos			10
 			zpos 2
+			"scriptID"					"5"
 
 			pin_to_sibling				NewsItem5
 			pin_corner_to_sibling		LEFT
 			pin_to_sibling_corner		RIGHT
-		}
-
-		NewsItemText1
-		{
-			"ControlName"			"Label"
-			"xpos"                  "-10"
-			"ypos"					"-20"
-			"wide"					"240"
-			"tall"					"20"
-			"visible"				"1"
-			"wrap"					"0"
-			"fontHeight"			"20"
-			"zpos"					"5"
-			"textAlignment"			"east"
-			"labelText"				""
-			"font"					"TitleBoldFont"
-			"allcaps"				"1"
-			"fgcolor_override"		"255 255 255 255"
-
-			"pin_to_sibling"		"NewsItem1"
-			"pin_corner_to_sibling"	"BOTTOM_LEFT"
-			"pin_to_sibling_corner"	"BOTTOM_LEFT"
-		}
-
-		NewsItemText2
-		{
-			"ControlName"			"Label"
-			"xpos"                  "-10"
-			"ypos"					"-20"
-			"wide"					"240"
-			"tall"					"20"
-			"visible"				"1"
-			"wrap"					"0"
-			"fontHeight"			"20"
-			"zpos"					"5"
-			"textAlignment"			"east"
-			"labelText"				""
-			"font"					"TitleBoldFont"
-			"allcaps"				"1"
-			"fgcolor_override"		"255 255 255 255"
-
-			"pin_to_sibling"		"NewsItem2"
-			"pin_corner_to_sibling"	"BOTTOM_LEFT"
-			"pin_to_sibling_corner"	"BOTTOM_LEFT"
-		}
-
-		NewsItemText3
-		{
-			"ControlName"			"Label"
-			"xpos"                  "-10"
-			"ypos"					"-20"
-			"wide"					"240"
-			"tall"					"20"
-			"visible"				"1"
-			"wrap"					"0"
-			"fontHeight"			"20"
-			"zpos"					"5"
-			"textAlignment"			"east"
-			"labelText"				""
-			"font"					"TitleBoldFont"
-			"allcaps"				"1"
-			"fgcolor_override"		"255 255 255 255"
-
-			"pin_to_sibling"		"NewsItem3"
-			"pin_corner_to_sibling"	"BOTTOM_LEFT"
-			"pin_to_sibling_corner"	"BOTTOM_LEFT"
-		}
-
-		NewsItemText4
-		{
-			"ControlName"			"Label"
-			"xpos"                  "-10"
-			"ypos"					"-20"
-			"wide"					"240"
-			"tall"					"20"
-			"visible"				"1"
-			"wrap"					"0"
-			"fontHeight"			"20"
-			"zpos"					"5"
-			"textAlignment"			"east"
-			"labelText"				""
-			"font"					"TitleBoldFont"
-			"allcaps"				"1"
-			"fgcolor_override"		"255 255 255 255"
-
-			"pin_to_sibling"		"NewsItem4"
-			"pin_corner_to_sibling"	"BOTTOM_LEFT"
-			"pin_to_sibling_corner"	"BOTTOM_LEFT"
-		}
-
-		NewsItemText5
-		{
-			"ControlName"			"Label"
-			"xpos"                  "-10"
-			"ypos"					"-20"
-			"wide"					"240"
-			"tall"					"20"
-			"visible"				"1"
-			"wrap"					"0"
-			"fontHeight"			"20"
-			"zpos"					"5"
-			"textAlignment"			"east"
-			"labelText"				""
-			"font"					"TitleBoldFont"
-			"allcaps"				"1"
-			"fgcolor_override"		"255 255 255 255"
-
-			"pin_to_sibling"		"NewsItem5"
-			"pin_corner_to_sibling"	"BOTTOM_LEFT"
-			"pin_to_sibling_corner"	"BOTTOM_LEFT"
-		}
-
-		NewsItemText6
-		{
-			"ControlName"			"Label"
-			"xpos"                  "-10"
-			"ypos"					"-20"
-			"wide"					"240"
-			"tall"					"20"
-			"visible"				"1"
-			"wrap"					"0"
-			"fontHeight"			"20"
-			"zpos"					"5"
-			"textAlignment"			"east"
-			"labelText"				""
-			"font"					"TitleBoldFont"
-			"allcaps"				"1"
-			"fgcolor_override"		"255 255 255 255"
-
-			"pin_to_sibling"		"NewsItem6"
-			"pin_corner_to_sibling"	"BOTTOM_LEFT"
-			"pin_to_sibling_corner"	"BOTTOM_LEFT"
-		}
-
-		NewItemButton1
-		{
-			ControlName RuiButton
-			InheritProperties RuiSmallButton
-			wide			256  
-			tall            144
-			xpos 0
-			ypos 0
-			zpos					20
-			"scriptID"					"0"
-			sound_accept            "UI_Menu_MOTD_Tab"
-
-			"pin_to_sibling"		"NewsItem1"
-			"pin_corner_to_sibling"	"CENTER"
-			"pin_to_sibling_corner"	"CENTER"
-		}
-
-		NewItemButton2
-		{
-			ControlName RuiButton
-			InheritProperties RuiSmallButton
-			wide			256  
-			tall            144
-			xpos 0
-			ypos 0
-			zpos					20
-			"scriptID"					"1"
-			sound_accept            "UI_Menu_MOTD_Tab"
-
-			"pin_to_sibling"		"NewsItem2"
-			"pin_corner_to_sibling"	"CENTER"
-			"pin_to_sibling_corner"	"CENTER"
-		}
-
-		NewItemButton3
-		{
-			ControlName RuiButton
-			InheritProperties RuiSmallButton
-			wide			256  
-			tall            144
-			xpos 0
-			ypos 0
-			zpos					20
-			"scriptID"					"2"
-			sound_accept            "UI_Menu_MOTD_Tab"
-
-			"pin_to_sibling"		"NewsItem3"
-			"pin_corner_to_sibling"	"CENTER"
-			"pin_to_sibling_corner"	"CENTER"
-		}
-
-		NewItemButton4
-		{
-			ControlName RuiButton
-			InheritProperties RuiSmallButton
-			wide			256  
-			tall            144
-			xpos 0
-			ypos 0
-			zpos					20
-			"scriptID"					"3"
-			sound_accept            "UI_Menu_MOTD_Tab"
-
-			"pin_to_sibling"		"NewsItem4"
-			"pin_corner_to_sibling"	"CENTER"
-			"pin_to_sibling_corner"	"CENTER"
-		}
-
-		NewItemButton5
-		{
-			ControlName RuiButton
-			InheritProperties RuiSmallButton
-			wide			256  
-			tall            144
-			xpos 0
-			ypos 0
-			zpos					20
-			"scriptID"					"4"
-			sound_accept            "UI_Menu_MOTD_Tab"
-
-			"pin_to_sibling"		"NewsItem5"
-			"pin_corner_to_sibling"	"CENTER"
-			"pin_to_sibling_corner"	"CENTER"
-		}
-
-		NewItemButton6
-		{
-			ControlName RuiButton
-			InheritProperties RuiSmallButton
-			wide			256  
-			tall            144
-			xpos 0
-			ypos 0
-			zpos					20
-			"scriptID"					"5"
-			sound_accept            "UI_Menu_MOTD_Tab"
-
-			"pin_to_sibling"		"NewsItem6"
-			"pin_corner_to_sibling"	"CENTER"
-			"pin_to_sibling_corner"	"CENTER"
 		}
 
 		NewsItemSelected

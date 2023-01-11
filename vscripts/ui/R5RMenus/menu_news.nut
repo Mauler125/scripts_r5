@@ -37,7 +37,7 @@ void function InitR5RNews( var newMenuArg ) //
 
     for(int i = 0; i < MAX_NEWS_ITEMS; i++)
     {
-        var button = Hud_GetChild( menu, "NewItemButton" + (i + 1) )
+        var button = Hud_GetChild( menu, "NewsItem" + (i + 1) )
 	    Hud_AddEventHandler( button, UIE_CLICK, NewsItem_Activated )
     }
 
@@ -190,35 +190,29 @@ void function SetSmallPreviewItems( int pageIndex )
     for(int j = 0; j < MAX_NEWS_ITEMS; j++)
     {
         Hud_Hide( Hud_GetChild( file.menu, "NewsItem" + (j + 1) ) )
-        Hud_Hide( Hud_GetChild( file.menu, "NewsItemText" + (j + 1) ) )
-        Hud_Hide( Hud_GetChild( file.menu, "NewItemButton" + (j + 1) ) )
     }
 
     //Show only the ones we need
     for(int j = 0; j < file.newspages.len(); j++)
     {
         Hud_Show( Hud_GetChild( file.menu, "NewsItem" + (j + 1) ) )
-        Hud_Show( Hud_GetChild( file.menu, "NewsItemText" + (j + 1) ) )
-        Hud_Show( Hud_GetChild( file.menu, "NewItemButton" + (j + 1) ) )
-        Hud_SetText(Hud_GetChild( file.menu, "NewsItemText" + (j + 1) ), file.newspages[j].title )
 
         if(j != 0)
             offset -= (Hud_GetWidth(Hud_GetChild( file.menu, "NewsItem1" ))/2) + 5
     }
 
+    Hud_SetX( Hud_GetChild( file.menu, "NewsItem1" ), 0 )
+
     if( file.newspages.len() > 1 )
-    {
         Hud_SetX( Hud_GetChild( file.menu, "NewsItem1" ), offset )
-    }
-    else
-    {
-        Hud_SetX( Hud_GetChild( file.menu, "NewsItem1" ), 0 )
-    }
     
     int i = 1
     foreach( NewsPage page in file.newspages )
     {
-        RuiSetImage(Hud_GetRui( Hud_GetChild( file.menu, "NewsItem" + i ) ), "loadscreenImage", page.image )
+        RuiSetString( Hud_GetRui( Hud_GetChild( file.menu, "NewsItem" + i ) ), "modeNameText", page.title )
+	    RuiSetString( Hud_GetRui( Hud_GetChild( file.menu, "NewsItem" + i ) ), "modeDescText", "" )
+	    RuiSetBool( Hud_GetRui( Hud_GetChild( file.menu, "NewsItem" + i )), "alwaysShowDesc", false )
+	    RuiSetImage( Hud_GetRui( Hud_GetChild( file.menu, "NewsItem" + i ) ), "modeImage", page.image )
 
         i++
 
