@@ -22,7 +22,7 @@ resource/ui/menus/dialog.menu
 			ControlName				RuiPanel
 			wide					%100
 			tall					%100
-			rui                     "ui/promo_screen_blur.rpak"
+			rui                     "ui/screen_blur.rpak"
 			visible					1
 		}
 
@@ -39,30 +39,150 @@ resource/ui/menus/dialog.menu
 			paintbackground			1
 		}
 
-		LastPage
+		"MainButtonsFrame"
 		{
-			ControlName				RuiPanel
-			wide					1920
-			tall                    664
-			visible					1
-			rui                     "ui/promo_page.rpak"
+            "ControlName"				"ImagePanel"
+			"wide"						"f0"
+			"tall"						"83"
+			"visible"					"1"
+            "scaleImage"				"1"
+			"zpos"						"0"
+            "fillColor"					"30 30 30 200"
+            "drawColor"					"30 30 30 200"
 
-			pin_to_sibling			DarkenBackground
-			pin_corner_to_sibling	CENTER
-			pin_to_sibling_corner	CENTER
+			"pin_to_sibling"			"DarkenBackground"
+			"pin_corner_to_sibling"		"TOP"
+			"pin_to_sibling_corner"		"TOP"
 		}
 
-		ActivePage
+		"NewsBtn"
 		{
-			ControlName				RuiPanel
-			wide					1920
-			tall                    664
-			visible					1
-			rui                     "ui/promo_page.rpak"
+			"ControlName"				"RuiButton"
+			"InheritProperties"			"TabButtonSettings"
+			"classname" 				"TopButtons"
+			"zpos"						"3"
 
-			pin_to_sibling			DarkenBackground
-			pin_corner_to_sibling	CENTER
-			pin_to_sibling_corner	CENTER
+			ruiArgs
+			{
+				isSelected 1
+				buttonText "News"
+			}
+
+			"pin_to_sibling"			"MainButtonsFrame"
+			"pin_corner_to_sibling"		"CENTER"
+			"pin_to_sibling_corner"		"CENTER"
+		}
+
+		MouseWheelText
+		{
+			"ControlName"			"Label"
+			"xpos"                  "0"
+			"ypos"					"-50"
+			"auto_wide_tocontents"	"1"
+			"tall"					"20"
+			"visible"				"1"
+			"wrap"					"0"
+			"fontHeight"			"20"
+			"zpos"					"5"
+			"labelText"				"%weaponcycle% NEXT/PREV"
+			"font"					"TitleBoldFont"
+			"allcaps"				"1"
+			"fgcolor_override"		"255 255 255 255"
+
+			"pin_to_sibling"		"DarkenBackground"
+			"pin_corner_to_sibling"	"BOTTOM"
+			"pin_to_sibling_corner"	"BOTTOM"
+		}
+
+		"DescText"
+		{
+			"ControlName"			"Label"
+			"xpos"                  "-30"
+			"ypos"					"-30"
+			"wide"					"600"
+			"tall"					"190"
+			"visible"				"1"
+			"wrap"					"1"
+			"fontHeight"			"28"
+			"zpos"					"5"
+			"textAlignment"			"north-west"
+			"labelText"				"This project allows you to run APEX Legends with mods, by running the embedded server and loading custom scripts/global compile lists into the scripting VM. This allows you to create custom gamemodes, levels, weapons and more. This project allows you to run APEX Legends with mods, by running the embedded server and loading custom scripts/global compile lists into the scripting VM. This allows you to create custom gamemodes, levels, weapons and more. This project allows you to run APEX Legends with mods, by running the embedded server and loading custom scripts/global compile lists into the scripting VM. This allows you to create custom gamemodes, levels, weapons and more. This project allows you to run APEX Legends with mods, by running the embedded server and loading custom scripts/global compile lists into the scripting VM. This allows you to create custom gamemodes, levels, weapons and more."
+			"font"					"DefaultBold_41"
+			"allcaps"				"0"
+			"fgcolor_override"		"255 255 255 255"
+
+			"pin_to_sibling"		"CenterNewsImage"
+			"pin_corner_to_sibling"	"BOTTOM_LEFT"
+			"pin_to_sibling_corner"	"BOTTOM_LEFT"
+		}
+
+		"TitleText"
+		{
+			"ControlName"			"Label"
+			"xpos"                  "0"
+			"ypos"					"5"
+			"wide"					"900"
+			"tall"					"50"
+			"visible"				"1"
+			"wrap"					"0"
+			"fontHeight"			"50"
+			"zpos"					"5"
+			"textAlignment"			"north-west"
+			"labelText"				"TEST TITLE. TEST TITLE. TEST TITLE. TEST TITLE. TEST TITLE. TEST TITLE. TEST TITLE. TEST TITLE. TEST TITLE. TEST TITLE. TEST TITLE. TEST TITLE. TEST TITLE. TEST TITLE. TEST TITLE. TEST TITLE. TEST TITLE. TEST TITLE. TEST TITLE. TEST TITLE. "
+			"font"					"TitleBoldFont"
+			"allcaps"				"1"
+			"fgcolor_override"		"255 255 255 255"
+
+			"pin_to_sibling"		"DescText"
+			"pin_corner_to_sibling"	"BOTTOM_LEFT"
+			"pin_to_sibling_corner"	"TOP_LEFT"
+		}
+
+		CenterNewsImage
+		{
+			ControlName		RuiPanel
+			wide			1280
+			tall            720
+			visible			1
+			rui           	"ui/custom_loadscreen_image.rpak"
+			ypos			20
+			zpos 2
+
+			pin_to_sibling				MainButtonsFrame
+			pin_corner_to_sibling		TOP
+			pin_to_sibling_corner		BOTTOM
+		}
+
+		LeftNewsImage
+		{
+			ControlName		RuiPanel
+			wide			1180
+			tall            620
+			visible			1
+			rui           	"ui/custom_loadscreen_image.rpak"
+			zpos 2
+
+			xpos			100
+
+			pin_to_sibling				CenterNewsImage
+			pin_corner_to_sibling		RIGHT
+			pin_to_sibling_corner		LEFT
+		}
+
+		RightNewsImage
+		{
+			ControlName		RuiPanel
+			wide			1180
+			tall            620
+			visible			1
+			rui           	"ui/custom_loadscreen_image.rpak"
+			zpos 2
+
+			xpos			100
+
+			pin_to_sibling				CenterNewsImage
+			pin_corner_to_sibling		LEFT
+			pin_to_sibling_corner		RIGHT
 		}
 
         PrevPageButton
@@ -74,11 +194,13 @@ resource/ui/menus/dialog.menu
             labelText               ""
             visible					1
             proportionalToParent    1
+			xpos					150
             sound_accept            "UI_Menu_MOTD_Tab"
+			zpos 10
 
-            pin_to_sibling			ActivePage
-            pin_corner_to_sibling	TOP_LEFT
-            pin_to_sibling_corner	TOP_LEFT
+            pin_to_sibling			CenterNewsImage
+            pin_corner_to_sibling	LEFT
+            pin_to_sibling_corner	LEFT
         }
 
         NextPageButton
@@ -90,12 +212,356 @@ resource/ui/menus/dialog.menu
             labelText               ""
             visible					1
             proportionalToParent    1
+			xpos					150
             sound_accept            "UI_Menu_MOTD_Tab"
+			zpos 10
 
-            pin_to_sibling			ActivePage
-            pin_corner_to_sibling	TOP_RIGHT
-            pin_to_sibling_corner	TOP_RIGHT
+           	pin_to_sibling			CenterNewsImage
+            pin_corner_to_sibling	RIGHT
+            pin_to_sibling_corner	RIGHT
         }
+
+		NewsItem1
+		{
+			ControlName		RuiPanel
+			wide			256  
+			tall            144
+			visible			1
+			rui           	"ui/custom_loadscreen_image.rpak"
+			ypos			-100
+			xpos			0
+			zpos 2
+
+			pin_to_sibling				DarkenBackground
+			pin_corner_to_sibling		BOTTOM
+			pin_to_sibling_corner		BOTTOM
+		}
+
+		NewsItem2
+		{
+			ControlName		RuiPanel
+			wide			256  
+			tall            144
+			visible			1
+			rui           	"ui/custom_loadscreen_image.rpak"
+			xpos			10
+			zpos 2
+
+			pin_to_sibling				NewsItem1
+			pin_corner_to_sibling		LEFT
+			pin_to_sibling_corner		RIGHT
+		}
+
+		NewsItem3
+		{
+			ControlName		RuiPanel
+			wide			256  
+			tall            144
+			visible			1
+			rui           	"ui/custom_loadscreen_image.rpak"
+			xpos			10
+			zpos 2
+
+			pin_to_sibling				NewsItem2
+			pin_corner_to_sibling		LEFT
+			pin_to_sibling_corner		RIGHT
+		}
+
+		NewsItem4
+		{
+			ControlName		RuiPanel
+			wide			256  
+			tall            144
+			visible			1
+			rui           	"ui/custom_loadscreen_image.rpak"
+			xpos			10
+			zpos 2
+
+			pin_to_sibling				NewsItem3
+			pin_corner_to_sibling		LEFT
+			pin_to_sibling_corner		RIGHT
+		}
+
+		NewsItem5
+		{
+			ControlName		RuiPanel
+			wide			256  
+			tall            144
+			visible			1
+			rui           	"ui/custom_loadscreen_image.rpak"
+			xpos			10
+			zpos 2
+
+			pin_to_sibling				NewsItem4
+			pin_corner_to_sibling		LEFT
+			pin_to_sibling_corner		RIGHT
+		}
+
+		NewsItem6
+		{
+			ControlName		RuiPanel
+			wide			256  
+			tall            144
+			visible			1
+			rui           	"ui/custom_loadscreen_image.rpak"
+			xpos			10
+			zpos 2
+
+			pin_to_sibling				NewsItem5
+			pin_corner_to_sibling		LEFT
+			pin_to_sibling_corner		RIGHT
+		}
+
+		NewsItemText1
+		{
+			"ControlName"			"Label"
+			"xpos"                  "-10"
+			"ypos"					"-20"
+			"wide"					"240"
+			"tall"					"20"
+			"visible"				"1"
+			"wrap"					"0"
+			"fontHeight"			"20"
+			"zpos"					"5"
+			"textAlignment"			"east"
+			"labelText"				""
+			"font"					"TitleBoldFont"
+			"allcaps"				"1"
+			"fgcolor_override"		"255 255 255 255"
+
+			"pin_to_sibling"		"NewsItem1"
+			"pin_corner_to_sibling"	"BOTTOM_LEFT"
+			"pin_to_sibling_corner"	"BOTTOM_LEFT"
+		}
+
+		NewsItemText2
+		{
+			"ControlName"			"Label"
+			"xpos"                  "-10"
+			"ypos"					"-20"
+			"wide"					"240"
+			"tall"					"20"
+			"visible"				"1"
+			"wrap"					"0"
+			"fontHeight"			"20"
+			"zpos"					"5"
+			"textAlignment"			"east"
+			"labelText"				""
+			"font"					"TitleBoldFont"
+			"allcaps"				"1"
+			"fgcolor_override"		"255 255 255 255"
+
+			"pin_to_sibling"		"NewsItem2"
+			"pin_corner_to_sibling"	"BOTTOM_LEFT"
+			"pin_to_sibling_corner"	"BOTTOM_LEFT"
+		}
+
+		NewsItemText3
+		{
+			"ControlName"			"Label"
+			"xpos"                  "-10"
+			"ypos"					"-20"
+			"wide"					"240"
+			"tall"					"20"
+			"visible"				"1"
+			"wrap"					"0"
+			"fontHeight"			"20"
+			"zpos"					"5"
+			"textAlignment"			"east"
+			"labelText"				""
+			"font"					"TitleBoldFont"
+			"allcaps"				"1"
+			"fgcolor_override"		"255 255 255 255"
+
+			"pin_to_sibling"		"NewsItem3"
+			"pin_corner_to_sibling"	"BOTTOM_LEFT"
+			"pin_to_sibling_corner"	"BOTTOM_LEFT"
+		}
+
+		NewsItemText4
+		{
+			"ControlName"			"Label"
+			"xpos"                  "-10"
+			"ypos"					"-20"
+			"wide"					"240"
+			"tall"					"20"
+			"visible"				"1"
+			"wrap"					"0"
+			"fontHeight"			"20"
+			"zpos"					"5"
+			"textAlignment"			"east"
+			"labelText"				""
+			"font"					"TitleBoldFont"
+			"allcaps"				"1"
+			"fgcolor_override"		"255 255 255 255"
+
+			"pin_to_sibling"		"NewsItem4"
+			"pin_corner_to_sibling"	"BOTTOM_LEFT"
+			"pin_to_sibling_corner"	"BOTTOM_LEFT"
+		}
+
+		NewsItemText5
+		{
+			"ControlName"			"Label"
+			"xpos"                  "-10"
+			"ypos"					"-20"
+			"wide"					"240"
+			"tall"					"20"
+			"visible"				"1"
+			"wrap"					"0"
+			"fontHeight"			"20"
+			"zpos"					"5"
+			"textAlignment"			"east"
+			"labelText"				""
+			"font"					"TitleBoldFont"
+			"allcaps"				"1"
+			"fgcolor_override"		"255 255 255 255"
+
+			"pin_to_sibling"		"NewsItem5"
+			"pin_corner_to_sibling"	"BOTTOM_LEFT"
+			"pin_to_sibling_corner"	"BOTTOM_LEFT"
+		}
+
+		NewsItemText6
+		{
+			"ControlName"			"Label"
+			"xpos"                  "-10"
+			"ypos"					"-20"
+			"wide"					"240"
+			"tall"					"20"
+			"visible"				"1"
+			"wrap"					"0"
+			"fontHeight"			"20"
+			"zpos"					"5"
+			"textAlignment"			"east"
+			"labelText"				""
+			"font"					"TitleBoldFont"
+			"allcaps"				"1"
+			"fgcolor_override"		"255 255 255 255"
+
+			"pin_to_sibling"		"NewsItem6"
+			"pin_corner_to_sibling"	"BOTTOM_LEFT"
+			"pin_to_sibling_corner"	"BOTTOM_LEFT"
+		}
+
+		NewItemButton1
+		{
+			ControlName RuiButton
+			InheritProperties RuiSmallButton
+			wide			256  
+			tall            144
+			xpos 0
+			ypos 0
+			zpos					20
+			"scriptID"					"0"
+			sound_accept            "UI_Menu_MOTD_Tab"
+
+			"pin_to_sibling"		"NewsItem1"
+			"pin_corner_to_sibling"	"CENTER"
+			"pin_to_sibling_corner"	"CENTER"
+		}
+
+		NewItemButton2
+		{
+			ControlName RuiButton
+			InheritProperties RuiSmallButton
+			wide			256  
+			tall            144
+			xpos 0
+			ypos 0
+			zpos					20
+			"scriptID"					"1"
+			sound_accept            "UI_Menu_MOTD_Tab"
+
+			"pin_to_sibling"		"NewsItem2"
+			"pin_corner_to_sibling"	"CENTER"
+			"pin_to_sibling_corner"	"CENTER"
+		}
+
+		NewItemButton3
+		{
+			ControlName RuiButton
+			InheritProperties RuiSmallButton
+			wide			256  
+			tall            144
+			xpos 0
+			ypos 0
+			zpos					20
+			"scriptID"					"2"
+			sound_accept            "UI_Menu_MOTD_Tab"
+
+			"pin_to_sibling"		"NewsItem3"
+			"pin_corner_to_sibling"	"CENTER"
+			"pin_to_sibling_corner"	"CENTER"
+		}
+
+		NewItemButton4
+		{
+			ControlName RuiButton
+			InheritProperties RuiSmallButton
+			wide			256  
+			tall            144
+			xpos 0
+			ypos 0
+			zpos					20
+			"scriptID"					"3"
+			sound_accept            "UI_Menu_MOTD_Tab"
+
+			"pin_to_sibling"		"NewsItem4"
+			"pin_corner_to_sibling"	"CENTER"
+			"pin_to_sibling_corner"	"CENTER"
+		}
+
+		NewItemButton5
+		{
+			ControlName RuiButton
+			InheritProperties RuiSmallButton
+			wide			256  
+			tall            144
+			xpos 0
+			ypos 0
+			zpos					20
+			"scriptID"					"4"
+			sound_accept            "UI_Menu_MOTD_Tab"
+
+			"pin_to_sibling"		"NewsItem5"
+			"pin_corner_to_sibling"	"CENTER"
+			"pin_to_sibling_corner"	"CENTER"
+		}
+
+		NewItemButton6
+		{
+			ControlName RuiButton
+			InheritProperties RuiSmallButton
+			wide			256  
+			tall            144
+			xpos 0
+			ypos 0
+			zpos					20
+			"scriptID"					"5"
+			sound_accept            "UI_Menu_MOTD_Tab"
+
+			"pin_to_sibling"		"NewsItem6"
+			"pin_corner_to_sibling"	"CENTER"
+			"pin_to_sibling_corner"	"CENTER"
+		}
+
+		NewsItemSelected
+		{
+			ControlName				ImagePanel
+            wide					296
+            tall                    450
+            visible				    1
+            image                   "vgui/HUD/flare_announcement"
+            drawColor               "255 255 255 255"
+            scaleImage              1
+			"zpos"						"0"
+
+			"pin_to_sibling"		"NewsItem1"
+			"pin_corner_to_sibling"	"CENTER"
+			"pin_to_sibling_corner"	"CENTER"
+		}
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -103,14 +569,14 @@ resource/ui/menus/dialog.menu
 		{
 			ControlName				CNestedPanel
 			InheritProperties       PromoFooterButtons
-			xpos					0
-			ypos                    32
+			xpos					-15
+			ypos                    -35
             //wide					200 // width of 1 button
             wide					422 // width of 2 buttons including space in between
 
-			pin_to_sibling			ActivePage
-			pin_corner_to_sibling	TOP
-			pin_to_sibling_corner	BOTTOM
+			pin_to_sibling			DarkenBackground
+			pin_corner_to_sibling	BOTTOM_LEFT
+			pin_to_sibling_corner	BOTTOM_LEFT
 		}
 	}
 }
