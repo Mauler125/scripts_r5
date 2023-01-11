@@ -38,6 +38,60 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
             drawColor				"255 255 255 255"
         }
 
+        "MainButtonsFrame"
+		{
+            "ControlName"				"ImagePanel"
+			"wide"						"f0"
+			"tall"						"83"
+			"visible"					"1"
+            "scaleImage"				"1"
+			"zpos"						"0"
+            "fillColor"					"30 30 30 200"
+            "drawColor"					"30 30 30 200"
+
+			"pin_to_sibling"			"ScreenFrame"
+			"pin_corner_to_sibling"		"TOP"
+			"pin_to_sibling_corner"		"TOP"
+		}
+
+		"GamemodesBtn"
+        {
+			"ControlName"				"RuiButton"
+			"InheritProperties"			"TabButtonSettings"
+			"classname" 				"TopButtons"
+			"zpos"						"3"
+            "xpos"                      "-100"
+
+			ruiArgs
+			{
+				isSelected 1
+				buttonText "Quick Play"
+			}
+
+			"pin_to_sibling"			"MainButtonsFrame"
+			"pin_corner_to_sibling"		"CENTER"
+			"pin_to_sibling_corner"		"CENTER"
+		}
+
+        "PrivateMatchBtn"
+        {
+			"ControlName"				"RuiButton"
+			"InheritProperties"			"TabButtonSettings"
+			"classname" 				"TopButtons"
+			"zpos"						"3"
+            "xpos"                      "-80"
+
+			ruiArgs
+			{
+				isSelected 0
+				buttonText "Private Match"
+			}
+
+			"pin_to_sibling"			"GamemodesBtn"
+			"pin_corner_to_sibling"		"LEFT"
+			"pin_to_sibling_corner"		"RIGHT"
+		}
+
         Cover
         {
             ControlName				ImagePanel
@@ -56,6 +110,44 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
             pin_to_sibling_corner	CENTER
         }
 
+        PrevPageButton
+        {
+            ControlName				RuiButton
+            wide					960
+            tall					560
+            rui                     "ui/promo_page_change_button.rpak"
+            labelText               ""
+            visible					1
+            proportionalToParent    1
+			xpos					50
+            ypos                    100
+            sound_accept            "UI_Menu_MOTD_Tab"
+			zpos 1
+
+            pin_to_sibling			ScreenFrame
+            pin_corner_to_sibling	LEFT
+            pin_to_sibling_corner	LEFT
+        }
+
+        NextPageButton
+        {
+            ControlName				RuiButton
+            wide					960
+            tall					560
+            rui                     "ui/promo_page_change_button.rpak"
+            labelText               ""
+            visible					1
+            proportionalToParent    1
+			xpos					50
+            ypos                    100
+            sound_accept            "UI_Menu_MOTD_Tab"
+			zpos 1
+
+           	pin_to_sibling			ScreenFrame
+            pin_corner_to_sibling	RIGHT
+            pin_to_sibling_corner	RIGHT
+        }
+
         CloseButton
         {
             ControlName             BaseModHybridButton
@@ -68,47 +160,14 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
             sound_accept            "UI_Menu_SelectMode_Close"
         }
 
-        GameModeSelectPanel
+        FiringRangeButton
         {
             ControlName				RuiButton
             classname               "MenuButton"
-            wide					1500
-            tall					475
-            xpos                    -48
-            ypos                    -110
-            zpos                    5
-            rui                     "ui/gamemode_select_v2_bg_panel.rpak"
-            labelText               ""
-            visible					1
-            cursorVelocityModifier  0.7
-
-            pin_to_sibling			CloseButton
-            pin_corner_to_sibling	BOTTOM_LEFT
-            pin_to_sibling_corner	BOTTOM_LEFT
-        }
-
-		GameModeSelectAnchor
-		{
-			ControlName				Label
-            labelText               ""
-
-            wide					0
-            tall					0
-            xpos                    0
-            ypos                    -80
-
-            pin_to_sibling			GameModeSelectPanel
-            pin_corner_to_sibling	TOP_LEFT
-            pin_to_sibling_corner	TOP_LEFT
-		}
-
-        GameModeButton0
-        {
-            ControlName				RuiButton
-            classname               "MenuButton"
-            wide					160
-            tall					365
-            xpos                    48
+            wide					280
+            tall					120
+            ypos                    -125
+            xpos                    -120
             zpos                    10
             rui                     "ui/gamemode_select_v2_button.rpak"
             labelText               ""
@@ -120,14 +179,83 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
             ruiArgs
             {
                 lockIconEnabled 0
+                modeNameText "Firing Range"
+                modeDescText "Run around in the custom Firing Range"
+                modeImage "rui/menu/gamemode/firing_range"
+            }
+
+            pin_to_sibling			ScreenFrame
+            pin_corner_to_sibling	ROP_LEFT
+            pin_to_sibling_corner	ROP_LEFT
+        }
+
+		GameModeSelectAnchor
+		{
+			ControlName				Label
+            labelText               ""
+
+            wide					0
+            tall					0
+            xpos                    0
+            ypos                    0
+
+            pin_to_sibling			ScreenFrame
+            pin_corner_to_sibling	CENTER
+            pin_to_sibling_corner	CENTER
+		}
+
+        "TitleText"
+		{
+			"ControlName"			"Label"
+			"xpos"                  "0"
+			"ypos"					"-215"
+			"auto_wide_tocontents"	"1"
+			"tall"					"30"
+			"visible"				"1"
+			"wrap"					"0"
+			"fontHeight"			"30"
+			"zpos"					"5"
+			"textAlignment"			"north-west"
+			"labelText"				"Server Quick Join"
+			"font"					"TitleBoldFont"
+			"allcaps"				"1"
+			"fgcolor_override"		"200 200 200 255"
+
+			"pin_to_sibling"		"GameModeSelectAnchor"
+			"pin_corner_to_sibling"	"CENTER"
+			"pin_to_sibling_corner"	"CENTER"
+		}
+
+        GameModeButton0
+        {
+            ControlName				RuiButton
+            classname               "MenuButton"
+            wide					325
+            tall					560
+            ypos                    100
+            xpos                    -675
+            zpos                    10
+            rui                     "ui/gamemode_select_v2_button.rpak"
+            labelText               ""
+            visible					1
+            tabPosition             1
+            cursorVelocityModifier  0.7
+            sound_accept            "UI_Menu_GameMode_Select"
+
+            ruiArgs
+            {
+                lockIconEnabled 0
+                modeNameText "Random Playlist"
+                modeDescText "Quickly Join any kind of server"
+                modeImage "rui/menu/gamemode/ranked_1"
             }
 
 
             navRight                GameModeButton1
 
             pin_to_sibling			GameModeSelectAnchor
-            pin_corner_to_sibling	TOP_LEFT
-            pin_to_sibling_corner	TOP_RIGHT
+            pin_corner_to_sibling	CENTER
+            pin_to_sibling_corner	CENTER
         }
 
 
@@ -135,9 +263,9 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
         {
             ControlName				RuiButton
             classname               "MenuButton"
-            wide					160
-            tall					365
-            xpos                    48
+            wide					325
+            tall					560
+            xpos                    15
             zpos                    10
             rui                     "ui/gamemode_select_v2_button.rpak"
             labelText               ""
@@ -149,8 +277,8 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
             navRight                GameModeButton2
 
             pin_to_sibling			GameModeButton0
-            pin_corner_to_sibling	TOP_LEFT
-            pin_to_sibling_corner	TOP_RIGHT
+            pin_corner_to_sibling	LEFT
+            pin_to_sibling_corner	RIGHT
         }
 
 
@@ -158,9 +286,9 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
         {
             ControlName				RuiButton
             classname               "MenuButton"
-            wide					365
-            tall					365
-            xpos                    48
+            wide					325
+            tall					560
+            xpos                    15
             zpos                    10
             rui                     "ui/gamemode_select_v2_button.rpak"
             labelText               ""
@@ -172,8 +300,8 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
             navRight                GameModeButton3
 
             pin_to_sibling			GameModeButton1
-            pin_corner_to_sibling	TOP_LEFT
-            pin_to_sibling_corner	TOP_RIGHT
+            pin_corner_to_sibling	LEFT
+            pin_to_sibling_corner	RIGHT
         }
 
 
@@ -181,9 +309,9 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
         {
             ControlName				RuiButton
             classname               "MenuButton"
-            wide					365
-            tall					365
-            xpos                    48
+            wide					325
+            tall					560
+            xpos                    15
             zpos                    10
             rui                     "ui/gamemode_select_v2_button.rpak"
             labelText               ""
@@ -195,8 +323,8 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
             navRight                GameModeButton4
 
             pin_to_sibling			GameModeButton2
-            pin_corner_to_sibling	TOP_LEFT
-            pin_to_sibling_corner	TOP_RIGHT
+            pin_corner_to_sibling	LEFT
+            pin_to_sibling_corner	RIGHT
         }
 
 
@@ -204,9 +332,9 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
         {
             ControlName				RuiButton
             classname               "MenuButton"
-            wide					365
-            tall					365
-            xpos                    48
+            wide					325
+            tall					560
+            xpos                    15
             zpos                    10
             rui                     "ui/gamemode_select_v2_button.rpak"
             labelText               ""
@@ -217,8 +345,8 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
             navLeft                 GameModeButton3
 
             pin_to_sibling			GameModeButton3
-            pin_corner_to_sibling	TOP_LEFT
-            pin_to_sibling_corner	TOP_RIGHT
+            pin_corner_to_sibling	LEFT
+            pin_to_sibling_corner	RIGHT
         }
 
 		FooterButtons

@@ -57,6 +57,9 @@ void function NewsItem_Activated(var button)
 
     file.activePageIndex = id
     UpdatePageRui( file.activePageIndex )
+
+    Hud_SetSelected( button, true )
+	Hud_SetFocused( button )
 }
 
 void function Page_NavRight(var button)
