@@ -160,13 +160,35 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
             sound_accept            "UI_Menu_SelectMode_Close"
         }
 
+        "QuickPlayText"
+		{
+			"ControlName"			"Label"
+			"xpos"                  "0"
+			"ypos"					"10"
+			"auto_wide_tocontents"	"1"
+			"tall"					"30"
+			"visible"				"1"
+			"wrap"					"0"
+			"fontHeight"			"30"
+			"zpos"					"5"
+			"textAlignment"			"north-west"
+			"labelText"				"Quick Play"
+			"font"					"TitleBoldFont"
+			"allcaps"				"1"
+			"fgcolor_override"		"200 200 200 255"
+
+			"pin_to_sibling"		"FiringRangeButton"
+			"pin_corner_to_sibling"	"BOTTOM"
+			"pin_to_sibling_corner"	"TOP"
+		}
+
         FiringRangeButton
         {
             ControlName				RuiButton
             classname               "MenuButton"
             wide					280
             tall					120
-            ypos                    -125
+            ypos                    -150
             xpos                    -120
             zpos                    10
             rui                     "ui/gamemode_select_v2_button.rpak"
@@ -185,8 +207,111 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
             }
 
             pin_to_sibling			ScreenFrame
-            pin_corner_to_sibling	ROP_LEFT
-            pin_to_sibling_corner	ROP_LEFT
+            pin_corner_to_sibling	TOP_LEFT
+            pin_to_sibling_corner	TOP_LEFT
+        }
+
+        "TopServersText"
+		{
+			"ControlName"			"Label"
+			"xpos"                  "0"
+			"ypos"					"10"
+			"auto_wide_tocontents"	"1"
+			"tall"					"30"
+			"visible"				"1"
+			"wrap"					"0"
+			"fontHeight"			"30"
+			"zpos"					"5"
+			"textAlignment"			"north-west"
+			"labelText"				"Top Servers"
+			"font"					"TitleBoldFont"
+			"allcaps"				"1"
+			"fgcolor_override"		"200 200 200 255"
+
+			"pin_to_sibling"		"TopServerButton1"
+			"pin_corner_to_sibling"	"BOTTOM"
+			"pin_to_sibling_corner"	"TOP"
+		}
+
+        TopServerButton0
+        {
+            ControlName				RuiButton
+            classname               "MenuButton"
+            wide					260
+            tall					120
+            ypos                    -150
+            xpos                    -120
+            zpos                    10
+            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
+            labelText               ""
+            visible					1
+            tabPosition             1
+            cursorVelocityModifier  0.7
+            sound_accept            "UI_Menu_GameMode_Select"
+            "scriptID"					"2"
+
+            ruiArgs
+            {
+                lockIconEnabled 0
+            }
+
+            pin_to_sibling			ScreenFrame
+            pin_corner_to_sibling	TOP_RIGHT
+            pin_to_sibling_corner	TOP_RIGHT
+        }
+
+        TopServerButton1
+        {
+            ControlName				RuiButton
+            classname               "MenuButton"
+            wide					260
+            tall					120
+            ypos                    0
+            xpos                    10
+            zpos                    10
+            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
+            labelText               ""
+            visible					1
+            tabPosition             1
+            cursorVelocityModifier  0.7
+            sound_accept            "UI_Menu_GameMode_Select"
+            "scriptID"					"1"
+
+            ruiArgs
+            {
+                lockIconEnabled 0
+            }
+
+            pin_to_sibling			TopServerButton0
+            pin_corner_to_sibling	RIGHT
+            pin_to_sibling_corner	LEFT
+        }
+
+        TopServerButton2
+        {
+            ControlName				RuiButton
+            classname               "MenuButton"
+            wide					260
+            tall					120
+            ypos                    0
+            xpos                    10
+            zpos                    10
+            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
+            labelText               ""
+            visible					1
+            tabPosition             1
+            cursorVelocityModifier  0.7
+            sound_accept            "UI_Menu_GameMode_Select"
+            "scriptID"					"0"
+
+            ruiArgs
+            {
+                lockIconEnabled 0
+            }
+
+            pin_to_sibling			TopServerButton1
+            pin_corner_to_sibling	RIGHT
+            pin_to_sibling_corner	LEFT
         }
 
 		GameModeSelectAnchor
@@ -216,7 +341,7 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
 			"fontHeight"			"30"
 			"zpos"					"5"
 			"textAlignment"			"north-west"
-			"labelText"				"Server Quick Join"
+			"labelText"				"Quick Join"
 			"font"					"TitleBoldFont"
 			"allcaps"				"1"
 			"fgcolor_override"		"200 200 200 255"
@@ -241,6 +366,7 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
             tabPosition             1
             cursorVelocityModifier  0.7
             sound_accept            "UI_Menu_GameMode_Select"
+            "scriptID"					"0"
 
             ruiArgs
             {
@@ -272,6 +398,7 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
             visible					1
             cursorVelocityModifier  0.7
             sound_accept            "UI_Menu_GameMode_Select"
+            "scriptID"					"1"
 
             navLeft                 GameModeButton0
             navRight                GameModeButton2
@@ -295,6 +422,7 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
             visible					1
             cursorVelocityModifier  0.7
             sound_accept            "UI_Menu_GameMode_Select"
+            "scriptID"					"2"
 
             navLeft                 GameModeButton1
             navRight                GameModeButton3
@@ -318,6 +446,7 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
             visible					1
             cursorVelocityModifier  0.7
             sound_accept            "UI_Menu_GameMode_Select"
+            "scriptID"					"3"
 
             navLeft                 GameModeButton2
             navRight                GameModeButton4
@@ -341,6 +470,7 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
             visible					1
             cursorVelocityModifier  0.7
             sound_accept            "UI_Menu_GameMode_Select"
+            "scriptID"					"4"
 
             navLeft                 GameModeButton3
 

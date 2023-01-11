@@ -41,7 +41,6 @@ void function InitR5RNews( var newMenuArg ) //
 	    Hud_AddEventHandler( button, UIE_CLICK, NewsItem_Activated )
     }
 
-	SetDialog( menu, true )
 	SetGamepadCursorEnabled( menu, false )
 
 	AddMenuEventHandler( menu, eUIEvent.MENU_OPEN, PromoDialog_OnOpen )

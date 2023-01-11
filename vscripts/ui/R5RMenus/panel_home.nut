@@ -29,6 +29,22 @@ struct PromoItem
 	string promoText2
 }
 
+global enum JoinType
+{
+    TopServerJoin = 0,
+    QuickPlay = 1,
+    QuickServerJoin = 2,
+    None = 3
+}
+
+struct
+{
+    int quickPlayType = JoinType.None
+    string TopServerSelectedName = ""
+    int TopServerSelectedID = -1
+    string TopServerMapName = ""
+} quickplay
+
 struct
 {
 	var menu
@@ -38,6 +54,8 @@ struct
 	bool foundserver = false
 	bool noservers = false
 	bool usercancled = false
+
+	bool firststart = false
 
 	bool navInputCallbacksRegistered = false
 	
@@ -142,6 +160,13 @@ void function Play_SetupUI()
 	SetPromoPage()
 	if(promo.shouldAutoAdvance)
 		thread AutoAdvancePages()
+
+	if(!file.firststart)
+	{
+		g_SelectedPlaylist = "Random Server"
+		R5RPlay_SetSelectedPlaylist(JoinType.QuickServerJoin)
+		file.firststart = true
+	}
 }
 
 void function GamemodeSelect_OnActivate(var button)
@@ -163,12 +188,42 @@ void function NewsPressed(var button)
 // Quick Play
 // ====================================================================================================
 
-void function R5RPlay_SetSelectedPlaylist(string playlist, asset img)
+void function R5RPlay_SetSelectedPlaylist(int quickPlayType)
 {
-	RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeNameText", playlist )
-	RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Party not ready" )
-	RuiSetBool( Hud_GetRui( file.gamemodeSelectV2Button ), "alwaysShowDesc", true )
-	RuiSetImage( Hud_GetRui( file.gamemodeSelectV2Button ), "modeImage", img )
+	if(quickPlayType == JoinType.TopServerJoin)
+	{
+		quickplay.quickPlayType = JoinType.TopServerJoin
+
+		string servername = g_SelectedTopServer.svServerName
+		if(g_SelectedTopServer.svServerName.len() > 30)
+			servername = g_SelectedTopServer.svServerName.slice(0, 30) + "..."
+
+		RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeNameText", servername )
+		RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Party not ready" )
+		RuiSetBool( Hud_GetRui( file.gamemodeSelectV2Button ), "alwaysShowDesc", true )
+		RuiSetImage( Hud_GetRui( file.gamemodeSelectV2Button ), "modeImage", GetUIMapAsset(g_SelectedTopServer.svMapName ) )
+	}
+	else if(quickPlayType == JoinType.QuickServerJoin)
+	{
+		quickplay.quickPlayType = JoinType.QuickServerJoin
+
+		RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeNameText", g_SelectedPlaylist )
+		RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Party not ready" )
+		RuiSetBool( Hud_GetRui( file.gamemodeSelectV2Button ), "alwaysShowDesc", true )
+		RuiSetImage( Hud_GetRui( file.gamemodeSelectV2Button ), "modeImage", $"rui/menu/gamemode/play_apex" )
+
+		if(g_SelectedPlaylist == "Random Server")
+			RuiSetImage( Hud_GetRui( file.gamemodeSelectV2Button ), "modeImage", $"rui/menu/gamemode/ranked_1" )
+	}
+	else if(quickPlayType == JoinType.QuickPlay)
+	{
+		quickplay.quickPlayType = JoinType.QuickPlay
+
+		RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeNameText", g_SelectedQuickPlay )
+		RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Party not ready" )
+		RuiSetBool( Hud_GetRui( file.gamemodeSelectV2Button ), "alwaysShowDesc", true )
+		RuiSetImage( Hud_GetRui( file.gamemodeSelectV2Button ), "modeImage", g_SelectedQuickPlayImage )
+	}
 }
 
 void function ReadyButton_OnActivate(var button)
@@ -181,7 +236,143 @@ void function ReadyButton_OnActivate(var button)
 	file.searching = true
 	EmitUISound( "UI_Menu_ReadyUp_1P" )
 	RuiSetBool( Hud_GetRui( Hud_GetChild( file.panel, "SelfButton" ) ), "isReady", true )
-	thread StartMatchFinding( button )
+
+	switch(quickplay.quickPlayType)
+	{
+		case JoinType.TopServerJoin:
+			thread JoinTopServer( button )
+			break;
+		case JoinType.QuickServerJoin:
+			thread StartMatchFinding( button )
+			break;
+		case JoinType.QuickPlay:
+			thread StartFiringRange( button )
+			break;
+	}
+}
+
+void function StartFiringRange(var button)
+{
+	HudElem_SetRuiArg( button, "buttonText", Localize( "#CANCEL" ) )
+
+	bool found = false
+	float timewaited = 0.0
+	int i = 0;
+	while(!found)
+	{
+		if(timewaited > 4.0)
+		{
+			found = true
+			continue
+		}
+
+		if(file.usercancled) {
+			found = true
+			continue
+		}
+
+		switch(i)
+		{
+			case 0:
+				RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Creating." )
+				break;
+			case 1:
+				RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Creating.." )
+				break;
+			case 2:
+				RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Creating..." )
+				break;
+		}
+
+		i++
+		if(i > 2)
+			i = 0
+		
+		wait 0.5
+		timewaited += 0.5
+	}
+
+	if(!file.usercancled)
+	{
+		EmitUISound( "UI_Menu_Apex_Launch" )
+		RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Starting Match" )
+		wait 2
+		CreateServer("Firing Range", "", "mp_rr_canyonlands_staging", "survival_firingrange", eServerVisibility.OFFLINE)
+		RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Party not ready" )
+		RuiSetBool( Hud_GetRui( Hud_GetChild( file.panel, "SelfButton" ) ), "isReady", false )
+		HudElem_SetRuiArg( button, "buttonText", Localize( "#READY" ) )
+		return
+	}
+	else
+	{
+		EmitUISound( "UI_Menu_Deny" )
+		file.usercancled = false
+		RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Party not ready" )
+		RuiSetBool( Hud_GetRui( Hud_GetChild( file.panel, "SelfButton" ) ), "isReady", false )
+		HudElem_SetRuiArg( button, "buttonText", Localize( "#READY" ) )
+	}
+}
+
+void function JoinTopServer(var button)
+{
+	HudElem_SetRuiArg( button, "buttonText", Localize( "#CANCEL" ) )
+
+	bool found = false
+	float timewaited = 0.0
+	int i = 0;
+	while(!found)
+	{
+		if(timewaited > 4.0)
+		{
+			found = true
+			continue
+		}
+
+		if(file.usercancled) {
+			found = true
+			continue
+		}
+
+		switch(i)
+		{
+			case 0:
+				RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Connecting." )
+				break;
+			case 1:
+				RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Connecting.." )
+				break;
+			case 2:
+				RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Connecting..." )
+				break;
+		}
+
+		i++
+		if(i > 2)
+			i = 0
+		
+		wait 0.5
+		timewaited += 0.5
+	}
+
+	if(!file.usercancled)
+	{
+		EmitUISound( "UI_Menu_Apex_Launch" )
+		RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Joining Match" )
+		wait 2
+		SetEncKeyAndConnect(g_SelectedTopServer.svServerID)
+		RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Party not ready" )
+		RuiSetBool( Hud_GetRui( Hud_GetChild( file.panel, "SelfButton" ) ), "isReady", false )
+		HudElem_SetRuiArg( button, "buttonText", Localize( "#READY" ) )
+		return
+	}
+	else
+	{
+		EmitUISound( "UI_Menu_Deny" )
+		file.usercancled = false
+		RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Party not ready" )
+		RuiSetBool( Hud_GetRui( Hud_GetChild( file.panel, "SelfButton" ) ), "isReady", false )
+		HudElem_SetRuiArg( button, "buttonText", Localize( "#READY" ) )
+	}
 }
 
 void function StartMatchFinding(var button)
@@ -251,6 +442,7 @@ void function UpdateQuickJoinButtons(var button)
 
 void function FindServer(bool refresh = false)
 {
+	file.selectedplaylist = g_SelectedPlaylist
 	wait 0.5
 
 	if(!file.searching)
@@ -290,28 +482,11 @@ void function FindServer(bool refresh = false)
 		if ( file.m_vServerList[i].svCurrentPlayers == file.m_vServerList[i].svMaxPlayers )
 			continue;
 
-		if(file.m_vServerList[i].svPlaylist != file.selectedplaylist && file.selectedplaylist != "Random")
+		if(file.m_vServerList[i].svPlaylist != file.selectedplaylist && file.selectedplaylist != "Random Server")
 			continue;
 
 		// Server fits our requirements, add it to the list
 		file.m_vFilteredServerList.append(file.m_vServerList[i])
-	}
-
-	if(file.m_vFilteredServerList.len() == 0)
-	{
-		//then do all servers if none are found
-		file.m_vFilteredServerList.clear()
-		for ( int i = 0, j = file.m_vServerList.len(); i < j; i++ )
-		{
-			if ( file.m_vServerList[i].svCurrentPlayers == file.m_vServerList[i].svMaxPlayers )
-				continue;
-
-			if(file.m_vServerList[i].svPlaylist != file.selectedplaylist && file.selectedplaylist != "Random")
-				continue;
-
-			// Server fits our requirements, add it to the list
-			file.m_vFilteredServerList.append(file.m_vServerList[i])
-		}
 	}
 
 	if(file.m_vFilteredServerList.len() == 0) {

@@ -12,6 +12,7 @@ global function ServerBrowser_UpdateFilterLists
 global function MS_GetPlayerCount
 global function MS_GetServerCount
 global function Servers_GetActivePlaylists
+global function Servers_GetCurrentServerListing
 
 //Used for max items for page
 //Changing this requires a bit of work to get more to show correctly
@@ -42,7 +43,7 @@ struct SelectedServerInfo
 }
 
 //Struct for server listing
-struct ServerListing
+global struct ServerListing
 {
 	int	svServerID
 	string svServerName
@@ -76,6 +77,8 @@ struct
 	array<ServerListing> m_vServerList
 	array<ServerListing> m_vFilteredServerList
 } file
+
+global array<ServerListing> global_m_vServerList
 
 void function InitR5RConnectingPanel( var panel )
 {
@@ -618,4 +621,12 @@ array<string> function Servers_GetActivePlaylists()
 	}
 
 	return playlists
+}
+
+void function Servers_GetCurrentServerListing()
+{
+	if(file.m_vServerList.len() == 0)
+		ServerBrowser_RefreshServerListing()
+
+	global_m_vServerList = file.m_vServerList
 }

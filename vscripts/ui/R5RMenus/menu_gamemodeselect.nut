@@ -1,14 +1,40 @@
 global function InitR5RGamemodeSelectDialog
 
+struct TopServer {
+	int	svServerID
+	string svServerName
+	string svMapName
+	string svPlaylist
+	string svDescription
+	int svMaxPlayers
+	int svCurrentPlayers
+}
+
+global struct SelectedTopServer {
+	int	svServerID
+	string svServerName
+	string svMapName
+	string svPlaylist
+	string svDescription
+	int svMaxPlayers
+	int svCurrentPlayers
+}
+
 struct {
 	var menu
 	var closeButton
-	var selectionPanel
 
-	array<var>         modeSelectButtonList
-	table<var, string> selectButtonPlaylistNameMap
-    table<var, asset> selectButtonPlaylistAssetMap
+	array<TopServer> m_vTopServers
+
+	int pageoffset = 0
+
+	array<string> m_vPlaylists
 } file
+
+global SelectedTopServer g_SelectedTopServer
+global string g_SelectedPlaylist
+global string g_SelectedQuickPlay
+global asset g_SelectedQuickPlayImage
 
 const int MAX_DISPLAYED_MODES = 5
 
@@ -34,11 +60,34 @@ void function InitR5RGamemodeSelectDialog( var newMenuArg ) //
 	var menu = GetMenu( "R5RGamemodeSelectV2Dialog" )
 	file.menu = menu
 
-	SetDialog( menu, true )
-	SetClearBlur( menu, false )
-
 	var prevPageButton = Hud_GetChild( menu, "PrevPageButton" )
 	HudElem_SetRuiArg( prevPageButton, "flipHorizontal", true )
+
+	var topserver0 = Hud_GetChild( menu, "TopServerButton0" )
+	var topserver1 = Hud_GetChild( menu, "TopServerButton1" )
+	var topserver2 = Hud_GetChild( menu, "TopServerButton2" )
+	Hud_AddEventHandler( topserver0, UIE_CLICK, TopServerButton_Activated )
+	Hud_AddEventHandler( topserver1, UIE_CLICK, TopServerButton_Activated )
+	Hud_AddEventHandler( topserver2, UIE_CLICK, TopServerButton_Activated )
+
+	var nextpage = Hud_GetChild( menu, "NextPageButton" )
+	var prevpage = Hud_GetChild( menu, "PrevPageButton" )
+	Hud_AddEventHandler( nextpage, UIE_CLICK, NextPage_Activated )
+	Hud_AddEventHandler( prevpage, UIE_CLICK, PrevPage_Activated )
+
+	var playlistbtn0 = Hud_GetChild( menu, "GameModeButton0" )
+	var playlistbtn1 = Hud_GetChild( menu, "GameModeButton1" )
+	var playlistbtn2 = Hud_GetChild( menu, "GameModeButton2" )
+	var playlistbtn3 = Hud_GetChild( menu, "GameModeButton3" )
+	var playlistbtn4 = Hud_GetChild( menu, "GameModeButton4" )
+	Hud_AddEventHandler( playlistbtn0, UIE_CLICK, PlaylistButton_Activated )
+	Hud_AddEventHandler( playlistbtn1, UIE_CLICK, PlaylistButton_Activated )
+	Hud_AddEventHandler( playlistbtn2, UIE_CLICK, PlaylistButton_Activated )
+	Hud_AddEventHandler( playlistbtn3, UIE_CLICK, PlaylistButton_Activated )
+	Hud_AddEventHandler( playlistbtn4, UIE_CLICK, PlaylistButton_Activated )
+
+	var firingrange = Hud_GetChild( menu, "FiringRangeButton" )
+	Hud_AddEventHandler( firingrange, UIE_CLICK, FiringRange_Activated )
 
 	AddMenuEventHandler( menu, eUIEvent.MENU_OPEN, OnOpenModeSelectDialog )
 	AddMenuEventHandler( menu, eUIEvent.MENU_CLOSE, OnCloseModeSelectDialog )
@@ -50,9 +99,56 @@ void function InitR5RGamemodeSelectDialog( var newMenuArg ) //
 	AddMenuFooterOption( menu, LEFT, BUTTON_A, true, "#A_BUTTON_SELECT" )
 }
 
+void function NextPage_Activated(var button)
+{
+	file.pageoffset += 1
+	SetupPlaylistQuickSearch()
+}
+
+void function PrevPage_Activated(var button)
+{
+	file.pageoffset -= 1
+	SetupPlaylistQuickSearch()
+}
+
+void function FiringRange_Activated(var button)
+{
+	g_SelectedQuickPlay = "Firing Range"
+	g_SelectedQuickPlayImage = $"rui/menu/gamemode/firing_range"
+	R5RPlay_SetSelectedPlaylist(JoinType.QuickPlay)
+	CloseActiveMenu()
+}
+
+void function PlaylistButton_Activated(var button)
+{
+	int id = Hud_GetScriptID( button ).tointeger()
+	g_SelectedPlaylist = file.m_vPlaylists[id + file.pageoffset]
+	R5RPlay_SetSelectedPlaylist(JoinType.QuickServerJoin)
+	CloseActiveMenu()
+}
+
+void function TopServerButton_Activated(var button)
+{
+	int id = Hud_GetScriptID( button ).tointeger()
+
+	g_SelectedTopServer.svServerID = file.m_vTopServers[id].svServerID
+	g_SelectedTopServer.svServerName = file.m_vTopServers[id].svServerName
+	g_SelectedTopServer.svMapName = file.m_vTopServers[id].svMapName
+	g_SelectedTopServer.svPlaylist = file.m_vTopServers[id].svPlaylist
+	g_SelectedTopServer.svDescription = file.m_vTopServers[id].svDescription
+	g_SelectedTopServer.svMaxPlayers = file.m_vTopServers[id].svMaxPlayers
+	g_SelectedTopServer.svCurrentPlayers = file.m_vTopServers[id].svCurrentPlayers
+
+	R5RPlay_SetSelectedPlaylist(JoinType.TopServerJoin)
+
+	CloseActiveMenu()
+}
+
 void function OnOpenModeSelectDialog()
 {
-	
+	Servers_GetCurrentServerListing()
+	SetupTopServers()
+	SetupPlaylistQuickSearch()
 }
 
 void function OnCloseModeSelectDialog()
@@ -62,5 +158,126 @@ void function OnCloseModeSelectDialog()
 
 void function OnCloseButton_Activate( var button )
 {
-	CloseAllDialogs()
+	//CloseActiveMenu()
+}
+
+void function SetupPlaylistQuickSearch()
+{
+	array<string> playlists = Servers_GetActivePlaylists()
+	playlists.insert(0, "Random Server")
+
+	file.m_vPlaylists = playlists
+
+	if( file.pageoffset != 0 && playlists.len() > 4)
+	{
+		Hud_Show( Hud_GetChild( file.menu, "PrevPageButton" ) )
+	}
+	else
+	{
+		Hud_Hide( Hud_GetChild( file.menu, "PrevPageButton" ) )
+	}
+
+	if( file.pageoffset < playlists.len() - 5 && playlists.len() > 4)
+	{
+		Hud_Show( Hud_GetChild( file.menu, "NextPageButton" ) )
+	}
+	else
+	{
+		Hud_Hide( Hud_GetChild( file.menu, "NextPageButton" ) )
+	}
+
+	int offset = 0
+    //Hide all items
+    for(int j = 0; j < MAX_DISPLAYED_MODES; j++)
+    {
+        Hud_Hide( Hud_GetChild( file.menu, "GameModeButton" + j ) )
+    }
+
+    //Show only the ones we need
+    for(int j = 0; j < playlists.len() + 1; j++)
+    {
+		if( j > playlists.len() - 1 )
+			break
+
+		if( j > MAX_DISPLAYED_MODES - 1 )
+			break
+		
+        Hud_Show( Hud_GetChild( file.menu, "GameModeButton" + j ) )
+
+		if(j != 0)
+        	offset -= (Hud_GetWidth(Hud_GetChild( file.menu, "GameModeButton0" ))/2) + 5
+    }
+
+    Hud_SetX( Hud_GetChild( file.menu, "GameModeButton0" ), 0 )
+    if( playlists.len() > 0 )
+        Hud_SetX( Hud_GetChild( file.menu, "GameModeButton0" ), offset )
+
+	int currentitem = 0
+	for(int i = 0; i < MAX_DISPLAYED_MODES; i++)
+	{
+		if(currentitem + file.pageoffset >= playlists.len())
+			break
+		
+		if(playlists[currentitem + file.pageoffset] == "Random Server")
+		{
+			RuiSetString( Hud_GetRui( Hud_GetChild( file.menu, "GameModeButton" + i ) ), "modeNameText", "Random Server" )
+			RuiSetString( Hud_GetRui( Hud_GetChild( file.menu, "GameModeButton" + i ) ), "modeDescText", "Quickly Join any kind of server" )
+			RuiSetImage( Hud_GetRui( Hud_GetChild( file.menu, "GameModeButton" + i ) ), "modeImage", $"rui/menu/gamemode/ranked_1" )
+		}
+		else
+		{
+			RuiSetString( Hud_GetRui( Hud_GetChild( file.menu, "GameModeButton" + i ) ), "modeNameText", playlists[currentitem + file.pageoffset] )
+			RuiSetString( Hud_GetRui( Hud_GetChild( file.menu, "GameModeButton" + i ) ), "modeDescText", "" )
+			RuiSetImage( Hud_GetRui( Hud_GetChild( file.menu, "GameModeButton" + i ) ), "modeImage", $"rui/menu/gamemode/play_apex" )
+		}
+	    RuiSetBool( Hud_GetRui( Hud_GetChild( file.menu, "GameModeButton" + i )), "alwaysShowDesc", false )
+		currentitem++
+	}
+}
+
+void function SetupTopServers()
+{
+	if(global_m_vServerList.len() < 3)
+		return
+		
+	file.m_vTopServers.clear()
+	for(int i = 0; i < 3; i++)
+	{
+		TopServer server
+		server.svServerID = global_m_vServerList[i].svServerID
+		server.svServerName = global_m_vServerList[i].svServerName
+		server.svMapName = global_m_vServerList[i].svMapName
+		server.svPlaylist = global_m_vServerList[i].svPlaylist
+		server.svDescription = global_m_vServerList[i].svDescription
+		server.svMaxPlayers = global_m_vServerList[i].svMaxPlayers
+		server.svCurrentPlayers = global_m_vServerList[i].svCurrentPlayers
+		file.m_vTopServers.append(server)
+	}
+
+	string servername1 = file.m_vTopServers[0].svServerName
+	if(file.m_vTopServers[0].svServerName.len() > 30)
+		servername1 = file.m_vTopServers[0].svServerName.slice(0, 30) + "..."
+	var TopServer1 = Hud_GetChild( file.menu, "TopServerButton2" )
+	RuiSetString( Hud_GetRui( TopServer1 ), "modeNameText", servername1 )
+	RuiSetString( Hud_GetRui( TopServer1 ), "modeDescText", "Players " + file.m_vTopServers[0].svCurrentPlayers + "/" + file.m_vTopServers[0].svMaxPlayers )
+	RuiSetBool( Hud_GetRui( TopServer1 ), "alwaysShowDesc", false )
+	RuiSetImage( Hud_GetRui( TopServer1 ), "modeImage", GetUIMapAsset(file.m_vTopServers[0].svMapName ) )
+
+	string servername2 = file.m_vTopServers[1].svServerName
+	if(file.m_vTopServers[1].svServerName.len() > 30)
+		servername2 = file.m_vTopServers[1].svServerName.slice(0, 30) + "..."
+	var TopServer2 = Hud_GetChild( file.menu, "TopServerButton1" )
+	RuiSetString( Hud_GetRui( TopServer2 ), "modeNameText", servername2 )
+	RuiSetString( Hud_GetRui( TopServer2 ), "modeDescText", "Players " + file.m_vTopServers[1].svCurrentPlayers + "/" + file.m_vTopServers[1].svMaxPlayers )
+	RuiSetBool( Hud_GetRui( TopServer2 ), "alwaysShowDesc", false )
+	RuiSetImage( Hud_GetRui( TopServer2 ), "modeImage", GetUIMapAsset(file.m_vTopServers[1].svMapName ) )
+
+	string servername3 = file.m_vTopServers[2].svServerName
+	if(file.m_vTopServers[2].svServerName.len() > 30)
+		servername3 = file.m_vTopServers[2].svServerName.slice(0, 30) + "..."
+	var TopServer3 = Hud_GetChild( file.menu, "TopServerButton0" )
+	RuiSetString( Hud_GetRui( TopServer3 ), "modeNameText", servername3 )
+	RuiSetString( Hud_GetRui( TopServer3 ), "modeDescText", "Players " + file.m_vTopServers[2].svCurrentPlayers + "/" + file.m_vTopServers[2].svMaxPlayers )
+	RuiSetBool( Hud_GetRui( TopServer3 ), "alwaysShowDesc", false )
+	RuiSetImage( Hud_GetRui( TopServer3 ), "modeImage", GetUIMapAsset(file.m_vTopServers[2].svMapName ) )
 }
