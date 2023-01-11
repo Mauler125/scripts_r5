@@ -22,6 +22,13 @@ struct SelectedServerInfo
 	string svDescription = ""
 }
 
+struct PromoItem
+{
+	asset promoImage
+	string promoText1
+	string promoText2
+}
+
 struct
 {
 	var menu
@@ -41,6 +48,8 @@ struct
 	string selectedplaylist = "Random"
 
 	var gamemodeSelectV2Button
+
+	array<PromoItem> promoItems
 } file
 
 struct
@@ -50,33 +59,12 @@ struct
 	bool shouldAutoAdvance = true
 } promo
 
+const MAX_PROMO_ITEMS = 5
+
 global table<int, string> SearchStages = {
 	[ 0 ] = "Searching.",
 	[ 1 ] = "Searching..",
 	[ 2 ] = "Searching..."
-}
-
-
-//THESE TABLES ARE TEMPORARY, THEY WILL BE REPLACED
-global table<int, asset> PromoAssets = {
-	[ 0 ] = $"rui/promo/S3_General_1",
-	[ 1 ] = $"rui/promo/S3_General_2",
-	[ 2 ] = $"rui/promo/S3_General_3",
-	[ 3 ] = $"rui/promo/S3_General_4"
-}
-
-global table<int, string> PromoText1 = {
-	[ 0 ] = "discord.gg/r5reloaded",
-	[ 1 ] = "Temp",
-	[ 2 ] = "Temp",
-	[ 3 ] = "Temp"
-}
-
-global table<int, string> PromoText2 = {
-	[ 0 ] = "Join us on discord!",
-	[ 1 ] = "Temp",
-	[ 2 ] = "Temp",
-	[ 3 ] = "Temp"
 }
 
 void function InitR5RHomePanel( var panel )
@@ -120,14 +108,9 @@ void function InitR5RHomePanel( var panel )
 	HudElem_SetRuiArg( readyButton, "isReady", false )
 	HudElem_SetRuiArg( readyButton, "buttonText", Localize( "#READY" ) )
 
-	var miniPromo = Hud_GetChild( panel, "MiniPromo" )
-	RuiSetInt( Hud_GetRui( miniPromo ), "pageCount", promo.pageCount + 1 )
-
+	var miniPromo = Hud_GetChild( file.panel, "MiniPromo" )
 	Hud_AddEventHandler( miniPromo, UIE_GET_FOCUS, MiniPromoButton_OnGetFocus )
 	Hud_AddEventHandler( miniPromo, UIE_LOSE_FOCUS, MiniPromoButton_OnLoseFocus )
-
-	SetPromoPage(PromoText1[promo.currentPage], PromoText2[promo.currentPage], PromoAssets[promo.currentPage], true, promo.currentPage)
-	thread AutoAdvancePages()
 }
 
 void function Play_SetupUI()
@@ -153,6 +136,12 @@ void function Play_SetupUI()
 	Hud_SetToolTipData( serversButton, serversToolTip )
 	HudElem_SetRuiArg( serversButton, "buttonText", "" + MS_GetServerCount() )
 	Hud_SetWidth( serversButton, Hud_GetBaseWidth( serversButton ) * 2 )
+
+	GetR5RPromos()
+
+	SetPromoPage()
+	if(promo.shouldAutoAdvance)
+		thread AutoAdvancePages()
 }
 
 void function GamemodeSelect_OnActivate(var button)
@@ -381,18 +370,18 @@ void function ChangePromoPageToLeft()
 {
 	promo.currentPage--
 	if(promo.currentPage < 0)
-		promo.currentPage = promo.pageCount
+		promo.currentPage = file.promoItems.len() - 1
 	
-	SetPromoPage(PromoText1[promo.currentPage], PromoText2[promo.currentPage], PromoAssets[promo.currentPage], true, promo.currentPage)
+	SetPromoPage()
 }
 
 void function ChangePromoPageToRight()
 {
 	promo.currentPage++
-	if(promo.currentPage > promo.pageCount)
+	if(promo.currentPage > file.promoItems.len() - 1)
 		promo.currentPage = 0
 	
-	SetPromoPage(PromoText1[promo.currentPage], PromoText2[promo.currentPage], PromoAssets[promo.currentPage], true, promo.currentPage)
+	SetPromoPage()
 }
 
 void function AutoAdvancePages()
@@ -414,12 +403,41 @@ void function AutoAdvancePages()
 	}
 }
 
-void function SetPromoPage(string Text1, string Text2, asset ImageAsset, bool Format, int PageIndex)
+void function SetPromoPage()
 {
+	if(file.promoItems.len() == 0)
+	{
+		var miniPromo = Hud_GetChild( file.panel, "MiniPromo" )
+		Hud_Hide( miniPromo)
+		return
+	}
+
 	var miniPromo = Hud_GetChild( file.panel, "MiniPromo" )
-	RuiSetString( Hud_GetRui( miniPromo ), "lastText1", Text1 )
-	RuiSetString( Hud_GetRui( miniPromo ), "lastText2", Text2 )
-	RuiSetImage( Hud_GetRui( miniPromo ), "lastImageAsset", ImageAsset )
-	RuiSetBool( Hud_GetRui( miniPromo ), "lastFormat", Format )
-	RuiSetInt( Hud_GetRui( miniPromo ), "activePageIndex", PageIndex )
+	Hud_Show( miniPromo)
+	RuiSetString( Hud_GetRui( miniPromo ), "lastText1", file.promoItems[promo.currentPage].promoText1 )
+	RuiSetString( Hud_GetRui( miniPromo ), "lastText2", file.promoItems[promo.currentPage].promoText2 )
+	RuiSetImage( Hud_GetRui( miniPromo ), "lastImageAsset", file.promoItems[promo.currentPage].promoImage )
+	RuiSetBool( Hud_GetRui( miniPromo ), "lastFormat", true )
+	RuiSetInt( Hud_GetRui( miniPromo ), "activePageIndex", promo.currentPage )
+}
+
+void function GetR5RPromos()
+{
+	//INFO FOR LATER
+    //MAX PAGES = 5
+
+	//TEMPORARY PROMO DATA
+	//WILL BE REPLACED WITH A CALL TO THE PROMO ENDPOINT
+	file.promoItems.clear()
+
+	for(int i = 0; i < MAX_PROMO_ITEMS; i++)
+	{
+		PromoItem item
+		item.promoText1 = "Temp Promo " + (i + 1)
+		item.promoText2 = "Temp Promo " + (i + 1)
+		item.promoImage = GetAssetFromString( $"rui/promo/S3_General_" + (i + 1).tostring() )
+		file.promoItems.append(item)
+	}
+
+	RuiSetInt( Hud_GetRui( Hud_GetChild( file.panel, "MiniPromo" ) ), "pageCount", file.promoItems.len() )
 }
