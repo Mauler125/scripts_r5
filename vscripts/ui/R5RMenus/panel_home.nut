@@ -231,6 +231,7 @@ void function ReadyButton_OnActivate(var button)
 {
 	if(file.searching) {
 		file.usercancled = true
+		file.searching = false
 		return;
 	}
 
