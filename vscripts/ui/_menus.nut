@@ -1540,6 +1540,7 @@ void function InitMenus()
 
 	AddMenu( "R5RNews", $"scripts/resource/ui/menus/R5R/news.res", InitR5RNews )
 	AddMenu( "R5RGamemodeSelectV2Dialog", $"scripts/resource/ui/menus/R5R/gamemode_select.res", InitR5RGamemodeSelectDialog )
+	AddMenu( "R5RCreateMatch", $"scripts/resource/ui/menus/R5R/create_match.res", InitR5RCreateMatch )
 	////////
 
 	//CTF UI

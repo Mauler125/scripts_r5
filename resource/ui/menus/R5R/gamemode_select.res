@@ -265,7 +265,7 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
         TopServerButton0
         {
             ControlName				RuiButton
-            classname               "MenuButton"
+            classname               "TopServerButtons"
             wide					260
             tall					120
             ypos                    -150
@@ -292,7 +292,7 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
         TopServerButton1
         {
             ControlName				RuiButton
-            classname               "MenuButton"
+            classname               "TopServerButtons"
             wide					260
             tall					120
             ypos                    0
@@ -319,7 +319,7 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
         TopServerButton2
         {
             ControlName				RuiButton
-            classname               "MenuButton"
+            classname               "TopServerButtons"
             wide					260
             tall					120
             ypos                    0
@@ -383,7 +383,7 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
         GameModeButton0
         {
             ControlName				RuiButton
-            classname               "MenuButton"
+            classname               "GamemodeButtons"
             wide					325
             tall					560
             ypos                    100
@@ -417,7 +417,7 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
         GameModeButton1
         {
             ControlName				RuiButton
-            classname               "MenuButton"
+            classname               "GamemodeButtons"
             wide					325
             tall					560
             xpos                    15
@@ -441,7 +441,7 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
         GameModeButton2
         {
             ControlName				RuiButton
-            classname               "MenuButton"
+            classname               "GamemodeButtons"
             wide					325
             tall					560
             xpos                    15
@@ -465,7 +465,7 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
         GameModeButton3
         {
             ControlName				RuiButton
-            classname               "MenuButton"
+            classname               "GamemodeButtons"
             wide					325
             tall					560
             xpos                    15
@@ -489,7 +489,7 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
         GameModeButton4
         {
             ControlName				RuiButton
-            classname               "MenuButton"
+            classname               "GamemodeButtons"
             wide					325
             tall					560
             xpos                    15
