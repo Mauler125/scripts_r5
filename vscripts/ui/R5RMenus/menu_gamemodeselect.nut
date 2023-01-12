@@ -239,7 +239,7 @@ void function OnOpenModeSelectDialog()
 
 void function OnCloseModeSelectDialog()
 {
-
+	DiagCloseing()
 }
 
 void function OnCloseButton_Activate( var button )
