@@ -23,6 +23,10 @@ global struct SelectedTopServer {
 struct {
 	var menu
 	var closeButton
+	var freeroam
+
+	bool showfreeroam = false
+	int freeroamscroll = 0
 
 	array<TopServer> m_vTopServers
 
@@ -34,6 +38,7 @@ struct {
 global SelectedTopServer g_SelectedTopServer
 global string g_SelectedPlaylist
 global string g_SelectedQuickPlay
+global string g_SelectedQuickPlayMap
 global asset g_SelectedQuickPlayImage
 
 const int MAX_DISPLAYED_MODES = 5
@@ -89,6 +94,16 @@ void function InitR5RGamemodeSelectDialog( var newMenuArg ) //
 	var firingrange = Hud_GetChild( menu, "FiringRangeButton" )
 	Hud_AddEventHandler( firingrange, UIE_CLICK, FiringRange_Activated )
 
+	var freeroam = Hud_GetChild( menu, "FreeRoamButton" )
+	Hud_AddEventHandler( freeroam, UIE_CLICK, FreeRoam_Activated )
+	
+	array<var> buttons = GetElementsByClassname( menu, "FreeRoamUI" )
+	foreach ( button in buttons )
+	{
+		Hud_Hide( button )
+		Hud_AddEventHandler( button, UIE_CLICK, FreeRoamButton_Activated )
+	}
+
 	AddMenuEventHandler( menu, eUIEvent.MENU_OPEN, OnOpenModeSelectDialog )
 	AddMenuEventHandler( menu, eUIEvent.MENU_CLOSE, OnCloseModeSelectDialog )
 
@@ -97,6 +112,72 @@ void function InitR5RGamemodeSelectDialog( var newMenuArg ) //
 
 	AddMenuFooterOption( menu, LEFT, BUTTON_B, true, "#B_BUTTON_CLOSE", "#CLOSE" )
 	AddMenuFooterOption( menu, LEFT, BUTTON_A, true, "#A_BUTTON_SELECT" )
+}
+
+void function FreeRoam_Activated(var button)
+{
+	array<var> uielems = GetElementsByClassname( file.menu, "FreeRoamUI" )
+
+	if(file.showfreeroam)
+	{
+		foreach ( var uielem in uielems )
+		{
+			Hud_Hide( uielem )
+		}
+
+		RemoveCallback_OnMouseWheelUp( FreeRoam_ScrollUp )
+        RemoveCallback_OnMouseWheelDown( FreeRoam_ScrollDown )
+
+		file.showfreeroam = false
+	}
+	else
+	{
+		foreach ( var uielem in uielems )
+		{
+			Hud_Show( uielem )
+		}
+
+		AddCallback_OnMouseWheelUp( FreeRoam_ScrollUp )
+        AddCallback_OnMouseWheelDown( FreeRoam_ScrollDown )
+
+		file.showfreeroam = true
+	}
+
+	file.freeroamscroll = 0
+}
+
+void function FreeRoam_ScrollUp()
+{
+	if(file.freeroamscroll > 0)
+		file.freeroamscroll -= 1
+
+	SetupFreeRoamButtons()
+}
+
+void function FreeRoam_ScrollDown()
+{
+	array<string> m_vMaps = GetPlaylistMaps("survival_dev")
+	int max = m_vMaps.len()
+
+	if(file.freeroamscroll + 6 < max)
+		file.freeroamscroll += 1
+
+    SetupFreeRoamButtons()
+}
+
+void function FreeRoamButton_Activated(var button)
+{
+	int id = Hud_GetScriptID( button ).tointeger()
+	array<string> m_vMaps = GetPlaylistMaps("survival_dev")
+	g_SelectedQuickPlay = m_vMaps[id + file.freeroamscroll]
+	g_SelectedQuickPlayImage = GetUIMapAsset( g_SelectedQuickPlay )
+
+	g_SelectedQuickPlay = "survival_dev"
+	g_SelectedQuickPlayMap = m_vMaps[id + file.freeroamscroll]
+	g_SelectedQuickPlayImage = GetUIMapAsset( g_SelectedQuickPlayMap )
+	R5RPlay_SetSelectedPlaylist(JoinType.QuickPlay)
+	DiagCloseing()
+	CloseActiveMenu()
 }
 
 void function NextPage_Activated(var button)
@@ -113,9 +194,11 @@ void function PrevPage_Activated(var button)
 
 void function FiringRange_Activated(var button)
 {
-	g_SelectedQuickPlay = "Firing Range"
+	g_SelectedQuickPlay = "survival_firingrange"
+	g_SelectedQuickPlayMap = "mp_rr_canyonlands_staging"
 	g_SelectedQuickPlayImage = $"rui/menu/gamemode/firing_range"
 	R5RPlay_SetSelectedPlaylist(JoinType.QuickPlay)
+	DiagCloseing()
 	CloseActiveMenu()
 }
 
@@ -124,6 +207,7 @@ void function PlaylistButton_Activated(var button)
 	int id = Hud_GetScriptID( button ).tointeger()
 	g_SelectedPlaylist = file.m_vPlaylists[id + file.pageoffset]
 	R5RPlay_SetSelectedPlaylist(JoinType.QuickServerJoin)
+	DiagCloseing()
 	CloseActiveMenu()
 }
 
@@ -141,6 +225,7 @@ void function TopServerButton_Activated(var button)
 
 	R5RPlay_SetSelectedPlaylist(JoinType.TopServerJoin)
 
+	DiagCloseing()
 	CloseActiveMenu()
 }
 
@@ -149,6 +234,7 @@ void function OnOpenModeSelectDialog()
 	Servers_GetCurrentServerListing()
 	SetupTopServers()
 	SetupPlaylistQuickSearch()
+	SetupFreeRoamButtons()
 }
 
 void function OnCloseModeSelectDialog()
@@ -158,7 +244,38 @@ void function OnCloseModeSelectDialog()
 
 void function OnCloseButton_Activate( var button )
 {
-	//CloseActiveMenu()
+	DiagCloseing()
+}
+
+void function DiagCloseing()
+{
+	if(file.showfreeroam)
+	{
+		array<var> uielems = GetElementsByClassname( file.menu, "FreeRoamUI" )
+		foreach ( var uielem in uielems )
+		{
+			Hud_Hide( uielem )
+		}
+
+		RemoveCallback_OnMouseWheelUp( FreeRoam_ScrollUp )
+        RemoveCallback_OnMouseWheelDown( FreeRoam_ScrollDown )
+
+		file.showfreeroam = false
+
+		file.freeroamscroll = 0
+	}
+}
+
+void function SetupFreeRoamButtons()
+{
+	array<string> m_vMaps = GetPlaylistMaps("survival_dev")
+
+	for(int i = 0; i < 6; i++)
+	{
+		RuiSetString( Hud_GetRui( Hud_GetChild( file.menu, "FreeRoamButton" + i ) ), "modeNameText", GetUIMapName(m_vMaps[i + file.freeroamscroll]) )
+		RuiSetString( Hud_GetRui( Hud_GetChild( file.menu, "FreeRoamButton" + i ) ), "modeDescText", "" )
+		RuiSetImage( Hud_GetRui( Hud_GetChild( file.menu, "FreeRoamButton" + i ) ), "modeImage", GetUIMapAsset(m_vMaps[i + file.freeroamscroll]) )
+	}
 }
 
 void function SetupPlaylistQuickSearch()

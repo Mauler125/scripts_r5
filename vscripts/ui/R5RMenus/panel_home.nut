@@ -75,6 +75,7 @@ struct
 	int pageCount = 3
 	int currentPage = 0
 	bool shouldAutoAdvance = true
+	bool IsAutoAdvance = false
 } promo
 
 const MAX_PROMO_ITEMS = 5
@@ -158,7 +159,7 @@ void function Play_SetupUI()
 	GetR5RPromos()
 
 	SetPromoPage()
-	if(promo.shouldAutoAdvance)
+	if(!promo.IsAutoAdvance)
 		thread AutoAdvancePages()
 
 	if(!file.firststart)
@@ -219,7 +220,7 @@ void function R5RPlay_SetSelectedPlaylist(int quickPlayType)
 	{
 		quickplay.quickPlayType = JoinType.QuickPlay
 
-		RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeNameText", g_SelectedQuickPlay )
+		RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeNameText", GetUIMapName(g_SelectedQuickPlayMap) )
 		RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Party not ready" )
 		RuiSetBool( Hud_GetRui( file.gamemodeSelectV2Button ), "alwaysShowDesc", true )
 		RuiSetImage( Hud_GetRui( file.gamemodeSelectV2Button ), "modeImage", g_SelectedQuickPlayImage )
@@ -246,12 +247,12 @@ void function ReadyButton_OnActivate(var button)
 			thread StartMatchFinding( button )
 			break;
 		case JoinType.QuickPlay:
-			thread StartFiringRange( button )
+			thread StartQuickPlay( button )
 			break;
 	}
 }
 
-void function StartFiringRange(var button)
+void function StartQuickPlay(var button)
 {
 	HudElem_SetRuiArg( button, "buttonText", Localize( "#CANCEL" ) )
 
@@ -297,7 +298,7 @@ void function StartFiringRange(var button)
 		EmitUISound( "UI_Menu_Apex_Launch" )
 		RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Starting Match" )
 		wait 2
-		CreateServer("Firing Range", "", "mp_rr_canyonlands_staging", "survival_firingrange", eServerVisibility.OFFLINE)
+		CreateServer(GetUIMapName(g_SelectedQuickPlayMap), "", g_SelectedQuickPlayMap, g_SelectedQuickPlay, eServerVisibility.OFFLINE)
 		RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Party not ready" )
 		RuiSetBool( Hud_GetRui( Hud_GetChild( file.panel, "SelfButton" ) ), "isReady", false )
 		HudElem_SetRuiArg( button, "buttonText", Localize( "#READY" ) )
@@ -538,7 +539,9 @@ void function MiniPromoButton_OnLoseFocus( var button )
 	RemoveCallback_OnMouseWheelDown( ChangePromoPageToRight )
 	file.navInputCallbacksRegistered = false
 	promo.shouldAutoAdvance = true
-	thread AutoAdvancePages()
+
+	if(!promo.IsAutoAdvance)
+		thread AutoAdvancePages()
 }
 
 void function ChangePromoPageToLeft()
@@ -561,6 +564,7 @@ void function ChangePromoPageToRight()
 
 void function AutoAdvancePages()
 {
+	promo.IsAutoAdvance = true
 	int i = 0
 	while(promo.shouldAutoAdvance)
 	{
@@ -576,6 +580,8 @@ void function AutoAdvancePages()
 
 		i++
 	}
+
+	promo.IsAutoAdvance = false
 }
 
 void function SetPromoPage()

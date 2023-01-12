@@ -163,7 +163,7 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
         "QuickPlayText"
 		{
 			"ControlName"			"Label"
-			"xpos"                  "0"
+			"xpos"                  "100"
 			"ypos"					"10"
 			"auto_wide_tocontents"	"1"
 			"tall"					"30"
@@ -191,7 +191,7 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
             ypos                    -150
             xpos                    -120
             zpos                    10
-            rui                     "ui/gamemode_select_v2_button.rpak"
+            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
             labelText               ""
             visible					1
             tabPosition             1
@@ -209,6 +209,35 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
             pin_to_sibling			ScreenFrame
             pin_corner_to_sibling	TOP_LEFT
             pin_to_sibling_corner	TOP_LEFT
+        }
+
+        FreeRoamButton
+        {
+            ControlName				RuiButton
+            classname               "MenuButton"
+            wide					280
+            tall					120
+            ypos                    0
+            xpos                    10
+            zpos                    10
+            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
+            labelText               ""
+            visible					1
+            tabPosition             1
+            cursorVelocityModifier  0.7
+            sound_accept            "UI_Menu_MOTD_Tab"
+
+            ruiArgs
+            {
+                lockIconEnabled 0
+                modeNameText "Free Roam"
+                modeDescText "Run around any map"
+                modeImage "rui/menu/maps/mp_rr_desertlands_64k_x_64k"
+            }
+
+            pin_to_sibling			FiringRangeButton
+            pin_corner_to_sibling	LEFT
+            pin_to_sibling_corner	RIGHT
         }
 
         "TopServersText"
@@ -483,6 +512,231 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
 		{
 			ControlName				CNestedPanel
 			InheritProperties       FooterButtons
+		}
+
+        FreeRoamPanel
+        {
+            "ControlName"				"ImagePanel"
+            classname                   "FreeRoamUI"
+			"wide"						"300"
+			"tall"						"780"
+            "xpos"                      "10"
+			"visible"					"1"
+            "scaleImage"				"1"
+			"zpos"						"100"
+            "fillColor"					"30 30 30 255"
+            "drawColor"					"30 30 30 255"
+
+			"pin_to_sibling"			"FreeRoamButton"
+			"pin_corner_to_sibling"		"TOP_LEFT"
+			"pin_to_sibling_corner"		"TOP_RIGHT"
+        }
+
+        "FreeRoamText"
+		{
+			"ControlName"			"Label"
+            classname                   "FreeRoamUI"
+			"xpos"                  "0"
+			"ypos"					"10"
+			"auto_wide_tocontents"	"1"
+			"tall"					"30"
+			"visible"				"1"
+			"wrap"					"0"
+			"fontHeight"			"30"
+			"zpos"					"5"
+			"textAlignment"			"north-west"
+			"labelText"				"Select Map"
+			"font"					"TitleBoldFont"
+			"allcaps"				"1"
+			"fgcolor_override"		"200 200 200 255"
+
+			pin_to_sibling			FreeRoamPanel
+            pin_corner_to_sibling	BOTTOM
+            pin_to_sibling_corner	TOP
+		}
+
+        FreeRoamButton0
+        {
+            ControlName				RuiButton
+            classname               "FreeRoamUI"
+            wide					280
+            tall					120
+            ypos                    -5
+            xpos                    0
+            zpos                    105
+            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
+            labelText               ""
+            visible					1
+            tabPosition             1
+            cursorVelocityModifier  0.7
+            sound_accept            "UI_Menu_GameMode_Select"
+            "scriptID"					"0"
+
+            ruiArgs
+            {
+                lockIconEnabled 0
+            }
+
+            pin_to_sibling			FreeRoamPanel
+            pin_corner_to_sibling	TOP
+            pin_to_sibling_corner	TOP
+        }
+
+        FreeRoamButton1
+        {
+            ControlName				RuiButton
+            classname               "FreeRoamUI"
+            wide					280
+            tall					120
+            ypos                    5
+            xpos                    0
+            zpos                    105
+            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
+            labelText               ""
+            visible					1
+            tabPosition             1
+            cursorVelocityModifier  0.7
+            sound_accept            "UI_Menu_GameMode_Select"
+            "scriptID"					"1"
+
+            ruiArgs
+            {
+                lockIconEnabled 0
+            }
+
+            pin_to_sibling			FreeRoamButton0
+            pin_corner_to_sibling	TOP_LEFT
+            pin_to_sibling_corner	BOTTOM_LEFT
+        }
+
+        FreeRoamButton2
+        {
+            ControlName				RuiButton
+            classname               "FreeRoamUI"
+            wide					280
+            tall					120
+            ypos                    5
+            xpos                    0
+            zpos                    105
+            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
+            labelText               ""
+            visible					1
+            tabPosition             1
+            cursorVelocityModifier  0.7
+            sound_accept            "UI_Menu_GameMode_Select"
+            "scriptID"					"2"
+
+            ruiArgs
+            {
+                lockIconEnabled 0
+            }
+
+            pin_to_sibling			FreeRoamButton1
+            pin_corner_to_sibling	TOP_LEFT
+            pin_to_sibling_corner	BOTTOM_LEFT
+        }
+
+        FreeRoamButton3
+        {
+            ControlName				RuiButton
+            classname               "FreeRoamUI"
+            wide					280
+            tall					120
+            ypos                    5
+            xpos                    0
+            zpos                    105
+            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
+            labelText               ""
+            visible					1
+            tabPosition             1
+            cursorVelocityModifier  0.7
+            sound_accept            "UI_Menu_GameMode_Select"
+            "scriptID"					"3"
+
+            ruiArgs
+            {
+                lockIconEnabled 0
+            }
+
+            pin_to_sibling			FreeRoamButton2
+            pin_corner_to_sibling	TOP_LEFT
+            pin_to_sibling_corner	BOTTOM_LEFT
+        }
+
+        FreeRoamButton4
+        {
+            ControlName				RuiButton
+            classname               "FreeRoamUI"
+            wide					280
+            tall					120
+            ypos                    5
+            xpos                    0
+            zpos                    105
+            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
+            labelText               ""
+            visible					1
+            tabPosition             1
+            cursorVelocityModifier  0.7
+            sound_accept            "UI_Menu_GameMode_Select"
+            "scriptID"					"4"
+
+            ruiArgs
+            {
+                lockIconEnabled 0
+            }
+
+            pin_to_sibling			FreeRoamButton3
+            pin_corner_to_sibling	TOP_LEFT
+            pin_to_sibling_corner	BOTTOM_LEFT
+        }
+
+        FreeRoamButton5
+        {
+            ControlName				RuiButton
+            classname               "FreeRoamUI"
+            wide					280
+            tall					120
+            ypos                    5
+            xpos                    0
+            zpos                    105
+            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
+            labelText               ""
+            visible					1
+            tabPosition             1
+            cursorVelocityModifier  0.7
+            sound_accept            "UI_Menu_GameMode_Select"
+            "scriptID"					"5"
+
+            ruiArgs
+            {
+                lockIconEnabled 0
+            }
+
+            pin_to_sibling			FreeRoamButton4
+            pin_corner_to_sibling	TOP_LEFT
+            pin_to_sibling_corner	BOTTOM_LEFT
+        }
+
+        MouseWheelText
+		{
+			"ControlName"			"Label"
+            classname               "FreeRoamUI"
+			"xpos"                  "0"
+			"ypos"					"10"
+			"auto_wide_tocontents"	"1"
+			"tall"					"20"
+			"visible"				"1"
+			"wrap"					"0"
+			"fontHeight"			"20"
+			"zpos"					"150"
+			"labelText"				"%weaponcycle% NEXT/PREV"
+			"font"					"TitleBoldFont"
+			"allcaps"				"1"
+			"fgcolor_override"		"255 255 255 255"
+
+			pin_to_sibling			FreeRoamButton5
+            pin_corner_to_sibling	TOP
+            pin_to_sibling_corner	BOTTOM
 		}
 	}
 }
