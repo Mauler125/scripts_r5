@@ -157,7 +157,6 @@ void function Play_SetupUI()
 	Hud_SetWidth( serversButton, Hud_GetBaseWidth( serversButton ) * 2 )
 
 	GetR5RPromos()
-
 	SetPromoPage()
 	if(!promo.IsAutoAdvance)
 		thread AutoAdvancePages()
@@ -168,11 +167,6 @@ void function Play_SetupUI()
 		R5RPlay_SetSelectedPlaylist(JoinType.QuickServerJoin)
 		file.firststart = true
 	}
-}
-
-void function GamemodeSelect_OnActivate(var button)
-{
-	AdvanceMenu( GetMenu( "R5RGamemodeSelectV2Dialog" ) )
 }
 
 void function SettingsPressed(var button)
@@ -188,6 +182,11 @@ void function NewsPressed(var button)
 // ====================================================================================================
 // Quick Play
 // ====================================================================================================
+
+void function GamemodeSelect_OnActivate(var button)
+{
+	AdvanceMenu( GetMenu( "R5RGamemodeSelectV2Dialog" ) )
+}
 
 void function R5RPlay_SetSelectedPlaylist(int quickPlayType)
 {
@@ -259,6 +258,7 @@ void function StartQuickPlay(var button)
 
 	bool found = false
 	float timewaited = 0.0
+
 	int i = 0;
 	while(!found)
 	{
@@ -305,14 +305,12 @@ void function StartQuickPlay(var button)
 		HudElem_SetRuiArg( button, "buttonText", Localize( "#READY" ) )
 		return
 	}
-	else
-	{
-		EmitUISound( "UI_Menu_Deny" )
-		file.usercancled = false
-		RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Party not ready" )
-		RuiSetBool( Hud_GetRui( Hud_GetChild( file.panel, "SelfButton" ) ), "isReady", false )
-		HudElem_SetRuiArg( button, "buttonText", Localize( "#READY" ) )
-	}
+	
+	EmitUISound( "UI_Menu_Deny" )
+	file.usercancled = false
+	RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Party not ready" )
+	RuiSetBool( Hud_GetRui( Hud_GetChild( file.panel, "SelfButton" ) ), "isReady", false )
+	HudElem_SetRuiArg( button, "buttonText", Localize( "#READY" ) )
 }
 
 void function JoinTopServer(var button)
@@ -367,14 +365,12 @@ void function JoinTopServer(var button)
 		HudElem_SetRuiArg( button, "buttonText", Localize( "#READY" ) )
 		return
 	}
-	else
-	{
-		EmitUISound( "UI_Menu_Deny" )
-		file.usercancled = false
-		RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Party not ready" )
-		RuiSetBool( Hud_GetRui( Hud_GetChild( file.panel, "SelfButton" ) ), "isReady", false )
-		HudElem_SetRuiArg( button, "buttonText", Localize( "#READY" ) )
-	}
+
+	EmitUISound( "UI_Menu_Deny" )
+	file.usercancled = false
+	RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Party not ready" )
+	RuiSetBool( Hud_GetRui( Hud_GetChild( file.panel, "SelfButton" ) ), "isReady", false )
+	HudElem_SetRuiArg( button, "buttonText", Localize( "#READY" ) )
 }
 
 void function StartMatchFinding(var button)

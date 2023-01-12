@@ -1,5 +1,7 @@
 global function InitR5RNews
 
+const MAX_NEWS_ITEMS = 6
+
 struct NewsPage
 {
     string title
@@ -20,8 +22,6 @@ struct
     bool navInputCallbacksRegistered = false
     
 } file
-
-const MAX_NEWS_ITEMS = 6
 
 void function InitR5RNews( var newMenuArg ) //
 {
