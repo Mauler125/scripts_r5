@@ -163,7 +163,7 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
         "QuickPlayText"
 		{
 			"ControlName"			"Label"
-			"xpos"                  "100"
+			"xpos"                  "0"
 			"ypos"					"10"
 			"auto_wide_tocontents"	"1"
 			"tall"					"30"
@@ -179,7 +179,7 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
 
 			"pin_to_sibling"		"FiringRangeButton"
 			"pin_corner_to_sibling"	"BOTTOM"
-			"pin_to_sibling_corner"	"TOP"
+			"pin_to_sibling_corner"	"TOP_RIGHT"
 		}
 
         FiringRangeButton

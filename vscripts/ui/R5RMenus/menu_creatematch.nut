@@ -13,9 +13,6 @@ void function InitR5RCreateMatch( var newMenuArg ) //
 	Hud_AddEventHandler( privatematchbutton, UIE_CLICK, Gamemodes_Activated )
 
     AddMenuEventHandler( menu, eUIEvent.MENU_NAVIGATE_BACK, OnNavBack )
-
-    AddMenuFooterOption( menu, LEFT, BUTTON_B, true, "#B_BUTTON_CLOSE", "#CLOSE" )
-	AddMenuFooterOption( menu, LEFT, BUTTON_A, true, "#A_BUTTON_SELECT" )
 }
 
 void function Gamemodes_Activated(var button)

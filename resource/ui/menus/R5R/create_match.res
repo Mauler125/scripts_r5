@@ -110,10 +110,1077 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
             pin_to_sibling_corner	CENTER
         }
 
-        FooterButtons
+        BtnServerName
+        {
+            ControlName				TextEntry
+            zpos					100 // This works around input weirdness when the control is constructed by code instead of VGUI blackbox.
+            wide					600
+            tall					50
+            ypos                    -198
+            xpos                    -120
+            zpos					70
+            allowRightClickMenu		0
+            allowSpecialCharacters	0
+            unicode					0
+
+            keyboardTitle			"Enter Server Name"
+            keyboardDescription		"Enter Server Name"
+
+            visible					1
+            enabled					1
+            textHidden				0
+            editable				1
+            maxchars				100
+            textAlignment			"center"
+            ruiFont                 TitleRegularFont
+            ruiFontHeight           22
+            ruiMinFontHeight        16
+            bgcolor_override		"30 30 30 200"
+
+            pin_to_sibling			ScreenFrame
+            pin_corner_to_sibling	TOP_RIGHT
+            pin_to_sibling_corner	TOP_RIGHT
+        }
+
+        "ServerNameText"
 		{
-			ControlName				CNestedPanel
-			InheritProperties       FooterButtons
+			"ControlName"			"Label"
+			"xpos"                  "0"
+			"ypos"					"10"
+			"auto_wide_tocontents"	"1"
+			"tall"					"25"
+			"visible"				"1"
+			"wrap"					"0"
+			"fontHeight"			"25"
+			"zpos"					"5"
+			"textAlignment"			"north-west"
+			"labelText"				"Server Name:"
+			"font"					"TitleBoldFont"
+			"allcaps"				"1"
+			"fgcolor_override"		"200 200 200 255"
+
+			"pin_to_sibling"		"BtnServerName"
+			"pin_corner_to_sibling"	"BOTTOM"
+			"pin_to_sibling_corner"	"TOP"
 		}
+
+        BtnServerDesc
+        {
+            ControlName				TextEntry
+            zpos					100 // This works around input weirdness when the control is constructed by code instead of VGUI blackbox.
+            wide					600
+            tall					50
+            ypos                    50
+            xpos                    0
+            zpos					70
+            allowRightClickMenu		0
+            allowSpecialCharacters	0
+            unicode					0
+
+            keyboardTitle			"Enter Server Name"
+            keyboardDescription		"Enter Server Name"
+
+            visible					1
+            enabled					1
+            textHidden				0
+            editable				1
+            maxchars				100
+            textAlignment			"center"
+            ruiFont                 TitleRegularFont
+            ruiFontHeight           22
+            ruiMinFontHeight        16
+            bgcolor_override		"30 30 30 200"
+
+            pin_to_sibling			BtnServerName
+            pin_corner_to_sibling	TOP_RIGHT
+            pin_to_sibling_corner	BOTTOM_RIGHT
+        }
+
+        "ServerDescText"
+		{
+			"ControlName"			"Label"
+			"xpos"                  "0"
+			"ypos"					"10"
+			"auto_wide_tocontents"	"1"
+			"tall"					"25"
+			"visible"				"1"
+			"wrap"					"0"
+			"fontHeight"			"25"
+			"zpos"					"5"
+			"textAlignment"			"north-west"
+			"labelText"				"Server Name:"
+			"font"					"TitleBoldFont"
+			"allcaps"				"1"
+			"fgcolor_override"		"200 200 200 255"
+
+			"pin_to_sibling"		"BtnServerDesc"
+			"pin_corner_to_sibling"	"BOTTOM"
+			"pin_to_sibling_corner"	"TOP"
+		}
+
+        SwtBtnHideEmpty
+        {
+            ControlName RuiButton
+            InheritProperties SwitchButton
+            style                   DialogListButton
+            ConVar "grx_hasUnknownItems"
+            classname FilterPanelChild
+            wide 600
+            ypos                    30
+            xpos                    0
+
+            ruiArgs
+            {
+                buttonText "Server Visibility"
+            }
+
+            list
+            {
+                "Offline" 0
+                "Hidden" 1
+                "Visible" 2
+            }
+
+            pin_to_sibling			BtnServerDesc
+            pin_corner_to_sibling	TOP_RIGHT
+            pin_to_sibling_corner	BOTTOM_RIGHT
+
+            childGroupAlways        MultiChoiceButtonAlways
+        }
+
+        "SettingsText"
+		{
+			"ControlName"			"Label"
+			"xpos"                  "0"
+			"ypos"					"60"
+			"auto_wide_tocontents"	"1"
+			"tall"					"30"
+			"visible"				"1"
+			"wrap"					"0"
+			"fontHeight"			"30"
+			"zpos"					"5"
+			"textAlignment"			"north-west"
+			"labelText"				"Server Settings"
+			"font"					"TitleBoldFont"
+			"allcaps"				"1"
+			"fgcolor_override"		"200 200 200 255"
+
+			"pin_to_sibling"		"BtnServerName"
+			"pin_corner_to_sibling"	"BOTTOM"
+			"pin_to_sibling_corner"	"TOP"
+		}
+
+        SaveBtn
+        {
+            ControlName				RuiButton
+            classname               "MapButton"
+            wide					600
+            tall					120
+            ypos                    -100
+            xpos                    -120
+            zpos                    10
+            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
+            labelText               ""
+            visible					1
+            tabPosition             1
+            cursorVelocityModifier  0.7
+            sound_accept            "UI_Menu_GameMode_Select"
+
+            ruiArgs
+            {
+                lockIconEnabled 0
+                modeNameText "Save"
+                modeDescText ""
+                //modeImage "rui/menu/gamemode/firing_range"
+            }
+
+            pin_to_sibling			ScreenFrame
+            pin_corner_to_sibling	BOTTOM_RIGHT
+            pin_to_sibling_corner	BOTTOM_RIGHT
+        }
+
+        "SettingsBG"
+        {
+            "ControlName"			"Label"
+            "xpos"					"2"
+            "ypos"					"50"
+            "zpos"					"1"
+            "wide"					"600"
+            "tall"					"700"
+            "labelText"				""
+            "bgcolor_override"		"100 100 100 150"
+            "visible"				"1"
+            "paintbackground"		"1"
+
+            "pin_to_sibling"		"BtnServerName"
+            "pin_corner_to_sibling"	"TOP"
+            "pin_to_sibling_corner"	"TOP"
+        }
+
+        //Row 1
+        MapButton0
+        {
+            ControlName				RuiButton
+            classname               "MapButton"
+            wide					280
+            tall					120
+            ypos                    125
+            xpos                    -120
+            zpos                    10
+            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
+            labelText               ""
+            visible					1
+            tabPosition             1
+            cursorVelocityModifier  0.7
+            sound_accept            "UI_Menu_GameMode_Select"
+
+            ruiArgs
+            {
+                lockIconEnabled 0
+                modeNameText "Map Name"
+                modeDescText ""
+                //modeImage "rui/menu/gamemode/firing_range"
+            }
+
+            pin_to_sibling			ScreenFrame
+            pin_corner_to_sibling	LEFT
+            pin_to_sibling_corner	LEFT
+        }
+
+        MapButton1
+        {
+            ControlName				RuiButton
+            classname               "MapButton"
+            wide					280
+            tall					120
+            ypos                    0
+            xpos                    10
+            zpos                    10
+            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
+            labelText               ""
+            visible					1
+            tabPosition             1
+            cursorVelocityModifier  0.7
+            sound_accept            "UI_Menu_GameMode_Select"
+
+            ruiArgs
+            {
+                lockIconEnabled 0
+                modeNameText "Map Name"
+                modeDescText ""
+                //modeImage "rui/menu/gamemode/firing_range"
+            }
+
+            pin_to_sibling			MapButton0
+            pin_corner_to_sibling	LEFT
+            pin_to_sibling_corner	RIGHT
+        }
+
+        MapButton2
+        {
+            ControlName				RuiButton
+            classname               "MapButton"
+            wide					280
+            tall					120
+            ypos                    0
+            xpos                    10
+            zpos                    10
+            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
+            labelText               ""
+            visible					1
+            tabPosition             1
+            cursorVelocityModifier  0.7
+            sound_accept            "UI_Menu_GameMode_Select"
+
+            ruiArgs
+            {
+                lockIconEnabled 0
+                modeNameText "Map Name"
+                modeDescText ""
+                //modeImage "rui/menu/gamemode/firing_range"
+            }
+
+            pin_to_sibling			MapButton1
+            pin_corner_to_sibling	LEFT
+            pin_to_sibling_corner	RIGHT
+        }
+
+        //Row 2
+        MapButton3
+        {
+            ControlName				RuiButton
+            classname               "MapButton"
+            wide					280
+            tall					120
+            ypos                    10
+            xpos                    0
+            zpos                    10
+            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
+            labelText               ""
+            visible					1
+            tabPosition             1
+            cursorVelocityModifier  0.7
+            sound_accept            "UI_Menu_GameMode_Select"
+
+            ruiArgs
+            {
+                lockIconEnabled 0
+                modeNameText "Map Name"
+                modeDescText ""
+                //modeImage "rui/menu/gamemode/firing_range"
+            }
+
+            pin_to_sibling			MapButton0
+            pin_corner_to_sibling	TOP
+            pin_to_sibling_corner	BOTTOM
+        }
+
+        MapButton4
+        {
+            ControlName				RuiButton
+            classname               "MapButton"
+            wide					280
+            tall					120
+            ypos                    0
+            xpos                    10
+            zpos                    10
+            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
+            labelText               ""
+            visible					1
+            tabPosition             1
+            cursorVelocityModifier  0.7
+            sound_accept            "UI_Menu_GameMode_Select"
+
+            ruiArgs
+            {
+                lockIconEnabled 0
+                modeNameText "Map Name"
+                modeDescText ""
+                //modeImage "rui/menu/gamemode/firing_range"
+            }
+
+            pin_to_sibling			MapButton3
+            pin_corner_to_sibling	LEFT
+            pin_to_sibling_corner	RIGHT
+        }
+
+        MapButton5
+        {
+            ControlName				RuiButton
+            classname               "MapButton"
+            wide					280
+            tall					120
+            ypos                    0
+            xpos                    10
+            zpos                    10
+            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
+            labelText               ""
+            visible					1
+            tabPosition             1
+            cursorVelocityModifier  0.7
+            sound_accept            "UI_Menu_GameMode_Select"
+
+            ruiArgs
+            {
+                lockIconEnabled 0
+                modeNameText "Map Name"
+                modeDescText ""
+                //modeImage "rui/menu/gamemode/firing_range"
+            }
+
+            pin_to_sibling			MapButton4
+            pin_corner_to_sibling	LEFT
+            pin_to_sibling_corner	RIGHT
+        }
+
+        //Row 3
+        MapButton6
+        {
+            ControlName				RuiButton
+            classname               "MapButton"
+            wide					280
+            tall					120
+            ypos                    10
+            xpos                    0
+            zpos                    10
+            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
+            labelText               ""
+            visible					1
+            tabPosition             1
+            cursorVelocityModifier  0.7
+            sound_accept            "UI_Menu_GameMode_Select"
+
+            ruiArgs
+            {
+                lockIconEnabled 0
+                modeNameText "Map Name"
+                modeDescText ""
+                //modeImage "rui/menu/gamemode/firing_range"
+            }
+
+            pin_to_sibling			MapButton3
+            pin_corner_to_sibling	TOP
+            pin_to_sibling_corner	BOTTOM
+        }
+
+        MapButton7
+        {
+            ControlName				RuiButton
+            classname               "MapButton"
+            wide					280
+            tall					120
+            ypos                    0
+            xpos                    10
+            zpos                    10
+            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
+            labelText               ""
+            visible					1
+            tabPosition             1
+            cursorVelocityModifier  0.7
+            sound_accept            "UI_Menu_GameMode_Select"
+
+            ruiArgs
+            {
+                lockIconEnabled 0
+                modeNameText "Map Name"
+                modeDescText ""
+                //modeImage "rui/menu/gamemode/firing_range"
+            }
+
+            pin_to_sibling			MapButton6
+            pin_corner_to_sibling	LEFT
+            pin_to_sibling_corner	RIGHT
+        }
+
+        MapButton8
+        {
+            ControlName				RuiButton
+            classname               "MapButton"
+            wide					280
+            tall					120
+            ypos                    0
+            xpos                    10
+            zpos                    10
+            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
+            labelText               ""
+            visible					1
+            tabPosition             1
+            cursorVelocityModifier  0.7
+            sound_accept            "UI_Menu_GameMode_Select"
+
+            ruiArgs
+            {
+                lockIconEnabled 0
+                modeNameText "Map Name"
+                modeDescText ""
+                //modeImage "rui/menu/gamemode/firing_range"
+            }
+
+            pin_to_sibling			MapButton7
+            pin_corner_to_sibling	LEFT
+            pin_to_sibling_corner	RIGHT
+        }
+
+        "MapText"
+		{
+			"ControlName"			"Label"
+			"xpos"                  "0"
+			"ypos"					"10"
+			"auto_wide_tocontents"	"1"
+			"tall"					"30"
+			"visible"				"1"
+			"wrap"					"0"
+			"fontHeight"			"30"
+			"zpos"					"5"
+			"textAlignment"			"north-west"
+			"labelText"				"Select Map"
+			"font"					"TitleBoldFont"
+			"allcaps"				"1"
+			"fgcolor_override"		"200 200 200 255"
+
+			"pin_to_sibling"		"MapButton1"
+			"pin_corner_to_sibling"	"BOTTOM"
+			"pin_to_sibling_corner"	"TOP"
+		}
+
+        //Row 1
+        PlaylistButton0
+        {
+            ControlName				RuiButton
+            classname               "PlaylistButton"
+            wide					280
+            tall					120
+            ypos                    -150
+            xpos                    -120
+            zpos                    10
+            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
+            labelText               ""
+            visible					1
+            tabPosition             1
+            cursorVelocityModifier  0.7
+            sound_accept            "UI_Menu_GameMode_Select"
+
+            ruiArgs
+            {
+                lockIconEnabled 0
+                modeNameText "Playlist Name"
+                modeDescText ""
+                //modeImage "rui/menu/gamemode/firing_range"
+            }
+
+            pin_to_sibling			ScreenFrame
+            pin_corner_to_sibling	TOP_LEFT
+            pin_to_sibling_corner	TOP_LEFT
+        }
+
+        PlaylistButton1
+        {
+            ControlName				RuiButton
+            classname               "PlaylistButton"
+            wide					280
+            tall					120
+            ypos                    0
+            xpos                    10
+            zpos                    10
+            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
+            labelText               ""
+            visible					1
+            tabPosition             1
+            cursorVelocityModifier  0.7
+            sound_accept            "UI_Menu_GameMode_Select"
+
+            ruiArgs
+            {
+                lockIconEnabled 0
+                modeNameText "Playlist Name"
+                modeDescText ""
+                //modeImage "rui/menu/gamemode/firing_range"
+            }
+
+            pin_to_sibling			PlaylistButton0
+            pin_corner_to_sibling	LEFT
+            pin_to_sibling_corner	RIGHT
+        }
+
+        PlaylistButton2
+        {
+            ControlName				RuiButton
+            classname               "PlaylistButton"
+            wide					280
+            tall					120
+            ypos                    0
+            xpos                    10
+            zpos                    10
+            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
+            labelText               ""
+            visible					1
+            tabPosition             1
+            cursorVelocityModifier  0.7
+            sound_accept            "UI_Menu_GameMode_Select"
+
+            ruiArgs
+            {
+                lockIconEnabled 0
+                modeNameText "Playlist Name"
+                modeDescText ""
+                //modeImage "rui/menu/gamemode/firing_range"
+            }
+
+            pin_to_sibling			PlaylistButton1
+            pin_corner_to_sibling	LEFT
+            pin_to_sibling_corner	RIGHT
+        }
+
+        //Row 2
+        PlaylistButton3
+        {
+            ControlName				RuiButton
+            classname               "PlaylistButton"
+            wide					280
+            tall					120
+            ypos                    10
+            xpos                    0
+            zpos                    10
+            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
+            labelText               ""
+            visible					1
+            tabPosition             1
+            cursorVelocityModifier  0.7
+            sound_accept            "UI_Menu_GameMode_Select"
+
+            ruiArgs
+            {
+                lockIconEnabled 0
+                modeNameText "Playlist Name"
+                modeDescText ""
+                //modeImage "rui/menu/gamemode/firing_range"
+            }
+
+            pin_to_sibling			PlaylistButton0
+            pin_corner_to_sibling	TOP
+            pin_to_sibling_corner	BOTTOM
+        }
+
+        PlaylistButton4
+        {
+            ControlName				RuiButton
+            classname               "PlaylistButton"
+            wide					280
+            tall					120
+            ypos                    0
+            xpos                    10
+            zpos                    10
+            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
+            labelText               ""
+            visible					1
+            tabPosition             1
+            cursorVelocityModifier  0.7
+            sound_accept            "UI_Menu_GameMode_Select"
+
+            ruiArgs
+            {
+                lockIconEnabled 0
+                modeNameText "Playlist Name"
+                modeDescText ""
+                //modeImage "rui/menu/gamemode/firing_range"
+            }
+
+            pin_to_sibling			PlaylistButton3
+            pin_corner_to_sibling	LEFT
+            pin_to_sibling_corner	RIGHT
+        }
+
+        PlaylistButton5
+        {
+            ControlName				RuiButton
+            classname               "PlaylistButton"
+            wide					280
+            tall					120
+            ypos                    0
+            xpos                    10
+            zpos                    10
+            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
+            labelText               ""
+            visible					1
+            tabPosition             1
+            cursorVelocityModifier  0.7
+            sound_accept            "UI_Menu_GameMode_Select"
+
+            ruiArgs
+            {
+                lockIconEnabled 0
+                modeNameText "Playlist Name"
+                modeDescText ""
+                //modeImage "rui/menu/gamemode/firing_range"
+            }
+
+            pin_to_sibling			PlaylistButton4
+            pin_corner_to_sibling	LEFT
+            pin_to_sibling_corner	RIGHT
+        }
+
+        //Row 3
+        PlaylistButton6
+        {
+            ControlName				RuiButton
+            classname               "PlaylistButton"
+            wide					280
+            tall					120
+            ypos                    10
+            xpos                    0
+            zpos                    10
+            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
+            labelText               ""
+            visible					1
+            tabPosition             1
+            cursorVelocityModifier  0.7
+            sound_accept            "UI_Menu_GameMode_Select"
+
+            ruiArgs
+            {
+                lockIconEnabled 0
+                modeNameText "Playlist Name"
+                modeDescText ""
+                //modeImage "rui/menu/gamemode/firing_range"
+            }
+
+            pin_to_sibling			PlaylistButton3
+            pin_corner_to_sibling	TOP
+            pin_to_sibling_corner	BOTTOM
+        }
+
+        PlaylistButton7
+        {
+            ControlName				RuiButton
+            classname               "PlaylistButton"
+            wide					280
+            tall					120
+            ypos                    0
+            xpos                    10
+            zpos                    10
+            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
+            labelText               ""
+            visible					1
+            tabPosition             1
+            cursorVelocityModifier  0.7
+            sound_accept            "UI_Menu_GameMode_Select"
+
+            ruiArgs
+            {
+                lockIconEnabled 0
+                modeNameText "Playlist Name"
+                modeDescText ""
+                //modeImage "rui/menu/gamemode/firing_range"
+            }
+
+            pin_to_sibling			PlaylistButton6
+            pin_corner_to_sibling	LEFT
+            pin_to_sibling_corner	RIGHT
+        }
+
+        PlaylistButton8
+        {
+            ControlName				RuiButton
+            classname               "PlaylistButton"
+            wide					280
+            tall					120
+            ypos                    0
+            xpos                    10
+            zpos                    10
+            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
+            labelText               ""
+            visible					1
+            tabPosition             1
+            cursorVelocityModifier  0.7
+            sound_accept            "UI_Menu_GameMode_Select"
+
+            ruiArgs
+            {
+                lockIconEnabled 0
+                modeNameText "Playlist Name"
+                modeDescText ""
+                //modeImage "rui/menu/gamemode/firing_range"
+            }
+
+            pin_to_sibling			PlaylistButton7
+            pin_corner_to_sibling	LEFT
+            pin_to_sibling_corner	RIGHT
+        }
+
+        "PlaylistText"
+		{
+			"ControlName"			"Label"
+			"xpos"                  "0"
+			"ypos"					"10"
+			"auto_wide_tocontents"	"1"
+			"tall"					"30"
+			"visible"				"1"
+			"wrap"					"0"
+			"fontHeight"			"30"
+			"zpos"					"5"
+			"textAlignment"			"north-west"
+			"labelText"				"Select Playlist"
+			"font"					"TitleBoldFont"
+			"allcaps"				"1"
+			"fgcolor_override"		"200 200 200 255"
+
+			"pin_to_sibling"		"PlaylistButton1"
+			"pin_corner_to_sibling"	"BOTTOM"
+			"pin_to_sibling_corner"	"TOP"
+		}
+
+        //Map Slider
+        "MapListSliderBG"
+        {
+            "ControlName"			"ImagePanel"
+            wide 32
+            tall 335
+            xpos 10
+            ypos -45
+            zpos 0
+            "fillColor"				"195 29 38 150"
+            scaleImage				1
+            "visible"				"0"
+
+            pin_to_sibling MapButton2
+            pin_corner_to_sibling TOP_LEFT
+            pin_to_sibling_corner TOP_RIGHT
+        }
+
+        BtnMapListSlider
+        {
+            ControlName RuiButton
+            InheritProperties RuiSmallButton
+            //labelText "V"
+            wide 30
+            tall 290
+            xpos 10
+            ypos -45
+            zpos 0
+
+            image "vgui/hud/white"
+            drawColor "255 255 255 255"
+
+            pin_to_sibling MapButton2
+            pin_corner_to_sibling TOP_LEFT
+            pin_to_sibling_corner TOP_RIGHT
+        }
+
+        BtnMapListSliderPanel
+        {
+            ControlName RuiPanel
+            wide 30
+            tall 290
+            xpos 10
+            ypos -45
+            zpos 100
+
+            rui "ui/control_options_description.rpak"
+
+            visible 1
+            zpos -1
+
+            pin_to_sibling MapButton2
+            pin_corner_to_sibling TOP_LEFT
+            pin_to_sibling_corner TOP_RIGHT
+        }
+
+        // sh_menu_models.gnut has a global function which gets called when
+        // left mouse button gets called while hovering and has mouse
+        // deltaX; deltaY which we can yoink for ourselfes
+        MapMouseMovementCapture
+        {
+            ControlName CMouseMovementCapturePanel
+            wide 30
+            tall 290
+            xpos 10
+            ypos -45
+            zpos 100
+
+            pin_to_sibling MapButton2
+            pin_corner_to_sibling TOP_LEFT
+            pin_to_sibling_corner TOP_RIGHT
+        }
+
+        BtnMapListUpArrow
+        {
+            ControlName RuiButton
+            InheritProperties RuiSmallButton
+            //labelText "A"
+            wide 30
+            tall 45
+            xpos 0
+            ypos 0
+            zpos 5
+
+            image "vgui/hud/white"
+            drawColor "255 255 255 128"
+
+            pin_to_sibling MapListSliderBG
+            pin_corner_to_sibling BOTTOM_LEFT
+            pin_to_sibling_corner TOP_LEFT
+        }
+
+        BtnMapListUpArrowPanel
+        {
+            ControlName RuiPanel
+            wide 30
+            tall 45
+            xpos 0
+            ypos 0
+
+            rui "ui/control_options_description.rpak"
+
+            visible 1
+            zpos 4
+
+            pin_to_sibling MapListSliderBG
+            pin_corner_to_sibling BOTTOM_LEFT
+            pin_to_sibling_corner TOP_LEFT
+        }
+
+        BtnMapListDownArrow
+        {
+            ControlName RuiButton
+            InheritProperties RuiSmallButton
+            //labelText "A"
+            wide 30
+            tall 45
+            xpos 0
+            ypos 0
+            zpos 5
+
+            image "vgui/hud/white"
+            drawColor "255 255 255 128"
+
+            pin_to_sibling MapListSliderBG
+            pin_corner_to_sibling BOTTOM_LEFT
+            pin_to_sibling_corner BOTTOM_LEFT
+        }
+
+        BtnMapListDownArrowPanel
+        {
+            ControlName RuiPanel
+            wide 30
+            tall 45
+            xpos 0
+            ypos 0
+
+            rui "ui/control_options_description.rpak"
+
+            visible 1
+            zpos 4
+
+            pin_to_sibling MapListSliderBG
+            pin_corner_to_sibling BOTTOM_LEFT
+            pin_to_sibling_corner BOTTOM_LEFT
+        }
+
+        //Playlist Slider
+        "PlaylistListSliderBG"
+        {
+            "ControlName"			"ImagePanel"
+            wide 32
+            tall 335
+            xpos 10
+            ypos -45
+            zpos 0
+            "fillColor"				"195 29 38 150"
+            scaleImage				1
+            "visible"				"0"
+
+            pin_to_sibling PlaylistButton2
+            pin_corner_to_sibling TOP_LEFT
+            pin_to_sibling_corner TOP_RIGHT
+        }
+
+        PlaylistMapListSlider
+        {
+            ControlName RuiButton
+            InheritProperties RuiSmallButton
+            //labelText "V"
+            wide 30
+            tall 290
+            xpos 10
+            ypos -45
+            zpos 0
+
+            image "vgui/hud/white"
+            drawColor "255 255 255 255"
+
+            pin_to_sibling PlaylistButton2
+            pin_corner_to_sibling TOP_LEFT
+            pin_to_sibling_corner TOP_RIGHT
+        }
+
+        PlaylistMapListSliderPanel
+        {
+            ControlName RuiPanel
+            wide 30
+            tall 290
+            xpos 10
+            ypos -45
+            zpos 100
+
+            rui "ui/control_options_description.rpak"
+
+            visible 1
+            zpos -1
+
+            pin_to_sibling PlaylistButton2
+            pin_corner_to_sibling TOP_LEFT
+            pin_to_sibling_corner TOP_RIGHT
+        }
+
+        // sh_menu_models.gnut has a global function which gets called when
+        // left mouse button gets called while hovering and has mouse
+        // deltaX; deltaY which we can yoink for ourselfes
+        PlaylistMouseMovementCapture
+        {
+            ControlName CMouseMovementCapturePanel
+            wide 30
+            tall 290
+            xpos 10
+            ypos -45
+            zpos 100
+
+            pin_to_sibling PlaylistButton2
+            pin_corner_to_sibling TOP_LEFT
+            pin_to_sibling_corner TOP_RIGHT
+        }
+
+        BtnPlaylistListUpArrow
+        {
+            ControlName RuiButton
+            InheritProperties RuiSmallButton
+            //labelText "A"
+            wide 30
+            tall 45
+            xpos 0
+            ypos 0
+            zpos 5
+
+            image "vgui/hud/white"
+            drawColor "255 255 255 128"
+
+            pin_to_sibling PlaylistListSliderBG
+            pin_corner_to_sibling BOTTOM_LEFT
+            pin_to_sibling_corner TOP_LEFT
+        }
+
+        BtnPlaylistListUpArrowPanel
+        {
+            ControlName RuiPanel
+            wide 30
+            tall 45
+            xpos 0
+            ypos 0
+
+            rui "ui/control_options_description.rpak"
+
+            visible 1
+            zpos 4
+
+            pin_to_sibling PlaylistListSliderBG
+            pin_corner_to_sibling BOTTOM_LEFT
+            pin_to_sibling_corner TOP_LEFT
+        }
+
+        BtnPlaylistListDownArrow
+        {
+            ControlName RuiButton
+            InheritProperties RuiSmallButton
+            //labelText "A"
+            wide 30
+            tall 45
+            xpos 0
+            ypos 0
+            zpos 5
+
+            image "vgui/hud/white"
+            drawColor "255 255 255 128"
+
+            pin_to_sibling PlaylistListSliderBG
+            pin_corner_to_sibling BOTTOM_LEFT
+            pin_to_sibling_corner BOTTOM_LEFT
+        }
+
+        BtnPlaylistListDownArrowPanel
+        {
+            ControlName RuiPanel
+            wide 30
+            tall 45
+            xpos 0
+            ypos 0
+
+            rui "ui/control_options_description.rpak"
+
+            visible 1
+            zpos 4
+
+            pin_to_sibling PlaylistListSliderBG
+            pin_corner_to_sibling BOTTOM_LEFT
+            pin_to_sibling_corner BOTTOM_LEFT
+        }
 	}
 }
