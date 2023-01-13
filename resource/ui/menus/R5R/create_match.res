@@ -273,7 +273,6 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
         SaveBtn
         {
             ControlName				RuiButton
-            classname               "MapButton"
             wide					600
             tall					120
             ypos                    -100
@@ -289,9 +288,9 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
             ruiArgs
             {
                 lockIconEnabled 0
-                modeNameText "Save"
+                modeNameText "Create Private Match"
                 modeDescText ""
-                //modeImage "rui/menu/gamemode/firing_range"
+                modeImage "rui/menu/store/feature_background_square"
             }
 
             pin_to_sibling			ScreenFrame
@@ -333,6 +332,7 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
             tabPosition             1
             cursorVelocityModifier  0.7
             sound_accept            "UI_Menu_GameMode_Select"
+            "scriptID"					"0"
 
             ruiArgs
             {
@@ -362,6 +362,7 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
             tabPosition             1
             cursorVelocityModifier  0.7
             sound_accept            "UI_Menu_GameMode_Select"
+            "scriptID"					"1"
 
             ruiArgs
             {
@@ -391,6 +392,7 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
             tabPosition             1
             cursorVelocityModifier  0.7
             sound_accept            "UI_Menu_GameMode_Select"
+            "scriptID"					"2"
 
             ruiArgs
             {
@@ -421,6 +423,7 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
             tabPosition             1
             cursorVelocityModifier  0.7
             sound_accept            "UI_Menu_GameMode_Select"
+            "scriptID"					"3"
 
             ruiArgs
             {
@@ -450,6 +453,7 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
             tabPosition             1
             cursorVelocityModifier  0.7
             sound_accept            "UI_Menu_GameMode_Select"
+            "scriptID"					"4"
 
             ruiArgs
             {
@@ -479,6 +483,7 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
             tabPosition             1
             cursorVelocityModifier  0.7
             sound_accept            "UI_Menu_GameMode_Select"
+            "scriptID"					"5"
 
             ruiArgs
             {
@@ -509,6 +514,7 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
             tabPosition             1
             cursorVelocityModifier  0.7
             sound_accept            "UI_Menu_GameMode_Select"
+            "scriptID"					"6"
 
             ruiArgs
             {
@@ -538,6 +544,7 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
             tabPosition             1
             cursorVelocityModifier  0.7
             sound_accept            "UI_Menu_GameMode_Select"
+            "scriptID"					"7"
 
             ruiArgs
             {
@@ -567,6 +574,7 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
             tabPosition             1
             cursorVelocityModifier  0.7
             sound_accept            "UI_Menu_GameMode_Select"
+            "scriptID"					"8"
 
             ruiArgs
             {
@@ -619,6 +627,7 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
             tabPosition             1
             cursorVelocityModifier  0.7
             sound_accept            "UI_Menu_GameMode_Select"
+            "scriptID"					"0"
 
             ruiArgs
             {
@@ -648,6 +657,7 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
             tabPosition             1
             cursorVelocityModifier  0.7
             sound_accept            "UI_Menu_GameMode_Select"
+            "scriptID"					"1"
 
             ruiArgs
             {
@@ -677,6 +687,7 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
             tabPosition             1
             cursorVelocityModifier  0.7
             sound_accept            "UI_Menu_GameMode_Select"
+            "scriptID"					"2"
 
             ruiArgs
             {
@@ -707,6 +718,7 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
             tabPosition             1
             cursorVelocityModifier  0.7
             sound_accept            "UI_Menu_GameMode_Select"
+            "scriptID"					"3"
 
             ruiArgs
             {
@@ -736,6 +748,7 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
             tabPosition             1
             cursorVelocityModifier  0.7
             sound_accept            "UI_Menu_GameMode_Select"
+            "scriptID"					"4"
 
             ruiArgs
             {
@@ -765,6 +778,7 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
             tabPosition             1
             cursorVelocityModifier  0.7
             sound_accept            "UI_Menu_GameMode_Select"
+            "scriptID"					"5"
 
             ruiArgs
             {
@@ -795,6 +809,7 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
             tabPosition             1
             cursorVelocityModifier  0.7
             sound_accept            "UI_Menu_GameMode_Select"
+            "scriptID"					"6"
 
             ruiArgs
             {
@@ -824,6 +839,7 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
             tabPosition             1
             cursorVelocityModifier  0.7
             sound_accept            "UI_Menu_GameMode_Select"
+            "scriptID"					"7"
 
             ruiArgs
             {
@@ -853,6 +869,7 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
             tabPosition             1
             cursorVelocityModifier  0.7
             sound_accept            "UI_Menu_GameMode_Select"
+            "scriptID"					"8"
 
             ruiArgs
             {
