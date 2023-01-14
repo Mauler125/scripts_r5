@@ -88,12 +88,10 @@ void function InitR5RLobbyMenu( var newMenuArg )
 
 	//Setup panel array
 	file.panels.append(Hud_GetChild(menu, "R5RHomePanel"))
-	file.panels.append(Hud_GetChild(menu, "R5RPrivateMatchPanel"))
 	file.panels.append(Hud_GetChild(menu, "R5RServerBrowserPanel"))
 
 	//Setup Button Vars
 	file.buttons.append(Hud_GetChild(menu, "HomeBtn"))
-	file.buttons.append(Hud_GetChild(menu, "CreateServerBtn"))
 	file.buttons.append(Hud_GetChild(menu, "ServerBrowserBtn"))
 
 	ToolTips_AddMenu( menu )
@@ -113,11 +111,6 @@ void function OpenSelectedPanel(var button)
 			CurrentPresentationType = ePresentationType.PLAY
 			break;
 		case 1:
-			PrivateMatchMenuOpened()
-			UI_SetPresentationType( ePresentationType.CHARACTER_SELECT )
-			CurrentPresentationType = ePresentationType.CHARACTER_SELECT
-			break;
-		case 2:
 			UI_SetPresentationType( ePresentationType.COLLECTION_EVENT )
 			CurrentPresentationType = ePresentationType.COLLECTION_EVENT
 			break;
@@ -142,7 +135,6 @@ void function OnR5RLobby_Show()
 
 	//Set back to default for next time
 	g_isAtMainMenu = false
-	server_host_name = ""
 
 	//RunClientScript("UICallback_SetHostName", GetPlayerName() + "'s Lobby")
 }
@@ -220,25 +212,6 @@ asset function GetUIMapAsset(string map)
 
 void function OnR5RLobby_Back()
 {
-	if(PMMenusOpen.maps_open || PMMenusOpen.playlists_open || PMMenusOpen.vis_open || PMMenusOpen.name_open || PMMenusOpen.desc_open || PMMenusOpen.kick_open)
-    {
-		var pmpanel = GetPanel( "R5RPrivateMatchPanel" )
-        Hud_SetVisible( Hud_GetChild(pmpanel, "R5RMapPanel"), false )
-        Hud_SetVisible( Hud_GetChild(pmpanel, "R5RPlaylistPanel"), false )
-        Hud_SetVisible( Hud_GetChild(pmpanel, "R5RVisPanel"), false )
-        Hud_SetVisible( Hud_GetChild(file.menu, "R5RNamePanel"), false )
-        Hud_SetVisible( Hud_GetChild(file.menu, "R5RDescPanel"), false )
-        Hud_SetVisible( Hud_GetChild(file.menu, "R5RKickPanel"), false )
-
-        PMMenusOpen.maps_open = false
-        PMMenusOpen.playlists_open = false
-        PMMenusOpen.vis_open = false
-        PMMenusOpen.name_open = false
-        PMMenusOpen.desc_open = false
-        PMMenusOpen.kick_open = false
-		return
-    }
-
 	AdvanceMenu( GetMenu( "SystemMenu" ) )
 }
 

@@ -836,12 +836,6 @@ Scripts:
 
 	//CTF
 	ui/CTFMenus/menu_ctf_vote.nut
-
-	//old will be removed
-	ui/R5RMenus/menu_private_match.nut
-	ui/R5RMenus/panel_playlist.nut
-	ui/R5RMenus/panel_map.nut
-	ui/R5RMenus/panel_visibility.nut
 ]
 
 When: "SERVER && DEV || UI && DEV"

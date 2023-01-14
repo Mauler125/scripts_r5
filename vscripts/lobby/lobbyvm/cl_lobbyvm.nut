@@ -37,8 +37,7 @@ void function OnResolutionChanged_UpdateClientUI()
 
 void function UICallback_SetHostName(string name)
 {
-    if(GetLocalClientPlayer() == GetPlayerArray()[0])
-        GetLocalClientPlayer().ClientCommand("hostname " + name)
+    
 }
 
 void function UICallback_RefreshServer()
@@ -49,36 +48,22 @@ void function UICallback_RefreshServer()
 
 void function UICallback_StartMatch()
 {
-    if(GetLocalClientPlayer() == GetPlayerArray()[0])
-        GetLocalClientPlayer().ClientCommand("lobby_startmatch")
+   
 }
 
 void function UICallback_CheckForHost()
 {
-    if(GetLocalClientPlayer() == GetPlayerArray()[0])
-        RunUIScript( "EnableCreateMatchUI" )
+    
 }
 
 void function UICodeCallback_UpdateServerInfo(int type, string text)
 {
-    if(GetLocalClientPlayer() == GetPlayerArray()[0])
-        GetLocalClientPlayer().ClientCommand("lobby_updateserversetting " + type + " " + text)
+    
 }
 
 void function UICodeCallback_KickOrBanPlayer(int type, string player)
 {
-    if(GetLocalClientPlayer() != GetPlayerArray()[0])
-        return
     
-    switch (type)
-    {
-        case 0:
-            GetLocalClientPlayer().ClientCommand("lobby_kick " + player)
-            break;
-        case 1:
-            GetLocalClientPlayer().ClientCommand("lobby_ban " + player)
-            break;
-    }
 }
 
 void function UICallback_ServerBrowserJoinServer(int id)
@@ -105,41 +90,17 @@ void function ServerCallback_ServerBrowser_JoinServer(int id)
 
 void function ServerCallback_LobbyVM_StartingMatch()
 {
-    RunUIScript( "ShowMatchStartingScreen")
+    
 }
 
 void function ServerCallback_LobbyVM_UpdateUI()
 {
-    array<string> playernames
-
-    RunUIScript( "ClearPlayerUIArray" )
-
-    foreach( player in GetPlayerArray() )
-    {
-        if(!IsValid(player))
-            continue
-
-        string playername = player.GetPlayerName()
-
-        if(GetPlayerArray()[0] == player)
-        {
-            playername = "[Host] " + player.GetPlayerName()
-        }
-
-        RunUIScript( "AddPlayerToUIArray", playername )
-    }
-
-    RunUIScript( "UpdateHostName", GetPlayerArray()[0].GetPlayerName() )
-
-    RunUIScript( "UpdatePlayersList" )
-
-    //RunUIScript( "InPlayersLobby" , GetPlayerArray()[0] != GetLocalClientPlayer() && GetPlayerArray().len() > 1, GetPlayerArray()[0].GetPlayerName())
+    
 }
 
 void function ServerCallback_LobbyVM_SelectionUpdated(int type)
 {
-    RunUIScript("UI_SetServerInfo", type, tempstring)
-    tempstring = ""
+    
 }
 
 void function ServerCallback_LobbyVM_BuildClientString( ... )

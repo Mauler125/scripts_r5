@@ -235,6 +235,16 @@ void function SetupTopServers()
 		RuiSetString( Hud_GetRui( TopServer ), "modeDescText", "Players " + file.m_vTopServers[i].svCurrentPlayers + "/" + file.m_vTopServers[i].svMaxPlayers )
 		RuiSetBool( Hud_GetRui( TopServer ), "alwaysShowDesc", false )
 		RuiSetImage( Hud_GetRui( TopServer ), "modeImage", GetUIMapAsset(file.m_vTopServers[i].svMapName ) )
+		Hud_SetLocked( TopServer, false )
+		RuiSetString( Hud_GetRui( TopServer ), "modeLockedReason", "" )
+		RuiSetBool( Hud_GetRui( TopServer ), "showLockedIcon", false )
+
+		if( file.m_vTopServers[i].svCurrentPlayers == file.m_vTopServers[i].svMaxPlayers )
+		{
+			Hud_SetLocked( TopServer, true )
+			RuiSetString( Hud_GetRui( TopServer ), "modeLockedReason", "Server is full" )
+			RuiSetBool( Hud_GetRui( TopServer ), "showLockedIcon", true )
+		}
 
 		btnid--
 	}
@@ -242,6 +252,9 @@ void function SetupTopServers()
 
 void function TopServerButton_Activated(var button)
 {
+	if ( Hud_IsLocked( button ) )
+		return
+		
 	int id = Hud_GetScriptID( button ).tointeger()
 
 	g_SelectedTopServer.svServerID = file.m_vTopServers[id].svServerID

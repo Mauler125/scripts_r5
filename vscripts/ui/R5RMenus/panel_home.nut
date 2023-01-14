@@ -488,6 +488,22 @@ void function FindServer(bool refresh = false)
 	}
 
 	if(file.m_vFilteredServerList.len() == 0) {
+		//if non are found, include empty servers
+		file.m_vFilteredServerList.clear()
+		for ( int i = 0, j = file.m_vServerList.len(); i < j; i++ )
+		{
+			if ( file.m_vServerList[i].svCurrentPlayers == file.m_vServerList[i].svMaxPlayers )
+				continue;
+
+			if(file.m_vServerList[i].svPlaylist != file.selectedplaylist && file.selectedplaylist != "Random Server")
+				continue;
+
+			// Server fits our requirements, add it to the list
+			file.m_vFilteredServerList.append(file.m_vServerList[i])
+		}
+	}
+
+	if(file.m_vFilteredServerList.len() == 0) {
 		file.noservers = true
 		file.foundserver = true
 		return
