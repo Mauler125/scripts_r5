@@ -1,4 +1,4 @@
-scripts/resource/ui/menus/R5R/panels/serverbrowser.res
+scripts/resource/ui/menus/CustomLobby/panels/serverbrowser.res
 {
 	"DarkenBackground"
 	{

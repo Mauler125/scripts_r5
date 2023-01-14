@@ -34,6 +34,7 @@ struct {
 
 	array<TopServer> m_vTopServers
 	array<string> m_vPlaylists
+	array<string> m_vMaps
 } file
 
 global SelectedTopServer g_SelectedTopServer
@@ -206,12 +207,15 @@ void function SetupPlaylistQuickSearch()
 
 void function SetupTopServers()
 {
-	if(global_m_vServerList.len() < 3)
-		return
-		
+	foreach ( btn in GetElementsByClassname( file.menu, "TopServerButtons" ) )
+		Hud_Hide( btn )
+	
 	file.m_vTopServers.clear()
 	for(int i = 0; i < MAX_TOP_SERVERS; i++)
 	{
+		if(i >= global_m_vServerList.len())
+			break
+		
 		TopServer server
 		server.svServerID = global_m_vServerList[i].svServerID
 		server.svServerName = global_m_vServerList[i].svServerName
@@ -231,6 +235,7 @@ void function SetupTopServers()
 			servername = file.m_vTopServers[i].svServerName.slice(0, 30) + "..."
 
 		var TopServer = Hud_GetChild( file.menu, "TopServerButton" + btnid )
+		Hud_Show( TopServer )
 		RuiSetString( Hud_GetRui( TopServer ), "modeNameText", servername )
 		RuiSetString( Hud_GetRui( TopServer ), "modeDescText", "Players " + file.m_vTopServers[i].svCurrentPlayers + "/" + file.m_vTopServers[i].svMaxPlayers )
 		RuiSetBool( Hud_GetRui( TopServer ), "alwaysShowDesc", false )
@@ -254,7 +259,7 @@ void function TopServerButton_Activated(var button)
 {
 	if ( Hud_IsLocked( button ) )
 		return
-		
+
 	int id = Hud_GetScriptID( button ).tointeger()
 
 	g_SelectedTopServer.svServerID = file.m_vTopServers[id].svServerID
@@ -294,12 +299,12 @@ void function FiringRange_Activated(var button)
 
 void function SetupFreeRoamButtons()
 {
-	array<string> m_vMaps = GetPlaylistMaps("survival_dev")
+	file.m_vMaps = GetPlaylistMaps("survival_dev")
 	for(int i = 0; i < MAX_FREEROAM_MAPS; i++)
 	{
-		RuiSetString( Hud_GetRui( Hud_GetChild( file.menu, "FreeRoamButton" + i ) ), "modeNameText", GetUIMapName(m_vMaps[i + file.freeroamscroll]) )
+		RuiSetString( Hud_GetRui( Hud_GetChild( file.menu, "FreeRoamButton" + i ) ), "modeNameText", GetUIMapName(file.m_vMaps[i + file.freeroamscroll]) )
 		RuiSetString( Hud_GetRui( Hud_GetChild( file.menu, "FreeRoamButton" + i ) ), "modeDescText", "" )
-		RuiSetImage( Hud_GetRui( Hud_GetChild( file.menu, "FreeRoamButton" + i ) ), "modeImage", GetUIMapAsset(m_vMaps[i + file.freeroamscroll]) )
+		RuiSetImage( Hud_GetRui( Hud_GetChild( file.menu, "FreeRoamButton" + i ) ), "modeImage", GetUIMapAsset(file.m_vMaps[i + file.freeroamscroll]) )
 	}
 }
 
@@ -308,28 +313,20 @@ void function FreeRoam_Activated(var button)
 	if(file.showfreeroam)
 	{
 		foreach ( var uielem in GetElementsByClassname( file.menu, "FreeRoamUI" ) )
-		{
 			Hud_Hide( uielem )
-		}
 
 		RemoveCallback_OnMouseWheelUp( FreeRoam_ScrollUp )
         RemoveCallback_OnMouseWheelDown( FreeRoam_ScrollDown )
-
 		file.showfreeroam = false
-	}
-	else
-	{
-		foreach ( var uielem in GetElementsByClassname( file.menu, "FreeRoamUI" ) )
-		{
-			Hud_Show( uielem )
-		}
-
-		AddCallback_OnMouseWheelUp( FreeRoam_ScrollUp )
-        AddCallback_OnMouseWheelDown( FreeRoam_ScrollDown )
-
-		file.showfreeroam = true
+		return
 	}
 
+	foreach ( var uielem in GetElementsByClassname( file.menu, "FreeRoamUI" ) )
+		Hud_Show( uielem )
+
+	AddCallback_OnMouseWheelUp( FreeRoam_ScrollUp )
+    AddCallback_OnMouseWheelDown( FreeRoam_ScrollDown )
+	file.showfreeroam = true
 	file.freeroamscroll = 0
 }
 
@@ -343,8 +340,7 @@ void function FreeRoam_ScrollUp()
 
 void function FreeRoam_ScrollDown()
 {
-	array<string> m_vMaps = GetPlaylistMaps("survival_dev")
-	int max = m_vMaps.len()
+	int max = file.m_vMaps.len()
 
 	if(file.freeroamscroll + 6 < max)
 		file.freeroamscroll += 1
@@ -356,9 +352,8 @@ void function FreeRoamButton_Activated(var button)
 {
 	int id = Hud_GetScriptID( button ).tointeger()
 	
-	array<string> m_vMaps = GetPlaylistMaps("survival_dev")
 	g_SelectedQuickPlay = "survival_dev"
-	g_SelectedQuickPlayMap = m_vMaps[id + file.freeroamscroll]
+	g_SelectedQuickPlayMap = file.m_vMaps[id + file.freeroamscroll]
 	g_SelectedQuickPlayImage = GetUIMapAsset( g_SelectedQuickPlayMap )
 
 	R5RPlay_SetSelectedPlaylist(JoinType.QuickPlay)

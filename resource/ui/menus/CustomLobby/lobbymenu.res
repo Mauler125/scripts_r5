@@ -1,4 +1,4 @@
-"scripts/resource/ui/menus/R5R/lobbymenu.menu"
+"scripts/resource/ui/menus/CustomLobby/lobbymenu.menu"
 {
 	menu
 	{
@@ -143,7 +143,7 @@
     	    "wide"						"f0"
 			"tall"						"940"
 			"visible"					"0"
-    	    "controlSettingsFile"		"scripts/resource/ui/menus/R5R/panels/home.res"
+    	    "controlSettingsFile"		"scripts/resource/ui/menus/CustomLobby/panels/home.res"
     	    "proportionalToParent"    	"1"
 
     	    "pin_to_sibling"          	"MainButtonsFrame"
@@ -159,7 +159,7 @@
     	    "wide"						"f0"
 			"tall"						"960"
 			"visible"					"0"
-    	    "controlSettingsFile"		"scripts/resource/ui/menus/R5R/panels/serverbrowser.res"
+    	    "controlSettingsFile"		"scripts/resource/ui/menus/CustomLobby/panels/serverbrowser.res"
     	    "proportionalToParent"    	"1"
 
     	    "pin_to_sibling"          	"MainButtonsFrame"
@@ -175,7 +175,7 @@
 			"wide"						"f0"
 			"tall"						"f0"
 			"visible"					"0"
-			"controlSettingsFile"		"scripts/resource/ui/menus/R5R/panels/kickplayer.res"
+			"controlSettingsFile"		"scripts/resource/ui/menus/CustomLobby/panels/kickplayer.res"
 			"proportionalToParent"    	"1"
 			"zpos"                      "10"
 		}
@@ -188,7 +188,7 @@
 			"wide"						"f0"
 			"tall"						"f0"
 			"visible"					"0"
-			"controlSettingsFile"		"scripts/resource/ui/menus/R5R/panels/connecting.res"
+			"controlSettingsFile"		"scripts/resource/ui/menus/CustomLobby/panels/connecting.res"
 			"proportionalToParent"    	"1"
 			"zpos"                      "10"
 		}

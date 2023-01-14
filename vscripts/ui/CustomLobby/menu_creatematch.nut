@@ -57,64 +57,23 @@ void function InitR5RCreateMatch( var newMenuArg ) //
 
     AddMenuEventHandler( menu, eUIEvent.MENU_OPEN, OnOpenModeSelectDialog )
 	AddMenuEventHandler( menu, eUIEvent.MENU_CLOSE, OnCloseModeSelectDialog )
+	AddMenuEventHandler( menu, eUIEvent.MENU_NAVIGATE_BACK, OnNavBack )
 
-    var privatematchbutton = Hud_GetChild( menu, "GamemodesBtn" )
-	Hud_AddEventHandler( privatematchbutton, UIE_CLICK, Gamemodes_Activated )
-
-    AddMenuEventHandler( menu, eUIEvent.MENU_NAVIGATE_BACK, OnNavBack )
-
+	Hud_AddEventHandler( Hud_GetChild( menu, "GamemodesBtn" ), UIE_CLICK, Gamemodes_Activated )
 	Hud_AddEventHandler( Hud_GetChild( menu, "BtnPlaylistListDownArrow" ), UIE_CLICK, OnScrollDown_Playlist )
 	Hud_AddEventHandler( Hud_GetChild( menu, "BtnPlaylistListUpArrow" ), UIE_CLICK, OnScrollUp_Playlist )
-
 	Hud_AddEventHandler( Hud_GetChild( menu, "BtnMapListDownArrow" ), UIE_CLICK, OnScrollDown_Map )
 	Hud_AddEventHandler( Hud_GetChild( menu, "BtnMapListUpArrow" ), UIE_CLICK, OnScrollUp_Map )
-
 	Hud_AddEventHandler( Hud_GetChild( menu, "SaveBtn" ), UIE_CLICK, CreateMatch_Activated )
-
-	AddButtonEventHandler( Hud_GetChild( menu, "BtnServerName"), UIE_CHANGE, SaveServerName )
-	AddButtonEventHandler( Hud_GetChild( menu, "BtnServerDesc"), UIE_CHANGE, SaveServerDesc )
+	Hud_AddEventHandler( Hud_GetChild( Hud_GetChild( file.menu, "SwtBtnVisibility" ), "LeftButton" ), UIE_CLICK, VisButton_Activate )
+	Hud_AddEventHandler( Hud_GetChild( Hud_GetChild( file.menu, "SwtBtnVisibility" ), "RightButton" ), UIE_CLICK, VisButton_Activate )
 
 	AddMouseMovementCaptureHandler( Hud_GetChild(menu, "MapMouseMovementCapture"), UpdateMapMouseDeltaBuffer )
 	AddMouseMovementCaptureHandler( Hud_GetChild(menu, "PlaylistMouseMovementCapture"), UpdatePlaylistMouseDeltaBuffer )
 	AddButtonEventHandler( Hud_GetChild(menu, "MapMouseMovementCapture"), UIE_GET_FOCUS, MapButton_Hover )
 	AddButtonEventHandler( Hud_GetChild(menu, "PlaylistMouseMovementCapture"), UIE_GET_FOCUS, PlaylistButton_Hover )
-
-	Hud_AddEventHandler( Hud_GetChild( Hud_GetChild( file.menu, "SwtBtnVisibility" ), "LeftButton" ), UIE_CLICK, VisButton_Activate )
-	Hud_AddEventHandler( Hud_GetChild( Hud_GetChild( file.menu, "SwtBtnVisibility" ), "RightButton" ), UIE_CLICK, VisButton_Activate )
-}
-
-void function MapButton_Hover( var button )
-{
-	if(file.playlistscrollCallback)
-	{
-		file.playlistscrollCallback = false
-		RemoveCallback_OnMouseWheelUp( PlaylistScrollUp )
-        RemoveCallback_OnMouseWheelDown( PlaylistScrollDown )
-	}
-
-	if(file.mapscrollCallback)
-		return
-
-	file.mapscrollCallback = true
-	AddCallback_OnMouseWheelUp( MapScrollUp )
-    AddCallback_OnMouseWheelDown( MapScrollDown )
-}
-
-void function PlaylistButton_Hover( var button )
-{
-	if(file.mapscrollCallback)
-	{
-		file.mapscrollCallback = false
-		RemoveCallback_OnMouseWheelUp( MapScrollUp )
-        RemoveCallback_OnMouseWheelDown( MapScrollDown )
-	}
-
-	if(file.playlistscrollCallback)
-		return
-
-	file.playlistscrollCallback = true
-	AddCallback_OnMouseWheelUp( PlaylistScrollUp )
-    AddCallback_OnMouseWheelDown( PlaylistScrollDown )
+	AddButtonEventHandler( Hud_GetChild( menu, "BtnServerName"), UIE_CHANGE, SaveServerName )
+	AddButtonEventHandler( Hud_GetChild( menu, "BtnServerDesc"), UIE_CHANGE, SaveServerDesc )
 }
 
 void function VisButton_Activate( var button )
@@ -136,20 +95,17 @@ void function CreateMatch_Activated( var button )
 {
 	Hud_Hide( Hud_GetChild( file.menu, "ErrorText" ) )
 
-	if(p_ServerSettings.pm_Servername.len() == 0)
-	{
+	if(p_ServerSettings.pm_Servername.len() == 0) {
 		ShowErrorMessage("Error: Server name cannot be empty")
 		return
 	}
 	
-	if(p_ServerSettings.pm_Playlist.len() == 0)
-	{
+	if(p_ServerSettings.pm_Playlist.len() == 0) {
 		ShowErrorMessage("Error: No Playlist Selected")
 		return
 	}
 	
-	if(p_ServerSettings.pm_Map.len() == 0)
-	{
+	if(p_ServerSettings.pm_Map.len() == 0) {
 		ShowErrorMessage("Error: No Map Selected")
 		return
 	}
@@ -161,68 +117,6 @@ void function ShowErrorMessage(string message)
 {
 	Hud_Show( Hud_GetChild( file.menu, "ErrorText" ) )
 	Hud_SetText( Hud_GetChild( file.menu, "ErrorText" ), message )
-}
-
-void function PlaylistScrollDown()
-{
-	if(file.playlistscrollOffset > (file.m_vPlaylists.len() - 4))
-		return
-
-	file.playlistscrollOffset += MAX_BUTTONS_PER_ROW
-
-	SetupPlaylistButtons()
-	UpdatePlaylistListSliderPosition( file.m_vPlaylists.len() )
-}
-
-void function PlaylistScrollUp()
-{
-	file.playlistscrollOffset -= MAX_BUTTONS_PER_ROW
-	if(file.playlistscrollOffset < 0)
-		file.playlistscrollOffset = 0
-
-	SetupPlaylistButtons()
-	UpdatePlaylistListSliderPosition( file.m_vPlaylists.len() )
-}
-
-void function OnScrollDown_Playlist(var button)
-{
-	PlaylistScrollDown()
-}
-
-void function OnScrollUp_Playlist(var button)
-{
-	PlaylistScrollUp()
-}
-
-void function MapScrollUp()
-{
-	file.mapscrolloffset -= MAX_BUTTONS_PER_ROW
-	if(file.mapscrolloffset < 0)
-		file.mapscrolloffset = 0
-
-	SetupMapButtons()
-	UpdateMapListSliderPosition( file.m_vMaps.len() )
-}
-
-void function MapScrollDown()
-{
-	if(file.mapscrolloffset > (file.m_vMaps.len() - 4))
-		return
-
-	file.mapscrolloffset += MAX_BUTTONS_PER_ROW
-
-	SetupMapButtons()
-	UpdateMapListSliderPosition( file.m_vMaps.len() )
-}
-
-void function OnScrollDown_Map(var button)
-{
-	MapScrollDown()
-}
-
-void function OnScrollUp_Map(var button)
-{
-	MapScrollUp()
 }
 
 void function PlaylistButton_Activated(var button)
@@ -260,7 +154,7 @@ void function OnOpenModeSelectDialog()
 
 void function OnCloseModeSelectDialog()
 {
-	//DiagCloseing()
+	//
 }
 
 void function Gamemodes_Activated(var button)
@@ -354,9 +248,115 @@ array<string> function GetPlaylists()
 
 ////////////////////////////////////////////////////////////////////////////////////////
 //
-// Sliders
+// Scrolling
 //
 ////////////////////////////////////////////////////////////////////////////////////////
+
+void function AddMouseScrollCallback( int Type )
+{
+	if(file.playlistscrollCallback)
+	{
+		file.playlistscrollCallback = false
+		RemoveCallback_OnMouseWheelUp( PlaylistScrollUp )
+        RemoveCallback_OnMouseWheelDown( PlaylistScrollDown )
+	}
+
+	if(file.mapscrollCallback)
+	{
+		file.mapscrollCallback = false
+		RemoveCallback_OnMouseWheelUp( MapScrollUp )
+        RemoveCallback_OnMouseWheelDown( MapScrollDown )
+	}
+
+	switch(Type)
+	{
+		case 0:
+			file.mapscrollCallback = true
+			AddCallback_OnMouseWheelUp( MapScrollUp )
+			AddCallback_OnMouseWheelDown( MapScrollDown )
+			break
+		case 1:
+			file.playlistscrollCallback = true
+			AddCallback_OnMouseWheelUp( PlaylistScrollUp )
+			AddCallback_OnMouseWheelDown( PlaylistScrollDown )
+			break
+	}
+}
+
+void function MapButton_Hover( var button )
+{
+	if(Hud_IsVisible(button))
+		AddMouseScrollCallback(0)
+}
+
+void function PlaylistButton_Hover( var button )
+{
+	if(Hud_IsVisible(button))
+		AddMouseScrollCallback(1)
+}
+
+void function PlaylistScrollDown()
+{
+	if(file.playlistscrollOffset > (file.m_vPlaylists.len() - 4))
+		return
+
+	file.playlistscrollOffset += MAX_BUTTONS_PER_ROW
+
+	SetupPlaylistButtons()
+	UpdatePlaylistListSliderPosition( file.m_vPlaylists.len() )
+}
+
+void function PlaylistScrollUp()
+{
+	file.playlistscrollOffset -= MAX_BUTTONS_PER_ROW
+	if(file.playlistscrollOffset < 0)
+		file.playlistscrollOffset = 0
+
+	SetupPlaylistButtons()
+	UpdatePlaylistListSliderPosition( file.m_vPlaylists.len() )
+}
+
+void function MapScrollUp()
+{
+	file.mapscrolloffset -= MAX_BUTTONS_PER_ROW
+	if(file.mapscrolloffset < 0)
+		file.mapscrolloffset = 0
+
+	SetupMapButtons()
+	UpdateMapListSliderPosition( file.m_vMaps.len() )
+}
+
+void function MapScrollDown()
+{
+	if(file.mapscrolloffset > (file.m_vMaps.len() - 4))
+		return
+
+	file.mapscrolloffset += MAX_BUTTONS_PER_ROW
+
+	SetupMapButtons()
+	UpdateMapListSliderPosition( file.m_vMaps.len() )
+}
+
+void function OnScrollDown_Map(var button)
+{
+	MapScrollDown()
+}
+
+void function OnScrollUp_Map(var button)
+{
+	MapScrollUp()
+}
+
+void function OnScrollDown_Playlist(var button)
+{
+	PlaylistScrollDown()
+}
+
+void function OnScrollUp_Playlist(var button)
+{
+	PlaylistScrollUp()
+}
+
 
 void function UpdateMapMouseDeltaBuffer( int x, int y )
 {

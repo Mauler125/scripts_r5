@@ -825,14 +825,14 @@ Scripts:
 	ui/KillReplay/menu_killreplay.nut
 
 	//R5RUI
-	ui/R5RMenus/menu_main.nut
-	ui/R5RMenus/menu_lobby.nut
-	ui/R5RMenus/panel_home.nut
-	ui/R5RMenus/menu_news.nut
-	ui/R5RMenus/menu_gamemodeselect.nut
-	ui/R5RMenus/menu_creatematch.nut
-	ui/R5RMenus/panel_serverbrowser.nut
-	ui/R5RMenus/panel_mainmenu.nut
+	ui/CustomLobby/menu_main.nut
+	ui/CustomLobby/menu_lobby.nut
+	ui/CustomLobby/panel_home.nut
+	ui/CustomLobby/menu_news.nut
+	ui/CustomLobby/menu_gamemodeselect.nut
+	ui/CustomLobby/menu_creatematch.nut
+	ui/CustomLobby/panel_serverbrowser.nut
+	ui/CustomLobby/panel_mainmenu.nut
 
 	//CTF
 	ui/CTFMenus/menu_ctf_vote.nut

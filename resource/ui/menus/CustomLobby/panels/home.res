@@ -1,4 +1,4 @@
-"scripts/resource/ui/menus/R5R/panels/home.res"
+"scripts/resource/ui/menus/CustomLobby/panels/home.res"
 {
 	"DarkenBackground"
 	{
