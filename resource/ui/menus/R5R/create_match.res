@@ -218,12 +218,12 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
 			"pin_to_sibling_corner"	"TOP"
 		}
 
-        SwtBtnHideEmpty
+        SwtBtnVisibility
         {
             ControlName RuiButton
             InheritProperties SwitchButton
             style                   DialogListButton
-            ConVar "grx_hasUnknownItems"
+            ConVar "menu_faq_community_version"
             classname FilterPanelChild
             wide 600
             ypos                    30
@@ -237,8 +237,8 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
             list
             {
                 "Offline" 0
-                "Hidden" 1
-                "Visible" 2
+                "Visible" 1
+                "Hidden" 2
             }
 
             pin_to_sibling			BtnServerDesc
@@ -297,6 +297,28 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
             pin_corner_to_sibling	BOTTOM_RIGHT
             pin_to_sibling_corner	BOTTOM_RIGHT
         }
+
+        "ErrorText"
+		{
+			"ControlName"			"Label"
+			"xpos"                  "0"
+			"ypos"					"10"
+			"auto_wide_tocontents"	"1"
+			"tall"					"30"
+			"visible"				"0"
+			"wrap"					"0"
+			"fontHeight"			"30"
+			"zpos"					"5"
+			"textAlignment"			"north-west"
+			"labelText"				""
+			"font"					"TitleBoldFont"
+			"allcaps"				"1"
+			"fgcolor_override"		"200 30 30 255"
+
+			"pin_to_sibling"		"SaveBtn"
+			"pin_corner_to_sibling"	"TOP"
+			"pin_to_sibling_corner"	"BOTTOM"
+		}
 
         "SettingsBG"
         {
