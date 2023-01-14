@@ -76,6 +76,8 @@ void function InitR5RCreateMatch( var newMenuArg ) //
 
 	AddMouseMovementCaptureHandler( Hud_GetChild(menu, "MapMouseMovementCapture"), UpdateMapMouseDeltaBuffer )
 	AddMouseMovementCaptureHandler( Hud_GetChild(menu, "PlaylistMouseMovementCapture"), UpdatePlaylistMouseDeltaBuffer )
+	AddButtonEventHandler( Hud_GetChild(menu, "MapMouseMovementCapture"), UIE_GET_FOCUS, MapButton_Hover )
+	AddButtonEventHandler( Hud_GetChild(menu, "PlaylistMouseMovementCapture"), UIE_GET_FOCUS, PlaylistButton_Hover )
 
 	Hud_AddEventHandler( Hud_GetChild( Hud_GetChild( file.menu, "SwtBtnVisibility" ), "LeftButton" ), UIE_CLICK, VisButton_Activate )
 	Hud_AddEventHandler( Hud_GetChild( Hud_GetChild( file.menu, "SwtBtnVisibility" ), "RightButton" ), UIE_CLICK, VisButton_Activate )
@@ -85,9 +87,9 @@ void function MapButton_Hover( var button )
 {
 	if(file.playlistscrollCallback)
 	{
+		file.playlistscrollCallback = false
 		RemoveCallback_OnMouseWheelUp( PlaylistScrollUp )
         RemoveCallback_OnMouseWheelDown( PlaylistScrollDown )
-		file.playlistscrollCallback = false
 	}
 
 	if(file.mapscrollCallback)
@@ -102,9 +104,9 @@ void function PlaylistButton_Hover( var button )
 {
 	if(file.mapscrollCallback)
 	{
+		file.mapscrollCallback = false
 		RemoveCallback_OnMouseWheelUp( MapScrollUp )
         RemoveCallback_OnMouseWheelDown( MapScrollDown )
-		file.mapscrollCallback = false
 	}
 
 	if(file.playlistscrollCallback)
