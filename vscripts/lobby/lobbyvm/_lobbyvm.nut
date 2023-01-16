@@ -20,6 +20,13 @@ void function _LobbyVM_Init()
 
     PrecacheModel( $"mdl/vehicle/goblin_dropship/goblin_dropship.rmdl")
     PrecacheModel( $"mdl/props/death_box/death_box_01.rmdl")
+    PrecacheModel( $"mdl/props/global_access_panel_button/global_access_panel_button_console_w_stand.rmdl")
+    PrecacheModel( $"mdl/menu/coin.rmdl" )
+    PrecacheModel( $"mdl/props/loot_sphere/loot_sphere.rmdl" )
+    PrecacheModel( $"mdl/props/loot_drone/loot_drone.rmdl" )
+    PrecacheModel( $"mdl/vehicle/droppod_fireteam/droppod_fireteam_door.rmdl" )
+    PrecacheModel( $"mdl/vehicle/droppod_fireteam/droppod_fireteam.rmdl" )
+    PrecacheModel( $"mdl/robots/marvin/marvin_gladcard.rmdl" )
 }
 
 /////////////////////////////////////////////

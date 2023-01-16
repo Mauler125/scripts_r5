@@ -21,8 +21,13 @@ string tempstring = ""
 
 entity loottick
 entity dummyEnt
+entity modsdropship
+entity loot_drone
+entity loot_sphere
 
 global bool IsLootTickRunning = false
+
+bool loot_drone_moving = false
 
 void function Cl_LobbyVM_Init()
 {
@@ -38,29 +43,34 @@ void function LobbyVM_EntitiesDidLoad()
 {
     PrecacheParticleSystem( $"P_bBomb_smoke" )
     PrecacheParticleSystem( $"P_loot_tick_beam_idle_flash")
+    PrecacheParticleSystem( LOOT_DRONE_FX_TRAIL )
+    PrecacheModel( $"mdl/menu/coin.rmdl" )
+    PrecacheModel( $"mdl/props/loot_sphere/loot_sphere.rmdl" )
+    PrecacheModel( $"mdl/props/loot_drone/loot_drone.rmdl" )
+    PrecacheModel( $"mdl/vehicle/droppod_fireteam/droppod_fireteam_door.rmdl" )
+    PrecacheModel( $"mdl/vehicle/droppod_fireteam/droppod_fireteam.rmdl" )
     PrecacheModel( $"mdl/vehicle/goblin_dropship/goblin_dropship.rmdl")
     PrecacheModel( $"mdl/props/death_box/death_box_01.rmdl")
+    PrecacheModel( $"mdl/props/global_access_panel_button/global_access_panel_button_console_w_stand.rmdl")
+    PrecacheModel( $"mdl/robots/marvin/marvin_gladcard.rmdl" )
 
 	StartParticleEffectInWorld( GetParticleSystemIndex( $"P_bBomb_smoke" ), <8320,-7317, -8129>, <0, 0, 0> )
-
-	entity modsdropship = CreateClientSidePropDynamic( <8000,-7357, -8129>, <0, 120, 0>, $"mdl/vehicle/goblin_dropship/goblin_dropship.rmdl" )
-	modsdropship.SetModelScale( 0.5 )
-	thread PlayAnim( modsdropship, "s2s_rampdown_idle" )
-
-    dummyEnt = CreateClientSidePropDynamic( <8100,-7457, -8129>, <0, -45, 0>, $"mdl/humans/class/medium/pilot_medium_bloodhound.rmdl" )
-    dummyEnt.SetModelScale( 0.5 )
+    MapEditor_CreateProp( $"mdl/menu/coin.rmdl", < 8033.1500, -7369.0700, -8104.0800 >, < 10.4035, 43.3066, 0.8356 >, true, 50000, -1, 0.5 )
+    loot_sphere = MapEditor_CreateProp( $"mdl/props/loot_sphere/loot_sphere.rmdl", < 8704.4360, -7228.1640, -8071.3800 >, < 0, 23.6729, -90 >, true, 50000, -1, 0.5 )
+    loot_drone = MapEditor_CreateProp( $"mdl/props/loot_drone/loot_drone.rmdl", < 8707.1040, -7230.1200, -8048.7000 >, < 0, 145.2767, 0 >, true, 50000, -1, 0.5 )
+    int trailFXHandle = StartParticleEffectOnEntity( loot_drone, GetParticleSystemIndex( LOOT_DRONE_FX_TRAIL ), FX_PATTACH_POINT_FOLLOW, loot_drone.LookupAttachment( LOOT_DRONE_FX_ATTACH_NAME ) )
+    loottick = MapEditor_CreateProp( $"mdl/robots/drone_frag/drone_frag_loot.rmdl", < 8115, -7497, -8129 >, < 0, 0, 0 >, true, 50000, -1, 0.5 )
+    MapEditor_CreateProp( $"mdl/props/global_access_panel_button/global_access_panel_button_console_w_stand.rmdl", < 7973.2000, -7454.1000, -8129 >, < 0, 40.4603, 0 >, true, 50000, -1, 0.5 )
+    MapEditor_CreateProp( $"mdl/props/death_box/death_box_01.rmdl", < 8115, -7457, -8117 >, < 0, 90, 0 >, true, 50000, -1, 0.5 )
+    MapEditor_CreateProp( $"mdl/props/death_box/death_box_01.rmdl", < 8125, -7457, -8129 >, < 0, 30, 0 >, true, 50000, -1, 0.5 )
+    MapEditor_CreateProp( $"mdl/props/death_box/death_box_01.rmdl", < 8100, -7457, -8129 >, < 0, -60, 0 >, true, 50000, -1, 0.5 )
+    dummyEnt = MapEditor_CreateProp( $"mdl/humans/class/medium/pilot_medium_bloodhound.rmdl", < 8090, -7457, -8129 >, < 0, -45, 0 >, true, 50000, -1, 0.5 )
     thread PlayAnim( dummyEnt, "mp_pt_medium_training_blood_intro_idle" )
+    modsdropship = MapEditor_CreateProp( $"mdl/vehicle/goblin_dropship/goblin_dropship.rmdl", < 8000, -7357, -8129 >, < 0, 120, 0 >, true, 50000, -1, 0.5 )
+    thread PlayAnim( modsdropship, "s2s_rampdown_idle" )
 
-    entity deathbox1 = CreateClientSidePropDynamic( <8100,-7457, -8129>, <0, -60, 0>, $"mdl/props/death_box/death_box_01.rmdl" )
-    deathbox1.SetModelScale( 0.5 )
-    entity deathbox2 = CreateClientSidePropDynamic( <8125,-7457, -8129>, <0, 30, 0>, $"mdl/props/death_box/death_box_01.rmdl" )
-    deathbox2.SetModelScale( 0.5 )
-    entity deathbox3 = CreateClientSidePropDynamic( <8115,-7457, -8117>, <0, 90, 0>, $"mdl/props/death_box/death_box_01.rmdl" )
-    deathbox3.SetModelScale( 0.5 )
-
-    loottick = CreateClientSidePropDynamic( <8115,-7497, -8129>, <0, 0, 0>, $"mdl/robots/drone_frag/drone_frag_loot.rmdl")
-    loottick.SetModelScale( 0.5 )
-    thread PlayAnim( loottick, "sd_closed_idle" )
+    entity marvin = MapEditor_CreateProp( $"mdl/robots/marvin/marvin_gladcard.rmdl", < 8079.9000, -7408.3000, -8129 >, < 0, 0, 0 >, true, 50000, -1, 0.5 )
+    thread PlayAnim( marvin, "marvin_Gladcard_static_bighug" )
 }
 
 void function ModsPanelShown()
@@ -73,6 +83,35 @@ void function ModsPanelShown()
 
     if(IsValid(loottick))
         thread PlayLoottickOpenAnim()
+
+    if(!loot_drone_moving)
+        if(IsValid(loot_sphere) && IsValid(loot_drone))
+            thread PlayLootDroneAnim()
+}
+
+void function PlayLootDroneAnim()
+{
+    loot_drone_moving = true
+    Wait(RandomFloatRange( 0.5, 5.0 ))
+    float waittime = RandomFloatRange( 10.0, 20.0 )
+
+    loot_sphere.SetParent( loot_drone )
+    loot_drone.SetOrigin(< 8707.1040, -7230.1200, -8048.7000 >)
+
+    entity mover = CreateClientsideScriptMover( $"mdl/dev/empty_model.rmdl", < 8707.1040, -7230.1200, -8048.7000 >, < 0, 145.2767, 0 > )
+    loot_drone.SetParent( mover )
+    mover.NonPhysicsMoveTo( < 7426, -6343, -8049 >, waittime, 0, 0 )
+
+    wait waittime
+
+    //Reset Lootdrone without having trail FX shoot arcross the screen
+    loot_drone.SetOrigin( < 7426, -6343, 0 >)
+    WaitFrame()
+    loot_drone.SetOrigin(< 8707.1040, -7230.1200, 0>)
+    WaitFrame()
+    loot_drone.SetOrigin(< 8707.1040, -7230.1200, -8048.7000 >)
+
+    loot_drone_moving = false
 }
 
 void function PlayLoottickOpenAnim()
@@ -196,4 +235,14 @@ void function ServerCallback_LobbyVM_BuildClientString( ... )
 {
 	for ( int i = 0; i < vargc; i++ )
 		tempstring += format("%c", vargv[i] )
+}
+
+entity function MapEditor_CreateProp(asset a, vector pos, vector ang, bool mantle = false, float fade = 5000, int realm = -1, float scale = 1)
+{
+	entity e = CreateClientSidePropDynamic(pos,ang,a)
+    
+	e.SetScriptName("editor_placed_prop")
+    e.SetModelScale( scale )
+    
+	return e
 }
