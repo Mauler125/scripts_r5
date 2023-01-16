@@ -41,7 +41,7 @@ void function LobbyVM_EntitiesDidLoad()
     PrecacheModel( $"mdl/vehicle/goblin_dropship/goblin_dropship.rmdl")
     PrecacheModel( $"mdl/props/death_box/death_box_01.rmdl")
 
-	StartParticleEffectInWorld( GetParticleSystemIndex( $"P_bBomb_smoke" ), <8100,-7557, -8129>, <0, 0, 0> )
+	StartParticleEffectInWorld( GetParticleSystemIndex( $"P_bBomb_smoke" ), <8320,-7317, -8129>, <0, 0, 0> )
 
 	entity modsdropship = CreateClientSidePropDynamic( <8000,-7357, -8129>, <0, 120, 0>, $"mdl/vehicle/goblin_dropship/goblin_dropship.rmdl" )
 	modsdropship.SetModelScale( 0.5 )
