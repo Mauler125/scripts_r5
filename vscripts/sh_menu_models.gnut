@@ -804,6 +804,25 @@ void function InitPresentationData()
 		pd.lights = []
 		pd.cameraTargetName = eCameraTargetNames.collection_event_camera_target
 	}
+
+	{
+		PresentationDef pd = file.presentationData[ePresentationType.MODS]
+		pd.modelData = null
+		pd.useCharacterOffsets = false
+		pd.maxYawDegrees = 0
+		pd.maxPitchDegrees = 0
+		pd.fov = 60
+		pd.dofNearStart = DEFAULT_DOF_NEAR_START
+		pd.dofNearEnd = DEFAULT_DOF_NEAR_END
+		pd.dofFarStart = 400.0
+		pd.dofFarEnd = 500.0
+		pd.csmTexelScale1 = 0.22
+		pd.csmTexelScale2 = 0.55
+		pd.csmStartDistance = 70.0
+		pd.lights = []
+		pd.startFunc = StartPresentation_MODS
+		pd.cameraTargetName = eCameraTargetNames.customize_weapon_camera_target
+	}
 }
 
 void function StartPresentation_PLAY()
@@ -947,6 +966,18 @@ void function EndPresentation_WEAPON_CHARMS()
 
 	ModelData_SetBaseAngles( file.customizeWeapon, WEAPON_BASE_ANGLES )
 	ModelData_SetBaseRotationDelta( file.customizeWeapon, WEAPON_BASE_ROTATION_DELTA )
+}
+
+void function StartPresentation_MODS()
+{
+	int cameraTargetIndex    = eCameraTargetNames.customize_weapon_camera_target
+	entity cameraTarget      = file.cameraTargets[ cameraTargetIndex ]
+
+	vector cameraStartOrigin = <8000,-7757, -8118>
+	vector cameraStartAngles = <0, 74, 0>
+
+	cameraTarget.SetOrigin( cameraStartOrigin )
+	cameraTarget.SetAngles( cameraStartAngles )
 }
 
 void function StartPresentation_BATTLE_PASS()

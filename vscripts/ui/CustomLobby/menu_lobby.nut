@@ -88,10 +88,14 @@ void function InitR5RLobbyMenu( var newMenuArg )
 	//Setup panel array
 	file.panels.append(Hud_GetChild(menu, "R5RHomePanel"))
 	file.panels.append(Hud_GetChild(menu, "R5RServerBrowserPanel"))
+	file.panels.append(Hud_GetChild(menu, "ModsPanel"))
+	file.panels.append(null)
 
 	//Setup Button Vars
 	file.buttons.append(Hud_GetChild(menu, "HomeBtn"))
 	file.buttons.append(Hud_GetChild(menu, "ServerBrowserBtn"))
+	file.buttons.append(Hud_GetChild(menu, "ModsBtn"))
+	file.buttons.append(Hud_GetChild(menu, "SettingsBtn"))
 
 	ToolTips_AddMenu( menu )
 }
@@ -144,6 +148,14 @@ void function OpenSelectedPanel(var button)
 			UI_SetPresentationType( ePresentationType.COLLECTION_EVENT )
 			CurrentPresentationType = ePresentationType.COLLECTION_EVENT
 			break;
+		case 2:
+			Mods_SetupUI()
+			UI_SetPresentationType( ePresentationType.MODS )
+			CurrentPresentationType = ePresentationType.MODS
+			break;
+		case 3:
+			AdvanceMenu( GetMenu( "MiscMenu" ) )
+			break;
 	}
 }
 
@@ -163,9 +175,13 @@ void function SetupLobby()
 
 void function ShowSelectedPanel(var panel, var button)
 {
+	if(panel == null)
+		return
+	
 	//Hide all panels
 	foreach ( p in file.panels ) {
-		Hud_SetVisible( p, false )
+		if(p != null)
+			Hud_SetVisible( p, false )
 	}
 
 	//Unselect all buttons
