@@ -812,15 +812,16 @@ void function InitPresentationData()
 		pd.maxYawDegrees = 0
 		pd.maxPitchDegrees = 0
 		pd.fov = 60
-		pd.dofNearStart = DEFAULT_DOF_NEAR_START
-		pd.dofNearEnd = DEFAULT_DOF_NEAR_END
-		pd.dofFarStart = 400.0
-		pd.dofFarEnd = 500.0
+		pd.dofNearStart = 0.0
+		pd.dofNearEnd = -0.0
+		pd.dofFarStart = 5000.0
+		pd.dofFarEnd = 5000.0
 		pd.csmTexelScale1 = 0.22
 		pd.csmTexelScale2 = 0.55
 		pd.csmStartDistance = 70.0
 		pd.lights = []
 		pd.startFunc = StartPresentation_MODS
+		pd.endFunc = EndPresentation_MODS
 		pd.cameraTargetName = eCameraTargetNames.customize_weapon_camera_target
 	}
 }
@@ -973,11 +974,18 @@ void function StartPresentation_MODS()
 	int cameraTargetIndex    = eCameraTargetNames.customize_weapon_camera_target
 	entity cameraTarget      = file.cameraTargets[ cameraTargetIndex ]
 
-	vector cameraStartOrigin = <8000,-7757, -8118>
-	vector cameraStartAngles = <0, 74, 0>
+	vector cameraStartOrigin = <8020,-7607, -8080>
+	vector cameraStartAngles = <8, 74, 0>
 
 	cameraTarget.SetOrigin( cameraStartOrigin )
 	cameraTarget.SetAngles( cameraStartAngles )
+
+	ModsPanelShown()
+}
+
+void function EndPresentation_MODS()
+{
+	
 }
 
 void function StartPresentation_BATTLE_PASS()

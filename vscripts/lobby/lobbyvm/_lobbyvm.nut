@@ -17,6 +17,9 @@ void function _LobbyVM_Init()
     AddClientCommandCallback("lobby_refreshservers", ClientCommand_ResfreshServers)
 
     thread PlayerCheck()
+
+    PrecacheModel( $"mdl/vehicle/goblin_dropship/goblin_dropship.rmdl")
+    PrecacheModel( $"mdl/props/death_box/death_box_01.rmdl")
 }
 
 /////////////////////////////////////////////
