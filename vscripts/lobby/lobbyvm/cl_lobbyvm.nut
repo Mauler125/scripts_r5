@@ -63,7 +63,7 @@ void function LobbyVM_EntitiesDidLoad()
     MapEditor_CreateProp( $"mdl/props/tablet/tablet_mini.rmdl", < 8093.8900, -7460.6300, -8115.8200 >, < 0, 0, 0 >, true, 50000, -1, 1 )
     MapEditor_CreateProp( $"mdl/props/skull/skull_gladcard.rmdl", < 8105.6000, -7461.5700, -8101.7400 >, < 0, -137.0601, 0 >, true, 50000, -1, 0.5 )
     MapEditor_CreateProp( $"mdl/props/caustic_flask/caustic_flask.rmdl", < 8122.8400, -7457.3100, -8103.4300 >, < 0, -132.0102, 0 >, true, 50000, -1, 0.5 )
-    MapEditor_CreateProp( $"mdl/props/charm/charm_r5r.rmdl", < 8039.3000, -7462.5800, -8060.5200 >, < 0, 200.3317, -28.5662 >, true, 50000, -1, 10 )
+    //MapEditor_CreateProp( $"mdl/props/charm/charm_r5r.rmdl", < 8039.3000, -7462.5800, -8060.5200 >, < 0, 200.3317, -28.5662 >, true, 50000, -1, 10 )
     MapEditor_CreateProp( $"mdl/vehicle/droppod_fireteam/droppod_fireteam.rmdl", < 8488, -7203, -8113 >, < 8.8820, 0, -28.0421 >, true, 50000, -1, 0.5 )
 }
 
