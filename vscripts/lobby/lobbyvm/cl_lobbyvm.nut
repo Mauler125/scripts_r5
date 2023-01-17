@@ -31,30 +31,13 @@ bool loot_drone_moving = false
 
 void function Cl_LobbyVM_Init()
 {
-    AddClientCallback_OnResolutionChanged( OnResolutionChanged_UpdateClientUI )
-
-    PakHandle earlypak = RequestPakFile( "common_early" )
-    PakHandle earlypak2 = RequestPakFile( "common_mp" )
-    
+    AddClientCallback_OnResolutionChanged( OnResolutionChanged_UpdateClientUI ) 
     AddCallback_EntitiesDidLoad( LobbyVM_EntitiesDidLoad )
 }
 
 void function LobbyVM_EntitiesDidLoad()
 {
-    PrecacheParticleSystem( $"P_bBomb_smoke" )
-    PrecacheParticleSystem( $"P_loot_tick_beam_idle_flash")
-    PrecacheParticleSystem( LOOT_DRONE_FX_TRAIL )
-    PrecacheModel( $"mdl/menu/coin.rmdl" )
-    PrecacheModel( $"mdl/props/loot_sphere/loot_sphere.rmdl" )
-    PrecacheModel( $"mdl/props/loot_drone/loot_drone.rmdl" )
-    PrecacheModel( $"mdl/vehicle/droppod_fireteam/droppod_fireteam_door.rmdl" )
-    PrecacheModel( $"mdl/vehicle/droppod_fireteam/droppod_fireteam.rmdl" )
-    PrecacheModel( $"mdl/vehicle/goblin_dropship/goblin_dropship.rmdl")
-    PrecacheModel( $"mdl/props/death_box/death_box_01.rmdl")
-    PrecacheModel( $"mdl/props/global_access_panel_button/global_access_panel_button_console_w_stand.rmdl")
-    PrecacheModel( $"mdl/robots/marvin/marvin_gladcard.rmdl" )
-
-	StartParticleEffectInWorld( GetParticleSystemIndex( $"P_bBomb_smoke" ), <8320,-7317, -8129>, <0, 0, 0> )
+	StartParticleEffectInWorld( GetParticleSystemIndex( $"P_fire_med_FULL" ), < 8488, -7203, -8129 >, <0, 0, 0> )
     MapEditor_CreateProp( $"mdl/menu/coin.rmdl", < 8033.1500, -7369.0700, -8104.0800 >, < 10.4035, 43.3066, 0.8356 >, true, 50000, -1, 0.5 )
     loot_sphere = MapEditor_CreateProp( $"mdl/props/loot_sphere/loot_sphere.rmdl", < 8704.4360, -7228.1640, -8071.3800 >, < 0, 23.6729, -90 >, true, 50000, -1, 0.5 )
     loot_drone = MapEditor_CreateProp( $"mdl/props/loot_drone/loot_drone.rmdl", < 8707.1040, -7230.1200, -8048.7000 >, < 0, 145.2767, 0 >, true, 50000, -1, 0.5 )
@@ -69,8 +52,15 @@ void function LobbyVM_EntitiesDidLoad()
     modsdropship = MapEditor_CreateProp( $"mdl/vehicle/goblin_dropship/goblin_dropship.rmdl", < 8000, -7357, -8129 >, < 0, 120, 0 >, true, 50000, -1, 0.5 )
     thread PlayAnim( modsdropship, "s2s_rampdown_idle" )
 
-    entity marvin = MapEditor_CreateProp( $"mdl/robots/marvin/marvin_gladcard.rmdl", < 8079.9000, -7408.3000, -8129 >, < 0, 0, 0 >, true, 50000, -1, 0.5 )
-    thread PlayAnim( marvin, "marvin_Gladcard_static_bighug" )
+    entity marvin = MapEditor_CreateProp( $"mdl/robots/marvin/marvin.rmdl", < 7981.4400, -7468.0510, -8128.7000 >, < 0, 120, 0 >, true, 50000, -1, 0.5 )
+    thread PlayAnim( marvin, "mv_idle_unarmed" )
+
+    MapEditor_CreateProp( $"mdl/props/kunai/kunai.rmdl", < 8126.8400, -7466.8300, -8115.9200 >, < 0, 0, 0 >, true, 50000, -1, 0.5 )
+    MapEditor_CreateProp( $"mdl/props/tablet/tablet_mini.rmdl", < 8093.8900, -7460.6300, -8115.8200 >, < 0, 0, 0 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/props/skull/skull_gladcard.rmdl", < 8105.6000, -7461.5700, -8101.7400 >, < 0, -137.0601, 0 >, true, 50000, -1, 0.5 )
+    MapEditor_CreateProp( $"mdl/props/caustic_flask/caustic_flask.rmdl", < 8122.8400, -7457.3100, -8103.4300 >, < 0, -132.0102, 0 >, true, 50000, -1, 0.5 )
+    MapEditor_CreateProp( $"mdl/props/charm/charm_yeti.rmdl", < 8039.3000, -7462.5800, -8060.5200 >, < 0, 117.3317, -28.5662 >, true, 50000, -1, 10 )
+    MapEditor_CreateProp( $"mdl/vehicle/droppod_fireteam/droppod_fireteam.rmdl", < 8488, -7203, -8113 >, < 8.8820, 0, -28.0421 >, true, 50000, -1, 0.5 )
 }
 
 void function ModsPanelShown()
