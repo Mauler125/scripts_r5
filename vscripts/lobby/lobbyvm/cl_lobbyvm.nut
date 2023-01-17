@@ -17,6 +17,8 @@ global function UICallback_SetHostName
 
 global function ModsPanelShown
 
+global function BrowesModsMoveCamera
+
 string tempstring = ""
 
 entity loottick
@@ -28,6 +30,8 @@ entity loot_sphere
 global bool IsLootTickRunning = false
 
 bool loot_drone_moving = false
+
+entity menucamera = null
 
 void function Cl_LobbyVM_Init()
 {
@@ -59,12 +63,15 @@ void function LobbyVM_EntitiesDidLoad()
     MapEditor_CreateProp( $"mdl/props/tablet/tablet_mini.rmdl", < 8093.8900, -7460.6300, -8115.8200 >, < 0, 0, 0 >, true, 50000, -1, 1 )
     MapEditor_CreateProp( $"mdl/props/skull/skull_gladcard.rmdl", < 8105.6000, -7461.5700, -8101.7400 >, < 0, -137.0601, 0 >, true, 50000, -1, 0.5 )
     MapEditor_CreateProp( $"mdl/props/caustic_flask/caustic_flask.rmdl", < 8122.8400, -7457.3100, -8103.4300 >, < 0, -132.0102, 0 >, true, 50000, -1, 0.5 )
-    MapEditor_CreateProp( $"mdl/props/charm/charm_yeti.rmdl", < 8039.3000, -7462.5800, -8060.5200 >, < 0, 117.3317, -28.5662 >, true, 50000, -1, 10 )
+    MapEditor_CreateProp( $"mdl/props/charm/charm_r5r.rmdl", < 8039.3000, -7462.5800, -8060.5200 >, < 0, 200.3317, -28.5662 >, true, 50000, -1, 10 )
     MapEditor_CreateProp( $"mdl/vehicle/droppod_fireteam/droppod_fireteam.rmdl", < 8488, -7203, -8113 >, < 8.8820, 0, -28.0421 >, true, 50000, -1, 0.5 )
 }
 
-void function ModsPanelShown()
+void function ModsPanelShown(entity cameraTarget)
 {
+    if(IsValid(cameraTarget))
+        menucamera = cameraTarget
+    
     if(IsLootTickRunning)
         IsLootTickRunning = false
         
@@ -235,4 +242,21 @@ entity function MapEditor_CreateProp(asset a, vector pos, vector ang, bool mantl
     e.SetModelScale( scale )
     
 	return e
+}
+
+void function BrowesModsMoveCamera()
+{
+    thread MoveCameraToMods()
+}
+
+void function MoveCameraToMods()
+{
+    if(IsValid(menucamera))
+    {
+        entity mover = CreateClientsideScriptMover( $"mdl/dev/empty_model.rmdl", menucamera.GetOrigin(), menucamera.GetAngles() )
+        menucamera.SetParent( mover )
+        mover.NonPhysicsMoveTo( < 8093.8900, -7460.6300, -8100.8200 >, 1.3, 0.2, 0.3 )
+        wait 0.1
+        mover.NonPhysicsRotateTo( < 90, 90, 0 >, 1.1, 1.0, 0.1 )
+    }
 }

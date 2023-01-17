@@ -980,7 +980,7 @@ void function StartPresentation_MODS()
 	cameraTarget.SetOrigin( cameraStartOrigin )
 	cameraTarget.SetAngles( cameraStartAngles )
 
-	ModsPanelShown()
+	ModsPanelShown(cameraTarget)
 }
 
 void function EndPresentation_MODS()

@@ -12,5 +12,34 @@ scripts/resource/ui/menus/CustomLobby/panels/mods.res
 		"visible"				"1"
 		"paintbackground"		"1"
 	}
+
+	BrowseModsButton
+    {
+        ControlName				RuiButton
+        classname               "MenuButton"
+        wide					280
+        tall					120
+        ypos                    -150
+        xpos                    0
+        zpos                    10
+        rui                     "ui/gamemode_select_v2_lobby_button.rpak"
+        labelText               ""
+        visible					1
+        tabPosition             1
+        cursorVelocityModifier  0.7
+        sound_accept            "UI_Menu_GameMode_Select"
+
+        ruiArgs
+        {
+            lockIconEnabled 0
+            modeNameText "Browse Mods"
+            modeDescText ""
+            modeImage "rui/menu/store/feature_background_square"
+        }
+
+        pin_to_sibling			DarkenBackground
+        pin_corner_to_sibling	BOTTOM
+        pin_to_sibling_corner	BOTTOM
+    }
 }
 
