@@ -1,42 +1,26 @@
 global function Cl_LobbyVM_Init
 
-global function ServerCallback_LobbyVM_UpdateUI
-global function ServerCallback_LobbyVM_SelectionUpdated
-global function ServerCallback_LobbyVM_BuildClientString
-global function ServerCallback_LobbyVM_StartingMatch
-global function ServerCallback_ServerBrowser_JoinServer
-global function ServerCallback_ServerBrowser_RefreshServers
-
-global function UICodeCallback_UpdateServerInfo
-global function UICodeCallback_KickOrBanPlayer
-global function UICallback_CheckForHost
-global function UICallback_StartMatch
-global function UICallback_ServerBrowserJoinServer
-global function UICallback_RefreshServer
-global function UICallback_SetHostName
-
+//Mods Panel
 global function ModsPanelShown
+global function DefaultToBrowseMods
+global function BrowseModsToDefault
+global function DefaultToInstalledMods
+global function InstalledModsToDefault
 
-global function BrowesModsMoveCamera
-global function MoveCameraFromModsToMain
-
-string tempstring = ""
 
 entity loottick
 entity dummyEnt
 entity modsdropship
 entity loot_drone
 entity loot_sphere
+entity cam_mover
 
 global bool IsLootTickRunning = false
-
 bool loot_drone_moving = false
-
 entity menucamera = null
 
 void function Cl_LobbyVM_Init()
 {
-    AddClientCallback_OnResolutionChanged( OnResolutionChanged_UpdateClientUI ) 
     AddCallback_EntitiesDidLoad( LobbyVM_EntitiesDidLoad )
 }
 
@@ -150,91 +134,6 @@ void function StartLootTickLights()
     }
 }
 
-void function OnResolutionChanged_UpdateClientUI()
-{
-    GetLocalClientPlayer().ClientCommand("lobby_updateclient")
-}
-
-////////////////////////////////////////////////
-//
-//    UI CallBacks
-//
-////////////////////////////////////////////////
-
-void function UICallback_SetHostName(string name)
-{
-    
-}
-
-void function UICallback_RefreshServer()
-{
-    if(GetLocalClientPlayer() == GetPlayerArray()[0])
-        GetLocalClientPlayer().ClientCommand("lobby_refreshservers")
-}
-
-void function UICallback_StartMatch()
-{
-   
-}
-
-void function UICallback_CheckForHost()
-{
-    
-}
-
-void function UICodeCallback_UpdateServerInfo(int type, string text)
-{
-    
-}
-
-void function UICodeCallback_KickOrBanPlayer(int type, string player)
-{
-    
-}
-
-void function UICallback_ServerBrowserJoinServer(int id)
-{
-    if(GetLocalClientPlayer() == GetPlayerArray()[0])
-        GetLocalClientPlayer().ClientCommand("lobby_joinserver " + id)
-}
-
-////////////////////////////////////////////////
-//
-//    Server CallBacks
-//
-////////////////////////////////////////////////
-
-void function ServerCallback_ServerBrowser_RefreshServers()
-{
-    RunUIScript( "ServerBrowser_RefreshServerListing")
-}
-
-void function ServerCallback_ServerBrowser_JoinServer(int id)
-{
-    RunUIScript( "ServerBrowser_JoinServer", id)
-}
-
-void function ServerCallback_LobbyVM_StartingMatch()
-{
-    
-}
-
-void function ServerCallback_LobbyVM_UpdateUI()
-{
-    
-}
-
-void function ServerCallback_LobbyVM_SelectionUpdated(int type)
-{
-    
-}
-
-void function ServerCallback_LobbyVM_BuildClientString( ... )
-{
-	for ( int i = 0; i < vargc; i++ )
-		tempstring += format("%c", vargv[i] )
-}
-
 entity function MapEditor_CreateProp(asset a, vector pos, vector ang, bool mantle = false, float fade = 5000, int realm = -1, float scale = 1)
 {
 	entity e = CreateClientSidePropDynamic(pos,ang,a)
@@ -245,48 +144,51 @@ entity function MapEditor_CreateProp(asset a, vector pos, vector ang, bool mantl
 	return e
 }
 
-void function BrowesModsMoveCamera()
+void function DefaultToBrowseMods()
 {
-    thread MoveCameraToMods()
+    array<vector> nodes = GetAllPointsOnBezier( [ < 8020, -7607, -8080 >, < 8082, -7524.8000, -8080 >, < 8058.7000, -7452.4100, -8080 >, < 8010.9100, -7377.7300, -8080 > ], 50)
+    thread MoveModsCamera( nodes, < 8, 74, 0 >, < 0, 0.90, 0 >, false )
 }
 
-void function MoveCameraFromModsToMain()
+void function BrowseModsToDefault()
 {
-    thread MoveCameraFromModsToMain2()
+    vector startangs = <8, 120, 0>
+    array<vector> nodes = GetAllPointsOnBezier( [ < 8010.9100, -7377.7300, -8080 >, < 8058.7000, -7452.4100, -8080 >, < 8082, -7524.8000, -8080 >, < 8020, -7607, -8080 > ], 50)
+    thread MoveModsCamera( nodes, <8, 120, 0>, < 0, 0.90, 0 >, true )
 }
 
-void function MoveCameraToMods()
+void function DefaultToInstalledMods()
 {
-    if(IsValid(menucamera))
-    {
-        entity mover = CreateClientsideScriptMover( $"mdl/dev/empty_model.rmdl", menucamera.GetOrigin(), menucamera.GetAngles() )
-        menucamera.SetParent( mover )
-        array<vector> nodes = GetAllPointsOnBezier( [ < 8020, -7607, -8080 >, < 8082, -7524.8000, -8080 >, < 8058.7000, -7452.4100, -8080 >, < 8010.9100, -7377.7300, -8080 > ], 50)
-        vector angles = <8, 74, 0>
-        foreach(vector node in nodes)
-        {
-            angles += <0, 0.90, 0>
-            mover.NonPhysicsMoveTo( node, 0.3, 0.0, 0.3 )
-            mover.NonPhysicsRotateTo( angles, 0.3, 0.0, 0.3 )
-            wait 0.005
-        }
+    array<vector> nodes = GetAllPointsOnBezier( [ < 8020, -7607, -8080 >, < 8086.9400, -7490.3000, -8080 >, < 8093.8900, -7461.2900, -8080 >, < 8093.4000, -7460.4700, -8108.8000 > ], 50 )
+    thread MoveModsCamera( nodes, < 8, 74, 0 >, < 1.64, 0.32, 0 >, false )
+}
+
+void function InstalledModsToDefault()
+{
+    array<vector> nodes = GetAllPointsOnBezier( [ < 8093.4000, -7460.4700, -8108.8000 >, < 8093.8900, -7461.2900, -8080 >, < 8086.9400, -7490.3000, -8080 >, < 8020, -7607, -8080 > ], 50 )
+    thread MoveModsCamera( nodes, < 90, 90, 0 >, < 1.64, 0.32, 0 >, true )
+}
+
+void function MoveModsCamera(array<vector> nodes, vector startAngles, vector rotateAngles, bool minus)
+{
+    if(!IsValid(menucamera))
+        return
+    
+    if(!IsValid(cam_mover)) {
+        cam_mover = CreateClientsideScriptMover( $"mdl/dev/empty_model.rmdl", menucamera.GetOrigin(), menucamera.GetAngles() )
+        menucamera.SetParent( cam_mover )
     }
-}
 
-void function MoveCameraFromModsToMain2()
-{
-    if(IsValid(menucamera))
+    vector angles = startAngles
+    foreach(vector node in nodes)
     {
-        entity mover = CreateClientsideScriptMover( $"mdl/dev/empty_model.rmdl", menucamera.GetOrigin(), menucamera.GetAngles() )
-        menucamera.SetParent( mover )
-        array<vector> nodes = GetAllPointsOnBezier( [ < 8010.9100, -7377.7300, -8080 >, < 8058.7000, -7452.4100, -8080 >, < 8082, -7524.8000, -8080 >, < 8020, -7607, -8080 > ], 50)
-        vector angles = <8, 120, 0>
-        foreach(vector node in nodes)
-        {
-            angles += <0, -0.92, 0>
-            mover.NonPhysicsMoveTo( node, 0.3, 0.0, 0.3 )
-            mover.NonPhysicsRotateTo( angles, 0.3, 0.0, 0.3 )
-            wait 0.005
-        }
+        if(minus)
+            angles -= rotateAngles
+        else
+            angles += rotateAngles
+
+        cam_mover.NonPhysicsMoveTo( node, 0.3, 0.0, 0.3 )
+        cam_mover.NonPhysicsRotateTo( angles, 0.3, 0.0, 0.3 )
+        wait 0.005
     }
 }

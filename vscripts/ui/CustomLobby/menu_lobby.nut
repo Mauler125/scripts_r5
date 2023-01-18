@@ -128,12 +128,20 @@ void function OnR5RLobby_Show()
 
 void function OnR5RLobby_Back()
 {
-	if( g_isInModsMenu)
-	{
-		RunClientScript( "MoveCameraFromModsToMain")
+	if( g_isInModsMenu) {
+		RunClientScript( "BrowseModsToDefault")
 		g_isInModsMenu = false
+		ReShowModsButtons()
 		return
 	}
+
+	if(g_isInInstalledMenu) {
+		RunClientScript( "InstalledModsToDefault")
+		g_isInInstalledMenu = false
+		ReShowModsButtons()
+		return
+	}
+
 	AdvanceMenu( GetMenu( "SystemMenu" ) )
 }
 
