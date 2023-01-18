@@ -18,6 +18,7 @@ global function UICallback_SetHostName
 global function ModsPanelShown
 
 global function BrowesModsMoveCamera
+global function MoveCameraFromModsToMain
 
 string tempstring = ""
 
@@ -249,14 +250,43 @@ void function BrowesModsMoveCamera()
     thread MoveCameraToMods()
 }
 
+void function MoveCameraFromModsToMain()
+{
+    thread MoveCameraFromModsToMain2()
+}
+
 void function MoveCameraToMods()
 {
     if(IsValid(menucamera))
     {
         entity mover = CreateClientsideScriptMover( $"mdl/dev/empty_model.rmdl", menucamera.GetOrigin(), menucamera.GetAngles() )
         menucamera.SetParent( mover )
-        mover.NonPhysicsMoveTo( < 8093.8900, -7460.6300, -8100.8200 >, 1.3, 0.2, 0.3 )
-        wait 0.1
-        mover.NonPhysicsRotateTo( < 90, 90, 0 >, 1.1, 1.0, 0.1 )
+        array<vector> nodes = GetAllPointsOnBezier( [ < 8020, -7607, -8080 >, < 8082, -7524.8000, -8080 >, < 8058.7000, -7452.4100, -8080 >, < 8010.9100, -7377.7300, -8080 > ], 50)
+        vector angles = <8, 74, 0>
+        foreach(vector node in nodes)
+        {
+            angles += <0, 0.90, 0>
+            mover.NonPhysicsMoveTo( node, 0.3, 0.0, 0.3 )
+            mover.NonPhysicsRotateTo( angles, 0.3, 0.0, 0.3 )
+            wait 0.005
+        }
+    }
+}
+
+void function MoveCameraFromModsToMain2()
+{
+    if(IsValid(menucamera))
+    {
+        entity mover = CreateClientsideScriptMover( $"mdl/dev/empty_model.rmdl", menucamera.GetOrigin(), menucamera.GetAngles() )
+        menucamera.SetParent( mover )
+        array<vector> nodes = GetAllPointsOnBezier( [ < 8010.9100, -7377.7300, -8080 >, < 8058.7000, -7452.4100, -8080 >, < 8082, -7524.8000, -8080 >, < 8020, -7607, -8080 > ], 50)
+        vector angles = <8, 120, 0>
+        foreach(vector node in nodes)
+        {
+            angles += <0, -0.92, 0>
+            mover.NonPhysicsMoveTo( node, 0.3, 0.0, 0.3 )
+            mover.NonPhysicsRotateTo( angles, 0.3, 0.0, 0.3 )
+            wait 0.005
+        }
     }
 }

@@ -8,6 +8,8 @@ struct
 
 } file
 
+global bool g_isInModsMenu = false
+
 void function InitModsPanel( var panel )
 {
 	file.panel = panel
@@ -18,6 +20,7 @@ void function InitModsPanel( var panel )
 
 void function BrowseModsButton_Activated(var button)
 {
+	g_isInModsMenu = true
 	RunClientScript("BrowesModsMoveCamera")
 }
 
