@@ -128,13 +128,13 @@ void function OnR5RLobby_Show()
 
 void function OnR5RLobby_Back()
 {
-	if( g_isInModsMenu) {
-		ChangeModsPanel(3, false)
+	if( g_modCameraPosition == ModCameraPosition.BROWSE ) {
+		ChangeModsPanel(ModCameraMovement.BROWSE_TO_MAIN)
 		return
 	}
 
-	if(g_isInInstalledMenu) {
-		ChangeModsPanel(2, false)
+	if( g_modCameraPosition == ModCameraPosition.INSTALLED ) {
+		ChangeModsPanel(ModCameraMovement.INSTALLED_TO_MAIN)
 		return
 	}
 

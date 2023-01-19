@@ -28,6 +28,7 @@ scripts/resource/ui/menus/CustomLobby/panels/mods.res
         tabPosition             1
         cursorVelocityModifier  0.7
         sound_accept            "UI_Menu_GameMode_Select"
+        scriptID					"1"
 
         ruiArgs
         {
@@ -57,6 +58,7 @@ scripts/resource/ui/menus/CustomLobby/panels/mods.res
         tabPosition             1
         cursorVelocityModifier  0.7
         sound_accept            "UI_Menu_GameMode_Select"
+        scriptID					"0"
 
         ruiArgs
         {

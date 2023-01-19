@@ -2,12 +2,19 @@ global function InitModsPanel
 global function Mods_SetupUI
 global function ChangeModsPanel
 
-global enum ModPanelType
+global enum ModCameraMovement
 {
 	MAIN_TO_INSTALLED = 0,
 	MAIN_TO_BROWSE = 1,
 	INSTALLED_TO_MAIN = 2,
 	BROWSE_TO_MAIN = 3
+}
+
+global enum ModCameraPosition
+{
+	MAIN = 0,
+	INSTALLED = 1,
+	BROWSE = 2
 }
 
 struct
@@ -17,16 +24,15 @@ struct
 
 } file
 
-global bool g_isInModsMenu = false
-global bool g_isInInstalledMenu = false
+global int g_modCameraPosition = ModCameraPosition.MAIN
 
 void function InitModsPanel( var panel )
 {
 	file.panel = panel
 	file.menu = GetParentMenu( file.panel )
 
-	Hud_AddEventHandler( Hud_GetChild( panel, "BrowseModsButton" ), UIE_CLICK, BrowseModsButton_Activated )
-	Hud_AddEventHandler( Hud_GetChild( panel, "InstalledModsButton" ), UIE_CLICK, InstalledModsButton_Activated )
+	Hud_AddEventHandler( Hud_GetChild( panel, "BrowseModsButton" ), UIE_CLICK, ModsButton_Activated )
+	Hud_AddEventHandler( Hud_GetChild( panel, "InstalledModsButton" ), UIE_CLICK, ModsButton_Activated )
 	Hud_AddEventHandler( Hud_GetChild( panel, "BackButton" ), UIE_CLICK, BackButton_Activated )
 
 	Hud_SetX( Hud_GetChild( panel, "BrowseModsButton" ), -(Hud_GetWidth(Hud_GetChild( panel, "BrowseModsButton" ))/2) + 7.5 )
@@ -39,50 +45,45 @@ void function Mods_SetupUI()
 
 void function BackButton_Activated(var button)
 {
-	if( g_isInModsMenu ) {
-		ChangeModsPanel(ModPanelType.BROWSE_TO_MAIN, false)
+	if( g_modCameraPosition == ModCameraPosition.BROWSE ) {
+		ChangeModsPanel(ModCameraMovement.BROWSE_TO_MAIN)
 		return
 	}
 
-	if( g_isInInstalledMenu ) {
-		ChangeModsPanel(ModPanelType.INSTALLED_TO_MAIN, false)
+	if( g_modCameraPosition == ModCameraPosition.INSTALLED ) {
+		ChangeModsPanel(ModCameraMovement.INSTALLED_TO_MAIN)
 		return
 	}
 }
 
-void function InstalledModsButton_Activated(var button)
+void function ModsButton_Activated(var button)
 {
-	ChangeModsPanel(ModPanelType.MAIN_TO_BROWSE, true)
+	ChangeModsPanel(Hud_GetScriptID( button ).tointeger())
 }
 
-void function BrowseModsButton_Activated(var button)
+void function ChangeModsPanel(int type)
 {
-	ChangeModsPanel(ModPanelType.MAIN_TO_INSTALLED, true)
-}
-
-void function ChangeModsPanel(int paneltype, bool show)
-{
-	switch(paneltype)
+	switch(type)
 	{
-		case ModPanelType.MAIN_TO_INSTALLED:
-			g_isInInstalledMenu = show
+		case ModCameraMovement.MAIN_TO_INSTALLED:
+			g_modCameraPosition = ModCameraPosition.INSTALLED
 			RunClientScript("DefaultToInstalledMods")	
 			break;
-		case ModPanelType.MAIN_TO_BROWSE:
-			g_isInModsMenu = show
+		case ModCameraMovement.MAIN_TO_BROWSE:
+			g_modCameraPosition = ModCameraPosition.BROWSE
 			RunClientScript("DefaultToBrowseMods")
 			break;
-		case ModPanelType.INSTALLED_TO_MAIN:
-			g_isInInstalledMenu = show
+		case ModCameraMovement.INSTALLED_TO_MAIN:
+			g_modCameraPosition = ModCameraPosition.MAIN
 			RunClientScript( "InstalledModsToDefault")
 			break;
-		case ModPanelType.BROWSE_TO_MAIN:
-			g_isInModsMenu = show
+		case ModCameraMovement.BROWSE_TO_MAIN:
+			g_modCameraPosition = ModCameraPosition.MAIN
 			RunClientScript( "BrowseModsToDefault")
 			break;
 	}
 
-	SetMainModsButtonVis(!show)
+	SetMainModsButtonVis((g_modCameraPosition == ModCameraPosition.MAIN))
 }
 
 void function SetMainModsButtonVis(bool vis)
