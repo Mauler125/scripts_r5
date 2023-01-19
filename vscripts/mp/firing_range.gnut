@@ -29,6 +29,10 @@ global const asset FIRINGRANGE_256x256_ASSET = $"mdl/thunderdome/thunderdome_cag
 global const asset FIRINGRANGE_GRATE_ASSET = $"mdl/industrial/landing_mat_metal_02_large.rmdl"
 global const asset FIRINGRANGE_QUARRY_BLOCK_ASSET = $"mdl/rocks/thunderdome_quarry_block_01_orange.rmdl"
 
+const asset RESPAWN_DROPSHIP_MODEL                     = $"mdl/vehicle/goblin_dropship/goblin_dropship.rmdl"
+
+global const asset LANDING_PAD_ASSET = $"mdl/imc_base/landing_pad_tarmac_nobase.rmdl"
+
 #if SERVER
 // To be used outside if needed
 global int firingrange_infinite_ammo = 0
@@ -66,11 +70,11 @@ struct {
 	bool trackingTraining_speedRand = false
 
 	array<entity> doors
-	vector doorResetButton_pos = <30360,-9910,-25972>
+	vector doorResetButton_pos = <24056,-6600,-28157>
 	vector doorResetButton_ang = <0,-270,0>
-	vector doorSingle_pos = <30582,-9725,-25972>
+	vector doorSingle_pos = <24264,-6300, -28157>
 	vector doorSingle_ang = <0,90,0>
-	vector doorDouble_pos = <30550,-10025,-25972>
+	vector doorDouble_pos = <24264,-6700, -28157>
 	vector doorDouble_ang = <0,90,0>
 } file
 
@@ -78,8 +82,10 @@ void function FiringRangeGameMode_Init()
 {
 	PrecacheModel( FIRINGRANGE_BLUE_STAND_ASSET )
 	PrecacheModel( FIRINGRANGE_FLICK_TARGET_ASSET )
+	PrecacheModel( LANDING_PAD_ASSET )
 	PrecacheParticleSystem( FIRINGRANGE_FLICK_TARGET_PARTICLE_HIT )
 	PrecacheParticleSystem( FIRINGRANGE_ITEM_RESPAWN_PARTICLE )
+	
 
 	if ( !IsFiringRangeGameMode() || GetCurrentPlaylistVarBool( "r5reloaded_aimtrainer", false ))
 		return
@@ -147,7 +153,9 @@ void function OnEntitiesDidLoad()
 	SpawnAmmo()
 	
 	Overhang()
+	ShipPad()
 
+	evactest()
 	// Doors
 	SpawnDoors_Init()
 	SkinDoors_Init()
@@ -162,10 +170,6 @@ void function OnEntitiesDidLoad()
 
 	SpawnTargets()
 	// - - - -
-
-	
-
-
 	#endif
 }
 
@@ -877,29 +881,7 @@ void function SpawnMapProps()
 		})
 	}
 
-	// UPPER LEVEL PLATFORM
-	{
-		int len = 7
-		vector corner = <30795, -10429,-25988>
-		vector o = <240,240,0>
-
-		// Floor
-		for(int i = 0; i<len; i++)for(int j = 0; j<3; j++)
-			CreateFRProp( FIRINGRANGE_256x256_ASSET, corner+o+<i*256,j*256,0>, <0,0,0>)
-
-		// Side Walls
-		for(int i = 0; i<len; i++)for(int j = 0; j<2; j++)
-			CreateFRProp( FIRINGRANGE_256x128_ASSET, corner+o+<i*256,-128,8+j*128>, <0,0,0>, true)
-
-		// Small Walls
-		for(int i = 0; i<4; i++){
-		CreateFRProp( FIRINGRANGE_256x128_ASSET, corner+<1024+i*16,640,16>, <0,90,0>, true, 1000)
-		CreateFRProp( FIRINGRANGE_256x128_ASSET, corner+<512+i*16,640,-32>, <0,90,0>, true, 1000)}
-
-		// Walkway
-		CreateFRProp( FIRINGRANGE_GRATE_ASSET, <30853,-9930,-25975.5>, <0,0,0>)
-		CreateFRProp( FIRINGRANGE_GRATE_ASSET, <30853,-9810,-25975.5>, <0,0,0>)
-	}
+	
 
 	// UPPER DOORS
 	{
@@ -1159,5 +1141,85 @@ void function Overhang()
     }
     })
     DispatchSpawn( trigger0 )
+}
+
+void function ShipPad()
+{
+    //Props 
+    MapEditor_CreateProp( $"mdl/imc_base/landing_pad_arm_top.rmdl", < 34069.4000, -5050, -28820 >, < 0, -180, 0 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/imc_base/landing_pad_arm_top.rmdl", < 33031.5000, -4774.7000, -28820 >, < 0, 0, 0 >, true, 50000, -1, 1 )
+  	MapEditor_CreateProp( $"mdl/imc_base/landing_pad_tarmac_nobase.rmdl", < 33526, -4960, -29151 >, < 0, 0, 0 >, true, 50000, -1, 1 )
+
+   //MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl", < 33526, -4984, -28649 >, < 0, 0, 0 >, true, 50000, -1, 1 )
+}
+
+const vector shiporigin =  <33526, -4984, -28649 >
+
+void function evactest()
+{
+	entity button = CreateFRButton(< 33514, -5284, -28635 >, < 0, 0, 0 >, "%&use% Spawn Ship")
+	AddCallback_OnUseEntity( button, void function(entity panel, entity user, int input)
+	{
+	entity evac = CreatePropDynamic( $"mdl/vehicle/goblin_dropship/goblin_dropship.rmdl", <33526, -4984, -28649 >, <0,0,0>, SOLID_VPHYSICS )
+	thread HandleEvacTeaser( evac, shiporigin + <0,0,200>, <0,-90,0>)
+	
+		EmitSoundOnEntityOnlyToPlayer( user, user, FIRINGRANGE_BUTTON_SOUND )
+	})
+}
+
+
+const string EVAC_TARGET_NAME             = "evac_ship"
+const string DROPSHIP_HOVER               = "goblin_imc_evac_hover"
+const string DROPSHIP_WARP_IN             = "dropship_warpin"
+const string DROPSHIP_FLYING_MOVE         = "dropship_classic_mp_flyin"
+const string EVAC_START                   = "dropship_VTOL_evac_start"
+const string EVAC_END                     = "dropship_VTOL_evac_end"
+const string EVAC_IDLE                    = "dropship_VTOL_evac_idle"
+
+
+
+void function HandleEvacTeaser( entity evac, vector origin, vector angles ) // entity should be prop_dynamic or custom npc.
+{
+	EndSignal( evac, "OnDestroy" )
+	
+	Attachment attachResult = evac.Anim_GetAttachmentAtTime( DROPSHIP_FLYING_MOVE, "ORIGIN", 0.0 )
+    evac.MakeInvisible()
+	
+	waitthread __WarpInEffectShared( attachResult.position, attachResult.angle, DROPSHIP_WARP_IN, 0.0 )
+	evac.MakeVisible()
+
+	Signal( evac, "WarpedIn" )
+
+	EmitSoundOnEntity( evac, DROPSHIP_HOVER )
+	waitthread PlayAnim( evac, EVAC_START, origin, angles )
+	thread PlayAnim( evac, EVAC_IDLE, origin, angles )
+
+	if ( IsFallLTM() )
+	{
+		wait 2
+		evac.Anim_Stop()
+		wait 45
+	}
+	else
+		wait evac.GetSequenceDuration( EVAC_IDLE )
+	gp()[0].SetOrigin(shiporigin + <-23,-26,240>)
+	gp()[0].SetParent(evac)	
+	wait 5
+	
+	waitthread PlayAnim( evac, EVAC_END, origin, angles )
+entity player = gp()[0]
+
+
+wait 2
+EmitSoundOnEntity( evac, "Dropship_Warpout_Attrition" )
+wait 1
+StatusEffect_AddTimed( gp()[0], eStatusEffect.timeshift_visual_effect, 1.0, 999, 999 )
+StatusEffect_AddTimed( gp()[0], eStatusEffect.sonar_pulse_visuals, 1 , 999, 999 )
+StatusEffect_AddTimed( gp()[0], eStatusEffect.phase_tunnel_visual, 1 , 999, 999 )
+StatusEffect_AddTimed( gp()[0], eStatusEffect.placing_phase_gate, 1 , 999, 999 )
+
+	// Hide dropShip now and warpout.
+	//waitthread PlayAnim( evac, EVAC_END, origin, angles )
+	//__WarpOutEffectShared( evac )
 }
 #endif
