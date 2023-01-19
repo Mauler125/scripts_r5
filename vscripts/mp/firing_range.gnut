@@ -1,11 +1,11 @@
 global function FiringRangeGameMode_Init
 
 global const float FIRINGRANGE_DISSOLVE_TIME = 5.0
-global const float FIRINGRANGE_RACK_RESPAWN_TIME = 0.5
+global const float FIRINGRANGE_RACK_RESPAWN_TIME = 0.7
 global const float FIRINGRANGE_RACK_OFFSET = 32
 
 global const int FIRINGRANGE_ATTACHMENTS_MAX_COLUMNS = 6
-global const int FIRINGRANGE_ITEMS_MAX_COLUMNS = 2
+global const int FIRINGRANGE_ITEMS_MAX_COLUMNS = 8
 global const int FIRINGRANGE_ORDNANCE_MAX_COLUMNS = 2
 global const int FIRINGRANGE_AMMO_ROWS = 3
 
@@ -46,6 +46,7 @@ struct RackGroup
 	string ammoType = ""
 	array<entity> racks = []
 }
+
 
 struct {
 	table<string, array<LootData> > weaponsPerAmmoType
@@ -225,7 +226,7 @@ void function OnPlayerRespawned(entity player)
 	foreach(string ammo in ["highcal","bullet"])
 	{
 		entity loot = SpawnGenericLoot( ammo, player.GetOrigin(), player.GetAngles(),
-			60-SURVIVAL_CountItemsInInventory( player, ammo ) )
+			80-SURVIVAL_CountItemsInInventory( player, ammo ) )
 
 		if(!Survival_PickupItem(loot, player))
 			loot.Destroy()
@@ -378,9 +379,9 @@ void function SpawnOrdnance()
 // Spawn ammo at the left of the racks
 void function SpawnAmmo()
 {
-	const float cornerOffset = -3
-	const float itemOffsetX = 19.0
-	const float itemOffsetY = 20.0
+	const float cornerOffset = -10
+	const float itemOffsetX = 18.0
+	const float itemOffsetY = 18.0
 
 	foreach(RackGroup rackGroup in file.rackSpawns)
 	{
@@ -413,9 +414,9 @@ void function SpawnAmmo()
 void function SpawnItems()
 {
 	const float otherSideOffset = 512.0
-	const float cornerOffset = 128.0 - 12.0
-	const float itemOffsetX = 32.0
-	const float itemOffsetY = 24.0
+	const float cornerOffset = 13.0
+	const float itemOffsetX = 26.0
+	const float itemOffsetY = 48.0
 	foreach(RackGroup rackGroup in file.rackSpawns)
 	{
 		entity rack = rackGroup.point
@@ -423,6 +424,10 @@ void function SpawnItems()
 		vector fwd = rack.GetForwardVector()
 
 		vector firstPos = rack.GetOrigin() + fwd*otherSideOffset + rght*cornerOffset
+
+		int itemStack = 2
+
+		
 
 		int col = 0
 		int row = 0
@@ -436,9 +441,9 @@ void function SpawnItems()
 
 			LootData item = file.items[i]
 			vector pos = firstPos + rght*itemOffsetX*col - fwd*itemOffsetY*row
-
-			entity loot = SpawnGenericLoot(item.ref, pos, <0,90,0>, 1)
-			thread OnPickupGenericThread(loot, item.ref)
+			vector rot = <0,90,0>
+			entity loot = SpawnGenericLoot(item.ref, pos, rot, itemStack)
+			thread OnPickupGenericThread(loot, item.ref, itemStack)
 
 			col++
 		}
@@ -490,6 +495,7 @@ void function SpawnAttachments()
 				continue
 
 			entity r = file.rackSpawns[ammoIndex].point
+			
 			vector firstPos = r.GetOrigin() - r.GetRightVector()*cornerOffset
 
 			int row = 0
@@ -504,7 +510,7 @@ void function SpawnAttachments()
 
 				vector pos = firstPos - r.GetRightVector()*col*placementOffset + r.GetForwardVector()*row*placementOffset
 
-				entity loot = SpawnGenericLoot( ref, pos, <0,0,0>, 1 )
+				entity loot = SpawnGenericLoot( ref, pos, <0,180,0>, 1 )
 				thread OnPickupGenericThread(loot, ref)
 				col++
 			}
