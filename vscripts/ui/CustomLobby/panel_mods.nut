@@ -1,6 +1,14 @@
 global function InitModsPanel
 global function Mods_SetupUI
-global function ReShowModsButtons
+global function ChangeModsPanel
+
+global enum ModPanelType
+{
+	MAIN_TO_INSTALLED = 0,
+	MAIN_TO_BROWSE = 1,
+	INSTALLED_TO_MAIN = 2,
+	BROWSE_TO_MAIN = 3
+}
 
 struct
 {
@@ -24,56 +32,62 @@ void function InitModsPanel( var panel )
 	Hud_SetX( Hud_GetChild( panel, "BrowseModsButton" ), -(Hud_GetWidth(Hud_GetChild( panel, "BrowseModsButton" ))/2) + 7.5 )
 }
 
+void function Mods_SetupUI()
+{
+	SetMainModsButtonVis(true)
+}
+
 void function BackButton_Activated(var button)
 {
-	if( g_isInModsMenu )
-	{
-		g_isInModsMenu = false
-		RunClientScript("BrowseModsToDefault")
-		ReShowModsButtons()
+	if( g_isInModsMenu ) {
+		ChangeModsPanel(ModPanelType.BROWSE_TO_MAIN, false)
+		return
 	}
-	else if( g_isInInstalledMenu )
-	{
-		g_isInInstalledMenu = false
-		RunClientScript("InstalledModsToDefault")
-		ReShowModsButtons()
-	}
-	else
-	{
-		ReShowModsButtons()
+
+	if( g_isInInstalledMenu ) {
+		ChangeModsPanel(ModPanelType.INSTALLED_TO_MAIN, false)
+		return
 	}
 }
 
 void function InstalledModsButton_Activated(var button)
 {
-	g_isInModsMenu = true
-	RunClientScript("DefaultToBrowseMods")
-
-	Hud_SetVisible( Hud_GetChild( file.panel, "BrowseModsButton" ), false )
-	Hud_SetVisible( Hud_GetChild( file.panel, "InstalledModsButton" ), false )
-	Hud_SetVisible( Hud_GetChild( file.panel, "BackButton" ), true )
+	ChangeModsPanel(ModPanelType.MAIN_TO_BROWSE, true)
 }
 
 void function BrowseModsButton_Activated(var button)
 {
-	g_isInInstalledMenu = true
-	RunClientScript("DefaultToInstalledMods")
-
-	Hud_SetVisible( Hud_GetChild( file.panel, "BrowseModsButton" ), false )
-	Hud_SetVisible( Hud_GetChild( file.panel, "InstalledModsButton" ), false )
-	Hud_SetVisible( Hud_GetChild( file.panel, "BackButton" ), true )
+	ChangeModsPanel(ModPanelType.MAIN_TO_INSTALLED, true)
 }
 
-void function ReShowModsButtons()
+void function ChangeModsPanel(int paneltype, bool show)
 {
-	Hud_SetVisible( Hud_GetChild( file.panel, "BrowseModsButton" ), true )
-	Hud_SetVisible( Hud_GetChild( file.panel, "InstalledModsButton" ), true )
-	Hud_SetVisible( Hud_GetChild( file.panel, "BackButton" ), false )
+	switch(paneltype)
+	{
+		case ModPanelType.MAIN_TO_INSTALLED:
+			g_isInInstalledMenu = show
+			RunClientScript("DefaultToInstalledMods")	
+			break;
+		case ModPanelType.MAIN_TO_BROWSE:
+			g_isInModsMenu = show
+			RunClientScript("DefaultToBrowseMods")
+			break;
+		case ModPanelType.INSTALLED_TO_MAIN:
+			g_isInInstalledMenu = show
+			RunClientScript( "InstalledModsToDefault")
+			break;
+		case ModPanelType.BROWSE_TO_MAIN:
+			g_isInModsMenu = show
+			RunClientScript( "BrowseModsToDefault")
+			break;
+	}
+
+	SetMainModsButtonVis(!show)
 }
 
-void function Mods_SetupUI()
+void function SetMainModsButtonVis(bool vis)
 {
-	Hud_SetVisible( Hud_GetChild( file.panel, "BrowseModsButton" ), true )
-	Hud_SetVisible( Hud_GetChild( file.panel, "InstalledModsButton" ), true )
-	Hud_SetVisible( Hud_GetChild( file.panel, "BackButton" ), false )
+	Hud_SetVisible( Hud_GetChild( file.panel, "BrowseModsButton" ), vis )
+	Hud_SetVisible( Hud_GetChild( file.panel, "InstalledModsButton" ), vis )
+	Hud_SetVisible( Hud_GetChild( file.panel, "BackButton" ), !vis )
 }

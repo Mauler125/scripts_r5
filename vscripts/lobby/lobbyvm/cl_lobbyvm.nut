@@ -41,8 +41,9 @@ void function LobbyVM_EntitiesDidLoad()
     modsdropship = MapEditor_CreateProp( $"mdl/vehicle/goblin_dropship/goblin_dropship.rmdl", < 8000, -7357, -8129 >, < 0, 120, 0 >, true, 50000, -1, 0.5 )
     thread PlayAnim( modsdropship, "s2s_rampdown_idle" )
 
-    entity marvin = MapEditor_CreateProp( $"mdl/robots/marvin/marvin.rmdl", < 7981.4400, -7468.0510, -8128.7000 >, < 0, 120, 0 >, true, 50000, -1, 0.5 )
-    thread PlayAnim( marvin, "mv_idle_unarmed" )
+    //hide until common_sdk release
+    //entity marvin = MapEditor_CreateProp( $"mdl/robots/marvin/marvin.rmdl", < 7981.4400, -7468.0510, -8128.7000 >, < 0, 120, 0 >, true, 50000, -1, 0.5 )
+    //thread PlayAnim( marvin, "mv_idle_unarmed" )
 
     MapEditor_CreateProp( $"mdl/props/kunai/kunai.rmdl", < 8126.8400, -7466.8300, -8115.9200 >, < 0, 0, 0 >, true, 50000, -1, 0.5 )
     MapEditor_CreateProp( $"mdl/props/tablet/tablet_mini.rmdl", < 8093.8900, -7460.6300, -8115.8200 >, < 0, 0, 0 >, true, 50000, -1, 1 )
