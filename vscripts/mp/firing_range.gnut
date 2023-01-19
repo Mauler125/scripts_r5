@@ -7,7 +7,7 @@ global const float FIRINGRANGE_RACK_OFFSET = 32
 global const int FIRINGRANGE_ATTACHMENTS_MAX_COLUMNS = 6
 global const int FIRINGRANGE_ITEMS_MAX_COLUMNS = 2
 global const int FIRINGRANGE_ORDNANCE_MAX_COLUMNS = 2
-global const int FIRINGRANGE_AMMO_ROWS = 2
+global const int FIRINGRANGE_AMMO_ROWS = 3
 
 global const asset FIRINGRANGE_FLICK_TARGET_ASSET = $"mdl/fx/plasma_sphere_01.rmdl"
 global const asset FIRINGRANGE_FLICK_TARGET_PARTICLE_HIT = $"P_crypto_drone_explosion"
@@ -65,7 +65,7 @@ struct {
 	bool trackingTraining_speedRand = false
 
 	array<entity> doors
-	vector doorResetButton_pos = <30754,-9885,-25972>
+	vector doorResetButton_pos = <30754,-9850,-25972>
 	vector doorResetButton_ang = <0,270,0>
 	vector doorSingle_pos = <30582,-9725,-25972>
 	vector doorSingle_ang = <0,90,0>
@@ -158,9 +158,11 @@ void function OnEntitiesDidLoad()
 	SpawnOrdnance()
 	SpawnItems()
 	SpawnAmmo()
+	
 
 	// Doors
 	SpawnDoors_Init()
+	SkinDoors_Init()
 
 	// Map Props
 	SpawnMapProps()
@@ -376,8 +378,8 @@ void function SpawnOrdnance()
 // Spawn ammo at the left of the racks
 void function SpawnAmmo()
 {
-	const float cornerOffset = -4
-	const float itemOffsetX = 12.0
+	const float cornerOffset = -3
+	const float itemOffsetX = 19.0
 	const float itemOffsetY = 20.0
 
 	foreach(RackGroup rackGroup in file.rackSpawns)
@@ -399,8 +401,8 @@ void function SpawnAmmo()
 			for(int j = 0; j<FIRINGRANGE_AMMO_ROWS; j++)
 			{
 				vector pos = firstPos + rght*itemOffsetX*i + fwd*itemOffsetY*j
-
-				entity loot = SpawnGenericLoot(rackGroup.ammoType, pos, <0,0,0>, ammoStack)
+				
+				entity loot = SpawnGenericLoot(rackGroup.ammoType, pos, <0,90,0>, ammoStack)
 				thread OnPickupGenericThread(loot, rackGroup.ammoType, ammoStack)
 			}
 		}
@@ -1057,6 +1059,25 @@ void function SpawnDoors()
 	file.doors.append(singleDoor)
 	file.doors.append(ddl)
 	file.doors.append(ddr)
+}
+
+void function SkinDoors_Init()
+{
+	entity button = CreateFRButton(file.doorResetButton_pos + <0,-90,0>, file.doorResetButton_ang, "%&use% DOOR SKIN")
+	AddCallback_OnUseEntity( button, void function(entity panel, entity user, int input)
+	{
+		EmitSoundOnEntityOnlyToPlayer( user, user, FIRINGRANGE_BUTTON_SOUND )
+		SkinDoors()
+	})
+}
+
+void function SkinDoors()
+{
+	foreach(entity door in file.doors)
+	{
+		if(IsValid(door))
+			door.SetSkin(1)
+	}
 }
 
 void function OnWeaponAttack( entity player, entity weapon, string weaponName, int ammoUsed, vector attackOrigin, vector attackDir )
