@@ -66,8 +66,8 @@ struct {
 	bool trackingTraining_speedRand = false
 
 	array<entity> doors
-	vector doorResetButton_pos = <30754,-9850,-25972>
-	vector doorResetButton_ang = <0,270,0>
+	vector doorResetButton_pos = <30360,-9910,-25972>
+	vector doorResetButton_ang = <0,-270,0>
 	vector doorSingle_pos = <30582,-9725,-25972>
 	vector doorSingle_ang = <0,90,0>
 	vector doorDouble_pos = <30550,-10025,-25972>
@@ -795,6 +795,10 @@ void function SpawnMapProps()
 			{
 				TeleportFRPlayer(DamageInfo_GetAttacker(damageInfo), <30777.9258, -5282.96387, -29163.9688>, <0,0,0>)
 			})
+			/* DOORS */ SpawnBigTrainingTarget(<31241, -10310, -27643>, <0,90,0>, void function(entity panel, var damageInfo)
+			{
+				TeleportFRPlayer(DamageInfo_GetAttacker(damageInfo), <30437.8281, -9880.22852, -25972.6387>, <0,0,0>)
+			})
 		}
 	}
 
@@ -897,7 +901,9 @@ void function SpawnMapProps()
 		CreateFRProp( FIRINGRANGE_256x128_ASSET, corner+<1024+i*16,640,16>, <0,90,0>, true, 1000)
 		CreateFRProp( FIRINGRANGE_256x128_ASSET, corner+<512+i*16,640,-32>, <0,90,0>, true, 1000)}
 
-
+		// Walkway
+		CreateFRProp( FIRINGRANGE_GRATE_ASSET, <30853,-9930,-25975.5>, <0,0,0>)
+		CreateFRProp( FIRINGRANGE_GRATE_ASSET, <30853,-9810,-25975.5>, <0,0,0>)
 	}
 
 	// UPPER DOORS
@@ -909,6 +915,7 @@ void function SpawnMapProps()
 		dbdoorWall =
 		CreateFRProp( FIRINGRANGE_128x128_ASSET, file.doorSingle_pos + <-124,8,64>, <90,270,0>, true)
 		CreateFRProp( FIRINGRANGE_128x128_ASSET, dbdoorWall.GetOrigin()+<192,0,0>, <90,270,0>, true)
+
 	}
 
 	// FIRING RANGE CONNECTORS
@@ -1069,7 +1076,7 @@ void function SpawnDoors()
 
 void function SkinDoors_Init()
 {
-	entity button = CreateFRButton(file.doorResetButton_pos + <0,-90,0>, file.doorResetButton_ang, "%&use% DOOR SKIN")
+	entity button = CreateFRButton(file.doorResetButton_pos + <0,90,0>, file.doorResetButton_ang, "%&use% DOOR SKIN")
 	AddCallback_OnUseEntity( button, void function(entity panel, entity user, int input)
 	{
 		EmitSoundOnEntityOnlyToPlayer( user, user, FIRINGRANGE_BUTTON_SOUND )
