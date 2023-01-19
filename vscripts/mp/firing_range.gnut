@@ -96,20 +96,6 @@ void function FiringRangeGameMode_Init()
 		firingrange_infinite_ammo = GetCurrentPlaylistVarBool( "survival_infinite_ammo", false ) ? 1 : 2
 	#endif
 
-	#if(false)
-
-
-
-
-
-
-
-
-//
-
-
-	#endif //
-
 	#if(CLIENT)
 		//
 
@@ -160,6 +146,7 @@ void function OnEntitiesDidLoad()
 	SpawnItems()
 	SpawnAmmo()
 	
+	Overhang()
 
 	// Doors
 	SpawnDoors_Init()
@@ -175,6 +162,10 @@ void function OnEntitiesDidLoad()
 
 	SpawnTargets()
 	// - - - -
+
+	
+
+
 	#endif
 }
 
@@ -799,6 +790,10 @@ void function SpawnMapProps()
 			{
 				TeleportFRPlayer(DamageInfo_GetAttacker(damageInfo), <30437.8281, -9880.22852, -25972.6387>, <0,0,0>)
 			})
+			/* SECRET */ SpawnBigTrainingTarget(<27793, -8885, -21430>, <0,90,0>, void function(entity panel, var damageInfo)
+			{
+				TeleportFRPlayer(DamageInfo_GetAttacker(damageInfo), <24034, -6015, -28089>, <0,0,0>)
+			})
 		}
 	}
 
@@ -1118,169 +1113,7 @@ void function FixWeapon(entity weapon)
 }
 #endif
 
-
-
-
-
 #if(false)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//
-
-
-
-
-
-//
-
-
-//
-
-
-
-
-
-
-
-
-
-
-
-//
-
-
-//
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 #endif //
 
@@ -1300,98 +1133,31 @@ void function IntroDisplayThread()
 }
 #endif //
 
-
-#if(false)
-
-
-
-//
-
-
-
-
-
-
-
-
-
-
-
-
-
-//
-
-
-
-//
-//
-
-
-
-
-
-
-
-
-//
-
-
-
-
-
-
-
-
-
-
-
-
-//
-
-
-
-
-
-
-
-
-
-
-//
-
-
-
-
-
-
-
-
-
-
-//
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#endif //
+#if SERVER
+void function Overhang()
+{
+	// Zipline
+    MapEditor_CreateZiplineFromUnity( < 30346.4800, -2313.5660, -25703 >, < 0, -148.0795, 0 >, < 30346.4800, -2313.5660, -28685.7000 >, < 0, -148.0795, 0 >, true, -1, 1, 2, 1, 1, 0, 1, 50, 25, false, 1, false, 0, 0, [ ], [ ], [ ], 32, 60, 0 )
+	MapEditor_CreateProp( $"mdl/industrial/zipline_arm.rmdl", < 30291.6600, -2307.5320, -25691 >, < 0, -100.4417, 0 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/industrial/security_fence_post.rmdl", < 30292.5000, -2308.5000, -25871 >, < 0, -10.4417, 0 >, true, 50000, -1, 1 )
+
+	// Floor
+	MapEditor_CreateProp(FIRINGRANGE_256x256_ASSET, < 30220, -2403, -25880.1 >, < 0, -147, 0 >, true, 50000, -1, 1 )
+
+	// Props
+	MapEditor_CreateRespawnableWeaponRack( < 30144, -2559.5000, -25864.9000 >, < 0, 123.0858, 0 >, "mp_weapon_sniper", 0.5 )
+
+	//Triggers 
+    entity trigger0 = MapEditor_CreateTrigger( < 29520.4000, -2438, -25864 >, < 0, 0, 0 >, 30, 20, false )
+    trigger0.SetEnterCallback( void function(entity trigger , entity ent){
+    if (IsValid(ent)) // ensure the entity is valid
+    {
+        if (ent.IsPlayer() && ent.GetPhysics() != MOVETYPE_NOCLIP) // Noclip players are not affected by the trigger
+        {
+            ent.SetOrigin(<27604,-7846,-22252>) // change tp location
+        }
+    }
+    })
+    DispatchSpawn( trigger0 )
+}
+#endif
