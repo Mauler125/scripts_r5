@@ -13,10 +13,7 @@ void function InitR5RMainMenuPanel( var panel )
 	file.menu = GetParentMenu( file.panel )
 	file.launchButton = Hud_GetChild( panel, "LaunchButton" )
 
-	// mainmenu handler
 	AddPanelEventHandler( file.panel, eUIEvent.PANEL_SHOW, OnMainMenuPanel_Show )
-
-	// launchbutton handler
 	Hud_AddEventHandler( file.launchButton, UIE_CLICK, LaunchButton_OnActivate )
 }
 

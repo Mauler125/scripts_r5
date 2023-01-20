@@ -16,7 +16,6 @@ global function Servers_GetCurrentServerListing
 
 //Used for max items for page
 //Changing this requires a bit of work to get more to show correctly
-//So keep at 19
 const SB_MAX_SERVER_PER_PAGE = 15
 
 // Stores mouse delta used for scroll bar
@@ -168,7 +167,6 @@ void function ServerBrowser_ServerBtnClicked(var button)
 {
 	//Get the button id and add it to the scroll offset to get the correct server id
 	int id = Hud_GetScriptID( button ).tointeger() + m_vScroll.Offset
-
 	ServerBrowser_SelectServer(file.m_vFilteredServerList[id].svServerID)
 }
 
@@ -176,9 +174,7 @@ void function ServerBrowser_ServerBtnDoubleClicked(var button)
 {
 	//Get the button id and add it to the scroll offset to get the correct server id
 	int id = Hud_GetScriptID( button ).tointeger() + m_vScroll.Offset
-
 	ServerBrowser_SelectServer(file.m_vFilteredServerList[id].svServerID)
-
 	thread ServerBrowser_StartConnection(id)
 }
 
@@ -223,24 +219,6 @@ void function ServerBrowser_UpdateServerPlayerCount()
 {
 	Hud_SetText( Hud_GetChild( file.panel, "PlayersCount"), "Players: " + file.m_vAllPlayers)
 	Hud_SetText( Hud_GetChild( file.panel, "ServersCount"), "Servers: " + file.m_vAllServers)
-}
-
-array<string> function GetVisiblePlaylists()
-{
-	array<string> m_vPlaylists
-
-	//Setup available playlists array
-	foreach( string playlist in GetAvailablePlaylists())
-	{
-		//Check playlist visibility
-		if(!GetPlaylistVarBool( playlist, "visible", false ))
-			continue
-
-		//Add playlist to the array
-		m_vPlaylists.append(playlist)
-	}
-
-	return m_vPlaylists
 }
 
 void function OnBtnFiltersClear()
@@ -629,4 +607,22 @@ void function Servers_GetCurrentServerListing()
 		ServerBrowser_RefreshServerListing()
 
 	global_m_vServerList = file.m_vServerList
+}
+
+array<string> function GetVisiblePlaylists()
+{
+	array<string> m_vPlaylists
+
+	//Setup available playlists array
+	foreach( string playlist in GetAvailablePlaylists())
+	{
+		//Check playlist visibility
+		if(!GetPlaylistVarBool( playlist, "visible", false ))
+			continue
+
+		//Add playlist to the array
+		m_vPlaylists.append(playlist)
+	}
+
+	return m_vPlaylists
 }

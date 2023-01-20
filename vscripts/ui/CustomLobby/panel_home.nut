@@ -2,6 +2,8 @@ global function InitR5RHomePanel
 global function Play_SetupUI
 global function R5RPlay_SetSelectedPlaylist
 
+const MAX_PROMO_ITEMS = 5
+
 struct ServerListing
 {
 	int	svServerID
@@ -49,41 +51,45 @@ struct
 {
 	var menu
 	var panel
+	var gamemodeSelectV2Button
 
 	bool searching = false
 	bool foundserver = false
 	bool noservers = false
 	bool usercancled = false
-
 	bool firststart = false
-
 	bool navInputCallbacksRegistered = false
 	
 	SelectedServerInfo m_vSelectedServer
 	array<ServerListing> m_vServerList
 	array<ServerListing> m_vFilteredServerList
-
-	string selectedplaylist = "Random"
-
-	var gamemodeSelectV2Button
-
-	array<PromoItem> promoItems
 } file
 
 struct
 {
+	array<PromoItem> Items
 	int pageCount = 3
 	int currentPage = 0
 	bool shouldAutoAdvance = true
 	bool IsAutoAdvance = false
 } promo
 
-const MAX_PROMO_ITEMS = 5
-
 global table<int, string> SearchStages = {
 	[ 0 ] = "Searching.",
 	[ 1 ] = "Searching..",
 	[ 2 ] = "Searching..."
+}
+
+global table<int, string> CreatingStages = {
+	[ 0 ] = "Creating.",
+	[ 1 ] = "Creating..",
+	[ 2 ] = "Creating..."
+}
+
+global table<int, string> ConnectingStages = {
+	[ 0 ] = "Connecting.",
+	[ 1 ] = "Connecting..",
+	[ 2 ] = "Connecting..."
 }
 
 void function InitR5RHomePanel( var panel )
@@ -183,6 +189,14 @@ void function NewsPressed(var button)
 // Quick Play
 // ====================================================================================================
 
+void function SetGamemodeButtonRUI(string modeNameText, string modeDescText, bool alwaysShowDesc, asset modeImage)
+{
+	RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeNameText", modeNameText )
+	RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", modeDescText )
+	RuiSetBool( Hud_GetRui( file.gamemodeSelectV2Button ), "alwaysShowDesc", alwaysShowDesc )
+	RuiSetImage( Hud_GetRui( file.gamemodeSelectV2Button ), "modeImage", modeImage )
+}
+
 void function GamemodeSelect_OnActivate(var button)
 {
 	AdvanceMenu( GetMenu( "R5RGamemodeSelectV2Dialog" ) )
@@ -190,39 +204,29 @@ void function GamemodeSelect_OnActivate(var button)
 
 void function R5RPlay_SetSelectedPlaylist(int quickPlayType)
 {
-	if(quickPlayType == JoinType.TopServerJoin)
+	switch(quickPlayType)
 	{
-		quickplay.quickPlayType = JoinType.TopServerJoin
+		case JoinType.TopServerJoin:
+				quickplay.quickPlayType = JoinType.TopServerJoin
+				string servername = g_SelectedTopServer.svServerName
+				if(g_SelectedTopServer.svServerName.len() > 30)
+					servername = g_SelectedTopServer.svServerName.slice(0, 30) + "..."
 
-		string servername = g_SelectedTopServer.svServerName
-		if(g_SelectedTopServer.svServerName.len() > 30)
-			servername = g_SelectedTopServer.svServerName.slice(0, 30) + "..."
+				SetGamemodeButtonRUI(servername, "Party not ready", true, GetUIMapAsset(g_SelectedTopServer.svMapName ))
+			break;
+		case JoinType.QuickServerJoin:
+			quickplay.quickPlayType = JoinType.QuickServerJoin
 
-		RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeNameText", servername )
-		RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Party not ready" )
-		RuiSetBool( Hud_GetRui( file.gamemodeSelectV2Button ), "alwaysShowDesc", true )
-		RuiSetImage( Hud_GetRui( file.gamemodeSelectV2Button ), "modeImage", GetUIMapAsset(g_SelectedTopServer.svMapName ) )
-	}
-	else if(quickPlayType == JoinType.QuickServerJoin)
-	{
-		quickplay.quickPlayType = JoinType.QuickServerJoin
+			asset image = $"rui/menu/gamemode/play_apex"
+			if(g_SelectedPlaylist == "Random Server")
+				image = $"rui/menu/gamemode/ranked_1"
 
-		RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeNameText", g_SelectedPlaylist )
-		RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Party not ready" )
-		RuiSetBool( Hud_GetRui( file.gamemodeSelectV2Button ), "alwaysShowDesc", true )
-		RuiSetImage( Hud_GetRui( file.gamemodeSelectV2Button ), "modeImage", $"rui/menu/gamemode/play_apex" )
-
-		if(g_SelectedPlaylist == "Random Server")
-			RuiSetImage( Hud_GetRui( file.gamemodeSelectV2Button ), "modeImage", $"rui/menu/gamemode/ranked_1" )
-	}
-	else if(quickPlayType == JoinType.QuickPlay)
-	{
-		quickplay.quickPlayType = JoinType.QuickPlay
-
-		RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeNameText", GetUIMapName(g_SelectedQuickPlayMap) )
-		RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Party not ready" )
-		RuiSetBool( Hud_GetRui( file.gamemodeSelectV2Button ), "alwaysShowDesc", true )
-		RuiSetImage( Hud_GetRui( file.gamemodeSelectV2Button ), "modeImage", g_SelectedQuickPlayImage )
+			SetGamemodeButtonRUI(g_SelectedPlaylist, "Party not ready", true, image)
+			break;
+		case JoinType.QuickPlay:
+			quickplay.quickPlayType = JoinType.QuickPlay
+			SetGamemodeButtonRUI(GetUIMapName(g_SelectedQuickPlayMap), "Party not ready", true, g_SelectedQuickPlayImage)
+			break;
 	}
 }
 
@@ -273,18 +277,7 @@ void function StartQuickPlay(var button)
 			continue
 		}
 
-		switch(i)
-		{
-			case 0:
-				RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Creating." )
-				break;
-			case 1:
-				RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Creating.." )
-				break;
-			case 2:
-				RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Creating..." )
-				break;
-		}
+		RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", CreatingStages[i] )
 
 		i++
 		if(i > 2)
@@ -333,18 +326,7 @@ void function JoinTopServer(var button)
 			continue
 		}
 
-		switch(i)
-		{
-			case 0:
-				RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Connecting." )
-				break;
-			case 1:
-				RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Connecting.." )
-				break;
-			case 2:
-				RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Connecting..." )
-				break;
-		}
+		RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", ConnectingStages[i] )
 
 		i++
 		if(i > 2)
@@ -440,7 +422,6 @@ void function UpdateQuickJoinButtons(var button)
 
 void function FindServer(bool refresh = false)
 {
-	file.selectedplaylist = g_SelectedPlaylist
 	wait 0.5
 
 	if(!file.searching)
@@ -480,7 +461,7 @@ void function FindServer(bool refresh = false)
 		if ( file.m_vServerList[i].svCurrentPlayers == file.m_vServerList[i].svMaxPlayers )
 			continue;
 
-		if(file.m_vServerList[i].svPlaylist != file.selectedplaylist && file.selectedplaylist != "Random Server")
+		if(file.m_vServerList[i].svPlaylist != g_SelectedPlaylist && g_SelectedPlaylist != "Random Server")
 			continue;
 
 		// Server fits our requirements, add it to the list
@@ -495,7 +476,7 @@ void function FindServer(bool refresh = false)
 			if ( file.m_vServerList[i].svCurrentPlayers == file.m_vServerList[i].svMaxPlayers )
 				continue;
 
-			if(file.m_vServerList[i].svPlaylist != file.selectedplaylist && file.selectedplaylist != "Random Server")
+			if(file.m_vServerList[i].svPlaylist != g_SelectedPlaylist && g_SelectedPlaylist != "Random Server")
 				continue;
 
 			// Server fits our requirements, add it to the list
@@ -561,7 +542,7 @@ void function ChangePromoPageToLeft()
 {
 	promo.currentPage--
 	if(promo.currentPage < 0)
-		promo.currentPage = file.promoItems.len() - 1
+		promo.currentPage = promo.Items.len() - 1
 	
 	SetPromoPage()
 }
@@ -569,7 +550,7 @@ void function ChangePromoPageToLeft()
 void function ChangePromoPageToRight()
 {
 	promo.currentPage++
-	if(promo.currentPage > file.promoItems.len() - 1)
+	if(promo.currentPage > promo.Items.len() - 1)
 		promo.currentPage = 0
 	
 	SetPromoPage()
@@ -599,8 +580,7 @@ void function AutoAdvancePages()
 
 void function SetPromoPage()
 {
-	if(file.promoItems.len() == 0)
-	{
+	if(promo.Items.len() == 0) {
 		var miniPromo = Hud_GetChild( file.panel, "MiniPromo" )
 		Hud_Hide( miniPromo)
 		return
@@ -608,9 +588,9 @@ void function SetPromoPage()
 
 	var miniPromo = Hud_GetChild( file.panel, "MiniPromo" )
 	Hud_Show( miniPromo)
-	RuiSetString( Hud_GetRui( miniPromo ), "lastText1", file.promoItems[promo.currentPage].promoText1 )
-	RuiSetString( Hud_GetRui( miniPromo ), "lastText2", file.promoItems[promo.currentPage].promoText2 )
-	RuiSetImage( Hud_GetRui( miniPromo ), "lastImageAsset", file.promoItems[promo.currentPage].promoImage )
+	RuiSetString( Hud_GetRui( miniPromo ), "lastText1", promo.Items[promo.currentPage].promoText1 )
+	RuiSetString( Hud_GetRui( miniPromo ), "lastText2", promo.Items[promo.currentPage].promoText2 )
+	RuiSetImage( Hud_GetRui( miniPromo ), "lastImageAsset", promo.Items[promo.currentPage].promoImage )
 	RuiSetBool( Hud_GetRui( miniPromo ), "lastFormat", true )
 	RuiSetInt( Hud_GetRui( miniPromo ), "activePageIndex", promo.currentPage )
 }
@@ -622,7 +602,7 @@ void function GetR5RPromos()
 
 	//TEMPORARY PROMO DATA
 	//WILL BE REPLACED WITH A CALL TO THE PROMO ENDPOINT
-	file.promoItems.clear()
+	promo.Items.clear()
 
 	for(int i = 0; i < MAX_PROMO_ITEMS; i++)
 	{
@@ -630,8 +610,8 @@ void function GetR5RPromos()
 		item.promoText1 = "Temp Promo " + (i + 1)
 		item.promoText2 = "Temp Promo " + (i + 1)
 		item.promoImage = GetAssetFromString( $"rui/promo/S3_General_" + (i + 1).tostring() )
-		file.promoItems.append(item)
+		promo.Items.append(item)
 	}
 
-	RuiSetInt( Hud_GetRui( Hud_GetChild( file.panel, "MiniPromo" ) ), "pageCount", file.promoItems.len() )
+	RuiSetInt( Hud_GetRui( Hud_GetChild( file.panel, "MiniPromo" ) ), "pageCount", promo.Items.len() )
 }
