@@ -7,6 +7,14 @@ global function BrowseModsToDefault
 global function DefaultToInstalledMods
 global function InstalledModsToDefault
 
+const int CAMERA_SMOOTH_STEPS = 50
+
+struct {
+    array<vector> MAIN_TO_MODS = [ < 8020, -7607, -8080 >, < 8082, -7524.8000, -8080 >, < 8058.7000, -7452.4100, -8080 >, < 8010.9100, -7377.7300, -8080 > ]
+    array<vector> MODS_TO_MAIN = [ < 8010.9100, -7377.7300, -8080 >, < 8058.7000, -7452.4100, -8080 >, < 8082, -7524.8000, -8080 >, < 8020, -7607, -8080 > ]
+    array<vector> MAIN_TO_INSTALLED = [ < 8020, -7607, -8080 >, < 8086.9400, -7490.3000, -8080 >, < 8093.8900, -7461.2900, -8080 >, < 8093.4000, -7460.4700, -8108.8000 > ]
+    array<vector> INSTALLED_TO_MAIN = [ < 8093.4000, -7460.4700, -8108.8000 >, < 8093.8900, -7461.2900, -8080 >, < 8086.9400, -7490.3000, -8080 >, < 8020, -7607, -8080 > ]
+} CameraMovementArrays
 
 entity loottick
 entity dummyEnt
@@ -113,6 +121,7 @@ void function StartLootTickLights()
         array<string> eyes = ["FX_L_EYE","FX_R_EYE","FX_C_EYE"]
         foreach(string eye in eyes)
         {
+            //Code copied from lootticks fx funtion
             int rarity  = 0
             int randInt = RandomInt( 1000 )
 
@@ -138,35 +147,32 @@ void function StartLootTickLights()
 entity function MapEditor_CreateProp(asset a, vector pos, vector ang, bool mantle = false, float fade = 5000, int realm = -1, float scale = 1)
 {
 	entity e = CreateClientSidePropDynamic(pos,ang,a)
-    
 	e.SetScriptName("editor_placed_prop")
     e.SetModelScale( scale )
-    
 	return e
 }
 
 void function DefaultToBrowseMods()
 {
-    array<vector> nodes = GetAllPointsOnBezier( [ < 8020, -7607, -8080 >, < 8082, -7524.8000, -8080 >, < 8058.7000, -7452.4100, -8080 >, < 8010.9100, -7377.7300, -8080 > ], 50)
+    array<vector> nodes = GetAllPointsOnBezier( CameraMovementArrays.MAIN_TO_MODS, CAMERA_SMOOTH_STEPS)
     thread MoveModsCamera( nodes, < 8, 74, 0 >, < 0, 0.90, 0 >, false )
 }
 
 void function BrowseModsToDefault()
 {
-    vector startangs = <8, 120, 0>
-    array<vector> nodes = GetAllPointsOnBezier( [ < 8010.9100, -7377.7300, -8080 >, < 8058.7000, -7452.4100, -8080 >, < 8082, -7524.8000, -8080 >, < 8020, -7607, -8080 > ], 50)
+    array<vector> nodes = GetAllPointsOnBezier( CameraMovementArrays.MODS_TO_MAIN, CAMERA_SMOOTH_STEPS)
     thread MoveModsCamera( nodes, <8, 120, 0>, < 0, 0.90, 0 >, true )
 }
 
 void function DefaultToInstalledMods()
 {
-    array<vector> nodes = GetAllPointsOnBezier( [ < 8020, -7607, -8080 >, < 8086.9400, -7490.3000, -8080 >, < 8093.8900, -7461.2900, -8080 >, < 8093.4000, -7460.4700, -8108.8000 > ], 50 )
+    array<vector> nodes = GetAllPointsOnBezier( CameraMovementArrays.MAIN_TO_INSTALLED, CAMERA_SMOOTH_STEPS )
     thread MoveModsCamera( nodes, < 8, 74, 0 >, < 1.64, 0.32, 0 >, false )
 }
 
 void function InstalledModsToDefault()
 {
-    array<vector> nodes = GetAllPointsOnBezier( [ < 8093.4000, -7460.4700, -8108.8000 >, < 8093.8900, -7461.2900, -8080 >, < 8086.9400, -7490.3000, -8080 >, < 8020, -7607, -8080 > ], 50 )
+    array<vector> nodes = GetAllPointsOnBezier( CameraMovementArrays.INSTALLED_TO_MAIN, CAMERA_SMOOTH_STEPS )
     thread MoveModsCamera( nodes, < 90, 90, 0 >, < 1.64, 0.32, 0 >, true )
 }
 
@@ -183,10 +189,14 @@ void function MoveModsCamera(array<vector> nodes, vector startAngles, vector rot
     vector angles = startAngles
     foreach(vector node in nodes)
     {
-        if(minus)
-            angles -= rotateAngles
-        else
-            angles += rotateAngles
+        switch(minus) {
+            case true:
+                angles -= rotateAngles
+                break;
+            case false:
+                angles += rotateAngles
+                break;
+        }
 
         cam_mover.NonPhysicsMoveTo( node, 0.3, 0.0, 0.3 )
         cam_mover.NonPhysicsRotateTo( angles, 0.3, 0.0, 0.3 )

@@ -45,14 +45,14 @@ void function Mods_SetupUI()
 
 void function BackButton_Activated(var button)
 {
-	if( g_modCameraPosition == ModCameraPosition.BROWSE ) {
-		ChangeModsPanel(ModCameraMovement.BROWSE_TO_MAIN)
-		return
-	}
-
-	if( g_modCameraPosition == ModCameraPosition.INSTALLED ) {
-		ChangeModsPanel(ModCameraMovement.INSTALLED_TO_MAIN)
-		return
+	switch(g_modCameraPosition)
+	{
+		case ModCameraPosition.BROWSE:
+			ChangeModsPanel(ModCameraMovement.BROWSE_TO_MAIN)
+			break;
+		case ModCameraPosition.INSTALLED:
+			ChangeModsPanel(ModCameraMovement.INSTALLED_TO_MAIN)
+			break;
 	}
 }
 

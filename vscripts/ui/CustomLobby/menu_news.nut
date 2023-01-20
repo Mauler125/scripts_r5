@@ -137,7 +137,7 @@ void function PromoDialog_OnOpen()
 void function GetR5RNews()
 {
     //INFO FOR LATER
-    //MAX PAGES = 9
+    //MAX PAGES = 6
 
     //TEMPOARY NEWS FOR TESTING
     //WILL BE REPLACED WITH A CALL TO THE NEWS ENDPOINT
