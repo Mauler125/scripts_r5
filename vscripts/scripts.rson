@@ -376,6 +376,7 @@ Scripts:
 	mp/_sh_tutorial.gnut
 	mp/sh_survival_training.gnut
 	mp/firing_range.gnut
+	mp/ashs_redemption.gnut
 	mp/sh_airdrops.gnut
   mp/sh_supply_ship.gnut
 
