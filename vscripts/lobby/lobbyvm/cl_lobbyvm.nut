@@ -63,6 +63,11 @@ void function LobbyVM_EntitiesDidLoad()
 
 void function ModsPanelShown(entity cameraTarget)
 {
+    if(IsValid(cam_mover)) {
+        menucamera.ClearParent()
+        cam_mover.Destroy()
+    }
+
     if(IsValid(cameraTarget))
         menucamera = cameraTarget
     

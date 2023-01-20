@@ -10,6 +10,8 @@ struct
 	array<var> buttons
 	array<var> panels
 
+	int currentpanel = 0
+
 	var HomePanel
 	var CreateServerPanel
 	var ServerBrowserPanel
@@ -128,14 +130,15 @@ void function OnR5RLobby_Show()
 
 void function OnR5RLobby_Back()
 {
-	if( g_modCameraPosition == ModCameraPosition.BROWSE ) {
-		ChangeModsPanel(ModCameraMovement.BROWSE_TO_MAIN)
-		return
-	}
-
-	if( g_modCameraPosition == ModCameraPosition.INSTALLED ) {
-		ChangeModsPanel(ModCameraMovement.INSTALLED_TO_MAIN)
-		return
+	if(file.currentpanel == 2) {
+		switch(g_modCameraPosition) {
+			case ModCameraPosition.BROWSE:
+				ChangeModsPanel(ModCameraMovement.BROWSE_TO_MAIN)
+				return;
+			case ModCameraPosition.INSTALLED:
+				ChangeModsPanel(ModCameraMovement.INSTALLED_TO_MAIN)
+				return;
+		}
 	}
 
 	AdvanceMenu( GetMenu( "SystemMenu" ) )
@@ -146,6 +149,8 @@ void function OpenSelectedPanel(var button)
 	//Get the script id, and show the panel acording to that id
 	int scriptid = Hud_GetScriptID( button ).tointeger()
 	ShowSelectedPanel( file.panels[scriptid], button )
+
+	file.currentpanel = scriptid
 
 	switch(scriptid)
 	{

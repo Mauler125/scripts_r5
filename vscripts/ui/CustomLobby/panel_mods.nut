@@ -40,6 +40,7 @@ void function InitModsPanel( var panel )
 
 void function Mods_SetupUI()
 {
+	g_modCameraPosition = ModCameraPosition.MAIN
 	SetMainModsButtonVis(true)
 }
 
