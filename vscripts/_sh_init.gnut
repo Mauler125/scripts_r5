@@ -206,6 +206,9 @@ void function SV_CL_Init()
 	#endif
 
 	RemoteFunctions_Init_Finish()
+
+	if(GetCurrentPlaylistVarBool( "weaponmodsmenu", false ))
+		Sh_Init_WeaponMods()
 }
 
 #if SERVER

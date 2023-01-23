@@ -807,8 +807,6 @@ Scripts:
 	ui/menu_reward_ceremony.nut
 	ui/menu_loadscreen_preview.nut
 	
-	//CTF
-	ui/CTFMenus/menu_ctf_respawn.nut
 	//FR Challenges
 	ui/FRChallenges/menu_frchallenges.nut
 	ui/FRChallenges/mainmenu_challenges.nut
@@ -836,7 +834,9 @@ Scripts:
 	ui/CustomLobby/panel_mods.nut
 
 	//CTF
+	ui/CTFMenus/menu_ctf_respawn.nut
 	ui/CTFMenus/menu_ctf_vote.nut
+	ui/menu_weaponmods.nut
 ]
 
 When: "SERVER && DEV || UI && DEV"
@@ -925,6 +925,8 @@ Scripts:
 	gamemodes/custom_ctf/custom_ctf_settings.nut
 	gamemodes/custom_aimtrainer/sh_aimtrainer.nut
 	lobby/lobbyvm/sh_lobbyvm.nut
+
+	sh_weaponmods.nut
 ]
 
 When: "SERVER"
