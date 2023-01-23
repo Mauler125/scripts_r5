@@ -31,216 +31,143 @@
 			"paintbackground"		"1"
 		}
 
-        OpticCata
-        {
-            ControlName				RuiButton
-            classname               "CataButton"
-            wide					230
-            tall					75
-            ypos                    0
-            xpos                    15
-            zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
-            scriptID				"0"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeNameText "Optics"
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
+        "ModsBG"
+		{
+			"ControlName"			"Label"
+			"xpos"					"0"
+			"ypos"					"0"
+			"wide"					"100"
+			"tall"					"100"
+			"labelText"				""
+			"bgcolor_override"		"0 0 0 200"
+			"visible"				"1"
+			"paintbackground"		"1"
 
             pin_to_sibling			DarkenBackground
             pin_corner_to_sibling	BOTTOM_LEFT
             pin_to_sibling_corner	BOTTOM_LEFT
-        }
+		}
+
+        OpticCata
+		{
+			sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "CataButton"
+			wide                    100
+			tall                    100
+			ypos                    0
+            xpos                    15
+            zpos                    10
+            scriptID                "0"
+
+            pin_to_sibling			DarkenBackground
+            pin_corner_to_sibling	BOTTOM_LEFT
+            pin_to_sibling_corner	BOTTOM_LEFT
+		}
 
         BarrelCata
-        {
-            ControlName				RuiButton
-            classname               "CataButton"
-            wide					230
-            tall					75
-            ypos                    0
+		{
+			sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "CataButton"
+			wide                    100
+			tall                    100
+			ypos                    0
             xpos                    15
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
-            scriptID				"1"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeNameText "Barrels"
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
+            scriptID                "1"
 
             pin_to_sibling			DarkenBackground
             pin_corner_to_sibling	BOTTOM_LEFT
             pin_to_sibling_corner	BOTTOM_LEFT
-        }
+		}
 
         MagsCata
-        {
-            ControlName				RuiButton
-            classname               "CataButton"
-            wide					230
-            tall					75
-            ypos                    0
+		{
+			sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "CataButton"
+			wide                    100
+			tall                    100
+			ypos                    0
             xpos                    15
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
-            scriptID				"2"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeNameText "Magazines"
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
+            scriptID                "2"
 
             pin_to_sibling			DarkenBackground
             pin_corner_to_sibling	BOTTOM_LEFT
             pin_to_sibling_corner	BOTTOM_LEFT
-        }
+		}
 
         StocksCata
         {
-            ControlName				RuiButton
-            classname               "CataButton"
-            wide					230
-            tall					75
-            ypos                    0
+			sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "CataButton"
+			wide                    100
+			tall                    100
+			ypos                    0
             xpos                    15
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
-            scriptID				"3"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeNameText "Stocks"
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
+            scriptID                "3"
 
             pin_to_sibling			DarkenBackground
             pin_corner_to_sibling	BOTTOM_LEFT
             pin_to_sibling_corner	BOTTOM_LEFT
-        }
+		}
 
         BoltsCata
         {
-            ControlName				RuiButton
-            classname               "CataButton"
-            wide					230
-            tall					75
-            ypos                    0
+			sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "CataButton"
+			wide                    100
+			tall                    100
+			ypos                    0
             xpos                    15
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
-            scriptID				"4"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeNameText "Shotgun Bolts"
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
+            scriptID                "4"
 
             pin_to_sibling			DarkenBackground
             pin_corner_to_sibling	BOTTOM_LEFT
             pin_to_sibling_corner	BOTTOM_LEFT
-        }
+		}
 
         HopUpCata
         {
-            ControlName				RuiButton
-            classname               "CataButton"
-            wide					230
-            tall					75
-            ypos                    0
+			sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "CataButton"
+			wide                    100
+			tall                    100
+			ypos                    0
             xpos                    15
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
-            scriptID				"5"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeNameText "HopUps"
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
+            scriptID                "5"
 
             pin_to_sibling			DarkenBackground
             pin_corner_to_sibling	BOTTOM_LEFT
             pin_to_sibling_corner	BOTTOM_LEFT
-        }
+		}
 
         Optic0
         {
-            ControlName				RuiButton
-            classname               "OpticsButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "OpticsButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"0"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			OpticCata
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -249,388 +176,232 @@
 
         Optic1
         {
-            ControlName				RuiButton
-            classname               "OpticsButton"
-            wide					230
-            tall					75
-            ypos                    10
-            xpos                    0
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "OpticsButton"
+			wide                    100
+			tall                    100
+			ypos                    0
+            xpos                    10
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"1"
 
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
+            pin_to_sibling			Optic0
+            pin_corner_to_sibling	BOTTOM_LEFT
+            pin_to_sibling_corner	BOTTOM_RIGHT
+        }
+
+        Optic2
+        {
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "OpticsButton"
+			wide                    100
+			tall                    100
+			ypos                    0
+            xpos                    10
+            zpos                    10
+            scriptID				"2"
+
+            pin_to_sibling			Optic1
+            pin_corner_to_sibling	BOTTOM_LEFT
+            pin_to_sibling_corner	BOTTOM_RIGHT
+        }
+
+        Optic3
+        {
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "OpticsButton"
+			wide                    100
+			tall                    100
+			ypos                    0
+            xpos                    10
+            zpos                    10
+            scriptID				"3"
+
+            pin_to_sibling			Optic2
+            pin_corner_to_sibling	BOTTOM_LEFT
+            pin_to_sibling_corner	BOTTOM_RIGHT
+        }
+
+        Optic4
+        {
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "OpticsButton"
+			wide                    100
+			tall                    100
+			ypos                    10
+            xpos                    0
+            zpos                    10
+            scriptID				"4"
 
             pin_to_sibling			Optic0
             pin_corner_to_sibling	BOTTOM_LEFT
             pin_to_sibling_corner	TOP_LEFT
         }
 
-        Optic2
-        {
-            ControlName				RuiButton
-            classname               "OpticsButton"
-            wide					230
-            tall					75
-            ypos                    10
-            xpos                    0
-            zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
-            scriptID				"2"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
-
-            pin_to_sibling			Optic1
-            pin_corner_to_sibling	BOTTOM_LEFT
-            pin_to_sibling_corner	TOP_LEFT
-        }
-
-        Optic3
-        {
-            ControlName				RuiButton
-            classname               "OpticsButton"
-            wide					230
-            tall					75
-            ypos                    10
-            xpos                    0
-            zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
-            scriptID				"3"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
-
-            pin_to_sibling			Optic2
-            pin_corner_to_sibling	BOTTOM_LEFT
-            pin_to_sibling_corner	TOP_LEFT
-        }
-
-        Optic4
-        {
-            ControlName				RuiButton
-            classname               "OpticsButton"
-            wide					230
-            tall					75
-            ypos                    10
-            xpos                    0
-            zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
-            scriptID				"4"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
-
-            pin_to_sibling			Optic3
-            pin_corner_to_sibling	BOTTOM_LEFT
-            pin_to_sibling_corner	TOP_LEFT
-        }
-
         Optic5
         {
-            ControlName				RuiButton
-            classname               "OpticsButton"
-            wide					230
-            tall					75
-            ypos                    10
-            xpos                    0
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "OpticsButton"
+			wide                    100
+			tall                    100
+			ypos                    0
+            xpos                    10
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"5"
 
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
+            pin_to_sibling			Optic4
+            pin_corner_to_sibling	BOTTOM_LEFT
+            pin_to_sibling_corner	BOTTOM_RIGHT
+        }
+
+        Optic6
+        {
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "OpticsButton"
+			wide                    100
+			tall                    100
+			ypos                    0
+            xpos                    10
+            zpos                    10
+            scriptID				"6"
+
+            pin_to_sibling			Optic5
+            pin_corner_to_sibling	BOTTOM_LEFT
+            pin_to_sibling_corner	BOTTOM_RIGHT
+        }
+
+        Optic7
+        {
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "OpticsButton"
+			wide                    100
+			tall                    100
+			ypos                    0
+            xpos                    10
+            zpos                    10
+            scriptID				"7"
+
+            pin_to_sibling			Optic6
+            pin_corner_to_sibling	BOTTOM_LEFT
+            pin_to_sibling_corner	BOTTOM_RIGHT
+        }
+
+        Optic8
+        {
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "OpticsButton"
+			wide                    100
+			tall                    100
+			ypos                    10
+            xpos                    0
+            zpos                    10
+            scriptID				"8"
 
             pin_to_sibling			Optic4
             pin_corner_to_sibling	BOTTOM_LEFT
             pin_to_sibling_corner	TOP_LEFT
         }
 
-        Optic6
-        {
-            ControlName				RuiButton
-            classname               "OpticsButton"
-            wide					230
-            tall					75
-            ypos                    10
-            xpos                    0
-            zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
-            scriptID				"6"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
-
-            pin_to_sibling			Optic5
-            pin_corner_to_sibling	BOTTOM_LEFT
-            pin_to_sibling_corner	TOP_LEFT
-        }
-
-        Optic7
-        {
-            ControlName				RuiButton
-            classname               "OpticsButton"
-            wide					230
-            tall					75
-            ypos                    10
-            xpos                    0
-            zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
-            scriptID				"7"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
-
-            pin_to_sibling			Optic6
-            pin_corner_to_sibling	BOTTOM_LEFT
-            pin_to_sibling_corner	TOP_LEFT
-        }
-
-        Optic8
-        {
-            ControlName				RuiButton
-            classname               "OpticsButton"
-            wide					230
-            tall					75
-            ypos                    10
-            xpos                    0
-            zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
-            scriptID				"8"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
-
-            pin_to_sibling			Optic7
-            pin_corner_to_sibling	BOTTOM_LEFT
-            pin_to_sibling_corner	TOP_LEFT
-        }
-
         Optic9
         {
-            ControlName				RuiButton
-            classname               "OpticsButton"
-            wide					230
-            tall					75
-            ypos                    10
-            xpos                    0
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "OpticsButton"
+			wide                    100
+			tall                    100
+			ypos                    0
+            xpos                    10
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"9"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Optic8
             pin_corner_to_sibling	BOTTOM_LEFT
-            pin_to_sibling_corner	TOP_LEFT
+            pin_to_sibling_corner	BOTTOM_RIGHT
         }
 
         Optic10
         {
-            ControlName				RuiButton
-            classname               "OpticsButton"
-            wide					230
-            tall					75
-            ypos                    10
-            xpos                    0
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "OpticsButton"
+			wide                    100
+			tall                    100
+			ypos                    0
+            xpos                    10
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"10"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Optic9
             pin_corner_to_sibling	BOTTOM_LEFT
-            pin_to_sibling_corner	TOP_LEFT
+            pin_to_sibling_corner	BOTTOM_RIGHT
         }
 
         Optic11
         {
-            ControlName				RuiButton
-            classname               "OpticsButton"
-            wide					230
-            tall					75
-            ypos                    10
-            xpos                    0
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "OpticsButton"
+			wide                    100
+			tall                    100
+			ypos                    0
+            xpos                    10
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"11"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Optic10
             pin_corner_to_sibling	BOTTOM_LEFT
-            pin_to_sibling_corner	TOP_LEFT
+            pin_to_sibling_corner	BOTTOM_RIGHT
         }
 
         Optic12
         {
-            ControlName				RuiButton
-            classname               "OpticsButton"
-            wide					230
-            tall					75
-            ypos                    10
-            xpos                    0
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "OpticsButton"
+			wide                    100
+			tall                    100
+			ypos                    0
+            xpos                    10
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"12"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Optic11
             pin_corner_to_sibling	BOTTOM_LEFT
-            pin_to_sibling_corner	TOP_LEFT
+            pin_to_sibling_corner	BOTTOM_RIGHT
         }
 
         Barrel0
         {
-            ControlName				RuiButton
-            classname               "BarrelButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "BarrelButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"0"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			BarrelCata
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -639,28 +410,16 @@
 
         Barrel1
         {
-            ControlName				RuiButton
-            classname               "BarrelButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "BarrelButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"1"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Barrel0
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -669,28 +428,16 @@
 
         Barrel2
         {
-            ControlName				RuiButton
-            classname               "BarrelButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "BarrelButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"2"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Barrel1
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -699,28 +446,16 @@
 
         Barrel3
         {
-            ControlName				RuiButton
-            classname               "BarrelButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "BarrelButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"3"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Barrel2
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -729,28 +464,16 @@
 
         Barrel4
         {
-            ControlName				RuiButton
-            classname               "BarrelButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "BarrelButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"4"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Barrel3
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -759,28 +482,16 @@
 
         Barrel5
         {
-            ControlName				RuiButton
-            classname               "BarrelButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "BarrelButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"5"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Barrel4
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -789,28 +500,16 @@
 
         Barrel6
         {
-            ControlName				RuiButton
-            classname               "BarrelButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "BarrelButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"6"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Barrel5
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -819,28 +518,16 @@
 
         Barrel7
         {
-            ControlName				RuiButton
-            classname               "BarrelButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "BarrelButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"7"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Barrel6
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -849,28 +536,16 @@
 
         Barrel8
         {
-            ControlName				RuiButton
-            classname               "BarrelButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "BarrelButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"8"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Barrel7
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -879,28 +554,16 @@
 
         Barrel9
         {
-            ControlName				RuiButton
-            classname               "BarrelButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "BarrelButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"9"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Barrel8
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -909,28 +572,16 @@
 
         Barrel10
         {
-            ControlName				RuiButton
-            classname               "BarrelButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "BarrelButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"10"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Barrel9
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -939,28 +590,16 @@
 
         Barrel11
         {
-            ControlName				RuiButton
-            classname               "BarrelButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "BarrelButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"11"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Barrel10
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -969,28 +608,16 @@
 
         Barrel12
         {
-            ControlName				RuiButton
-            classname               "BarrelButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "BarrelButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"12"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Barrel11
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -999,28 +626,16 @@
 
         Magazine0
         {
-            ControlName				RuiButton
-            classname               "MagazineButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "MagazineButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"0"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			MagsCata
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -1029,28 +644,16 @@
 
         Magazine1
         {
-            ControlName				RuiButton
-            classname               "MagazineButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "MagazineButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"1"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Magazine0
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -1059,28 +662,16 @@
 
         Magazine2
         {
-            ControlName				RuiButton
-            classname               "MagazineButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "MagazineButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"2"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Magazine1
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -1089,28 +680,16 @@
 
         Magazine3
         {
-            ControlName				RuiButton
-            classname               "MagazineButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "MagazineButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"3"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Magazine2
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -1119,28 +698,16 @@
 
         Magazine4
         {
-            ControlName				RuiButton
-            classname               "MagazineButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "MagazineButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"4"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Magazine3
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -1149,28 +716,16 @@
 
         Magazine5
         {
-            ControlName				RuiButton
-            classname               "MagazineButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "MagazineButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"5"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Magazine4
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -1179,28 +734,16 @@
 
         Magazine6
         {
-            ControlName				RuiButton
-            classname               "MagazineButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "MagazineButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"6"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Magazine5
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -1209,28 +752,16 @@
 
         Magazine7
         {
-            ControlName				RuiButton
-            classname               "MagazineButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "MagazineButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"7"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Magazine6
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -1239,28 +770,16 @@
 
         Magazine8
         {
-            ControlName				RuiButton
-            classname               "MagazineButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "MagazineButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"8"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Magazine7
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -1269,28 +788,16 @@
 
         Magazine9
         {
-            ControlName				RuiButton
-            classname               "MagazineButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "MagazineButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"9"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Magazine8
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -1299,28 +806,16 @@
 
         Magazine10
         {
-            ControlName				RuiButton
-            classname               "MagazineButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "MagazineButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"10"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Magazine9
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -1329,28 +824,16 @@
 
         Magazine11
         {
-            ControlName				RuiButton
-            classname               "MagazineButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "MagazineButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"11"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Magazine10
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -1359,28 +842,16 @@
 
         Magazine12
         {
-            ControlName				RuiButton
-            classname               "MagazineButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "MagazineButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"12"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Magazine11
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -1389,28 +860,16 @@
 
         Stock0
         {
-            ControlName				RuiButton
-            classname               "StockButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "StockButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"0"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			StocksCata
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -1419,28 +878,16 @@
 
         Stock1
         {
-            ControlName				RuiButton
-            classname               "StockButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "StockButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"1"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Stock0
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -1449,28 +896,16 @@
 
         Stock2
         {
-            ControlName				RuiButton
-            classname               "StockButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "StockButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"2"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Stock1
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -1479,28 +914,16 @@
 
         Stock3
         {
-            ControlName				RuiButton
-            classname               "StockButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "StockButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"3"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Stock2
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -1509,28 +932,16 @@
 
         Stock4
         {
-            ControlName				RuiButton
-            classname               "StockButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "StockButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"4"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Stock3
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -1539,28 +950,16 @@
 
         Stock5
         {
-            ControlName				RuiButton
-            classname               "StockButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "StockButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"5"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Stock4
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -1569,28 +968,16 @@
 
         Stock6
         {
-            ControlName				RuiButton
-            classname               "StockButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "StockButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"6"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Stock5
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -1599,28 +986,16 @@
 
         Stock7
         {
-            ControlName				RuiButton
-            classname               "StockButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "StockButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"7"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Stock6
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -1629,28 +1004,16 @@
 
         Stock8
         {
-            ControlName				RuiButton
-            classname               "StockButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "StockButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"8"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Stock7
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -1659,28 +1022,16 @@
 
         Stock9
         {
-            ControlName				RuiButton
-            classname               "StockButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "StockButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"9"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Stock8
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -1689,28 +1040,16 @@
 
         Stock10
         {
-            ControlName				RuiButton
-            classname               "StockButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "StockButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"10"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Stock9
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -1719,28 +1058,16 @@
 
         Stock11
         {
-            ControlName				RuiButton
-            classname               "StockButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "StockButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"11"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Stock10
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -1749,28 +1076,16 @@
 
         Stock12
         {
-            ControlName				RuiButton
-            classname               "StockButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "StockButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"12"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Stock11
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -1779,28 +1094,16 @@
 
         Bolt0
         {
-            ControlName				RuiButton
-            classname               "BoltButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "BoltButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"0"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			BoltsCata
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -1809,28 +1112,16 @@
 
         Bolt1
         {
-            ControlName				RuiButton
-            classname               "BoltButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "BoltButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"1"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Bolt0
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -1839,28 +1130,16 @@
 
         Bolt2
         {
-            ControlName				RuiButton
-            classname               "BoltButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "BoltButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"2"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Bolt1
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -1869,28 +1148,16 @@
 
         Bolt3
         {
-            ControlName				RuiButton
-            classname               "BoltButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "BoltButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"3"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-                modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Bolt2
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -1899,28 +1166,16 @@
 
         Bolt4
         {
-            ControlName				RuiButton
-            classname               "BoltButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "BoltButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"4"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-                modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Bolt3
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -1929,28 +1184,16 @@
 
         Bolt5
         {
-            ControlName				RuiButton
-            classname               "BoltButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "BoltButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"5"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-                modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Bolt5
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -1959,28 +1202,16 @@
 
         Bolt6
         {
-            ControlName				RuiButton
-            classname               "BoltButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "BoltButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"6"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-                modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Bolt5
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -1989,28 +1220,16 @@
 
         Bolt7
         {
-            ControlName				RuiButton
-            classname               "BoltButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "BoltButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"7"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-                modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Bolt6
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -2019,28 +1238,16 @@
 
         Bolt8
         {
-            ControlName				RuiButton
-            classname               "BoltButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "BoltButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"8"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-                modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Bolt7
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -2049,28 +1256,16 @@
 
         Bolt9
         {
-            ControlName				RuiButton
-            classname               "BoltButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "BoltButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"9"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-                modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Bolt8
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -2079,28 +1274,16 @@
 
         Bolt10
         {
-            ControlName				RuiButton
-            classname               "BoltButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "BoltButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"10"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-                modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Bolt9
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -2109,28 +1292,16 @@
 
         Bolt11
         {
-            ControlName				RuiButton
-            classname               "BoltButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "BoltButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"11"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-                modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Bolt10
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -2139,28 +1310,16 @@
 
         Bolt12
         {
-            ControlName				RuiButton
-            classname               "BoltButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "BoltButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"12"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-                modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			Bolt11
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -2169,28 +1328,16 @@
 
         HopUp0
         {
-            ControlName				RuiButton
-            classname               "HopUpButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "HopUpButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"0"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			HopUpCata
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -2199,28 +1346,16 @@
 
         HopUp1
         {
-            ControlName				RuiButton
-            classname               "HopUpButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "HopUpButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"1"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			HopUp0
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -2229,28 +1364,16 @@
 
         HopUp2
         {
-            ControlName				RuiButton
-            classname               "HopUpButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "HopUpButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"2"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			DarkenBackground
             pin_corner_to_sibling	TOP_LEFT
@@ -2259,28 +1382,16 @@
 
         HopUp3
         {
-            ControlName				RuiButton
-            classname               "HopUpButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "HopUpButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"3"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			HopUp2
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -2289,28 +1400,16 @@
 
         HopUp4
         {
-            ControlName				RuiButton
-            classname               "HopUpButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "HopUpButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"4"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			HopUp3
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -2319,28 +1418,16 @@
 
         HopUp5
         {
-            ControlName				RuiButton
-            classname               "HopUpButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "HopUpButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"5"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			HopUp4
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -2349,28 +1436,16 @@
 
         HopUp6
         {
-            ControlName				RuiButton
-            classname               "HopUpButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "HopUpButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"6"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			HopUp5
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -2379,28 +1454,16 @@
 
         HopUp7
         {
-            ControlName				RuiButton
-            classname               "HopUpButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "HopUpButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"7"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			HopUp6
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -2409,28 +1472,16 @@
 
         HopUp8
         {
-            ControlName				RuiButton
-            classname               "HopUpButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "HopUpButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"8"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			HopUp7
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -2439,28 +1490,16 @@
 
         HopUp9
         {
-            ControlName				RuiButton
-            classname               "HopUpButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "HopUpButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"9"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			HopUp8
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -2469,28 +1508,16 @@
 
         HopUp10
         {
-            ControlName				RuiButton
-            classname               "HopUpButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "HopUpButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"10"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			HopUp9
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -2499,28 +1526,16 @@
 
         HopUp11
         {
-            ControlName				RuiButton
-            classname               "HopUpButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "HopUpButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"11"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			HopUp10
             pin_corner_to_sibling	BOTTOM_LEFT
@@ -2529,28 +1544,16 @@
 
         HopUp12
         {
-            ControlName				RuiButton
-            classname               "HopUpButton"
-            wide					230
-            tall					75
-            ypos                    10
+            sound_accept            "UI_Menu_Accept"
+			ControlName             RuiButton
+			InheritProperties       SurvivalInventoryGridButton
+			classname               "HopUpButton"
+			wide                    100
+			tall                    100
+			ypos                    10
             xpos                    0
             zpos                    10
-            rui                     "ui/gamemode_select_v2_lobby_button.rpak"
-            labelText               ""
-            allowRightClickMenu		1
-            visible					1
-            tabPosition             1
-            cursorVelocityModifier  0.7
-            sound_accept            "UI_Menu_GameMode_Select"
             scriptID				"12"
-
-            ruiArgs
-            {
-                lockIconEnabled 0
-                modeDescText ""
-            modeImage "rui/menu/store/feature_background_square"
-            }
 
             pin_to_sibling			HopUp11
             pin_corner_to_sibling	BOTTOM_LEFT

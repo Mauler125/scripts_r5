@@ -83,9 +83,15 @@ bool function ClientCommand_UpdateWeaponMods(entity player, array<string> args)
     }
 
     entity activeWeapon = player.GetActiveWeapon( eActiveInventorySlot.mainHand )
+    int clipcount = activeWeapon.GetWeaponPrimaryClipCount()
     string weaponclassname = activeWeapon.GetWeaponClassName()
     player.TakeWeaponNow( weaponclassname )
     player.GiveWeapon( args[0], activeSlot, weaponmods )
+
+    if(clipcount > player.GetActiveWeapon( eActiveInventorySlot.mainHand ).GetWeaponPrimaryClipCountMax())
+        clipcount = player.GetActiveWeapon( eActiveInventorySlot.mainHand ).GetWeaponPrimaryClipCountMax()
+
+    player.GetActiveWeapon( eActiveInventorySlot.mainHand ).SetWeaponPrimaryClipCount( clipcount )
 
     return true
 }

@@ -77,6 +77,19 @@ table <string, string> ModToName = {
 	["hopup_double_tap"] = "Double Tap"
 }
 
+const table<string, asset> emptyAttachmenttoImage = {
+	["sight"] = $"rui/pilot_loadout/mods/empty_sight",
+	["barrel"] = $"rui/pilot_loadout/mods/empty_barrel_stabilizer",
+	["lightmag"] = $"rui/pilot_loadout/mods/empty_mag_straight",
+	["heavymag"] = $"rui/pilot_loadout/mods/empty_mag",
+	["energymag"] = $"rui/pilot_loadout/mods/empty_energy_mag",
+	["stock_tactical"] = $"rui/pilot_loadout/mods/empty_stock_tactical",
+	["stock_sniper"] = $"rui/pilot_loadout/mods/empty_stock_sniper",
+	["sniper"] = $"rui/pilot_loadout/mods/empty_stock",
+	["bolt"] = $"rui/pilot_loadout/mods/empty_mag_shotgun",
+	["hopup"] = $"rui/pilot_loadout/mods/empty_hopup"
+}
+
 struct
 {
 	var menu
@@ -320,20 +333,34 @@ void function OnWeaponsMenuOpen()
 		{
 			if(j > MAX_ATTACHMENT_ITEMS)
 				break
-			
-			string modname = mod
-			if(mod in ModToName)
-				modname = ModToName[mod]
 				
-			RuiSetString( Hud_GetRui( Hud_GetChild( file.menu, ModsButtons[i] + j ) ), "modeNameText", modname )
-
 			if(file.OpenButtonName == ButtonNames[i])
 				Hud_SetVisible( Hud_GetChild( file.menu, ModsButtons[i] + j ), true )
 
-			RuiSetBool( Hud_GetRui( Hud_GetChild( file.menu, ModsButtons[i] + j ) ), "isPartyLeader", false )
-
-			if(mod == ButtonToSelected[i])
-				RuiSetBool( Hud_GetRui( Hud_GetChild( file.menu, ModsButtons[i] + j ) ), "isPartyLeader", true )
+			if(SURVIVAL_Loot_IsRefValid( mod ))
+			{
+				LootData data = SURVIVAL_Loot_GetLootDataByRef( mod )
+				RuiSetImage( Hud_GetRui(Hud_GetChild( file.menu, ModsButtons[i] + j )), "iconImage", data.hudIcon )
+				RuiSetInt( Hud_GetRui(Hud_GetChild( file.menu, ModsButtons[i] + j )), "lootTier", data.tier )
+			}
+			else
+			{
+				switch(mod)
+				{
+					case "hopup_headshot_dmg":
+						RuiSetImage( Hud_GetRui(Hud_GetChild( file.menu, ModsButtons[i] + j )), "iconImage", $"rui/pilot_loadout/mods/empty_hopup_skullpiercer" )
+						RuiSetInt( Hud_GetRui(Hud_GetChild( file.menu, ModsButtons[i] + j )), "lootTier", 4 )
+						break
+					case "energy_mag_l4":
+						RuiSetImage( Hud_GetRui(Hud_GetChild( file.menu, ModsButtons[i] + j )), "iconImage", $"rui/pilot_loadout/mods/energy_mag" )
+						RuiSetInt( Hud_GetRui(Hud_GetChild( file.menu, ModsButtons[i] + j )), "lootTier", 4 )
+						break
+					default:
+						RuiSetImage( Hud_GetRui(Hud_GetChild( file.menu, ModsButtons[i] + j )), "iconImage", $"rui/pilot_loadout/mods/empty_hopup" )
+						RuiSetInt( Hud_GetRui(Hud_GetChild( file.menu, ModsButtons[i] + j )), "lootTier", 4 )
+						break
+				}
+			}
 
 			switch(i)
 			{
@@ -387,17 +414,29 @@ void function SetupModCatagorys()
 		if(mod.find( "barrel" ) > -1)
 			weaponBarrels.append( mod )
 
-		if(mod.find( "_mag_" ) > -1)
+		if(mod.find( "_mag_" ) > -1 && mod.find( "sniper_mag" ) == -1)
 			weaponMagazines.append( mod )
 
 		if(mod.find( "stock" ) > -1)
 			weaponStocks.append( mod )
 
-		if(mod.find( "shotgun_bolt" ) > -1)
+		if(mod.find( "shotgun_bolt" ) > -1 && mod.find( "_double_tap" ) == -1)
 			weaponBolts.append( mod )
 
 		if(mod.find( "hopup" ) > -1)
 			weaponHopup.append( mod )
+	}
+
+	//weird bug with eva8 where lvl 3 bolt is not in the list
+	if(weaponBolts.len() > 0)
+	{
+		bool lvl3boltinarry = false
+		foreach(string mod in weaponBolts)
+			if(mod.find( "shotgun_bolt_l3" ) > -1)
+				lvl3boltinarry = true
+	
+		if(!lvl3boltinarry)
+			weaponBolts.append( "shotgun_bolt_l3" )
 	}
 
 	//Remove Blacklisted Items
@@ -417,6 +456,17 @@ void function SetupModCatagorys()
 		[catanames[5]] = weaponHopup
 	}
 
+	table<int, string > ButtonToSelected = {
+		[0] = selectedMods.optic,
+		[1] = selectedMods.barrel,
+		[2] = selectedMods.magazine,
+		[3] = selectedMods.stock,
+		[4] = selectedMods.bolt,
+		[5] = selectedMods.hopup
+	}
+
+	int bgwidth = 0
+	int bgheight = 0
 	var previousPanelForPinning
 	foreach(int i, string cata in catanames)
 	{
@@ -426,17 +476,154 @@ void function SetupModCatagorys()
 		var button = Hud_GetChild( file.menu, cata )
 		Hud_SetVisible( button, true )
 
-		if(i == 0)
-		{
+		RuiSetImage( Hud_GetRui(button), "iconImage", $"" )	
+		RuiSetInt( Hud_GetRui(button), "lootTier", 0 )
+		
+		SetupEquipedWeaponMods(i, button)
+
+		if(i == 0) {
+			bgwidth += Hud_GetWidth(button)
 			Hud_SetY( button, -10 )
 			Hud_SetX( button, -10 )
-		}
-		else 
-		{
+		} else  {
+			bgwidth += Hud_GetWidth(button) + 15
 			Hud_SetPinSibling( button, Hud_GetHudName( previousPanelForPinning ) )
 			Hud_SetX( button, -(Hud_GetWidth(previousPanelForPinning)) - 15 )
 		}
 
+		bgheight = Hud_GetHeight(button)
 		previousPanelForPinning = button
+	}
+
+	Hud_SetY( Hud_GetChild( file.menu, "ModsBG" ), -10 )
+	Hud_SetX( Hud_GetChild( file.menu, "ModsBG" ), -10 )
+	Hud_SetWidth( Hud_GetChild( file.menu, "ModsBG" ), bgwidth )
+	Hud_SetHeight( Hud_GetChild( file.menu, "ModsBG" ), bgheight )
+}
+
+void function SetupEquipedWeaponMods(int i, var button)
+{
+	switch(i)
+	{
+		case 0:
+			RuiSetImage( Hud_GetRui(button), "iconImage", emptyAttachmenttoImage["sight"] )
+			RuiSetInt( Hud_GetRui(button), "lootTier", 0 )
+
+			if(selectedMods.optic != "") {
+				LootData data = SURVIVAL_Loot_GetLootDataByRef( selectedMods.optic )
+				RuiSetImage( Hud_GetRui(button), "iconImage", data.hudIcon )
+				RuiSetInt( Hud_GetRui(button), "lootTier", data.tier )
+			}
+			break
+		case 1:
+			RuiSetImage( Hud_GetRui(button), "iconImage", emptyAttachmenttoImage["barrel"] )
+			RuiSetInt( Hud_GetRui(button), "lootTier", 0 )
+
+			if(selectedMods.barrel != "") {
+				LootData data = SURVIVAL_Loot_GetLootDataByRef( selectedMods.barrel )
+				RuiSetImage( Hud_GetRui(button), "iconImage", data.hudIcon )
+				RuiSetInt( Hud_GetRui(button), "lootTier", data.tier )
+			}
+			break
+		case 2:
+			string ammoType = GetWeaponInfoFileKeyField_GlobalString( file.weaponclassname, "ammo_pool_type" )
+			asset ammoTypeAsset = $""
+			switch(ammoType)
+			{
+				case "bullet":
+					ammoTypeAsset = emptyAttachmenttoImage["lightmag"]
+					break
+				case "highcal":
+					ammoTypeAsset = emptyAttachmenttoImage["heavymag"]
+					break
+				case "special":
+					ammoTypeAsset = emptyAttachmenttoImage["energymag"]
+					break
+			}
+
+			RuiSetImage( Hud_GetRui(button), "iconImage", ammoTypeAsset )
+			RuiSetInt( Hud_GetRui(button), "lootTier", 0 )
+
+			if(selectedMods.magazine != "") {
+				if(SURVIVAL_Loot_IsRefValid( selectedMods.magazine ))
+				{
+					LootData data = SURVIVAL_Loot_GetLootDataByRef( selectedMods.magazine )
+					RuiSetImage( Hud_GetRui(button), "iconImage", data.hudIcon )
+					RuiSetInt( Hud_GetRui(button), "lootTier", data.tier )
+				}
+				else
+				{
+					switch(selectedMods.magazine)
+					{
+						case "energy_mag_l4":
+							RuiSetImage( Hud_GetRui(button), "iconImage", $"rui/pilot_loadout/mods/energy_mag" )
+							RuiSetInt( Hud_GetRui(button), "lootTier", 4 )
+							break
+						default:
+							RuiSetImage( Hud_GetRui(button), "iconImage", $"rui/pilot_loadout/mods/empty_mag_straight" )
+							RuiSetInt( Hud_GetRui(button), "lootTier", 4 )
+							break
+					}
+				}
+			}
+			break
+		case 3:
+			RuiSetImage( Hud_GetRui(button), "iconImage", emptyAttachmenttoImage["stock_tactical"] )
+			RuiSetInt( Hud_GetRui(button), "lootTier", 0 )
+
+			switch(file.weaponclassname)
+			{
+				case "mp_weapon_doubletake":
+				case "mp_weapon_dmr":
+				case "mp_weapon_sniper":
+				case "mp_weapon_sentinel":
+				case "mp_weapon_defender":
+				case "mp_weapon_g2":
+				RuiSetImage( Hud_GetRui(button), "iconImage", emptyAttachmenttoImage["stock_sniper"] )
+			}
+
+			if(selectedMods.stock != "") {
+				LootData data = SURVIVAL_Loot_GetLootDataByRef( selectedMods.stock )
+				RuiSetImage( Hud_GetRui(button), "iconImage", data.hudIcon )
+				RuiSetInt( Hud_GetRui(button), "lootTier", data.tier )
+			}
+			break
+		case 4:
+			RuiSetImage( Hud_GetRui(button), "iconImage", emptyAttachmenttoImage["bolt"] )
+			RuiSetInt( Hud_GetRui(button), "lootTier", 0 )
+
+			if(selectedMods.bolt != "") {
+				LootData data = SURVIVAL_Loot_GetLootDataByRef( selectedMods.bolt )
+				RuiSetImage( Hud_GetRui(button), "iconImage", data.hudIcon )
+				RuiSetInt( Hud_GetRui(button), "lootTier", data.tier )
+			}
+			break
+		case 5:
+			RuiSetImage( Hud_GetRui(button), "iconImage", emptyAttachmenttoImage["hopup"] )
+			RuiSetInt( Hud_GetRui(button), "lootTier", 0 )
+
+			if(selectedMods.hopup != "") {
+				if(SURVIVAL_Loot_IsRefValid( selectedMods.hopup ))
+				{
+					LootData data = SURVIVAL_Loot_GetLootDataByRef( selectedMods.hopup )
+					RuiSetImage( Hud_GetRui(button), "iconImage", data.hudIcon )
+					RuiSetInt( Hud_GetRui(button), "lootTier", data.tier )
+				}
+				else
+				{
+					switch(selectedMods.hopup)
+					{
+						case "hopup_headshot_dmg":
+							RuiSetImage( Hud_GetRui(button), "iconImage", $"rui/pilot_loadout/mods/empty_hopup_skullpiercer" )
+							RuiSetInt( Hud_GetRui(button), "lootTier", 4 )
+							break
+						default:
+							RuiSetImage( Hud_GetRui(button), "iconImage", $"rui/pilot_loadout/mods/empty_hopup" )
+							RuiSetInt( Hud_GetRui(button), "lootTier", 4 )
+							break
+					}
+				}
+			}
+			break
 	}
 }
