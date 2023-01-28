@@ -87,6 +87,7 @@ void function SetupWeapons()
 	SetupDevCommand( "Pistol: P2020", "give mp_weapon_semipistol" )
 	SetupDevCommand( "Pistol: RE-45", "give mp_weapon_autopistol" )
 	SetupDevCommand( "Pistol: Wingman", "give mp_weapon_wingman" )
+	SetupDevCommand( "Pistol: Smart Pistol", "give mp_weapon_smart_pistol" )
 
 	// Grenades
 	SetupDevCommand( "Grenade: Arc Star", "give mp_weapon_grenade_emp" )
@@ -95,9 +96,9 @@ void function SetupWeapons()
 
 	// Dev
 	//SetupDevCommand( "Dev: Dev Tool", "give mp_weapon_mdlspawner" )
-	SetupDevCommand( "Dev: Smart Pistol", "give mp_weapon_smart_pistol" )
-	SetupDevCommand( "Dev: Flight Core", "give mp_titanweapon_flightcore_rockets" )
-	SetupDevCommand( "Dev: Sheila", "give mp_weapon_mobile_hmg" )
+	//SetupDevCommand( "Dev: Smart Pistol", "give mp_weapon_smart_pistol" )
+	//SetupDevCommand( "Dev: Flight Core", "give mp_titanweapon_flightcore_rockets" )
+	//SetupDevCommand( "Dev: Sheila", "give mp_weapon_mobile_hmg" )
 	SetupDevCommand( "Dev: Dev Cubemap ", "give weapon_cubemap" )
 	#endif
 }
