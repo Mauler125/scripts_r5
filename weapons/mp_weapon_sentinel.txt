@@ -42,7 +42,7 @@
 	//"OnWeaponStartZoomOut"                   "OnWeaponStartZoomOut_weapon_sentinel"
 
     // Energize mechanics
-    "energized_duration"                       "90.0"
+    "energized_duration"                       "120.0"
     "energized_time_consumed_per_shot"         "15.0"
     "energize_activity_time"                   "5.0"        //this doesn't scale the animation! This is used for UI, make sure it is in parity with the animation timing
 	"entity_color_from_charge"				   "1"
@@ -69,12 +69,12 @@
 
 	// Damage
 	//
-	"damage_near_value"                        "65"
-	"damage_far_value"                         "65"
-	"damage_very_far_value"                    "65"
-	"damage_near_value_titanarmor"             "65"
-	"damage_far_value_titanarmor"              "65"
-	"damage_very_far_value_titanarmor"         "65"
+	"damage_near_value"                        "70"    //"65"
+	"damage_far_value"                         "70"    //"65"
+	"damage_very_far_value"                    "70"    //"65"
+	"damage_near_value_titanarmor"             "70"    //"65"
+	"damage_far_value_titanarmor"              "70"    //"65"
+	"damage_very_far_value_titanarmor"         "70"    //"65"
 
     // Projectile
     "projectile_launch_speed"                  "31000"
@@ -101,11 +101,7 @@
 
 	// Ammo
 	//
-                   
-	"ammo_pool_type"                           "highcal"
-     
-                                                         
-      
+	"ammo_pool_type"                               "sniper"
 	"ammo_clip_size"                               "4"
 	"ammo_stockpile_max"                           "50"
 	"ammo_default_total"                           "50"
@@ -127,7 +123,7 @@
 	"reloadempty_time_late1"                       "2.63"
 	"reloadempty_time_late2"                       "1.58"
 	"reloadempty_time_late3"                       "0.9"  //will update (Shawn)
-	"rechamber_time"                               "1.85" //"1.6"
+	"rechamber_time"                               "1.6"        //"1.75"
 
 	// Behavior - Animation
 	"deployfirst_time"                         "1.6"
@@ -258,14 +254,11 @@
     //"pre_energize_effect0_3p"                   ""
     //"pre_energize_effect0_attachment"           ""
     //"pre_energize_effect0_attachment_scope"     ""
-
-    "energize_effect0_1p"                       ""
-    "energize_effect0_3p"                       ""
+   
+    "energize_effect0_1p"                       "P_wpn_sentinel_charge_FP"
+    "energize_effect0_3p"                       "P_wpn_sentinel_charge_3P"
     "energize_effect0_attachment"               "muzzle_flash"
     "energize_effect0_attachment_scope"         ""
-    "energize_effect1_3p"                       ""
-    "energize_effect1_attachment"               ""
-    "energize_effect1_attachment_scope"         ""
 
     "end_energize_effect0_1p"                   ""
     "end_energize_effect0_3p"                   ""

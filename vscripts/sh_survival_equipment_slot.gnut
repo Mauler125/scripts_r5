@@ -357,6 +357,8 @@ int function EmptyCommsAction_AttachmentForParent( string equipmentSlot, string 
 					return eCommsAction.INVENTORY_NEED_ATTACHMENT_MAG_HIGHCAL
 				case "shotgun":
 					return eCommsAction.INVENTORY_NEED_ATTACHMENT_MAG_SHOTGUN
+				case "sniper":
+					return eCommsAction.INVENTORY_NEED_ATTACHMENT_MAG_SNIPER
 				default:
 					Warning( format( "%s() - Unhandled ammo type: '%s'.", FUNC_NAME(), weaponData.ammoType ) )
 					return eCommsAction.BLANK
@@ -462,6 +464,8 @@ int function FilledCommsAction_Weapon( string equipmentSlotRef, string itemRef )
 			return eCommsAction.INVENTORY_NEED_AMMO_SHOTGUN
 		case "boomjuice":
 			return eCommsAction.INVENTORY_NEED_AMMO_BOOMJUICE
+		case "sniper":
+			return eCommsAction.INVENTORY_NEED_AMMO_SNIPER
 	}
 
 	Warning( "GetCommsActionForEquipmentSlot() - Unhandled ammo type '" + lootData.ammoType + "'" )

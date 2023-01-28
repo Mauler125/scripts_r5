@@ -185,6 +185,21 @@ struct CustomGrenadeData
 	float carePackageChance
 }
 
+global struct CustomAmmoData
+{
+	string className,
+	asset icon = $"rui/hud/gametype_icons/survival/sur_ammo_bullet_large",
+	asset model = $"mdl/weapons_r5/loot/_master/w_loot_wep_ammo_hc.rmdl",
+	string sound = "survival_loot_pickup_HeavyAmmo",
+	string sound3p = "survival_loot_pickup_3p_HeavyAmmo",
+	string printname = "Custom Ammo",
+    string pingCommsAction = "PING_AMMO_HIGHCAL",
+	string desc = "Custom Ammo Desc",
+	int countPerDrop = 80,
+	int stackSize = 80,
+	float chance = 10.0
+}
+
 array<string> attachmentSortOrder = ["barrel", "mag", "sight", "grip", "hopup"]
 
 array<CustomHopupData> function GetCustomHopupArray()
@@ -587,6 +602,72 @@ array<string> function GetCustomHopupsForWeapon(string className)
 		result.append(mod)
 	}
 	return result
+}
+
+void function RegisterCustomAmmo(CustomAmmoData AmmoData)
+{
+	LootData data
+	data.ref = AmmoData.className
+	data.baseWeapon = AmmoData.className
+
+	data.pickupString = AmmoData.printname
+	data.desc = AmmoData.desc
+	data.hudIcon = AmmoData.icon
+	data.model = AmmoData.model
+	data.tier = 1
+	data.countPerDrop = AmmoData.countPerDrop
+	data.inventorySlotCount = AmmoData.stackSize
+	data.lootType = eLootType.AMMO
+	data.pickupSound_1p = AmmoData.sound
+	data.pickupSound_3p = AmmoData.sound3p
+
+	#if SERVER || CLIENT
+	data.pingCommsAction = GetCommsActionForName( AmmoData.pingCommsAction )
+	#endif
+
+	data.index = file.lootIndexToString.len()
+	file.lootIndexToString.append( data.ref )
+	file.lootData[ data.ref ] <- data
+
+	#if !UI
+	AddCustomItemToLootPool( data.ref, "ammo", AmmoData.chance)
+	#endif
+}
+
+void function RegisterCustomAmmos()
+{
+	CustomAmmoData SniperAmmo = {
+		className = "sniper",
+		printname = "Sniper Ammo",
+		desc = "",
+
+		icon = $"rui/hud/gametype_icons/survival/sur_ammo_sniper",
+		model = $"mdl/weapons_r5/loot/_master/w_loot_wep_ammo_sniper.rmdl",
+		sound = "survival_loot_pickup_HeavyAmmo",
+		sound3p = "survival_loot_pickup_3p_HeavyAmmo",
+		pingCommsAction = "BLANK",
+		countPerDrop = 15,
+		stackSize = 30,
+		chance = 10.0
+	}
+
+	CustomAmmoData ExplosiveAmmo = {
+		printname = "Explosive Ammo",
+		className = "explosive",
+
+		desc = "",
+		icon = $"rui/hud/gametype_icons/survival/sur_ammo_explosive",
+		model = $"mdl/weapons_r5/loot/_master/w_loot_wep_ammo_explosive.rmdl",
+		sound = "survival_loot_pickup_titan_ammo",
+		sound3p = "survival_loot_pickup_3p_titan_ammo",
+		pingCommsAction = "BLANK",
+		countPerDrop = 5,
+		stackSize = 10,
+		chance = 10.0
+	}
+
+	RegisterCustomAmmo(SniperAmmo)
+	RegisterCustomAmmo(ExplosiveAmmo)
 }
 
 void function RegisterCustomGrenade(CustomGrenadeData grenadeData) {
