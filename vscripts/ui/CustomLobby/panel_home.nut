@@ -341,7 +341,7 @@ void function JoinTopServer(var button)
 		EmitUISound( "UI_Menu_Apex_Launch" )
 		RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Joining Match" )
 		wait 2
-		SetEncKeyAndConnect(g_SelectedTopServer.svServerID)
+		ConnectToListedServer(g_SelectedTopServer.svServerID)
 		RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Party not ready" )
 		RuiSetBool( Hud_GetRui( Hud_GetChild( file.panel, "SelfButton" ) ), "isReady", false )
 		HudElem_SetRuiArg( button, "buttonText", Localize( "#READY" ) )
@@ -407,7 +407,7 @@ void function UpdateQuickJoinButtons(var button)
 	wait waittime
 
 	if(!file.noservers) {
-		SetEncKeyAndConnect(file.m_vSelectedServer.svServerID)
+		ConnectToListedServer(file.m_vSelectedServer.svServerID)
 	}
 
 	RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Party not ready" )

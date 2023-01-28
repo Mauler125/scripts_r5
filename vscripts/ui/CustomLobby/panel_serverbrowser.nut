@@ -192,7 +192,7 @@ void function ServerBrowser_StartConnection(int id)
 	wait 2
 
 	Hud_SetVisible(Hud_GetChild( file.menu, "R5RConnectingPanel"), false)
-	SetEncKeyAndConnect(id)
+	ConnectToListedServer(id)
 }
 
 void function ServerBrowser_UpdateSelectedServerUI()
