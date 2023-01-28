@@ -229,20 +229,33 @@ float function GetLootTableFloat( string ref, var datatable, int rowIndex, strin
 
 void function SURVIVAL_Loot_All_InitShared()
 {
-	#if(!UI)
-		//
-	#endif
-	var dt = GetDataTable( $"datatable/survival_loot.rpak" )
+	if ( IsLobby())
+		return
+	
 	file.lootIndexToString.clear()
 	file.lootData.clear()
 
-	var attachmentTable = GetDataTable( $"datatable/survival_weapon_mods.rpak" )
-
 	file.disabledRefs.clear()
-	string disabledRefs = GetCurrentPlaylistVarString( "survival_disabled_loot", " " )
-	file.disabledRefs = split( disabledRefs, " " )
+	file.disabledRefs = split( GetCurrentPlaylistVarString( "survival_disabled_loot", " " ), " " )
 
-	array<string> icons = []
+	SURVIVAL_Loot_RegFromDataTable( GetDataTable( $"datatable/survival_loot.rpak" ) )
+	SURVIVAL_Loot_RegFromDataTable( GetDataTable( $"datatable/survival_loot_sdk.rpak" ))
+
+	//RegisterCustomAmmos()
+	RegisterCustomWeapons()
+
+	#if(UI)
+		RegisterSignal( "GatherFriendInfo" )
+		RegisterSignal( "GatheredEnoughFriendInfo" )
+		SURVIVAL_UIInit_Override_DeathBox_RUI()
+	#endif
+
+	file.initialized = true
+}
+
+void function SURVIVAL_Loot_RegFromDataTable(var dt)
+{
+	var attachmentTable = GetDataTable( $"datatable/survival_weapon_mods.rpak" )
 	int numRows = GetDatatableRowCount( dt )
 	for ( int i = 0; i < numRows; i++ )
 	{
@@ -431,21 +444,8 @@ void function SURVIVAL_Loot_All_InitShared()
 				PrecacheModel( data.model )
 		#endif
 	}
-
-	// foreach(string icon in icons)
-	// {
-
-	// }
-	RegisterCustomWeapons()
-
-	#if(UI)
-		RegisterSignal( "GatherFriendInfo" )
-		RegisterSignal( "GatheredEnoughFriendInfo" )
-		SURVIVAL_UIInit_Override_DeathBox_RUI()
-	#endif
-
-	file.initialized = true
 }
+
 
 struct CustomWeaponData
 {

@@ -144,6 +144,7 @@ global enum eDamageSourceId
 	mp_turretweapon_blaster
 	mp_turretweapon_plasma
 	mp_turretweapon_sentry
+	mp_weapon_smart_pistol
 
 	//Character Abilities
 	mp_weapon_defensive_bombardment_weapon
@@ -440,6 +441,7 @@ void function DamageTypes_Init()
 		file.damageSourceIDToImage[eDamageSourceId.melee_shadowsquad_hands] <- $"rui/gamemodes/shadow_squad/shadow_icon_small"
 		file.damageSourceIDToImage[eDamageSourceId.mp_weapon_volt_smg] <- $"rui/weapon_icons/r5/weapon_volt"
 		file.damageSourceIDToImage[eDamageSourceId.mp_weapon_sentinel] <- $"rui/weapon_icons/r5/weapon_sentinel"
+	file.damageSourceIDToImage[eDamageSourceId.mp_weapon_smart_pistol]		<- $"rui/weapon_icons/r5/weapon_smart_pistol"
 
 	file.damageSourceIDToName =
 	{
