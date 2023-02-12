@@ -121,18 +121,21 @@ void function Sequence_Playing()
 
 	if ( !GetCurrentPlaylistVarBool( "jump_from_plane_enabled", true ) )
 	{
-		bool circle = GetCurrentPlaylistVarBool( "circle_spawn_enabled", true )
 		vector pos = GetEnt( "info_player_start" ).GetOrigin()
-		pos.z += 5
+		pos.z += 25
 
 		int i = 0
+		bool circle = GetCurrentPlaylistVarBool( "survival_circle_spawn", false )
 		foreach ( player in GetPlayerArray() )
 		{
 			if ( circle )
 			{
-				// circle
 				float r = float(i) / float(GetPlayerArray().len()) * 2 * PI
 				player.SetOrigin( pos + 500.0 * <sin( r ), cos( r ), 0.0> )
+			}
+			else // don't spawn in a circle
+			{
+				player.SetOrigin( pos )
 			}
 
 			DecideRespawnPlayer( player )
