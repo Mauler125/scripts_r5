@@ -192,10 +192,8 @@ string function GetCurrentLobbyMenu()
 {
 	string menuName = "R5RLobbyMenu"
 
-	if(IsLobby() && GetPlaylistVarBool("menufall", "use_orginal_lobby_menu", false))
-	{
-		menuName = "LobbyMenu"
-	}
+	if(IsLobby())
+		menuName = GetPlaylistVarBool("menufall", "r5reloaded_lobby", true) ? "R5RLobbyMenu" : "LobbyMenu"
 
 	return menuName
 }
