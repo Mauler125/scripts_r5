@@ -70,8 +70,8 @@ void function OnMiscMenu_NavigateBack()
 
 	if ( IsLobby() )
 	{
-		if (GetActiveMenu() != GetMenu( "R5RLobbyMenu" ) )
-			AdvanceMenu( GetMenu( "R5RLobbyMenu" ) )
+		if (GetActiveMenu() != GetMenu( GetCurrentLobbyMenu() ) )
+			AdvanceMenu( GetMenu( GetCurrentLobbyMenu() ) )
 
 		UI_SetPresentationType( CurrentPresentationType )
 	}
