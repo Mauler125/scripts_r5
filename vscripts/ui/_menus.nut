@@ -103,6 +103,7 @@ global function SetTopLevelCustomizeContext
 global function SetGamepadCursorEnabled
 global function IsGamepadCursorEnabled
 global function IsCommsMenuOpen
+global function GetCurrentLobbyMenu
 
 global function ButtonClass_AddMenu
 
@@ -187,6 +188,16 @@ void function UICodeCallback_CloseAllMenus()
 	// This is usually followed by a call to UICodeCallback_ActivateMenus().
 }
 
+string function GetCurrentLobbyMenu()
+{
+	string menuName = "R5RLobbyMenu"
+
+	if(IsLobby())
+		menuName = GetPlaylistVarBool("menufall", "r5reloaded_lobby", true) ? "R5RLobbyMenu" : "LobbyMenu"
+
+	return menuName
+}
+
 // Bringing up the console will cause this, and it probably shouldn't
 void function UICodeCallback_ActivateMenus()
 {
@@ -226,7 +237,7 @@ void function UICodeCallback_ToggleInGameMenu()
 	if ( isLobby )
 	{
 		if ( activeMenu == null )
-			AdvanceMenu( GetMenu( "R5RLobbyMenu" ) )
+			AdvanceMenu( GetMenu( GetCurrentLobbyMenu() ) )
 		else if ( activeMenu == GetMenu( "SystemMenu" ) )
 			CloseActiveMenu()
 		return
@@ -1058,7 +1069,7 @@ void function UpdateMenusOnConnectThread( string levelname )
 
 	if ( isLobby )
 	{
-		AdvanceMenu( GetMenu( "R5RLobbyMenu" ) )
+		AdvanceMenu( GetMenu( GetCurrentLobbyMenu() ) )
 
 		UIMusicUpdate()
 
