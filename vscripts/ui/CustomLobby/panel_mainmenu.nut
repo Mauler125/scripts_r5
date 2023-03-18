@@ -19,7 +19,7 @@ void function InitR5RMainMenuPanel( var panel )
 
 void function LaunchButton_OnActivate( var button )
 {
-	CreateServer("Lobby", "", "mp_lobby", "menufall", eServerVisibility.HIDDEN)
+	CreateServer("Lobby", "", "mp_lobby", "menufall", eServerVisibility.OFFLINE)
 }
 
 void function OnMainMenuPanel_Show( var panel )
