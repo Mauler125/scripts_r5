@@ -958,6 +958,12 @@ Scripts:
 	freelance/_freelance.gnut
 ]
 
+// ReMap Live
+When: "SERVER"
+Scripts:
+[
+	mp/levels/mp_rr_remap.nut
+]
 
 // Zipline Utility
 When: "SERVER"
