@@ -323,6 +323,11 @@ void function Server_Init()
 
 	PilotsPassage_Init()
 	SneakPeek_Init()
+
+    // ReMap Live
+    if ( GetCurrentPlaylistName() == "survival_dev" )
+        ReMapLive_Init()
+
 	JumpPad_Init()
 	#if DEVELOPER
 		SmokeTest_Init()
