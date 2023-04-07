@@ -271,7 +271,6 @@ void function SetupDefaultDevCommandsMP()
 	SetupDevMenu( "Abilities", SetDevMenu_Abilities )
 	SetupDevMenu( "Equip Weapon", SetDevMenu_Weapons )
 	SetupDevMenu( "TDM Weapon", SetDevMenu_TDMWeapons )
-	//SetupDevMenu( "MDLSpawner", SetDevMenu_ModelSpawner )
 
 	if ( IsSurvivalMenuEnabled() )
 	{
@@ -395,11 +394,6 @@ void function SetupLevelDevCommands()
 	}
 }
 
-void function SetDevMenu_ModelSpawner( var _ )
-{
-	thread ChangeToThisMenu( SetupModelSpawner )
-}
-
 void function SetDevMenu_Abilities( var _ )
 {
 	thread ChangeToThisMenu( SetupAbilities )
@@ -411,13 +405,12 @@ void function SetDevMenu_Weapons( var _ )
 }
 void function SetDevMenu_TDMWeapons( var _ )
 {
-	thread ChangeToThisMenu( SetupTDMweapsons )
+	thread ChangeToThisMenu( SetupTDMWeapons )
 }
 void function SetDevMenu_SurvivalCharacter( var _ )
 {
 	thread ChangeToThisMenu( SetupChangeSurvivalCharacterClass )
 }
-
 
 void function DEV_InitLoadoutDevSubMenu()
 {
@@ -701,7 +694,7 @@ void function SetupRespawnPlayersDevMenu()
 	//	SetupDevCommand( "Respawn player: " + player.GetPlayerName(), "respawn " + player.GetEntIndex() )
 	//}
 }
-void function SetupTDMweapsons()
+void function SetupTDMWeapons()
 {
 	SetupDevCommand( "2x R99", "tgive p mp_weapon_r97 optic_cq_hcog_bruiser stock_tactical_l3 barrel_stabilizer_l4_flash_hider bullets_mag_l3" )
 	SetupDevCommand( "3x G7 ", "tgive p mp_weapon_g2 optic_ranged_hcog stock_sniper_l3 barrel_stabilizer_l4_flash_hider bullets_mag_l3 hopup_double_tap" )

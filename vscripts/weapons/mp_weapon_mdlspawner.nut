@@ -24,10 +24,7 @@ struct {
 
 void function MDLSpawner_Init()
 {
-	#if SERVER
-	//printt("adding mdlspawner ccc")
-	// AddClientCommandCallback( "SetMDLSpawnerModel", ClientCommand_SetMDLSpawnerModel )
-	#endif
+
 }
 
 var function OnWeaponPrimaryAttack_weapon_mdlspawner( entity weapon, WeaponPrimaryAttackParams attackParams )
