@@ -2,12 +2,12 @@ global function Sh_LobbyVM_Init
 
 void function Sh_LobbyVM_Init()
 {
-    PreCacheLobby()
+    //PreCacheLobby()
 }
 
 void function PreCacheLobby()
 {
-    PrecacheParticleSystem( $"P_fire_med_FULL" )
+    /*PrecacheParticleSystem( $"P_fire_med_FULL" )
     PrecacheParticleSystem( $"P_loot_tick_beam_idle_flash")
     PrecacheParticleSystem( LOOT_DRONE_FX_TRAIL )
 
@@ -27,5 +27,5 @@ void function PreCacheLobby()
     PrecacheModel( $"mdl/robots/drone_frag/drone_frag_loot.rmdl" )
     PrecacheModel( $"mdl/menu/coin.rmdl" )
     PrecacheModel( $"mdl/humans/class/medium/pilot_medium_bloodhound.rmdl" )
-    PrecacheModel( $"mdl/vehicle/droppod_fireteam/droppod_fireteam.rmdl" )
+    PrecacheModel( $"mdl/vehicle/droppod_fireteam/droppod_fireteam.rmdl" )*/
 }

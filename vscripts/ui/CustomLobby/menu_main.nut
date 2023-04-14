@@ -61,6 +61,8 @@ void function OnR5RSB_Show()
 
 void function SetAtMainMenu()
 {
+	WaitFrame()
+	
 	//You are at the main menu
 	g_isAtMainMenu = true
 
