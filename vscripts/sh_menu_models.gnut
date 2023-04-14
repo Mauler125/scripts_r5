@@ -971,16 +971,16 @@ void function EndPresentation_WEAPON_CHARMS()
 
 void function StartPresentation_MODS()
 {
-	int cameraTargetIndex    = eCameraTargetNames.customize_weapon_camera_target
-	entity cameraTarget      = file.cameraTargets[ cameraTargetIndex ]
+	//int cameraTargetIndex    = eCameraTargetNames.customize_weapon_camera_target
+	//entity cameraTarget      = file.cameraTargets[ cameraTargetIndex ]
 
-	vector cameraStartOrigin = <8020,-7607, -8080>
-	vector cameraStartAngles = <8, 74, 0>
+	//vector cameraStartOrigin = <8020,-7607, -8080>
+	//vector cameraStartAngles = <8, 74, 0>
 
-	cameraTarget.SetOrigin( cameraStartOrigin )
-	cameraTarget.SetAngles( cameraStartAngles )
+	//cameraTarget.SetOrigin( cameraStartOrigin )
+	//cameraTarget.SetAngles( cameraStartAngles )
 
-	ModsPanelShown(cameraTarget)
+	//ModsPanelShown(cameraTarget)
 }
 
 void function EndPresentation_MODS()

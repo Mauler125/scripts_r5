@@ -258,6 +258,7 @@ void function ReadyButton_OnActivate(var button)
 
 void function StartQuickPlay(var button)
 {
+	//TODO: MENU CLEAN UP
 	HudElem_SetRuiArg( button, "buttonText", Localize( "#CANCEL" ) )
 
 	bool found = false
@@ -308,6 +309,7 @@ void function StartQuickPlay(var button)
 
 void function JoinTopServer(var button)
 {
+	//TODO: MENU CLEAN UP
 	HudElem_SetRuiArg( button, "buttonText", Localize( "#CANCEL" ) )
 
 	bool found = false
@@ -384,6 +386,7 @@ void function StartMatchFinding(var button)
 
 void function UpdateQuickJoinButtons(var button)
 {
+	//TODO: MENU CLEAN UP
 	float waittime = 2
 
 	if(file.usercancled)

@@ -1,6 +1,8 @@
 untyped
 // Only way to get Hud_GetPos(sliderButton) working was to use untyped
 
+//TODO: MOVING CREATE MATCH TO ITS OWN SEPRATE TAB AGAIN
+
 global function InitR5RCreateMatch
 
 const MAX_BUTTONS_PER_ROW = 3
