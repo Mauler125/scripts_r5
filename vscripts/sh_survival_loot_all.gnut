@@ -254,7 +254,7 @@ void function SURVIVAL_Loot_All_InitShared()
 	file.disabledRefs = split( GetCurrentPlaylistVarString( "survival_disabled_loot", " " ), " " )
 
 	SURVIVAL_Loot_RegFromDataTable( GetDataTable( $"datatable/survival_loot.rpak" ) )
-	//SURVIVAL_Loot_RegFromDataTable( GetDataTable( $"datatable/survival_loot_sdk.rpak" ))
+	SURVIVAL_Loot_RegFromDataTable( GetDataTable( $"datatable/survival_loot_sdk.rpak" ))
 
 	//RegisterCustomAmmos()
 	RegisterCustomWeapons()
