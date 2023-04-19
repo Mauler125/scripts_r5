@@ -169,17 +169,15 @@ void function UpdatePageRui( int pageIndex )
 
     Hud_SetPinSibling( Hud_GetChild( file.menu, "NewsItemSelected" ), Hud_GetHudName( Hud_GetChild( file.menu, "NewsItem" + (pageIndex + 1) ) ) )
 
+    Hud_Hide(Hud_GetChild( file.menu, "RightNewsImage" ))
+    Hud_Hide(Hud_GetChild( file.menu, "LeftNewsImage" ))
+
     if(file.newspages.len() > 1)
     {
         Hud_Show(Hud_GetChild( file.menu, "RightNewsImage" ))
         Hud_Show(Hud_GetChild( file.menu, "LeftNewsImage" ))
         RuiSetImage(Hud_GetRui( Hud_GetChild( file.menu, "RightNewsImage" ) ), "loadscreenImage", file.newspages[nextpage].image )
         RuiSetImage(Hud_GetRui( Hud_GetChild( file.menu, "LeftNewsImage" ) ), "loadscreenImage", file.newspages[lastpage].image )
-    }
-    else
-    {
-        Hud_Hide(Hud_GetChild( file.menu, "RightNewsImage" ))
-        Hud_Hide(Hud_GetChild( file.menu, "LeftNewsImage" ))
     }
 
     SetSmallPreviewItems( pageIndex )
@@ -225,18 +223,14 @@ void function SetSmallPreviewItems( int pageIndex )
 
 void function UpdatePromoButtons()
 {
-	if ( file.newspages.len() <= 1 )
-    {
-		Hud_Hide( file.prevPageButton )
-        Hud_Hide( file.nextPageButton )
-    }
-	else
+	Hud_Hide( file.prevPageButton )
+    Hud_Hide( file.nextPageButton )
+
+	if ( file.newspages.len() > 1 )
     {
 		Hud_Show( file.prevPageButton )
         Hud_Show( file.nextPageButton )
     }
-
-	var panel = Hud_GetChild( file.menu, "FooterButtons" )
-	int width = 200
-	Hud_SetWidth( panel, ContentScaledXAsInt( width ) )
+    
+	Hud_SetWidth( Hud_GetChild( file.menu, "FooterButtons" ), ContentScaledXAsInt( 200 ) )
 }

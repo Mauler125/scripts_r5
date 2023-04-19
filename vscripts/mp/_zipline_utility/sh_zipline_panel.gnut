@@ -251,7 +251,7 @@
             if ( IsValid( panel ) ) panel.SetSkin( ePanelState.DISABLE )
 
                 wait waitPanelState + travelTime
-
+                
             if ( IsValid( panel ) ) panel.SetUsable()
             if ( IsValid( panel ) ) panel.SetSkin( ePanelState.ENABLE )
         }

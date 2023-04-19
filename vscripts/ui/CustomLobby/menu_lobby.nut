@@ -15,6 +15,8 @@ struct
 	var HomePanel
 	var CreateServerPanel
 	var ServerBrowserPanel
+
+	bool initialisedHomePanel = false
 } file
 
 // do not change this enum without modifying it in code at gameui/IBrowser.h
@@ -176,16 +178,20 @@ void function OpenSelectedPanel(var button)
 
 void function SetupLobby()
 {
-	//Setup Lobby Stuff
+	// Setup Lobby Stuff
 	UI_SetPresentationType( CurrentPresentationType )
 	thread TryRunDialogFlowThread()
 
-	//Set Version
 	Play_SetupUI()
 
-	//Set selected legend from playlist
-	ItemFlavor character = GetItemFlavorByHumanReadableRef( GetCurrentPlaylistVarString( "set_legend", "character_wraith" ) )
-	RequestSetItemFlavorLoadoutSlot( LocalClientEHI(), Loadout_CharacterClass(), character )
+	if ( !file.initialisedHomePanel )
+	{
+		ItemFlavor character = GetItemFlavorByHumanReadableRef( GetCurrentPlaylistVarString( "set_legend", "character_wraith" ) )
+		RequestSetItemFlavorLoadoutSlot( LocalClientEHI(), Loadout_CharacterClass(), character )
+
+		file.initialisedHomePanel = true
+	}
+
 }
 
 void function ShowSelectedPanel(var panel, var button)

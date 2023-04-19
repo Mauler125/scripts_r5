@@ -221,7 +221,7 @@ void function R5RPlay_SetSelectedPlaylist(int quickPlayType)
 			if(g_SelectedPlaylist == "Random Server")
 				image = $"rui/menu/gamemode/ranked_1"
 
-			SetGamemodeButtonRUI(g_SelectedPlaylist, "Party not ready", true, image)
+			SetGamemodeButtonRUI(GetUIPlaylistName(g_SelectedPlaylist), "Party not ready", true, image)
 			break;
 		case JoinType.QuickPlay:
 			quickplay.quickPlayType = JoinType.QuickPlay
@@ -245,117 +245,62 @@ void function ReadyButton_OnActivate(var button)
 	switch(quickplay.quickPlayType)
 	{
 		case JoinType.TopServerJoin:
-			thread JoinTopServer( button )
+			thread JoinMatch(button, ConnectingStages)
 			break;
 		case JoinType.QuickServerJoin:
-			thread StartMatchFinding( button )
+			thread FindMatch( button )
 			break;
 		case JoinType.QuickPlay:
-			thread StartQuickPlay( button )
+			thread JoinMatch(button, CreatingStages)
 			break;
 	}
 }
 
-void function StartQuickPlay(var button)
+void function JoinMatch(var button, table<int, string> StringStages)
 {
-	HudElem_SetRuiArg( button, "buttonText", Localize( "#CANCEL" ) )
+	file.searching = true;
 
-	bool found = false
-	float timewaited = 0.0
+	HudElem_SetRuiArg(button, "buttonText", Localize("#CANCEL"))
 
-	int i = 0;
-	while(!found)
+	for (int i = 0; i < 6; i++)
 	{
-		if(timewaited > 4.0)
-		{
-			found = true
-			continue
-		}
-
-		if(file.usercancled) {
-			found = true
-			continue
-		}
-
-		RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", CreatingStages[i] )
-
-		i++
-		if(i > 2)
-			i = 0
+		if(file.usercancled)
+			break;
 		
+		RuiSetString(Hud_GetRui(file.gamemodeSelectV2Button), "modeDescText", StringStages[i % 3])
 		wait 0.5
-		timewaited += 0.5
 	}
 
-	if(!file.usercancled)
+	if (!file.usercancled)
 	{
-		EmitUISound( "UI_Menu_Apex_Launch" )
-		RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Starting Match" )
-		wait 2
-		CreateServer(GetUIMapName(g_SelectedQuickPlayMap), "", g_SelectedQuickPlayMap, g_SelectedQuickPlay, eServerVisibility.OFFLINE)
-		RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Party not ready" )
-		RuiSetBool( Hud_GetRui( Hud_GetChild( file.panel, "SelfButton" ) ), "isReady", false )
-		HudElem_SetRuiArg( button, "buttonText", Localize( "#READY" ) )
-		return
-	}
-	
-	EmitUISound( "UI_Menu_Deny" )
-	file.usercancled = false
-	RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Party not ready" )
-	RuiSetBool( Hud_GetRui( Hud_GetChild( file.panel, "SelfButton" ) ), "isReady", false )
-	HudElem_SetRuiArg( button, "buttonText", Localize( "#READY" ) )
-}
-
-void function JoinTopServer(var button)
-{
-	HudElem_SetRuiArg( button, "buttonText", Localize( "#CANCEL" ) )
-
-	bool found = false
-	float timewaited = 0.0
-	int i = 0;
-	while(!found)
-	{
-		if(timewaited > 4.0)
+		EmitUISound("UI_Menu_Apex_Launch")
+		switch(quickplay.quickPlayType)
 		{
-			found = true
-			continue
+			case JoinType.QuickPlay:
+				RuiSetString(Hud_GetRui(file.gamemodeSelectV2Button), "modeDescText", "Starting Match")
+				wait 2
+				CreateServer(GetUIMapName(g_SelectedQuickPlayMap), "", g_SelectedQuickPlayMap, g_SelectedQuickPlay, eServerVisibility.OFFLINE)
+				break;
+			case JoinType.TopServerJoin:
+				RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Joining Match" )
+				wait 2
+				ConnectToListedServer(g_SelectedTopServer.svServerID)
+				break;
 		}
-
-		if(file.usercancled) {
-			found = true
-			continue
-		}
-
-		RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", ConnectingStages[i] )
-
-		i++
-		if(i > 2)
-			i = 0
-		
-		wait 0.5
-		timewaited += 0.5
-	}
-
-	if(!file.usercancled)
-	{
-		EmitUISound( "UI_Menu_Apex_Launch" )
-		RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Joining Match" )
-		wait 2
-		ConnectToListedServer(g_SelectedTopServer.svServerID)
-		RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Party not ready" )
-		RuiSetBool( Hud_GetRui( Hud_GetChild( file.panel, "SelfButton" ) ), "isReady", false )
-		HudElem_SetRuiArg( button, "buttonText", Localize( "#READY" ) )
+		RuiSetString(Hud_GetRui(file.gamemodeSelectV2Button), "modeDescText", "Party not ready")
+		RuiSetBool(Hud_GetRui(Hud_GetChild(file.panel, "SelfButton")), "isReady", false)
+		HudElem_SetRuiArg(button, "buttonText", Localize("#READY"))
 		return
 	}
 
-	EmitUISound( "UI_Menu_Deny" )
+	EmitUISound("UI_Menu_Deny")
 	file.usercancled = false
-	RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Party not ready" )
-	RuiSetBool( Hud_GetRui( Hud_GetChild( file.panel, "SelfButton" ) ), "isReady", false )
-	HudElem_SetRuiArg( button, "buttonText", Localize( "#READY" ) )
+	RuiSetString(Hud_GetRui(file.gamemodeSelectV2Button), "modeDescText", "Party not ready")
+	RuiSetBool(Hud_GetRui(Hud_GetChild(file.panel, "SelfButton")), "isReady", false)
+	HudElem_SetRuiArg(button, "buttonText", Localize("#READY"))
 }
 
-void function StartMatchFinding(var button)
+void function FindMatch(var button)
 {
 	HudElem_SetRuiArg( button, "buttonText", Localize( "#CANCEL" ) )
 
@@ -384,6 +329,7 @@ void function StartMatchFinding(var button)
 
 void function UpdateQuickJoinButtons(var button)
 {
+	//TODO: MENU CLEAN UP
 	float waittime = 2
 
 	if(file.usercancled)

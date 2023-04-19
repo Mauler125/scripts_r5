@@ -102,7 +102,7 @@
 			"InheritProperties"			"TabButtonSettings"
 			"classname" 				"TopButtons"
 			"zpos"						"3"
-			"xpos"                    	"-400"
+			"xpos"                    	"-200" // from -400 with ModsBtn visible
 			"scriptID"					"0"
 
 			ruiArgs
@@ -154,6 +154,8 @@
 			"pin_to_sibling"			"ServerBrowserBtn"
 			"pin_corner_to_sibling"		"BOTTOM_LEFT"
 			"pin_to_sibling_corner"		"BOTTOM_RIGHT"
+
+			"visible" "0" // hide for now
 		}
 
 		"SettingsBtn"
@@ -171,7 +173,7 @@
 				buttonText "Settings"
 			}
 
-			"pin_to_sibling"			"ModsBtn"
+			"pin_to_sibling"			"ServerBrowserBtn"
 			"pin_corner_to_sibling"		"BOTTOM_LEFT"
 			"pin_to_sibling_corner"		"BOTTOM_RIGHT"
 		}
