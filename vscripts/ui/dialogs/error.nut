@@ -1,5 +1,6 @@
 global function InitErrorDialog
 global function OpenErrorDialogThread
+global function OpenErrorDialog
 
 struct
 {
@@ -47,6 +48,11 @@ void function ErrorDialog_OnClose()
 void function ErrorDialog_OnNavigateBack()
 {
 	CloseActiveMenu()
+}
+
+void function OpenErrorDialog( string errorMessage )
+{
+	thread OpenErrorDialogThread( errorMessage )
 }
 
 void function OpenErrorDialogThread( string errorMessage )

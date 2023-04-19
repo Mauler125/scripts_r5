@@ -29,12 +29,12 @@ entity menucamera = null
 
 void function Cl_LobbyVM_Init()
 {
-    AddCallback_EntitiesDidLoad( LobbyVM_EntitiesDidLoad )
+    //AddCallback_EntitiesDidLoad( LobbyVM_EntitiesDidLoad )
 }
 
 void function LobbyVM_EntitiesDidLoad()
 {
-	StartParticleEffectInWorld( GetParticleSystemIndex( $"P_fire_med_FULL" ), < 8488, -7203, -8129 >, <0, 0, 0> )
+	/*StartParticleEffectInWorld( GetParticleSystemIndex( $"P_fire_med_FULL" ), < 8488, -7203, -8129 >, <0, 0, 0> )
     MapEditor_CreateProp( $"mdl/menu/coin.rmdl", < 8033.1500, -7369.0700, -8104.0800 >, < 10.4035, 43.3066, 0.8356 >, true, 50000, -1, 0.5 )
     loot_sphere = MapEditor_CreateProp( $"mdl/props/loot_sphere/loot_sphere.rmdl", < 8704.4360, -7228.1640, -8071.3800 >, < 0, 23.6729, -90 >, true, 50000, -1, 0.5 )
     loot_drone = MapEditor_CreateProp( $"mdl/props/loot_drone/loot_drone.rmdl", < 8707.1040, -7230.1200, -8048.7000 >, < 0, 145.2767, 0 >, true, 50000, -1, 0.5 )
@@ -58,12 +58,12 @@ void function LobbyVM_EntitiesDidLoad()
     MapEditor_CreateProp( $"mdl/props/skull/skull_gladcard.rmdl", < 8105.6000, -7461.5700, -8101.7400 >, < 0, -137.0601, 0 >, true, 50000, -1, 0.5 )
     MapEditor_CreateProp( $"mdl/props/caustic_flask/caustic_flask.rmdl", < 8122.8400, -7457.3100, -8103.4300 >, < 0, -132.0102, 0 >, true, 50000, -1, 0.5 )
     //MapEditor_CreateProp( $"mdl/props/charm/charm_r5r.rmdl", < 8039.3000, -7462.5800, -8060.5200 >, < 0, 200.3317, -28.5662 >, true, 50000, -1, 10 )
-    MapEditor_CreateProp( $"mdl/vehicle/droppod_fireteam/droppod_fireteam.rmdl", < 8488, -7203, -8113 >, < 8.8820, 0, -28.0421 >, true, 50000, -1, 0.5 )
+    MapEditor_CreateProp( $"mdl/vehicle/droppod_fireteam/droppod_fireteam.rmdl", < 8488, -7203, -8113 >, < 8.8820, 0, -28.0421 >, true, 50000, -1, 0.5 )*/
 }
 
 void function ModsPanelShown(entity cameraTarget)
 {
-    if(IsValid(cam_mover)) {
+    /*if(IsValid(cam_mover)) {
         menucamera.ClearParent()
         cam_mover.Destroy()
     }
@@ -82,12 +82,12 @@ void function ModsPanelShown(entity cameraTarget)
 
     if(!loot_drone_moving)
         if(IsValid(loot_sphere) && IsValid(loot_drone))
-            thread PlayLootDroneAnim()
+            thread PlayLootDroneAnim()*/
 }
 
 void function PlayLootDroneAnim()
 {
-    loot_drone_moving = true
+    /*loot_drone_moving = true
     Wait(RandomFloatRange( 0.5, 5.0 ))
     float waittime = RandomFloatRange( 10.0, 20.0 )
 
@@ -107,20 +107,20 @@ void function PlayLootDroneAnim()
     WaitFrame()
     loot_drone.SetOrigin(< 8707.1040, -7230.1200, -8048.7000 >)
 
-    loot_drone_moving = false
+    loot_drone_moving = false*/
 }
 
 void function PlayLoottickOpenAnim()
 {
-    waitthread PlayAnim( loottick, "sd_closed_to_open" )
+    /*waitthread PlayAnim( loottick, "sd_closed_to_open" )
     thread PlayAnim( loottick, "sd_search_idle" )
     
-    thread StartLootTickLights()
+    thread StartLootTickLights()*/
 }
 
 void function StartLootTickLights()
 {
-    IsLootTickRunning = true
+    /*IsLootTickRunning = true
     while(IsLootTickRunning)
     {
         array<string> eyes = ["FX_L_EYE","FX_R_EYE","FX_C_EYE"]
@@ -146,7 +146,7 @@ void function StartLootTickLights()
 
             wait 0.2
         }
-    }
+    }*/
 }
 
 entity function MapEditor_CreateProp(asset a, vector pos, vector ang, bool mantle = false, float fade = 5000, int realm = -1, float scale = 1)
@@ -159,26 +159,26 @@ entity function MapEditor_CreateProp(asset a, vector pos, vector ang, bool mantl
 
 void function DefaultToBrowseMods()
 {
-    array<vector> nodes = GetAllPointsOnBezier( CameraMovementArrays.MAIN_TO_MODS, CAMERA_SMOOTH_STEPS)
-    thread MoveModsCamera( nodes, < 8, 74, 0 >, < 0, 0.90, 0 >, false )
+    //array<vector> nodes = GetAllPointsOnBezier( CameraMovementArrays.MAIN_TO_MODS, CAMERA_SMOOTH_STEPS)
+    //thread MoveModsCamera( nodes, < 8, 74, 0 >, < 0, 0.90, 0 >, false )
 }
 
 void function BrowseModsToDefault()
 {
-    array<vector> nodes = GetAllPointsOnBezier( CameraMovementArrays.MODS_TO_MAIN, CAMERA_SMOOTH_STEPS)
-    thread MoveModsCamera( nodes, <8, 120, 0>, < 0, 0.90, 0 >, true )
+    //array<vector> nodes = GetAllPointsOnBezier( CameraMovementArrays.MODS_TO_MAIN, CAMERA_SMOOTH_STEPS)
+    //thread MoveModsCamera( nodes, <8, 120, 0>, < 0, 0.90, 0 >, true )
 }
 
 void function DefaultToInstalledMods()
 {
-    array<vector> nodes = GetAllPointsOnBezier( CameraMovementArrays.MAIN_TO_INSTALLED, CAMERA_SMOOTH_STEPS )
-    thread MoveModsCamera( nodes, < 8, 74, 0 >, < 1.64, 0.32, 0 >, false )
+    //array<vector> nodes = GetAllPointsOnBezier( CameraMovementArrays.MAIN_TO_INSTALLED, CAMERA_SMOOTH_STEPS )
+    //thread MoveModsCamera( nodes, < 8, 74, 0 >, < 1.64, 0.32, 0 >, false )
 }
 
 void function InstalledModsToDefault()
 {
-    array<vector> nodes = GetAllPointsOnBezier( CameraMovementArrays.INSTALLED_TO_MAIN, CAMERA_SMOOTH_STEPS )
-    thread MoveModsCamera( nodes, < 90, 90, 0 >, < 1.64, 0.32, 0 >, true )
+    //array<vector> nodes = GetAllPointsOnBezier( CameraMovementArrays.INSTALLED_TO_MAIN, CAMERA_SMOOTH_STEPS )
+    //thread MoveModsCamera( nodes, < 90, 90, 0 >, < 1.64, 0.32, 0 >, true )
 }
 
 void function MoveModsCamera(array<vector> nodes, vector startAngles, vector rotateAngles, bool minus)
