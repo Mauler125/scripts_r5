@@ -102,7 +102,7 @@
 			"InheritProperties"			"TabButtonSettings"
 			"classname" 				"TopButtons"
 			"zpos"						"3"
-			"xpos"                    	"-200" // from -400 with ModsBtn visible
+			"xpos"                    	"-400" // from -400 with ModsBtn visible
 			"scriptID"					"0"
 
 			ruiArgs

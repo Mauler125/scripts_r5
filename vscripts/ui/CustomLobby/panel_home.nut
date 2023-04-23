@@ -2,7 +2,7 @@ global function InitHomePanel
 global function Play_SetupUI
 global function R5RPlay_SetSelectedPlaylist
 
-const MAX_PROMO_ITEMS = 5
+const MAX_PROMO_ITEMS = 0
 
 struct ServerListing
 {
@@ -72,6 +72,7 @@ struct
 	int currentPage = 0
 	bool shouldAutoAdvance = true
 	bool IsAutoAdvance = false
+	bool HasPages = false
 } promo
 
 global table<int, string> SearchStages = {
@@ -164,9 +165,9 @@ void function Play_SetupUI()
 
 	Hud_SetText( Hud_GetChild( file.panel, "Info" ), "#MOTD" )
 
-	GetR5RPromos()
+	//GetR5RPromos()
 	SetPromoPage()
-	if(!promo.IsAutoAdvance)
+	if(!promo.IsAutoAdvance && promo.HasPages)
 		thread AutoAdvancePages()
 
 	if(!file.firststart)
@@ -530,7 +531,7 @@ void function SetPromoPage()
 {
 	if(promo.Items.len() == 0) {
 		var miniPromo = Hud_GetChild( file.panel, "MiniPromo" )
-		Hud_Hide( miniPromo)
+		Hud_Hide( miniPromo )
 		return
 	}
 
