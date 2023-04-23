@@ -162,6 +162,8 @@ void function Play_SetupUI()
 	HudElem_SetRuiArg( serversButton, "buttonText", "" + MS_GetServerCount() )
 	Hud_SetWidth( serversButton, Hud_GetBaseWidth( serversButton ) * 2 )
 
+	Hud_SetText( Hud_GetChild( file.panel, "Info" ), "#MOTD" )
+
 	GetR5RPromos()
 	SetPromoPage()
 	if(!promo.IsAutoAdvance)
