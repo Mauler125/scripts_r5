@@ -828,10 +828,14 @@ Scripts:
 	ui/CustomLobby/panel_home.nut
 	ui/CustomLobby/menu_news.nut
 	ui/CustomLobby/menu_gamemodeselect.nut
-	ui/CustomLobby/menu_creatematch.nut
 	ui/CustomLobby/panel_serverbrowser.nut
 	ui/CustomLobby/panel_mainmenu.nut
 	ui/CustomLobby/panel_mods.nut
+
+	ui/CustomLobby/panel_create.nut
+	ui/CustomLobby/panel_map.nut
+	ui/CustomLobby/panel_playlist.nut
+	ui/CustomLobby/panel_visibility.nut
 
 	//CTF
 	ui/CTFMenus/menu_ctf_respawn.nut

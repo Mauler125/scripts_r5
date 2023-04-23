@@ -90,13 +90,15 @@ void function InitR5RLobbyMenu( var newMenuArg )
 	}
 
 	//Setup panel array
-	file.panels.append(Hud_GetChild(menu, "R5RHomePanel"))
-	file.panels.append(Hud_GetChild(menu, "R5RServerBrowserPanel"))
+	file.panels.append(Hud_GetChild(menu, "HomePanel"))
+	file.panels.append(Hud_GetChild(menu, "CreatePanel"))
+	file.panels.append(Hud_GetChild(menu, "ServerBrowserPanel"))
 	file.panels.append(Hud_GetChild(menu, "ModsPanel"))
 	file.panels.append(null)
 
 	//Setup Button Vars
 	file.buttons.append(Hud_GetChild(menu, "HomeBtn"))
+	file.buttons.append(Hud_GetChild(menu, "CreateBtn"))
 	file.buttons.append(Hud_GetChild(menu, "ServerBrowserBtn"))
 	file.buttons.append(Hud_GetChild(menu, "ModsBtn"))
 	file.buttons.append(Hud_GetChild(menu, "SettingsBtn"))
@@ -132,7 +134,30 @@ void function OnR5RLobby_Show()
 
 void function OnR5RLobby_Back()
 {
-	if(file.currentpanel == 2) {
+	if(PMMenusOpen.maps_open || PMMenusOpen.playlists_open || PMMenusOpen.vis_open || PMMenusOpen.name_open || PMMenusOpen.desc_open)
+    {
+		var pmpanel = GetPanel( "CreatePanel" )
+        Hud_SetVisible( Hud_GetChild(pmpanel, "R5RMapPanel"), false )
+        Hud_SetVisible( Hud_GetChild(pmpanel, "R5RPlaylistPanel"), false )
+        Hud_SetVisible( Hud_GetChild(pmpanel, "R5RVisPanel"), false )
+        Hud_SetVisible( Hud_GetChild(file.menu, "R5RNamePanel"), false )
+        Hud_SetVisible( Hud_GetChild(file.menu, "R5RDescPanel"), false )
+
+        PMMenusOpen.maps_open = false
+        PMMenusOpen.playlists_open = false
+        PMMenusOpen.vis_open = false
+        PMMenusOpen.name_open = false
+        PMMenusOpen.desc_open = false
+		return
+    }
+
+	if(file.currentpanel != 0)
+	{
+		OpenSelectedPanel(file.buttons[0])
+		return
+	}
+
+	/*if(file.currentpanel == 2) {
 		switch(g_modCameraPosition) {
 			case ModCameraPosition.BROWSE:
 				ChangeModsPanel(ModCameraMovement.BROWSE_TO_MAIN)
@@ -141,7 +166,7 @@ void function OnR5RLobby_Back()
 				ChangeModsPanel(ModCameraMovement.INSTALLED_TO_MAIN)
 				return;
 		}
-	}
+	}*/
 
 	AdvanceMenu( GetMenu( "SystemMenu" ) )
 }
@@ -162,15 +187,20 @@ void function OpenSelectedPanel(var button)
 			CurrentPresentationType = ePresentationType.PLAY
 			break;
 		case 1:
+			OnCreateMatchOpen()
+			UI_SetPresentationType( ePresentationType.CHARACTER_SELECT )
+			CurrentPresentationType = ePresentationType.CHARACTER_SELECT
+			break;
+		case 2:
 			UI_SetPresentationType( ePresentationType.COLLECTION_EVENT )
 			CurrentPresentationType = ePresentationType.COLLECTION_EVENT
 			break;
-		case 2:
-			Mods_SetupUI()
-			UI_SetPresentationType( ePresentationType.MODS )
-			CurrentPresentationType = ePresentationType.MODS
-			break;
 		case 3:
+			//Mods_SetupUI()
+			//UI_SetPresentationType( ePresentationType.MODS )
+			//CurrentPresentationType = ePresentationType.MODS
+			break;
+		case 4:
 			AdvanceMenu( GetMenu( "MiscMenu" ) )
 			break;
 	}
