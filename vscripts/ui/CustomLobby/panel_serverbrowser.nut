@@ -1,7 +1,7 @@
 untyped
 // Only way to get Hud_GetPos(sliderButton) working was to use untyped
 
-global function InitR5RServerBrowserPanel
+global function InitServerBrowserPanel
 global function InitR5RConnectingPanel
 
 global function ServerBrowser_RefreshServerListing
@@ -84,7 +84,7 @@ void function InitR5RConnectingPanel( var panel )
 	file.connectingpanel = panel
 }
 
-void function InitR5RServerBrowserPanel( var panel )
+void function InitServerBrowserPanel( var panel )
 {
 	file.panel = panel
 	file.menu = GetParentMenu( file.panel )

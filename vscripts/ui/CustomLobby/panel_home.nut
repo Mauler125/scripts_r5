@@ -1,4 +1,4 @@
-global function InitR5RHomePanel
+global function InitHomePanel
 global function Play_SetupUI
 global function R5RPlay_SetSelectedPlaylist
 
@@ -92,7 +92,7 @@ global table<int, string> ConnectingStages = {
 	[ 2 ] = "Connecting..."
 }
 
-void function InitR5RHomePanel( var panel )
+void function InitHomePanel( var panel )
 {
 	file.panel = panel
 	file.menu = GetParentMenu( file.panel )
