@@ -38,6 +38,7 @@ void function LaunchCustomLobby()
 void function ShowSpinner(bool show)
 {
 	RuiSetBool( file.status, "showSpinner", show )
+	RuiSetBool( file.status, "showPrompt", !show )
 }
 
 void function OnMainMenuPanel_Show( var panel )
