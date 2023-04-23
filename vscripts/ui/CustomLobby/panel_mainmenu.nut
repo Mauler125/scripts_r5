@@ -5,6 +5,7 @@ struct
 	var menu
 	var panel
 	var launchButton
+	var status
 } file
 
 void function InitR5RMainMenuPanel( var panel )
@@ -13,13 +14,30 @@ void function InitR5RMainMenuPanel( var panel )
 	file.menu = GetParentMenu( file.panel )
 	file.launchButton = Hud_GetChild( panel, "LaunchButton" )
 
+	file.status = Hud_GetRui( Hud_GetChild( panel, "Status" ) )
+
 	AddPanelEventHandler( file.panel, eUIEvent.PANEL_SHOW, OnMainMenuPanel_Show )
 	Hud_AddEventHandler( file.launchButton, UIE_CLICK, LaunchButton_OnActivate )
 }
 
 void function LaunchButton_OnActivate( var button )
 {
+	thread LaunchCustomLobby()
+}
+
+void function LaunchCustomLobby()
+{
+	ShowSpinner(true)
+
+	wait 3
+
 	CreateServer("Lobby", "", "mp_lobby", "menufall", eServerVisibility.OFFLINE)
+	ShowSpinner(false)
+}
+
+void function ShowSpinner(bool show)
+{
+	RuiSetBool( file.status, "showSpinner", show )
 }
 
 void function OnMainMenuPanel_Show( var panel )
