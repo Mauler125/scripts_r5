@@ -310,16 +310,11 @@ void function JoinMatch(var button, table<int, string> StringStages)
 				ConnectToListedServer(g_SelectedTopServer.svServerID)
 				break;
 		}
-		
-		RuiSetBool(Hud_GetRui(Hud_GetChild(file.panel, "SelfButton")), "isReady", false)
-		HudElem_SetRuiArg(button, "buttonText", Localize("#READY"))
-		SetSearchingText("")
-		GamemodeButtonSetSearching(false)
-		file.searching = false;
-		return
 	}
 
-	EmitUISound("UI_Menu_Deny")
+	if(file.usercancled)
+		EmitUISound("UI_Menu_Deny")
+	
 	file.usercancled = false
 	file.searching = false;
 	RuiSetBool(Hud_GetRui(Hud_GetChild(file.panel, "SelfButton")), "isReady", false)
