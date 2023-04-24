@@ -1547,7 +1547,6 @@ void function InitMenus()
 
 	AddPanel( r5rlobbymenu, "ServerBrowserPanel", InitServerBrowserPanel )
 	AddPanel( r5rlobbymenu, "LegendsPanel", InitR5RLegendsPanel )
-	AddPanel( r5rlobbymenu, "ModsPanel", InitModsPanel )
 	AddPanel( r5rlobbymenu, "R5RConnectingPanel", InitR5RConnectingPanel )
 
 	AddMenu( "R5RNews", $"scripts/resource/ui/menus/CustomLobby/news.res", InitR5RNews )

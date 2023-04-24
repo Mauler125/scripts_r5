@@ -1287,7 +1287,6 @@ global enum ePresentationType
 	BATTLE_PASS,
 	BATTLE_PASS_3,
 	COLLECTION_EVENT,
-	MODS,
 	COUNT
 }
 

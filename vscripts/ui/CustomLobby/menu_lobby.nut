@@ -94,7 +94,6 @@ void function InitR5RLobbyMenu( var newMenuArg )
 	file.panels.append(Hud_GetChild(menu, "CreatePanel"))
 	file.panels.append(Hud_GetChild(menu, "ServerBrowserPanel"))
 	file.panels.append(Hud_GetChild(menu, "LegendsPanel"))
-	file.panels.append(Hud_GetChild(menu, "ModsPanel"))
 	file.panels.append(null)
 
 	//Setup Button Vars
@@ -102,7 +101,6 @@ void function InitR5RLobbyMenu( var newMenuArg )
 	file.buttons.append(Hud_GetChild(menu, "CreateBtn"))
 	file.buttons.append(Hud_GetChild(menu, "ServerBrowserBtn"))
 	file.buttons.append(Hud_GetChild(menu, "LegendsBtn"))
-	file.buttons.append(Hud_GetChild(menu, "ModsBtn"))
 	file.buttons.append(Hud_GetChild(menu, "SettingsBtn"))
 
 	ToolTips_AddMenu( menu )
@@ -159,17 +157,6 @@ void function OnR5RLobby_Back()
 		return
 	}
 
-	/*if(file.currentpanel == 2) {
-		switch(g_modCameraPosition) {
-			case ModCameraPosition.BROWSE:
-				ChangeModsPanel(ModCameraMovement.BROWSE_TO_MAIN)
-				return;
-			case ModCameraPosition.INSTALLED:
-				ChangeModsPanel(ModCameraMovement.INSTALLED_TO_MAIN)
-				return;
-		}
-	}*/
-
 	AdvanceMenu( GetMenu( "SystemMenu" ) )
 }
 
@@ -203,11 +190,6 @@ void function OpenSelectedPanel(var button)
 			CurrentPresentationType = ePresentationType.CHARACTER_SELECT
 			break;
 		case 4:
-			//Mods_SetupUI()
-			//UI_SetPresentationType( ePresentationType.MODS )
-			//CurrentPresentationType = ePresentationType.MODS
-			break;
-		case 5:
 			AdvanceMenu( GetMenu( "MiscMenu" ) )
 			break;
 	}
