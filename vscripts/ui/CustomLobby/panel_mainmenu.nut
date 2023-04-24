@@ -18,6 +18,24 @@ void function InitR5RMainMenuPanel( var panel )
 
 	AddPanelEventHandler( file.panel, eUIEvent.PANEL_SHOW, OnMainMenuPanel_Show )
 	Hud_AddEventHandler( file.launchButton, UIE_CLICK, LaunchButton_OnActivate )
+
+	AddPanelFooterOption( panel, LEFT, BUTTON_B, true, "#B_BUTTON_EXIT_TO_DESKTOP", "#B_BUTTON_EXIT_TO_DESKTOP", null, null )
+	AddPanelFooterOption( panel, LEFT, KEY_TAB, false, "", "#DATACENTER_DOWNLOADING", OpenDataCenterDialog, IsDataCenterFooterVisible, UpdateDataCenterFooter )
+}
+
+void function UpdateDataCenterFooter( InputDef footerData )
+{
+	string label = "Data Center: ms.r5reloaded.com"
+	footerData.clickable = false
+
+	var elem = footerData.vguiElem
+	Hud_SetText( elem, label )
+	Hud_Show( elem )
+}
+
+bool function IsDataCenterFooterVisible()
+{
+	return true
 }
 
 void function LaunchButton_OnActivate( var button )
