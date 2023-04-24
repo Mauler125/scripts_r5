@@ -297,6 +297,16 @@
 			"zpos"                      "10"
 		}
 
+		MatchmakingStatus
+        {
+            ControlName		        RuiPanel
+            InheritProperties		MatchmakingStatus
+
+            pin_to_sibling			DarkenBackground
+            pin_corner_to_sibling	BOTTOM
+            pin_to_sibling_corner	BOTTOM
+        }
+
 		ToolTip
 		{
 			ControlName				CNestedPanel
