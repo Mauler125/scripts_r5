@@ -6,7 +6,6 @@ struct
 	var menu
 	var panel
 	var listPanel
-
 	table<var, string> map_button_table
 } file
 

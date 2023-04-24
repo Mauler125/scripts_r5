@@ -128,11 +128,12 @@ void function InitHomePanel( var panel )
 	RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Not Ready" )
 	RuiSetBool( Hud_GetRui( file.gamemodeSelectV2Button ), "alwaysShowDesc", true )
 	RuiSetImage( Hud_GetRui( file.gamemodeSelectV2Button ), "modeImage", $"rui/menu/gamemode/ranked_1" )
+	HudElem_SetRuiArg( file.gamemodeSelectV2Button, "isPartyLeader", true )
 	Hud_AddEventHandler( file.gamemodeSelectV2Button, UIE_CLICK, GamemodeSelect_OnActivate )
 
 	var readyButton = Hud_GetChild( panel, "ReadyButton" )
 	Hud_AddEventHandler( readyButton, UIE_CLICK, ReadyButton_OnActivate )
-	HudElem_SetRuiArg( readyButton, "isLeader", true ) // TEMP
+	HudElem_SetRuiArg( readyButton, "isLeader", true )
 	HudElem_SetRuiArg( readyButton, "isReady", false )
 	HudElem_SetRuiArg( readyButton, "buttonText", Localize( "#READY" ) )
 
@@ -155,7 +156,7 @@ void function Play_SetupUI()
 	ToolTipData playersToolTip
 	playersToolTip.titleText = "Players Online"
 	playersToolTip.descText = MS_GetPlayerCount() + " Players Online"
-	Hud_SetToolTipData( playersButton, playersToolTip )
+	z( playersButton, playersToolTip )
 	HudElem_SetRuiArg( playersButton, "buttonText", "" + MS_GetPlayerCount() )
 	Hud_SetWidth( playersButton, Hud_GetBaseWidth( playersButton ) * 2 )
 
@@ -242,7 +243,6 @@ void function R5RPlay_SetSelectedPlaylist(int quickPlayType)
 
 void function GamemodeButtonSetSearching(bool searching)
 {
-	HudElem_SetRuiArg( file.gamemodeSelectV2Button, "isPartyLeader", true )
 	HudElem_SetRuiArg( file.gamemodeSelectV2Button, "isReady", searching )	
 	RuiSetBool( Hud_GetRui(file.gamemodeSelectV2Button), "statusVisible", searching )
 	RuiSetBool( Hud_GetRui(file.gamemodeSelectV2Button), "statusHasText", true )
@@ -312,7 +312,6 @@ void function JoinMatch(var button, table<int, string> StringStages)
 				ConnectToListedServer(g_SelectedTopServer.svServerID)
 				break;
 		}
-		RuiSetString(Hud_GetRui(file.gamemodeSelectV2Button), "modeDescText", "Not Ready")
 		RuiSetBool(Hud_GetRui(Hud_GetChild(file.panel, "SelfButton")), "isReady", false)
 		HudElem_SetRuiArg(button, "buttonText", Localize("#READY"))
 		SetSearchingText("")
@@ -322,7 +321,6 @@ void function JoinMatch(var button, table<int, string> StringStages)
 
 	EmitUISound("UI_Menu_Deny")
 	file.usercancled = false
-	RuiSetString(Hud_GetRui(file.gamemodeSelectV2Button), "modeDescText", "Not Ready")
 	RuiSetBool(Hud_GetRui(Hud_GetChild(file.panel, "SelfButton")), "isReady", false)
 	HudElem_SetRuiArg(button, "buttonText", Localize("#READY"))
 	SetSearchingText("")
@@ -384,7 +382,6 @@ void function UpdateQuickJoinButtons(var button)
 		ConnectToListedServer(file.m_vSelectedServer.svServerID)
 	}
 
-	RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Not Ready" )
 	HudElem_SetRuiArg( button, "buttonText", Localize( "#READY" ) )
 	RuiSetBool( Hud_GetRui( Hud_GetChild( file.panel, "SelfButton" ) ), "isReady", false )
 	SetSearchingText("")
@@ -444,8 +441,8 @@ void function FindServer(bool refresh = false)
 		file.m_vFilteredServerList.append(file.m_vServerList[i])
 	}
 
+	//if non are found, include empty servers
 	if(file.m_vFilteredServerList.len() == 0) {
-		//if non are found, include empty servers
 		file.m_vFilteredServerList.clear()
 		for ( int i = 0, j = file.m_vServerList.len(); i < j; i++ )
 		{
@@ -460,12 +457,6 @@ void function FindServer(bool refresh = false)
 		}
 	}
 
-	if(file.m_vFilteredServerList.len() == 0) {
-		file.noservers = true
-		file.foundserver = true
-		return
-	}
-	
 	if(file.m_vFilteredServerList.len() > 1)
 	{
 		int randomserver = RandomIntRange( 0, file.m_vFilteredServerList.len() - 1 )
@@ -584,7 +575,6 @@ void function GetR5RPromos()
 {
 	//INFO FOR LATER
     //MAX PAGES = 5
-
 	//TEMPORARY PROMO DATA
 	//WILL BE REPLACED WITH A CALL TO THE PROMO ENDPOINT
 	promo.Items.clear()

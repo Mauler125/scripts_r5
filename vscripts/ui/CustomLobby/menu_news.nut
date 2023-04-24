@@ -1,6 +1,6 @@
 global function InitR5RNews
 
-const MAX_NEWS_ITEMS = 6
+const MAX_NEWS_ITEMS = 1
 
 struct NewsPage
 {
@@ -138,16 +138,15 @@ void function GetR5RNews()
 {
     //INFO FOR LATER
     //MAX PAGES = 6
-
     //TEMPOARY NEWS FOR TESTING
     //WILL BE REPLACED WITH A CALL TO THE NEWS ENDPOINT
     file.newspages.clear()
 
-    for(int i = 0; i < 5; i++)
+    for(int i = 0; i < 1; i++)
 	{
 		NewsPage page
-		page.title = "Temp News " + (i + 1)
-		page.desc = "Temp News Description " + (i + 1)
+		page.title = "Welcome to R5Reloaded!"
+		page.desc = "This news panel isnt currently used for much, but maybe one day."
 		page.image = GetAssetFromString( $"rui/promo/S3_General_" + (i + 1).tostring() )
 		file.newspages.append(page)
 	}
@@ -187,7 +186,7 @@ void function SetSmallPreviewItems( int pageIndex )
 {
     int offset = 0
     //Hide all items
-    for(int j = 0; j < MAX_NEWS_ITEMS; j++)
+    for(int j = 0; j < 5; j++)
     {
         Hud_Hide( Hud_GetChild( file.menu, "NewsItem" + (j + 1) ) )
     }
