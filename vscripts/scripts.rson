@@ -831,6 +831,7 @@ Scripts:
 	ui/CustomLobby/panel_serverbrowser.nut
 	ui/CustomLobby/panel_mainmenu.nut
 	ui/CustomLobby/panel_mods.nut
+	ui/CustomLobby/panel_legends.nut
 
 	ui/CustomLobby/panel_create.nut
 	ui/CustomLobby/panel_map.nut

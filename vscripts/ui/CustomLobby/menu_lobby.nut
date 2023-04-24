@@ -93,6 +93,7 @@ void function InitR5RLobbyMenu( var newMenuArg )
 	file.panels.append(Hud_GetChild(menu, "HomePanel"))
 	file.panels.append(Hud_GetChild(menu, "CreatePanel"))
 	file.panels.append(Hud_GetChild(menu, "ServerBrowserPanel"))
+	file.panels.append(Hud_GetChild(menu, "LegendsPanel"))
 	file.panels.append(Hud_GetChild(menu, "ModsPanel"))
 	file.panels.append(null)
 
@@ -100,6 +101,7 @@ void function InitR5RLobbyMenu( var newMenuArg )
 	file.buttons.append(Hud_GetChild(menu, "HomeBtn"))
 	file.buttons.append(Hud_GetChild(menu, "CreateBtn"))
 	file.buttons.append(Hud_GetChild(menu, "ServerBrowserBtn"))
+	file.buttons.append(Hud_GetChild(menu, "LegendsBtn"))
 	file.buttons.append(Hud_GetChild(menu, "ModsBtn"))
 	file.buttons.append(Hud_GetChild(menu, "SettingsBtn"))
 
@@ -196,11 +198,16 @@ void function OpenSelectedPanel(var button)
 			CurrentPresentationType = ePresentationType.COLLECTION_EVENT
 			break;
 		case 3:
+			R5RCharactersPanel_Show()
+			UI_SetPresentationType( ePresentationType.CHARACTER_SELECT )
+			CurrentPresentationType = ePresentationType.CHARACTER_SELECT
+			break;
+		case 4:
 			//Mods_SetupUI()
 			//UI_SetPresentationType( ePresentationType.MODS )
 			//CurrentPresentationType = ePresentationType.MODS
 			break;
-		case 4:
+		case 5:
 			AdvanceMenu( GetMenu( "MiscMenu" ) )
 			break;
 	}

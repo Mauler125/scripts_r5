@@ -156,7 +156,7 @@
 			"pin_to_sibling_corner"		"BOTTOM_RIGHT"
 		}
 
-		"ModsBtn"
+		"LegendsBtn"
 		{
 			"ControlName"				"RuiButton"
 			"InheritProperties"			"TabButtonSettings"
@@ -164,6 +164,28 @@
 			"zpos"						"3"
 			"xpos"                    	"-80"
 			"scriptID"					"3"
+
+			ruiArgs
+			{
+				isSelected 0
+				buttonText "Legends"
+			}
+
+			"pin_to_sibling"			"ServerBrowserBtn"
+			"pin_corner_to_sibling"		"BOTTOM_LEFT"
+			"pin_to_sibling_corner"		"BOTTOM_RIGHT"
+
+			"visible" "0" // hide for now
+		}
+
+		"ModsBtn"
+		{
+			"ControlName"				"RuiButton"
+			"InheritProperties"			"TabButtonSettings"
+			"classname" 				"TopButtons"
+			"zpos"						"3"
+			"xpos"                    	"-80"
+			"scriptID"					"4"
 
 			ruiArgs
 			{
@@ -185,7 +207,7 @@
 			"classname" 				"TopButtons"
 			"zpos"						"3"
 			"xpos"                    	"-80"
-			"scriptID"					"4"
+			"scriptID"					"5"
 
 			ruiArgs
 			{
@@ -236,6 +258,21 @@
 			"tall"						"1200"
 			"visible"					"0"
     	    "controlSettingsFile"		"scripts/resource/ui/menus/CustomLobby/panels/serverbrowser.res"
+    	    "proportionalToParent"    	"1"
+
+    	    "pin_to_sibling"          	"MainButtonsFrame"
+    	    "pin_corner_to_sibling"		"TOP"
+    	    "pin_to_sibling_corner"		"BOTTOM"
+    	}
+
+		"LegendsPanel"
+    	{
+    	    "ControlName"				"CNestedPanel"
+    	    "ypos"						"20"
+    	    "wide"						"f0"
+			"tall"						"1200"
+			"visible"					"0"
+    	    "controlSettingsFile"		"scripts/resource/ui/menus/CustomLobby/panels/characters.res"
     	    "proportionalToParent"    	"1"
 
     	    "pin_to_sibling"          	"MainButtonsFrame"

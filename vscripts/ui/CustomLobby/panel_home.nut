@@ -156,7 +156,7 @@ void function Play_SetupUI()
 	ToolTipData playersToolTip
 	playersToolTip.titleText = "Players Online"
 	playersToolTip.descText = MS_GetPlayerCount() + " Players Online"
-	z( playersButton, playersToolTip )
+	Hud_SetToolTipData( playersButton, playersToolTip )
 	HudElem_SetRuiArg( playersButton, "buttonText", "" + MS_GetPlayerCount() )
 	Hud_SetWidth( playersButton, Hud_GetBaseWidth( playersButton ) * 2 )
 
