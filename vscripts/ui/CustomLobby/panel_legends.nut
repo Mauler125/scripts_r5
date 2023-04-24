@@ -19,22 +19,16 @@ void function InitR5RLegendsPanel( var panel )
 	file.characterSelectInfoRui = Hud_GetRui( Hud_GetChild( file.panel, "CharacterSelectInfo" ) )
 	file.buttons = GetPanelElementsByClassname( panel, "CharacterButtonClass" )
 
-	//AddPanelEventHandler( panel, eUIEvent.PANEL_SHOW, CharactersPanel_OnShow )
-	//AddPanelEventHandler( panel, eUIEvent.PANEL_HIDE, CharactersPanel_OnHide )
-	//AddPanelEventHandler_FocusChanged( panel, CharactersPanel_OnFocusChanged )
-
 	foreach ( button in file.buttons )
 	{
 		Hud_AddEventHandler( button, UIE_CLICK, CharacterButton_OnActivate )
 		Hud_AddEventHandler( button, UIE_CLICKRIGHT, CharacterButton_OnRightClick )
-	}
 
-	AddPanelFooterOption( panel, LEFT, BUTTON_B, true, "#B_BUTTON_BACK", "#B_BUTTON_BACK" )
-	//AddPanelFooterOption( panel, LEFT, BUTTON_A, false, "#A_BUTTON_SELECT", "", null, IsCharacterButtonFocused )
-	//AddPanelFooterOption( panel, LEFT, BUTTON_X, false, "#X_BUTTON_TOGGLE_LOADOUT", "#X_BUTTON_TOGGLE_LOADOUT", OpenFocusedCharacterSkillsDialog, IsCharacterButtonFocused )
-	//AddPanelFooterOption( panel, LEFT, BUTTON_Y, false, "#Y_BUTTON_UNLOCK", "#Y_BUTTON_UNLOCK", JumpToStoreCharacterFromFocus, IsReadyAndFocusedCharacterLocked )
-	//AddPanelFooterOption( panel, LEFT, BUTTON_Y, false, "#Y_BUTTON_SET_FEATURED", "#Y_BUTTON_SET_FEATURED", SetFeaturedCharacterFromFocus, IsReadyAndNonfeaturedCharacterButtonFocused )
-	//AddPanelFooterOption( panel, LEFT, MOUSE_RIGHT, false, "", "#X_BUTTON_TOGGLE_LOADOUT", ToggleCharacterDetails ) // mouse
+		ToolTipData toolTipData
+		toolTipData.tooltipStyle = eTooltipStyle.BUTTON_PROMPT
+		toolTipData.actionHint1 = "#X_BUTTON_TOGGLE_LOADOUT"
+		Hud_SetToolTipData( button, toolTipData )
+	}
 
 	file.actionLabel = Hud_GetChild( panel, "ActionLabel" )
 	Hud_SetText( file.actionLabel, "#X_BUTTON_TOGGLE_LOADOUT" )
