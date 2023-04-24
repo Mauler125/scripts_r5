@@ -116,6 +116,26 @@
 			"pin_to_sibling_corner"		"CENTER"
 		}
 
+		"CreateBtn"
+		{
+			"ControlName"				"RuiButton"
+			"InheritProperties"			"TabButtonSettings"
+			"classname" 				"TopButtons"
+			"zpos"						"3"
+			"xpos"                    	"-80" // from -400 with ModsBtn visible
+			"scriptID"					"1"
+
+			ruiArgs
+			{
+				isSelected 1
+				buttonText "Create"
+			}
+
+			"pin_to_sibling"			"HomeBtn"
+			"pin_corner_to_sibling"		"BOTTOM_LEFT"
+			"pin_to_sibling_corner"		"BOTTOM_RIGHT"
+		}
+
 		"ServerBrowserBtn"
 		{
 			"ControlName"				"RuiButton"
@@ -123,15 +143,15 @@
 			"classname" 				"TopButtons"
 			"zpos"						"3"
 			"xpos"                    	"-80"
-			"scriptID"					"1"
+			"scriptID"					"2"
 
 			ruiArgs
 			{
 				isSelected 0
-				buttonText "Server Browser"
+				buttonText "Servers"
 			}
 
-			"pin_to_sibling"			"HomeBtn"
+			"pin_to_sibling"			"CreateBtn"
 			"pin_corner_to_sibling"		"BOTTOM_LEFT"
 			"pin_to_sibling_corner"		"BOTTOM_RIGHT"
 		}
@@ -143,7 +163,7 @@
 			"classname" 				"TopButtons"
 			"zpos"						"3"
 			"xpos"                    	"-80"
-			"scriptID"					"2"
+			"scriptID"					"3"
 
 			ruiArgs
 			{
@@ -165,7 +185,7 @@
 			"classname" 				"TopButtons"
 			"zpos"						"3"
 			"xpos"                    	"-80"
-			"scriptID"					"3"
+			"scriptID"					"4"
 
 			ruiArgs
 			{
@@ -178,7 +198,7 @@
 			"pin_to_sibling_corner"		"BOTTOM_RIGHT"
 		}
 
-		"R5RHomePanel"
+		"HomePanel"
     	{
     	    "ControlName"				"CNestedPanel"
     	    "ypos"						"20"
@@ -193,8 +213,22 @@
     	    "pin_to_sibling_corner"		"BOTTOM"
     	}
 
+		"CreatePanel"
+    	{
+    	    "ControlName"				"CNestedPanel"
+    	    "ypos"						"20"
+    	    "wide"						"f0"
+			"tall"						"1200"
+			"visible"					"0"
+    	    "controlSettingsFile"		"scripts/resource/ui/menus/CustomLobby/panels/create_match.res"
+    	    "proportionalToParent"    	"1"
 
-		"R5RServerBrowserPanel"
+    	    "pin_to_sibling"          	"MainButtonsFrame"
+    	    "pin_corner_to_sibling"		"TOP"
+    	    "pin_to_sibling_corner"		"BOTTOM"
+    	}
+
+		"ServerBrowserPanel"
     	{
     	    "ControlName"				"CNestedPanel"
     	    "ypos"						"20"
@@ -224,7 +258,7 @@
     	    "pin_to_sibling_corner"		"BOTTOM"
     	}
 
-		"R5RKickPanel"
+		"R5RNamePanel"
 		{
 			"ControlName"				"CNestedPanel"
 			"ypos"						"0"
@@ -232,7 +266,20 @@
 			"wide"						"f0"
 			"tall"						"f0"
 			"visible"					"0"
-			"controlSettingsFile"		"scripts/resource/ui/menus/CustomLobby/panels/kickplayer.res"
+			"controlSettingsFile"		"scripts/resource/ui/menus/CustomLobby/panels/servername.res"
+			"proportionalToParent"    	"1"
+			"zpos"                      "10"
+		}
+
+		"R5RDescPanel"
+		{
+			"ControlName"				"CNestedPanel"
+			"ypos"						"0"
+			"zpos"						"45"
+			"wide"						"f0"
+			"tall"						"f0"
+			"visible"					"0"
+			"controlSettingsFile"		"scripts/resource/ui/menus/CustomLobby/panels/serverdesc.res"
 			"proportionalToParent"    	"1"
 			"zpos"                      "10"
 		}

@@ -54,7 +54,6 @@ void function InitR5RGamemodeSelectDialog( var newMenuArg ) //
 	Hud_AddEventHandler( Hud_GetChild( menu, "NextPageButton" ), UIE_CLICK, NextPage_Activated )
 	Hud_AddEventHandler( Hud_GetChild( menu, "FiringRangeButton" ), UIE_CLICK, FiringRange_Activated )
 	Hud_AddEventHandler( Hud_GetChild( menu, "FreeRoamButton" ), UIE_CLICK, FreeRoam_Activated )
-	Hud_AddEventHandler( Hud_GetChild( menu, "PrivateMatchBtn" ), UIE_CLICK, PrivateMatch_Activated )
 	Hud_AddEventHandler( Hud_GetChild( menu, "CloseButton" ), UIE_CLICK, OnCloseButton_Activate )
 	
 	AddMenuEventHandler( menu, eUIEvent.MENU_OPEN, OnOpenModeSelectDialog )

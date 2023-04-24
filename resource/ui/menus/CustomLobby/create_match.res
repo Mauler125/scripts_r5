@@ -38,60 +38,6 @@ resource/ui/menus/dialog_gamemode_select_v2.menu
             drawColor				"255 255 255 255"
         }
 
-        "MainButtonsFrame"
-		{
-            "ControlName"				"ImagePanel"
-			"wide"						"f0"
-			"tall"						"83"
-			"visible"					"1"
-            "scaleImage"				"1"
-			"zpos"						"0"
-            "fillColor"					"30 30 30 200"
-            "drawColor"					"30 30 30 200"
-
-			"pin_to_sibling"			"ScreenFrame"
-			"pin_corner_to_sibling"		"TOP"
-			"pin_to_sibling_corner"		"TOP"
-		}
-
-		"GamemodesBtn"
-        {
-			"ControlName"				"RuiButton"
-			"InheritProperties"			"TabButtonSettings"
-			"classname" 				"TopButtons"
-			"zpos"						"3"
-            "xpos"                      "-100"
-
-			ruiArgs
-			{
-				isSelected 0
-				buttonText "Quick Play"
-			}
-
-			"pin_to_sibling"			"MainButtonsFrame"
-			"pin_corner_to_sibling"		"CENTER"
-			"pin_to_sibling_corner"		"CENTER"
-		}
-
-        "PrivateMatchBtn"
-        {
-			"ControlName"				"RuiButton"
-			"InheritProperties"			"TabButtonSettings"
-			"classname" 				"TopButtons"
-			"zpos"						"3"
-            "xpos"                      "-80"
-
-			ruiArgs
-			{
-				isSelected 1
-				buttonText "Private Match"
-			}
-
-			"pin_to_sibling"			"GamemodesBtn"
-			"pin_corner_to_sibling"		"LEFT"
-			"pin_to_sibling_corner"		"RIGHT"
-		}
-
         Cover
         {
             ControlName				ImagePanel
