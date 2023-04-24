@@ -175,7 +175,7 @@
 			"pin_corner_to_sibling"		"BOTTOM_LEFT"
 			"pin_to_sibling_corner"		"BOTTOM_RIGHT"
 
-			"visible" "0" // hide for now
+			"visible" "1" // hide for now
 		}
 
 		"ModsBtn"
@@ -215,7 +215,7 @@
 				buttonText "Settings"
 			}
 
-			"pin_to_sibling"			"ServerBrowserBtn"
+			"pin_to_sibling"			"LegendsBtn"
 			"pin_corner_to_sibling"		"BOTTOM_LEFT"
 			"pin_to_sibling_corner"		"BOTTOM_RIGHT"
 		}
