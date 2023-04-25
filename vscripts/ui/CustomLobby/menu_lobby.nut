@@ -83,27 +83,53 @@ void function InitR5RLobbyMenu( var newMenuArg )
 	AddMenuEventHandler( menu, eUIEvent.MENU_CLOSE, OnR5RLobby_Close )
 	AddMenuEventHandler( menu, eUIEvent.MENU_NAVIGATE_BACK, OnR5RLobby_Back )
 
-	//Button event handlers
-	array<var> buttons = GetElementsByClassname( file.menu, "TopButtons" )
-	foreach ( var elem in buttons ) {
-		Hud_AddEventHandler( elem, UIE_CLICK, OpenSelectedPanel )
-	}
-
-	//Setup panel array
-	file.panels.append(Hud_GetChild(menu, "HomePanel"))
-	file.panels.append(Hud_GetChild(menu, "CreatePanel"))
-	file.panels.append(Hud_GetChild(menu, "ServerBrowserPanel"))
-	file.panels.append(Hud_GetChild(menu, "LegendsPanel"))
-	file.panels.append(null)
-
-	//Setup Button Vars
-	file.buttons.append(Hud_GetChild(menu, "HomeBtn"))
-	file.buttons.append(Hud_GetChild(menu, "CreateBtn"))
-	file.buttons.append(Hud_GetChild(menu, "ServerBrowserBtn"))
-	file.buttons.append(Hud_GetChild(menu, "LegendsBtn"))
-	file.buttons.append(Hud_GetChild(menu, "SettingsBtn"))
-
+	CreateNavButtons()
 	ToolTips_AddMenu( menu )
+}
+
+void function CreateNavButtons()
+{
+	array<var> elems = GetElementsByClassname( file.menu, "TopButtons" )
+		foreach ( elem in elems )
+			Hud_SetVisible( elem, false )
+
+	AddNavButton("Play", elems[0], Hud_GetChild(file.menu, "HomePanel"), void function( var button ) {
+		Play_SetupUI()
+		UI_SetPresentationType( ePresentationType.PLAY )
+		CurrentPresentationType = ePresentationType.PLAY
+	} )
+
+	AddNavButton("Create", elems[1], Hud_GetChild(file.menu, "CreatePanel"), void function( var button ) {
+		OnCreateMatchOpen()
+		UI_SetPresentationType( ePresentationType.CHARACTER_SELECT )
+		CurrentPresentationType = ePresentationType.CHARACTER_SELECT
+	} )
+
+	AddNavButton("Servers", elems[2], Hud_GetChild(file.menu, "ServerBrowserPanel"), void function( var button ) {
+		UI_SetPresentationType( ePresentationType.COLLECTION_EVENT )
+		CurrentPresentationType = ePresentationType.COLLECTION_EVENT
+	} )
+
+	AddNavButton("Legends", elems[3], Hud_GetChild(file.menu, "LegendsPanel"), void function( var button ) {
+		R5RCharactersPanel_Show()
+		UI_SetPresentationType( ePresentationType.CHARACTER_SELECT )
+		CurrentPresentationType = ePresentationType.CHARACTER_SELECT
+	} )
+
+	AddNavButton("Settings", elems[4], null, void function( var button ) {
+		AdvanceMenu( GetMenu( "MiscMenu" ) )
+	} )
+}
+
+void function AddNavButton(string title, var button, var panel, void functionref(var button) Click = null)
+{
+	Hud_SetVisible( button, true )
+	RuiSetString( Hud_GetRui(button), "buttonText", title )
+	Hud_AddEventHandler( button, UIE_CLICK, OpenSelectedPanel )
+	Hud_AddEventHandler( button, UIE_CLICK, Click )
+
+	file.panels.append(panel)
+	file.buttons.append(button)
 }
 
 void function OnR5RLobby_Open()
@@ -124,7 +150,7 @@ void function OnR5RLobby_Show()
 	SetupLobby()
 
 	//Show Home Panel
-	ShowSelectedPanel( file.panels[0], file.buttons[0] )
+	OpenSelectedPanel( file.buttons[0] )
 	UI_SetPresentationType( ePresentationType.PLAY )
 	CurrentPresentationType = ePresentationType.PLAY
 
@@ -153,7 +179,9 @@ void function OnR5RLobby_Back()
 
 	if(file.currentpanel != 0)
 	{
-		OpenSelectedPanel(file.buttons[0])
+		OpenSelectedPanel( file.buttons[0] )
+		UI_SetPresentationType( ePresentationType.PLAY )
+		CurrentPresentationType = ePresentationType.PLAY
 		return
 	}
 
@@ -162,37 +190,9 @@ void function OnR5RLobby_Back()
 
 void function OpenSelectedPanel(var button)
 {
-	//Get the script id, and show the panel acording to that id
 	int scriptid = Hud_GetScriptID( button ).tointeger()
 	ShowSelectedPanel( file.panels[scriptid], button )
-
 	file.currentpanel = scriptid
-
-	switch(scriptid)
-	{
-		case 0:
-			Play_SetupUI()
-			UI_SetPresentationType( ePresentationType.PLAY )
-			CurrentPresentationType = ePresentationType.PLAY
-			break;
-		case 1:
-			OnCreateMatchOpen()
-			UI_SetPresentationType( ePresentationType.CHARACTER_SELECT )
-			CurrentPresentationType = ePresentationType.CHARACTER_SELECT
-			break;
-		case 2:
-			UI_SetPresentationType( ePresentationType.COLLECTION_EVENT )
-			CurrentPresentationType = ePresentationType.COLLECTION_EVENT
-			break;
-		case 3:
-			R5RCharactersPanel_Show()
-			UI_SetPresentationType( ePresentationType.CHARACTER_SELECT )
-			CurrentPresentationType = ePresentationType.CHARACTER_SELECT
-			break;
-		case 4:
-			AdvanceMenu( GetMenu( "MiscMenu" ) )
-			break;
-	}
 }
 
 void function SetupLobby()
