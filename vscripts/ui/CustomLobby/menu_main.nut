@@ -32,20 +32,6 @@ void function InitR5RMainMenu( var newMenuArg )
 	RuiSetString( subtitleRui, "subtitleText", Localize( "Reloaded" ).toupper() )
 }
 
-void function ActivatePanel( var panel )
-{
-	Assert( panel != null )
-
-	array<var> elems = GetElementsByClassname( file.menu, "MainMenuPanelClass" )
-	foreach ( elem in elems )
-	{
-		if ( elem != panel && Hud_IsVisible( elem ) )
-			HidePanel( elem )
-	}
-
-	ShowPanel( panel )
-}
-
 void function OnR5RSB_Show()
 {
 	thread SetAtMainMenu()
@@ -57,6 +43,16 @@ void function OnR5RSB_Show()
 	ActivatePanel( GetPanel( "R5RMainMenuPanel" ) )
 
 	Chroma_MainMenu()
+}
+
+void function OnR5RSB_Close()
+{
+	HidePanel( GetPanel( "R5RMainMenuPanel" ) )
+}
+
+void function OnR5RSB_NavigateBack()
+{
+    OpenConfirmExitToDesktopDialog()
 }
 
 void function SetAtMainMenu()
@@ -73,18 +69,22 @@ void function SetAtMainMenu()
 	SetMainMenuBlackScreenVisible(false)
 }
 
+void function ActivatePanel( var panel )
+{
+	Assert( panel != null )
+
+	array<var> elems = GetElementsByClassname( file.menu, "MainMenuPanelClass" )
+	foreach ( elem in elems )
+	{
+		if ( elem != panel && Hud_IsVisible( elem ) )
+			HidePanel( elem )
+	}
+
+	ShowPanel( panel )
+}
+
 void function SetMainMenuBlackScreenVisible(bool show)
 {
 	//Hide/show full black screen
 	Hud_SetVisible(Hud_GetChild( file.menu, "FullBlackScreen" ), show)
-}
-
-void function OnR5RSB_Close()
-{
-	HidePanel( GetPanel( "R5RMainMenuPanel" ) )
-}
-
-void function OnR5RSB_NavigateBack()
-{
-    OpenConfirmExitToDesktopDialog()
 }

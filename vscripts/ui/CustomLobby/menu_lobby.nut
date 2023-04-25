@@ -87,51 +87,6 @@ void function InitR5RLobbyMenu( var newMenuArg )
 	ToolTips_AddMenu( menu )
 }
 
-void function CreateNavButtons()
-{
-	array<var> elems = GetElementsByClassname( file.menu, "TopButtons" )
-		foreach ( elem in elems )
-			Hud_SetVisible( elem, false )
-
-	AddNavButton("Play", elems[0], Hud_GetChild(file.menu, "HomePanel"), void function( var button ) {
-		Play_SetupUI()
-		UI_SetPresentationType( ePresentationType.PLAY )
-		CurrentPresentationType = ePresentationType.PLAY
-	} )
-
-	AddNavButton("Create", elems[1], Hud_GetChild(file.menu, "CreatePanel"), void function( var button ) {
-		OnCreateMatchOpen()
-		UI_SetPresentationType( ePresentationType.CHARACTER_SELECT )
-		CurrentPresentationType = ePresentationType.CHARACTER_SELECT
-	} )
-
-	AddNavButton("Servers", elems[2], Hud_GetChild(file.menu, "ServerBrowserPanel"), void function( var button ) {
-		UI_SetPresentationType( ePresentationType.COLLECTION_EVENT )
-		CurrentPresentationType = ePresentationType.COLLECTION_EVENT
-	} )
-
-	AddNavButton("Legends", elems[3], Hud_GetChild(file.menu, "LegendsPanel"), void function( var button ) {
-		R5RCharactersPanel_Show()
-		UI_SetPresentationType( ePresentationType.CHARACTER_SELECT )
-		CurrentPresentationType = ePresentationType.CHARACTER_SELECT
-	} )
-
-	AddNavButton("Settings", elems[4], null, void function( var button ) {
-		AdvanceMenu( GetMenu( "MiscMenu" ) )
-	} )
-}
-
-void function AddNavButton(string title, var button, var panel, void functionref(var button) Click = null)
-{
-	Hud_SetVisible( button, true )
-	RuiSetString( Hud_GetRui(button), "buttonText", title )
-	Hud_AddEventHandler( button, UIE_CLICK, OpenSelectedPanel )
-	Hud_AddEventHandler( button, UIE_CLICK, Click )
-
-	file.panels.append(panel)
-	file.buttons.append(button)
-}
-
 void function OnR5RLobby_Open()
 {
 	ToolTips_MenuOpened( file.menu )
@@ -188,11 +143,49 @@ void function OnR5RLobby_Back()
 	AdvanceMenu( GetMenu( "SystemMenu" ) )
 }
 
-void function OpenSelectedPanel(var button)
+void function CreateNavButtons()
 {
-	int scriptid = Hud_GetScriptID( button ).tointeger()
-	ShowSelectedPanel( file.panels[scriptid], button )
-	file.currentpanel = scriptid
+	array<var> elems = GetElementsByClassname( file.menu, "TopButtons" )
+		foreach ( elem in elems )
+			Hud_SetVisible( elem, false )
+
+	AddNavButton("Play", elems[0], Hud_GetChild(file.menu, "HomePanel"), void function( var button ) {
+		Play_SetupUI()
+		UI_SetPresentationType( ePresentationType.PLAY )
+		CurrentPresentationType = ePresentationType.PLAY
+	} )
+
+	AddNavButton("Create", elems[1], Hud_GetChild(file.menu, "CreatePanel"), void function( var button ) {
+		OnCreateMatchOpen()
+		UI_SetPresentationType( ePresentationType.CHARACTER_SELECT )
+		CurrentPresentationType = ePresentationType.CHARACTER_SELECT
+	} )
+
+	AddNavButton("Servers", elems[2], Hud_GetChild(file.menu, "ServerBrowserPanel"), void function( var button ) {
+		UI_SetPresentationType( ePresentationType.COLLECTION_EVENT )
+		CurrentPresentationType = ePresentationType.COLLECTION_EVENT
+	} )
+
+	AddNavButton("Legends", elems[3], Hud_GetChild(file.menu, "LegendsPanel"), void function( var button ) {
+		R5RCharactersPanel_Show()
+		UI_SetPresentationType( ePresentationType.CHARACTER_SELECT )
+		CurrentPresentationType = ePresentationType.CHARACTER_SELECT
+	} )
+
+	AddNavButton("Settings", elems[4], null, void function( var button ) {
+		AdvanceMenu( GetMenu( "MiscMenu" ) )
+	} )
+}
+
+void function AddNavButton(string title, var button, var panel, void functionref(var button) Click = null)
+{
+	Hud_SetVisible( button, true )
+	RuiSetString( Hud_GetRui(button), "buttonText", title )
+	Hud_AddEventHandler( button, UIE_CLICK, OpenSelectedPanel )
+	Hud_AddEventHandler( button, UIE_CLICK, Click )
+
+	file.panels.append(panel)
+	file.buttons.append(button)
 }
 
 void function SetupLobby()
@@ -211,6 +204,13 @@ void function SetupLobby()
 		file.initialisedHomePanel = true
 	}
 
+}
+
+void function OpenSelectedPanel(var button)
+{
+	int scriptid = Hud_GetScriptID( button ).tointeger()
+	ShowSelectedPanel( file.panels[scriptid], button )
+	file.currentpanel = scriptid
 }
 
 void function ShowSelectedPanel(var panel, var button)

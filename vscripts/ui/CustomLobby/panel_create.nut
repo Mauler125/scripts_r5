@@ -77,6 +77,17 @@ void function InitCreatePanel( var panel )
 	ServerSettings.svVisibility = eServerVisibility.OFFLINE
 }
 
+void function OnCreateMatchOpen()
+{
+	RefreshUIPlaylists()
+	RefreshUIMaps()
+
+	Hud_SetText(Hud_GetChild( file.panel, "PlaylistInfoEdit" ), GetUIPlaylistName(ServerSettings.svPlaylist))
+	RuiSetImage( Hud_GetRui( Hud_GetChild( file.panel, "ServerMapImg" ) ), "loadscreenImage", GetUIMapAsset( ServerSettings.svMapName ) )
+	Hud_SetText(Hud_GetChild( file.panel, "VisInfoEdit" ), GetUIVisibilityName(ServerSettings.svVisibility))
+	Hud_SetText(Hud_GetChild( file.panel, "MapServerNameInfoEdit" ), ServerSettings.svServerName)
+}
+
 void function OpenSelectedPanel( var button )
 {
 	//Show panel depending on script id
@@ -178,17 +189,6 @@ void function ShowSelectedPanel(var panel)
 
 	//Show selected panel
 	Hud_SetVisible( panel, true )
-}
-
-void function OnCreateMatchOpen()
-{
-	RefreshUIPlaylists()
-	RefreshUIMaps()
-
-	Hud_SetText(Hud_GetChild( file.panel, "PlaylistInfoEdit" ), GetUIPlaylistName(ServerSettings.svPlaylist))
-	RuiSetImage( Hud_GetRui( Hud_GetChild( file.panel, "ServerMapImg" ) ), "loadscreenImage", GetUIMapAsset( ServerSettings.svMapName ) )
-	Hud_SetText(Hud_GetChild( file.panel, "VisInfoEdit" ), GetUIVisibilityName(ServerSettings.svVisibility))
-	Hud_SetText(Hud_GetChild( file.panel, "MapServerNameInfoEdit" ), ServerSettings.svServerName)
 }
 
 void function UpdateServerName( var button )
