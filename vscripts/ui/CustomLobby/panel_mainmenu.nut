@@ -47,7 +47,7 @@ void function LaunchCustomLobby()
 {
 	ShowSpinner(true)
 
-	wait 3
+	wait 1
 
 	CreateServer("Lobby", "", "mp_lobby", "menufall", eServerVisibility.OFFLINE)
 	ShowSpinner(false)
