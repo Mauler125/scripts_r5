@@ -12,6 +12,8 @@ struct
 	ItemFlavor ornull	   presentedCharacter
 } file
 
+global bool g_InLegendsMenu = false
+
 void function InitR5RLegendsPanel( var panel )
 {
 	file.panel = panel
@@ -23,6 +25,7 @@ void function InitR5RLegendsPanel( var panel )
 	{
 		Hud_AddEventHandler( button, UIE_CLICK, CharacterButton_OnActivate )
 		Hud_AddEventHandler( button, UIE_CLICKRIGHT, CharacterButton_OnRightClick )
+		Hud_AddEventHandler( button, UIE_MIDDLECLICK, CharacterButton_OnMiddleClick )
 
 		ToolTipData toolTipData
 		toolTipData.tooltipStyle = eTooltipStyle.BUTTON_PROMPT
@@ -34,13 +37,30 @@ void function InitR5RLegendsPanel( var panel )
 	Hud_SetText( file.actionLabel, "#X_BUTTON_TOGGLE_LOADOUT" )
 }
 
+void function CharacterButton_OnMiddleClick( var button )
+{
+	SetFeaturedCharacterFromButton( button )
+}
+
+void function SetFeaturedCharacterFromButton( var button )
+{
+	if ( button in file.buttonToCharacter )
+		SetFeaturedCharacter( file.buttonToCharacter[button] )
+}
+
 void function CharacterButton_OnActivate( var button )
 {
 	ItemFlavor character = file.buttonToCharacter[button]
-	SetTopLevelCustomizeContext( character )
-	SetFeaturedCharacter( file.buttonToCharacter[button] )
+	CustomizeCharacterMenu_SetCharacter( character )
 	PresentCharacter( character )
 	RequestSetItemFlavorLoadoutSlot( LocalClientEHI(), Loadout_CharacterClass(), character ) // TEMP, Some menu state is broken without this. Need Declan to look at why RefreshLoadoutSlotInternal doesn't run when editing a loadout that isn't the featured one before removing this.
+
+	SetFeaturedCharacter( character )
+	
+	//SetTopLevelCustomizeContext( LoadoutSlot_GetItemFlavor( LocalClientEHI(), Loadout_CharacterClass() ) )
+	//EmitUISound( "UI_Menu_Legend_Select" )
+	//AdvanceMenu( GetMenu( "CustomizeCharacterMenu" ) )
+	//g_InLegendsMenu = true
 }
 
 void function CharacterButton_OnRightClick( var button )
@@ -53,7 +73,7 @@ void function SetFeaturedCharacter( ItemFlavor character )
 	foreach ( button in file.buttons )
 		if ( button in file.buttonToCharacter )
 			Hud_SetSelected( button, file.buttonToCharacter[button] == character )
-
+	
 	RequestSetItemFlavorLoadoutSlot( LocalClientEHI(), Loadout_CharacterClass(), character )
 
 	EmitUISound( "UI_Menu_Legend_SetFeatured" )

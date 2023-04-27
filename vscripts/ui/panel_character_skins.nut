@@ -54,8 +54,8 @@ void function CharacterSkinsPanel_OnShow( var panel )
 	CharacterSkinsPanel_Update( panel )
 
 	//
-	AddCallback_ItemFlavorLoadoutSlotDidChange_SpecificPlayer( LocalClientEHI(), Loadout_MeleeSkin( GetTopLevelCustomizeContext() ), OnMeleeSkinChanged )
-	CustomizeCharacterMenu_UpdateHeirloomButton()
+	//AddCallback_ItemFlavorLoadoutSlotDidChange_SpecificPlayer( LocalClientEHI(), Loadout_MeleeSkin( GetTopLevelCustomizeContext() ), OnMeleeSkinChanged )
+	//CustomizeCharacterMenu_UpdateHeirloomButton()
 }
 
 
@@ -67,7 +67,7 @@ void function CharacterSkinsPanel_OnHide( var panel )
 	CharacterSkinsPanel_Update( panel )
 
 	//Signal( panel, "PROTO_StopButtonThumbnailsThink" )
-	RemoveCallback_ItemFlavorLoadoutSlotDidChange_SpecificPlayer( LocalClientEHI(), Loadout_MeleeSkin( GetTopLevelCustomizeContext() ), OnMeleeSkinChanged )
+	//RemoveCallback_ItemFlavorLoadoutSlotDidChange_SpecificPlayer( LocalClientEHI(), Loadout_MeleeSkin( GetTopLevelCustomizeContext() ), OnMeleeSkinChanged )
 }
 
 
@@ -93,6 +93,9 @@ void function CharacterSkinsPanel_Update( var panel )
 		LoadoutEntry entry = Loadout_CharacterSkin( GetTopLevelCustomizeContext() )
 		file.characterSkinList = GetLoadoutItemsSortedForMenu( entry, CharacterSkin_GetSortOrdinal )
 		FilterCharacterSkinList( file.characterSkinList )
+		
+		//Only show first skin
+		file.characterSkinList = [file.characterSkinList[0]]
 
 		Hud_InitGridButtons( file.listPanel, file.characterSkinList.len() )
 		foreach ( int flavIdx, ItemFlavor flav in file.characterSkinList )
@@ -190,12 +193,12 @@ void function PreviewCharacterSkin( ItemFlavor flav )
 
 void function OnMeleeSkinChanged( EHI playerEHI, ItemFlavor flavor )
 {
-	CustomizeCharacterMenu_UpdateHeirloomButton()
+	//CustomizeCharacterMenu_UpdateHeirloomButton()
 }
 
 ItemFlavor ornull function GetMeleeHeirloom( ItemFlavor character )
 {
-	LoadoutEntry entry = Loadout_MeleeSkin( GetTopLevelCustomizeContext() )
+	/*LoadoutEntry entry = Loadout_MeleeSkin( GetTopLevelCustomizeContext() )
 	array<ItemFlavor> melees = GetValidItemFlavorsForLoadoutSlot( LocalClientEHI(), entry )
 
 	foreach ( meleeFlav in melees )
@@ -204,14 +207,14 @@ ItemFlavor ornull function GetMeleeHeirloom( ItemFlavor character )
 		{
 			return meleeFlav
 		}
-	}
+	}*/
 
 	return null
 }
 
 void function CustomizeCharacterMenu_UpdateHeirloomButton()
 {
-	LoadoutEntry entry = Loadout_MeleeSkin( GetTopLevelCustomizeContext() )
+	/*LoadoutEntry entry = Loadout_MeleeSkin( GetTopLevelCustomizeContext() )
 	ItemFlavor ornull meleeHeirloom = GetMeleeHeirloom( GetTopLevelCustomizeContext() )
 	if ( meleeHeirloom != null )
 	{
@@ -247,12 +250,14 @@ void function CustomizeCharacterMenu_UpdateHeirloomButton()
 	else
 	{
 		Hud_Hide( file.heirloomButton )
-	}
+	}*/
+
+	Hud_Hide( file.heirloomButton )
 }
 
 void function CustomizeCharacterMenu_HeirloomButton_OnActivate( var button )
 {
-	if ( Hud_IsLocked( button ) )
+	/*if ( Hud_IsLocked( button ) )
 		return
 
 	LoadoutEntry entry = Loadout_MeleeSkin( GetTopLevelCustomizeContext() )
@@ -278,7 +283,7 @@ void function CustomizeCharacterMenu_HeirloomButton_OnActivate( var button )
 	}
 
 	PIN_Customization( context, meleeToEquip )
-	RequestSetItemFlavorLoadoutSlot( LocalClientEHI(), entry, meleeToEquip )
+	RequestSetItemFlavorLoadoutSlot( LocalClientEHI(), entry, meleeToEquip )*/
 }
 
 void function FilterCharacterSkinList( array<ItemFlavor> characterSkinList )

@@ -17,6 +17,9 @@ struct
 	var ServerBrowserPanel
 
 	bool initialisedHomePanel = false
+
+	int CurrentNavIndex = 0
+	array<var> TopButtons
 } file
 
 // do not change this enum without modifying it in code at gameui/IBrowser.h
@@ -104,13 +107,20 @@ void function OnR5RLobby_Show()
 	ServerBrowser_UpdateFilterLists()
 	SetupLobby()
 
+	//Set back to default for next time
+	g_isAtMainMenu = false
+
+	if(g_InLegendsMenu || g_InLoutoutPanel)
+	{
+		g_InLegendsMenu = false
+		g_InLoutoutPanel = false
+		return
+	}
+
 	//Show Home Panel
 	OpenSelectedPanel( file.buttons[0] )
 	UI_SetPresentationType( ePresentationType.PLAY )
 	CurrentPresentationType = ePresentationType.PLAY
-
-	//Set back to default for next time
-	g_isAtMainMenu = false
 }
 
 void function OnR5RLobby_Back()
@@ -145,47 +155,59 @@ void function OnR5RLobby_Back()
 
 void function CreateNavButtons()
 {
-	array<var> elems = GetElementsByClassname( file.menu, "TopButtons" )
-		foreach ( elem in elems )
+	file.CurrentNavIndex = 0
+	file.TopButtons = GetElementsByClassname( file.menu, "TopButtons" )
+		foreach ( elem in file.TopButtons )
 			Hud_SetVisible( elem, false )
 
-	AddNavButton("Play", elems[0], Hud_GetChild(file.menu, "HomePanel"), void function( var button ) {
+	AddNavButton("Play", Hud_GetChild(file.menu, "HomePanel"), void function( var button ) {
 		Play_SetupUI()
 		UI_SetPresentationType( ePresentationType.PLAY )
 		CurrentPresentationType = ePresentationType.PLAY
 	} )
 
-	AddNavButton("Create", elems[1], Hud_GetChild(file.menu, "CreatePanel"), void function( var button ) {
-		OnCreateMatchOpen()
-		UI_SetPresentationType( ePresentationType.CHARACTER_SELECT )
-		CurrentPresentationType = ePresentationType.CHARACTER_SELECT
-	} )
-
-	AddNavButton("Servers", elems[2], Hud_GetChild(file.menu, "ServerBrowserPanel"), void function( var button ) {
-		UI_SetPresentationType( ePresentationType.COLLECTION_EVENT )
-		CurrentPresentationType = ePresentationType.COLLECTION_EVENT
-	} )
-
-	AddNavButton("Legends", elems[3], Hud_GetChild(file.menu, "LegendsPanel"), void function( var button ) {
+	AddNavButton("Legends", Hud_GetChild(file.menu, "LegendsPanel"), void function( var button ) {
+		SetTopLevelCustomizeContext( null )
+		RunMenuClientFunction( "ClearAllCharacterPreview" )
 		R5RCharactersPanel_Show()
 		UI_SetPresentationType( ePresentationType.CHARACTER_SELECT )
 		CurrentPresentationType = ePresentationType.CHARACTER_SELECT
 	} )
 
-	AddNavButton("Settings", elems[4], null, void function( var button ) {
-		AdvanceMenu( GetMenu( "MiscMenu" ) )
+	//Item flavor bugged, disable for now
+	/*AddNavButton("Loadout", Hud_GetChild(file.menu, "LoadoutPanel"), void function( var button ) {
+		ShowLoadoutPanel()
+		UI_SetPresentationType( ePresentationType.WEAPON_CATEGORY )
+		CurrentPresentationType = ePresentationType.WEAPON_CATEGORY
+	} )*/
+
+	AddNavButton("Create", Hud_GetChild(file.menu, "CreatePanel"), void function( var button ) {
+		OnCreateMatchOpen()
+		UI_SetPresentationType( ePresentationType.CHARACTER_SELECT )
+		CurrentPresentationType = ePresentationType.CHARACTER_SELECT
 	} )
+
+	AddNavButton("Servers", Hud_GetChild(file.menu, "ServerBrowserPanel"), void function( var button ) {
+		UI_SetPresentationType( ePresentationType.COLLECTION_EVENT )
+		CurrentPresentationType = ePresentationType.COLLECTION_EVENT
+	} )
+
+	/*AddNavButton("Settings", null, void function( var button ) {
+		AdvanceMenu( GetMenu( "MiscMenu" ) )
+	} )*/
 }
 
-void function AddNavButton(string title, var button, var panel, void functionref(var button) Click = null)
+void function AddNavButton(string title, var panel, void functionref(var button) Click = null)
 {
-	Hud_SetVisible( button, true )
-	RuiSetString( Hud_GetRui(button), "buttonText", title )
-	Hud_AddEventHandler( button, UIE_CLICK, OpenSelectedPanel )
-	Hud_AddEventHandler( button, UIE_CLICK, Click )
+	
+	Hud_SetVisible( file.TopButtons[file.CurrentNavIndex], true )
+	RuiSetString( Hud_GetRui(file.TopButtons[file.CurrentNavIndex]), "buttonText", title )
+	Hud_AddEventHandler( file.TopButtons[file.CurrentNavIndex], UIE_CLICK, OpenSelectedPanel )
+	Hud_AddEventHandler( file.TopButtons[file.CurrentNavIndex], UIE_CLICK, Click )
 
 	file.panels.append(panel)
-	file.buttons.append(button)
+	file.buttons.append(file.TopButtons[file.CurrentNavIndex])
+	file.CurrentNavIndex++
 }
 
 void function SetupLobby()

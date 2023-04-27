@@ -84,7 +84,7 @@
 			"ypos"						"0"
 			"auto_wide_tocontents"		"1"
 			"tall"						"40"
-			"visible"					"1"
+			"visible"					"0"
 			"fontHeight"				"50"
 			"labelText"					"R5Reloaded"
 			"font"						"DefaultBold_41"
@@ -102,7 +102,7 @@
 			"InheritProperties"			"TabButtonSettings"
 			"classname" 				"TopButtons"
 			"zpos"						"3"
-			"xpos"                    	"-400" // from -400 with ModsBtn visible
+			"xpos"                    	"-500" // from -400 with ModsBtn visible
 			"scriptID"					"0"
 
 			"pin_to_sibling"			"MainButtonsFrame"
@@ -233,6 +233,21 @@
 			"tall"						"1200"
 			"visible"					"0"
     	    "controlSettingsFile"		"scripts/resource/ui/menus/CustomLobby/panels/characters.res"
+    	    "proportionalToParent"    	"1"
+
+    	    "pin_to_sibling"          	"MainButtonsFrame"
+    	    "pin_corner_to_sibling"		"TOP"
+    	    "pin_to_sibling_corner"		"BOTTOM"
+    	}
+
+		"LoadoutPanel"
+    	{
+    	    "ControlName"				"CNestedPanel"
+    	    "ypos"						"20"
+    	    "wide"						"f0"
+			"tall"						"1200"
+			"visible"					"0"
+    	    "controlSettingsFile"		"scripts/resource/ui/menus/CustomLobby/panels/loadout.res"
     	    "proportionalToParent"    	"1"
 
     	    "pin_to_sibling"          	"MainButtonsFrame"

@@ -228,6 +228,8 @@ void function PreviewCardBadge( ItemFlavor flav )
 
 int function CanEquipCanBuyBadgeCheck( ItemFlavor unused )
 {
+	return eItemCanEquipCanBuyStatus.CAN_EQUIP_CAN_BUY
+
 	int status = CanEquipCanBuyCharacterItemCheck( unused )
 	if ( status == eItemCanEquipCanBuyStatus.CAN_EQUIP_CAN_BUY )
 		return eItemCanEquipCanBuyStatus.CAN_EQUIP_CANNOT_BUY
@@ -268,14 +270,14 @@ void function SortBadgesAndFilter( ItemFlavor character, array<ItemFlavor> badge
 
 bool function ShouldDisplayBadge( ItemFlavor badge, table<ItemFlavor, int> equippedBadgeSet, ItemFlavor character )
 {
-	if ( GladiatorCardBadge_ShouldHideIfLocked( badge ) )
+	/*if ( GladiatorCardBadge_ShouldHideIfLocked( badge ) )
 	{
 		if ( !IsItemFlavorUnlockedForLoadoutSlot( LocalClientEHI(), Loadout_GladiatorCardBadge( character, 0 ), badge ) )//
 			return false
 	}
 
 	if ( GladiatorCardBadge_IsTheEmpty( badge ) )
-		return false
+		return false*/
 
 	return true
 }

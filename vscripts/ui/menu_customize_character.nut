@@ -77,7 +77,7 @@ void function CustomizeCharacterMenu_OnOpen()
 	RuiSetString( file.titleRui, "title", Localize( ItemFlavor_GetLongName( character ) ).toupper() )
 	RuiSetGameTime( file.decorationRui, "initTime", Time() )
 
-	RegisterNewnessCallbacks( character )
+	//RegisterNewnessCallbacks( character )
 
 }
 
@@ -85,7 +85,7 @@ void function CustomizeCharacterMenu_OnOpen()
 void function CustomizeCharacterMenu_OnClose()
 {
 	ItemFlavor character = expect ItemFlavor( file.characterOrNull )
-	DeregisterNewnessCallbacks( character )
+	//DeregisterNewnessCallbacks( character )
 
 	file.characterOrNull = null
 	SetTopLevelCustomizeContext( null )
@@ -97,26 +97,26 @@ void function CustomizeCharacterMenu_OnClose()
 void function RegisterNewnessCallbacks( ItemFlavor character )
 {
 	string cardPanelString = "CharacterCardsPanelV2"
-	Newness_AddCallbackAndCallNow_OnRerverseQueryUpdated( NEWNESS_QUERIES.CharacterSkinsTab[character], OnNewnessQueryChangedUpdatePanelTab, GetPanel( "CharacterSkinsPanel" ) )
-	Newness_AddCallbackAndCallNow_OnRerverseQueryUpdated( NEWNESS_QUERIES.CharacterCardTab[character], OnNewnessQueryChangedUpdatePanelTab, GetPanel( cardPanelString ) )
+	//Newness_AddCallbackAndCallNow_OnRerverseQueryUpdated( NEWNESS_QUERIES.CharacterSkinsTab[character], OnNewnessQueryChangedUpdatePanelTab, GetPanel( "CharacterSkinsPanel" ) )
+	//Newness_AddCallbackAndCallNow_OnRerverseQueryUpdated( NEWNESS_QUERIES.CharacterCardTab[character], OnNewnessQueryChangedUpdatePanelTab, GetPanel( cardPanelString ) )
 	//Newness_AddCallbackAndCallNow_OnRerverseQueryUpdated( NEWNESS_QUERIES.CharacterQuipsTab[character], OnNewnessQueryChangedUpdatePanelTab, GetPanel( "CharacterQuipsPanel" ) )
-	Newness_AddCallbackAndCallNow_OnRerverseQueryUpdated( NEWNESS_QUERIES.CharacterFinishersTab[character], OnNewnessQueryChangedUpdatePanelTab, GetPanel( "CharacterExecutionsPanel" ) )
+	//Newness_AddCallbackAndCallNow_OnRerverseQueryUpdated( NEWNESS_QUERIES.CharacterFinishersTab[character], OnNewnessQueryChangedUpdatePanelTab, GetPanel( "CharacterExecutionsPanel" ) )
 }
 
 
 void function DeregisterNewnessCallbacks( ItemFlavor character )
 {
 	string cardPanelString = "CharacterCardsPanelV2"
-	Newness_RemoveCallback_OnRerverseQueryUpdated( NEWNESS_QUERIES.CharacterSkinsTab[character], OnNewnessQueryChangedUpdatePanelTab, GetPanel( "CharacterSkinsPanel" ) )
-	Newness_RemoveCallback_OnRerverseQueryUpdated( NEWNESS_QUERIES.CharacterCardTab[character], OnNewnessQueryChangedUpdatePanelTab, GetPanel( cardPanelString ) )
+	//Newness_RemoveCallback_OnRerverseQueryUpdated( NEWNESS_QUERIES.CharacterSkinsTab[character], OnNewnessQueryChangedUpdatePanelTab, GetPanel( "CharacterSkinsPanel" ) )
+	//Newness_RemoveCallback_OnRerverseQueryUpdated( NEWNESS_QUERIES.CharacterCardTab[character], OnNewnessQueryChangedUpdatePanelTab, GetPanel( cardPanelString ) )
 	//Newness_RemoveCallback_OnRerverseQueryUpdated( NEWNESS_QUERIES.CharacterQuipsTab[character], OnNewnessQueryChangedUpdatePanelTab, GetPanel( "CharacterQuipsPanel" ) )
-	Newness_RemoveCallback_OnRerverseQueryUpdated( NEWNESS_QUERIES.CharacterFinishersTab[character], OnNewnessQueryChangedUpdatePanelTab, GetPanel( "CharacterExecutionsPanel" ) )
+	//Newness_RemoveCallback_OnRerverseQueryUpdated( NEWNESS_QUERIES.CharacterFinishersTab[character], OnNewnessQueryChangedUpdatePanelTab, GetPanel( "CharacterExecutionsPanel" ) )
 }
 
 
 void function CustomizeCharacterMenu_OnNavigateBack()
 {
-	Assert( GetActiveMenu() == file.menu )
+	//Assert( GetActiveMenu() == file.menu )
 
 	CloseActiveMenu()
 }

@@ -502,7 +502,7 @@ void function UICodeCallback_FullyConnected( string levelname )
 
 	uiGlobal.loadedLevel = levelname
 
-	printt( "UICodeCallback_FullyConnected: " + uiGlobal.loadedLevel + ", IsFullyConnected(): ", IsFullyConnected() )
+	printf( "UICodeCallback_FullyConnected: " + uiGlobal.loadedLevel + ", IsFullyConnected(): ", IsFullyConnected() )
 
 	//if ( !uiGlobal.loadoutsInitialized )
 	//{
@@ -1547,6 +1547,7 @@ void function InitMenus()
 
 	AddPanel( r5rlobbymenu, "ServerBrowserPanel", InitServerBrowserPanel )
 	AddPanel( r5rlobbymenu, "LegendsPanel", InitR5RLegendsPanel )
+	AddPanel( r5rlobbymenu, "LoadoutPanel", InitLoadoutPanel )
 	AddPanel( r5rlobbymenu, "R5RConnectingPanel", InitR5RConnectingPanel )
 
 	AddMenu( "R5RNews", $"scripts/resource/ui/menus/CustomLobby/news.res", InitR5RNews )
@@ -1617,7 +1618,7 @@ void function InitMenus()
 	AddPanel( settingsPanel, "SoundPanel", InitSoundPanel )
 	AddPanel( settingsPanel, "HudOptionsPanel", InitHudOptionsPanel )
 
-	var customizeCharacterMenu = AddMenu( "CustomizeCharacterMenu", $"resource/ui/menus/customize_character.menu", InitCustomizeCharacterMenu )
+	var customizeCharacterMenu = AddMenu( "CustomizeCharacterMenu", $"scripts/resource/ui/menus/CustomLobby/customize_character.menu", InitCustomizeCharacterMenu )
 	AddPanel( customizeCharacterMenu, "CharacterSkinsPanel", InitCharacterSkinsPanel )
 
 	var cardPanel = AddPanel( customizeCharacterMenu, "CharacterCardsPanelV2", InitCharacterCardsPanel )
@@ -1634,14 +1635,14 @@ void function InitMenus()
 
 	AddPanel( customizeCharacterMenu, "CharacterExecutionsPanel", InitCharacterExecutionsPanel )
 
-	var customizeWeaponMenu = AddMenu( "CustomizeWeaponMenu", $"resource/ui/menus/customize_weapon.menu", InitCustomizeWeaponMenu )
+	var customizeWeaponMenu = AddMenu( "CustomizeWeaponMenu", $"scripts/resource/ui/menus/CustomLobby/customize_weapon.menu", InitCustomizeWeaponMenu )
 	AddPanel( customizeWeaponMenu, "WeaponSkinsPanel0", InitWeaponSkinsPanel )
 	AddPanel( customizeWeaponMenu, "WeaponSkinsPanel1", InitWeaponSkinsPanel )
 	AddPanel( customizeWeaponMenu, "WeaponSkinsPanel2", InitWeaponSkinsPanel )
 	AddPanel( customizeWeaponMenu, "WeaponSkinsPanel3", InitWeaponSkinsPanel )
 	AddPanel( customizeWeaponMenu, "WeaponSkinsPanel4", InitWeaponSkinsPanel )
 
-	var miscCustomizeMenu = AddMenu( "MiscCustomizeMenu", $"resource/ui/menus/misc_customize.menu", InitMiscCustomizeMenu )
+	var miscCustomizeMenu = AddMenu( "MiscCustomizeMenu", $"scripts/resource/ui/menus/CustomLobby/misc_customize.menu", InitMiscCustomizeMenu )
 	AddPanel( miscCustomizeMenu, "LoadscreenPanel", InitLoadscreenPanel )
 	AddPanel( miscCustomizeMenu, "MusicPackPanel", InitMusicPackPanel )
 	AddPanel( miscCustomizeMenu, "SkydiveTrailPanel", InitSkydiveTrailPanel )
