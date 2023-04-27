@@ -468,11 +468,11 @@ void function CustomizeButton_OnRightOrDoubleClick( var button )
 	CustomizeButtonContext cbc = fileLevel.activeCustomizeButtons[button]
 	CustomizeMenus_UpdateActionContext( button )
 
-	/*if ( cbc.getItemCanEquipCanBuyStatusFunc != null && cbc.getItemCanEquipCanBuyStatusFunc( cbc.itemFlavor ) == eItemCanEquipCanBuyStatus.CANNOT_EQUIP_CANNOT_BUY )
+	if ( cbc.getItemCanEquipCanBuyStatusFunc != null && cbc.getItemCanEquipCanBuyStatusFunc( cbc.itemFlavor ) == eItemCanEquipCanBuyStatus.CANNOT_EQUIP_CANNOT_BUY )
 	{
 		JumpToStoreCharacter( GetTopLevelCustomizeContext() )
 		return
-	}*/
+	}
 
 	PreviewCustomizeButtonItem( cbc )
 	EquipCustomizeButtonItemOrShowSlotPickerDialogOrShowUnlockDialog( cbc )
@@ -527,8 +527,6 @@ void function PlayerClickedToEquipThing_Part1_UnlockDialog( CustomizeButtonConte
 		else if ( canEquipCanBuyStatus == eItemCanEquipCanBuyStatus.CAN_EQUIP_CANNOT_BUY )
 			canEquipCanBuyStatus = eItemCanEquipCanBuyStatus.CANNOT_EQUIP_CANNOT_BUY
 	}
-
-	canEquipCanBuyStatus = eItemCanEquipCanBuyStatus.CAN_EQUIP_CAN_BUY
 
 	if ( canEquipCanBuyStatus == eItemCanEquipCanBuyStatus.CAN_EQUIP_CAN_BUY
 			|| canEquipCanBuyStatus == eItemCanEquipCanBuyStatus.CAN_EQUIP_CANNOT_BUY )
@@ -700,7 +698,7 @@ void function UpdateCustomizeItemButton( CustomizeButtonContext cbc, bool justAd
 	if ( ItemFlavor_GetGRXMode( cbc.itemFlavor ) == GRX_ITEMFLAVORMODE_NONE )
 	{
 		foreach ( loadoutEntry in cbc.loadoutEntries )
-			isOwned = true//isOwned || IsItemFlavorUnlockedForLoadoutSlot( LocalClientEHI(), loadoutEntry, cbc.itemFlavor, false )
+			isOwned = isOwned || IsItemFlavorUnlockedForLoadoutSlot( LocalClientEHI(), loadoutEntry, cbc.itemFlavor, false )
 	}
 	else // GRX item
 	{
@@ -717,7 +715,7 @@ void function UpdateCustomizeItemButton( CustomizeButtonContext cbc, bool justAd
 		RuiSetBool( rui, "isLoading", false )
 
 		// Do we own it?
-		isOwned = true //GRX_IsItemOwnedByPlayer( cbc.itemFlavor )
+		isOwned = GRX_IsItemOwnedByPlayer( cbc.itemFlavor )
 
 		if ( !isOwned )
 		{
@@ -861,7 +859,7 @@ void function UpdateActionButton()
 	bool isEquipped        = IsItemInCBCEquipped( cbc )
 	bool isVisible         = !isParentItemOwned || !isOwned || (isOwned && !isEquipped)
 
-	Hud_SetVisible( fileLevel.actionButton, false ) //isVisible
+	Hud_SetVisible( fileLevel.actionButton, isVisible )
 
 	if ( !isVisible )
 		return

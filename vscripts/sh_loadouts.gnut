@@ -1986,8 +1986,8 @@ bool function ClientCommand_loadouts_set( entity player, array<string> args )
 	{
 		// This could happen if two people try to select the same character at the same time
 		//Assert( false, "'loadouts_set' received item flavor \"" + ItemFlavor_GetRef( itemFlavor ) + "\" which is locked for this player (loadout slot \"" + entry.id + "\")." )
-		//Warning( "'loadouts_set' received item flavor \"" + DEV_DescItemFlavor( itemFlavor ) + "\" which is locked for this player (loadout slot \"" + entry.id + "\")." )
-		//return true
+		Warning( "'loadouts_set' received item flavor \"" + DEV_DescItemFlavor( itemFlavor ) + "\" which is locked for this player (loadout slot \"" + entry.id + "\")." )
+		return true
 	}
 	SetItemFlavorLoadoutSlotContentsInternal( playerEHI, entry, itemFlavor )
 

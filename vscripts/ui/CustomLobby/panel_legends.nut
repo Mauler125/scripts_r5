@@ -52,11 +52,10 @@ void function CharacterButton_OnActivate( var button )
 {
 	ItemFlavor character = file.buttonToCharacter[button]
 	CustomizeCharacterMenu_SetCharacter( character )
-	PresentCharacter( character )
 	RequestSetItemFlavorLoadoutSlot( LocalClientEHI(), Loadout_CharacterClass(), character ) // TEMP, Some menu state is broken without this. Need Declan to look at why RefreshLoadoutSlotInternal doesn't run when editing a loadout that isn't the featured one before removing this.
 
 	SetFeaturedCharacter( character )
-	SetTopLevelCustomizeContext( null )
+
 	SetTopLevelCustomizeContext( character )
 	EmitUISound( "UI_Menu_Legend_Select" )
 	AdvanceMenu( GetMenu( "CustomizeCharacterMenu" ) )
