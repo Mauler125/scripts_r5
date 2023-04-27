@@ -56,10 +56,11 @@ void function CharacterButton_OnActivate( var button )
 
 	SetFeaturedCharacter( character )
 
-	SetTopLevelCustomizeContext( character )
-	EmitUISound( "UI_Menu_Legend_Select" )
-	AdvanceMenu( GetMenu( "CustomizeCharacterMenu" ) )
-	g_InLegendsMenu = true
+	//Item flavor bug, disabled until fixed
+	//SetTopLevelCustomizeContext( character )
+	//EmitUISound( "UI_Menu_Legend_Select" )
+	//AdvanceMenu( GetMenu( "CustomizeCharacterMenu" ) )
+	//g_InLegendsMenu = true
 }
 
 void function CharacterButton_OnRightClick( var button )

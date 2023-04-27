@@ -167,19 +167,17 @@ void function CreateNavButtons()
 	} )
 
 	AddNavButton("Legends", Hud_GetChild(file.menu, "LegendsPanel"), void function( var button ) {
-		SetTopLevelCustomizeContext( null )
-		RunMenuClientFunction( "ClearAllCharacterPreview" )
 		R5RCharactersPanel_Show()
 		UI_SetPresentationType( ePresentationType.CHARACTER_SELECT )
 		CurrentPresentationType = ePresentationType.CHARACTER_SELECT
 	} )
 
 	//Item flavor bugged, disable for now
-	AddNavButton("Loadout", Hud_GetChild(file.menu, "LoadoutPanel"), void function( var button ) {
+	/*AddNavButton("Loadout", Hud_GetChild(file.menu, "LoadoutPanel"), void function( var button ) {
 		ShowLoadoutPanel()
 		UI_SetPresentationType( ePresentationType.WEAPON_CATEGORY )
 		CurrentPresentationType = ePresentationType.WEAPON_CATEGORY
-	} )
+	} )*/
 
 	AddNavButton("Create", Hud_GetChild(file.menu, "CreatePanel"), void function( var button ) {
 		OnCreateMatchOpen()
