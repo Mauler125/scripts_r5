@@ -175,11 +175,11 @@ void function CreateNavButtons()
 	} )
 
 	//Item flavor bugged, disable for now
-	/*AddNavButton("Loadout", Hud_GetChild(file.menu, "LoadoutPanel"), void function( var button ) {
+	AddNavButton("Loadout", Hud_GetChild(file.menu, "LoadoutPanel"), void function( var button ) {
 		ShowLoadoutPanel()
 		UI_SetPresentationType( ePresentationType.WEAPON_CATEGORY )
 		CurrentPresentationType = ePresentationType.WEAPON_CATEGORY
-	} )*/
+	} )
 
 	AddNavButton("Create", Hud_GetChild(file.menu, "CreatePanel"), void function( var button ) {
 		OnCreateMatchOpen()

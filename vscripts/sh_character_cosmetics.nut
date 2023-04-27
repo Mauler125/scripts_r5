@@ -271,7 +271,8 @@ void function SetupCharacterSkin( ItemFlavor skin )
 //////////////////////////
 LoadoutEntry function Loadout_CharacterSkin( ItemFlavor characterClass )
 {
-	return fileLevel.loadoutCharacterSkinSlotMap[characterClass]
+	LoadoutEntry lo = fileLevel.loadoutCharacterSkinSlotMap[characterClass]
+	return lo
 }
 
 
