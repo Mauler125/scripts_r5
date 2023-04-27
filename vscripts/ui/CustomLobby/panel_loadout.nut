@@ -118,12 +118,12 @@ void function CategoryButton_OnGetFocus( var button )
 
 void function CategoryButton_OnActivate( var button )
 {
-	//ItemFlavor category = file.buttonToCategory[button]
-	//SetTopLevelCustomizeContext( category )
+	ItemFlavor category = file.buttonToCategory[button]
+	SetTopLevelCustomizeContext( category )
 
-    //g_InLoutoutPanel = true
+    g_InLoutoutPanel = true
 
-	//AdvanceMenu( GetMenu( "CustomizeWeaponMenu" ) )
+	AdvanceMenu( GetMenu( "CustomizeWeaponMenu" ) )
 }
 
 
