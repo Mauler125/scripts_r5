@@ -258,6 +258,7 @@
 		"R5RNamePanel"
 		{
 			"ControlName"				"CNestedPanel"
+			"classname"					"CustomPrivateMatchMenu"
 			"ypos"						"0"
 			"zpos"						"45"
 			"wide"						"f0"
@@ -271,6 +272,7 @@
 		"R5RDescPanel"
 		{
 			"ControlName"				"CNestedPanel"
+			"classname"					"CustomPrivateMatchMenu"
 			"ypos"						"0"
 			"zpos"						"45"
 			"wide"						"f0"
