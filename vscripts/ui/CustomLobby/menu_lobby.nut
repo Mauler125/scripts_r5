@@ -3,6 +3,7 @@ global function GetUIPlaylistName
 global function GetUIMapName
 global function GetUIMapAsset
 global function GetUIVisibilityName
+global function ActivateNav
 
 struct NavButton {
 	var button
@@ -109,7 +110,7 @@ void function OnR5RLobby_Open()
 	g_isAtMainMenu = false
 
 	//Show Home Panel
-	ActivateNav( file.TopButtons[0] )
+	ActivateNav( 0 )
 
 	ToolTips_MenuOpened( file.menu )
 	RegisterServerBrowserButtonPressedCallbacks()
@@ -139,7 +140,7 @@ void function OnR5RLobby_Back()
 
 	if(file.currentpanel != 0)
 	{
-		ActivateNav( file.TopButtons[0] )
+		ActivateNav( 0 )
 		return
 	}
 
@@ -213,12 +214,17 @@ void function AddNavButton(string title, var panel, int presentationType, void f
 	Hud_SetVisible( file.TopButtons[file.CurrentNavIndex], true )
 	Hud_SetEnabled( file.TopButtons[file.CurrentNavIndex], enabled)
 
-	Hud_AddEventHandler( file.TopButtons[file.CurrentNavIndex], UIE_CLICK, ActivateNav )
+	Hud_AddEventHandler( file.TopButtons[file.CurrentNavIndex], UIE_CLICK, NavPressed )
 	Hud_AddEventHandler( file.TopButtons[file.CurrentNavIndex], UIE_CLICK, Click )
 	file.CurrentNavIndex++
 }
 
-void function ActivateNav(var button)
+void function ActivateNav(int index)
+{
+	NavPressed(file.TopButtons[index])
+}
+
+void function NavPressed(var button)
 {
 	NavButton navbtn = file.BtnToNav[button]
 
