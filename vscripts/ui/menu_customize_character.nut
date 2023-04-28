@@ -118,6 +118,8 @@ void function CustomizeCharacterMenu_OnNavigateBack()
 {
 	Assert( GetActiveMenu() == file.menu )
 
+	UI_SetPresentationType( ePresentationType.CHARACTER_SELECT )
+
 	CloseActiveMenu()
 }
 

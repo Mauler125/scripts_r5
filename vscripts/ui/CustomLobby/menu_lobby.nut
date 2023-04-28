@@ -102,6 +102,15 @@ void function InitR5RLobbyMenu( var newMenuArg )
 
 void function OnR5RLobby_Open()
 {
+	ServerBrowser_UpdateFilterLists()
+	SetupLobby()
+
+	//Set back to default for next time
+	g_isAtMainMenu = false
+
+	//Show Home Panel
+	ActivateNav( file.TopButtons[0] )
+
 	ToolTips_MenuOpened( file.menu )
 	RegisterServerBrowserButtonPressedCallbacks()
 }
@@ -114,21 +123,7 @@ void function OnR5RLobby_Close()
 
 void function OnR5RLobby_Show()
 {
-	ServerBrowser_UpdateFilterLists()
-	SetupLobby()
 
-	//Set back to default for next time
-	g_isAtMainMenu = false
-
-	if(g_InLegendsMenu || g_InLoutoutPanel)
-	{
-		g_InLegendsMenu = false
-		g_InLoutoutPanel = false
-		return
-	}
-
-	//Show Home Panel
-	ActivateNav( file.TopButtons[0] )
 }
 
 void function OnR5RLobby_Back()

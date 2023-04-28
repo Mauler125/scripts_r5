@@ -21,18 +21,6 @@ void function InitR5RLegendsPanel( var panel )
 	file.characterSelectInfoRui = Hud_GetRui( Hud_GetChild( file.panel, "CharacterSelectInfo" ) )
 	file.buttons = GetPanelElementsByClassname( panel, "CharacterButtonClass" )
 
-	foreach ( button in file.buttons )
-	{
-		Hud_AddEventHandler( button, UIE_CLICK, CharacterButton_OnActivate )
-		Hud_AddEventHandler( button, UIE_CLICKRIGHT, CharacterButton_OnRightClick )
-		Hud_AddEventHandler( button, UIE_MIDDLECLICK, CharacterButton_OnMiddleClick )
-
-		ToolTipData toolTipData
-		toolTipData.tooltipStyle = eTooltipStyle.BUTTON_PROMPT
-		toolTipData.actionHint1 = "#X_BUTTON_TOGGLE_LOADOUT"
-		Hud_SetToolTipData( button, toolTipData )
-	}
-
 	file.actionLabel = Hud_GetChild( panel, "ActionLabel" )
 	Hud_SetText( file.actionLabel, "#X_BUTTON_TOGGLE_LOADOUT" )
 }
@@ -52,15 +40,15 @@ void function CharacterButton_OnActivate( var button )
 {
 	ItemFlavor character = file.buttonToCharacter[button]
 	CustomizeCharacterMenu_SetCharacter( character )
+	PresentCharacter( character )
 	RequestSetItemFlavorLoadoutSlot( LocalClientEHI(), Loadout_CharacterClass(), character ) // TEMP, Some menu state is broken without this. Need Declan to look at why RefreshLoadoutSlotInternal doesn't run when editing a loadout that isn't the featured one before removing this.
 
 	SetFeaturedCharacter( character )
 
-	//Item flavor bug, disabled until fixed
-	//SetTopLevelCustomizeContext( character )
-	//EmitUISound( "UI_Menu_Legend_Select" )
-	//AdvanceMenu( GetMenu( "CustomizeCharacterMenu" ) )
-	//g_InLegendsMenu = true
+	SetTopLevelCustomizeContext( LoadoutSlot_GetItemFlavor( LocalClientEHI(), Loadout_CharacterClass() ) )
+	EmitUISound( "UI_Menu_Legend_Select" )
+	AdvanceMenu( GetMenu( "CustomizeCharacterMenu" ) )
+	g_InLegendsMenu = true
 }
 
 void function CharacterButton_OnRightClick( var button )
@@ -79,6 +67,9 @@ void function SetFeaturedCharacter( ItemFlavor character )
 	EmitUISound( "UI_Menu_Legend_SetFeatured" )
 }
 
+table<var, void functionref(var)> WORKAROUND_LegendButtonToClickHandlerMap1 = {}
+table<var, void functionref(var)> WORKAROUND_LegendButtonToClickHandlerMap2 = {}
+table<var, void functionref(var)> WORKAROUND_LegendButtonToClickHandlerMap3 = {}
 void function InitCharacterButtons()
 {
 	file.buttonToCharacter.clear()
@@ -88,7 +79,41 @@ void function InitCharacterButtons()
 		allCharacters.append( itemFlav )
 
 	foreach ( button in file.buttons )
+	{
 		Hud_SetVisible( button, false )
+
+		if ( button in WORKAROUND_LegendButtonToClickHandlerMap1 )
+		{
+			Hud_RemoveEventHandler( button, UIE_CLICK, WORKAROUND_LegendButtonToClickHandlerMap1[button] )
+			delete WORKAROUND_LegendButtonToClickHandlerMap1[button]
+		}
+
+		if( button in WORKAROUND_LegendButtonToClickHandlerMap2 )
+		{
+			Hud_RemoveEventHandler( button, UIE_CLICKRIGHT, WORKAROUND_LegendButtonToClickHandlerMap2[button] )
+			delete WORKAROUND_LegendButtonToClickHandlerMap2[button]
+		}
+
+		if( button in WORKAROUND_LegendButtonToClickHandlerMap3 )
+		{
+			Hud_RemoveEventHandler( button, UIE_MIDDLECLICK, WORKAROUND_LegendButtonToClickHandlerMap3[button] )
+			delete WORKAROUND_LegendButtonToClickHandlerMap3[button]
+		}
+
+		void functionref(var) clickHandler1 = CharacterButton_OnActivate
+		void functionref(var) clickHandler2 = CharacterButton_OnRightClick
+		void functionref(var) clickHandler3 = CharacterButton_OnMiddleClick
+
+		Hud_AddEventHandler( button, UIE_CLICK, clickHandler1 )
+		Hud_AddEventHandler( button, UIE_CLICKRIGHT, clickHandler2 )
+		Hud_AddEventHandler( button, UIE_MIDDLECLICK, clickHandler3 )
+
+		WORKAROUND_LegendButtonToClickHandlerMap1[button] <- clickHandler1
+		WORKAROUND_LegendButtonToClickHandlerMap2[button] <- clickHandler2
+		WORKAROUND_LegendButtonToClickHandlerMap3[button] <- clickHandler3
+	}
+	
+
 
 	table<int,ItemFlavor> mappingTable = GetCharacterButtonMapping( allCharacters, file.buttons.len() )
 	foreach ( int buttonIndex, ItemFlavor itemFlav in mappingTable )
