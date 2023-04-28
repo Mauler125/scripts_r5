@@ -1238,7 +1238,7 @@ void function OnItemFlavorRegistered_Character( ItemFlavor characterClass )
 		entry.isItemFlavorUnlocked = (bool function( EHI playerEHI, ItemFlavor badge, bool shouldIgnoreOtherSlots ) : ( characterClass, badgeIndex ) {
 			int tierIndex = GetPlayerBadgeDataInteger( playerEHI, badge, badgeIndex, characterClass )
 
-			if ( IsEverythingUnlocked() )
+			//if ( IsEverythingUnlocked() )
 				return true
 
 			return (tierIndex >= 0)
@@ -2672,6 +2672,13 @@ int function GetPlayerBadgeDataInteger( EHI playerEHI, ItemFlavor badge, int bad
 		return 0 //
 
 	StatEntry stat = GetStatEntryByRef( unlockStatRef )
+
+	//R5Reloaded
+	//Added by ayezee to max out badges
+	if(ItemFlavor_GetHumanReadableRef(badge) == "gcard_badge_account_account_level" || ItemFlavor_GetHumanReadableRef(badge) == "gcard_badge_account_season01_bplevel" || ItemFlavor_GetHumanReadableRef(badge) == "gcard_badge_account_season02_bplevel" || ItemFlavor_GetHumanReadableRef(badge) == "gcard_badge_account_season03_bplevel")
+		return 100
+	else
+		return GladiatorCardBadge_GetTierCount( badge ) - 1
 
 	int dataInteger = -1
 	entity player   = FromEHI( playerEHI )

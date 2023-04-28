@@ -9,7 +9,7 @@ void function SV_CL_Shared_Init()
 	GameModes_Init()
 	Settings_Init()
 
-	if ( IsLobby())
+	if ( IsLobby() )
 	{
 		Shared_Lobby_Init()
 		return

@@ -78,6 +78,7 @@ void function InitCharacterButtons()
 	foreach ( ItemFlavor itemFlav in GetAllCharacters() )
 		allCharacters.append( itemFlav )
 
+	//Shit fix, was registering event handlers every lobby load
 	foreach ( button in file.buttons )
 	{
 		Hud_SetVisible( button, false )

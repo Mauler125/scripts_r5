@@ -1279,7 +1279,7 @@ void function UpdatePlayerStatsDisplay( entity player = null )
 void function UpdatePlayerAccountProgressBar( entity player )
 {
 	int xpProgress            = GetPlayerAccountXPProgress( ToEHI( player ) )
-	int accountLevel          = GetAccountLevelForXP( xpProgress )
+	int accountLevel          = 100 //GetAccountLevelForXP( xpProgress )
 	int xpForAccountLevel     = GetTotalXPToCompleteAccountLevel( accountLevel - 1 )
 	int xpForNextAccountLevel = GetTotalXPToCompleteAccountLevel( accountLevel )
 	float accountFrac         = GraphCapped( xpProgress, xpForAccountLevel, xpForNextAccountLevel, 0.0, 1.0 )
