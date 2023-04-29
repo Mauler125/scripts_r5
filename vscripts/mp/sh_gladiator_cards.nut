@@ -2684,17 +2684,16 @@ int function GetPlayerBadgeDataInteger( EHI playerEHI, ItemFlavor badge, int bad
 	//R5Reloaded Temp
 	//Added by ayezee to max out badges
 	//Remove if we ever get perstiance
-	printf(ItemFlavor_GetHumanReadableRef(badge))
-	if(ItemFlavor_GetHumanReadableRef(badge) == "gcard_badge_account_account_level" 
-	|| ItemFlavor_GetHumanReadableRef(badge) == "gcard_badge_account_season01_bplevel" 
-	|| ItemFlavor_GetHumanReadableRef(badge) == "gcard_badge_account_season02_bplevel" 
-	|| ItemFlavor_GetHumanReadableRef(badge) == "gcard_badge_account_season03_bplevel"
-	|| ItemFlavor_GetHumanReadableRef(badge) == "gcard_badge_account_elite_max_streak")
+	array<string> BadgesToChange = ["gcard_badge_account_account_level", "gcard_badge_account_season01_bplevel", "gcard_badge_account_season02_bplevel", "gcard_badge_account_season03_bplevel", "gcard_badge_account_elite_max_streak", "gcard_badge_account_rankedperiod01_rpbadge"]
+	if(BadgesToChange.contains(ItemFlavor_GetHumanReadableRef(badge)))
+	{
+		if(ItemFlavor_GetHumanReadableRef(badge) == BadgesToChange[5])
+			return 1000
+		
 		return 100
-	else if(ItemFlavor_GetHumanReadableRef(badge) == "gcard_badge_account_rankedperiod01_rpbadge")
-		return 1000
-	else
-		return GladiatorCardBadge_GetTierCount( badge ) - 1
+	}
+
+	return GladiatorCardBadge_GetTierCount( badge ) - 1
 	///////////////////////////////////////////////////////////////////////////////////////////////
 
 	int dataInteger = -1
