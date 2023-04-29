@@ -157,6 +157,7 @@ void function SetupLobby()
 
 	if ( !file.initialisedHomePanel )
 	{
+		RunClientScript("SetR5ReloadedBadgeOnStartup")
 		ItemFlavor character = GetItemFlavorByHumanReadableRef( GetCurrentPlaylistVarString( "set_legend", "character_wraith" ) )
 		RequestSetItemFlavorLoadoutSlot( LocalClientEHI(), Loadout_CharacterClass(), character )
 

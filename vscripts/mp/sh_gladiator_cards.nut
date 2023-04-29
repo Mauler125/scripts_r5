@@ -695,7 +695,15 @@ GladCardBadgeDisplayData function GetBadgeData( EHI playerEHI, ItemFlavor ornull
 			else
 				badgeData.ruiAsset = $"ui/gcard_badge_basic.rpak"
 
-			badgeData.imageAsset = tierDataList[tierIndex].imageAsset
+			//R5Reloaded Temp
+			if(ItemFlavor_GetHumanReadableRef(badge) == "gcard_badge_account_dev_badge")
+				badgeData.imageAsset = $"rui/hud/custom_badges/r5r_badge"
+			else
+				badgeData.imageAsset = tierDataList[tierIndex].imageAsset
+			//////////////////////////////////////////////////////////////
+
+			//Origial Code
+			//badgeData.imageAsset = tierDataList[tierIndex].imageAsset
 		}
 	}
 
@@ -2673,12 +2681,21 @@ int function GetPlayerBadgeDataInteger( EHI playerEHI, ItemFlavor badge, int bad
 
 	StatEntry stat = GetStatEntryByRef( unlockStatRef )
 
-	//R5Reloaded
+	//R5Reloaded Temp
 	//Added by ayezee to max out badges
-	if(ItemFlavor_GetHumanReadableRef(badge) == "gcard_badge_account_account_level" || ItemFlavor_GetHumanReadableRef(badge) == "gcard_badge_account_season01_bplevel" || ItemFlavor_GetHumanReadableRef(badge) == "gcard_badge_account_season02_bplevel" || ItemFlavor_GetHumanReadableRef(badge) == "gcard_badge_account_season03_bplevel")
+	//Remove if we ever get perstiance
+	printf(ItemFlavor_GetHumanReadableRef(badge))
+	if(ItemFlavor_GetHumanReadableRef(badge) == "gcard_badge_account_account_level" 
+	|| ItemFlavor_GetHumanReadableRef(badge) == "gcard_badge_account_season01_bplevel" 
+	|| ItemFlavor_GetHumanReadableRef(badge) == "gcard_badge_account_season02_bplevel" 
+	|| ItemFlavor_GetHumanReadableRef(badge) == "gcard_badge_account_season03_bplevel"
+	|| ItemFlavor_GetHumanReadableRef(badge) == "gcard_badge_account_elite_max_streak")
 		return 100
+	else if(ItemFlavor_GetHumanReadableRef(badge) == "gcard_badge_account_rankedperiod01_rpbadge")
+		return 1000
 	else
 		return GladiatorCardBadge_GetTierCount( badge ) - 1
+	///////////////////////////////////////////////////////////////////////////////////////////////
 
 	int dataInteger = -1
 	entity player   = FromEHI( playerEHI )

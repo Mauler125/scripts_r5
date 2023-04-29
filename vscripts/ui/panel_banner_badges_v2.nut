@@ -147,7 +147,19 @@ void function CardBadgesPanel_Update( var panel )
 						}
 					}
 				}
-				toolTipData.descText = Localize( ItemFlavor_GetShortDescription( flav ) )
+
+				//R5Reloaded Temp
+				if(ItemFlavor_GetHumanReadableRef(flav) == "gcard_badge_account_dev_badge")
+				{
+					toolTipData.titleText = "R5Reloaded Badge"
+					toolTipData.descText = "Play R5Reloaded"
+				}
+				else
+					toolTipData.descText = Localize( ItemFlavor_GetShortDescription( flav ) )
+				//////////////////////////////////////////////////////////////
+
+				//Original Code
+				//toolTipData.descText = Localize( ItemFlavor_GetShortDescription( flav ) )
 
 				toolTipData.actionHint2 = badgeHint
 			}
