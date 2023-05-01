@@ -57,9 +57,6 @@ void function SetAtMainMenu()
 {
 	WaitFrame()
 
-	//Wait an extra 1.5 before showing the main menu
-	wait 1.5
-
 	//Hide the fullscreen black panel
 	SetMainMenuBlackScreenVisible(false)
 }
