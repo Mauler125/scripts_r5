@@ -229,9 +229,9 @@ void function OnBtnFiltersClear()
 	filterArguments.filterMap = "Any"
 	filterArguments.hideEmpty = false
 
-	SetConVarBool( "grx_hasUnknownItems", false )
-	SetConVarInt( "match_rankedSwitchETA", 0 )
-	SetConVarInt( "match_rankedMaxPing", 0 )
+	SetConVarBool( "serverbrowser_hideEmptyServers", false )
+	SetConVarInt( "serverbrowser_mapFilter", 0 )
+	SetConVarInt( "serverbrowser_gamemodeFilter", 0 )
 }
 
 void function ServerBrowser_SelectServer(int id)
