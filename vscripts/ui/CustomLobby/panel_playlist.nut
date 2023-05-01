@@ -17,6 +17,7 @@ void function InitR5RPlaylistPanel( var panel )
 	file.listPanel = Hud_GetChild( panel, "PlaylistList" )
 }
 
+table<var, void functionref(var)> WORKAROUND_PlaylistButtonToClickHandlerMap = {}
 void function RefreshUIPlaylists()
 {
 	var scrollPanel = Hud_GetChild( file.listPanel, "ScrollPanel" )
@@ -69,8 +70,9 @@ array<string> function GetPlaylists()
 
 void function SelectServerPlaylist( var button )
 {
-	//Set selected server playlist
 	EmitUISound( "menu_accept" )
+	
+	//Set selected server playlist
 	thread SetSelectedServerPlaylist(file.playlist_button_table[button])
 }
 

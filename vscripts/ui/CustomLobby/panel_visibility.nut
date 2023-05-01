@@ -42,7 +42,6 @@ void function InitR5RVisPanel( var panel )
 
 void function SelectServerVis( var button )
 {
-	//Set selected server vis
 	EmitUISound( "menu_accept" )
 	SetSelectedServerVis(file.vis_button_table[button])
 }

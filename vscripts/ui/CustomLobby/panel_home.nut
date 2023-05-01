@@ -2,7 +2,7 @@ global function InitHomePanel
 global function Play_SetupUI
 global function R5RPlay_SetSelectedPlaylist
 
-const MAX_PROMO_ITEMS = 0
+const MAX_PROMO_ITEMS = 5
 
 struct ServerListing
 {
@@ -63,8 +63,6 @@ struct
 	SelectedServerInfo m_vSelectedServer
 	array<ServerListing> m_vServerList
 	array<ServerListing> m_vFilteredServerList
-
-	array<var> matchStatusRuis
 } file
 
 struct
@@ -74,7 +72,6 @@ struct
 	int currentPage = 0
 	bool shouldAutoAdvance = true
 	bool IsAutoAdvance = false
-	bool HasPages = false
 } promo
 
 global table<int, string> SearchStages = {
@@ -128,20 +125,17 @@ void function InitHomePanel( var panel )
 	RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Not Ready" )
 	RuiSetBool( Hud_GetRui( file.gamemodeSelectV2Button ), "alwaysShowDesc", true )
 	RuiSetImage( Hud_GetRui( file.gamemodeSelectV2Button ), "modeImage", $"rui/menu/gamemode/ranked_1" )
-	HudElem_SetRuiArg( file.gamemodeSelectV2Button, "isPartyLeader", true )
 	Hud_AddEventHandler( file.gamemodeSelectV2Button, UIE_CLICK, GamemodeSelect_OnActivate )
 
 	var readyButton = Hud_GetChild( panel, "ReadyButton" )
 	Hud_AddEventHandler( readyButton, UIE_CLICK, ReadyButton_OnActivate )
-	HudElem_SetRuiArg( readyButton, "isLeader", true )
+	HudElem_SetRuiArg( readyButton, "isLeader", true ) // TEMP
 	HudElem_SetRuiArg( readyButton, "isReady", false )
 	HudElem_SetRuiArg( readyButton, "buttonText", Localize( "#READY" ) )
 
 	var miniPromo = Hud_GetChild( file.panel, "MiniPromo" )
 	Hud_AddEventHandler( miniPromo, UIE_GET_FOCUS, MiniPromoButton_OnGetFocus )
 	Hud_AddEventHandler( miniPromo, UIE_LOSE_FOCUS, MiniPromoButton_OnLoseFocus )
-
-	file.matchStatusRuis = GetElementsByClassnameForMenus( "MatchmakingStatusRui", uiGlobal.allMenus )
 }
 
 void function Play_SetupUI()
@@ -170,9 +164,9 @@ void function Play_SetupUI()
 
 	Hud_SetText( Hud_GetChild( file.panel, "Info" ), "#MOTD" )
 
-	//GetR5RPromos()
+	GetR5RPromos()
 	SetPromoPage()
-	if(!promo.IsAutoAdvance && promo.HasPages)
+	if(!promo.IsAutoAdvance)
 		thread AutoAdvancePages()
 
 	if(!file.firststart)
@@ -207,9 +201,6 @@ void function SetGamemodeButtonRUI(string modeNameText, string modeDescText, boo
 
 void function GamemodeSelect_OnActivate(var button)
 {
-	if(file.searching)
-		return
-	
 	AdvanceMenu( GetMenu( "R5RGamemodeSelectV2Dialog" ) )
 }
 
@@ -241,18 +232,6 @@ void function R5RPlay_SetSelectedPlaylist(int quickPlayType)
 	}
 }
 
-void function GamemodeButtonSetSearching(bool searching)
-{
-	HudElem_SetRuiArg( file.gamemodeSelectV2Button, "isReady", searching )	
-	RuiSetBool( Hud_GetRui(file.gamemodeSelectV2Button), "statusVisible", searching )
-	RuiSetBool( Hud_GetRui(file.gamemodeSelectV2Button), "statusHasText", true )
-}
-
-void function SetSearchingText(string text)
-{
-	RuiSetString( Hud_GetRui(file.gamemodeSelectV2Button), "statusText", text )
-}
-
 void function ReadyButton_OnActivate(var button)
 {
 	if(file.searching) {
@@ -263,9 +242,7 @@ void function ReadyButton_OnActivate(var button)
 
 	file.searching = true
 	EmitUISound( "UI_Menu_ReadyUp_1P" )
-	RuiSetBool(Hud_GetRui(Hud_GetChild(file.panel, "SelfButton")), "isReady", true)
-
-	GamemodeButtonSetSearching(true)
+	RuiSetBool( Hud_GetRui( Hud_GetChild( file.panel, "SelfButton" ) ), "isReady", true )
 
 	switch(quickplay.quickPlayType)
 	{
@@ -283,6 +260,8 @@ void function ReadyButton_OnActivate(var button)
 
 void function JoinMatch(var button, table<int, string> StringStages)
 {
+	file.searching = true;
+
 	HudElem_SetRuiArg(button, "buttonText", Localize("#CANCEL"))
 
 	for (int i = 0; i < 6; i++)
@@ -290,7 +269,7 @@ void function JoinMatch(var button, table<int, string> StringStages)
 		if(file.usercancled)
 			break;
 		
-		SetSearchingText(StringStages[i % 3])
+		RuiSetString(Hud_GetRui(file.gamemodeSelectV2Button), "modeDescText", StringStages[i % 3])
 		wait 0.5
 	}
 
@@ -300,27 +279,27 @@ void function JoinMatch(var button, table<int, string> StringStages)
 		switch(quickplay.quickPlayType)
 		{
 			case JoinType.QuickPlay:
-				SetSearchingText("Starting Match")
+				RuiSetString(Hud_GetRui(file.gamemodeSelectV2Button), "modeDescText", "Starting Match")
 				wait 2
 				CreateServer(GetUIMapName(g_SelectedQuickPlayMap), "", g_SelectedQuickPlayMap, g_SelectedQuickPlay, eServerVisibility.OFFLINE)
 				break;
 			case JoinType.TopServerJoin:
-				SetSearchingText("Joining Match")
+				RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Joining Match" )
 				wait 2
 				ConnectToListedServer(g_SelectedTopServer.svServerID)
 				break;
 		}
+		RuiSetString(Hud_GetRui(file.gamemodeSelectV2Button), "modeDescText", "Not Ready")
+		RuiSetBool(Hud_GetRui(Hud_GetChild(file.panel, "SelfButton")), "isReady", false)
+		HudElem_SetRuiArg(button, "buttonText", Localize("#READY"))
+		return
 	}
 
-	if(file.usercancled)
-		EmitUISound("UI_Menu_Deny")
-	
+	EmitUISound("UI_Menu_Deny")
 	file.usercancled = false
-	file.searching = false;
+	RuiSetString(Hud_GetRui(file.gamemodeSelectV2Button), "modeDescText", "Not Ready")
 	RuiSetBool(Hud_GetRui(Hud_GetChild(file.panel, "SelfButton")), "isReady", false)
 	HudElem_SetRuiArg(button, "buttonText", Localize("#READY"))
-	SetSearchingText("")
-	GamemodeButtonSetSearching(false)
 }
 
 void function FindMatch(var button)
@@ -338,7 +317,7 @@ void function FindMatch(var button)
 			continue
 		}
 
-		SetSearchingText(SearchStages[i])
+		RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", SearchStages[i] )
 
 		i++
 		if(i > 2)
@@ -352,6 +331,7 @@ void function FindMatch(var button)
 
 void function UpdateQuickJoinButtons(var button)
 {
+	//TODO: MENU CLEAN UP
 	float waittime = 2
 
 	if(file.usercancled)
@@ -378,10 +358,9 @@ void function UpdateQuickJoinButtons(var button)
 		ConnectToListedServer(file.m_vSelectedServer.svServerID)
 	}
 
+	RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Not Ready" )
 	HudElem_SetRuiArg( button, "buttonText", Localize( "#READY" ) )
 	RuiSetBool( Hud_GetRui( Hud_GetChild( file.panel, "SelfButton" ) ), "isReady", false )
-	SetSearchingText("")
-	GamemodeButtonSetSearching(false)
 
 	file.searching = false
 	file.noservers = false
@@ -437,8 +416,8 @@ void function FindServer(bool refresh = false)
 		file.m_vFilteredServerList.append(file.m_vServerList[i])
 	}
 
-	//if non are found, include empty servers
 	if(file.m_vFilteredServerList.len() == 0) {
+		//if non are found, include empty servers
 		file.m_vFilteredServerList.clear()
 		for ( int i = 0, j = file.m_vServerList.len(); i < j; i++ )
 		{
@@ -453,21 +432,18 @@ void function FindServer(bool refresh = false)
 		}
 	}
 
-	if(file.m_vFilteredServerList.len() > 1)
-	{
-		int randomserver = RandomIntRange( 0, file.m_vFilteredServerList.len() - 1 )
-		file.m_vSelectedServer.svServerID = file.m_vFilteredServerList[randomserver].svServerID
-		file.m_vSelectedServer.svServerName = file.m_vFilteredServerList[randomserver].svServerName
-		file.m_vSelectedServer.svMapName = file.m_vFilteredServerList[randomserver].svMapName
-		file.m_vSelectedServer.svPlaylist = file.m_vFilteredServerList[randomserver].svPlaylist
-		file.m_vSelectedServer.svDescription = file.m_vFilteredServerList[randomserver].svDescription
-	}
-	else
-	{
+	if(file.m_vFilteredServerList.len() == 0) {
 		file.noservers = true
 		file.foundserver = true
 		return
 	}
+
+	int randomserver = RandomIntRange( 0, file.m_vFilteredServerList.len() - 1 )
+	file.m_vSelectedServer.svServerID = file.m_vFilteredServerList[randomserver].svServerID
+	file.m_vSelectedServer.svServerName = file.m_vFilteredServerList[randomserver].svServerName
+	file.m_vSelectedServer.svMapName = file.m_vFilteredServerList[randomserver].svMapName
+	file.m_vSelectedServer.svPlaylist = file.m_vFilteredServerList[randomserver].svPlaylist
+	file.m_vSelectedServer.svDescription = file.m_vFilteredServerList[randomserver].svDescription
 
 	for(int i = 0; i < 4; i++)
 	{
@@ -554,7 +530,7 @@ void function SetPromoPage()
 {
 	if(promo.Items.len() == 0) {
 		var miniPromo = Hud_GetChild( file.panel, "MiniPromo" )
-		Hud_Hide( miniPromo )
+		Hud_Hide( miniPromo)
 		return
 	}
 
@@ -571,6 +547,7 @@ void function GetR5RPromos()
 {
 	//INFO FOR LATER
     //MAX PAGES = 5
+
 	//TEMPORARY PROMO DATA
 	//WILL BE REPLACED WITH A CALL TO THE PROMO ENDPOINT
 	promo.Items.clear()

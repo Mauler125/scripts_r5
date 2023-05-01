@@ -822,20 +822,17 @@ Scripts:
 	//KillReplay
 	ui/KillReplay/menu_killreplay.nut
 
-	//R5R Main Menu
+	//R5RUI
 	ui/CustomLobby/menu_main.nut
-	ui/CustomLobby/panel_mainmenu.nut
-
-	//R5R Lobby
 	ui/CustomLobby/menu_lobby.nut
 	ui/CustomLobby/panel_home.nut
-	ui/CustomLobby/panel_create.nut
-	ui/CustomLobby/panel_serverbrowser.nut
-	ui/CustomLobby/panel_legends.nut
-
-	//R5R Extra
 	ui/CustomLobby/menu_news.nut
 	ui/CustomLobby/menu_gamemodeselect.nut
+	ui/CustomLobby/panel_serverbrowser.nut
+	ui/CustomLobby/panel_mainmenu.nut
+	ui/CustomLobby/panel_mods.nut
+
+	ui/CustomLobby/panel_create.nut
 	ui/CustomLobby/panel_map.nut
 	ui/CustomLobby/panel_playlist.nut
 	ui/CustomLobby/panel_visibility.nut

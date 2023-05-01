@@ -6,6 +6,7 @@ struct
 	var menu
 	var panel
 	var listPanel
+
 	table<var, string> map_button_table
 } file
 
@@ -51,8 +52,9 @@ void function RefreshUIMaps()
 
 void function SelectServerMap( var button )
 {
-	//Set selected server map
 	EmitUISound( "menu_accept" )
+	
+	//Set selected server map
 	SetSelectedServerMap(file.map_button_table[button])
 }
 

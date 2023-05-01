@@ -113,6 +113,7 @@ void function InitServerBrowserPanel( var panel )
 	ServerBrowser_UpdateSelectedServerUI()
 	ServerBrowser_UpdateServerPlayerCount()
 	ServerBrowser_NoServersFound(false)
+
 	ServerBrowser_UpdateFilterLists()
 	OnBtnFiltersClear()
 }
