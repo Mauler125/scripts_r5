@@ -326,6 +326,9 @@ void function ServerBrowser_FilterServerList()
 	m_vScroll.Offset = 0
 	file.m_vAllPlayers = 0
 
+	if(GetConVarInt( "serverbrowser_mapFilter" ) > (filterArguments.filterMaps.len() - 1) || GetConVarInt( "serverbrowser_gamemodeFilter" ) > (filterArguments.filterGamemodes.len() - 1))
+		OnBtnFiltersClear()
+
 	filterArguments.hideEmpty = GetConVarBool( "serverbrowser_hideEmptyServers" )
 	filterArguments.filterMap = filterArguments.filterMaps[GetConVarInt( "serverbrowser_mapFilter" )]
 	filterArguments.filterGamemode = filterArguments.filterGamemodes[GetConVarInt( "serverbrowser_gamemodeFilter" )]
