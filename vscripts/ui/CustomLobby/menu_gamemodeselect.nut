@@ -74,6 +74,11 @@ void function InitR5RGamemodeSelectDialog( var newMenuArg ) //
 	AddMenuFooterOption( menu, LEFT, BUTTON_A, true, "#A_BUTTON_SELECT" )
 }
 
+void function PrivateMatch_Activated(var button)
+{
+	AdvanceMenu( GetMenu( "R5RCreateMatch" ) )
+}
+
 void function OnOpenModeSelectDialog()
 {
 	Servers_GetCurrentServerListing()

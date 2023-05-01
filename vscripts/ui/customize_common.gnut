@@ -209,23 +209,19 @@ void function CustomizeButton_UpdateAndMarkForUpdating( var button,
 void function CustomizeButton_UnmarkForUpdating( var button )
 {
 	Assert( button in fileLevel.activeCustomizeButtons )
+	CustomizeButtonContext cbc = fileLevel.activeCustomizeButtons[button]
 
-	if(button in fileLevel.activeCustomizeButtons)
+	delete fileLevel.activeCustomizeButtons[button]
+
+	if ( fileLevel.activeCustomizeButtons.len() == 0 )
 	{
-		CustomizeButtonContext cbc = fileLevel.activeCustomizeButtons[button]
-
-		delete fileLevel.activeCustomizeButtons[button]
-
-		if ( fileLevel.activeCustomizeButtons.len() == 0 )
-		{
-			foreach ( loadoutEntry in cbc.loadoutEntries )
-				RemoveCallback_ItemFlavorLoadoutSlotDidChange_SpecificPlayer( LocalClientEHI(), loadoutEntry, OnLoadoutSlotContentsChanged )
-		}
-
-		Hud_RemoveEventHandler( button, UIE_CLICK, CustomizeButton_OnClick )
-		Hud_RemoveEventHandler( button, UIE_CLICKRIGHT, CustomizeButton_OnRightClick )
-		Hud_RemoveEventHandler( button, UIE_DOUBLECLICK, CustomizeButton_OnRightOrDoubleClick )
+		foreach ( loadoutEntry in cbc.loadoutEntries )
+			RemoveCallback_ItemFlavorLoadoutSlotDidChange_SpecificPlayer( LocalClientEHI(), loadoutEntry, OnLoadoutSlotContentsChanged )
 	}
+
+	Hud_RemoveEventHandler( button, UIE_CLICK, CustomizeButton_OnClick )
+	Hud_RemoveEventHandler( button, UIE_CLICKRIGHT, CustomizeButton_OnRightClick )
+	Hud_RemoveEventHandler( button, UIE_DOUBLECLICK, CustomizeButton_OnRightOrDoubleClick )
 }
 
 

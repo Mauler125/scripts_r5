@@ -19,28 +19,33 @@ void function LeaveMatch()
 	Durango_LeaveParty()
 #endif // #if DURANGO_PROG
 
-	// Disconnect and load the lobby in a thread
+	//CancelMatchmaking()
+	//ClientCommand( "LeaveMatch" )
+	ClientCommand( "disconnect" )
+
+	//load new lobbyvm
+	//ty amos for the idea of loading it on leave match
 	thread LoadLobbyAfterLeave()
 }
 
 void function LoadLobbyAfterLeave()
 {
-	// Wait a second for a smoother transition
-	wait 1
-
-	// Only execute these if we aren't running the listen server
-	if ( !IsServerActive() )
-	{
-		CancelMatchmaking()
-		ClientCommand( "disconnect" ) // also disconnect on client
-		ClientCommand( "LeaveMatch" )
-	}
-
-	// Set the main menus blackscreen visibility to true to cover it
+	//Set the main menus blackscreen visibility to true
 	SetMainMenuBlackScreenVisible(true)
 
-	// Create the lobby server
+	//Just incase the player leaving is the host of the game, we wana make sure the hostgame is shut down
+	ShutdownHostGame()
+
+	//wait until fully disconnected
+	while(!g_isAtMainMenu) {
+		WaitFrame()
+	}
+
+	//Create lobby server
 	CreateServer("Lobby VM", "", "mp_lobby", "menufall", eServerVisibility.OFFLINE)
+	
+	//No longer at main menu
+	g_isAtMainMenu = false
 }
 
 void function LeaveParty()

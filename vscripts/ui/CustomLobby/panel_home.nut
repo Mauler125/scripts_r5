@@ -123,8 +123,6 @@ void function InitHomePanel( var panel )
 	HudElem_SetRuiArg( newsButton, "icon", $"rui/menu/lobby/news_icon" )
 	Hud_AddEventHandler( newsButton, UIE_CLICK, NewsPressed )
 
-	Hud_AddEventHandler( Hud_GetChild(file.panel, "SelfButton"), UIE_CLICK, SelfButtonPressed )
-
 	file.gamemodeSelectV2Button = Hud_GetChild( panel, "GamemodeSelectV2Button" )
 	RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeNameText", "Random" )
 	RuiSetString( Hud_GetRui( file.gamemodeSelectV2Button ), "modeDescText", "Not Ready" )
@@ -193,22 +191,6 @@ void function SettingsPressed(var button)
 void function NewsPressed(var button)
 {
 	AdvanceMenu( GetMenu( "R5RNews" ) )
-}
-
-void function SelfButtonPressed(var button)
-{
-	Friend friend
-	friend.status = eFriendStatus.ONLINE_INGAME
-	friend.name = GetPlayerName()
-	friend.hardware = ""
-	friend.ingame = true
-	friend.id = GetPlayerUID()
-
-	Party party = GetParty()
-	friend.presence = Localize( "#PARTY_N_N", party.numClaimedSlots, party.numSlots )
-	friend.inparty = party.numClaimedSlots > 0
-
-	InspectFriend( friend )
 }
 
 // ====================================================================================================

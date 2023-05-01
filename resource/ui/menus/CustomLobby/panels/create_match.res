@@ -634,7 +634,6 @@
 		"R5RPlaylistPanel"
 		{
 			"ControlName"				"CNestedPanel"
-			"classname"					"CustomPrivateMatchMenu"
 			"ypos"						"-61"
 			"xpos"                      "-520"
 			"wide"						"490"
@@ -652,7 +651,6 @@
 		"R5RMapPanel"
 		{
 			"ControlName"				"CNestedPanel"
-			"classname"					"CustomPrivateMatchMenu"
 			"ypos"						"-61"
 			"xpos"                      "-520"
 			"wide"						"490"
@@ -670,7 +668,6 @@
 		"R5RVisPanel"
 		{
 			"ControlName"				"CNestedPanel"
-			"classname"					"CustomPrivateMatchMenu"
 			"ypos"						"-61"
 			"xpos"                      "-520"
 			"wide"						"500"
