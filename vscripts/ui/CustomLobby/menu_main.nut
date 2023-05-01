@@ -1,8 +1,6 @@
 global function InitR5RMainMenu
 global function SetMainMenuBlackScreenVisible
 
-global bool g_isAtMainMenu = false
-
 struct
 {
 	var menu
@@ -58,13 +56,10 @@ void function OnR5RSB_NavigateBack()
 void function SetAtMainMenu()
 {
 	WaitFrame()
-	
-	//You are at the main menu
-	g_isAtMainMenu = true
 
-	//Wait a extra 1.5 before showing the main menu
+	//Wait an extra 1.5 before showing the main menu
 	wait 1.5
-	
+
 	//Hide the fullscreen black panel
 	SetMainMenuBlackScreenVisible(false)
 }

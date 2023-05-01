@@ -106,9 +106,6 @@ void function OnR5RLobby_Open()
 	ServerBrowser_UpdateFilterLists()
 	SetupLobby()
 
-	//Set back to default for next time
-	g_isAtMainMenu = false
-
 	//Show Home Panel
 	ActivateNav( 0 )
 
