@@ -938,6 +938,8 @@ bool function IsItemFlavorUnlockedForLoadoutSlot( EHI playerEHI, LoadoutEntry en
 
 	Assert( entry.type == eLoadoutEntryType.ITEM_FLAVOR )
 
+	return true
+
 	if ( !ItemFlavor_IsAvailableInPlaylist( itemFlavor ) )
 		return false
 

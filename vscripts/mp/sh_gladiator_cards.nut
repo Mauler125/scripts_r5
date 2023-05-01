@@ -695,7 +695,15 @@ GladCardBadgeDisplayData function GetBadgeData( EHI playerEHI, ItemFlavor ornull
 			else
 				badgeData.ruiAsset = $"ui/gcard_badge_basic.rpak"
 
-			badgeData.imageAsset = tierDataList[tierIndex].imageAsset
+			//R5Reloaded Temp
+			if(ItemFlavor_GetHumanReadableRef(badge) == "gcard_badge_account_dev_badge")
+				badgeData.imageAsset = $"rui/hud/custom_badges/r5r_badge"
+			else
+				badgeData.imageAsset = tierDataList[tierIndex].imageAsset
+			//////////////////////////////////////////////////////////////
+
+			//Origial Code
+			//badgeData.imageAsset = tierDataList[tierIndex].imageAsset
 		}
 	}
 
@@ -1238,7 +1246,7 @@ void function OnItemFlavorRegistered_Character( ItemFlavor characterClass )
 		entry.isItemFlavorUnlocked = (bool function( EHI playerEHI, ItemFlavor badge, bool shouldIgnoreOtherSlots ) : ( characterClass, badgeIndex ) {
 			int tierIndex = GetPlayerBadgeDataInteger( playerEHI, badge, badgeIndex, characterClass )
 
-			if ( IsEverythingUnlocked() )
+			//if ( IsEverythingUnlocked() )
 				return true
 
 			return (tierIndex >= 0)
@@ -2672,6 +2680,21 @@ int function GetPlayerBadgeDataInteger( EHI playerEHI, ItemFlavor badge, int bad
 		return 0 //
 
 	StatEntry stat = GetStatEntryByRef( unlockStatRef )
+
+	//R5Reloaded Temp
+	//Added by ayezee to max out badges
+	//Remove if we ever get perstiance
+	array<string> BadgesToChange = ["gcard_badge_account_account_level", "gcard_badge_account_season01_bplevel", "gcard_badge_account_season02_bplevel", "gcard_badge_account_season03_bplevel", "gcard_badge_account_elite_max_streak", "gcard_badge_account_rankedperiod01_rpbadge"]
+	if(BadgesToChange.contains(ItemFlavor_GetHumanReadableRef(badge)))
+	{
+		if(ItemFlavor_GetHumanReadableRef(badge) == BadgesToChange[5])
+			return 1000
+		
+		return 100
+	}
+
+	return GladiatorCardBadge_GetTierCount( badge ) - 1
+	///////////////////////////////////////////////////////////////////////////////////////////////
 
 	int dataInteger = -1
 	entity player   = FromEHI( playerEHI )

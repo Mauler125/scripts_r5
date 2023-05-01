@@ -84,7 +84,7 @@
 			"ypos"						"0"
 			"auto_wide_tocontents"		"1"
 			"tall"						"40"
-			"visible"					"1"
+			"visible"					"0"
 			"fontHeight"				"50"
 			"labelText"					"R5Reloaded"
 			"font"						"DefaultBold_41"
@@ -96,27 +96,21 @@
 			"pin_to_sibling_corner"		"LEFT"
 		}
 
-		"HomeBtn"
+		"NabButton0"
 		{
 			"ControlName"				"RuiButton"
 			"InheritProperties"			"TabButtonSettings"
 			"classname" 				"TopButtons"
 			"zpos"						"3"
-			"xpos"                    	"-400" // from -400 with ModsBtn visible
+			"xpos"                    	"-500" // from -400 with ModsBtn visible
 			"scriptID"					"0"
-
-			ruiArgs
-			{
-				isSelected 1
-				buttonText "#Play"
-			}
 
 			"pin_to_sibling"			"MainButtonsFrame"
 			"pin_corner_to_sibling"		"CENTER"
 			"pin_to_sibling_corner"		"CENTER"
 		}
 
-		"CreateBtn"
+		"NabButton1"
 		{
 			"ControlName"				"RuiButton"
 			"InheritProperties"			"TabButtonSettings"
@@ -125,18 +119,12 @@
 			"xpos"                    	"-80" // from -400 with ModsBtn visible
 			"scriptID"					"1"
 
-			ruiArgs
-			{
-				isSelected 1
-				buttonText "Create"
-			}
-
-			"pin_to_sibling"			"HomeBtn"
+			"pin_to_sibling"			"NabButton0"
 			"pin_corner_to_sibling"		"BOTTOM_LEFT"
 			"pin_to_sibling_corner"		"BOTTOM_RIGHT"
 		}
 
-		"ServerBrowserBtn"
+		"NabButton2"
 		{
 			"ControlName"				"RuiButton"
 			"InheritProperties"			"TabButtonSettings"
@@ -145,18 +133,12 @@
 			"xpos"                    	"-80"
 			"scriptID"					"2"
 
-			ruiArgs
-			{
-				isSelected 0
-				buttonText "Servers"
-			}
-
-			"pin_to_sibling"			"CreateBtn"
+			"pin_to_sibling"			"NabButton1"
 			"pin_corner_to_sibling"		"BOTTOM_LEFT"
 			"pin_to_sibling_corner"		"BOTTOM_RIGHT"
 		}
 
-		"LegendsBtn"
+		"NabButton3"
 		{
 			"ControlName"				"RuiButton"
 			"InheritProperties"			"TabButtonSettings"
@@ -165,20 +147,12 @@
 			"xpos"                    	"-80"
 			"scriptID"					"3"
 
-			ruiArgs
-			{
-				isSelected 0
-				buttonText "Legends"
-			}
-
-			"pin_to_sibling"			"ServerBrowserBtn"
+			"pin_to_sibling"			"NabButton2"
 			"pin_corner_to_sibling"		"BOTTOM_LEFT"
 			"pin_to_sibling_corner"		"BOTTOM_RIGHT"
-
-			"visible" "1" // hide for now
 		}
 
-		"SettingsBtn"
+		"NabButton4"
 		{
 			"ControlName"				"RuiButton"
 			"InheritProperties"			"TabButtonSettings"
@@ -187,13 +161,21 @@
 			"xpos"                    	"-80"
 			"scriptID"					"4"
 
-			ruiArgs
-			{
-				isSelected 0
-				buttonText "Settings"
-			}
+			"pin_to_sibling"			"NabButton3"
+			"pin_corner_to_sibling"		"BOTTOM_LEFT"
+			"pin_to_sibling_corner"		"BOTTOM_RIGHT"
+		}
 
-			"pin_to_sibling"			"LegendsBtn"
+		"NabButton5"
+		{
+			"ControlName"				"RuiButton"
+			"InheritProperties"			"TabButtonSettings"
+			"classname" 				"TopButtons"
+			"zpos"						"3"
+			"xpos"                    	"-80"
+			"scriptID"					"5"
+
+			"pin_to_sibling"			"NabButton4"
 			"pin_corner_to_sibling"		"BOTTOM_LEFT"
 			"pin_to_sibling_corner"		"BOTTOM_RIGHT"
 		}
@@ -258,9 +240,25 @@
     	    "pin_to_sibling_corner"		"BOTTOM"
     	}
 
+		"LoadoutPanel"
+    	{
+    	    "ControlName"				"CNestedPanel"
+    	    "ypos"						"20"
+    	    "wide"						"f0"
+			"tall"						"1200"
+			"visible"					"0"
+    	    "controlSettingsFile"		"scripts/resource/ui/menus/CustomLobby/panels/loadout.res"
+    	    "proportionalToParent"    	"1"
+
+    	    "pin_to_sibling"          	"MainButtonsFrame"
+    	    "pin_corner_to_sibling"		"TOP"
+    	    "pin_to_sibling_corner"		"BOTTOM"
+    	}
+
 		"R5RNamePanel"
 		{
 			"ControlName"				"CNestedPanel"
+			"classname"					"CustomPrivateMatchMenu"
 			"ypos"						"0"
 			"zpos"						"45"
 			"wide"						"f0"
@@ -274,6 +272,7 @@
 		"R5RDescPanel"
 		{
 			"ControlName"				"CNestedPanel"
+			"classname"					"CustomPrivateMatchMenu"
 			"ypos"						"0"
 			"zpos"						"45"
 			"wide"						"f0"

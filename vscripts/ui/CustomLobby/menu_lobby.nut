@@ -3,20 +3,30 @@ global function GetUIPlaylistName
 global function GetUIMapName
 global function GetUIMapAsset
 global function GetUIVisibilityName
+global function ActivateNav
+
+struct NavButton {
+	var button
+	var panel
+	int index
+	int presentationType
+}
 
 struct
 {
 	var menu
-	array<var> buttons
-	array<var> panels
-
-	int currentpanel = 0
 
 	var HomePanel
 	var CreateServerPanel
 	var ServerBrowserPanel
 
 	bool initialisedHomePanel = false
+
+	int currentpanel = 0
+	int CurrentNavIndex = 0
+	array<var> TopButtons
+
+	table<var,NavButton> BtnToNav
 } file
 
 // do not change this enum without modifying it in code at gameui/IBrowser.h
@@ -83,31 +93,22 @@ void function InitR5RLobbyMenu( var newMenuArg )
 	AddMenuEventHandler( menu, eUIEvent.MENU_CLOSE, OnR5RLobby_Close )
 	AddMenuEventHandler( menu, eUIEvent.MENU_NAVIGATE_BACK, OnR5RLobby_Back )
 
-	//Button event handlers
-	array<var> buttons = GetElementsByClassname( file.menu, "TopButtons" )
-	foreach ( var elem in buttons ) {
-		Hud_AddEventHandler( elem, UIE_CLICK, OpenSelectedPanel )
-	}
-
-	//Setup panel array
-	file.panels.append(Hud_GetChild(menu, "HomePanel"))
-	file.panels.append(Hud_GetChild(menu, "CreatePanel"))
-	file.panels.append(Hud_GetChild(menu, "ServerBrowserPanel"))
-	file.panels.append(Hud_GetChild(menu, "LegendsPanel"))
-	file.panels.append(null)
-
-	//Setup Button Vars
-	file.buttons.append(Hud_GetChild(menu, "HomeBtn"))
-	file.buttons.append(Hud_GetChild(menu, "CreateBtn"))
-	file.buttons.append(Hud_GetChild(menu, "ServerBrowserBtn"))
-	file.buttons.append(Hud_GetChild(menu, "LegendsBtn"))
-	file.buttons.append(Hud_GetChild(menu, "SettingsBtn"))
-
+	file.TopButtons = GetElementsByClassname( file.menu, "TopButtons" )
+		foreach ( elem in file.TopButtons )
+			Hud_SetVisible( elem, false )
+			
+	CreateNavButtons()
 	ToolTips_AddMenu( menu )
 }
 
 void function OnR5RLobby_Open()
 {
+	ServerBrowser_UpdateFilterLists()
+	SetupLobby()
+
+	//Show Home Panel
+	ActivateNav( 0 )
+
 	ToolTips_MenuOpened( file.menu )
 	RegisterServerBrowserButtonPressedCallbacks()
 }
@@ -120,79 +121,27 @@ void function OnR5RLobby_Close()
 
 void function OnR5RLobby_Show()
 {
-	ServerBrowser_UpdateFilterLists()
-	SetupLobby()
 
-	//Show Home Panel
-	ShowSelectedPanel( file.panels[0], file.buttons[0] )
-	UI_SetPresentationType( ePresentationType.PLAY )
-	CurrentPresentationType = ePresentationType.PLAY
-
-	//Set back to default for next time
-	g_isAtMainMenu = false
 }
 
 void function OnR5RLobby_Back()
 {
-	if(PMMenusOpen.maps_open || PMMenusOpen.playlists_open || PMMenusOpen.vis_open || PMMenusOpen.name_open || PMMenusOpen.desc_open)
+	if(pmatch_MenuOpen)
     {
-		var pmpanel = GetPanel( "CreatePanel" )
-        Hud_SetVisible( Hud_GetChild(pmpanel, "R5RMapPanel"), false )
-        Hud_SetVisible( Hud_GetChild(pmpanel, "R5RPlaylistPanel"), false )
-        Hud_SetVisible( Hud_GetChild(pmpanel, "R5RVisPanel"), false )
-        Hud_SetVisible( Hud_GetChild(file.menu, "R5RNamePanel"), false )
-        Hud_SetVisible( Hud_GetChild(file.menu, "R5RDescPanel"), false )
+		foreach(var p in GetElementsByClassnameForMenus( "CustomPrivateMatchMenu", uiGlobal.allMenus))
+        	Hud_SetVisible( p, false )
 
-        PMMenusOpen.maps_open = false
-        PMMenusOpen.playlists_open = false
-        PMMenusOpen.vis_open = false
-        PMMenusOpen.name_open = false
-        PMMenusOpen.desc_open = false
+        pmatch_MenuOpen = false
 		return
     }
 
 	if(file.currentpanel != 0)
 	{
-		OpenSelectedPanel(file.buttons[0])
+		ActivateNav( 0 )
 		return
 	}
 
 	AdvanceMenu( GetMenu( "SystemMenu" ) )
-}
-
-void function OpenSelectedPanel(var button)
-{
-	//Get the script id, and show the panel acording to that id
-	int scriptid = Hud_GetScriptID( button ).tointeger()
-	ShowSelectedPanel( file.panels[scriptid], button )
-
-	file.currentpanel = scriptid
-
-	switch(scriptid)
-	{
-		case 0:
-			Play_SetupUI()
-			UI_SetPresentationType( ePresentationType.PLAY )
-			CurrentPresentationType = ePresentationType.PLAY
-			break;
-		case 1:
-			OnCreateMatchOpen()
-			UI_SetPresentationType( ePresentationType.CHARACTER_SELECT )
-			CurrentPresentationType = ePresentationType.CHARACTER_SELECT
-			break;
-		case 2:
-			UI_SetPresentationType( ePresentationType.COLLECTION_EVENT )
-			CurrentPresentationType = ePresentationType.COLLECTION_EVENT
-			break;
-		case 3:
-			R5RCharactersPanel_Show()
-			UI_SetPresentationType( ePresentationType.CHARACTER_SELECT )
-			CurrentPresentationType = ePresentationType.CHARACTER_SELECT
-			break;
-		case 4:
-			AdvanceMenu( GetMenu( "MiscMenu" ) )
-			break;
-	}
 }
 
 void function SetupLobby()
@@ -213,27 +162,86 @@ void function SetupLobby()
 
 }
 
-void function ShowSelectedPanel(var panel, var button)
+////////////////////////////////////////////////////////////////////////////////////////
+//
+// Nav Buttons
+//
+////////////////////////////////////////////////////////////////////////////////////////
+
+void function CreateNavButtons()
 {
-	if(panel == null)
+	file.CurrentNavIndex = 0
+
+	//Max size of 6 tabs
+
+	AddNavButton("Play", Hud_GetChild(file.menu, "HomePanel"), ePresentationType.PLAY, void function( var button ) {
+		Play_SetupUI()
+	} )
+
+	AddNavButton("Legends", Hud_GetChild(file.menu, "LegendsPanel"), ePresentationType.CHARACTER_SELECT, void function( var button ) {
+		R5RCharactersPanel_Show()
+	} )
+
+	//Item flavor bugged, disable for now
+	AddNavButton("Loadout", Hud_GetChild(file.menu, "LoadoutPanel"), ePresentationType.WEAPON_CATEGORY, void function( var button ) {
+		ShowLoadoutPanel()
+	}, false )
+
+	AddNavButton("Create", Hud_GetChild(file.menu, "CreatePanel"), ePresentationType.CHARACTER_SELECT, void function( var button ) {
+		OnCreateMatchOpen()
+	} )
+
+	AddNavButton("Servers", Hud_GetChild(file.menu, "ServerBrowserPanel"), ePresentationType.COLLECTION_EVENT, void function( var button ) { } )
+
+	/*AddNavButton("Settings", null, void function( var button ) {
+		AdvanceMenu( GetMenu( "MiscMenu" ) )
+	} )*/
+}
+
+void function AddNavButton(string title, var panel, int presentationType, void functionref(var button) Click = null, bool enabled = true)
+{
+	NavButton navbtn
+	navbtn.button = file.TopButtons[file.CurrentNavIndex]
+	navbtn.panel = panel
+	navbtn.index = file.CurrentNavIndex
+	navbtn.presentationType = presentationType
+	file.BtnToNav[file.TopButtons[file.CurrentNavIndex]] <- navbtn
+
+	RuiSetString( Hud_GetRui(file.TopButtons[file.CurrentNavIndex]), "buttonText", title )
+	Hud_SetVisible( file.TopButtons[file.CurrentNavIndex], true )
+	Hud_SetEnabled( file.TopButtons[file.CurrentNavIndex], enabled)
+
+	Hud_AddEventHandler( file.TopButtons[file.CurrentNavIndex], UIE_CLICK, NavPressed )
+	Hud_AddEventHandler( file.TopButtons[file.CurrentNavIndex], UIE_CLICK, Click )
+	file.CurrentNavIndex++
+}
+
+void function ActivateNav(int index)
+{
+	NavPressed(file.TopButtons[index])
+}
+
+void function NavPressed(var button)
+{
+	NavButton navbtn = file.BtnToNav[button]
+
+	if(navbtn.panel == null)
 		return
+
+	UI_SetPresentationType( navbtn.presentationType )
+	CurrentPresentationType = navbtn.presentationType
 	
 	//Hide all panels
-	foreach ( p in file.panels ) {
-		if(p != null)
-			Hud_SetVisible( p, false )
+	foreach ( var btn, NavButton nav in  file.BtnToNav) {
+		if(nav.panel != null)
+			Hud_SetVisible( nav.panel, false )
+
+		RuiSetBool( Hud_GetRui( nav.button ) ,"isSelected", false )
 	}
 
-	//Unselect all buttons
-	foreach ( btn in file.buttons ) {
-		RuiSetBool( Hud_GetRui( btn ) ,"isSelected", false )
-	}
-
-	//Select button
 	RuiSetBool( Hud_GetRui( button ) ,"isSelected", true )
-
-	//Show selected panel
-	Hud_SetVisible( panel, true )
+	Hud_SetVisible( navbtn.panel, true )
+	file.currentpanel = navbtn.index
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////

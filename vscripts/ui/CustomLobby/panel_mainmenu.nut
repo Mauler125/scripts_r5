@@ -6,6 +6,8 @@ struct
 	var panel
 	var launchButton
 	var status
+
+	bool is_working = false
 } file
 
 void function InitR5RMainMenuPanel( var panel )
@@ -40,17 +42,24 @@ bool function IsDataCenterFooterVisible()
 
 void function LaunchButton_OnActivate( var button )
 {
+	if(file.is_working)
+		return
+	
 	thread LaunchCustomLobby()
 }
 
 void function LaunchCustomLobby()
 {
+	file.is_working = true
+
 	ShowSpinner(true)
 
-	wait 3
+	wait 1
 
 	CreateServer("Lobby", "", "mp_lobby", "menufall", eServerVisibility.OFFLINE)
 	ShowSpinner(false)
+
+	file.is_working = false
 }
 
 void function ShowSpinner(bool show)
