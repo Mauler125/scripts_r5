@@ -35,6 +35,13 @@ void function LoadLobbyAfterLeave()
 		ClientCommand( "disconnect" ) // also disconnect on client
 		ClientCommand( "LeaveMatch" )
 	}
+	else
+	{
+		// Shutdown and wait a frame so the state machine could shut the
+		// server down properly, else we crash in CClient::SendSnapshot.
+		ShutdownHostGame()
+		WaitFrame()
+	}
 
 	// Set the main menus blackscreen visibility to true to cover it
 	SetMainMenuBlackScreenVisible(true)
