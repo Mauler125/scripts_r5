@@ -230,9 +230,9 @@ void function OnBtnFiltersClear()
 	filterArguments.filterMap = "Any"
 	filterArguments.hideEmpty = false
 
-	SetConVarBool( "grx_hasUnknownItems", false )
-	SetConVarInt( "match_rankedSwitchETA", 0 )
-	SetConVarInt( "match_rankedMaxPing", 0 )
+	SetConVarBool( "serverbrowser_hideEmptyServers", false )
+	SetConVarInt( "serverbrowser_mapFilter", 0 )
+	SetConVarInt( "serverbrowser_gamemodeFilter", 0 )
 }
 
 void function ServerBrowser_SelectServer(int id)
@@ -318,6 +318,9 @@ void function ServerBrowser_FilterServerList()
 		return
 
 	ServerBrowser_UpdateFilterLists()
+
+	if(GetConVarInt( "serverbrowser_mapFilter" ) > (filterArguments.filterMaps.len() - 1) || GetConVarInt( "serverbrowser_gamemodeFilter" ) > (filterArguments.filterGamemodes.len() - 1))
+		OnBtnFiltersClear()
 	
 	//Must wait for convars to actually set
 	wait 0.1
@@ -327,9 +330,9 @@ void function ServerBrowser_FilterServerList()
 	m_vScroll.Offset = 0
 	file.m_vAllPlayers = 0
 
-	filterArguments.hideEmpty = GetConVarBool( "grx_hasUnknownItems" )
-	filterArguments.filterMap = filterArguments.filterMaps[GetConVarInt( "match_rankedMaxPing" )]
-	filterArguments.filterGamemode = filterArguments.filterGamemodes[GetConVarInt( "match_rankedSwitchETA" )]
+	filterArguments.hideEmpty = GetConVarBool( "serverbrowser_hideEmptyServers" )
+	filterArguments.filterMap = filterArguments.filterMaps[GetConVarInt( "serverbrowser_mapFilter" )]
+	filterArguments.filterGamemode = filterArguments.filterGamemodes[GetConVarInt( "serverbrowser_gamemodeFilter" )]
 	filterArguments.searchTerm = Hud_GetUTF8Text( Hud_GetChild( file.panel, "BtnServerSearch" ) )
 	filterArguments.useSearch = filterArguments.searchTerm != ""
 

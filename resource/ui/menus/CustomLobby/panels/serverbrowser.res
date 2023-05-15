@@ -121,7 +121,7 @@ scripts/resource/ui/menus/CustomLobby/panels/serverbrowser.res
 		ControlName RuiButton
 		InheritProperties SwitchButton
 		style                   DialogListButton
-		ConVar "match_rankedSwitchETA"
+		ConVar "serverbrowser_gamemodeFilter"
 		wide 670
 		ypos 15
 
@@ -142,7 +142,7 @@ scripts/resource/ui/menus/CustomLobby/panels/serverbrowser.res
 		ControlName RuiButton
 		InheritProperties SwitchButton
 		style                   DialogListButton
-		ConVar "match_rankedMaxPing"
+		ConVar "serverbrowser_mapFilter"
 		wide 670
 		ypos 0
 		xpos 10
@@ -164,7 +164,7 @@ scripts/resource/ui/menus/CustomLobby/panels/serverbrowser.res
 		ControlName RuiButton
 		InheritProperties SwitchButton
 		style                   DialogListButton
-		ConVar "grx_hasUnknownItems"
+		ConVar "serverbrowser_hideEmptyServers"
 		classname FilterPanelChild
 		wide 1349
 		ypos 10
