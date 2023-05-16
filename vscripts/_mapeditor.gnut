@@ -44,8 +44,6 @@ const asset BALLON_MDL = $"mdl/props/zipline_balloon/zipline_balloon.rmdl"
 
 void function MapEditor_Init()
 {
-    ReMapCreateJumpTower( < 3255.44141, 4937.47803, -4297.31641 >, < 0, 45, 0 >, 3000 )
-
     PrecacheModel( BALLON_BASE_MDL )
     PrecacheModel( BALLON_MDL )
 
@@ -54,6 +52,9 @@ void function MapEditor_Init()
 
 void function MapTriggers_Init()
 {
+	if(GameRules_GetGameMode() == "fs_duckhunt")
+		return
+	
     switch (GetMapName())
     {
         case "mp_rr_aqueduct_night":
@@ -96,12 +97,12 @@ void function MapTriggers_Init()
     }
 }
 
-entity function CreateWallTrigger( vector origin , int type = 0, float radius = 30000 , float Height = 2000, bool debugdraw = false)
+entity function CreateWallTrigger( vector origin , int type = 0, float radius = 30000 , float height = 2000, bool debugdraw = false)
 {
     // Set up the trigger
     entity trigger = CreateEntity( "trigger_cylinder" )
     trigger.SetRadius( radius )
-    trigger.SetAboveHeight( Height )
+    trigger.SetAboveHeight( height )
     trigger.SetBelowHeight( 50 )
     trigger.SetOrigin( origin )
     trigger.SetEnterCallback(  WallTriggerEnter )
