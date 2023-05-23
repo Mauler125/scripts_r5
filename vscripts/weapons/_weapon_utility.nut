@@ -113,6 +113,7 @@ global function GetActiveThermiteBurnsWithinRadius
 global function OnWeaponPrimaryAttack_GenericBoltWithDrop_NPC
 global function OnWeaponPrimaryAttack_GenericMissile_NPC
 global function EMP_DamagedPlayerOrNPC
+global function EMPGrenade_EffectsPlayer
 global function EMP_FX
 global function GetWeaponDPS
 global function GetTTK
@@ -3750,7 +3751,10 @@ void function EMPGrenade_EffectsPlayer( entity player, var damageInfo )
 	//vector origin = inflictor.GetOrigin()
 
 	int dmgSource = DamageInfo_GetDamageSourceIdentifier( damageInfo )
-
+	
+	if( dmgSource == eDamageSourceId.mp_weapon_tesla_trap )
+		duration = 3
+	
 	if ( player.IsTitan() )
 	{
 		// Hit player should do EMP screen effects locally

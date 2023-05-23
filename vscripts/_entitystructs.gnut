@@ -402,6 +402,11 @@ global struct ServerEntityStruct
 
 	//Trophy Structs
 	float pylonhealth
+	
+	//wattson q
+	bool isLinked = false
+	array<entity> attachedTriggersToPole
+	float teslaTrapTriggerCreationTime
 }
 
 global struct MeritData
@@ -690,6 +695,9 @@ global struct ServerPlayerStruct
 	bool touchingTopTrigger = false
 	string weapon = "mp_weapon_wingman"
 	array<string> mods = ["optic_cq_hcog_classic"]
+	//wattson q
+	float lastTimeDamagedByTeslaTrap
+	float lastTimeAppliedEMPByTeslaTrap
 }
 
 global struct ChallengeScore
