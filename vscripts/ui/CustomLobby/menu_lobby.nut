@@ -75,6 +75,15 @@ global table<string, string> MapNames = {
 	[ "mp_lobby" ] = "Lobby"
 }
 
+global table<string, string> FlowstatePlaylists = {
+	[ "fs_aimtrainer" ] = "FS Aim Trainer",
+	[ "fs_prophunt" ] = "FS PropHunt",
+	[ "fs_duckhunt" ] = "FS Duckhunt",
+	[ "fs_dm" ] = "FS Deathmatch",
+	[ "fs_1v1" ] = "FS 1v1",
+	[ "fs_movementgym" ] = "FS Movement Gym"
+}
+
 //Vis to readable name
 global table<int, string> VisibilityNames = {
 	[ eServerVisibility.OFFLINE ] = "Offline",
@@ -254,6 +263,9 @@ string function GetUIPlaylistName(string playlist)
 {
 	if(!IsLobby() || !IsConnected())
 		return ""
+
+	if(playlist in FlowstatePlaylists)
+		return FlowstatePlaylists[playlist]
 
 	return GetPlaylistVarString( playlist, "name", playlist )
 }
