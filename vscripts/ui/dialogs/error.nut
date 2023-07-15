@@ -1,6 +1,7 @@
 global function InitErrorDialog
 global function OpenErrorDialogThread
 global function OpenErrorDialog
+global function OpenR5RErrorDialogThread
 
 struct
 {
@@ -65,6 +66,15 @@ void function OpenErrorDialogThread( string errorMessage )
 
 	while ( GetActiveMenu() != GetMenu( "R5RMainMenu" ) )
 		WaitSignal( uiGlobal.signalDummy, "OpenErrorDialog", "ActiveMenuChanged" )
+
+	AdvanceMenu( file.menu )
+}
+
+void function OpenR5RErrorDialogThread( string headerText, string messageText, asset contextImage = $"ui/menu/common/dialog_error" )
+{
+	file.contextImage = contextImage
+	file.headerText = headerText
+	file.messageText = messageText
 
 	AdvanceMenu( file.menu )
 }

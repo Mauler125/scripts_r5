@@ -37,6 +37,16 @@ struct {
 	array<string> m_vMaps
 } file
 
+const table<int, asset> GAMEMODE_SELECT_IMAGE_MAP = {
+	[0] = $"rui/menu/gamemode/play_apex",
+	[1] = $"rui/menu/gamemode/apex_elite",
+	[2] = $"rui/menu/gamemode/training",
+	[3] = $"rui/menu/gamemode/firing_range",
+	[4] = $"rui/menu/gamemode/generic_01",
+	[5] = $"rui/menu/gamemode/generic_02",
+	[6] = $"rui/menu/gamemode/ranked_2"
+}
+
 global SelectedTopServer g_SelectedTopServer
 
 global string g_SelectedPlaylist
@@ -156,11 +166,8 @@ void function SetupPlaylistQuickSearch()
     int offset = 0
     for(int j = 0; j < playlists.len() + 1; j++)
     {
-		if( j > playlists.len() - 1 )
-			break
-
-		if( j > MAX_DISPLAYED_MODES - 1 )
-			break
+		if (j > playlists.len() - 1 || j > MAX_DISPLAYED_MODES - 1)
+            break;
 		
         Hud_Show( Hud_GetChild( file.menu, "GameModeButton" + j ) )
 
@@ -187,7 +194,7 @@ void function SetupPlaylistQuickSearch()
 		{
 			RuiSetString( Hud_GetRui( Hud_GetChild( file.menu, "GameModeButton" + i ) ), "modeNameText", GetUIPlaylistName(playlists[i + file.pageoffset]) )
 			RuiSetString( Hud_GetRui( Hud_GetChild( file.menu, "GameModeButton" + i ) ), "modeDescText", "" )
-			RuiSetImage( Hud_GetRui( Hud_GetChild( file.menu, "GameModeButton" + i ) ), "modeImage", $"rui/menu/gamemode/play_apex" )
+			RuiSetImage( Hud_GetRui( Hud_GetChild( file.menu, "GameModeButton" + i ) ), "modeImage", GAMEMODE_SELECT_IMAGE_MAP[RandomIntRange( 0, 6 )] )
 		}
 	    RuiSetBool( Hud_GetRui( Hud_GetChild( file.menu, "GameModeButton" + i )), "alwaysShowDesc", false )
 	}
