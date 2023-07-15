@@ -279,24 +279,36 @@ void function ReadyButton_OnActivate(var button)
 		return;
 	}
 
+	switch(quickplay.quickPlayType)
+	{
+		case JoinType.TopServerJoin:
+			if(!GetAvailablePlaylists().contains(file.m_vSelectedServer.svPlaylist))
+			{
+				thread OpenR5RErrorDialogThread("Error", "The server you are trying to connect to is running a playlist that is not installed on your system. Please install the playlist and try again. \n\n You can join the R5Reloaded Discord for help with this issue.")
+				return
+			}
+
+			UpdateReadyButtonJoining()
+			thread JoinMatch(button, ConnectingStages)
+			break;
+		case JoinType.QuickServerJoin:
+			UpdateReadyButtonJoining()
+			thread FindMatch( button )
+			break;
+		case JoinType.QuickPlay:
+			UpdateReadyButtonJoining()
+			thread JoinMatch(button, CreatingStages)
+			break;
+	}
+}
+
+void function UpdateReadyButtonJoining()
+{
 	file.searching = true
 	EmitUISound( "UI_Menu_ReadyUp_1P" )
 	RuiSetBool(Hud_GetRui(Hud_GetChild(file.panel, "SelfButton")), "isReady", true)
 
 	GamemodeButtonSetSearching(true)
-
-	switch(quickplay.quickPlayType)
-	{
-		case JoinType.TopServerJoin:
-			thread JoinMatch(button, ConnectingStages)
-			break;
-		case JoinType.QuickServerJoin:
-			thread FindMatch( button )
-			break;
-		case JoinType.QuickPlay:
-			thread JoinMatch(button, CreatingStages)
-			break;
-	}
 }
 
 void function JoinMatch(var button, table<int, string> StringStages)
@@ -451,6 +463,9 @@ void function FindServer(bool refresh = false)
 		if(file.m_vServerList[i].svPlaylist != g_SelectedPlaylist && g_SelectedPlaylist != "Random Server")
 			continue;
 
+		if(!GetAvailablePlaylists().contains(file.m_vServerList[i].svPlaylist))
+			continue;
+
 		// Server fits our requirements, add it to the list
 		file.m_vFilteredServerList.append(file.m_vServerList[i])
 	}
@@ -464,6 +479,9 @@ void function FindServer(bool refresh = false)
 				continue;
 
 			if(file.m_vServerList[i].svPlaylist != g_SelectedPlaylist && g_SelectedPlaylist != "Random Server")
+				continue;
+
+			if(!GetAvailablePlaylists().contains(file.m_vServerList[i].svPlaylist))
 				continue;
 
 			// Server fits our requirements, add it to the list

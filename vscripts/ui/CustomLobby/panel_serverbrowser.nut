@@ -157,6 +157,12 @@ void function ServerBrowser_ConnectBtnClicked(var button)
 	if(file.m_vSelectedServer.svServerID == -1)
 		return
 
+	if(!GetAvailablePlaylists().contains(file.m_vSelectedServer.svPlaylist))
+	{
+		thread OpenR5RErrorDialogThread("Error", "The server you are trying to connect to is running a playlist that is not installed on your system. Please install the playlist and try again. \n\n You can join the R5Reloaded Discord for help with this issue.")
+		return
+	}
+	
 	//Connect to server
 	printf("Connecting to server: (Server ID: " + file.m_vSelectedServer.svServerID + " | Server Name: " + file.m_vSelectedServer.svServerName + " | Map: " + file.m_vSelectedServer.svMapName + " | Playlist: " + file.m_vSelectedServer.svPlaylist + ")")
 	thread ServerBrowser_StartConnection(file.m_vSelectedServer.svServerID)
