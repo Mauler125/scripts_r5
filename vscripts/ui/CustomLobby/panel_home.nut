@@ -311,6 +311,10 @@ void function UpdateReadyButtonJoining()
 	GamemodeButtonSetSearching(true)
 }
 
+// TODO: rework this. Currently it intermittently causes crashes in
+// 'CClient::SendSnapshot' as we are creating a server in a threaded function.
+// A more ideal approach would be to precache the map before even attempting
+// to connect to, or create a server, and move the creating in the main thread.
 void function JoinMatch(var button, table<int, string> StringStages)
 {
 	HudElem_SetRuiArg(button, "buttonText", Localize("#CANCEL"))
