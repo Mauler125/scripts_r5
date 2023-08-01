@@ -1,0 +1,235 @@
+global function Ashs_Redemption_Init
+
+const asset RESPAWN_DROPSHIP_MODEL                     = $"mdl/vehicle/goblin_dropship/goblin_dropship.rmdl"
+
+
+void function Ashs_Redemption_Init()
+{
+
+	if ( !IsFiringRangeGameMode() || GetCurrentPlaylistVarBool( "r5reloaded_aimtrainer", false ))
+		return
+
+	PrecacheModel($"mdl/props/global_access_panel_button/global_access_panel_button_console_w_stand.rmdl")
+	PrecacheModel($"mdl/props/global_access_panel_button/global_access_panel_button_wall.rmdl")
+
+	#if SERVER
+		AddCallback_EntitiesDidLoad( OnEntitiesDidLoad )
+	#endif
+
+	#if(CLIENT)
+		IntroDisplayThread()
+	#endif
+}
+
+#if SERVER
+void function OnEntitiesDidLoad()
+{
+	TeaserEvacTest()
+}
+#endif
+
+#if(CLIENT)
+void function IntroDisplayThread()
+{
+	thread function() : ()
+	{
+		FlagWait( "EntitiesDidLoad" )
+		wait 3.0
+
+		entity viewPlayer = GetLocalViewPlayer()
+		if ( IsValid( viewPlayer ) )
+			MapZones_ZoneIntroText( viewPlayer, ("#" + GetMapName()), -1 )
+	}()
+}
+#endif
+
+#if SERVER
+const array<string> EvacAttachments = [
+	"RampAttachA"
+	"RampAttachB"
+	"RampAttachC"
+	"RampAttachD"
+	"RampAttachE"
+	"RampAttachF"
+]
+
+const vector shiporigin =  <33526, -4984, -28649 >
+
+const string EVAC_TARGET_NAME             = "evac_ship"
+const string DROPSHIP_HOVER               = "goblin_imc_evac_hover"
+const string DROPSHIP_WARP_IN             = "dropship_warpin"
+const string DROPSHIP_FLYING_MOVE         = "dropship_classic_mp_flyin"
+const string EVAC_START                   = "dropship_VTOL_evac_start"
+const string EVAC_END                     = "dropship_VTOL_evac_end"
+const string EVAC_IDLE                    = "dropship_VTOL_evac_idle"
+
+void function TeaserEvacTest()
+{
+	entity button = CreateFRButton(< 33514, -5284, -28635 >, < 0, 0, 0 >, "%&use% Spawn Ship")
+	AddCallback_OnUseEntity( button, void function(entity panel, entity user, int input)
+	{
+	entity target = CreatePropDynamic( $"mdl/dev/empty_model.rmdl", <33526, -4984, -28649 >, <0,0,0>, SOLID_VPHYSICS )
+	entity evac = CreatePropDynamic( $"mdl/vehicle/goblin_dropship/goblin_dropship.rmdl", <33526, -4984, -28649 >, <0,0,0>, SOLID_VPHYSICS )
+	evac.MakeInvisible()
+	thread HandleEvacTeaser( evac, shiporigin + <0,0,200>, <0,-90,0>)
+	thread HandleEvacTrigger( evac , target)
+	
+		EmitSoundOnEntityOnlyToPlayer( user, user, FIRINGRANGE_BUTTON_SOUND )
+	})
+}
+
+
+void function HandleEvacTrigger( entity evac , entity target)
+{
+	// wait for warp anim to finish
+    evac.WaitSignal("WarpedIn")
+    const float radius = 230.0
+	const float alivetime = 25.0
+
+	entity trigger = CreateEntity("trigger_cylinder")
+	{
+		trigger.SetRadius( radius )
+		trigger.SetAboveHeight( 150 )
+		trigger.SetBelowHeight( 0 )
+		trigger.SetOrigin( target.GetOrigin() )
+		trigger.SetOwner( evac )
+
+		trigger.SetEnterCallback( EvacTriggerEnter )
+
+		DispatchSpawn( trigger )
+	}
+
+	#if DEVELOPER
+		DebugDrawCylinder( trigger.GetOrigin() , < -90, 0, 0 >, radius, trigger.GetAboveHeight(), 0, 0, 255, true, alivetime )
+		DebugDrawCylinder( trigger.GetOrigin() , < -90, 0, 0 >, radius, -trigger.GetBelowHeight(), 0, 0, 255, true, alivetime )
+	#endif
+
+	array<entity> CirclePoints = CreateTeaserEvacFX( target.GetOrigin() , radius , 16 , alivetime)
+
+	wait alivetime
+	trigger.Destroy()
+
+	//foreach( flare in CirclePoints )
+	//   flare.Destroy()
+}
+
+void function EvacTriggerEnter( entity trigger, entity ent )
+{
+	if( !IsValid( ent ) || !ent.IsPlayer() || ent.Player_IsFreefalling() || ent.GetPhysics() == MOVETYPE_NOCLIP )
+		return
+
+	if( ent.IsShadowForm() )
+	    return
+
+	entity evac = trigger.GetOwner()
+
+	if( !IsValid( evac ) )
+	   return
+
+	thread ScreenFadeToBlack( ent, 3.5, 0.0 )
+
+	// handle logic here
+    //ent.SetParent( evac )
+	//ent.SetOrigin( evac.GetAttachmentOrigin( evac.LookupAttachment( EvacAttachments.getrandom() ) ) )
+
+	thread ScreenFadeFromBlack( ent, 2.5, 0.0 )
+}
+
+void function HandleEvacTeaser( entity evac, vector origin, vector angles ) // entity should be prop_dynamic or custom npc.
+{
+	EndSignal( evac, "OnDestroy" )
+	
+	Attachment attachResult = evac.Anim_GetAttachmentAtTime( DROPSHIP_FLYING_MOVE, "ORIGIN", 0.0 )
+    evac.MakeInvisible()
+	
+	waitthread __WarpInEffectShared( attachResult.position, attachResult.angle, DROPSHIP_WARP_IN, 0.0 )
+	evac.MakeVisible()
+
+	Signal( evac, "WarpedIn" )
+
+	EmitSoundOnEntity( evac, DROPSHIP_HOVER )
+	waitthread PlayAnim( evac, EVAC_START, origin, angles )
+	thread PlayAnim( evac, EVAC_IDLE, origin, angles )
+
+	if ( IsFallLTM() )
+	{
+		wait 2
+		evac.Anim_Stop()
+		wait 45
+	}
+	else
+	wait evac.GetSequenceDuration( EVAC_IDLE )
+
+	thread ScreenFadeToBlack( gp()[0], 3.5, 0.0 )
+	wait 1
+	gp()[0].SetOrigin( evac.GetAttachmentOrigin( evac.LookupAttachment( EvacAttachments.getrandom() ) ) )
+	gp()[0].SetParent(evac)	
+	
+	thread ScreenFadeFromBlack( gp()[0], 2.5, 0.0 )
+	wait 5
+	
+	waitthread PlayAnim( evac, EVAC_END, origin, angles )
+
+	wait 2
+	EmitSoundOnEntity( evac, "Dropship_Warpout_Attrition" )
+	wait 1
+	StatusEffect_AddTimed( gp()[0], eStatusEffect.timeshift_visual_effect, 1.0, 999, 999 )
+	StatusEffect_AddTimed( gp()[0], eStatusEffect.phase_tunnel_visual, 1 , 999, 999 )
+	StatusEffect_AddTimed( gp()[0], eStatusEffect.placing_phase_gate, 1 , 999, 999 )
+	Remote_CallFunction_Replay( gp()[0], "ServerCallback_PlayScreenFXWarpJump" )
+	thread ScreenFadeToBlack( gp()[0], 3.5, 0.0 )
+    wait 6
+	//ClientCommand( gp()[0], "launchplaylist survival_dev" )
+	//ClientCommand( gp()[0], "changelevel mp_rr_aqueduct" )
+	// Hide dropShip now and warpout.
+	
+	
+	//__WarpOutEffectShared( evac )
+}
+
+
+array<entity> function CreateTeaserEvacFX( vector origin , float radius , int segments = 16, float alivetime = 30.0)
+{
+	float degrees =  360.0 / float( segments )
+
+	bool firstLoop = true
+	vector start
+	vector end
+	vector firstend
+
+	array<vector> pointsOnCircle = []
+
+	for ( int i = 0; i < segments; i++ )
+	{
+		vector angles2 = AnglesCompose( ZERO_VECTOR, <0, degrees * i, 0> )
+		vector forward = AnglesToForward( angles2 )
+		end = origin + ( forward * radius )
+
+		if ( firstLoop )
+			firstend = end
+
+		pointsOnCircle.append( end )
+
+		start = end
+
+		firstLoop = false
+	}
+
+	array<entity> Markers = []
+
+    foreach( point in pointsOnCircle)
+	{
+		TraceResults result = TraceLineHighDetail( point + <0,0,-35>, point + <0,0,300>, null, TRACE_MASK_PLAYERSOLID | TRACE_MASK_TITANSOLID | TRACE_MASK_NPCWORLDSTATIC, TRACE_COLLISION_GROUP_PLAYER )
+		if ( !IsValid( result.hitEnt )  )
+		   continue
+
+		Markers.append( PlayFX($"P_bFlare_glow_3P", result.endPos) )
+	}
+
+	foreach( marker in Markers)
+	    EntFireByHandle( marker, "kill", "", alivetime, null, null )
+
+	return Markers
+}
+
+#endif

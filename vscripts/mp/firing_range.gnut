@@ -1,13 +1,13 @@
 global function FiringRangeGameMode_Init
 
 global const float FIRINGRANGE_DISSOLVE_TIME = 5.0
-global const float FIRINGRANGE_RACK_RESPAWN_TIME = 0.5
+global const float FIRINGRANGE_RACK_RESPAWN_TIME = 0.7
 global const float FIRINGRANGE_RACK_OFFSET = 32
 
 global const int FIRINGRANGE_ATTACHMENTS_MAX_COLUMNS = 6
-global const int FIRINGRANGE_ITEMS_MAX_COLUMNS = 2
+global const int FIRINGRANGE_ITEMS_MAX_COLUMNS = 8
 global const int FIRINGRANGE_ORDNANCE_MAX_COLUMNS = 2
-global const int FIRINGRANGE_AMMO_ROWS = 2
+global const int FIRINGRANGE_AMMO_ROWS = 3
 
 global const asset FIRINGRANGE_FLICK_TARGET_ASSET = $"mdl/fx/plasma_sphere_01.rmdl"
 global const asset FIRINGRANGE_FLICK_TARGET_PARTICLE_HIT = $"P_crypto_drone_explosion"
@@ -29,6 +29,10 @@ global const asset FIRINGRANGE_256x256_ASSET = $"mdl/thunderdome/thunderdome_cag
 global const asset FIRINGRANGE_GRATE_ASSET = $"mdl/industrial/landing_mat_metal_02_large.rmdl"
 global const asset FIRINGRANGE_QUARRY_BLOCK_ASSET = $"mdl/rocks/thunderdome_quarry_block_01_orange.rmdl"
 
+const asset RESPAWN_DROPSHIP_MODEL                     = $"mdl/vehicle/goblin_dropship/goblin_dropship.rmdl"
+
+global const asset LANDING_PAD_ASSET = $"mdl/imc_base/landing_pad_tarmac_nobase.rmdl"
+
 #if SERVER
 // To be used outside if needed
 global int firingrange_infinite_ammo = 0
@@ -46,6 +50,7 @@ struct RackGroup
 	string ammoType = ""
 	array<entity> racks = []
 }
+
 
 struct {
 	table<string, array<LootData> > weaponsPerAmmoType
@@ -65,11 +70,11 @@ struct {
 	bool trackingTraining_speedRand = false
 
 	array<entity> doors
-	vector doorResetButton_pos = <30754,-9885,-25972>
-	vector doorResetButton_ang = <0,270,0>
-	vector doorSingle_pos = <30582,-9725,-25972>
+	vector doorResetButton_pos = <24056,-6600,-28157>
+	vector doorResetButton_ang = <0,-270,0>
+	vector doorSingle_pos = <24264,-6300, -28157>
 	vector doorSingle_ang = <0,90,0>
-	vector doorDouble_pos = <30550,-10025,-25972>
+	vector doorDouble_pos = <24264,-6700, -28157>
 	vector doorDouble_ang = <0,90,0>
 } file
 
@@ -77,8 +82,10 @@ void function FiringRangeGameMode_Init()
 {
 	PrecacheModel( FIRINGRANGE_BLUE_STAND_ASSET )
 	PrecacheModel( FIRINGRANGE_FLICK_TARGET_ASSET )
+	PrecacheModel( LANDING_PAD_ASSET )
 	PrecacheParticleSystem( FIRINGRANGE_FLICK_TARGET_PARTICLE_HIT )
 	PrecacheParticleSystem( FIRINGRANGE_ITEM_RESPAWN_PARTICLE )
+	
 
 	if ( !IsFiringRangeGameMode() || GetCurrentPlaylistVarBool( "r5reloaded_aimtrainer", false ))
 		return
@@ -94,20 +101,6 @@ void function FiringRangeGameMode_Init()
 
 		firingrange_infinite_ammo = GetCurrentPlaylistVarBool( "survival_infinite_ammo", false ) ? 1 : 2
 	#endif
-
-	#if(false)
-
-
-
-
-
-
-
-
-//
-
-
-	#endif //
 
 	#if(CLIENT)
 		//
@@ -158,9 +151,14 @@ void function OnEntitiesDidLoad()
 	SpawnOrdnance()
 	SpawnItems()
 	SpawnAmmo()
+	
+	Overhang()
+	ShipPad()
 
+	evactest()
 	// Doors
 	SpawnDoors_Init()
+	SkinDoors_Init()
 
 	// Map Props
 	SpawnMapProps()
@@ -223,7 +221,7 @@ void function OnPlayerRespawned(entity player)
 	foreach(string ammo in ["highcal","bullet"])
 	{
 		entity loot = SpawnGenericLoot( ammo, player.GetOrigin(), player.GetAngles(),
-			60-SURVIVAL_CountItemsInInventory( player, ammo ) )
+			80-SURVIVAL_CountItemsInInventory( player, ammo ) )
 
 		if(!Survival_PickupItem(loot, player))
 			loot.Destroy()
@@ -376,9 +374,9 @@ void function SpawnOrdnance()
 // Spawn ammo at the left of the racks
 void function SpawnAmmo()
 {
-	const float cornerOffset = -4
-	const float itemOffsetX = 12.0
-	const float itemOffsetY = 20.0
+	const float cornerOffset = -10
+	const float itemOffsetX = 18.0
+	const float itemOffsetY = 18.0
 
 	foreach(RackGroup rackGroup in file.rackSpawns)
 	{
@@ -399,8 +397,8 @@ void function SpawnAmmo()
 			for(int j = 0; j<FIRINGRANGE_AMMO_ROWS; j++)
 			{
 				vector pos = firstPos + rght*itemOffsetX*i + fwd*itemOffsetY*j
-
-				entity loot = SpawnGenericLoot(rackGroup.ammoType, pos, <0,0,0>, ammoStack)
+				
+				entity loot = SpawnGenericLoot(rackGroup.ammoType, pos, <0,90,0>, ammoStack)
 				thread OnPickupGenericThread(loot, rackGroup.ammoType, ammoStack)
 			}
 		}
@@ -411,9 +409,9 @@ void function SpawnAmmo()
 void function SpawnItems()
 {
 	const float otherSideOffset = 512.0
-	const float cornerOffset = 128.0 - 12.0
-	const float itemOffsetX = 32.0
-	const float itemOffsetY = 24.0
+	const float cornerOffset = 13.0
+	const float itemOffsetX = 26.0
+	const float itemOffsetY = 48.0
 	foreach(RackGroup rackGroup in file.rackSpawns)
 	{
 		entity rack = rackGroup.point
@@ -421,6 +419,10 @@ void function SpawnItems()
 		vector fwd = rack.GetForwardVector()
 
 		vector firstPos = rack.GetOrigin() + fwd*otherSideOffset + rght*cornerOffset
+
+		int itemStack = 2
+
+		
 
 		int col = 0
 		int row = 0
@@ -434,9 +436,9 @@ void function SpawnItems()
 
 			LootData item = file.items[i]
 			vector pos = firstPos + rght*itemOffsetX*col - fwd*itemOffsetY*row
-
-			entity loot = SpawnGenericLoot(item.ref, pos, <0,90,0>, 1)
-			thread OnPickupGenericThread(loot, item.ref)
+			vector rot = <0,90,0>
+			entity loot = SpawnGenericLoot(item.ref, pos, rot, itemStack)
+			thread OnPickupGenericThread(loot, item.ref, itemStack)
 
 			col++
 		}
@@ -488,6 +490,7 @@ void function SpawnAttachments()
 				continue
 
 			entity r = file.rackSpawns[ammoIndex].point
+			
 			vector firstPos = r.GetOrigin() - r.GetRightVector()*cornerOffset
 
 			int row = 0
@@ -502,7 +505,7 @@ void function SpawnAttachments()
 
 				vector pos = firstPos - r.GetRightVector()*col*placementOffset + r.GetForwardVector()*row*placementOffset
 
-				entity loot = SpawnGenericLoot( ref, pos, <0,0,0>, 1 )
+				entity loot = SpawnGenericLoot( ref, pos, <0,180,0>, 1 )
 				thread OnPickupGenericThread(loot, ref)
 				col++
 			}
@@ -787,6 +790,14 @@ void function SpawnMapProps()
 			{
 				TeleportFRPlayer(DamageInfo_GetAttacker(damageInfo), <30777.9258, -5282.96387, -29163.9688>, <0,0,0>)
 			})
+			/* DOORS */ SpawnBigTrainingTarget(<31241, -10310, -27643>, <0,90,0>, void function(entity panel, var damageInfo)
+			{
+				TeleportFRPlayer(DamageInfo_GetAttacker(damageInfo), <30437.8281, -9880.22852, -25972.6387>, <0,0,0>)
+			})
+			/* SECRET */ SpawnBigTrainingTarget(<27793, -8885, -21430>, <0,90,0>, void function(entity panel, var damageInfo)
+			{
+				TeleportFRPlayer(DamageInfo_GetAttacker(damageInfo), <24034, -6015, -28089>, <0,0,0>)
+			})
 		}
 	}
 
@@ -870,27 +881,7 @@ void function SpawnMapProps()
 		})
 	}
 
-	// UPPER LEVEL PLATFORM
-	{
-		int len = 7
-		vector corner = <30795, -10429,-25988>
-		vector o = <240,240,0>
-
-		// Floor
-		for(int i = 0; i<len; i++)for(int j = 0; j<3; j++)
-			CreateFRProp( FIRINGRANGE_256x256_ASSET, corner+o+<i*256,j*256,0>, <0,0,0>)
-
-		// Side Walls
-		for(int i = 0; i<len; i++)for(int j = 0; j<2; j++)
-			CreateFRProp( FIRINGRANGE_256x128_ASSET, corner+o+<i*256,-128,8+j*128>, <0,0,0>, true)
-
-		// Small Walls
-		for(int i = 0; i<4; i++){
-		CreateFRProp( FIRINGRANGE_256x128_ASSET, corner+<1024+i*16,640,16>, <0,90,0>, true, 1000)
-		CreateFRProp( FIRINGRANGE_256x128_ASSET, corner+<512+i*16,640,-32>, <0,90,0>, true, 1000)}
-
-
-	}
+	
 
 	// UPPER DOORS
 	{
@@ -901,6 +892,7 @@ void function SpawnMapProps()
 		dbdoorWall =
 		CreateFRProp( FIRINGRANGE_128x128_ASSET, file.doorSingle_pos + <-124,8,64>, <90,270,0>, true)
 		CreateFRProp( FIRINGRANGE_128x128_ASSET, dbdoorWall.GetOrigin()+<192,0,0>, <90,270,0>, true)
+
 	}
 
 	// FIRING RANGE CONNECTORS
@@ -1059,6 +1051,25 @@ void function SpawnDoors()
 	file.doors.append(ddr)
 }
 
+void function SkinDoors_Init()
+{
+	entity button = CreateFRButton(file.doorResetButton_pos + <0,90,0>, file.doorResetButton_ang, "%&use% DOOR SKIN")
+	AddCallback_OnUseEntity( button, void function(entity panel, entity user, int input)
+	{
+		EmitSoundOnEntityOnlyToPlayer( user, user, FIRINGRANGE_BUTTON_SOUND )
+		SkinDoors()
+	})
+}
+
+void function SkinDoors()
+{
+	foreach(entity door in file.doors)
+	{
+		if(IsValid(door))
+			door.SetSkin(1)
+	}
+}
+
 void function OnWeaponAttack( entity player, entity weapon, string weaponName, int ammoUsed, vector attackOrigin, vector attackDir )
 {
 	FixWeapon(weapon)
@@ -1084,169 +1095,7 @@ void function FixWeapon(entity weapon)
 }
 #endif
 
-
-
-
-
 #if(false)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//
-
-
-
-
-
-//
-
-
-//
-
-
-
-
-
-
-
-
-
-
-
-//
-
-
-//
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 #endif //
 
@@ -1266,98 +1115,111 @@ void function IntroDisplayThread()
 }
 #endif //
 
-
-#if(false)
-
-
-
-//
-
-
-
-
-
-
-
-
-
-
-
-
-
-//
-
-
-
-//
-//
-
-
-
-
-
-
-
-
-//
-
-
-
-
-
-
-
-
-
-
-
-
-//
-
-
-
-
-
-
-
-
-
-
-//
-
-
-
-
-
-
-
-
-
-
-//
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#endif //
+#if SERVER
+void function Overhang()
+{
+	// Zipline
+    MapEditor_CreateZiplineFromUnity( < 30346.4800, -2313.5660, -25703 >, < 0, -148.0795, 0 >, < 30346.4800, -2313.5660, -28685.7000 >, < 0, -148.0795, 0 >, true, -1, 1, 2, 1, 1, 0, 1, 50, 25, false, 1, false, 0, 0, [ ], [ ], [ ], 32, 60, 0 )
+	MapEditor_CreateProp( $"mdl/industrial/zipline_arm.rmdl", < 30291.6600, -2307.5320, -25691 >, < 0, -100.4417, 0 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/industrial/security_fence_post.rmdl", < 30292.5000, -2308.5000, -25871 >, < 0, -10.4417, 0 >, true, 50000, -1, 1 )
+
+	// Floor
+	MapEditor_CreateProp(FIRINGRANGE_256x256_ASSET, < 30220, -2403, -25880.1 >, < 0, -147, 0 >, true, 50000, -1, 1 )
+
+	// Props
+	MapEditor_CreateRespawnableWeaponRack( < 30144, -2559.5000, -25864.9000 >, < 0, 123.0858, 0 >, "mp_weapon_sniper", 0.5 )
+
+	//Triggers 
+    entity trigger0 = MapEditor_CreateTrigger( < 29520.4000, -2438, -25864 >, < 0, 0, 0 >, 30, 20, false )
+    trigger0.SetEnterCallback( void function(entity trigger , entity ent){
+    if (IsValid(ent)) // ensure the entity is valid
+    {
+        if (ent.IsPlayer() && ent.GetPhysics() != MOVETYPE_NOCLIP) // Noclip players are not affected by the trigger
+        {
+            ent.SetOrigin(<27604,-7846,-22252>) // change tp location
+        }
+    }
+    })
+    DispatchSpawn( trigger0 )
+}
+
+void function ShipPad()
+{
+    //Props 
+    MapEditor_CreateProp( $"mdl/imc_base/landing_pad_arm_top.rmdl", < 34069.4000, -5050, -28820 >, < 0, -180, 0 >, true, 50000, -1, 1 )
+    MapEditor_CreateProp( $"mdl/imc_base/landing_pad_arm_top.rmdl", < 33031.5000, -4774.7000, -28820 >, < 0, 0, 0 >, true, 50000, -1, 1 )
+  	MapEditor_CreateProp( $"mdl/imc_base/landing_pad_tarmac_nobase.rmdl", < 33526, -4960, -29151 >, < 0, 0, 0 >, true, 50000, -1, 1 )
+
+   //MapEditor_CreateProp( $"mdl/thunderdome/thunderdome_cage_ceiling_256x256_06.rmdl", < 33526, -4984, -28649 >, < 0, 0, 0 >, true, 50000, -1, 1 )
+}
+
+const vector shiporigin =  <33526, -4984, -28649 >
+
+void function evactest()
+{
+	entity button = CreateFRButton(< 33514, -5284, -28635 >, < 0, 0, 0 >, "%&use% Spawn Ship")
+	AddCallback_OnUseEntity( button, void function(entity panel, entity user, int input)
+	{
+	entity evac = CreatePropDynamic( $"mdl/vehicle/goblin_dropship/goblin_dropship.rmdl", <33526, -4984, -28649 >, <0,0,0>, SOLID_VPHYSICS )
+	thread HandleEvacTeaser( evac, shiporigin + <0,0,200>, <0,-90,0>)
+	
+		EmitSoundOnEntityOnlyToPlayer( user, user, FIRINGRANGE_BUTTON_SOUND )
+	})
+}
+
+
+const string EVAC_TARGET_NAME             = "evac_ship"
+const string DROPSHIP_HOVER               = "goblin_imc_evac_hover"
+const string DROPSHIP_WARP_IN             = "dropship_warpin"
+const string DROPSHIP_FLYING_MOVE         = "dropship_classic_mp_flyin"
+const string EVAC_START                   = "dropship_VTOL_evac_start"
+const string EVAC_END                     = "dropship_VTOL_evac_end"
+const string EVAC_IDLE                    = "dropship_VTOL_evac_idle"
+
+
+
+void function HandleEvacTeaser( entity evac, vector origin, vector angles ) // entity should be prop_dynamic or custom npc.
+{
+	EndSignal( evac, "OnDestroy" )
+	
+	Attachment attachResult = evac.Anim_GetAttachmentAtTime( DROPSHIP_FLYING_MOVE, "ORIGIN", 0.0 )
+    evac.MakeInvisible()
+	
+	waitthread __WarpInEffectShared( attachResult.position, attachResult.angle, DROPSHIP_WARP_IN, 0.0 )
+	evac.MakeVisible()
+
+	Signal( evac, "WarpedIn" )
+
+	EmitSoundOnEntity( evac, DROPSHIP_HOVER )
+	waitthread PlayAnim( evac, EVAC_START, origin, angles )
+	thread PlayAnim( evac, EVAC_IDLE, origin, angles )
+
+	if ( IsFallLTM() )
+	{
+		wait 2
+		evac.Anim_Stop()
+		wait 45
+	}
+	else
+		wait evac.GetSequenceDuration( EVAC_IDLE )
+	gp()[0].SetOrigin(shiporigin + <-23,-26,240>)
+	gp()[0].SetParent(evac)	
+	wait 5
+	
+	waitthread PlayAnim( evac, EVAC_END, origin, angles )
+entity player = gp()[0]
+
+
+wait 2
+EmitSoundOnEntity( evac, "Dropship_Warpout_Attrition" )
+wait 1
+StatusEffect_AddTimed( gp()[0], eStatusEffect.timeshift_visual_effect, 1.0, 999, 999 )
+StatusEffect_AddTimed( gp()[0], eStatusEffect.sonar_pulse_visuals, 1 , 999, 999 )
+StatusEffect_AddTimed( gp()[0], eStatusEffect.phase_tunnel_visual, 1 , 999, 999 )
+StatusEffect_AddTimed( gp()[0], eStatusEffect.placing_phase_gate, 1 , 999, 999 )
+
+	// Hide dropShip now and warpout.
+	//waitthread PlayAnim( evac, EVAC_END, origin, angles )
+	//__WarpOutEffectShared( evac )
+}
+#endif
